@@ -2,11 +2,11 @@ import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/cor
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaMediaType } from 'kaltura-ngx-client';
 import { NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { TranscodingProfileManagement } from 'app-shared/kmc-shared/transcoding-profile-management';
 import { globalConfig } from 'config/global';
 
@@ -77,7 +77,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this._fileDialog.open();
 
-    this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-datatable-scrollable-body');
+    this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-table-scrollable-body');
   }
 
   ngOnInit() {
@@ -90,7 +90,8 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     const newItems = Array.from(files).map(file => {
       const ext = this._getFileExtension(file.name);
       const mediaType = this._getMediaTypeFromExtension(ext);
-      const { name, size } = file;
+      const name = file.name.replace(/\.[^.]*$/, '');
+      const { size } = file;
       return ({ file, mediaType, name, size, isEditing });
     });
 

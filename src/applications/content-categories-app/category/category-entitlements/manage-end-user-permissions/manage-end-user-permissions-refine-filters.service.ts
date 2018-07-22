@@ -4,7 +4,7 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/forkJoin';
 
 import {DefaultFiltersList} from './default-filters-list';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 export interface RefineListItem {
     value: string,

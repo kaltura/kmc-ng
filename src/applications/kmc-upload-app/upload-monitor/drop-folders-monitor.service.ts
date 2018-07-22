@@ -1,25 +1,26 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { UploadMonitorStatuses } from './upload-monitor.component';
-import { KalturaDropFolder } from 'kaltura-ngx-client/api/types/KalturaDropFolder';
-import { KalturaDropFolderFilter } from 'kaltura-ngx-client/api/types/KalturaDropFolderFilter';
-import { KalturaDropFolderOrderBy } from 'kaltura-ngx-client/api/types/KalturaDropFolderOrderBy';
-import { KalturaDropFolderContentFileHandlerConfig } from 'kaltura-ngx-client/api/types/KalturaDropFolderContentFileHandlerConfig';
-import { KalturaDropFolderStatus } from 'kaltura-ngx-client/api/types/KalturaDropFolderStatus';
-import { DropFolderListAction } from 'kaltura-ngx-client/api/types/DropFolderListAction';
-import { KalturaDropFolderFileHandlerType } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileHandlerType';
-import { KalturaDropFolderContentFileHandlerMatchPolicy } from 'kaltura-ngx-client/api/types/KalturaDropFolderContentFileHandlerMatchPolicy';
-import { DropFolderFileListAction } from 'kaltura-ngx-client/api/types/DropFolderFileListAction';
-import { KalturaDropFolderFileFilter } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileFilter';
-import { KalturaDropFolderFileStatus } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileStatus';
-import { KalturaDropFolderFileListResponse } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileListResponse';
+import { KalturaDropFolder } from 'kaltura-ngx-client';
+import { KalturaDropFolderFilter } from 'kaltura-ngx-client';
+import { KalturaDropFolderOrderBy } from 'kaltura-ngx-client';
+import { KalturaDropFolderContentFileHandlerConfig } from 'kaltura-ngx-client';
+import { KalturaDropFolderStatus } from 'kaltura-ngx-client';
+import { DropFolderListAction } from 'kaltura-ngx-client';
+import { KalturaDropFolderFileHandlerType } from 'kaltura-ngx-client';
+import { KalturaDropFolderContentFileHandlerMatchPolicy } from 'kaltura-ngx-client';
+import { DropFolderFileListAction } from 'kaltura-ngx-client';
+import { KalturaDropFolderFileFilter } from 'kaltura-ngx-client';
+import { KalturaDropFolderFileStatus } from 'kaltura-ngx-client';
+import { KalturaDropFolderFileListResponse } from 'kaltura-ngx-client';
 import { DropFoldersRequestFactory } from './drop-folders-request-factory';
-import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaDropFolderFile } from 'kaltura-ngx-client';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 interface DropFoldersUploadFile {
   status: KalturaDropFolderFileStatus;
@@ -242,7 +243,7 @@ export class DropFoldersMonitorService implements OnDestroy {
 
 
       this._kmcServerPolls.register<KalturaDropFolderFileListResponse>(10, this._dropFolderChangesFactory)
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe((response) => {
           if (response.error) {
             this._logger.warn(`error occurred while trying to sync drop folders upload status from server. server error: ${response.error.message}`);

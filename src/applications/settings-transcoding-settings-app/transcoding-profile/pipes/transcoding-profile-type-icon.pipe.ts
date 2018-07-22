@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 @Pipe({
   name: 'kTranscodingProfileType'

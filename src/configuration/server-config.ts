@@ -109,7 +109,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
                 result = !!configuration.uri &&
                     !configuration.uri.match(/\s/g); // not contains white spaces
                 if (result) {
-                    configuration.uri = buildKalturaServerUri(configuration.uri);
+                    configuration.uri = buildBaseUri(configuration.uri);
                 }
             }
 
@@ -125,7 +125,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
                 !!configuration.html5lib;
 
             if (result) {
-                configuration.uri = buildKalturaServerUri(configuration.uri);
+                configuration.uri = buildBaseUri(configuration.uri);
             }
         }
 
@@ -142,7 +142,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
                 !!configuration.html5lib;
 
             if (result) {
-                configuration.uri = buildKalturaServerUri(configuration.uri);
+                configuration.uri = buildBaseUri(configuration.uri);
             }
         }
 
@@ -156,7 +156,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
                 !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
-                configuration.uri = buildKalturaServerUri(configuration.uri);
+                configuration.uri = buildBaseUri(configuration.uri);
             }
         }
 
@@ -170,7 +170,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
                 !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
-                configuration.uri = buildKalturaServerUri(configuration.uri);
+                configuration.uri = buildBaseUri(configuration.uri);
             }
         }
 
@@ -184,7 +184,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
                 !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
-                configuration.uri = buildKalturaServerUri(configuration.uri);
+                configuration.uri = buildBaseUri(configuration.uri);
             }
         }
 
@@ -198,7 +198,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
                 !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
-                configuration.uri = buildKalturaServerUri(configuration.uri);
+                configuration.uri = buildBaseUri(configuration.uri);
             }
         }
 
@@ -206,7 +206,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
     }
 };
 
-export function buildKalturaServerUri(suffix: string): string {
+export function buildBaseUri(suffix: string): string {
     let result = '';
     try {
         const port = (window.location.port) ? ':' + window.location.port : '';
@@ -220,15 +220,37 @@ export function buildKalturaServerUri(suffix: string): string {
     return result;
 }
 
+export function buildUrlWithClientProtocol(urlWithoutProtocol) {
+    let protocol =  (location.protocol || '').toLowerCase();
+    if (protocol[protocol.length - 1] === ':') {
+        protocol =  location.protocol.substring(0, location.protocol.length - 1);
+    }
+    return `${protocol}://${urlWithoutProtocol}`;
+}
+
+export function buildCDNUrl(suffix: string): string {
+    let protocol =  (location.protocol || '').toLowerCase();
+    if (protocol[protocol.length - 1] === ':') {
+        protocol =  location.protocol.substring(0, location.protocol.length - 1);
+    }
+    let baseUrl = '';
+    if (protocol === 'https') {
+        baseUrl = serverConfig.cdnServers.securedServerUri;
+    } else {
+        baseUrl = serverConfig.cdnServers.serverUri;
+    }
+
+    return `${baseUrl}${suffix}`;
+}
+
 export function buildDeployUrl(suffix: string): string {
     return `${serverConfig.kalturaServer.deployUrl || ''}${suffix}`;
 }
 
 export function getKalturaServerUri(suffix: string = ''): string {
-    if (serverConfig.kalturaServer) {
-        const useHttpsProtocol = globalConfig.kalturaServer.useSecuredProtocol;
+    if (serverConfig.kalturaServer && serverConfig.kalturaServer.uri) {
         const serverEndpoint = serverConfig.kalturaServer.uri;
-        return `${useHttpsProtocol ? 'https' : 'http'}://${serverEndpoint}${suffix}`;
+        return buildUrlWithClientProtocol(`${serverEndpoint}${suffix}`);
     } else {
         throw new Error(`cannot provide kaltura server uri. server configuration wasn't loaded already`);
     }

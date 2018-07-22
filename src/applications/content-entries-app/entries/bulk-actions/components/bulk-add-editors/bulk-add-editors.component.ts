@@ -3,15 +3,16 @@ import {ISubscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs/Subject';
 
 import {KalturaClient} from 'kaltura-ngx-client';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import {KalturaFilterPager} from 'kaltura-ngx-client';
+import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {UserListAction} from 'kaltura-ngx-client/api/types/UserListAction';
-import {KalturaUserFilter} from 'kaltura-ngx-client/api/types/KalturaUserFilter';
-import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
+import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui';
+import {UserListAction} from 'kaltura-ngx-client';
+import {KalturaUserFilter} from 'kaltura-ngx-client';
+import {KalturaUser} from 'kaltura-ngx-client';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kBulkAddEditors',
@@ -94,12 +95,13 @@ export class BulkAddEditorsComponent implements OnInit, OnDestroy, AfterViewInit
         }
       )
     }))
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         result => {
           const suggestions = [];
           const users: KalturaUser[] = result.objects;
           (users || []).forEach(suggestedUser => {
+              suggestedUser['__tooltip'] = suggestedUser.id;
             const isSelectable = !this.users.find(user => {
               return user.id === suggestedUser.id;
             });

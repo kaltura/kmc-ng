@@ -3,13 +3,14 @@ import { UsersStore } from './users.service';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { KalturaUser } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Observer } from 'rxjs/Observer';
 import { serverConfig } from 'config/server';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { AdminUsersMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -55,7 +56,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
 
   private _prepare(): void {
       this._usersStore.query$
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(
               query => {
                   this._filter.pageSize = query.pageSize;
@@ -65,7 +66,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
           );
 
       this._usersStore.users.data$
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(
               response => {
                   this._usersInfo = this._appLocalization.get('applications.administration.users.usersInfo',
@@ -140,16 +141,16 @@ export class UsersListComponent implements OnInit, OnDestroy {
   public _onToggleUserStatus(user: KalturaUser): void {
     const retryFn = () => this._onToggleUserStatus(user);
     this._usersStore.toggleUserStatus(user)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(this._getObserver(retryFn));
   }
 
   public _onDeleteUser(user: KalturaUser): void {
     const retryFn = () => this._onDeleteUser(user);
     this._usersStore.deleteUser(user)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(this._getObserver(retryFn))
   }
 

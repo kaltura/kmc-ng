@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { BulkUploadMonitorService } from './bulk-upload-monitor.service';
 import { NewUploadMonitorService } from './new-upload-monitor.service';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { DropFoldersMonitorService } from './drop-folders-monitor.service';
 import {
     ContentBulkUploadsMainViewService,
@@ -81,7 +81,7 @@ export class UploadMonitorComponent implements OnDestroy {
       if (this._isAvailable) {
           if (this._isUploadAvailable) {
               this._newUploadMonitor.totals$
-                  .cancelOnDestroy(this)
+                  .pipe(cancelOnDestroy(this))
                   .subscribe(totals => {
                       if (this._uploadFromDesktop.errors < totals.errors) {
                           this._updateErrorIconStatus();
@@ -95,7 +95,7 @@ export class UploadMonitorComponent implements OnDestroy {
 
           if (this._isBulkAvailable) {
               this._bulkUploadMonitor.totals.data$
-                  .cancelOnDestroy(this)
+                  .pipe(cancelOnDestroy(this))
                   .subscribe(totals => {
                       if (this._bulkUpload.errors < totals.errors) {
                           this._updateErrorIconStatus();
@@ -105,7 +105,7 @@ export class UploadMonitorComponent implements OnDestroy {
                   });
 
               this._bulkUploadMonitor.totals.state$
-                  .cancelOnDestroy(this)
+                  .pipe(cancelOnDestroy(this))
                   .subscribe((state) => {
                       if (state.error && state.isErrorRecoverable) {
                           this._bulkUploadLayout = 'recoverableError';
@@ -124,7 +124,7 @@ export class UploadMonitorComponent implements OnDestroy {
 
           if (this._isDropFolderAvailable) {
               this._dropFoldersMonitor.totals.state$
-                  .cancelOnDestroy(this)
+                  .pipe(cancelOnDestroy(this))
                   .subscribe(state => {
                       if (state.error && state.notPermitted) {
                           this._dropFoldersLayout = null;
@@ -141,7 +141,7 @@ export class UploadMonitorComponent implements OnDestroy {
                   });
 
               this._dropFoldersMonitor.totals.data$
-                  .cancelOnDestroy(this)
+                  .pipe(cancelOnDestroy(this))
                   .subscribe(totals => {
                       if (this._dropFolders.errors < totals.errors) {
                           this._updateErrorIconStatus();

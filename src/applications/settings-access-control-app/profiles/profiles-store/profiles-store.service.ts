@@ -1,36 +1,37 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { FiltersStoreBase, NumberTypeAdapter, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters';
+import { FiltersStoreBase, NumberTypeAdapter, TypeAdaptersMapping } from '@kaltura-ng/mc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/string-type';
+import { StringTypeAdapter } from '@kaltura-ng/mc-shared';
 import { SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaAccessControlFilter } from 'kaltura-ngx-client/api/types/KalturaAccessControlFilter';
-import { AccessControlListAction } from 'kaltura-ngx-client/api/types/AccessControlListAction';
-import { KalturaLimitFlavorsRestriction } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestriction';
-import { KalturaSiteRestriction } from 'kaltura-ngx-client/api/types/KalturaSiteRestriction';
-import { KalturaCountryRestriction } from 'kaltura-ngx-client/api/types/KalturaCountryRestriction';
-import { KalturaIpAddressRestriction } from 'kaltura-ngx-client/api/types/KalturaIpAddressRestriction';
-import { KalturaSessionRestriction } from 'kaltura-ngx-client/api/types/KalturaSessionRestriction';
-import { KalturaSiteRestrictionType } from 'kaltura-ngx-client/api/types/KalturaSiteRestrictionType';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaCountryRestrictionType } from 'kaltura-ngx-client/api/types/KalturaCountryRestrictionType';
-import { KalturaIpAddressRestrictionType } from 'kaltura-ngx-client/api/types/KalturaIpAddressRestrictionType';
-import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestrictionType';
-import { KalturaPreviewRestriction } from 'kaltura-ngx-client/api/types/KalturaPreviewRestriction';
-import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
-import { AccessControlDeleteAction } from 'kaltura-ngx-client/api/types/AccessControlDeleteAction';
-import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
-import { AccessControlUpdateAction } from 'kaltura-ngx-client/api/types/AccessControlUpdateAction';
-import { AccessControlAddAction } from 'kaltura-ngx-client/api/types/AccessControlAddAction';
-import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaAccessControlFilter } from 'kaltura-ngx-client';
+import { AccessControlListAction } from 'kaltura-ngx-client';
+import { KalturaLimitFlavorsRestriction } from 'kaltura-ngx-client';
+import { KalturaSiteRestriction } from 'kaltura-ngx-client';
+import { KalturaCountryRestriction } from 'kaltura-ngx-client';
+import { KalturaIpAddressRestriction } from 'kaltura-ngx-client';
+import { KalturaSessionRestriction } from 'kaltura-ngx-client';
+import { KalturaSiteRestrictionType } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaCountryRestrictionType } from 'kaltura-ngx-client';
+import { KalturaIpAddressRestrictionType } from 'kaltura-ngx-client';
+import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client';
+import { KalturaPreviewRestriction } from 'kaltura-ngx-client';
+import { KalturaAccessControl } from 'kaltura-ngx-client';
+import { AccessControlDeleteAction } from 'kaltura-ngx-client';
+import { KalturaFlavorParams } from 'kaltura-ngx-client';
+import { AccessControlUpdateAction } from 'kaltura-ngx-client';
+import { AccessControlAddAction } from 'kaltura-ngx-client';
+import { KalturaNullableBoolean } from 'kaltura-ngx-client';
 import { SettingsAccessControlMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { FlavoursStore } from 'app-shared/kmc-shared';
-
+import { switchMap, map } from 'rxjs/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 const localStoragePageSizeKey = 'accessControlProfiles.list.pageSize';
 
@@ -114,7 +115,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
 
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._executeQuery();
       });
@@ -135,7 +136,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
     this._logger.info(`loading data from the server`);
     this._profiles.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         ({ accessControlList, flavorsList }) => {
           this._querySubscription = null;
@@ -180,21 +181,20 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
 
       // build the request
       return this._kalturaServerClient.request(new AccessControlListAction({ filter, pager }))
-        .switchMap(
-          () => this._flavorsStore.get(),
-          (accessControlList, flavors) => ({ accessControlList, flavors })
-        )
-        .map(({ accessControlList: originalAccessControlList, flavors }) => {
+          .pipe(
+             switchMap((accessControlList) => this._flavorsStore.get().pipe(map(flavors => ({ accessControlList, flavors })))  ),
+              map(({ accessControlList: originalAccessControlList, flavors }) => {
 
-          const extendedAccessControlList = this._mapProfilesResponse(originalAccessControlList.objects, flavors.items);
-          return {
-            accessControlList: {
-              items: extendedAccessControlList,
-              totalCount: originalAccessControlList.totalCount
-            },
-            flavorsList: flavors.items
-          };
-        });
+                  const extendedAccessControlList = this._mapProfilesResponse(originalAccessControlList.objects, flavors.items);
+                  return {
+                      accessControlList: {
+                          items: extendedAccessControlList,
+                          totalCount: originalAccessControlList.totalCount
+                      },
+                      flavorsList: flavors.items
+                  };
+              })
+          );
     } catch (err) {
       return Observable.throw(err);
     }

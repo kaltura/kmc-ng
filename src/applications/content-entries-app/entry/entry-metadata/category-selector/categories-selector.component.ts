@@ -4,17 +4,15 @@ import {
   CategoriesStatus,
   CategoriesStatusMonitorService
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Subject } from 'rxjs/Subject';
-import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-
-
+import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories/categories-tree/categories-tree.component';
-import { TagsComponent } from '@kaltura-ng/kaltura-ui/tags/tags.component';
+import { TagsComponent } from '@kaltura-ng/kaltura-ui';
 import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 import { BrowserService } from 'app-shared/kmc-shell';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kCategoriesSelector',
@@ -57,7 +55,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this._categoriesStatusMonitorService.status$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe((status: CategoriesStatus) => {
         this._categoriesLocked = status.lock;
         this._categoriesUpdating = status.update;
@@ -73,7 +71,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.parentPopupWidget) {
       this.parentPopupWidget.state$
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe(event => {
           if (event.state === PopupWidgetStates.Open) {
             this._confirmClose = false;
@@ -199,9 +197,11 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
   public _onCategoryUnselected(node: number): void {
     this._confirmClose = true;
     const requestedCategoryIndex = this._selectedCategories.findIndex(item => item.id === node);
+    const requestedCategoryTreeIndex = this._treeSelection.findIndex(item => item === node);
 
-    if (requestedCategoryIndex > -1) {
+    if (requestedCategoryIndex > -1 && requestedCategoryTreeIndex > -1) {
       this._selectedCategories.splice(requestedCategoryIndex, 1);
+      this._treeSelection.splice(requestedCategoryTreeIndex, 1);
     }
   }
 

@@ -1,11 +1,12 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {EntitlementService} from '../entitlement.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 function privacyContextLabelValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: boolean } | null => {
@@ -91,8 +92,8 @@ export class NewEntitlementComponent implements OnInit, OnDestroy {
               id: categoryId,
               privacyContext,
           })
-          .cancelOnDestroy(this)
-          .tag('block-shell')
+          .pipe(cancelOnDestroy(this))
+          .pipe(tag('block-shell'))
           .subscribe(() => {
               this._logger.info(`handle successful add entitlement request`);
                   this.onApply.emit();

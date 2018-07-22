@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MetadataProfile } from '../custom-metadata';
-import { DynamicFormService } from '@kaltura-ng/kaltura-ui/dynamic-form';
+import { DynamicFormService } from '@kaltura-ng/kaltura-ui';
 import { DynamicMetadataForm } from './dynamic-metadata-form';
 import { DynamicMetadataSectionFactory } from './dynamic-metadata-section-factory.service';
 

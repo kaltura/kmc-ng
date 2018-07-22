@@ -1,12 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {
   AccountInfo,
   AccountInfoService
 } from 'applications/settings-integration-settings-app/account-info/account-info.service';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { SettingsIntegrationSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
@@ -47,7 +47,7 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
 
     this._accountInfoService
       .getAccountInfo()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe((response: AccountInfo) => {
           this._logger.info(`handle successful loading partner account info data`);
           this._accountInfo = response;

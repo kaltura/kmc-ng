@@ -3,11 +3,11 @@ import { Router } from '@angular/router';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { PlaylistsFilters, PlaylistsStore, SortDirection } from '../playlists-store/playlists-store.service';
 import { BulkDeleteService } from '../bulk-service/bulk-delete.service';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
-import { StickyComponent } from '@kaltura-ng/kaltura-ui/sticky/components/sticky.component';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KalturaPlaylist } from 'kaltura-ngx-client';
+import { StickyComponent } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
@@ -16,7 +16,7 @@ import { async } from 'rxjs/scheduler/async';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-playlist-view.service';
 import { ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentPlaylistsMainViewService } from 'app-shared/kmc-shared/kmc-views';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kPlaylistsList',
@@ -75,8 +75,8 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
   private _proceedDeletePlaylists(ids: string[]): void {
     this._bulkDeleteService.deletePlaylist(ids)
-      .tag('block-shell')
-      .cancelOnDestroy(this)
+      .pipe(tag('block-shell'))
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         () => {
           this._playlistsStore.reload();
@@ -114,8 +114,8 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
   private _deleteCurrentPlaylist(playlistId: string): void {
     this._playlistsStore.deletePlaylist(playlistId)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this._clearSelection();
@@ -180,7 +180,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
   private _registerToFilterStoreDataChanges(): void {
     this._playlistsStore.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({ changes }) => {
         this._updateComponentState(changes);
         this._clearSelection();
@@ -191,7 +191,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
     private _registerToDataChanges(): void {
         this._playlistsStore.playlists.state$
             .observeOn(async)
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 result => {
 

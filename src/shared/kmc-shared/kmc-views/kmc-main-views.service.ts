@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContentCategoriesMainViewService,
     ContentEntriesMainViewService,
     ContentModerationMainViewService,
@@ -22,7 +22,7 @@ import { ContentCategoriesMainViewService,
     SettingsMyUserSettingsMainViewService,
     SettingsAccountInformationMainViewService
 } from './main-views';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 
 export interface KMCAppMenuItem {

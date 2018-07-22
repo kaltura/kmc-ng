@@ -1,15 +1,16 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
-import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
-import { GroupedListType } from '@kaltura-ng/mc-shared/filters';
-import { KalturaMetadataSearchItem } from 'kaltura-ngx-client/api/types/KalturaMetadataSearchItem';
+import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client';
+import { KalturaSearchOperator } from 'kaltura-ngx-client';
+import { GroupedListType } from '@kaltura-ng/mc-shared';
+import { KalturaMetadataSearchItem } from 'kaltura-ngx-client';
 import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
 import { MetadataProfile } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
 import { PlaylistRule } from './playlist-rule.interface';
-import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
+import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class PlaylistRuleParserService implements OnDestroy {
@@ -28,7 +29,7 @@ export class PlaylistRuleParserService implements OnDestroy {
         type: MetadataProfileTypes.Entry,
         ignoredCreateMode: MetadataProfileCreateModes.App
       })
-      .cancelOnDestroy(this);
+      .pipe(cancelOnDestroy(this));
   }
 
   private _mapCustomMetadata(advancedSearch: KalturaSearchOperator): Observable<GroupedListType<string>> {
@@ -135,8 +136,8 @@ export class PlaylistRuleParserService implements OnDestroy {
           sortBy: sortBy,
           sortDirection: sortDirection,
           createdAt: {
-            fromDate: new Date(originalFilter.createdAtGreaterThanOrEqual),
-            toDate: new Date(originalFilter.createdAtLessThanOrEqual)
+            fromDate: originalFilter.createdAtGreaterThanOrEqual ? new Date(originalFilter.createdAtGreaterThanOrEqual) : null,
+            toDate: originalFilter.createdAtLessThanOrEqual ? new Date(originalFilter.createdAtLessThanOrEqual) : null
           }
         };
 

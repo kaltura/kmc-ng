@@ -1,20 +1,21 @@
 import { Injectable, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy } from '@angular/core';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';
 import {
   ExtendedKalturaConversionProfileAssetParams,
   KalturaConversionProfileWithAsset
 } from '../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { FlavoursStore } from 'app-shared/kmc-shared';
-import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
-import { KalturaLiveParams } from 'kaltura-ngx-client/api/types/KalturaLiveParams';
-import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
+import { KalturaLiveParams } from 'kaltura-ngx-client';
+import { KalturaFlavorParams } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
-import { ConversionProfileAssetParamsUpdateAction } from 'kaltura-ngx-client/api/types/ConversionProfileAssetParamsUpdateAction';
+import { ConversionProfileAssetParamsUpdateAction } from 'kaltura-ngx-client';
 import { SettingsTranscodingProfileViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget implements OnDestroy {
@@ -101,7 +102,7 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
     }
 
     return this._flavorsStore.get()
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .map((response: { items: KalturaFlavorParams[] }) => {
         const items = response.items;
         const profileType: KalturaConversionProfileType = this.data.type;

@@ -1,11 +1,12 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import {KalturaRecordStatus} from 'kaltura-ngx-client/api/types/KalturaRecordStatus';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import {KalturaRecordStatus} from 'kaltura-ngx-client';
 import {KalturaLiveStreamService} from './kaltura-live-stream.service';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {KalturaLive} from './kaltura-live-stream.interface';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kKalturaLiveStream',
@@ -56,7 +57,7 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
   private _loadTranscodingProfiles(): void {
     this._updateAreaBlockerState(true, null);
     this._kalturaLiveStreamService.getKalturaConversionProfiles()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(transcodingProfilesList => {
         this._availableTranscodingProfiles = transcodingProfilesList.map(transcodingProfile => ({
           value: transcodingProfile.id,
@@ -119,7 +120,7 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
 
     this._form
       .valueChanges
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(data => {
         this.dataChange.emit(data);
       });

@@ -1,15 +1,16 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KMCPermissionsService } from '../../kmc-permissions';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { DetailsViewMetadata, KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import {KalturaMediaEntry} from 'kaltura-ngx-client';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContentCategoriesMainViewService } from '../main-views/content-categories-main-view.service';
 import { Title } from '@angular/platform-browser';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-category-view.service';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface ContentNewCategoryViewArgs {
     entries: KalturaMediaEntry[];
@@ -51,7 +52,7 @@ export class ContentNewCategoryViewService extends KmcDetailsViewBaseService<Con
             this._newCategoryData = args;
 
             this._contentCategoriesMainView.openWithState()
-                .cancelOnDestroy(this)
+                .pipe(cancelOnDestroy(this))
                 .catch((error, caught) => {
                     return Observable.of(false);
                 })

@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AppAuthentication, AppUser} from 'app-shared/kmc-shell';
 import { kmcAppConfig } from '../../kmc-app-config';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import { Router } from '@angular/router';
 
 @Component({

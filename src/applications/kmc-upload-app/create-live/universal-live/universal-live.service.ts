@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { subApplicationsConfig } from 'config/sub-applications';
 import {Http} from '@angular/http';
 import { serverConfig } from 'config/server';

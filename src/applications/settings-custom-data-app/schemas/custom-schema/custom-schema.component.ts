@@ -1,15 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
-import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
+import { KalturaMetadataProfile } from 'kaltura-ngx-client';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { MetadataItem } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
-import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
-import { KalturaAPIException, KalturaTypesFactory } from 'kaltura-ngx-client';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
+import { KalturaUtils } from '@kaltura-ng/kaltura-common';
+import { KalturaAPIException, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { KalturaMetadataObjectType } from 'kaltura-ngx-client';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kCustomSchema',
@@ -49,7 +49,7 @@ export class CustomSchemaComponent implements OnInit {
   private _prepare(): void {
     if (this.schema) {
       this._logger.info(`enter edit schema mode for existing schema`, { id: this.schema.id, name: this.schema.name });
-      this._schema = <SettingsMetadataProfile>Object.assign(KalturaTypesFactory.createObject(this.schema), this.schema);
+      this._schema = <SettingsMetadataProfile>Object.assign(KalturaObjectBaseFactory.createObject(this.schema), this.schema);
       this._profileFields = (this._schema.parsedProfile && Array.isArray(this._schema.parsedProfile.items))
         ? [...this._schema.parsedProfile.items] : [];
       this._title = this._appLocalization.get('applications.settings.metadata.editCustomSchema');

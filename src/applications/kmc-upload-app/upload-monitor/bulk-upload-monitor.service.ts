@@ -1,22 +1,23 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { BulkListAction } from 'kaltura-ngx-client/api/types/BulkListAction';
-import { KalturaBatchJobStatus } from 'kaltura-ngx-client/api/types/KalturaBatchJobStatus';
-import { KalturaBulkUploadFilter } from 'kaltura-ngx-client/api/types/KalturaBulkUploadFilter';
-import { Observable } from 'rxjs/Observable';
-import { KalturaBulkUploadListResponse } from 'kaltura-ngx-client/api/types/KalturaBulkUploadListResponse';
+import { BulkListAction } from 'kaltura-ngx-client';
+import { KalturaBatchJobStatus } from 'kaltura-ngx-client';
+import { KalturaBulkUploadFilter } from 'kaltura-ngx-client';
+import { Observable } from 'rxjs';
+import { KalturaBulkUploadListResponse } from 'kaltura-ngx-client';
 import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
 import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client';
+import { KalturaBulkUpload } from 'kaltura-ngx-client';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { UploadMonitorStatuses } from './upload-monitor.component';
-import { KalturaBulkUploadObjectType } from 'kaltura-ngx-client/api/types/KalturaBulkUploadObjectType';
+import { KalturaBulkUploadObjectType } from 'kaltura-ngx-client';
 import { BulkUploadRequestFactory } from './bulk-upload-request-factory';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 interface BulkUploadFile
 {
@@ -72,7 +73,7 @@ export class BulkUploadMonitorService implements OnDestroy {
         this._logger.debug(`registering to app event 'BulkLogUploadingStartedEvent'`);
         this._appEvents
             .event(BulkLogUploadingStartedEvent)
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(({id, status, uploadedOn}) => {
                 this._logger.debug(`handling app event 'BulkLogUploadingStartedEvent. { id: '${id}' }`);
                 this._trackNewFile({id, status, uploadedOn});
@@ -213,7 +214,7 @@ export class BulkUploadMonitorService implements OnDestroy {
 
 
             this._kmcServerPolls.register<KalturaBulkUploadListResponse>(10, this._bulkUploadChangesFactory)
-                .cancelOnDestroy(this)
+                .pipe(cancelOnDestroy(this))
                 .subscribe((response) => {
                     if (response.error) {
                         this._logger.warn(`error occurred while trying to sync bulk upload status from server. server error: ${response.error.message}`);

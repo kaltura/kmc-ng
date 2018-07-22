@@ -1,18 +1,19 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaAPIException, KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { async } from 'rxjs/scheduler/async';
 import { TranscodingProfileWidget } from '../transcoding-profile-widget';
 import { KalturaConversionProfileWithAsset } from '../../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
-import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
-import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
+import { KalturaStorageProfile } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
-import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
+import { BaseEntryGetAction } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { SettingsTranscodingProfileViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget implements OnDestroy {
@@ -68,7 +69,7 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
 
   private _monitorFormChanges(): void {
     Observable.merge(this.metadataForm.valueChanges, this.metadataForm.statusChanges)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
       .subscribe(() => {
           super.updateState({
@@ -152,7 +153,7 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
     this.hideStorageProfileIdField = (this.data.type && this.data.type === KalturaConversionProfileType.liveStream) || !hasStorageProfilesPermission;
     if (!this.hideStorageProfileIdField) {
       return this._loadRemoteStorageProfiles()
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .map(profiles => {
           prepare();
           this.remoteStorageProfilesOptions = profiles.map(profile => ({ label: profile.name, value: profile.id }));

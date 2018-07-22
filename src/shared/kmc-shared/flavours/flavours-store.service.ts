@@ -1,15 +1,15 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {PartnerProfileStore} from '../partner-profile';
 import 'rxjs/add/observable/throw';
 import {KalturaClient} from 'kaltura-ngx-client';
-import {FlavorParamsListAction} from 'kaltura-ngx-client/api/types/FlavorParamsListAction';
-import {KalturaFlavorParams} from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import {KalturaFlavorParamsListResponse} from 'kaltura-ngx-client/api/types/KalturaFlavorParamsListResponse';
-import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import {FlavorParamsListAction} from 'kaltura-ngx-client';
+import {KalturaFlavorParams} from 'kaltura-ngx-client';
+import {KalturaFilterPager} from 'kaltura-ngx-client';
+import {KalturaFlavorParamsListResponse} from 'kaltura-ngx-client';
+import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
+import {KalturaResponseProfileType} from 'kaltura-ngx-client';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class FlavoursStore extends PartnerProfileStore implements OnDestroy {
@@ -24,7 +24,7 @@ export class FlavoursStore extends PartnerProfileStore implements OnDestroy {
     if (!this._getFlavorsFilters$) {
       // execute the request
       this._getFlavorsFilters$ = this._buildGetRequest()
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .map(
           response => {
             return ({items: response ? response.objects : []});

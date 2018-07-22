@@ -8,11 +8,11 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {EndUserPermissionsUser} from '../manage-end-user-permissions.service';
-import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
-import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
-import {KalturaCategoryUserStatus} from 'kaltura-ngx-client/api/types/KalturaCategoryUserStatus';
+import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client';
+import {KalturaUpdateMethodType} from 'kaltura-ngx-client';
+import {KalturaCategoryUserStatus} from 'kaltura-ngx-client';
 import {UserActionData} from '../manage-end-user-permissions.component';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 

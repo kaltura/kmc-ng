@@ -1,4 +1,4 @@
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 export abstract class KmcComponentViewBaseService<TArgs> {
 

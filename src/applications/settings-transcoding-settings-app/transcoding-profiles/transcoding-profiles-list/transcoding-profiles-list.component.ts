@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
 import {
   BaseTranscodingProfilesStore,
   KalturaConversionProfileWithAsset,
@@ -8,17 +8,18 @@ import {
 import { MediaTranscodingProfilesStore } from '../transcoding-profiles-store/media-transcoding-profiles-store.service';
 import { LiveTranscodingProfilesStore } from '../transcoding-profiles-store/live-transcoding-profiles-store.service';
 import { Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
-import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { KalturaNullableBoolean } from 'kaltura-ngx-client';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import {
     SettingsTranscodingProfileViewSections,
     SettingsTranscodingProfileViewService
 } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { SettingsTranscodingMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'k-transcoding-profiles-list',
@@ -28,6 +29,7 @@ import { SettingsTranscodingMainViewService } from 'app-shared/kmc-shared/kmc-vi
 })
 export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   @Input() title = '';
+    @Input() singleTableMode: boolean;
 
   @Input() set storeFor(value: KalturaConversionProfileType) {
     if (value) {
@@ -40,6 +42,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   @Output() setParentBlockerMessage = new EventEmitter<AreaBlockerMessage>();
 
   public _profilesType: KalturaConversionProfileType;
+  public _profilesTypes = KalturaConversionProfileType;
   public _storeService: BaseTranscodingProfilesStore;
   public _selectedProfiles: KalturaConversionProfileWithAsset[] = [];
   public _tableIsBusy = false;
@@ -80,7 +83,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
 
   private _registerToFilterStoreDataChanges(): void {
     this._storeService.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({ changes }) => {
         this._updateComponentState(changes);
         this._clearSelection();
@@ -101,7 +104,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
 
   private _registerToDataChanges(): void {
     this._storeService.profiles.state$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         result => {
           this._tableIsBusy = result.loading;
@@ -172,8 +175,8 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
     this._logger.info(`handle 'setAsDefault' request by the user`, { id: profile.id, name: profile.name });
     if (!profile.isDefault) {
       this._storeService.setAsDefault(profile)
-        .tag('block-shell')
-        .cancelOnDestroy(this)
+        .pipe(tag('block-shell'))
+        .pipe(cancelOnDestroy(this))
         .subscribe(
           () => {
             this._logger.info(`handle successful 'setAsDefault' request by the user`);
@@ -215,8 +218,8 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
       () => profiles.map(profile => ({ id: profile.id, name: profile.name }))
     );
     this._storeService.deleteProfiles(profiles)
-      .tag('block-shell')
-      .cancelOnDestroy(this)
+      .pipe(tag('block-shell'))
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         () => {
           this._logger.info(`handle successful 'delete' profiles request by the user`);

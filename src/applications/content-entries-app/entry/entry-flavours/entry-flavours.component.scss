@@ -29,15 +29,11 @@
 		.kStatusReady{
 			color: $kPrimary;
 		}
-		.kStatusError{
+		.kStatusError, .kStatusErrorProcessing{
 			color: $kDandger;
-		}
-		.kStatusErrorProcessing{
-			color: $kGrayscale1;
 		}
         &.kAddingEntry {
             width: calc(100% - 80px);
-            margin-bottom: 0;
         }
 	}
 	.kFlavorStatusError{
@@ -48,7 +44,7 @@
         .kRefreshBtn {
             position: absolute;
             right: 10px;
-            bottom: 0;
+            bottom: 16px;
             font-size: 24px;
             border: none;
             min-width: inherit;
@@ -56,6 +52,7 @@
             color: $kGrayscale3;
             &:active {
                 box-shadow: none;
+                transform: rotate(45deg);
             }
             &:hover {
                 background-color: #ffffff;
@@ -64,7 +61,6 @@
         }
     }
 	.kTable{
-		margin-top: 16px;
 		.kFlavorName{
 			font-weight: bold;
 		}
@@ -80,7 +76,19 @@
 		text-align: center;
 	}
 }
-:host /deep/ .ui-button-icon-right.ui-c.fa.fa-fw.kIcondropdown_arrow_bottom{
+:host /deep/ .ui-button-icon-right.ui-c.pi-pi-fw.kIcondropdown_arrow_bottom{
 	font-size: 11px;
 	padding-right: 4px;
+}
+
+:host /deep/ p-table {
+    .ui-table .ui-table-thead > tr > th {
+        border-left: 1px solid $kGrayscale6;
+    }
+}
+
+@media screen and (max-width: 1310px) {
+    .kReplacementButtonsShown {
+        bottom: 22px !important;
+    }
 }

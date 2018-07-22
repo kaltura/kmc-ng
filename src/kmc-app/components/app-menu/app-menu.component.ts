@@ -1,17 +1,15 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-
 import { AppAuthentication, AppUser} from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { serverConfig } from 'config/server';
-
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { serverConfig, buildBaseUri } from 'config/server';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
-
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KMCAppMenuItem, KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views';
 import { ContextualHelpLink, ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 import { globalConfig } from 'config/global';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -51,13 +49,13 @@ export class AppMenuComponent implements OnInit, OnDestroy{
                 private _browserService: BrowserService) {
 
         _contextualHelpService.contextualHelpData$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(data => {
                 this._contextualHelp = data;
             });
 
         router.events
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe((event) => {
                 if (event instanceof NavigationEnd) {
                     this.setSelectedRoute(event.urlAfterRedirects);
@@ -105,7 +103,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
                 link = serverConfig.externalLinks.kaltura.mediaManagement;
                 break;
             case 'legacy':
-                link = "https://kmc.kaltura.com/index.php/kmc";
+                link = buildBaseUri('/index.php/kmc');
                 break;
         }
         if (link.length > 0) {

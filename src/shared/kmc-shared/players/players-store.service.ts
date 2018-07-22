@@ -1,19 +1,20 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
 import 'rxjs/add/observable/throw';
 import {KalturaClient} from 'kaltura-ngx-client';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import {UiConfListAction} from 'kaltura-ngx-client/api/types/UiConfListAction';
-import {KalturaUiConfListResponse} from 'kaltura-ngx-client/api/types/KalturaUiConfListResponse';
-import {KalturaUiConfFilter} from 'kaltura-ngx-client/api/types/KalturaUiConfFilter';
-import {KalturaUiConfObjType} from 'kaltura-ngx-client/api/types/KalturaUiConfObjType';
-import {KalturaUiConf} from 'kaltura-ngx-client/api/types/KalturaUiConf';
+import {KalturaFilterPager} from 'kaltura-ngx-client';
+import {UiConfListAction} from 'kaltura-ngx-client';
+import {KalturaUiConfListResponse} from 'kaltura-ngx-client';
+import {KalturaUiConfFilter} from 'kaltura-ngx-client';
+import {KalturaUiConfObjType} from 'kaltura-ngx-client';
+import {KalturaUiConf} from 'kaltura-ngx-client';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
+import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
+import {KalturaResponseProfileType} from 'kaltura-ngx-client';
 import {AppEventsService} from "app-shared/kmc-shared";
 import {PlayersUpdatedEvent} from "app-shared/kmc-shared/events";
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum PlayerTypes {
   Entry = 1,
@@ -34,7 +35,7 @@ export class PlayersStore implements OnDestroy {
     this._logger = logger.subLogger('PlayersStore');
 
     this._appEvents.event(PlayersUpdatedEvent)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe((event) => {
         this._logger.info(`clear players cache (triggered by PlayersUpdatedEvent)`);
         const cacheKeyToDelete = this._createCacheKey({type: event.isPlaylist ? PlayerTypes.Playlist : PlayerTypes.Entry});

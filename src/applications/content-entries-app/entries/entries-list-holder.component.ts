@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {EntriesListComponent} from 'app-shared/content-shared/entries/entries-list/entries-list.component';
 import {BrowserService, NewEntryUploadFile} from 'app-shared/kmc-shell';
 import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
@@ -9,19 +9,25 @@ import {EntriesTableColumns} from 'app-shared/content-shared/entries/entries-tab
 import {ContentEntriesAppService} from '../content-entries-app.service';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {PreviewAndEmbedEvent} from 'app-shared/kmc-shared/events';
-import {UploadManagement} from '@kaltura-ng/kaltura-common/upload-management/upload-management.service';
-import {TrackedFileStatuses} from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
+import {UploadManagement} from '@kaltura-ng/kaltura-common';
+import {TrackedFileStatuses} from '@kaltura-ng/kaltura-common';
 import {UpdateEntriesListEvent} from 'app-shared/kmc-shared/events/update-entries-list-event';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { EntriesListService } from './entries-list.service';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kEntriesListHolder',
-  templateUrl: './entries-list-holder.component.html'
+  templateUrl: './entries-list-holder.component.html',
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'entries-table' }
+    ]
 })
 export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
@@ -33,7 +39,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
     name: { sortable: true },
-    id: { width: '100px' },
+    id: { width: '120px' },
     mediaType: { sortable: true, width: '80px', align: 'center' },
     plays: { sortable: true, width: '76px' },
     createdAt: { sortable: true, width: '140px' },
@@ -96,14 +102,14 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       }
 
       this._uploadManagement.onTrackedFileChanged$
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile && trackedFile.status === TrackedFileStatuses.uploadCompleted)
           .subscribe(() => {
               this._entriesStore.reload();
           });
 
       this._appEvents.event(UpdateEntriesListEvent)
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(() => this._entriesStore.reload());
 
       const hasEmbedPermission = this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EMBED_CODE);
@@ -113,12 +119,13 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   }
 
   public _onActionSelected({ action, entry }) {
-      this._entriesList.clearSelection();
     switch (action) {
       case 'preview':
+          this._entriesList.clearSelection();
         this._appEvents.publish(new PreviewAndEmbedEvent(entry));
         break;
       case 'view':
+          this._entriesList.clearSelection();
           this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
         break;
       case 'delete':
@@ -132,6 +139,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         break;
       case 'liveDashboard':
         if (entry && entry.id) {
+            this._entriesList.clearSelection();
           this._entryId = entry.id;
           this._liveDashboard.open();
         }
@@ -149,10 +157,11 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
 
     this._blockerMessage = null;
     this._contentEntriesAppService.deleteEntry(entryId)
-      .tag('block-shell')
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
-          this._entriesStore.reload();
+            this._entriesList.clearSelection();
+            this._entriesStore.reload();
         },
         error => {
           this._blockerMessage = new AreaBlockerMessage({

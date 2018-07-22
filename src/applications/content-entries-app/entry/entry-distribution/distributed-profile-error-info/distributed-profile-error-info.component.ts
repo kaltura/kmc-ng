@@ -1,15 +1,16 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { KalturaDistributionValidationError } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationError';
-import { KalturaDistributionValidationErrorInvalidData } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationErrorInvalidData';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaDistributionValidationErrorType } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationErrorType';
-import { KalturaDistributionValidationErrorMissingMetadata } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationErrorMissingMetadata';
-import { KalturaDistributionValidationErrorMissingFlavor } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationErrorMissingFlavor';
-import { KalturaDistributionValidationErrorMissingThumbnail } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationErrorMissingThumbnail';
-import { KalturaDistributionValidationErrorConditionNotMet } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationErrorConditionNotMet';
+import { KalturaDistributionValidationError } from 'kaltura-ngx-client';
+import { KalturaDistributionValidationErrorInvalidData } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaDistributionValidationErrorType } from 'kaltura-ngx-client';
+import { KalturaDistributionValidationErrorMissingMetadata } from 'kaltura-ngx-client';
+import { KalturaDistributionValidationErrorMissingFlavor } from 'kaltura-ngx-client';
+import { KalturaDistributionValidationErrorMissingThumbnail } from 'kaltura-ngx-client';
+import { KalturaDistributionValidationErrorConditionNotMet } from 'kaltura-ngx-client';
 import { EntryDistributionWidget } from '../entry-distribution-widget.service';
 import { EntryStore } from '../../entry-store.service';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kEntryDistributedProfileErrorInfo',
@@ -134,7 +135,7 @@ export class DistributedProfileErrorInfoComponent implements OnDestroy {
        Add this Flavor.name to the list of flavor names.
     */
     this._widget.flavors$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({ items }) => {
         const details = errors.map(error => {
           const relevantFlavor = items.find(flavor => String(flavor.paramsId) === error.flavorParamsId);

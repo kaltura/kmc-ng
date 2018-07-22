@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanDeactivate } from '@angular/router';
 import { TranscodingProfileComponent } from './transcoding-profile.component';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class TranscodingProfileCanDeactivate implements CanDeactivate<TranscodingProfileComponent> {

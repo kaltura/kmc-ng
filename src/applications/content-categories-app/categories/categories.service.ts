@@ -1,20 +1,20 @@
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {KalturaCategoryFilter} from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
+import {KalturaCategoryFilter} from 'kaltura-ngx-client';
 import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
 
-import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import {CategoryListAction} from 'kaltura-ngx-client/api/types/CategoryListAction';
+import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
+import {KalturaFilterPager} from 'kaltura-ngx-client';
+import {KalturaResponseProfileType} from 'kaltura-ngx-client';
+import {CategoryListAction} from 'kaltura-ngx-client';
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
-import {CategoryDeleteAction} from 'kaltura-ngx-client/api/types/CategoryDeleteAction';
+import {KalturaCategoryListResponse} from 'kaltura-ngx-client';
+import {KalturaCategory} from 'kaltura-ngx-client';
+import {CategoryDeleteAction} from 'kaltura-ngx-client';
 import {
     DatesRangeAdapter,
     DatesRangeType,
@@ -24,25 +24,25 @@ import {
     NumberTypeAdapter,
     StringTypeAdapter,
     TypeAdaptersMapping
-} from '@kaltura-ng/mc-shared/filters';
+} from '@kaltura-ng/mc-shared';
 import {
     AppEventsService, MetadataProfileCreateModes, MetadataProfileStore,
     MetadataProfileTypes
 } from 'app-shared/kmc-shared';
-import {KalturaSearchOperator} from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
-import {KalturaSearchOperatorType} from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
+import {KalturaSearchOperator} from 'kaltura-ngx-client';
+import {KalturaSearchOperatorType} from 'kaltura-ngx-client';
 import {KalturaUtils} from '@kaltura-ng/kaltura-common';
-import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
-import {KalturaMetadataSearchItem} from 'kaltura-ngx-client/api/types/KalturaMetadataSearchItem';
-import {KalturaSearchCondition} from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
-import {CategoryMoveAction} from 'kaltura-ngx-client/api/types/CategoryMoveAction';
-import {CategoryAddAction} from 'kaltura-ngx-client/api/types/CategoryAddAction';
-import {KalturaInheritanceType} from 'kaltura-ngx-client/api/types/KalturaInheritanceType';
-import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
-import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
-import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
-import {KalturaCategoryEntry} from 'kaltura-ngx-client/api/types/KalturaCategoryEntry';
-import {CategoryEntryAddAction} from 'kaltura-ngx-client/api/types/CategoryEntryAddAction';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {KalturaMetadataSearchItem} from 'kaltura-ngx-client';
+import {KalturaSearchCondition} from 'kaltura-ngx-client';
+import {CategoryMoveAction} from 'kaltura-ngx-client';
+import {CategoryAddAction} from 'kaltura-ngx-client';
+import {KalturaInheritanceType} from 'kaltura-ngx-client';
+import {KalturaContributionPolicyType} from 'kaltura-ngx-client';
+import {KalturaAppearInListType} from 'kaltura-ngx-client';
+import {KalturaPrivacyType} from 'kaltura-ngx-client';
+import {KalturaCategoryEntry} from 'kaltura-ngx-client';
+import {CategoryEntryAddAction} from 'kaltura-ngx-client';
 
 import {
   CategoriesModeAdapter,
@@ -52,6 +52,7 @@ import {
 import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
 import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 import { ContentCategoriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -146,7 +147,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
                     type: MetadataProfileTypes.Category,
                     ignoredCreateMode: MetadataProfileCreateModes.App
                 })
-                .cancelOnDestroy(this)
+                .pipe(cancelOnDestroy(this))
                 .subscribe(
                     metadataProfiles => {
                         this._logger.info(`handle successful loading additional categories data`);
@@ -178,7 +179,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
 
     private _registerToFilterStoreDataChanges(): void {
         this.filtersChange$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(() => {
                 this._executeQuery();
             });
@@ -260,7 +261,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
         this._logger.info(`handle loading categories data`);
 
         this._querySubscription = this.buildQueryRequest()
-            .cancelOnDestroy(this).subscribe(
+            .pipe(cancelOnDestroy(this)).subscribe(
                 response => {
                     this._logger.info(`handle successful loading categories data`);
                     this._querySubscription = null;

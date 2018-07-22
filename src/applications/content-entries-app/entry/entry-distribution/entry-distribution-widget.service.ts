@@ -1,43 +1,44 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { EntryWidget } from '../entry-widget';
-import { Observable } from 'rxjs/Observable';
-import { DistributionProfileListAction } from 'kaltura-ngx-client/api/types/DistributionProfileListAction';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { EntryDistributionListAction } from 'kaltura-ngx-client/api/types/EntryDistributionListAction';
-import { KalturaEntryDistributionFilter } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionFilter';
-import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client/api/types/FlavorAssetGetFlavorAssetsWithParamsAction';
-import { ThumbAssetGetByEntryIdAction } from 'kaltura-ngx-client/api/types/ThumbAssetGetByEntryIdAction';
-import { KalturaDistributionProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileListResponse';
-import { KalturaDistributionProfileStatus } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileStatus';
-import { KalturaEntryDistributionListResponse } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionListResponse';
-import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionStatus';
-import { KalturaFlavorAssetWithParams } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetWithParams';
-import { KalturaLiveParams } from 'kaltura-ngx-client/api/types/KalturaLiveParams';
+import { Observable } from 'rxjs';
+import { DistributionProfileListAction } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { EntryDistributionListAction } from 'kaltura-ngx-client';
+import { KalturaEntryDistributionFilter } from 'kaltura-ngx-client';
+import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client';
+import { ThumbAssetGetByEntryIdAction } from 'kaltura-ngx-client';
+import { KalturaDistributionProfileListResponse } from 'kaltura-ngx-client';
+import { KalturaDistributionProfileStatus } from 'kaltura-ngx-client';
+import { KalturaEntryDistributionListResponse } from 'kaltura-ngx-client';
+import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client';
+import { KalturaFlavorAssetWithParams } from 'kaltura-ngx-client';
+import { KalturaLiveParams } from 'kaltura-ngx-client';
 import { Flavor } from '../entry-flavours/flavor';
-import { KalturaFlavorAssetStatus } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetStatus';
-import { KalturaWidevineFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaWidevineFlavorAsset';
-import { KalturaThumbAsset } from 'kaltura-ngx-client/api/types/KalturaThumbAsset';
-import { KalturaEntryDistribution } from 'kaltura-ngx-client/api/types/KalturaEntryDistribution';
-import { KalturaDistributionProfile } from 'kaltura-ngx-client/api/types/KalturaDistributionProfile';
+import { KalturaFlavorAssetStatus } from 'kaltura-ngx-client';
+import { KalturaWidevineFlavorAsset } from 'kaltura-ngx-client';
+import { KalturaThumbAsset } from 'kaltura-ngx-client';
+import { KalturaEntryDistribution } from 'kaltura-ngx-client';
+import { KalturaDistributionProfile } from 'kaltura-ngx-client';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { EntryDistributionSubmitDeleteAction } from 'kaltura-ngx-client/api/types/EntryDistributionSubmitDeleteAction';
-import { EntryDistributionDeleteAction } from 'kaltura-ngx-client/api/types/EntryDistributionDeleteAction';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
+import { EntryDistributionSubmitDeleteAction } from 'kaltura-ngx-client';
+import { EntryDistributionDeleteAction } from 'kaltura-ngx-client';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaRequest } from 'kaltura-ngx-client/api/kaltura-request';
-import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileActionStatus';
-import { FlavorParamsGetAction } from 'kaltura-ngx-client/api/types/FlavorParamsGetAction';
-import { EntryDistributionAddAction } from 'kaltura-ngx-client/api/types/EntryDistributionAddAction';
-import { EntryDistributionSubmitAddAction } from 'kaltura-ngx-client/api/types/EntryDistributionSubmitAddAction';
-import { EntryDistributionUpdateAction } from 'kaltura-ngx-client/api/types/EntryDistributionUpdateAction';
-import { EntryDistributionSubmitUpdateAction } from 'kaltura-ngx-client/api/types/EntryDistributionSubmitUpdateAction';
-import { EntryDistributionRetrySubmitAction } from 'kaltura-ngx-client/api/types/EntryDistributionRetrySubmitAction';
-import { KalturaDistributionProviderType } from 'kaltura-ngx-client/api/types/KalturaDistributionProviderType';
+import { KalturaRequest } from 'kaltura-ngx-client';
+import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client';
+import { FlavorParamsGetAction } from 'kaltura-ngx-client';
+import { EntryDistributionAddAction } from 'kaltura-ngx-client';
+import { EntryDistributionSubmitAddAction } from 'kaltura-ngx-client';
+import { EntryDistributionUpdateAction } from 'kaltura-ngx-client';
+import { EntryDistributionSubmitUpdateAction } from 'kaltura-ngx-client';
+import { EntryDistributionRetrySubmitAction } from 'kaltura-ngx-client';
+import { KalturaDistributionProviderType } from 'kaltura-ngx-client';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface ExtendedKalturaEntryDistribution extends KalturaEntryDistribution {
   name: string;
@@ -252,7 +253,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
         entryFlavorsListAction,
         entryThumbnailsListAction
       ))
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .map(response => {
         if (response.hasErrors()) {
           response.forEach(item => {
@@ -276,7 +277,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
             const autoDistribution = relevantPartnerProfile.submitEnabled === KalturaDistributionProfileActionStatus.automatic ||
               profile.status === KalturaEntryDistributionStatus.queued;
             const distributedProfile = <ExtendedKalturaEntryDistribution>Object.assign(
-              KalturaTypesFactory.createObject(profile),
+              KalturaObjectBaseFactory.createObject(profile),
               profile,
               {
                 autoDistribution,
@@ -300,8 +301,8 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
 
   private _performDeleteRequest(action: KalturaRequest<KalturaEntryDistribution | void>, closePopupCallback?: () => void): void {
     this._kalturaClient.request(action)
-      .tag('block-shell')
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(tag('block-shell'))
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .subscribe(
         () => {
           if (typeof closePopupCallback === 'function') {
@@ -527,8 +528,8 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
     }
 
     this._kalturaClient.multiRequest(new KalturaMultiRequest(...actions))
-      .cancelOnDestroy(this, this.widgetReset$)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
+      .pipe(tag('block-shell'))
       .map(responses => {
         responses.forEach(response => {
           if (response.error instanceof KalturaAPIException) {
@@ -564,8 +565,8 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       id: profile.id,
       entryDistribution: profile
     }))
-      .cancelOnDestroy(this, this.widgetReset$)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this.refresh();
@@ -590,8 +591,8 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
 
   public submitProfileUpdate(profileId: number): void {
     this._kalturaClient.request(new EntryDistributionSubmitUpdateAction({ id: profileId }))
-      .cancelOnDestroy(this, this.widgetReset$)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this.refresh();
@@ -616,8 +617,8 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
 
   public submitDistribution(profileId: number): void {
     this._kalturaClient.request(new EntryDistributionSubmitAddAction({ id: profileId }))
-      .cancelOnDestroy(this, this.widgetReset$)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this.refresh();
@@ -642,8 +643,8 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
 
   public retryDistribution(profileId: number): void {
     this._kalturaClient.request(new EntryDistributionRetrySubmitAction({ id: profileId }))
-      .cancelOnDestroy(this, this.widgetReset$)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this.refresh();
@@ -685,7 +686,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
     this._undistributedProfiles.next({ items: [] });
 
     this._loadDistributionData()
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .subscribe(
         (response) => {
           this._flavors.next({ items: response.flavors });

@@ -1,11 +1,11 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
 import {EntryRelatedWidget} from './entry-related-widget.service';
-import {KalturaAttachmentType} from 'kaltura-ngx-client/api/types/KalturaAttachmentType';
-import {KalturaAttachmentAsset} from 'kaltura-ngx-client/api/types/KalturaAttachmentAsset';
-import {KalturaEntryStatus} from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import {KalturaAttachmentType} from 'kaltura-ngx-client';
+import {KalturaAttachmentAsset} from 'kaltura-ngx-client';
+import {KalturaEntryStatus} from 'kaltura-ngx-client';
+import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {Menu, MenuItem, SelectItem} from 'primeng/primeng';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 

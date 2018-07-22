@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { Observable } from 'rxjs';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {Http} from '@angular/http';
 import {KalturaClient} from 'kaltura-ngx-client';
-import {KalturaPartnerStatistics} from 'kaltura-ngx-client/api/types/KalturaPartnerStatistics';
-import {PartnerGetStatisticsAction} from 'kaltura-ngx-client/api/types/PartnerGetStatisticsAction';
+import {KalturaPartnerStatistics} from 'kaltura-ngx-client';
+import {PartnerGetStatisticsAction} from 'kaltura-ngx-client';
 import { serverConfig } from 'config/server';
 
 

@@ -5,9 +5,9 @@ import {EntryClipsWidget} from './entry-clips-widget.service';
 import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
 import { ClipAndTrimAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { EntryStore } from '../entry-store.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/observable/merge';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
     selector: 'kEntryClips',
@@ -30,16 +30,22 @@ export class EntryClips implements OnInit, OnDestroy {
                 private _store: EntryStore) {
     }
 
-    _convertSortValue(value: boolean): number {
+    public _rowTrackBy(index: number, item: any): string {
+        return item.id;
+    }
+
+    public _convertSortValue(value: boolean): number {
         return value ? 1 : -1;
 
     }
 
     public _onSortChanged(event: any) {
-        this._widgetService.sortAsc = event.order === 1;
-        this._widgetService.sortBy = event.field;
+        if (event.field && event.order && (this._widgetService.sortOrder !== event.order || this._widgetService.sortBy !== event.field)) {
+            this._widgetService.sortOrder = event.order;
+            this._widgetService.sortBy = event.field;
 
-        this._widgetService.updateClips();
+            this._widgetService.updateClips();
+        }
     }
 
     public _onPaginationChanged(state: any): void {
@@ -57,7 +63,7 @@ export class EntryClips implements OnInit, OnDestroy {
             this._widgetService.data$,
             this._store.hasSource.value$
         )
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 () => {
                     if (this._widgetService.data) {

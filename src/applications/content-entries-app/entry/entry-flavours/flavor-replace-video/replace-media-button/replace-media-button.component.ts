@@ -1,10 +1,10 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { Flavor } from '../../flavor';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 export type UploadMenuType = 'upload' | 'import' | 'link' | 'match';
 
@@ -25,6 +25,7 @@ export class ReplaceMediaButtonComponent {
     public _uploadEnabled = false;
     public _importEnabled = false;
     public _linkEnabled = false;
+    public _matchEnabled = false;
 
     constructor(private _appLocalization: AppLocalization,
                 private _logger: KalturaLogger,
@@ -36,6 +37,9 @@ export class ReplaceMediaButtonComponent {
         this._linkEnabled = this._permissionsService.hasPermission(KMCPermissions.FEATURE_REMOTE_STORAGE_INGEST)
             && this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE)
             && this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_BASE);
+        this._matchEnabled = this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_DROP_FOLDER_MATCH)
+            && this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_BASE)
+            && this._permissionsService.hasPermission(KMCPermissions.DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_DELETE);
     }
 
     public _openReplacementMenu(type: UploadMenuType): void {

@@ -112,7 +112,7 @@
     </div>
 
     <!--Feed Owner Name-->
-    <div class="kRow">
+    <div class="kRow kMultiLine">
       <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.itunes.feedOwnerName.label' | translate}}</span>
       <div class="kAsterix" [ngClass]="{'kHasError':_feedOwnerNameField.touched && _feedOwnerNameField.invalid}">*</div>
       <div class="kControlContainer">
@@ -124,6 +124,11 @@
         <div class="kHint">
           {{'applications.content.syndication.details.destinationsForms.itunes.feedOwnerName.hint' | translate}}
         </div>
+          <div class="kEnforceFeedAuthor">
+              <p-checkbox [formControl]="_enforceFeedAuthorField"
+                          [label]="'applications.content.syndication.details.destinationsForms.itunes.enforceFeedAuthor' | translate"
+                          binary="true"></p-checkbox>
+          </div>
       </div>
     </div>
 

@@ -1,0 +1,116 @@
+<k-area-blocker [showLoader]="_isLoading" [message]="_blockerMessage">
+    <div class="kMatchDropFolder" [class.kMatchDropFolderFlavor]="flavor">
+        <div class="kHeader">
+            <h1>{{'applications.content.entryDetails.flavours.replaceVideo.matchFromDropFolder' | translate}}</h1>
+        </div>
+        <div class="kMatchDropFolderContent">
+            <div class="kMatchDropFolderControls">
+                <span class="kMatchDropFolderControlsLabel">
+                    {{'applications.content.entryDetails.flavours.replaceVideo.selectDropFolder' | translate}}
+                </span>
+                <p-dropdown class="kDropFoldersList"
+                            [options]="_dropFoldersListOptions"
+                            [autoWidth]="false"
+                            [disabled]="!_dropFoldersListOptions?.length"
+                            [placeholder]="'applications.content.entryDetails.flavours.replaceVideo.noDropFolders' | translate"
+                            (onChange)="_loadFolderData()"
+                            [(ngModel)]="_selectedDropFolder">
+                    <ng-template let-profile pTemplate="item">
+                        <span class="kDropFoldersListItem" [kTooltip]="profile.label">{{profile.label}}</span>
+                    </ng-template>
+                </p-dropdown>
+
+                <kClearableInput #dropFolderSearch
+                                 class="kDropFolderSearch"
+                                 [disabled]="!_dropFoldersListOptions.length"
+                                 [placeholder]="'applications.content.entryDetails.flavours.replaceVideo.searchFolder' | translate"
+                                 (onEnterKeyup)="_searchFolder($event)"
+                                 (onClear)="_clearFolderSearch()"></kClearableInput>
+
+                <button pButton class="kButtonDefault kRefreshBtn small"
+                        type="text" icon="kIconrefresh"
+                        [disabled]="!_dropFoldersListOptions.length"
+                        (click)="dropFolderSearch.clearValue();_loadFolderData()"></button>
+            </div>
+            <div *ngIf="!flavor" class="kMatchDropFolderReferenceId">
+                <span>{{'applications.content.entryDetails.flavours.replaceVideo.referenceId' | translate}}</span>&nbsp;
+                {{entry?.referenceId
+                ? entry?.referenceId
+                : ('applications.content.entryDetails.flavours.replaceVideo.na' | translate)}}
+            </div>
+            <div class="kMatchDropFolderTable">
+                <p-table dataKey="displayName"
+                         [scrollable]="true"
+                         scrollHeight="208px"
+                         [value]="_dropFolderFiles"
+                         [(selection)]="_selectedFile">
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th style="width: 45px; padding-left: 28px"></th>
+                            <th *ngIf="!flavor" style="width: 45px; padding-left: 16px"></th>
+                            <th>
+                                <span *ngIf="!flavor">
+                                    {{'applications.content.entryDetails.flavours.replaceVideo.mediaPackageName' | translate}}
+                                </span>
+                                <span *ngIf="flavor">
+                                    {{'applications.content.entryDetails.flavours.replaceVideo.mediaName' | translate}}
+                                </span>
+                            </th>
+                            <th style="width: 200px">
+                                {{'applications.content.entryDetails.flavours.replaceVideo.createdOn' | translate}}
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-file let-columns="columns" let-expanded="expanded">
+                        <tr [pSelectableRow]="file">
+                            <td style="width: 45px; padding-left: 28px">
+                                <p-tableRadioButton [value]="file"
+                                                    [class.kAvoidClick]="file.error"
+                                                    [disabled]="file.error"></p-tableRadioButton>
+                            </td>
+                            <td *ngIf="!flavor" style="width: 45px; padding-left: 16px">
+                                <a [pRowToggler]="file">
+                                    <i [ngClass]="expanded ? 'k-arrow-down' : 'k-arrow-right'"></i>
+                                </a>
+                            </td>
+                            <td class="kFileName">{{file?.displayName}}</td>
+                            <td class="kCreatedAt" style="width: 200px">{{file?.createdAt | kDate:'dateOnly'}}</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="rowexpansion" let-file let-columns="columns">
+                        <div class="kDropFolderFiles">
+                            <table>
+                                <tr *ngFor="let dff of file?.files">
+                                    <td style="width: 45px; padding-left: 28px"></td>
+                                    <td style="width: 45px; padding-left: 16px"></td>
+                                    <td style="padding-left: 3px">
+                                        <span class="kTableColumn" [kTooltip]="dff?.fileName">{{dff?.fileName}}</span>
+                                    </td>
+                                    <td style="width: 200px; padding-left: 8px">
+                                        {{dff?.createdAt | kDate:'dateOnly'}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <div class="emptymessage">{{'applications.content.table.noResults' | translate}}</div>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+        <div class="kFooter">
+            <button class="kButtonDefault kUploadButton" pButton
+                    [label]="'applications.content.entryDetails.flavours.replaceVideo.cancel' | translate"
+                    (click)="parentPopupWidget?.close()"></button>
+            <button *ngIf="!flavor" class="kButtonBranded kUploadButton" pButton
+                    [disabled]="!_setReferenceIdEnabled"
+                    [label]="'applications.content.entryDetails.flavours.replaceVideo.setReferenceId' | translate"
+                    (click)="_setReferenceId()"></button>
+            <button class="kButtonBranded kUploadButton" pButton
+                    [disabled]="!_addFilesEnabled"
+                    [label]="_addFilesBtnLabel"
+                    (click)="_addFiles()"></button>
+        </div>
+    </div>
+</k-area-blocker>

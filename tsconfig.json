@@ -31,9 +31,6 @@
       ],
       "app-shared/*": [
         "shared/*"
-      ],
-      "app-theme/*": [
-        "styles/app-theme/*"
       ]
     }
   }

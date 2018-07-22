@@ -1,8 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { KMCAppMenuItem } from 'app-shared/kmc-shared/kmc-views';
-import * as R from 'ramda';
 import { Router, NavigationEnd } from '@angular/router';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kKMCAppContentMenu',
@@ -25,7 +24,7 @@ export class AppMenuContentComponent implements OnChanges, OnDestroy {
                 ) {
 
         router.events
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 this.setSelectedRoute(event.urlAfterRedirects);

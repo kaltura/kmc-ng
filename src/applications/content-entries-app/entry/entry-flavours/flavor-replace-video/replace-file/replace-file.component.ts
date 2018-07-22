@@ -2,37 +2,40 @@ import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import { KalturaMediaType } from 'kaltura-ngx-client';
 import { NewEntryUploadFile } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { TranscodingProfileManagement } from 'app-shared/kmc-shared/transcoding-profile-management';
 import { globalConfig } from 'config/global';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { Flavor } from '../../flavor';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client/api/types/ConversionProfileAssetParamsListAction';
-import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsFilter';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaConversionProfileFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
-import { KalturaConversionProfileOrderBy } from 'kaltura-ngx-client/api/types/KalturaConversionProfileOrderBy';
-import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
-import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
-import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
-import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client/api/types/KalturaAssetParamsOrigin';
-import { Observable } from 'rxjs/Observable';
-import { KalturaFlavorReadyBehaviorType } from 'kaltura-ngx-client/api/types/KalturaFlavorReadyBehaviorType';
-import { urlRegex } from '@kaltura-ng/kaltura-ui/validators/validators';
+import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client';
+import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaConversionProfileFilter } from 'kaltura-ngx-client';
+import { KalturaConversionProfileOrderBy } from 'kaltura-ngx-client';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
+import { KalturaConversionProfile } from 'kaltura-ngx-client';
+import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client';
+import { KalturaAssetParamsOrigin } from 'kaltura-ngx-client';
+import { Observable } from 'rxjs';
+import { KalturaFlavorReadyBehaviorType } from 'kaltura-ngx-client';
+import { urlRegex } from '@kaltura-ng/kaltura-ui';
 import { NewReplaceVideoUploadService } from 'app-shared/kmc-shell/new-replace-video-upload';
 import { EntryFlavoursWidget } from '../../entry-flavours-widget.service';
 import { UploadMenuType } from '../replace-media-button/replace-media-button.component';
-import { StorageProfileListAction } from 'kaltura-ngx-client/api/types/StorageProfileListAction';
-import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { StorageProfileListAction } from 'kaltura-ngx-client';
+import { KalturaStorageProfile } from 'kaltura-ngx-client';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { Observer } from 'rxjs/Observer';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { switchMap, map } from 'rxjs/operators';
+import { of as ObservableOf} from 'rxjs';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface KalturaTranscodingProfileWithAsset extends Partial<KalturaConversionProfile> {
     assets: KalturaConversionProfileAssetParams[];
@@ -137,7 +140,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit(): void {
         this._addFile();
-        this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-datatable-scrollable-body');
+        this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-table-scrollable-body');
     }
 
     private _buildForm(): void {
@@ -209,9 +212,9 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
         this._isLoading = true;
 
         this._transcodingProfileManagement.get()
-            .switchMap(
-                () => this._loadConversionProfiles(),
-                (transcodingProfiles, assets) => {
+            .pipe(switchMap(
+                (transcodingProfiles) => this._loadConversionProfiles().pipe(
+                map(( assets) => {
                     return transcodingProfiles.map(profile => {
                         return {
                             id: profile.id,
@@ -223,19 +226,24 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                             })
                         };
                     });
-                }
-            ).switchMap(
-            () => {
-                if (this.replaceType === 'link') {
-                    this._logger.debug(`link replace type detected, load storage profiles list`);
-                    return this._kalturaClient
-                        .request(new StorageProfileListAction())
-                        .map(response => response.objects);
-                }
+                })
+            )
+            ),switchMap(
+                (profilesWithAssets) => {
+                    let result;
+                    if (this.replaceType === 'link') {
+                        this._logger.debug(`link replace type detected, load storage profiles list`);
+                        result = this._kalturaClient
+                            .request(new StorageProfileListAction())
+                            .map(response => response.objects);
+                    }else {
+                        result = ObservableOf(null);
+                    }
 
-                return Observable.of(null);
-            },
-            (profilesWithAssets, storageProfiles) => ({ profilesWithAssets, storageProfiles }))
+                    return result.pipe(
+                map(( storageProfiles) => ({ profilesWithAssets, storageProfiles })));
+                })
+            )
             .subscribe(
                 ({ profilesWithAssets, storageProfiles }) => {
                     this._logger.info(`handle successful loading of replacement data`);
@@ -355,6 +363,8 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                 .filter((flavor) => assetParamsIds.indexOf(flavor.paramsId) !== -1)
                 .map(({ name: label, paramsId: value }) => ({ label, value }));
 
+            this._files.forEach(file => file.flavor = null);
+
             if (!this._flavorOptions.length) {
                 this._setNoFlavorsOption();
             }
@@ -455,8 +465,8 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             storageProfileId: this._selectedStorageProfile.id
         });
         this._newReplaceVideoUpload.link(linkFileDataList, this.entry.id, Number(transcodingProfileId), this._selectedStorageProfile.id)
-            .cancelOnDestroy(this)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this))
+            .pipe(tag('block-shell'))
             .subscribe(this._replacementResultHandler);
     }
 
@@ -472,8 +482,8 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
             transcodingProfileId: Number(transcodingProfileId)
         });
         this._newReplaceVideoUpload.import(importFileDataList, this.entry.id, Number(transcodingProfileId))
-            .cancelOnDestroy(this)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this))
+            .pipe(tag('block-shell'))
             .subscribe(this._replacementResultHandler);
     }
 
@@ -490,8 +500,8 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
         });
 
         this._newReplaceVideoUpload.upload(uploadFileDataList, this.entry.id, Number(transcodingProfileId))
-            .cancelOnDestroy(this)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this))
+            .pipe(tag('block-shell'))
             .filter(entryId => entryId === this.entry.id)
             .map(() => {})
             .subscribe(this._replacementResultHandler);
@@ -536,7 +546,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             }
 
-            if (filesFlavors.indexOf(file.flavor) !== index) {
+            if (file.errorToken !== 'applications.upload.validation.selectFlavor' && filesFlavors.indexOf(file.flavor) !== index) {
                 isValid = false;
                 code = 'uniqueFlavors';
             }

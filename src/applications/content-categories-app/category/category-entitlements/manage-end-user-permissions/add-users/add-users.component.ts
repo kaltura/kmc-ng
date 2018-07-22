@@ -1,17 +1,18 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs/Subject';
-import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
-import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
-import {KalturaInheritanceType} from 'kaltura-ngx-client/api/types/KalturaInheritanceType';
-import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
-import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {KalturaCategory} from 'kaltura-ngx-client';
+import {KalturaUser} from 'kaltura-ngx-client';
+import {KalturaInheritanceType} from 'kaltura-ngx-client';
+import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client';
+import {KalturaUpdateMethodType} from 'kaltura-ngx-client';
 import {AddUsersService} from './add-users.service';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kAddUsers',
@@ -50,6 +51,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   constructor( private _appLocalization: AppLocalization,
                private _addUsersService: AddUsersService,
                private _logger: KalturaLogger) {
+      this._convertUserInputToValidValue = this._convertUserInputToValidValue.bind(this);
   }
 
   ngOnInit() {
@@ -92,12 +94,13 @@ export class AddUsersComponent implements OnInit, OnDestroy {
     }
 
     this._searchUsersSubscription = this._addUsersService.getUsersSuggestions(event.query)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         data => {
             this._logger.info(`handle successful search users action by user`);
           const suggestions = [];
           (data.objects || []).forEach((suggestedUser: KalturaUser) => {
+              suggestedUser['__tooltip'] = suggestedUser.id;
             suggestions.push({
               name: suggestedUser.screenName + '(' + suggestedUser.id + ')',
               item: suggestedUser,
@@ -115,14 +118,15 @@ export class AddUsersComponent implements OnInit, OnDestroy {
 
   public _convertUserInputToValidValue(value: string): KalturaUser {
     let result = null;
+    const tooltip = this._appLocalization.get('applications.content.bulkActions.userTooltip', {0: value});
 
     if (value) {
-      result = new KalturaUser(
-        {
-          id: value,
-          screenName: value
-        }
-      );
+        result = {
+            id: value,
+            screenName: value,
+            __tooltip: tooltip,
+            __class: 'userAdded'
+        };
     }
     return result;
   }
@@ -146,8 +150,8 @@ export class AddUsersComponent implements OnInit, OnDestroy {
             permissionLevel: this._selectedPermissionLevel,
             updateMethod: this._selectedUpdateMethod
           })
-        .tag('block-shell')
-        .cancelOnDestroy(this)
+        .pipe(tag('block-shell'))
+        .pipe(cancelOnDestroy(this))
         .subscribe(
           result => {
               this._logger.info(`handle successful add users action`);
@@ -199,8 +203,8 @@ export class AddUsersComponent implements OnInit, OnDestroy {
     const _executeCopyUsers = () => {
       this._addUsersService
         .copyUsersFromParent({categoryId: this.category.id})
-        .tag('block-shell')
-        .cancelOnDestroy(this)
+        .pipe(tag('block-shell'))
+        .pipe(cancelOnDestroy(this))
         .subscribe(
           result => {
               this._logger.info(`handle successful copy users from parent action by user`);

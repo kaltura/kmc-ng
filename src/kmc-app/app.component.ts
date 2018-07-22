@@ -8,7 +8,7 @@ import { async } from 'rxjs/scheduler/async';
 
 import { OpenEmailEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { EmailConfig } from './components/open-email/open-email.component';
 /*
  * App Component

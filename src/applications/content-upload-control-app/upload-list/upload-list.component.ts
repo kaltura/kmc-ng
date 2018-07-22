@@ -2,13 +2,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService, NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import { TrackedFileData } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaMediaType } from 'kaltura-ngx-client';
+import { TrackedFileData } from '@kaltura-ng/kaltura-common';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 import { KalturaUploadFile } from 'app-shared/kmc-shared';
 import { ContentUploadsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { NewReplaceVideoUploadFile } from 'app-shared/kmc-shell/new-replace-video-upload/new-replace-video-upload-file';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 type MonitoredUploadFile = NewEntryUploadFile | NewEntryFlavourFile;
 
@@ -59,7 +60,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
       // listen for mediaCreated to show entryId in the upload list once media is created for this upload
       this._newEntryUploadService.onMediaCreated$
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(
               file => {
                   this._updateFile(file.id, {entryId: file.entryId});
@@ -67,7 +68,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
           );
 
       this._uploadManagement.onTrackedFileChanged$
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .filter(trackedFile => isMonitoredUploadFile(trackedFile.data))
           .subscribe(
               (trackedFile) => {

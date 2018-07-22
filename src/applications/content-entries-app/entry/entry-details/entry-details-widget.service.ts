@@ -5,8 +5,8 @@ import {
 import { KalturaClient } from 'kaltura-ngx-client';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { subApplicationsConfig } from 'config/sub-applications';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaSourceType } from 'kaltura-ngx-client';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 @Injectable()

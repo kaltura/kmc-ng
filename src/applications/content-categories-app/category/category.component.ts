@@ -6,8 +6,8 @@ import {CategorySectionsListWidget} from './category-sections-list/category-sect
 import {CategoriesService} from '../categories/categories.service';
 import {CategoryWidgetsManager} from './category-widgets-manager';
 import {AreaBlockerMessage, AreaBlockerMessageButton} from '@kaltura-ng/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import {Observable} from 'rxjs/Observable';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { Observable } from 'rxjs';
 import {CategoryEntitlementsWidget} from './category-entitlements/category-entitlements-widget.service';
 import {CategorySubcategoriesWidget} from './category-subcategories/category-subcategories-widget.service';
 import {CategoryDetailsWidget} from "./category-details/category-details-widget.service";
@@ -17,9 +17,9 @@ import {
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kCategory',
@@ -74,7 +74,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
     this._showLoader = true;
 
     this._categoriesStatusMonitorService.status$
-	    .cancelOnDestroy(this)
+	    .pipe(cancelOnDestroy(this))
 	    .first()
 	    .subscribe((status: CategoriesStatus) => {
           if (status.lock){
@@ -93,7 +93,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
   private _prepare(): void{
       this._categoryStore.notifications$
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(
               ({ type, error }) => {
                   switch(type) {
@@ -114,7 +114,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
               });
 
     this._categoryStore.state$
-	    .cancelOnDestroy(this)
+	    .pipe(cancelOnDestroy(this))
 	    .subscribe(
             status => {
               this._showLoader = false;

@@ -1,6 +1,6 @@
 import { serverConfig, ServerConfig } from './server-config';
 import {globalConfig} from './global-config';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {environment} from 'environments/environment';
 import * as Ajv from 'ajv';
 import { ServerConfigSchema } from './server-config-schema';

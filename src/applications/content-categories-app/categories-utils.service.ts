@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import {Observable} from 'rxjs/Observable';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { Observable } from 'rxjs';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import {KalturaCategory} from 'kaltura-ngx-client';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class CategoriesUtilsService {

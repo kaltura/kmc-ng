@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { KalturaBatchJobStatus } from 'kaltura-ngx-client/api/types/KalturaBatchJobStatus';
+import { KalturaBatchJobStatus } from 'kaltura-ngx-client';
 
 @Pipe({ name: 'kBulkLogTableStatusIcon' })
 export class BulkLogStatusIconPipe implements PipeTransform {

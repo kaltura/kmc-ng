@@ -1,25 +1,30 @@
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component, ElementRef,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
 } from '@angular/core';
 import {Menu, MenuItem} from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeed';
-import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client';
+import {KalturaPlaylist} from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissionsService, KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kFeedsTable',
   templateUrl: './feeds-table.component.html',
-  styleUrls: ['./feeds-table.component.scss']
+  styleUrls: ['./feeds-table.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'syndication-table' }
+    ]
 })
 export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
@@ -71,8 +76,10 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _items: MenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
-  constructor(private _appLocalization: AppLocalization,
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
+              private _el: ElementRef<HTMLElement>,
               private _cdRef: ChangeDetectorRef) {
     this._fillCopyToClipboardTooltips();
   }
@@ -94,6 +101,8 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
         this._deferredFeeds = null;
       }, 0);
     }
+
+      this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;

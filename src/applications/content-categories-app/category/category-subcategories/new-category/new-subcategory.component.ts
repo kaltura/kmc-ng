@@ -1,10 +1,11 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import {KalturaCategory} from 'kaltura-ngx-client';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {CategoriesService} from '../../../categories/categories.service';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kNewSubcategory',
@@ -72,8 +73,8 @@ export class NewSubcategoryComponent implements OnInit, OnDestroy {
       });
     } else {
       this._categoriesService.addNewCategory({categoryParentId: categoryParentId, name: categoryName})
-        .cancelOnDestroy(this)
-        .tag('block-shell')
+        .pipe(cancelOnDestroy(this))
+        .pipe(tag('block-shell'))
         .subscribe(({category}: {category: KalturaCategory}) => {
             this.onSubCategoryAdded.emit({category});
             if (this.parentPopupWidget) {

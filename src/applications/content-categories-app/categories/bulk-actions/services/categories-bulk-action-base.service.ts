@@ -1,9 +1,9 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { subApplicationsConfig } from 'config/sub-applications';
 
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaRequest, KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-ngx-client';
-import { KalturaCategory } from "kaltura-ngx-client/api/types/KalturaCategory";
+import { KalturaCategory } from 'kaltura-ngx-client';
 
 
 export abstract class CategoriesBulkActionBaseService<T> {

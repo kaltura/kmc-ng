@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {KalturaMediaType} from 'kaltura-ngx-client';
 import {PrepareEntryComponent} from '../prepare-entry/prepare-entry.component';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 

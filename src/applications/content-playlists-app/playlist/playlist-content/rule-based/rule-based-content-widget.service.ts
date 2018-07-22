@@ -1,19 +1,21 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { PlaylistWidget } from '../../playlist-widget';
-import { Observable } from 'rxjs/Observable';
-import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
+import { Observable } from 'rxjs';
+import { FriendlyHashId } from '@kaltura-ng/kaltura-common';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
-import { PlaylistExecuteFromFiltersAction } from 'kaltura-ngx-client/api/types/PlaylistExecuteFromFiltersAction';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
-import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KalturaPlaylist } from 'kaltura-ngx-client';
+import { PlaylistExecuteFromFiltersAction } from 'kaltura-ngx-client';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client';
+import { KalturaPlaylistType } from 'kaltura-ngx-client';
+import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { PlaylistRule } from './playlist-rule/playlist-rule.interface';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+
 @Injectable()
 export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy {
   private _selectionIdGenerator = new FriendlyHashId();
@@ -77,7 +79,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     });
 
     return this._kalturaClient.multiRequest(rules)
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .map(responses => {
         const responseIncomplete = !Array.isArray(responses)
           || responses.some(response => !!response.error || !Array.isArray(response.result));

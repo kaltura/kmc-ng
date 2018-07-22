@@ -1,21 +1,22 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, Input, Output, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
 
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { PreviewEmbedService } from './preview-and-embed.service';
 
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaUiConfListResponse } from 'kaltura-ngx-client/api/types/KalturaUiConfListResponse';
-import { KalturaUiConf } from 'kaltura-ngx-client/api/types/KalturaUiConf';
-import { KalturaShortLink } from 'kaltura-ngx-client/api/types/KalturaShortLink';
-import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
+import { KalturaPlaylist } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaUiConfListResponse } from 'kaltura-ngx-client';
+import { KalturaUiConf } from 'kaltura-ngx-client';
+import { KalturaShortLink } from 'kaltura-ngx-client';
+import { KalturaSourceType } from 'kaltura-ngx-client';
 import { serverConfig } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kPreviewEmbedDetails',
@@ -79,7 +80,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   ngAfterViewInit(){
-    this._previewForm.valueChanges.cancelOnDestroy(this).subscribe(() => {
+    this._previewForm.valueChanges.pipe(cancelOnDestroy(this)).subscribe(() => {
       this._browserService.setInLocalStorage('previewEmbed.embedType', this._previewForm.controls['selectedEmbedType'].value);
       this._browserService.setInLocalStorage('previewEmbed.seo', this._previewForm.controls['seo'].value);
       this._browserService.setInLocalStorage('previewEmbed.secured', this._previewForm.controls['secured'].value);
@@ -96,7 +97,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     this._isBusy = true;
     this._blockerMessage = null;
 
-    this._previewEmbedService.listPlayers(isPlaylist).cancelOnDestroy(this).subscribe(
+    this._previewEmbedService.listPlayers(isPlaylist).pipe(cancelOnDestroy(this)).subscribe(
         (res: KalturaUiConfListResponse) => {
           // create players array from returned UICong list
           res.objects.forEach(uiConf => {
@@ -303,7 +304,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       }
 
       // create short link
-      this._previewEmbedService.generateShortLink(url).cancelOnDestroy(this).subscribe(
+      this._previewEmbedService.generateShortLink(url).pipe(cancelOnDestroy(this)).subscribe(
           (res: KalturaShortLink) => {
             this._shortLink = 'http://' + serverConfig.kalturaServer.uri + '/tiny/' + res.id;
           },

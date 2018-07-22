@@ -60,3 +60,6 @@ i.kUploadMonitorToggler.kDisabled {
         top: 11px;
     }
 }
+.uploadMonitorPopup /deep/ .kPopupWidget{
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .24);
+}

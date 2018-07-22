@@ -1,10 +1,10 @@
-import { KalturaBulkUploadObjectType } from 'kaltura-ngx-client/api/types/KalturaBulkUploadObjectType';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { KalturaBulkUploadFilter } from 'kaltura-ngx-client/api/types/KalturaBulkUploadFilter';
-import { BulkListAction } from 'kaltura-ngx-client/api/types/BulkListAction';
+import { KalturaBulkUploadObjectType } from 'kaltura-ngx-client';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client';
+import { KalturaBulkUploadFilter } from 'kaltura-ngx-client';
+import { BulkListAction } from 'kaltura-ngx-client';
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
-import { KalturaBulkUploadListResponse } from 'kaltura-ngx-client/api/types/KalturaBulkUploadListResponse';
+import { KalturaBulkUploadListResponse } from 'kaltura-ngx-client';
 
 export class BulkUploadRequestFactory implements RequestFactory<BulkListAction, KalturaBulkUploadListResponse> {
 

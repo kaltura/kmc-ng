@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import {KalturaMediaType} from 'kaltura-ngx-client';
 import { ActionTypes, EntryStore, NotificationTypes } from './entry-store.service';
 import {EntrySectionsListWidget} from './entry-sections-list/entry-sections-list-widget.service';
 import {EntryMetadataWidget} from './entry-metadata/entry-metadata-widget.service';
@@ -17,13 +17,14 @@ import {EntrySchedulingWidget} from './entry-scheduling/entry-scheduling-widget.
 import {EntryUsersWidget} from './entry-users/entry-users-widget.service';
 import {EntryWidgetsManager} from './entry-widgets-manager';
 import {AreaBlockerMessage, AreaBlockerMessageButton} from '@kaltura-ng/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import {Observable} from 'rxjs/Observable';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { Observable } from 'rxjs';
 import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import {EntryDistributionWidget} from './entry-distribution/entry-distribution-widget.service';
 import {EntryAdvertisementsWidget} from './entry-advertisements/entry-advertisements-widget.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
 	selector: 'kEntry',
@@ -128,7 +129,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 
 	    this._entryStore.notifications$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 ({ type, error }) => {
                     switch(type) {
@@ -149,7 +150,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                 });
 
 		this._entryStore.state$
-			.cancelOnDestroy(this)
+			.pipe(cancelOnDestroy(this))
 			.subscribe(
 				status => {
 

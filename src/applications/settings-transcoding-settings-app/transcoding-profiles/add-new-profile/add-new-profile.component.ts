@@ -1,19 +1,20 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
-import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
-import { Observable } from 'rxjs/Observable';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
+import { KalturaStorageProfile } from 'kaltura-ngx-client';
+import { Observable } from 'rxjs';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
-import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
+import { BaseEntryGetAction } from 'kaltura-ngx-client';
 import { KalturaAPIException, KalturaClient } from 'kaltura-ngx-client';
 import { CreateNewTranscodingProfileEvent } from 'app-shared/kmc-shared/events/transcoding-profile-creation';
-import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
+import { KalturaConversionProfile } from 'kaltura-ngx-client';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface NewTranscodingProfileFormData {
   name: string;
@@ -75,7 +76,7 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
     if (!this._hideIngestFromRemoteStorage) {
       this._dataLoading = true;
       this._loadRemoteStorageProfiles()
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .map(profiles => profiles.map(profile => ({ label: profile.name, value: profile.id })))
         .subscribe(
           profiles => {
@@ -163,7 +164,7 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
       if (entryId) {
         this._dataLoading = true;
         this._validateEntryExists(entryId)
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(
             exists => {
               this._dataLoading = false;

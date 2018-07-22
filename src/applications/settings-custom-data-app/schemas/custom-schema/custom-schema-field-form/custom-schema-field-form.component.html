@@ -25,6 +25,9 @@
       <span class="kLabel">{{'applications.settings.metadata.fieldForm.includeTime' | translate}}</span>
       <div>
         <p-inputSwitch [formControl]="_includeTimeField"></p-inputSwitch>
+        <span class="kInputSwitchLabel">
+            {{_includeTimeField.value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}
+        </span>
       </div>
     </div>
 
@@ -81,6 +84,9 @@
       <span class="kLabel">{{'applications.settings.metadata.fieldForm.searchable' | translate}}</span>
       <div>
         <p-inputSwitch [formControl]="_searchableField"></p-inputSwitch>
+        <span class="kInputSwitchLabel">
+            {{_searchableField.value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}
+        </span>
       </div>
     </div>
   </form>

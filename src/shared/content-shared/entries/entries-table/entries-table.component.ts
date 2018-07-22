@@ -1,25 +1,25 @@
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component, ElementRef,
+    EventEmitter, HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
 } from '@angular/core';
-import { DataTable, Menu, MenuItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
-import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import { Menu, MenuItem } from 'primeng/primeng';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaMediaType } from 'kaltura-ngx-client';
+import { KalturaEntryStatus } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaSourceType } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { ColumnsResizeManagerService } from 'app-shared/kmc-shared/columns-resize-manager';
 
 export interface EntriesTableColumns {
   [key: string]: {
@@ -32,6 +32,11 @@ export interface EntriesTableColumns {
 export interface CustomMenuItem extends MenuItem {
   metadata: any;
   commandName: string;
+}
+
+export interface EntriesTableColumnStyle {
+    'width': string;
+    'text-align': string;
 }
 
 @Component({
@@ -47,9 +52,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._columns = value || this._defaultColumns;
   }
 
-  public _columnsMetadata: {
-    [key: string]: { style: SafeStyle, sortable: boolean }
-  } = {};
+  public _columnsMetadata: { [key: string]: { style: EntriesTableColumnStyle, sortable: boolean } } = {};
 
   @Input() rowActions: { label: string, commandName: string, styleClass: string }[] = [];
 
@@ -59,9 +62,9 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
       // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
       // (ie when returning from entry page) - we should force detect changes on an empty list
       this._entries = [];
-      this.cdRef.detectChanges();
+      this._cdRef.detectChanges();
       this._entries = data;
-      this.cdRef.detectChanges();
+      this._cdRef.detectChanges();
     } else {
       this._deferredEntries = data;
     }
@@ -77,18 +80,16 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Output() actionSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
   @Output() selectedEntriesChange = new EventEmitter<any>();
 
-  @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
   private _deferredEntries: any[];
   private _defaultColumns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
     name: { sortable: true },
-    id: { width: '100px' }
+    id: { width: '120px' }
   };
 
   public _columns?: EntriesTableColumns = this._defaultColumns;
-
 
   public _entries: any[] = [];
   private _deferredLoading = true;
@@ -96,14 +97,15 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _items: CustomMenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
-  constructor(private appLocalization: AppLocalization,
-              private cdRef: ChangeDetectorRef,
-              private _permissionsService: KMCPermissionsService,
-              private sanitization: DomSanitizer) {
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private _appLocalization: AppLocalization,
+              private _cdRef: ChangeDetectorRef,
+              private _el: ElementRef<HTMLElement>,
+              private _permissionsService: KMCPermissionsService) {
   }
 
   ngOnInit() {
-    this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
+    this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
 
     Object.keys(this._columns).forEach(columnName => {
       this._columnsMetadata[columnName] = {
@@ -125,9 +127,11 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
         this._deferredLoading = false;
         this._entries = this._deferredEntries;
         this._deferredEntries = null;
-        this.cdRef.detectChanges();
+        this._cdRef.detectChanges();
       }, 0);
     }
+
+    this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   private _hideMenuItems(source: KalturaSourceType,
@@ -201,7 +205,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this.selectedEntriesChange.emit(event);
   }
 
-  public _getColumnStyle({ width = 'auto', align = 'left' } = {}): { 'width': string, 'text-align': string } {
+  public _getColumnStyle({ width = 'auto', align = 'left' } = {}): EntriesTableColumnStyle {
       return {
           'width': width,
           'text-align': align

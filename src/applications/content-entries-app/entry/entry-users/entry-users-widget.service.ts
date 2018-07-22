@@ -2,14 +2,14 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
-import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
-import { UserGetAction } from 'kaltura-ngx-client/api/types/UserGetAction';
-import { UserListAction } from 'kaltura-ngx-client/api/types/UserListAction';
-import { KalturaUserFilter } from 'kaltura-ngx-client/api/types/KalturaUserFilter';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaUser } from 'kaltura-ngx-client';
+import { UserGetAction } from 'kaltura-ngx-client';
+import { UserListAction } from 'kaltura-ngx-client';
+import { KalturaUserFilter } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 
 import 'rxjs/add/observable/forkJoin';
 import { EntryWidget } from '../entry-widget';
@@ -17,6 +17,7 @@ import { async } from 'rxjs/scheduler/async';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class EntryUsersWidget extends EntryWidget implements OnDestroy
@@ -45,7 +46,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 		Observable.merge(this.usersForm.valueChanges,
 			this.usersForm.statusChanges)
             .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
 				() => {
 					super.updateState({
@@ -117,7 +118,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
         new UserGetAction({ userId: this.data.creatorId }),
         new UserGetAction({ userId: this.data.userId })
       ))
-        .cancelOnDestroy(this, this.widgetReset$)
+        .pipe(cancelOnDestroy(this, this.widgetReset$))
         .map(([creatorResponse, ownerResponse]) => {
           if (creatorResponse.error || (ownerResponse.error && ownerResponse.error.code !== 'INVALID_USER_ID')) {
             throw new Error('failed to fetch users data');
@@ -138,7 +139,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 		    });
 
 		    const fetchEditorsData$ = this._kalturaServerClient.multiRequest(request)
-			    .cancelOnDestroy(this, this.widgetReset$)
+			    .pipe(cancelOnDestroy(this, this.widgetReset$))
 			    .map(
 				    responses =>
 				    {
@@ -169,7 +170,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 		    });
 
 		    const fetchPublishersData$ = this._kalturaServerClient.multiRequest(request)
-			    .cancelOnDestroy(this, this.widgetReset$)
+			    .pipe(cancelOnDestroy(this, this.widgetReset$))
 			    .map(
 				    responses =>
 				    {
@@ -224,7 +225,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 						}
 					)
 				)
-				.cancelOnDestroy(this, this.widgetReset$)
+				.pipe(cancelOnDestroy(this, this.widgetReset$))
 				.subscribe(
 					result =>
 					{

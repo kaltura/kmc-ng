@@ -1,14 +1,15 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {KalturaUiConf} from 'kaltura-ngx-client/api/types/KalturaUiConf';
-import {KalturaFlavorParams} from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
-import {KalturaGoogleVideoSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaGoogleVideoSyndicationFeed';
+import {KalturaUiConf} from 'kaltura-ngx-client';
+import {KalturaFlavorParams} from 'kaltura-ngx-client';
+import {KalturaGoogleVideoSyndicationFeed} from 'kaltura-ngx-client';
 import {AppAuthentication} from 'app-shared/kmc-shell';
-import {KalturaGoogleSyndicationFeedAdultValues} from 'kaltura-ngx-client/api/types/KalturaGoogleSyndicationFeedAdultValues';
+import {KalturaGoogleSyndicationFeedAdultValues} from 'kaltura-ngx-client';
 import { DestinationComponentBase, FeedFormMode } from '../../feed-details.component';
 import {KalturaValidators} from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kGoogleDestinationForm',
@@ -62,7 +63,7 @@ export class GoogleDestinationFormComponent extends DestinationComponentBase imp
       });
 
       this._form.valueChanges
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe(
           () => {
             this.onFormStateChanged.emit({

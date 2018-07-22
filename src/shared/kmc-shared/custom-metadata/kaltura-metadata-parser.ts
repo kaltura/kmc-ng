@@ -5,11 +5,11 @@ import {
 import { KalturaUtils, XmlParser } from '@kaltura-ng/kaltura-common';
 
 
-import { KalturaMetadataProfile } from 'kaltura-ngx-client/api/types/KalturaMetadataProfile';
+import { KalturaMetadataProfile } from 'kaltura-ngx-client';
 
 import {
 	KalturaMetadataProfileStatus
-} from 'kaltura-ngx-client/api/types/KalturaMetadataProfileStatus'
+} from 'kaltura-ngx-client';
 
 
 export class MetadataProfileParser {

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { KalturaPlaylist } from 'kaltura-ngx-client';
 import { PlaylistDetailsWidget } from './playlist-details-widget.service';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kPlaylistDetails',
@@ -17,7 +18,7 @@ export class PlaylistDetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._widgetService.attachForm();
     this._widgetService.data$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .filter(Boolean)
       .subscribe(data => {
         this._currentPlaylist = data;

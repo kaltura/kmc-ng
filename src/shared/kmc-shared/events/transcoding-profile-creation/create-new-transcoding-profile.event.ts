@@ -1,5 +1,5 @@
 import { AppEvent } from 'shared/kmc-shared/app-events/app-event';
-import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
+import { KalturaConversionProfile } from 'kaltura-ngx-client';
 
 export interface CreateNewTranscodingProfileEventArgs {
   profile: KalturaConversionProfile;

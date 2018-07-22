@@ -1,15 +1,29 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component, ElementRef,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    Output,
+    ViewChild
+} from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { SchemasStore } from '../schemas-store/schemas-store.service';
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kSchemasTable',
   templateUrl: './schemas-table.component.html',
-  styleUrls: ['./schemas-table.component.scss']
+  styleUrls: ['./schemas-table.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'customdata-table' }
+    ]
 })
 export class SchemasTableComponent implements AfterViewInit, OnDestroy {
   @Input() set schemas(data: SettingsMetadataProfile[]) {
@@ -40,10 +54,12 @@ export class SchemasTableComponent implements AfterViewInit, OnDestroy {
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
-  constructor(private _appLocalization: AppLocalization,
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
               public _schemasStore: SchemasStore,
-              private _cdRef: ChangeDetectorRef) {
+              private _cdRef: ChangeDetectorRef,
+              private _el: ElementRef<HTMLElement>) {
   }
 
   ngAfterViewInit() {
@@ -56,6 +72,8 @@ export class SchemasTableComponent implements AfterViewInit, OnDestroy {
         this._deferredSchemas = null;
       }, 0);
     }
+
+      this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   ngOnDestroy() {

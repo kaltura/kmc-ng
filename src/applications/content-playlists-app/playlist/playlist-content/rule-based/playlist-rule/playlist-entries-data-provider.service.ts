@@ -1,29 +1,29 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
-import { Observable } from 'rxjs/Observable';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaMetadataSearchItem } from 'kaltura-ngx-client/api/types/KalturaMetadataSearchItem';
-import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
-import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
-import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
-import { KalturaSearchCondition } from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
-import { KalturaContentDistributionSearchItem } from 'kaltura-ngx-client/api/types/KalturaContentDistributionSearchItem';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { KalturaMediaEntryFilter } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
-import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
+import { KalturaBaseEntry } from 'kaltura-ngx-client';
+import { Observable } from 'rxjs';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
+import { KalturaMetadataSearchItem } from 'kaltura-ngx-client';
+import { KalturaNullableBoolean } from 'kaltura-ngx-client';
+import { KalturaSearchOperatorType } from 'kaltura-ngx-client';
+import { KalturaSearchOperator } from 'kaltura-ngx-client';
+import { KalturaSearchCondition } from 'kaltura-ngx-client';
+import { KalturaContentDistributionSearchItem } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client';
+import { KalturaMediaEntryFilter } from 'kaltura-ngx-client';
+import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { KalturaClient } from 'kaltura-ngx-client';
 import {
   EntriesDataProvider, EntriesFilters, MetadataProfileData,
   SortDirection
 } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import { PlaylistExecuteFromFiltersAction } from 'kaltura-ngx-client/api/types/PlaylistExecuteFromFiltersAction';
-import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
+import { PlaylistExecuteFromFiltersAction } from 'kaltura-ngx-client';
+import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 @Injectable()
 export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestroy {
   constructor(private _kalturaServerClient: KalturaClient,
@@ -50,7 +50,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
       type: MetadataProfileTypes.Entry,
       ignoredCreateMode: MetadataProfileCreateModes.App
     })
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .first()
       .map(metadataProfiles => {
         return metadataProfiles.items.map(metadataProfile => ({

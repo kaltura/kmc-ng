@@ -2,13 +2,13 @@ import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, EventEmitte
 import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaClient } from 'kaltura-ngx-client';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaMediaEntry } from "kaltura-ngx-client/api/types/KalturaMediaEntry";
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { BulkRemoveCategoriesService } from '../../services/';
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { KalturaCategory } from 'kaltura-ngx-client';
 
 @Component({
   selector: 'kBulkRemoveCategories',

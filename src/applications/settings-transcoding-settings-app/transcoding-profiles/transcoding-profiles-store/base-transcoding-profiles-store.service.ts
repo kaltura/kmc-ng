@@ -1,26 +1,27 @@
 import { OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient, KalturaMultiRequest, KalturaRequest } from 'kaltura-ngx-client';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
-import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
-import { KalturaConversionProfileFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
-import { KalturaConversionProfileOrderBy } from 'kaltura-ngx-client/api/types/KalturaConversionProfileOrderBy';
-import { ConversionProfileListAction } from 'kaltura-ngx-client/api/types/ConversionProfileListAction';
-import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client/api/types/ConversionProfileAssetParamsListAction';
-import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsFilter';
-import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParams';
-import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
-import { ConversionProfileSetAsDefaultAction } from 'kaltura-ngx-client/api/types/ConversionProfileSetAsDefaultAction';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
+import { KalturaConversionProfileFilter } from 'kaltura-ngx-client';
+import { KalturaConversionProfileOrderBy } from 'kaltura-ngx-client';
+import { ConversionProfileListAction } from 'kaltura-ngx-client';
+import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client';
+import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client';
+import { KalturaConversionProfileAssetParams } from 'kaltura-ngx-client';
+import { KalturaConversionProfile } from 'kaltura-ngx-client';
+import { ConversionProfileSetAsDefaultAction } from 'kaltura-ngx-client';
 import { subApplicationsConfig } from 'config/sub-applications';
-import { ConversionProfileDeleteAction } from 'kaltura-ngx-client/api/types/ConversionProfileDeleteAction';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
-import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
+import { ConversionProfileDeleteAction } from 'kaltura-ngx-client';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared';
+import { NumberTypeAdapter } from '@kaltura-ng/mc-shared';
 import { SettingsTranscodingMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { globalConfig } from 'config/global';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface ExtendedKalturaConversionProfileAssetParams extends KalturaConversionProfileAssetParams {
   updated?: boolean;
@@ -72,7 +73,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
 
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._executeQuery();
       });
@@ -92,7 +93,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
     this._logger.info(`loading data from the server`);
     this._profiles.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         response => {
           this._logger.info(`handle success loading data from the server`);

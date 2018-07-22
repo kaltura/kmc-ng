@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/forkJoin';
 
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-ngx-client';
-import { DistributionProfileListAction } from 'kaltura-ngx-client/api/types/DistributionProfileListAction';
-import { AccessControlListAction } from 'kaltura-ngx-client/api/types/AccessControlListAction';
+import { DistributionProfileListAction } from 'kaltura-ngx-client';
+import { AccessControlListAction } from 'kaltura-ngx-client';
 import {
     FlavoursStore,
     MetadataItemTypes,
@@ -17,22 +17,25 @@ import {
     MetadataProfileTypes
 } from 'app-shared/kmc-shared';
 
-import { KalturaAccessControlFilter } from 'kaltura-ngx-client/api/types/KalturaAccessControlFilter';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
+import { KalturaAccessControlFilter } from 'kaltura-ngx-client';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaFlavorParams } from 'kaltura-ngx-client';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client';
 
 import { DefaultFiltersList } from './default-filters-list';
 
 import * as R from 'ramda';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaAccessControlListResponse } from 'kaltura-ngx-client/api/types/KalturaAccessControlListResponse';
-import { KalturaDistributionProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileListResponse';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaAccessControlListResponse } from 'kaltura-ngx-client';
+import { KalturaDistributionProfileListResponse } from 'kaltura-ngx-client';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
-export interface RefineGroupListItem
-{ value: string, label: string }
+export interface RefineGroupListItem {
+    value: string;
+    label: string;
+    disabled?: boolean;
+}
 
 export class RefineGroupList {
     public items: RefineGroupListItem[] = [];

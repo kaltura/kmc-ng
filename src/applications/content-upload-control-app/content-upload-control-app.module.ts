@@ -7,7 +7,6 @@ import { routing } from './content-upload-control-app.routes';
 
 import { AreaBlockerModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import {
-  DataTableModule,
   PaginatorModule,
   ButtonModule,
   TieredMenuModule,
@@ -18,15 +17,15 @@ import {
   SharedModule,
   ProgressBarModule,
 } from 'primeng/primeng';
-import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
+import {LocalizationModule} from '@kaltura-ng/mc-shared';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import {
   KalturaUIModule,
   TooltipModule
 } from '@kaltura-ng/kaltura-ui';
-import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
-import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
+import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { TagsModule } from '@kaltura-ng/kaltura-ui';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 
 import { ContentUploadControlComponent } from './content-upload-control.component';
 import { UploadListComponent } from './upload-list/upload-list.component';
@@ -34,12 +33,12 @@ import { UploadListTableComponent } from './upload-list/upload-list-table.compon
 import { UploadProgressComponent } from './upload-list/upload-progress/upload-progress.component';
 import { KMCShellModule } from 'app-shared/kmc-shell';
 import { UploadStatusPipe } from './upload-list/pipes/upload-status.pipe';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   imports: [
     CommonModule,
     AreaBlockerModule,
-    DataTableModule,
     LocalizationModule,
     KalturaUIModule,
     PaginatorModule,
@@ -60,7 +59,8 @@ import { UploadStatusPipe } from './upload-list/pipes/upload-status.pipe';
     ProgressBarModule,
     KMCShellModule,
     StickyModule,
-    RouterModule.forChild(routing)
+    RouterModule.forChild(routing),
+      TableModule
   ],
   declarations: [
     ContentUploadControlComponent,

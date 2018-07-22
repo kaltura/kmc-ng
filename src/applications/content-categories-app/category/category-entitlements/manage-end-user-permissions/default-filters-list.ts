@@ -1,6 +1,6 @@
-import {KalturaCategoryUserPermissionLevel} from "kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel";
-import {KalturaUpdateMethodType} from "kaltura-ngx-client/api/types/KalturaUpdateMethodType";
-import {KalturaCategoryUserStatus} from "kaltura-ngx-client/api/types/KalturaCategoryUserStatus";
+import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client';
+import {KalturaUpdateMethodType} from 'kaltura-ngx-client';
+import {KalturaCategoryUserStatus} from 'kaltura-ngx-client';
 
 export interface DefaultFilterList {
   label: string;

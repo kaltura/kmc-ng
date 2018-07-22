@@ -1,21 +1,22 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { Observable } from 'rxjs/Observable';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { PlaylistExecuteAction } from 'kaltura-ngx-client/api/types/PlaylistExecuteAction';
-import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
+import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
+import { KalturaPlaylist } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { Observable } from 'rxjs';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client';
+import { PlaylistExecuteAction } from 'kaltura-ngx-client';
+import { FriendlyHashId } from '@kaltura-ng/kaltura-common';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
-import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
-import { BaseEntryListAction } from 'kaltura-ngx-client/api/types/BaseEntryListAction';
-import { KalturaBaseEntryFilter } from 'kaltura-ngx-client/api/types/KalturaBaseEntryFilter';
+import { KalturaBaseEntry } from 'kaltura-ngx-client';
+import { BaseEntryListAction } from 'kaltura-ngx-client';
+import { KalturaBaseEntryFilter } from 'kaltura-ngx-client';
 import { PlaylistWidget } from '../../playlist-widget';
-import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaPlaylistType } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface PlaylistContentMediaEntry extends KalturaMediaEntry {
   selectionId?: string;
@@ -80,7 +81,7 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
     super._showLoader();
 
     return this._getEntriesRequest()
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .map((entries: KalturaMediaEntry[]) => {
         this.entries = this._extendWithSelectionId(entries);
         this._recalculateCountAndDuration();
@@ -157,7 +158,7 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
     const entryIndex = this.entries.indexOf(entry);
 
     if (entryIndex !== -1) {
-      const clonedEntry = <PlaylistContentMediaEntry>Object.assign(KalturaTypesFactory.createObject(entry), entry);
+      const clonedEntry = <PlaylistContentMediaEntry>Object.assign(KalturaObjectBaseFactory.createObject(entry), entry);
       this._extendWithSelectionId([clonedEntry]);
       this.entries.splice(entryIndex, 0, clonedEntry);
       this._recalculateCountAndDuration();

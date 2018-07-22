@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
     selector: 'k-power-user-console',

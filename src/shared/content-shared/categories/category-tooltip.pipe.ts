@@ -1,9 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
-import { KalturaPrivacyType } from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
-import { KalturaAppearInListType } from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
-import { KalturaContributionPolicyType } from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
+import { KalturaPrivacyType } from 'kaltura-ngx-client';
+import { KalturaAppearInListType } from 'kaltura-ngx-client';
+import { KalturaContributionPolicyType } from 'kaltura-ngx-client';
 
 @Pipe({ name: 'kCategoryTooltip' })
 export class CategoryTooltipPipe implements PipeTransform {

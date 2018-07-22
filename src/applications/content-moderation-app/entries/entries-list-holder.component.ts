@@ -1,6 +1,6 @@
 import { Component, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {
     EntriesListComponent
 } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
@@ -11,25 +11,32 @@ import {
 } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { BulkService } from '../bulk-service/bulk.service';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ModerationsListService } from './moderations-list.service';
 import { ContentModerationMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kModerationEntriesListHolder',
   templateUrl: './entries-list-holder.component.html',
-  providers: [BulkService]
+  providers: [
+      BulkService,
+      ColumnsResizeManagerService,
+      { provide: ResizableColumnsTableName, useValue: 'moderation-table' }
+  ]
 })
 export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent) private _entriesList: EntriesListComponent;
   @ViewChild('moderationDetails') private _moderationDetails: PopupWidgetComponent;
 
   public _kmcPermissions = KMCPermissions;
+    public _enforcedFilters: Partial<EntriesFilters> = {
+        'moderationStatuses': ['1', '5'],
+    };
   public _defaultFilters: Partial<EntriesFilters> = {
-    'moderationStatuses': ['1', '5'],
       'sortDirection': SortDirection.Desc
   };
 
@@ -48,7 +55,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
     name: { sortable: true },
-    id: { width: '100px' },
+    id: { width: '120px' },
     mediaType: { sortable: true, width: '80px', align: 'center' },
     plays: { sortable: true, width: '76px' },
     moderationCount: { sortable: true, width: '76px' },
@@ -135,8 +142,8 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
 
   private _doApproveEntry(entryIds: string | string[]): void {
     this._bulkService.approveEntry(typeof entryIds === 'string' ? [entryIds] : entryIds)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this._entriesList.onBulkChange({ reload: true });
@@ -188,8 +195,8 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
 
   private _doRejectEntry(entryIds: string | string[]): void {
     this._bulkService.rejectEntry(typeof entryIds === 'string' ? [entryIds] : entryIds)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this._entriesList.onBulkChange({ reload: true });

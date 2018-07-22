@@ -1,5 +1,5 @@
-import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
-import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
+import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client';
+import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client';
 
 export interface PlaylistRule {
   selectionId?: string;

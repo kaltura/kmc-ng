@@ -1,16 +1,31 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component, ElementRef,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KalturaPlaylist } from 'kaltura-ngx-client';
+import { KalturaEntryStatus } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { globalConfig } from 'config/global';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kPlaylistsTable',
   templateUrl: './playlists-table.component.html',
-  styleUrls: ['./playlists-table.component.scss']
+  styleUrls: ['./playlists-table.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'playlists-table' }
+    ]
 })
 export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() set playlists(data: KalturaPlaylist[]) {
@@ -44,9 +59,11 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
-  constructor(private _appLocalization: AppLocalization,
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
-              private _cdRef: ChangeDetectorRef) {
+              private _cdRef: ChangeDetectorRef,
+              private _el: ElementRef<HTMLElement>) {
   }
 
   ngOnInit() {
@@ -63,6 +80,8 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
         this._deferredPlaylists = null;
       }, 0);
     }
+
+      this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   openActionsMenu(event: any, playlist: KalturaPlaylist) {

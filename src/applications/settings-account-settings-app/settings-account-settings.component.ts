@@ -1,16 +1,16 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
-import {KalturaPartner} from 'kaltura-ngx-client/api/types/KalturaPartner';
+import {KalturaPartner} from 'kaltura-ngx-client';
 import {SettingsAccountSettingsService} from './settings-account-settings.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {SelectItem} from 'primeng/primeng';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { SettingsAccountSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 
 function phoneValidator(): ValidatorFn {
@@ -57,8 +57,13 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+      this._logger.info(`initiate account settings view`);
+      this._createForm();
+
       if (this._settingsAccountSettingsMainView.viewEntered()) {
           this._prepare();
+      } else {
+          this._logger.info(`view is not permitted, abort initialization`);
       }
   }
 
@@ -66,13 +71,11 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   private _prepare(): void {
-      this._logger.info(`initiate account settings view`);
-      this._createForm();
       this._fillDescribeYourselfOptions();
       this._loadPartnerAccountSettings();
       this.accountSettingsForm
           .statusChanges
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(() => this._updatePageExitVerification());
   }
 
@@ -118,8 +121,8 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
     this._logger.info(`handle update partner account settings request`);
     this._accountSettingsService
       .updatePartnerData(this.accountSettingsForm.value)
-      .tag('block-shell')
-      .cancelOnDestroy(this)
+      .pipe(tag('block-shell'))
+      .pipe(cancelOnDestroy(this))
       .subscribe(updatedPartner => {
           this._logger.info(`handle successful update partner account settings request`);
           this._fillForm(updatedPartner);
@@ -151,7 +154,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
 
     this._accountSettingsService
       .getPartnerAccountSettings()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(response => {
           this._fillAccountOwnersOptions(response.accountOwners);
           this.partnerId = response.partnerData.id;

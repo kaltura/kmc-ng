@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { CategoriesTreeNode } from './categories-tree-node';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { CategoriesTreePropagationDirective } from './categories-tree-propagation.directive';
 import { CategoriesTreeService } from './categories-tree.service';
-import { FiltersUtils } from '@kaltura-ng/mc-shared/filters/filters-utils';
+import { FiltersUtils } from '@kaltura-ng/mc-shared';
 
 export type TreeSelectionMode = 'single' | 'multiple';
 

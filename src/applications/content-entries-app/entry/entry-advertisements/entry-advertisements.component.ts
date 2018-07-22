@@ -2,9 +2,9 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {EntryAdvertisementsWidget} from './entry-advertisements-widget.service';
 import { AdvertisementsAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { EntryStore } from '../entry-store.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/observable/merge';
 
 @Component({
@@ -29,7 +29,7 @@ export class EntryAdvertisementsComponent implements OnInit, OnDestroy {
             this._widgetService.data$,
             this._store.hasSource.value$
         )
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 () => {
                     if (this._widgetService.data) {

@@ -165,10 +165,7 @@
   }
 
   .kCategoriesFilter {
-    border: 1px solid $kGrayscale4;
-    border-radius: 4px;
     display: flex;
-    background-color: #ffffff;
     height: 32px;
     align-items: center;
     cursor: pointer;
@@ -195,15 +192,6 @@
       color: $kGrayscale4;
       &.dropdown {
         font-size: 10px;
-      }
-    }
-    &:hover {
-      color: $kPrimary;
-      i {
-        color: $kPrimary;
-      }
-      i.kIcondropdown_arrow_bottom.dropdown {
-        color: $kGrayscale3;
       }
     }
     .dropdown {
@@ -233,7 +221,7 @@
   border-bottom: 1px solid $kGrayscale5;
 }
 
-:host /deep/ span.ui-button-icon-left.fa.kIcontrash {
+:host /deep/ span.ui-button-icon-left.pi-kIcontrash {
   margin-left: -.5em;
 }
 
@@ -255,7 +243,7 @@
   }
 }
 
-:host /deep/ .ui-button-icon-only .fa {
+:host /deep/ .ui-button-icon-only .pi {
   margin-left: -.5em;
 }
 

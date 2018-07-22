@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { KalturaEntryReplacementStatus } from 'kaltura-ngx-client/api/types/KalturaEntryReplacementStatus';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { KalturaEntryReplacementStatus } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 @Pipe({ name: 'kFlavorReplacementStatus' })
 export class FlavorReplacementStatusPipe implements PipeTransform {

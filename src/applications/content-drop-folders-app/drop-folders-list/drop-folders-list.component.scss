@@ -170,10 +170,7 @@
   }
 
   .kStatusesFilter {
-    border: 1px solid $kGrayscale4;
-    border-radius: 4px;
     display: flex;
-    background-color: #ffffff;
     height: 32px;
     align-items: center;
     cursor: pointer;
@@ -189,10 +186,6 @@
       &.dropdown {
         font-size: 10px;
       }
-    }
-
-    &:hover {
-      color: $kPrimary;
     }
 
     .dropdown {
@@ -235,11 +228,11 @@
   width: 100%;
 }
 
-:host /deep/ p-datatable .ui-datatable-scrollable-body{
+:host /deep/ p-table .ui-table-scrollable-body{
   margin-bottom: 34px;
 }
 
-:host /deep/ span.ui-button-icon-left.fa.kIcontrash {
+:host /deep/ span.ui-button-icon-left.pi-kIcontrash {
   margin-left: -.5em;
 }
 
@@ -261,7 +254,7 @@
   }
 }
 
-:host /deep/ .ui-button-icon-only .fa {
+:host /deep/ .ui-button-icon-only .pi {
   margin-left: -.5em;
 }
 

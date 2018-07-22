@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { PlaylistsStore } from './playlists/playlists-store/playlists-store.service';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
 
 @Component({

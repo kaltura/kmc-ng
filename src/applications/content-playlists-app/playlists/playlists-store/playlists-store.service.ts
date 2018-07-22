@@ -1,27 +1,28 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { PlaylistListAction } from 'kaltura-ngx-client/api/types/PlaylistListAction';
-import { KalturaPlaylistFilter } from 'kaltura-ngx-client/api/types/KalturaPlaylistFilter';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { PlaylistDeleteAction } from 'kaltura-ngx-client/api/types/PlaylistDeleteAction';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { PlaylistListAction } from 'kaltura-ngx-client';
+import { KalturaPlaylistFilter } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client';
+import { PlaylistDeleteAction } from 'kaltura-ngx-client';
+import { KalturaPlaylist } from 'kaltura-ngx-client';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-shared/filters/filter-types/dates-range-type';
-import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client/api/types/KalturaBaseEntryListResponse';
-import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
-import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
-import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/string-type';
-import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
+import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-shared';
+import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client';
+import { KalturaSearchOperatorType } from 'kaltura-ngx-client';
+import { KalturaSearchOperator } from 'kaltura-ngx-client';
+import { StringTypeAdapter } from '@kaltura-ng/mc-shared';
+import { NumberTypeAdapter } from '@kaltura-ng/mc-shared';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { ContentPlaylistsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { globalConfig } from 'config/global';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum SortDirection {
   Desc = -1,
@@ -92,7 +93,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
 
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._executeQuery();
       });
@@ -112,7 +113,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
 
     this._playlists.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         response => {
           this._querySubscription = null;

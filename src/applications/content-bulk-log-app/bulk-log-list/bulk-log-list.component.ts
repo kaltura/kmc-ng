@@ -1,18 +1,18 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {AreaBlockerMessage, StickyComponent} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 
 import {BulkLogFilters, BulkLogStoreService} from '../bulk-log-store/bulk-log-store.service';
-import {KalturaBulkUpload} from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
+import {KalturaBulkUpload} from 'kaltura-ngx-client';
 import {getBulkUploadType} from '../utils/get-bulk-upload-type';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {BulkLogUploadingStartedEvent} from 'app-shared/kmc-shared/events';
 import {BulkLogRefineFiltersService, RefineList} from '../bulk-log-store/bulk-log-refine-filters.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContentBulkUploadsMainViewService } from 'app-shared/kmc-shared/kmc-views';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kBulkLogList',
@@ -53,7 +53,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   ngOnInit() {
       if (this._contentBulkUploadsMainView.viewEntered()) {
           this._appEvents.event(BulkLogUploadingStartedEvent)
-              .cancelOnDestroy(this)
+              .pipe(cancelOnDestroy(this))
               .delay(2000) // Component specific - need to wait due to updating the list on the server side
               .subscribe(() => this._store.reload());
 
@@ -69,7 +69,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
       this._logger.info(`initiate bulk-log list view, load refine filters`);
         this._isBusy = true;
         this._refineFiltersService.getFilters()
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .first() // only handle it once, no need to handle changes over time
             .subscribe(
                 lists => {
@@ -101,7 +101,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
 
     private _registerToDataChanges(): void {
         this._store.bulkLog.state$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 result => {
 
@@ -150,7 +150,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
 
   private _registerToFilterStoreDataChanges(): void {
     this._store.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({changes}) => {
         this._updateComponentState(changes);
         this._clearSelection();
@@ -164,8 +164,8 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     this._blockerMessage = null;
 
     this._store.deleteBulkLog(id)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this._logger.info(`handle success delete log request`);
@@ -202,8 +202,8 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     this._blockerMessage = null;
 
     this._store.deleteBulkLogs(files)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(
       () => {
         this._logger.info(`handle successful delete bulk logs request`);

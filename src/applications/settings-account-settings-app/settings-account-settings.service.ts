@@ -1,19 +1,19 @@
 import {Injectable} from '@angular/core';
 import {KalturaClient} from 'kaltura-ngx-client';
 import { KalturaMultiRequest, KalturaRequest, KalturaRequestBase } from 'kaltura-ngx-client';
-import {KalturaUserRoleFilter} from 'kaltura-ngx-client/api/types/KalturaUserRoleFilter';
-import {KalturaUserRoleStatus} from 'kaltura-ngx-client/api/types/KalturaUserRoleStatus';
-import {KalturaUserFilter} from 'kaltura-ngx-client/api/types/KalturaUserFilter';
-import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
-import {KalturaUserStatus} from 'kaltura-ngx-client/api/types/KalturaUserStatus';
-import {UserRoleListAction} from 'kaltura-ngx-client/api/types/UserRoleListAction';
-import {UserListAction} from 'kaltura-ngx-client/api/types/UserListAction';
-import {Observable} from 'rxjs/Observable';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {KalturaPartner} from 'kaltura-ngx-client/api/types/KalturaPartner';
-import {PartnerGetInfoAction} from 'kaltura-ngx-client/api/types/PartnerGetInfoAction';
-import {PartnerUpdateAction} from "kaltura-ngx-client/api/types/PartnerUpdateAction";
-import {KalturaUserListResponse} from "kaltura-ngx-client/api/types/KalturaUserListResponse";
+import {KalturaUserRoleFilter} from 'kaltura-ngx-client';
+import {KalturaUserRoleStatus} from 'kaltura-ngx-client';
+import {KalturaUserFilter} from 'kaltura-ngx-client';
+import {KalturaNullableBoolean} from 'kaltura-ngx-client';
+import {KalturaUserStatus} from 'kaltura-ngx-client';
+import {UserRoleListAction} from 'kaltura-ngx-client';
+import {UserListAction} from 'kaltura-ngx-client';
+import { Observable } from 'rxjs';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import {KalturaPartner} from 'kaltura-ngx-client';
+import {PartnerGetInfoAction} from 'kaltura-ngx-client';
+import {PartnerUpdateAction} from 'kaltura-ngx-client';
+import {KalturaUserListResponse} from 'kaltura-ngx-client';
 
 
 export interface AccountSettings {

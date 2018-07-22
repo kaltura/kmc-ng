@@ -8,27 +8,27 @@ import {
   OnDestroy
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import { KalturaAssetFilter } from 'kaltura-ngx-client/api/types/KalturaAssetFilter';
-import { KalturaAttachmentAsset } from 'kaltura-ngx-client/api/types/KalturaAttachmentAsset';
-import { KalturaAttachmentType } from 'kaltura-ngx-client/api/types/KalturaAttachmentType';
-import { AttachmentAssetListAction } from 'kaltura-ngx-client/api/types/AttachmentAssetListAction';
-import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client/api/types/KalturaUploadedFileTokenResource';
-import { AttachmentAssetSetContentAction } from 'kaltura-ngx-client/api/types/AttachmentAssetSetContentAction';
-import { AttachmentAssetDeleteAction } from 'kaltura-ngx-client/api/types/AttachmentAssetDeleteAction';
-import { AttachmentAssetUpdateAction } from 'kaltura-ngx-client/api/types/AttachmentAssetUpdateAction';
-import { AttachmentAssetAddAction } from 'kaltura-ngx-client/api/types/AttachmentAssetAddAction';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { KalturaAssetFilter } from 'kaltura-ngx-client';
+import { KalturaAttachmentAsset } from 'kaltura-ngx-client';
+import { KalturaAttachmentType } from 'kaltura-ngx-client';
+import { AttachmentAssetListAction } from 'kaltura-ngx-client';
+import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client';
+import { AttachmentAssetSetContentAction } from 'kaltura-ngx-client';
+import { AttachmentAssetDeleteAction } from 'kaltura-ngx-client';
+import { AttachmentAssetUpdateAction } from 'kaltura-ngx-client';
+import { AttachmentAssetAddAction } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { NewEntryRelatedFile } from './new-entry-related-file';
 import { EntryWidget } from '../entry-widget';
-import { KalturaAttachmentAssetListResponse } from 'kaltura-ngx-client/api/types/KalturaAttachmentAssetListResponse';
+import { KalturaAttachmentAssetListResponse } from 'kaltura-ngx-client';
 import { getKalturaServerUri } from 'config/server';
 import { globalConfig } from 'config/global';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
@@ -71,7 +71,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 
   private _trackUploadFiles(): void {
     this._uploadManagement.onTrackedFileChanged$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .filter(uploadedFile => uploadedFile.data instanceof NewEntryRelatedFile)
       .map(uploadedFile => {
         let relevantRelatedFile = null;
@@ -147,8 +147,8 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
     return this._kalturaServerClient.request(new AttachmentAssetListAction({
       filter: new KalturaAssetFilter({ entryIdEqual: this._entryId })
     }))
-      .cancelOnDestroy(this, this.widgetReset$)
-      .do(response => {
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
+      .map(response => {
         // Set file type and restore previous upload state
         this._updateAssetsResponse(response);
 
@@ -162,6 +162,8 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
           this.relatedFileDiffer[asset.id].diff(asset);
         });
         super._hideLoader();
+
+        return {failed: false};
       })
       .catch(error => {
           this._relatedFiles.next({ items: [] });

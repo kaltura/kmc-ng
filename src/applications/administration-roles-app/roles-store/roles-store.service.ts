@@ -1,28 +1,29 @@
 import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
-import { KalturaUserRoleFilter } from 'kaltura-ngx-client/api/types/KalturaUserRoleFilter';
+import { KalturaUserRoleFilter } from 'kaltura-ngx-client';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
-import { KalturaUserRoleListResponse } from 'kaltura-ngx-client/api/types/KalturaUserRoleListResponse';
-import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
-import { UserRoleListAction } from 'kaltura-ngx-client/api/types/UserRoleListAction';
-import { KalturaUserRoleStatus } from 'kaltura-ngx-client/api/types/KalturaUserRoleStatus';
-import { KalturaUserRoleOrderBy } from 'kaltura-ngx-client/api/types/KalturaUserRoleOrderBy';
-import { UserRoleDeleteAction } from 'kaltura-ngx-client/api/types/UserRoleDeleteAction';
-import { UserRoleUpdateAction } from 'kaltura-ngx-client/api/types/UserRoleUpdateAction';
-import { UserRoleCloneAction } from 'kaltura-ngx-client/api/types/UserRoleCloneAction';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { UserRoleAddAction } from 'kaltura-ngx-client/api/types/UserRoleAddAction';
-import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaUserRoleListResponse } from 'kaltura-ngx-client';
+import { KalturaUserRole } from 'kaltura-ngx-client';
+import { UserRoleListAction } from 'kaltura-ngx-client';
+import { KalturaUserRoleStatus } from 'kaltura-ngx-client';
+import { KalturaUserRoleOrderBy } from 'kaltura-ngx-client';
+import { UserRoleDeleteAction } from 'kaltura-ngx-client';
+import { UserRoleUpdateAction } from 'kaltura-ngx-client';
+import { UserRoleCloneAction } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { UserRoleAddAction } from 'kaltura-ngx-client';
+import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { globalConfig } from 'config/global';
-import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
+import { NumberTypeAdapter } from '@kaltura-ng/mc-shared';
 import { AdminRolesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { PermissionTreeNodes, PermissionTreeNode } from './permission-tree-nodes';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum SortDirection {
   Desc = -1,
@@ -127,7 +128,7 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
 
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._executeQuery();
       });
@@ -148,7 +149,7 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     this._logger.info(`loading roles list data`);
     this._roles.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         response => {
           this._logger.info(`handle success loading roles list data`);

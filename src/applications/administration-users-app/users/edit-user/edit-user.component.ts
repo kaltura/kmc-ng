@@ -1,15 +1,16 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { UsersStore } from '../users.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { IsUserExistsStatuses } from '../user-exists-statuses';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
-import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { KalturaUser } from 'kaltura-ngx-client';
+import { KalturaUserRole } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number;
@@ -69,7 +70,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._usersStore.users.data$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .first()
       .subscribe(({ roles, users, partnerInfo }) => {
         this._roles = roles.items;
@@ -147,7 +148,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
     const { email } = this._userForm.value;
     this._isBusy = true;
     this._usersStore.isUserAlreadyExists(email)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe((status) => {
         this._isBusy = false;
 
@@ -192,8 +193,8 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
     const { roleIds, id, email } = this._userForm.getRawValue();
     this._usersStore.updateUser({ roleIds, email, id: (id || '').trim() }, this.user.id)
-      .tag('block-shell')
-      .cancelOnDestroy(this)
+      .pipe(tag('block-shell'))
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         () => {
           this._usersStore.reload(true);
@@ -242,7 +243,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
     const userProvidedEmail = (this._userForm.value.email || '').trim();
     this._isBusy = true;
     this._usersStore.getUserById(userProvidedEmail)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         user => {
           this._isBusy = false;
@@ -259,8 +260,8 @@ export class EditUserComponent implements OnInit, OnDestroy {
           this._isBusy = false;
           if (error.code === 'INVALID_USER_ID') {
               this._usersStore.addUser(this._userForm.value)
-                  .cancelOnDestroy(this)
-                  .tag('block-shell')
+                  .pipe(cancelOnDestroy(this))
+                  .pipe(tag('block-shell'))
                   .subscribe(
                       () => {
                           this._usersStore.reload(true);
@@ -309,8 +310,8 @@ export class EditUserComponent implements OnInit, OnDestroy {
   private _associateUserToAccount(userProvidedEmail: string, user: KalturaUser): void {
       const { roleIds } = this._userForm.value;
     this._usersStore.associateUserToAccount(userProvidedEmail, user, roleIds)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this._usersStore.reload(true);
