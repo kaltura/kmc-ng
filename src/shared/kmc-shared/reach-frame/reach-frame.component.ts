@@ -105,7 +105,7 @@ export class ReachFrameComponent implements OnDestroy, OnChanges {
                 }
                 break;
             case ReachPages.entries:
-                if (this.data.entries) {
+                if (Array.isArray(this.data.entries)) {
                     this._url = `${serverConfig.externalApps.reach.uri}#/entries`;
                 }
                 break;
