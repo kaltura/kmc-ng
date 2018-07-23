@@ -3,7 +3,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component, ElementRef,
-    EventEmitter, HostListener,
+    EventEmitter,
     Input,
     OnDestroy,
     OnInit,
@@ -20,6 +20,7 @@ import { globalConfig } from 'config/global';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { ColumnsResizeManagerService } from 'app-shared/kmc-shared/columns-resize-manager';
+import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 export interface EntriesTableColumns {
   [key: string]: {
@@ -99,6 +100,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   constructor(public _columnsResizeManager: ColumnsResizeManagerService,
               private _appLocalization: AppLocalization,
+              private _reachAppViewService: ReachAppViewService,
               private _cdRef: ChangeDetectorRef,
               private _el: ElementRef<HTMLElement>,
               private _permissionsService: KMCPermissionsService) {
@@ -134,28 +136,28 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
-  private _hideMenuItems(source: KalturaSourceType,
-                         status: KalturaEntryStatus,
-                         mediaType: KalturaMediaType,
-                         { commandName }: { commandName: string }): boolean {
+  private _hideMenuItems(entry: KalturaMediaEntry, { commandName }: { commandName: string }): boolean {
+    const { sourceType, status, mediaType } = entry;
     const isReadyStatus = status === KalturaEntryStatus.ready;
     const isLiveStreamFlash = mediaType && mediaType === KalturaMediaType.liveStreamFlash;
     const isPreviewCommand = commandName === 'preview';
     const isViewCommand = commandName === 'view';
-    const isKalturaLive = source === KalturaSourceType.liveStream;
+    const isKalturaLive = sourceType === KalturaSourceType.liveStream;
     const isLiveDashboardCommand = commandName === 'liveDashboard';
     const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
+    const isCaptionRequestCommand = commandName === 'captionRequest';
     return !(
       (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
       (!isReadyStatus && isLiveStreamFlash && isViewCommand) || // hide if trying to view live that isn't ready
       (isLiveDashboardCommand && !isKalturaLive) || // hide live-dashboard menu item for entry that isn't kaltura live
-      cannotDeleteEntry
+      cannotDeleteEntry ||
+      (isCaptionRequestCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry })) // hide caption request if not audio/video or if it is then if not ready or it's forbidden by permission
     );
   }
 
   private _buildMenu(entry: KalturaMediaEntry): void {
     this._items = this.rowActions
-      .filter(item => this._hideMenuItems(entry.sourceType, entry.status, entry.mediaType, item))
+      .filter(item => this._hideMenuItems(entry, item))
       .map(action =>
         Object.assign({} as CustomMenuItem, action, {
           command: ({ item }) => {

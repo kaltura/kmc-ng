@@ -46,6 +46,9 @@ export interface ExternalApplications {
     editor?: {
         uri?: string
     };
+    reach?: {
+        uri?: string;
+    };
 }
 
 export interface ServerConfig {
@@ -191,6 +194,20 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
         return result;
     },
     liveAnalytics: (configuration) => {
+        let result = false;
+
+        if (configuration) {
+            result = !!configuration.uri &&
+                !configuration.uri.match(/\s/g); // not contains white spaces
+
+            if (result) {
+                configuration.uri = buildBaseUri(configuration.uri);
+            }
+        }
+
+        return result;
+    },
+    reach: (configuration) => {
         let result = false;
 
         if (configuration) {

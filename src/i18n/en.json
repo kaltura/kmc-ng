@@ -529,6 +529,7 @@
                 "viewEntries": "View Entries",
                 "moveCategory": "Move Category",
                 "cancel": "Cancel",
+                "addServiceRule": "Add Service Rule",
                 "bActions": {
                     "addRemoveTags": "Add / Remove Tags",
                     "addTags": "Add Tags",
@@ -1116,7 +1117,8 @@
                 "ruleName": "Rule Name",
                 "entriesCount": "No. Entries",
                 "limit": "Limit",
-                "orderBy": "Order By"
+                "orderBy": "Order By",
+                "captionRequest": "Caption Request"
             },
             "paginator": {
                 "showRows": "Show rows:"
@@ -1267,6 +1269,7 @@
                 "dismiss": "Dismiss"
             },
             "bulkActions": {
+                "captionRequest": "Caption Request",
                 "setScheduling": "Set Scheduling",
                 "setAccessControl": "Set Access Control",
                 "addRemovePublishers": "Add / Remove Co-Publishers",
@@ -1337,7 +1340,10 @@
                 "deleteRule": "Delete Rule",
                 "noCategoriesOrEntries": "No categories or entries were selected.",
                 "entryAlreadyAssignedToCategory": "Entry {{0}} is already assigned to category {{1}}.",
-                "downloadFailed": "The Download request failed."
+                "downloadFailed": "The Download request failed.",
+                "captionRequestAllInvalid": "The selected entries do not support captions ordering. Please select only Video / Audio entries that are ready for playback",
+                "captionRequestSomeInvalid": "Please note that a few entries do not support captions ordering and will be ignored. Continue?"
+
             },
             "entryDetails": {
                 "entryEditor": {
@@ -1646,6 +1652,7 @@
                 "captions": {
                     "captions": "Captions",
                     "add": "Add Caption",
+                    "request": "Request Captions",
                     "label": "Label",
                     "type": "File Type",
                     "language": "Language",
@@ -2815,7 +2822,11 @@
         },
         "analytics": {
             "comingSoon": "Coming soon! Analytics for all media types.",
-            "releaseSupports": "This release supports analytics for “Live” entries only. For all other media, please <a href=\"{{0}}\" target=\"_blank\">login to the legacy KMC</a> to view and create analytics and reports. Analytics for all media should be available soon"
+           "releaseSupports": "This release supports analytics for “Live” entries only. For all other media, please <a href=\"{{0}}\" target=\"_blank\">login to the legacy KMC</a> to view and create analytics and reports. Analytics for all media should be available soon"
+        },
+        "reach": {
+            "captionRequests": "Caption Requests",
+            "addServiceRule": "Add Service Rule"
         }
     },
     "entriesShared": {
