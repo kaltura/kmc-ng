@@ -1,23 +1,18 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { AppAuthentication, BrowserService } from 'shared/kmc-shell/index';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { AppAuthentication, BrowserService } from 'shared/kmc-shell';
 import { getKalturaServerUri, serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { ReachAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
-import { ContentEntryViewService, ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ClearEntriesSelectionEvent } from 'app-shared/kmc-shared/events/clear-entries-selection-event';
 import { AppEventsService } from 'app-shared/kmc-shared/app-events';
-
-export enum ReachPages {
-    entry = 'entry',
-    entries = 'entries',
-    category = 'category'
-}
+import { KalturaCategory, KalturaMediaEntry } from 'kaltura-ngx-client';
 
 export interface ReachData {
-    entryId?: string;
-    entryIds?: string;
-    categoryId?: string;
+    entry?: KalturaMediaEntry;
+    entries?: KalturaMediaEntry[];
+    category?: KalturaCategory;
 }
 
 @Component({
@@ -29,7 +24,7 @@ export interface ReachData {
     ],
     providers: [KalturaLogger.createLogger('ReachFrameComponent')]
 })
-export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
+export class ReachFrameComponent implements OnDestroy, OnChanges {
     @Input() page: ReachPages;
     @Input() data: ReachData = {};
 
@@ -48,37 +43,15 @@ export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes['data']) {
-            this._updateUrl();
+            this._updateData();
         }
     }
 
-    private _updateUrl(): void {
-        this._url = null;
-
-        switch (this.page) {
-            case ReachPages.entry:
-                if (this.data.entryId) {
-                    this._url = `${serverConfig.externalApps.reach.uri}#/entry/${this.data.entryId}`;
-                }
-                break;
-            case ReachPages.entries:
-                if (this.data.entryIds) {
-                    this._url = `${serverConfig.externalApps.reach.uri}#/entries`;
-                }
-                break;
-            case ReachPages.category:
-                if (this.data.categoryId) {
-                    this._url = `${serverConfig.externalApps.reach.uri}#/category/${this.data.categoryId}`;
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    ngOnInit() {
+    private _updateData(): void {
         try {
-            if (!this._reachAppView.isAvailable()) {
+            const { entries, entry, category } = this.data;
+            const page = this.page;
+            if (!this._reachAppView.isAvailable({ page, entries, entry, category })) {
                 this._browserService.handleUnpermittedAction(true);
                 return;
             }
@@ -106,13 +79,37 @@ export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
                 };
 
                 if (this.page === ReachPages.entries) {
-                    window['kmc']['vars']['reach']['entryIds'] = this.data.entryIds;
+                    window['kmc']['vars']['reach']['entryIds'] = this.data.entries.map(({ id }) => id).join(',');
                 }
             }
         } catch (ex) {
             this._logger.warn(`Could not load reach app, please check that reach configurations are loaded correctly\n error: ${ex}`);
             this._url = null;
             window['kmc'] = null;
+        }
+    }
+
+    private _updateUrl(): void {
+        this._url = null;
+
+        switch (this.page) {
+            case ReachPages.entry:
+                if (this.data.entry) {
+                    this._url = `${serverConfig.externalApps.reach.uri}#/entry/${this.data.entry.id}`;
+                }
+                break;
+            case ReachPages.entries:
+                if (this.data.entries) {
+                    this._url = `${serverConfig.externalApps.reach.uri}#/entries`;
+                }
+                break;
+            case ReachPages.category:
+                if (this.data.category) {
+                    this._url = `${serverConfig.externalApps.reach.uri}#/category/${this.data.category.id}`;
+                }
+                break;
+            default:
+                break;
         }
     }
 

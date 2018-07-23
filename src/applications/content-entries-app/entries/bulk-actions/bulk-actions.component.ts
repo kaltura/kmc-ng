@@ -27,7 +27,7 @@ import {KalturaUser} from 'kaltura-ngx-client';
 import {KalturaMediaType} from 'kaltura-ngx-client';
 import {KalturaAccessControl} from 'kaltura-ngx-client';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { AppEventsService, ReachPages } from 'app-shared/kmc-shared';
+import { AppEventsService } from 'app-shared/kmc-shared';
 import {CreateNewPlaylistEvent} from 'app-shared/kmc-shared/events/playlist-creation';
 import {KalturaPlaylistType} from 'kaltura-ngx-client';
 import {KalturaEntryStatus} from 'kaltura-ngx-client';
@@ -40,7 +40,7 @@ import {BulkRemovePublishersService} from './services/bulk-remove-publishers.ser
 import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ReachAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { CaptionRequestEvent } from 'app-shared/kmc-shared/events';
 
 @Component({
@@ -104,7 +104,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               public _contentNewCategoryView: ContentNewCategoryViewService,
               private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
               private _permissionsService: KMCPermissionsService,
-              private _reachAppViewService: ReachAppViewService,) {
+              private _reachAppViewService: ReachAppViewService) {
 
   }
 
@@ -455,7 +455,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               id: 'captionRequest',
               label: this._appLocalization.get('applications.content.bulkActions.captionRequest'),
               command: () => this._captionRequest(),
-              disabled: !this._reachAppViewService.isAvailable()
+              disabled: !this._reachAppViewService.isAvailable({ page: ReachPages.entries, entries: this.selectedEntries })
           },
           {
               id: 'setAccessControl',
@@ -484,20 +484,18 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   public _captionRequest(): void {
-      if (!this._reachAppViewService.isAvailable()) {
+      if (!this._reachAppViewService.isAvailable({ page: ReachPages.entries, entries: this.selectedEntries })) {
           return;
       }
 
-      const invalidEntries = this.selectedEntries.filter(entry => {
-          const isVideoAudio = entry.mediaType === KalturaMediaType.video || entry.mediaType === KalturaMediaType.audio;
-          const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
-          const isReadyStatus = entry.status === KalturaEntryStatus.ready;
-          return (isVideoAudio && !isReadyStatus) || !isVideoAudio || isExternalMedia;
-      });
+      const invalidEntries = this.selectedEntries
+          .filter(entry => !this._reachAppViewService.isRelevantEntry(entry));
 
       if (!invalidEntries.length) {
-          const entryIds = this.selectedEntries.map(({ id }) => id).join(',');
-          this._appEvents.publish(new CaptionRequestEvent({ entryIds }, ReachPages.entries));
+          this._appEvents.publish(new CaptionRequestEvent(
+              { entries: this.selectedEntries },
+              ReachPages.entries
+          ));
           return;
       }
 
@@ -515,14 +513,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           return;
       }
 
-      const validEntries = this.selectedEntries.filter(entry => {
-          const isVideoAudio = entry.mediaType === KalturaMediaType.video || entry.mediaType === KalturaMediaType.audio;
-          const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
-          const isReadyStatus = entry.status === KalturaEntryStatus.ready;
-          return !((isVideoAudio && !isReadyStatus) || !isVideoAudio || isExternalMedia);
-      });
-
-      const validEntryIds = validEntries.map(({ id }) => id).join(',');
+      const validEntries = this.selectedEntries
+          .filter(entry => this._reachAppViewService.isRelevantEntry(entry));
 
       this.blockerMessageChange.emit(new AreaBlockerMessage({
           title: this._appLocalization.get('app.common.attention'),
@@ -531,7 +523,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               {
                   label: this._appLocalization.get('app.common.continue'),
                   action: () => {
-                      this._appEvents.publish(new CaptionRequestEvent({ entryIds: validEntryIds }, ReachPages.entries));
+                      this._appEvents.publish(new CaptionRequestEvent({ entries: validEntries }, ReachPages.entries));
                       this.blockerMessageChange.emit(null);
                   }
               },

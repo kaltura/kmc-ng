@@ -1,4 +1,4 @@
-import { Component, ElementRef, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, OnInit, OnDestroy, ViewChild } from '@angular/core';
 
 import { Menu, MenuItem } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
@@ -6,16 +6,17 @@ import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaCaptionAssetStatus } from 'kaltura-ngx-client';
+import { KalturaCaptionAssetStatus, KalturaExternalMediaEntry } from 'kaltura-ngx-client';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 
 import { EntryCaptionsWidget } from './entry-captions-widget.service';
 
 import { getKalturaServerUri, serverConfig } from 'config/server';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { AppEventsService, ReachPages } from 'app-shared/kmc-shared';
-import { ReachAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { CaptionRequestEvent } from 'app-shared/kmc-shared/events';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 
 @Component({
@@ -41,7 +42,6 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
                 private _browserService: BrowserService,
                 private _reachAppViewService: ReachAppViewService,
                 private _appEvents: AppEventsService) {
-        this._requestCaptionsAvailable = this._reachAppViewService.isAvailable();
     }
 
 	ngOnInit() {
@@ -53,6 +53,12 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 			{label: this._appLocalization.get('applications.content.entryDetails.captions.preview'), command: (event) => {this.actionSelected("preview");}},
 			{label: this._appLocalization.get('applications.content.entryDetails.captions.delete'), styleClass: 'kDanger', command: (event) => {this.actionSelected("delete");}}
 		];
+
+        this._widgetService.data$
+            .pipe(cancelOnDestroy(this))
+            .subscribe(entry => {
+                this._requestCaptionsAvailable = this._reachAppViewService.isAvailable({ page: ReachPages.entry, entry });
+            });
 	}
 
 	openActionsMenu(event: any, caption: any): void{
@@ -141,9 +147,9 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
     }
 
     public _requestCaptions(): void {
-        const entryId = this._widgetService.data.id;
-        if (this._requestCaptionsAvailable && entryId) {
-            this._appEvents.publish(new CaptionRequestEvent({ entryId }, ReachPages.entry));
+        const entry = <KalturaExternalMediaEntry>this._widgetService.data;
+        if (this._requestCaptionsAvailable && entry) {
+            this._appEvents.publish(new CaptionRequestEvent({ entry }, ReachPages.entry));
         }
     }
 }

@@ -14,7 +14,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {KalturaCategory} from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { ReachAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
@@ -124,7 +124,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
       },
         {
             id: 'addServiceRule',
-            disabled: !this._reachAppViewService.isAvailable(),
+            disabled: !this._reachAppViewService.isAvailable({ page: ReachPages.category, category }),
             label: this.appLocalization.get('applications.content.categories.addServiceRule'),
             command: () => this.onActionSelected('addServiceRule', category)
         },

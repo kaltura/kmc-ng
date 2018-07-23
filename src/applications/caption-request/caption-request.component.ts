@@ -3,8 +3,9 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { CaptionRequestEvent } from 'app-shared/kmc-shared/events';
-import { ReachData, ReachPages } from 'app-shared/kmc-shared/reach-frame';
+import { ReachData } from 'app-shared/kmc-shared/reach-frame';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { ReachPages } from 'app-shared/kmc-shared/kmc-views/component-views';
 
 @Component({
     selector: 'kCaptionRequest',

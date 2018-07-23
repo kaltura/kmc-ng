@@ -3,7 +3,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component, ElementRef,
-    EventEmitter, HostListener,
+    EventEmitter,
     Input,
     OnDestroy,
     OnInit,
@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { KalturaExternalMediaEntry, KalturaMediaType } from 'kaltura-ngx-client';
+import { KalturaMediaType } from 'kaltura-ngx-client';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaSourceType } from 'kaltura-ngx-client';
@@ -20,6 +20,7 @@ import { globalConfig } from 'config/global';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { ColumnsResizeManagerService } from 'app-shared/kmc-shared/columns-resize-manager';
+import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/component-views';
 
 export interface EntriesTableColumns {
   [key: string]: {
@@ -99,6 +100,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   constructor(public _columnsResizeManager: ColumnsResizeManagerService,
               private _appLocalization: AppLocalization,
+              private _reachAppViewService: ReachAppViewService,
               private _cdRef: ChangeDetectorRef,
               private _el: ElementRef<HTMLElement>,
               private _permissionsService: KMCPermissionsService) {
@@ -144,20 +146,12 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     const isLiveDashboardCommand = commandName === 'liveDashboard';
     const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
     const isCaptionRequestCommand = commandName === 'captionRequest';
-    const isVideoAudio = mediaType && (mediaType === KalturaMediaType.video || mediaType === KalturaMediaType.audio);
-    const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
     return !(
       (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
       (!isReadyStatus && isLiveStreamFlash && isViewCommand) || // hide if trying to view live that isn't ready
       (isLiveDashboardCommand && !isKalturaLive) || // hide live-dashboard menu item for entry that isn't kaltura live
       cannotDeleteEntry ||
-      (isCaptionRequestCommand &&
-          ((!isReadyStatus && isVideoAudio)
-              || !isVideoAudio
-              || isExternalMedia
-              || !this._permissionsService.hasPermission(KMCPermissions.REACH_PLUGIN_PERMISSION)
-          )
-      ) // hide caption request if not audio/video or if it is then if not ready or it's forbidden by permission
+      (isCaptionRequestCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry })) // hide caption request if not audio/video or if it is then if not ready or it's forbidden by permission
     );
   }
 

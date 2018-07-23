@@ -7,7 +7,7 @@ import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entr
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {EntriesTableColumns} from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import {ContentEntriesAppService} from '../content-entries-app.service';
-import { AppEventsService, ReachPages } from 'app-shared/kmc-shared';
+import { AppEventsService } from 'app-shared/kmc-shared';
 import { CaptionRequestEvent, PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import {UploadManagement} from '@kaltura-ng/kaltura-common';
 import {TrackedFileStatuses} from '@kaltura-ng/kaltura-common';
@@ -16,7 +16,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { EntriesListService } from './entries-list.service';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
-import { LiveDashboardAppViewService, ReachAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { LiveDashboardAppViewService, ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { ClearEntriesSelectionEvent } from 'app-shared/kmc-shared/events/clear-entries-selection-event';
@@ -67,9 +67,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
     },
       {
           label: this._appLocalization.get('applications.content.table.captionRequest'),
-          commandName: 'captionRequest',
-          styleClass: '',
-          disabled: !this._reachAppViewService.isAvailable()
+          commandName: 'captionRequest'
       },
     {
       label: this._appLocalization.get('applications.content.table.delete'),
@@ -161,8 +159,8 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         break;
 
         case 'captionRequest':
-            if (entry && entry.id && this._reachAppViewService.isAvailable()) {
-                this._appEvents.publish(new CaptionRequestEvent({ entryId: entry.id }, ReachPages.entry));
+            if (this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry })) {
+                this._appEvents.publish(new CaptionRequestEvent({ entry }, ReachPages.entry));
             }
             break;
       default:
