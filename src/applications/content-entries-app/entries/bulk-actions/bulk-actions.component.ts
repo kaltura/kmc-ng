@@ -453,7 +453,6 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               id: 'captionRequest',
               label: this._appLocalization.get('applications.content.bulkActions.captionRequest'),
               command: () => this._captionRequest(),
-              disabled: !this._reachAppViewService.isAvailable({ page: ReachPages.entries, entries: this.selectedEntries })
           },
           {
               id: 'setAccessControl',
@@ -474,7 +473,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
       this._permissionsService.filterList(
           <{ id: string }[]>result,
           {
-              'captionRequest': KMCPermissions.REACH_PLUGIN_PERMISSION
+              'captionRequest': this._reachAppViewService.isAvailable({ page: ReachPages.entries, entries: this.selectedEntries })
           }
       );
 
