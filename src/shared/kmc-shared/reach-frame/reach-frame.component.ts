@@ -66,8 +66,14 @@ export class ReachFrameComponent implements OnDestroy, OnChanges {
                         'reach': {
                             language: this._appLocalization.selectedLanguage,
                             dashboardEntryLinkAction: (entryId) => {
-                                this._logger.info(`handle 'dashboardEntryLinkAction' event from Reach app, open entry details vide`, { entryId });
-                                this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata);
+                                this._logger.info(`handle 'dashboardEntryLinkAction' event from Reach app`, { entryId });
+                                if (entryId) {
+                                    this._logger.info(`open entry details view`);
+                                    this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata);
+                                } else {
+                                    this._logger.info(`entryId was not provided, abort action, close popup`);
+                                }
+                                this.closeApp.emit();
                             },
                             bulkOrderOnCancel: () => {
                                 this._logger.info(`handle 'bulkOrderOnCancel' event from Reach app, close floater, clear entries selection`);
