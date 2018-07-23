@@ -58,37 +58,37 @@
                     <td [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
                         <p-tableCheckbox [value]="file"></p-tableCheckbox>
                     </td>
-                    <td>
+                    <td [ngStyle]="{'width':'80px', 'text-align': 'center'}">
                         <div class="kIconMediaType"
                              [kTooltip]="file.mediaType | entryType: true"
                              [ngClass]="file.mediaType | entryType: false"></div>
                     </td>
-                    <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.name}">
+                    <td class="ui-resizable-column">
                         <span class="kUploadName kTableColumn" [kTooltip]="file.fileName" [showOnEllipsis]="true">
                             {{file.fileName}}
                         </span>
                     </td>
-                    <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.entryId}">
+                    <td class="ui-resizable-column">
                         <span class="kTableColumn" [kTooltip]="file.entryId" [showOnEllipsis]="true">
                             {{file.entryId}}
                         </span>
                     </td>
-                    <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.size}">
+                    <td class="ui-resizable-column">
                         <span class="kTableColumn" [kTooltip]="file.fileSize | kFileSize" [showOnEllipsis]="true">
                             {{file.fileSize | kFileSize}}
                         </span>
                     </td>
-                    <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.uploadedOn}">
+                    <td class="ui-resizable-column">
                         <span class="kTableColumn" [kTooltip]="file.uploadedOn | kDate" [showOnEllipsis]="true">
                             {{file.uploadedOn | kDate}}
                         </span>
                     </td>
-                    <td class="ui-resizable-column" [ngStyle]="{'width': _columnsConfig.status}">
+                    <td class="ui-resizable-column">
                         <span class="kTableColumn" [kTooltip]="file.status | kUploadStatus" [showOnEllipsis]="true">
                             {{file.status | kUploadStatus}}
                         </span>
                     </td>
-                    <td [ngStyle]="{'width': '120px'}">
+                    <td>
                         <kUploadProgress [progress]="file.progress" [status]="file.status"></kUploadProgress>
                     </td>
                     <td [ngStyle]="{'width': '70px', 'text-align': 'center'}">

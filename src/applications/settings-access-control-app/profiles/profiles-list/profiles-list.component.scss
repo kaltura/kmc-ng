@@ -125,46 +125,6 @@
     display: flex;
     margin-left: auto;
   }
-  .kCategoriesFilter {
-    border: 1px solid $kGrayscale4;
-    border-radius: 4px;
-    display: flex;
-    background-color: #ffffff;
-    height: 32px;
-    align-items: center;
-    cursor: pointer;
-    color: $kGrayscale1;
-    width: 190px;
-    position: relative;
-    margin-right: 8px;
-    i {
-      margin-right: 12px;
-      margin-left: 8px;
-      font-size: 24px;
-      color: $kGrayscale4;
-      &.dropdown {
-        font-size: 10px;
-      }
-    }
-    &:hover {
-      color: $kPrimary;
-      i {
-        color: $kPrimary;
-      }
-      i.kIcondropdown_arrow_bottom.dropdown {
-        color: $kGrayscale3;
-      }
-    }
-    .dropdown {
-      position: absolute;
-      right: 4px;
-      top: 12px;
-    }
-  }
-  .kRefine {
-    @extend .kCategoriesFilter;
-    width: 160px;
-  }
   .kHidden {
     visibility: hidden;
     width: 0px;

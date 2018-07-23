@@ -33,7 +33,7 @@
                      [(ngModel)]="_query.freetext"
                      (keyup.enter)="onFreetextChanged()"
                      placeholder="{{'applications.content.entries.searchEntries' | translate}}">
-              <div #categoriesFilterBtn class="kCategoriesFilter">
+              <div #categoriesFilterBtn class="kCategoriesFilter kDropdown">
                 <i class="kIconfolder" *ngIf="!_categoriesUpdating"></i>
               <div *ngIf="_categoriesUpdating" class="k-spinner-background kSpinnerBkg" kTooltip="{{'applications.content.categories.categoriesUpdateMsg' | translate}}">
                 <div class="k-spinner-animation kSpinnerAnim"></div>
@@ -41,7 +41,7 @@
                 <span>{{'applications.content.entries.filterCategories' | translate}}</span>
                 <i class="kIcondropdown_arrow_bottom dropdown"></i>
               </div>
-              <div #refineBtn class="kRefine">
+              <div #refineBtn class="kRefine kDropdown">
                 <i class="kIconfilter"></i>
                 <span>{{'applications.content.entries.refine' | translate}}</span>
                 <i class="kIcondropdown_arrow_bottom dropdown"></i>

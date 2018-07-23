@@ -1,3 +1,24 @@
+<a name="5.1.0"></a>
+# [5.1.0](https://github.com/kaltura/kmc-ng/compare/v5.0.0...v5.1.0) (2018-07-19)
+
+
+### Bug Fixes
+
+* **content/entry:** fix noex format assigned to uploaded files ([07fb2e3](https://github.com/kaltura/kmc-ng/commit/07fb2e3))
+* **settings/custom-data:** fix custom data field table styling ([0c7c115](https://github.com/kaltura/kmc-ng/commit/0c7c115))
+* fix link to legacy KMC ([d043cc1](https://github.com/kaltura/kmc-ng/commit/d043cc1))
+* log into kmc using ks ([#774](https://github.com/kaltura/kmc-ng/issues/774)) KMCNG-1942 ([04d6191](https://github.com/kaltura/kmc-ng/commit/04d6191))
+* set heaight for sections to support Safari 10.1 ([c33b222](https://github.com/kaltura/kmc-ng/commit/c33b222))
+* style fixes ([#779](https://github.com/kaltura/kmc-ng/issues/779)) ([ab24843](https://github.com/kaltura/kmc-ng/commit/ab24843))
+
+
+### Features
+
+* **content/moderation:** make the moderation default filters as mandatory  ([#728](https://github.com/kaltura/kmc-ng/issues/728)) KMCNG-1903 ([e1ebf91](https://github.com/kaltura/kmc-ng/commit/e1ebf91))
+* set link to legacy KMC from Live Analitics message ([8795f12](https://github.com/kaltura/kmc-ng/commit/8795f12))
+* support table columns resize with persist state ([#749](https://github.com/kaltura/kmc-ng/issues/749)) KMCNG-1797 ([369cc9e](https://github.com/kaltura/kmc-ng/commit/369cc9e))
+
+
 <a name="5.0.0"></a>
 # [5.0.0](https://github.com/kaltura/kmc-ng/compare/v4.8.2...v5.0.0) (2018-07-11)
 
@@ -49,6 +70,15 @@
 
 * upgrade Angular stack to v6
 
+<a name="4.8.3"></a>
+## [4.8.3](https://github.com/kaltura/kmc-ng/compare/v4.8.2...v4.8.3) (2018-07-22)
+
+
+### Bug Fixes
+
+* handle custom schema boolean values correctly ([d734eef](https://github.com/kaltura/kmc-ng/commit/d734eef))
+* ignore invalid metadata profiles when parsing ([9d12bfe](https://github.com/kaltura/kmc-ng/commit/9d12bfe))
+* **content/entry:** save correct value of caption selected language ([7c9057b](https://github.com/kaltura/kmc-ng/commit/7c9057b))
 
 
 <a name="4.8.2"></a>

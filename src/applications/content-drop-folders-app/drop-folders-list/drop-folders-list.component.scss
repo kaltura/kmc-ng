@@ -170,10 +170,7 @@
   }
 
   .kStatusesFilter {
-    border: 1px solid $kGrayscale4;
-    border-radius: 4px;
     display: flex;
-    background-color: #ffffff;
     height: 32px;
     align-items: center;
     cursor: pointer;
@@ -189,10 +186,6 @@
       &.dropdown {
         font-size: 10px;
       }
-    }
-
-    &:hover {
-      color: $kPrimary;
     }
 
     .dropdown {

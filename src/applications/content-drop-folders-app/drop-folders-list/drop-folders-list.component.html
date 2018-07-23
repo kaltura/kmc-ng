@@ -22,7 +22,7 @@
                    [(ngModel)]="_query.freeText"
                    (keyup.enter)="_onFreetextChanged()"
                    [placeholder]="'applications.content.dropFolders.search' | translate">
-            <div #statusesFilterBtn class="kStatusesFilter">
+            <div #statusesFilterBtn class="kStatusesFilter kDropdown">
               <i class="kIconfilter"></i>
               <span>{{'applications.content.dropFolders.allStatuses' | translate}}</span>
               <i class="kIcondropdown_arrow_bottom dropdown"></i>

@@ -126,10 +126,11 @@
 
                 <td class="ui-resizable-column"
                     *ngIf="_columnsMetadata.thumbnailUrl && !(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
-                    <div class="kThumbnailHolder"
+                    <div class="kThumbnailHolder" #holder
                          [class.disable]="!_allowDrilldown('view', entry.mediaType,entry.status)"
                          (click)="_onActionSelected('view',entry)">
-                        <img src="{{entry.thumbnailUrl}}" onError="this.onerror=null;this.style.display='none'">
+                        <img *ngIf="entry.thumbnailUrl" src="{{entry.thumbnailUrl}}/quality/80/width/80/height/46/nearest_aspect_ratio/1" onError="this.onerror=null;this.style.display='none'" (error)="holder.classList.add('error')">
+                        <i class="kIconwarning"></i>
                     </div>
                 </td>
 
