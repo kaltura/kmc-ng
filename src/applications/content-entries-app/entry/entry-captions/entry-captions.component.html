@@ -9,7 +9,6 @@
                 (click)="_addCaption()"></button>
         <button type="button" class="kButtonDefault" pButton
                 label="{{'applications.content.entryDetails.captions.request' | translate}}"
-                *ngIf="_kmcPermissions.REACH_PLUGIN_PERMISSION | kNgIfPermitted"
                 [disabled]="!_requestCaptionsAvailable"
                 (click)="_requestCaptions()"></button>
         <div class="kTable">

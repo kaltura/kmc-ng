@@ -147,7 +147,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
     }
 
     public _requestCaptions(): void {
-        const entry = <KalturaExternalMediaEntry>this._widgetService.data;
+        const entry = this._widgetService.data;
         if (this._requestCaptionsAvailable && entry) {
             this._appEvents.publish(new CaptionRequestEvent({ entry }, ReachPages.entry));
         }

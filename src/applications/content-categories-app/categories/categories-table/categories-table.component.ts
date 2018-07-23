@@ -124,7 +124,6 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
       },
         {
             id: 'addServiceRule',
-            disabled: !this._reachAppViewService.isAvailable({ page: ReachPages.category, category }),
             label: this.appLocalization.get('applications.content.categories.addServiceRule'),
             command: () => this.onActionSelected('addServiceRule', category)
         },
@@ -141,7 +140,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
       {
         'moveCategory': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES,
         'delete': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES,
-        'addServiceRule': KMCPermissions.REACH_PLUGIN_PERMISSION
+        'addServiceRule': this._reachAppViewService.isAvailable({ page: ReachPages.category, category })
       }
     );
   }

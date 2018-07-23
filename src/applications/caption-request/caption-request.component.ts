@@ -30,7 +30,7 @@ export class CaptionRequestComponent implements OnDestroy {
                 if (!this.captionRequest.isShow) {
                     this.captionRequest.open();
                 } else {
-                    this._logger.info('Cannot open caption request (window already open?)');
+                    this._logger.warn('Cannot open caption request (window already open?)');
                 }
             });
     }
