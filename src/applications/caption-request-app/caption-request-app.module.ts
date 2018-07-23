@@ -4,7 +4,7 @@ import { AreaBlockerModule, PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 import { LocalizationModule } from '@kaltura-ng/mc-shared';
 import { ReachFrameModule } from 'app-shared/kmc-shared/reach-frame';
 import { ReachComponent } from './reach.component';
-import { CaptionRequestComponent } from './caption-request.component';
+import { CaptionRequestAppComponent } from './caption-request-app.component';
 
 
 @NgModule({
@@ -16,13 +16,13 @@ import { CaptionRequestComponent } from './caption-request.component';
         ReachFrameModule
     ],
     declarations: [
-        CaptionRequestComponent,
+        CaptionRequestAppComponent,
         ReachComponent
     ],
     providers: [],
     exports: [
-        CaptionRequestComponent
+        CaptionRequestAppComponent
     ]
 })
-export class CaptionRequestModule {
+export class CaptionRequestAppModule {
 }

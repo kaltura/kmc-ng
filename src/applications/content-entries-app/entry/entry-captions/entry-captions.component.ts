@@ -6,17 +6,15 @@ import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaCaptionAssetStatus, KalturaExternalMediaEntry } from 'kaltura-ngx-client';
+import { KalturaCaptionAssetStatus } from 'kaltura-ngx-client';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 
 import { EntryCaptionsWidget } from './entry-captions-widget.service';
 
 import { getKalturaServerUri, serverConfig } from 'config/server';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { AppEventsService } from 'app-shared/kmc-shared';
-import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/component-views';
-import { CaptionRequestEvent } from 'app-shared/kmc-shared/events';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 
 @Component({
@@ -40,8 +38,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
                 private _appAuthentication: AppAuthentication,
                 private _appLocalization: AppLocalization,
                 private _browserService: BrowserService,
-                private _reachAppViewService: ReachAppViewService,
-                private _appEvents: AppEventsService) {
+                private _reachAppViewService: ReachAppViewService) {
     }
 
 	ngOnInit() {
@@ -148,9 +145,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 
     public _requestCaptions(): void {
         const entry = this._widgetService.data;
-        if (this._requestCaptionsAvailable && entry) {
-            this._appEvents.publish(new CaptionRequestEvent({ entry }, ReachPages.entry));
-        }
+        this._reachAppViewService.open({ entry, page: ReachPages.entry });
     }
 }
 

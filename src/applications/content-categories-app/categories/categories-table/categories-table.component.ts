@@ -14,8 +14,8 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {KalturaCategory} from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
+import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Component({
   selector: 'kCategoriesTable',

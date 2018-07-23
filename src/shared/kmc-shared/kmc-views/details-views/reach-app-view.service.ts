@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import {
-    KalturaCategory,
-    KalturaClient,
-    KalturaEntryStatus,
-    KalturaExternalMediaEntry,
-    KalturaMediaEntry,
-    KalturaMediaType
-} from 'kaltura-ngx-client';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { KmcComponentViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-component-view-base.service';
+import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
+import { KalturaCategory, KalturaEntryStatus, KalturaExternalMediaEntry, KalturaMediaEntry, KalturaMediaType } from 'kaltura-ngx-client';
 import { serverConfig } from 'config/server';
-import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissions, KMCPermissionsService } from 'shared/kmc-shared/kmc-permissions/index';
+import { DetailsViewMetadata, KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
+import { Title } from '@angular/platform-browser';
+import { AppEventsService } from 'app-shared/kmc-shared/app-events';
+import { CaptionRequestEvent } from 'app-shared/kmc-shared/events';
+import { Observable, of as ObservableOf } from 'rxjs';
 
 export enum ReachPages {
     entry = 'entry',
@@ -29,15 +27,18 @@ export interface ReachAppViewArgs {
 }
 
 @Injectable()
-export class ReachAppViewService extends KmcComponentViewBaseService<ReachAppViewArgs> {
+export class ReachAppViewService extends KmcDetailsViewBaseService<ReachAppViewArgs> {
 
     constructor(private _appPermissions: KMCPermissionsService,
                 private _appLocalization: AppLocalization,
-                private _kalturaClient: KalturaClient,
                 private _router: Router,
+                private _appEvents: AppEventsService,
                 _browserService: BrowserService,
-                _logger: KalturaLogger) {
-        super(_logger.subLogger('ReachAppViewService'));
+                _logger: KalturaLogger,
+                _titleService: Title,
+                _contextualHelpService: ContextualHelpService) {
+        super(_logger.subLogger('ReachAppViewService'), _browserService,
+            _titleService, _contextualHelpService);
     }
 
     private _availableByPermission(): boolean {
@@ -67,11 +68,23 @@ export class ReachAppViewService extends KmcComponentViewBaseService<ReachAppVie
         return false;
     }
 
+    protected _open(args: ReachAppViewArgs): Observable<boolean> {
+        this._logger.info('handle open view request by the user', { page: args.page });
+        const page = args.page;
+        delete args.page;
+        this._appEvents.publish(new CaptionRequestEvent(args, page));
+        return ObservableOf(true);
+    }
+
     public isAvailable(args: ReachAppViewArgs): boolean {
         const isAvailableByConfig = !!serverConfig.externalApps.reach;
         const isAvailableByPermission = this._availableByPermission();
         const isAvailableByData = this._availableByData(args);
 
         return isAvailableByConfig && isAvailableByData && isAvailableByPermission;
+    }
+
+    public getViewMetadata(args: ReachAppViewArgs): DetailsViewMetadata {
+        return { title: '', viewKey: '' };
     }
 }

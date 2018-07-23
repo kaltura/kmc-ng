@@ -5,15 +5,15 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { CaptionRequestEvent } from 'app-shared/kmc-shared/events';
 import { ReachData } from 'app-shared/kmc-shared/reach-frame';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { ReachPages } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Component({
     selector: 'kCaptionRequest',
-    templateUrl: './caption-request.component.html',
-    styleUrls: ['./caption-request.component.scss'],
-    providers: [KalturaLogger.createLogger('CaptionRequestComponent')]
+    templateUrl: './caption-request-app.component.html',
+    styleUrls: ['./caption-request-app.component.scss'],
+    providers: [KalturaLogger.createLogger('CaptionRequestAppComponent')]
 })
-export class CaptionRequestComponent implements OnDestroy {
+export class CaptionRequestAppComponent implements OnDestroy {
     @ViewChild('captionRequest') captionRequest: PopupWidgetComponent;
 
     public _data: ReachData;

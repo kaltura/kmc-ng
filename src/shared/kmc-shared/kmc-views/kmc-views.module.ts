@@ -30,13 +30,13 @@ import {
     ContentNewCategoryViewService,
     ContentPlaylistViewService,
     SettingsTranscodingProfileViewService,
-    RestorePasswordViewService
+    RestorePasswordViewService,
+    ReachAppViewService
 } from './details-views';
 import {
     AdvertisementsAppViewService,
     ClipAndTrimAppViewService,
     LiveDashboardAppViewService,
-    ReachAppViewService
 } from './component-views';
 import { QuizAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 

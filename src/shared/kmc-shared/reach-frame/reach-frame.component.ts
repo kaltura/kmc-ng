@@ -3,8 +3,12 @@ import { AppAuthentication, BrowserService } from 'shared/kmc-shell';
 import { getKalturaServerUri, serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/component-views';
-import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import {
+    ContentEntryViewSections,
+    ContentEntryViewService,
+    ReachAppViewService,
+    ReachPages
+} from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ClearEntriesSelectionEvent } from 'app-shared/kmc-shared/events/clear-entries-selection-event';
 import { AppEventsService } from 'app-shared/kmc-shared/app-events';
 import { KalturaCategory, KalturaMediaEntry } from 'kaltura-ngx-client';

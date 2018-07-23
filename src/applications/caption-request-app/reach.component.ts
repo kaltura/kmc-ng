@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { ReachData } from 'app-shared/kmc-shared/reach-frame';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { ReachPages } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Component({
     selector: 'kReach',

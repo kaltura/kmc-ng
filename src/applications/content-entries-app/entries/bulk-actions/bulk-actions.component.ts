@@ -38,10 +38,8 @@ import {BulkAddEditorsService} from './services/bulk-add-editors.service';
 import {BulkRemoveEditorsService} from './services/bulk-remove-editors.service';
 import {BulkRemovePublishersService} from './services/bulk-remove-publishers.service';
 import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
-import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentPlaylistViewSections, ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/component-views';
-import { CaptionRequestEvent } from 'app-shared/kmc-shared/events';
 
 @Component({
   selector: 'kBulkActions',
@@ -492,10 +490,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           .filter(entry => !this._reachAppViewService.isRelevantEntry(entry));
 
       if (!invalidEntries.length) {
-          this._appEvents.publish(new CaptionRequestEvent(
-              { entries: this.selectedEntries },
-              ReachPages.entries
-          ));
+          this._reachAppViewService.open({ entries: this.selectedEntries, page: ReachPages.entries });
           return;
       }
 
@@ -523,7 +518,10 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               {
                   label: this._appLocalization.get('app.common.continue'),
                   action: () => {
-                      this._appEvents.publish(new CaptionRequestEvent({ entries: validEntries }, ReachPages.entries));
+                      this._reachAppViewService.open({
+                          entries: validEntries,
+                          page: ReachPages.entries
+                      });
                       this.blockerMessageChange.emit(null);
                   }
               },

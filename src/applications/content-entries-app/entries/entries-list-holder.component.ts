@@ -8,15 +8,20 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {EntriesTableColumns} from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import {ContentEntriesAppService} from '../content-entries-app.service';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { CaptionRequestEvent, PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
+import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import {UploadManagement} from '@kaltura-ng/kaltura-common';
 import {TrackedFileStatuses} from '@kaltura-ng/kaltura-common';
 import {UpdateEntriesListEvent} from 'app-shared/kmc-shared/events/update-entries-list-event';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { EntriesListService } from './entries-list.service';
-import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
-import { LiveDashboardAppViewService, ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/component-views';
+import {
+    ContentEntryViewSections,
+    ContentEntryViewService,
+    ReachAppViewService,
+    ReachPages
+} from 'app-shared/kmc-shared/kmc-views/details-views';
+import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { ClearEntriesSelectionEvent } from 'app-shared/kmc-shared/events/clear-entries-selection-event';
@@ -159,9 +164,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         break;
 
         case 'captionRequest':
-            if (this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry })) {
-                this._appEvents.publish(new CaptionRequestEvent({ entry }, ReachPages.entry));
-            }
+            this._reachAppViewService.open({ entry, page: ReachPages.entry });
             break;
       default:
         break;

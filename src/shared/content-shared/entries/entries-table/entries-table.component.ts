@@ -20,7 +20,7 @@ import { globalConfig } from 'config/global';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { ColumnsResizeManagerService } from 'app-shared/kmc-shared/columns-resize-manager';
-import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 export interface EntriesTableColumns {
   [key: string]: {
