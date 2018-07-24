@@ -2321,6 +2321,7 @@
         "roleUpdatedMessage": "Changes will take effect immediately.\nBrowser page refresh should be recommended to the existing users associated with this role",
         "errors": {
                     "required": "This field is required.",
+                    "unsafeValue": "Potential Unsafe HTML tags",
                     "validationError": "The form contains some invalid information. Please review the sections marked as invalid."
                 },
                 "permissionsTable": {
