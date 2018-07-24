@@ -15,7 +15,7 @@
     </span>
   </div>
 
-  <div class="kUploadMenuListItem">
+  <div class="kUploadMenuListItem" *ngIf="_bulkUploadAvailable">
     <i class="kIconbulk kUploadMenuBulkUploadIcon" (click)="onItemSelected.emit('bulkUpload')"></i>
     <span>
       <a (click)="onItemSelected.emit('bulkUpload')">{{ 'applications.upload.uploadMenu.bulkUpload.title' | translate }}</a><br>
