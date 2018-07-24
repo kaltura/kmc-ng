@@ -4,10 +4,10 @@
 
 ### Bug Fixes
 
-* ingnore invalid metadata profiles white parsing ([a705fd3](https://github.com/kaltura/kmc-ng/commit/a705fd3))
-* **content/entries:** optimize entries list thumbnails loading ([a98303d](https://github.com/kaltura/kmc-ng/commit/a98303d))
-* **content/entry:** fix entry caption language selection upon editing ([#781](https://github.com/kaltura/kmc-ng/issues/781)) ([ee8c492](https://github.com/kaltura/kmc-ng/commit/ee8c492))
-* **content/upload:** fix resieable data table configuration and style ([9cd401e](https://github.com/kaltura/kmc-ng/commit/9cd401e))
+* **content/entries:** optimize entries list thumbnail loading ([a98303d](https://github.com/kaltura/kmc-ng/commit/a98303d))
+* **content/entry:** fix entry caption language selection upon caption editing ([#781](https://github.com/kaltura/kmc-ng/issues/781)) ([ee8c492](https://github.com/kaltura/kmc-ng/commit/ee8c492))
+* **content/upload:** fix resizeable data table configuration and style ([9cd401e](https://github.com/kaltura/kmc-ng/commit/9cd401e))
+* ingnore invalid metadata profiles while parsing ([a705fd3](https://github.com/kaltura/kmc-ng/commit/a705fd3))
 
 
 ### Features
