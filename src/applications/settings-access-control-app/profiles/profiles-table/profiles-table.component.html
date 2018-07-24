@@ -127,7 +127,9 @@
                             <tr *ngIf="profile.view.hasAdditionalInfo">
                                 <td class="kStub1"></td>
                                 <td class="kStub1"></td>
-                                <td [attr.colspan]="_documentWidth < 1300 ? 1 : 3">{{profile.description}}</td>
+                                <td [attr.colspan]="_documentWidth < 1300 ? 1 : 3">
+                                    <span class="kDescription">{{profile.description}}</span>
+                                </td>
                                 <td>
                                     <div *ngFor="let domain of profile.view.domain.details" [kTooltip]="domain">
                                         {{domain}}

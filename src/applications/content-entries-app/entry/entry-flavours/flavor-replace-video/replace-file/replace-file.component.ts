@@ -65,8 +65,8 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @ViewChild('fileDialog') _fileDialog: FileDialogComponent;
 
-    private _transcodingProfiles: KalturaTranscodingProfileWithAsset[] = [];
     private _storageProfiles: KalturaStorageProfile[] = [];
+    private _transcodingProfiles: KalturaTranscodingProfileWithAsset[] = [];
     private _replacementResultHandler: Observer<void> = {
         next: () => {
             this._logger.info(`handle successful replace files action, reload widget data`);
@@ -212,25 +212,23 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
         this._isLoading = true;
 
         this._transcodingProfileManagement.get()
-            .pipe(
-            switchMap(
+            .pipe(switchMap(
                 (transcodingProfiles) => this._loadConversionProfiles().pipe(
-                    map((assets) => {
-                        return transcodingProfiles.map(profile => {
-                            return {
-                                id: profile.id,
-                                name: profile.name,
-                                isDefault: profile.isDefault,
-                                storageProfileId: profile.storageProfileId,
-                                assets: assets.filter(item => {
-                                    return item.conversionProfileId === profile.id && item.origin !== KalturaAssetParamsOrigin.convert;
-                                })
-                            };
-                        });
-                    })
-                )
-            ),
-            switchMap(
+                map(( assets) => {
+                    return transcodingProfiles.map(profile => {
+                        return {
+                            id: profile.id,
+                            name: profile.name,
+                            isDefault: profile.isDefault,
+                            storageProfileId: profile.storageProfileId,
+                            assets: assets.filter(item => {
+                                return item.conversionProfileId === profile.id && item.origin !== KalturaAssetParamsOrigin.convert;
+                            })
+                        };
+                    });
+                })
+            )
+            ),switchMap(
                 (profilesWithAssets) => {
                     let result;
                     if (this.replaceType === 'link') {
@@ -238,13 +236,12 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
                         result = this._kalturaClient
                             .request(new StorageProfileListAction())
                             .map(response => response.objects);
-                    } else {
+                    }else {
                         result = ObservableOf(null);
                     }
 
                     return result.pipe(
-                        map((storageProfiles) => ({ profilesWithAssets, storageProfiles }))
-                    );
+                map(( storageProfiles) => ({ profilesWithAssets, storageProfiles })));
                 })
             )
             .subscribe(

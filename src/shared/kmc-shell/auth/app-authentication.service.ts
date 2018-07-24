@@ -32,7 +32,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { UserLoginByKsAction } from 'kaltura-ngx-client';
 import { KmcServerPolls } from '../../kmc-shared/server-polls';
 import { HttpClient } from '@angular/common/http';
-import { buildKalturaServerUri } from 'config/server';
+import { buildBaseUri } from 'config/server';
 import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 
@@ -82,9 +82,10 @@ export class AppAuthentication {
     }
 
     private _defaultUrl: string;
-    private _automaticLogin: {  ks: string} = { ks: null };
+    private _automaticLogin: {  ks: string, persistCredentials: boolean } = { ks: null, persistCredentials: false };
     private _logger: KalturaLogger;
     private _appUser: Immutable.ImmutableObject<AppUser> = null;
+    private _autoLoginAttempted = false;
 
     public get defaultUrl(): string {
         return this._defaultUrl;
@@ -284,7 +285,7 @@ export class AppAuthentication {
         }
         const serviceUrl = serverConfig.kalturaServer.limitAccess.serviceUrl;
 
-        const url = buildKalturaServerUri(serviceUrl + partner.id);
+        const url = buildBaseUri(serviceUrl + partner.id);
         this._logger.debug(`check if partner can access the KMC`, {partnerId: partner.id, limitAccess: true, url});
 
         return this._http.get(url, { responseType: 'json' })
@@ -436,8 +437,9 @@ export class AppAuthentication {
         });
     }
 
-    public setAutomaticLoginCredentials(ks: string) {
+    public setAutomaticLoginCredentials(ks: string, persistCredentials = false) {
         this._automaticLogin.ks = ks;
+        this._automaticLogin.persistCredentials = persistCredentials;
     }
 
 
@@ -456,11 +458,16 @@ export class AppAuthentication {
     }
 
     public loginAutomatically(defaultUrl: string): Observable<boolean> {
+        if (this._autoLoginAttempted || this.isLogged()) {
+            return ObservableOf(this.isLogged());
+        }
+
+        this._autoLoginAttempted = true;
         const ksFromApp = this._automaticLogin.ks;
         if (ksFromApp) {
             this._logger.info(`try to login automatically with KS provided explicitly by the app`);
             this._clearSessionCredentials();
-            return this._loginByKS(ksFromApp, false);
+            return this._loginByKS(ksFromApp, this._automaticLogin.persistCredentials);
         }
 
         const forbiddenUrls = ['/error', '/actions', '/login'];

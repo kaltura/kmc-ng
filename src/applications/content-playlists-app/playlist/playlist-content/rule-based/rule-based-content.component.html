@@ -19,7 +19,7 @@
       [(selectedRules)]="_selectedRules"></kPlaylistRulesTable>
   </div>
 
-  <kPopupWidget #playlistRule [popupWidth]="995" [slider]="true">
+  <kPopupWidget #playlistRule data-aid="playlistRule" [popupWidth]="995" [slider]="true">
     <ng-template>
       <kPlaylistRule [rule]="_selectedRule"
                      (onClosePopupWidget)="playlistRule.close()"

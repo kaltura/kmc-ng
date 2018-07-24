@@ -85,6 +85,7 @@
   p-table {
     .ui-table-scrollable-body {
       margin-bottom: 34px;
+      height: calc(100vh - 521px) !important;
     }
 
     .ui-table-scrollable-table-wrapper {
