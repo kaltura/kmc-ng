@@ -1,5 +1,5 @@
-<a name="6.0.0"></a>
-# [6.0.0](https://github.com/kaltura/kmc-ng/compare/v4.8.3...v6.0.0) (2018-07-24)
+<a name="5.2.0"></a>
+# [5.2.0](https://github.com/kaltura/kmc-ng/compare/v5.1.0...v5.2.0) (2018-07-24)
 
 
 ### Bug Fixes
@@ -7,7 +7,7 @@
 * **content/entries:** optimize entries list thumbnail loading ([a98303d](https://github.com/kaltura/kmc-ng/commit/a98303d))
 * **content/entry:** fix entry caption language selection upon caption editing ([#781](https://github.com/kaltura/kmc-ng/issues/781)) ([ee8c492](https://github.com/kaltura/kmc-ng/commit/ee8c492))
 * **content/upload:** fix resizeable data table configuration and style ([9cd401e](https://github.com/kaltura/kmc-ng/commit/9cd401e))
-* ingnore invalid metadata profiles while parsing ([a705fd3](https://github.com/kaltura/kmc-ng/commit/a705fd3))
+* ignore invalid metadata profiles while parsing ([a705fd3](https://github.com/kaltura/kmc-ng/commit/a705fd3))
 
 
 ### Features
