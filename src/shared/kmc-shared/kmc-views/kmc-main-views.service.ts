@@ -24,7 +24,6 @@ import { ContentCategoriesMainViewService,
 } from './main-views';
 import { Observable } from 'rxjs';
 
-
 export interface KMCAppMenuItem {
     menuTitle: string;
     icon?: string;

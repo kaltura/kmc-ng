@@ -15,6 +15,7 @@ import {KalturaCategory} from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
+import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Component({
   selector: 'kCategoriesTable',
@@ -66,6 +67,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   constructor(public _columnsResizeManager: ColumnsResizeManagerService,
               private appLocalization: AppLocalization,
               private cdRef: ChangeDetectorRef,
+              private _reachAppViewService: ReachAppViewService,
               private _el: ElementRef<HTMLElement>,
               private _permissionsService: KMCPermissionsService) {
   }
@@ -120,6 +122,11 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
         label: this.appLocalization.get('applications.content.categories.moveCategory'),
         command: () => this.onActionSelected('moveCategory', category)
       },
+        {
+            id: 'addServiceRule',
+            label: this.appLocalization.get('applications.content.categories.addServiceRule'),
+            command: () => this.onActionSelected('addServiceRule', category)
+        },
       {
         id: 'delete',
         label: this.appLocalization.get('applications.content.categories.delete'),
@@ -132,7 +139,8 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
       <{ id: string }[]>this._items,
       {
         'moveCategory': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES,
-        'delete': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES
+        'delete': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES,
+        'addServiceRule': this._reachAppViewService.isAvailable({ page: ReachPages.category, category })
       }
     );
   }
