@@ -1,6 +1,13 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { KalturaEntryStatus, KalturaMediaEntry, KalturaMediaType, KalturaSourceType } from 'kaltura-ngx-client';
+import {
+    KalturaEntryStatus,
+    KalturaExternalMediaEntry,
+    KalturaLiveEntry,
+    KalturaMediaEntry,
+    KalturaMediaType,
+    KalturaSourceType
+} from 'kaltura-ngx-client';
 import { ActionTypes, EntryStore, NotificationTypes } from './entry-store.service';
 import { EntrySectionsListWidget } from './entry-sections-list/entry-sections-list-widget.service';
 import { EntryMetadataWidget } from './entry-metadata/entry-metadata-widget.service';
@@ -157,24 +164,28 @@ export class EntryComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 	}
 
-    private _hideMenuItems(source: KalturaSourceType,
-                           status: KalturaEntryStatus,
+    private _hideMenuItems(entry: KalturaMediaEntry,
                            { commandName }: { commandName: string }): boolean {
+        const { sourceType, status, mediaType } = entry;
         const isReadyStatus = status === KalturaEntryStatus.ready;
         const isPreviewCommand = commandName === 'preview';
-        const isKalturaLive = source === KalturaSourceType.liveStream;
+        const isKalturaLiveStream = sourceType === KalturaSourceType.liveStream;
         const isLiveDashboardCommand = commandName === 'liveDashboard';
         const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
+        const isDownloadCommand = commandName === 'download';
+        const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
+        const isNotVideoAudioImage = [KalturaMediaType.video, KalturaMediaType.audio, KalturaMediaType.image].indexOf(mediaType) === -1;
         return !(
             (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
-            (isLiveDashboardCommand && !isKalturaLive) || // hide live-dashboard menu item for entry that isn't kaltura live
+            (isLiveDashboardCommand && !isKalturaLiveStream) || // hide live-dashboard menu item for entry that isn't kaltura live
+            (isDownloadCommand && (isNotVideoAudioImage || isExternalMedia)) ||
             cannotDeleteEntry
         );
     }
 
     private _buildMenu(entry: KalturaMediaEntry): void {
         this._menuItems = this._items
-            .filter(item => this._hideMenuItems(entry.sourceType, entry.status, item))
+            .filter(item => this._hideMenuItems(entry, item))
             .map(item => {
                 switch (item.commandName) {
                     case 'preview':
@@ -199,13 +210,17 @@ export class EntryComponent implements OnInit, OnDestroy {
                         });
                         break;
                     case 'download':
-                        item.command = () => this._bulkActionsPopup.open();
+                        item.command = () => this._downloadEntry(entry);
                         break;
                     default:
                         break;
                 }
                 return item;
             });
+    }
+
+    private _downloadEntry(entry: KalturaMediaEntry): void {
+        this._bulkActionsPopup.open();
     }
 
     private _deleteEntry(entryId: string): void {
