@@ -25,6 +25,7 @@ export class ReplacementStatusComponent implements OnInit, OnDestroy {
     @Input() entry: KalturaMediaEntry;
     @Input() currentEntryId: string;
     @Input() replacementData: ReplacementData;
+    @Input() replaceButtonsLabel: string;
 
     private _failedUploadingFiles: { [id: string]: boolean } = {};
 

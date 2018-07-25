@@ -1,7 +1,7 @@
 <div class="kUploadMenu">
   <div class="kUploadMenuListItem" *ngIf="_kmcPermissions.CONTENT_INGEST_UPLOAD | kNgIfPermitted">
     <i class="kIconUpload kUploadMenuUploadIcon" (click)="onItemSelected.emit('uploadFromDesktop')"></i>
-    <span>
+    <span class="kUploadMenuListItemLinks">
       <a (click)="onItemSelected.emit('uploadFromDesktop')">{{ 'applications.upload.uploadMenu.uploadFromDesktop' | translate }}</a><br>
       <a *ngIf="_showHighSpeedLink"
          [class.kDisabled]="!_enableHighSpeedLink"
@@ -15,7 +15,7 @@
     </span>
   </div>
 
-  <div class="kUploadMenuListItem">
+  <div class="kUploadMenuListItem" *ngIf="_bulkUploadAvailable">
     <i class="kIconbulk kUploadMenuBulkUploadIcon" (click)="onItemSelected.emit('bulkUpload')"></i>
     <span>
       <a (click)="onItemSelected.emit('bulkUpload')">{{ 'applications.upload.uploadMenu.bulkUpload.title' | translate }}</a><br>
@@ -28,7 +28,7 @@
 
   <div class="kUploadMenuListItem last" *ngIf="_kmcPermissions.LIVE_STREAM_ADD | kNgIfPermitted">
     <i class="kIconlive kUploadMenuLiveStreamIcon" (click)="onItemSelected.emit('createLive')"></i>
-    <span>
+    <span class="kUploadMenuListItemLive">
       <a (click)="onItemSelected.emit('createLive')">{{ 'applications.upload.uploadMenu.liveStream' | translate }}</a>
     </span>
   </div>

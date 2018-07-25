@@ -1,58 +1,87 @@
-<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [bodyScroll]="true">
-	<div class="kClips">
-		<p class="kTitle">{{'applications.content.entryDetails.clips.clips' | translate}}</p>
-    <div class="kButtons">
-        <div>
-            <button [disabled]="!_clipAndTrimEnabled" pButton class="kButtonDefault" (click)="_clipAndTrimEnabled && clipAndTrim.open()" icon="kIconmovies" label="{{'applications.content.entryDetails.clips.clipTrim' | translate}}"></button>
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage"
+                [bodyScroll]="true">
+    <div class="kClips">
+        <p class="kTitle">{{'applications.content.entryDetails.clips.clips' | translate}}</p>
+        <div class="kButtons">
+            <div>
+                <button [disabled]="!_clipAndTrimEnabled" pButton class="kButtonDefault"
+                        (click)="_clipAndTrimEnabled && clipAndTrim.open()" icon="kIconmovies"
+                        label="{{'applications.content.entryDetails.clips.clipTrim' | translate}}"></button>
+            </div>
         </div>
-    </div>
-		<div class="kTable">
-			<p-dataTable [value]="(_widgetService.entries$ | async)?.items"
-                   scrollable="true"
-                   [sortField]="_widgetService.sortBy"
-                   [sortOrder]="_convertSortValue(_widgetService.sortAsc)"
-                   [defaultSortOrder]="_defaultSortOrder"
-                   (onSort)="_onSortChanged($event)">
-				<p-column field="id" header="{{'applications.content.entryDetails.clips.id' | translate}}" [style]="{'width':'120px','padding-left': '24px'}">
-					<ng-template let-col let-entry="rowData" pTemplate="body">
-						<a (click)="_widgetService.navigateToEntry(entry)">{{entry.id}}</a>
-					</ng-template>
-				</p-column>
-				<p-column field="name" header="{{'applications.content.entryDetails.clips.name' | translate}}" [sortable]="'custom'">
-          <ng-template let-col let-entry="rowData" pTemplate="body">
-            <span class="kTableColumn" [kTooltip]="entry[col.field]">{{entry[col.field]}}</span>
-          </ng-template>
-				</p-column>
-				<p-column field="plays" header="{{'applications.content.entryDetails.clips.plays' | translate}}" [sortable]="'custom'" [style]="{'width':'120px'}">
-				</p-column>
-				<p-column field="createdAt" header="{{'applications.content.entryDetails.clips.created' | translate}}" [sortable]="'custom'" [style]="{'width':'110px'}">
-					<ng-template let-col let-entry="rowData" pTemplate="body">
-						<span>{{entry[col.field] | kDate}}</span>
-					</ng-template>
-				</p-column>
-				<p-column field="offset" header="{{'applications.content.entryDetails.clips.offset' | translate}}" [style]="{'width':'80px'}">
-				</p-column>
-				<p-column field="duration" header="{{'applications.content.entryDetails.clips.duration' | translate}}" [sortable]="'custom'" [style]="{'width':'80px'}">
-				</p-column>
-				<p-column header="{{'applications.content.entryDetails.clips.status' | translate}}" [style]="{'width':'70px'}">
-					<ng-template let-col let-entry="rowData" pTemplate="body">
-						<span>{{entry | entryStatus}}</span>
-					</ng-template>
-				</p-column>
-			</p-dataTable>
-		</div>
+        <div class="kTable">
+            <p-table dataKey="id"
+                     [value]="(_widgetService.entries$ | async)?.items"
+                     [scrollable]="true"
+                     [rowTrackBy]="_rowTrackBy"
+                     [customSort]="true"
+                     [sortField]="_widgetService.sortBy"
+                     [sortOrder]="_widgetService.sortOrder"
+                     [defaultSortOrder]="_defaultSortOrder"
+                     (sortFunction)="_onSortChanged($event)">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th [ngStyle]="{'width':'120px','padding-left': '24px'}">
+                            {{'applications.content.entryDetails.clips.id' | translate}}
+                        </th>
+                        <th [kpSortableColumn]="'name'">
+                            {{'applications.content.entryDetails.clips.name' | translate}}
+                            <p-sortIcon [field]="'name'"></p-sortIcon>
+                        </th>
+                        <th [ngStyle]="{'width':'80px'}" [kpSortableColumn]="'plays'">
+                            {{'applications.content.entryDetails.clips.plays' | translate}}
+                            <p-sortIcon [field]="'plays'"></p-sortIcon>
+                        </th>
+                        <th [ngStyle]="{'width':'110px'}" [kpSortableColumn]="'createdAt'">
+                            {{'applications.content.entryDetails.clips.created' | translate}}
+                            <p-sortIcon [field]="'createdAt'"></p-sortIcon>
+                        </th>
+                        <th [ngStyle]="{'width':'80px'}">
+                            {{'applications.content.entryDetails.clips.offset' | translate}}
+                        </th>
+                        <th [ngStyle]="{'width':'80px'}" [kpSortableColumn]="'duration'">
+                            {{'applications.content.entryDetails.clips.duration' | translate}}
+                            <p-sortIcon [field]="'duration'"></p-sortIcon>
+                        </th>
+                        <th [ngStyle]="{'width':'70px'}">
+                            {{'applications.content.entryDetails.clips.status' | translate}}
+                        </th>
+                    </tr>
+                </ng-template>
 
-		<p-paginator class="kTableFooter" [rows]="_widgetService.pageSize" (onPageChange)="_onPaginationChanged($event)"
-					 [totalRecords]="(_widgetService.entries$ | async)?.totalItems"
-					 [rowsPerPageOptions]="_widgetService.pageSizesAvailable"></p-paginator>
-	</div>
+                <ng-template pTemplate="body" let-entry>
+                    <tr>
+                        <td [ngStyle]="{'width':'120px','padding-left': '24px'}">
+                            <a (click)="_widgetService.navigateToEntry(entry)">{{entry.id}}</a>
+                        </td>
+                        <td>
+                            <span class="kTableColumn" [kTooltip]="entry.name">{{entry.name}}</span>
+                        </td>
+                        <td [ngStyle]="{'width':'80px'}">{{entry.plays}}</td>
+                        <td [ngStyle]="{'width':'110px'}">{{entry.createdAt | kDate}}</td>
+                        <td [ngStyle]="{'width':'80px'}">{{entry.offset}}</td>
+                        <td [ngStyle]="{'width':'80px'}">{{entry.duration}}</td>
+                        <td [ngStyle]="{'width':'70px'}">{{entry | entryStatus}}</td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <div class="emptymessage">{{'applications.content.table.noResults' | translate}}</div>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-paginator class="kTableFooter" [rows]="_widgetService.pageSize" (onPageChange)="_onPaginationChanged($event)"
+                     [totalRecords]="(_widgetService.entries$ | async)?.totalItems"
+                     [rowsPerPageOptions]="_widgetService.pageSizesAvailable"></p-paginator>
+    </div>
 </k-area-blocker>
 
-<kPopupWidget #clipAndTrim [fullScreen]="true">
-  <ng-template>
-      <kEntryEditor [entry]="_widgetService.data"
-                    [entryHasSource]="true"
-                    [tab]="'editor'"
-                    [parentPopupWidget]="clipAndTrim"></kEntryEditor>
-  </ng-template>
+<kPopupWidget #clipAndTrim data-aid="clipAndTrim" [fullScreen]="true">
+    <ng-template>
+        <kEntryEditor [entry]="_widgetService.data"
+                      [entryHasSource]="true"
+                      [tab]="'editor'"
+                      [parentPopupWidget]="clipAndTrim"></kEntryEditor>
+    </ng-template>
 </kPopupWidget>

@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
@@ -16,24 +15,22 @@ import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs';
-import { KalturaStorageProfile } from 'kaltura-ngx-client';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
     selector: 'kEntryFlavours',
     templateUrl: './entry-flavours.component.html',
-    styleUrls: ['./entry-flavours.component.scss']
+    styleUrls: ['./entry-flavours.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'flavors-table' }
+    ]
 })
 export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
-
-	@HostListener("window:resize", [])
-	onWindowResize() {
-		this._documentWidth = document.body.clientWidth;
-	}
-
-	@ViewChild('drmPopup') drmPopup: PopupWidgetComponent;
+    @ViewChild('drmPopup') drmPopup: PopupWidgetComponent;
 	@ViewChild('previewPopup') previewPopup: PopupWidgetComponent;
 	@ViewChild('importPopup') importPopup: PopupWidgetComponent;
+	@ViewChild('matchDropFolder') matchDropFolder: PopupWidgetComponent;
     @ViewChild('linkPopup') linkPopup: FileDialogComponent;
     @ViewChild('actionsmenu') private actionsMenu: Menu;
     @ViewChild('fileDialog') private fileDialog: FileDialogComponent;
@@ -45,8 +42,12 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
     public _loadingError = null;
 
 	public _documentWidth: number = 2000;
+	public _showActionsView = false;
+    public _replaceButtonsLabel = '';
 
-	constructor(public _widgetService: EntryFlavoursWidget,
+	constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+                public _widgetService: EntryFlavoursWidget,
+                private _el: ElementRef<HTMLElement>,
               private _uploadManagement: UploadManagement,
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
@@ -56,11 +57,41 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
     ngOnInit() {
 	    this._documentWidth = document.body.clientWidth;
         this._widgetService.attachForm();
+
+        this._widgetService.replacementData$
+            .pipe(cancelOnDestroy(this))
+            .subscribe(replacementData => this._updateShowActionsView(replacementData));
+
+        this._widgetService.data$
+            .pipe(cancelOnDestroy(this))
+            .filter(Boolean)
+            .subscribe(entry => {
+                if (entry.status === KalturaEntryStatus.noContent) {
+                    this._replaceButtonsLabel = entry.mediaType === KalturaMediaType.audio
+                        ? this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.addAudio')
+                        : this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.addVideo');
+                } else {
+                    this._replaceButtonsLabel = entry.mediaType === KalturaMediaType.audio
+                        ? this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.replaceAudio')
+                        : this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.replaceVideo');
+                }
+            })
     }
 
-    public _showActionsView(replacementData: ReplacementData): boolean {
-        if (!replacementData || !this._widgetService.data) {
-            return false;
+    public _updateShowActionsView(replacementData: ReplacementData): void {
+        const processingFlavorsStatuses = [
+            KalturaFlavorAssetStatus.converting.toString(),
+            KalturaFlavorAssetStatus.waitForConvert.toString(),
+            KalturaFlavorAssetStatus.importing.toString(),
+            KalturaFlavorAssetStatus.validating.toString(),
+            KalturaFlavorAssetStatus.queued.toString()
+        ];
+        const flavors = this._widgetService.selectedFlavors || [];
+        const processingFlavors = flavors.some(flavor => processingFlavorsStatuses.indexOf(flavor.status) !== -1);
+
+        if (!replacementData || !this._widgetService.data || processingFlavors) {
+            this._showActionsView = false;
+            return;
         }
 
         const entry = this._widgetService.data;
@@ -77,11 +108,11 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
                 showActionsView = noCurrentlyReplacing && hasReplacePermission;
                 break;
             default:
-                showActionsView = hasReplacePermission;
+                showActionsView = noCurrentlyReplacing && hasReplacePermission;
                 break;
         }
 
-        return showActionsView;
+        this._showActionsView = showActionsView;
     }
 
 	openActionsMenu(event: any, flavor: Flavor): void{
@@ -107,6 +138,11 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
                     label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.link'),
                     command: () => this.actionSelected('link')
                 });
+                this._actions.push({
+                    id: 'match',
+                    label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.match'),
+                    command: () => this.actionSelected('match')
+                });
 			}
 			if ((flavor.isSource && this.isSourceReady(flavor) && flavor.isWeb) ||
 					(flavor.id !== "" && flavor.isWeb && (flavor.status === KalturaFlavorAssetStatus.exporting.toString() || flavor.status === KalturaFlavorAssetStatus.ready.toString()))){
@@ -126,9 +162,10 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
             }
 
             this._permissionsService.filterList(<{ id: string }[]>this._actions, {
-                'import': KMCPermissions.CONTENT_INGEST_UPLOAD,
+                'import': KMCPermissions.CONTENT_INGEST_BULK_UPLOAD,
                 'upload': KMCPermissions.CONTENT_INGEST_UPLOAD,
-                'link': KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE
+                'link': KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE,
+                'match': KMCPermissions.DROPFOLDER_CONTENT_INGEST_DROP_FOLDER_MATCH
             });
 
 			if (this._actions.length) {
@@ -172,6 +209,9 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 				break;
             case 'link':
                 this._linkFlavor();
+                break;
+            case 'match':
+                this.matchDropFolder.open();
                 break;
             default:
                 break;
@@ -241,6 +281,8 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 				    }
 			    });
 	    }
+
+        this._columnsResizeManager.updateColumns(this._el.nativeElement);
     }
 }
 

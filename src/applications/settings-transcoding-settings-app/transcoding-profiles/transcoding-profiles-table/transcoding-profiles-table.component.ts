@@ -1,15 +1,20 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { KalturaConversionProfileWithAsset } from '../transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
 
-@Component({
-  selector: 'k-transcoding-profiles-table',
-  templateUrl: './transcoding-profiles-table.component.html',
-  styleUrls: ['./transcoding-profiles-table.component.scss']
-})
-export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit, OnDestroy {
+export abstract class TranscodingProfilesTableComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() set profiles(data: KalturaConversionProfileWithAsset[]) {
     if (!this._deferredLoading) {
       this._profiles = [];
@@ -21,6 +26,8 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
     }
   }
 
+    @Input() singleTableMode: boolean;
+    @Input() profileType: KalturaConversionProfileType;
   @Input() selectedProfiles: KalturaConversionProfileWithAsset[] = [];
 
   @Output() selectedProfilesChange = new EventEmitter<KalturaConversionProfileWithAsset[]>();
@@ -33,11 +40,14 @@ export class TranscodingProfilesTableComponent implements OnInit, AfterViewInit,
   public _items: MenuItem[];
   public _deferredLoading = true;
   public _deferredProfiles = [];
+
+    public abstract _onColumnResize(event: { delta: number, element: HTMLTableHeaderCellElement }): void;
+
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
-  constructor(private _appLocalization: AppLocalization,
-              private _permissionsService: KMCPermissionsService,
-              private _cdRef: ChangeDetectorRef) {
+  constructor(protected _appLocalization: AppLocalization,
+              protected _permissionsService: KMCPermissionsService,
+              protected _cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {

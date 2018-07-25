@@ -5,6 +5,19 @@
   height: auto;
   padding: 0;
 
+    .emptymessage {
+        display: table-row;
+        border: 0;
+        height: 200px;
+
+        .kEmptyMessage {
+            position: absolute;
+            width: 100%;
+            height: 200px;
+            border-bottom: 1px solid $kGrayscale4;
+        }
+    }
+
   .kSchemasTableActions {
     width: 100%;
     text-align: center;
@@ -42,15 +55,21 @@
   flex-direction: column;
 }
 
-:host /deep/ p-datatable .ui-datatable-scrollable-body {
+:host /deep/ p-table .ui-table-scrollable-body {
   margin-bottom: 34px;
 }
 
-:host /deep/ p-datatable .stickyHeader {
+:host /deep/ p-table .stickyHeader {
   z-index: 10;
   display: table;
 }
 
 :host /deep/ .kSchemasTable tr.kProfileDisabled .ui-cell-data {
   color: $kGrayscale4;
+}
+
+:host /deep/ p-table {
+    .ui-table .ui-table-thead > tr > th {
+        border-left: 1px solid $kGrayscale6;
+    }
 }

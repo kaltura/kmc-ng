@@ -47,6 +47,16 @@
       {{'applications.content.syndication.details.destinationsForms.itunes.landingPage.explanation' | translate}}
     </div>
 
+      <!--Feed author-->
+      <div class="kRow">
+          <span class="kLabel">
+              {{'applications.content.syndication.details.destinationsForms.itunes.feedAuthor' | translate}}
+          </span>
+          <div class="kControlContainer">
+              <input class="kControl" [formControl]="_feedAuthorField" pInputText>
+          </div>
+      </div>
+
     <!--Website-->
     <div class="kRow">
       <span
@@ -94,7 +104,7 @@
     <div class="kRow">
       <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.itunes.feedImageUrl.label' | translate}}</span>
       <div class="kControlContainer">
-        <input class="kControl" [formControl]="_feedImageUrlField" pInputText>
+        <input class="kControl" [formControl]="_feedImageUrlField" pInputText placeholder="http://">
         <div class="kHint">
           {{'applications.content.syndication.details.destinationsForms.itunes.feedImageUrl.hint' | translate}}
         </div>
@@ -102,7 +112,7 @@
     </div>
 
     <!--Feed Owner Name-->
-    <div class="kRow">
+    <div class="kRow kMultiLine">
       <span class="kLabel">{{'applications.content.syndication.details.destinationsForms.itunes.feedOwnerName.label' | translate}}</span>
       <div class="kAsterix" [ngClass]="{'kHasError':_feedOwnerNameField.touched && _feedOwnerNameField.invalid}">*</div>
       <div class="kControlContainer">
@@ -114,6 +124,11 @@
         <div class="kHint">
           {{'applications.content.syndication.details.destinationsForms.itunes.feedOwnerName.hint' | translate}}
         </div>
+          <div class="kEnforceFeedAuthor">
+              <p-checkbox [formControl]="_enforceFeedAuthorField"
+                          [label]="'applications.content.syndication.details.destinationsForms.itunes.enforceFeedAuthor' | translate"
+                          binary="true"></p-checkbox>
+          </div>
       </div>
     </div>
 
@@ -127,7 +142,7 @@
         <div *ngIf="_feedOwnerEmailField.touched && _feedOwnerEmailField.hasError('required')" class="error">
           {{'applications.content.syndication.details.destinationsForms.itunes.errors.requiredFeedOwnerEmail' | translate}}
         </div>
-        <div *ngIf="_feedOwnerEmailField.touched && _feedOwnerEmailField.hasError('email')" class="error">
+        <div *ngIf="_feedOwnerEmailField.touched && _feedOwnerEmailField.hasError('email') && !_feedOwnerEmailField.hasError('required')" class="error">
           {{'applications.content.syndication.details.destinationsForms.itunes.errors.invalidFeedOwnerEmail' | translate}}
         </div>
         <div class="kHint">

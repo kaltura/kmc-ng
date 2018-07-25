@@ -3,155 +3,164 @@ $kmc-flags-path: '../../styles/flags/';
 @import 'app-theme/_variables.scss';
 
 .kAccessControlProfilesTable {
-  background-color: white;
-  overflow-y: hidden;
-  position: absolute;
-  padding: 0;
-  .kAccessControlProfileTableName {
-    font-weight: bold;
-    color: $kGrayscale1;
-    cursor: pointer;
-    max-width: calc(100% - 10px);
-  }
-  .kThumbnailHolder {
-    overflow: hidden;
-    position: relative;
-    width: 80px;
-    height: 46px;
-    background-color: $kGrayscale6;
-    white-space: nowrap;
-    text-align: center;
-    border-radius: 3px;
-    cursor: pointer;
-    &.disable {
-      cursor: auto;
+    background-color: white;
+    overflow-y: hidden;
+    position: absolute;
+    padding: 0;
+    .kAccessControlProfileTableName {
+        font-weight: bold;
+        color: $kGrayscale1;
+        cursor: pointer;
+        max-width: calc(100% - 10px);
     }
-    img {
-      position: absolute;
-      left: -100%;
-      right: -100%;
-      top: -100%;
-      bottom: -100%;
-      margin: auto;
-      width: 80px;
-      height: auto;
-      border-radius: 3px;
-    }
-  }
-  .kTitle {
-    color: $kGrayscale1;
-    font-weight: 700;
-    cursor: pointer;
-    &:hover {
-      color: #000000;
-    }
-    &.disable {
-      color: $kGrayscale4;
-      cursor: auto;
-    }
-  }
-  .kAccessControlProfilesTableActions {
-    width: 100%;
-    text-align: center;
-  }
-
-  .kAccessControlRestriction {
-    span, i {
-      vertical-align: middle;
-    }
-
-    .kAccessControlRestrictionIcon {
-      font-size: 15px;
-      margin-right: 10px;
-
-      &.authorized {
-        color: $kSuccess;
-      }
-
-      &.blocked {
-        color: $kDandger;
-      }
-    }
-  }
-
-  .kAccessControlProfilesDetailRow {
-    background-color: $kGrayscale6;
-    border-left: 4px solid $kGrayscale3;
-    font-size: 15px;
-    color: $kGrayscale3;
-    overflow-y: auto;
-    max-height: 195px;
-    padding: 12px 0;
-
-    .kNoAdditionalInfo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      table-layout: fixed;
-
-      tr {
-        td {
-          padding: 0;
-          vertical-align: top;
-
-          div {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space:nowrap;
-            margin-bottom: 26px;
-
-            &:last-child {
-              margin-bottom: 0;
-            }
-          }
-
-          &.kCountryList {
-            .kCountryListFlag {
-              margin-right: 6px;
-            }
-          }
+    .kThumbnailHolder {
+        overflow: hidden;
+        position: relative;
+        width: 80px;
+        height: 46px;
+        background-color: $kGrayscale6;
+        white-space: nowrap;
+        text-align: center;
+        border-radius: 3px;
+        cursor: pointer;
+        &.disable {
+            cursor: auto;
         }
-      }
+        img {
+            position: absolute;
+            left: -100%;
+            right: -100%;
+            top: -100%;
+            bottom: -100%;
+            margin: auto;
+            width: 80px;
+            height: auto;
+            border-radius: 3px;
+        }
+    }
+    .kTitle {
+        color: $kGrayscale1;
+        font-weight: 700;
+        cursor: pointer;
+        &:hover {
+            color: #000000;
+        }
+        &.disable {
+            color: $kGrayscale4;
+            cursor: auto;
+        }
+    }
+    .kAccessControlProfilesTableActions {
+        width: 100%;
+        text-align: center;
     }
 
-    .kStub1 {
-      width: 44px;
+    .kAccessControlRestriction {
+        span, i {
+            vertical-align: middle;
+        }
+
+        .kAccessControlRestrictionIcon {
+            font-size: 15px;
+            margin-right: 10px;
+
+            &.authorized {
+                color: $kSuccess;
+            }
+
+            &.blocked {
+                color: $kDandger;
+            }
+        }
     }
 
-    .kStub2 {
-      width: 80px;
+    .kAccessControlProfilesDetailRow {
+        background-color: $kGrayscale6;
+        border-left: 4px solid $kGrayscale3;
+        font-size: 15px;
+        color: $kGrayscale3;
+        overflow-y: auto;
+        max-height: 195px;
+        padding: 12px 0;
+
+        .kNoAdditionalInfo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 0;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+
+            tr {
+                td {
+                    padding: 0;
+                    vertical-align: top;
+
+                    .kDescription {
+                        word-wrap: break-word;
+                    }
+
+                    div {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        margin-bottom: 26px;
+
+                        &:last-child {
+                            margin-bottom: 0;
+                        }
+                    }
+
+                    &.kCountryList {
+                        .kCountryListFlag {
+                            margin-right: 6px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .kStub1 {
+            width: 42px;
+        }
+
+        .kStub2 {
+            width: 80px;
+        }
     }
-  }
 }
 
 :host {
-  display: flex;
-  flex-flow: row wrap;
-  margin: 0;
-  flex-direction: column;
+    display: flex;
+    flex-flow: row wrap;
+    margin: 0;
+    flex-direction: column;
 }
 
-:host /deep/ .kAccessControlProfilesTable p-datatable {
-  .ui-datatable .ui-datatable-data .pi-chevron-circle-down {
-    margin-left: 0;
-  }
+:host /deep/ .kAccessControlProfilesTable p-table {
+    .ui-table .ui-table-tbody .pi-chevron-circle-down {
+        margin-left: 0;
+        margin-top: 3px;
+    }
+    .ui-table .ui-table-tbody .pi-chevron-circle-right {
+        margin-top: 3px;
+    }
 
-  .ui-datatable .ui-datatable-thead>tr>th,
-  .ui-datatable .ui-datatable-tfoot>tr>td,
-  .ui-datatable .ui-datatable-data>tr>td {
-    padding: 0;
-  }
+    .ui-table .ui-table-thead > tr > th,
+    .ui-table .ui-table-tfoot > tr > td,
+    .ui-table .ui-table-tbody > tr > td {
+        padding: 0;
+    }
 
-  .ui-datatable-scrollable-body {
-    margin-bottom: 34px;
-  }
-  .stickyHeader {
-    z-index: 10;
-    display: table;
-  }
+    .ui-table-scrollable-body {
+        margin-bottom: 34px;
+    }
+    .stickyHeader {
+        z-index: 10;
+        display: table;
+    }
 }

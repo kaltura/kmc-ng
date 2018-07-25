@@ -299,7 +299,7 @@ export class CategoryService implements OnDestroy {
 				// do nothing - the service state is modified inside the map functions.
 			},
 			error => {
-				// should not reach here, this is a fallback plan.
+				// should not reach-frame here, this is a fallback plan.
 				this._state.next({ action: ActionTypes.CategorySavingFailed });
 			}
 			);

@@ -3,19 +3,20 @@
         class="kButtonDefault kUploadBtn"
         (click)="uploadmenu.open()"></button>
 
-<kPopupWidget #uploadmenu [popupWidth]="360" [popupHeight]="385" [closeBtn]="true" [modal]="true" [transparent]="true" [preventPageScroll]="true">
+<kPopupWidget #uploadmenu data-aid="uploadmenu" [popupWidth]="360" [popupHeight]="385" [closeBtn]="true"
+              [modal]="true" [transparent]="true" [preventPageScroll]="true">
   <ng-template>
     <kKMCUploadMenu (onItemSelected)="_onMenuItemSelected($event)"></kKMCUploadMenu>
   </ng-template>
 </kPopupWidget>
 
-<kPopupWidget #uploadsettings [popupWidth]="791" [popupHeight]="607" [closeBtn]="true" [modal]="true" [preventPageScroll]="true">
+<kPopupWidget #uploadsettings data-aid="uploadsettings" [popupWidth]="791" [popupHeight]="607" [closeBtn]="true" [modal]="true" [preventPageScroll]="true">
   <ng-template>
     <kKMCUploadSettings [parentPopupWidget]="uploadsettings"></kKMCUploadSettings>
   </ng-template>
 </kPopupWidget>
 
-<kPopupWidget #bulkuploadmenu [popupWidth]="382" [popupHeight]="436" [closeBtn]="true" [modal]="true">
+<kPopupWidget #bulkuploadmenu data-aid="bulkuploadmenu" [popupWidth]="382" [popupHeight]="436" [closeBtn]="true" [modal]="true">
   <ng-template>
     <kKMCBulkUploadMenu (onClose)="bulkuploadmenu.close()"></kKMCBulkUploadMenu>
   </ng-template>
@@ -23,7 +24,7 @@
 
 <kPrepareEntry #prepareEntry></kPrepareEntry>
 
-<kPopupWidget #createLive [popupWidth]="791" [popupHeight]="675" [closeBtn]="true" [modal]="true">
+<kPopupWidget #createLive data-aid="createLive" [popupWidth]="791" [popupHeight]="675" [closeBtn]="true" [modal]="true">
   <ng-template>
     <kCreateLive [parentPopupWidget]="createLive"></kCreateLive>
   </ng-template>

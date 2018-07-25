@@ -1,5 +1,5 @@
 <div class="kEditWin kOverrideFAIcons" #captionsEdit>
-	<kFileDialog #fileDialog [filter]="'.xml,.srt,.dfxp'" (onFileSelected)="_onFileSelected($event)"></kFileDialog>
+	<kFileDialog #fileDialog [filter]="'.xml,.srt,.dfxp,.vtt'" (onFileSelected)="_onFileSelected($event)"></kFileDialog>
 	<form [formGroup]="captionsEditForm" novalidate>
     <div class="kHeader">
       <span class="kTitle">{{ (_newCaption ? 'applications.content.entryDetails.captions.add' : 'applications.content.entryDetails.captions.editCaption') | translate}}</span>

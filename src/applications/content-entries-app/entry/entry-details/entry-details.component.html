@@ -3,7 +3,7 @@
     <kDetailInfo [iconStyle]="_currentEntry?.mediaType | entryType: false" [tooltip]="_currentEntry?.mediaType | entryType: true"></kDetailInfo>
     <kDetailInfo [label]="'applications.content.entryDetails.preview.creationDate' | translate" [value]="_currentEntry?.createdAt | kDate:'dateOnly'" [tooltip]="_currentEntry?.createdAt | kDate"></kDetailInfo>
     <kDetailInfo [label]="'applications.content.entryDetails.preview.updateDate' | translate" [value]="_currentEntry?.updatedAt | kDate:'dateOnly'" [tooltip]="_currentEntry?.updatedAt | kDate"></kDetailInfo>
-    <kDetailInfo [label]="'applications.content.entryDetails.preview.creator' | translate" [valueField]="'creatorId'" [tooltip]="_currentEntry?.creatorId"></kDetailInfo>
+    <kDetailInfo [label]="'applications.content.entryDetails.preview.owner' | translate" [valueField]="'userId'" [tooltip]="_currentEntry?.userId"></kDetailInfo>
     <kDetailInfo *ngIf="_hasDuration" [label]="'applications.content.entryDetails.preview.duration' | translate" [value]="_currentEntry?.duration | kTime"></kDetailInfo>
     <kDetailInfo *ngIf="_widgetService._landingPage" [label]="'applications.content.entryDetails.preview.landingPage' | translate" [link]="_widgetService._landingPage" [tooltip]="_widgetService._landingPage"></kDetailInfo>
     <kDetailInfo *ngIf="_isLive && _currentEntry?.recordedEntryId" [label]="'applications.content.entryDetails.preview.vodEntry' | translate" [value]="_currentEntry?.recordedEntryId" (itemClick)="navigateToEntry(currentEntry.recordedEntryId)"></kDetailInfo>
