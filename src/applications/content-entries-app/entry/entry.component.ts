@@ -74,15 +74,15 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _kmcPermissions = KMCPermissions;
     public _items: CustomMenuItem[] = [
         {
-            label: this._appLocalization.get('applications.content.table.download'),
-            commandName: 'download',
-            styleClass: ''
-        },
-        {
             label: this._appLocalization.get('applications.content.table.liveDashboard'),
             commandName: 'liveDashboard',
             styleClass: '',
             disabled: !this._liveDashboardAppViewService.isAvailable()
+        },
+        {
+            label: this._appLocalization.get('applications.content.table.download'),
+            commandName: 'download',
+            styleClass: ''
         },
         {
             label: this._appLocalization.get('applications.content.table.previewAndEmbed'),
