@@ -352,7 +352,8 @@ body {
     kpopupwidget[data-aid="bulkLogRefinePopup"],
     kpopupwidget[data-aid="dropFoldersRefinePopup"],
     kpopupwidget[data-aid="categoriesPref"],
-    kpopupwidget[data-aid="categoriesRefinePopup"], {
+    kpopupwidget[data-aid="usersettings"],
+    kpopupwidget[data-aid="categoriesRefinePopup"] {
         .kPopupWidget {
             box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .24);
         }
