@@ -57,10 +57,8 @@
     </ng-template>
 </kPopupWidget>
 
-<kPopupWidget #bulkActionsPopup [popupWidth]="570" [popupHeight]="500" [modal]="true">
+<kPopupWidget #bulkActionsPopup [popupWidth]="570" [popupHeight]="245" [modal]="true" [preventPageScroll]="true">
     <ng-template>
-        <kBulkDownload [selectedEntries]="[_entryStore.entry]"
-                       [parentPopupWidget]="bulkActionsPopup"
-                       (downloadChanged)="_onDownloadChanged($event)"></kBulkDownload>
+        <kDownloadEntry [entry]="_entryStore.entry" [parentPopupWidget]="bulkActionsPopup"></kDownloadEntry>
     </ng-template>
 </kPopupWidget>

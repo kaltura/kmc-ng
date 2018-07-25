@@ -1,13 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-    KalturaEntryStatus,
-    KalturaExternalMediaEntry,
-    KalturaLiveEntry,
-    KalturaMediaEntry,
-    KalturaMediaType,
-    KalturaSourceType
-} from 'kaltura-ngx-client';
+import { KalturaEntryStatus, KalturaExternalMediaEntry, KalturaMediaEntry, KalturaMediaType, KalturaSourceType } from 'kaltura-ngx-client';
 import { ActionTypes, EntryStore, NotificationTypes } from './entry-store.service';
 import { EntrySectionsListWidget } from './entry-sections-list/entry-sections-list-widget.service';
 import { EntryMetadataWidget } from './entry-metadata/entry-metadata-widget.service';
@@ -220,7 +213,11 @@ export class EntryComponent implements OnInit, OnDestroy {
     }
 
     private _downloadEntry(entry: KalturaMediaEntry): void {
-        this._bulkActionsPopup.open();
+	    if (entry.mediaType === KalturaMediaType.video) {
+            this._bulkActionsPopup.open();
+        } else {
+            this._browserService.openLink(entry.downloadUrl);
+        }
     }
 
     private _deleteEntry(entryId: string): void {
@@ -446,22 +443,5 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public canLeave(): Observable<{ allowed: boolean }> {
 		return this._entryStore.canLeave();
 	}
-
-    public _onDownloadChanged(flavorId: string): void {
-        this._contentEntriesAppService.downloadEntry(this._currentEntryId, flavorId)
-            .subscribe(
-                ({ email }) => {
-                    this._browserService.alert({
-                        header: this._appLocalization.get('applications.content.bulkActions.download'),
-                        message: this._appLocalization.get('applications.content.bulkActions.downloadMsg', [email || ''])
-                    });
-                },
-                () => {
-                    this._browserService.alert({
-                        header: this._appLocalization.get('app.common.error'),
-                        message: this._appLocalization.get('applications.content.bulkActions.downloadFailed')
-                    });
-                });
-    }
 }
 
