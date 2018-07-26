@@ -4,7 +4,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import {CommonModule} from '@angular/common';
-import {Ng2Webstorage} from 'ng2-webstorage';
+import {Ng2Webstorage} from 'ngx-webstorage';
 import {TranslateModule} from 'ng2-translate/ng2-translate';
 import {KalturaLogger, KalturaLoggerName} from '@kaltura-ng/kaltura-logger';
 import {PreviewAndEmbedModule} from '../applications/preview-and-embed/preview-and-embed.module';
@@ -61,7 +61,7 @@ import {
 
 
 import { UploadManagementModule } from '@kaltura-ng/kaltura-common';
-import { Ng2PageScrollModule } from 'ng2-page-scroll';
+import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { LoginComponent } from './components/login/login.component';
 import { ForgotPasswordFormComponent } from './components/login/forgot-password-form/forgot-password-form.component';
 import { LoginFormComponent } from './components/login/login-form/login-form.component';
@@ -126,7 +126,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     HttpClientModule,
     InputTextModule,
     MetadataProfileModule.forRoot(),
-    Ng2PageScrollModule.forRoot(),
+    NgxPageScrollModule,
     AppEventsModule.forRoot(),
     KMCShellModule.forRoot(),
     KalturaCommonModule.forRoot(),

@@ -1,5 +1,5 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {LocalStorageService, SessionStorageService} from 'ng2-webstorage';
+import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
 import {IAppStorage} from '@kaltura-ng/kaltura-common';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {Subject} from 'rxjs/Subject';
