@@ -385,6 +385,7 @@ export class CategoryService implements OnDestroy {
 						header: this._appLocalization.get('applications.content.categoryDetails.cancelEdit'),
 						message: this._appLocalization.get('applications.content.categoryDetails.discard'),
 						accept: () => {
+                            this._categoryIsDirty = false;
 							observer.next({ allowed: true });
 							observer.complete();
 						},
