@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule, DropdownModule, InputTextModule, InputTextareaModule, PaginatorModule } from 'primeng/primeng';
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
-import { TranslateModule } from 'ng2-translate';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranscodingProfilesComponentsList } from './transcoding-profiles/components-list';
 import { KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import { MenuModule } from 'primeng/menu';
