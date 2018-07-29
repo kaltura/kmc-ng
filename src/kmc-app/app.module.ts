@@ -2,10 +2,11 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {Ng2Webstorage} from 'ngx-webstorage';
-import {TranslateModule} from 'ng2-translate/ng2-translate';
+import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {KalturaLogger, KalturaLoggerName} from '@kaltura-ng/kaltura-logger';
 import {PreviewAndEmbedModule} from '../applications/preview-and-embed/preview-and-embed.module';
 import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
@@ -14,6 +15,10 @@ import {CategoriesStatusModule} from 'app-shared/content-shared/categories-statu
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { LocalizationModule } from '@kaltura-ng/mc-shared';
 import { KalturaLoggerInjectionToken } from '@kaltura-ng/kaltura-common';
+
+export function createTranslateLoader(http: HttpClient) {
+    return new TranslateHttpLoader(http, './i18n/', '.json');
+}
 
 import {
     AppBootstrap,
@@ -130,7 +135,13 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     AppEventsModule.forRoot(),
     KMCShellModule.forRoot(),
     KalturaCommonModule.forRoot(),
-    TranslateModule.forRoot(),
+  TranslateModule.forRoot({
+      loader: {
+          provide: TranslateLoader,
+          useFactory: (createTranslateLoader),
+          deps: [HttpClient]
+      }
+  }),
       EntriesModule.forRoot(),
       CategoriesModule.forRoot(),
     Ng2Webstorage,
