@@ -1,6 +1,11 @@
 <a name="5.2.1"></a>
 ## [5.2.1](https://github.com/kaltura/kmc-ng/compare/v5.2.0...v5.2.1) (2018-07-30)
 
+### Bug Fixes
+
+* Custom Data - Some characters entered in custom text fields are displayed with their character reference and break-lines are ignored
+* fix: Entries - Scrolling down action isn't smooth in IE11, edge and Firefox
+
 
 
 <a name="5.2.0"></a>
