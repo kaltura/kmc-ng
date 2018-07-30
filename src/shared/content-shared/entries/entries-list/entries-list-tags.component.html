@@ -3,6 +3,7 @@
        [labelField]="'label'"
        [disabledField]="'disabled'"
        [tooltipField]="'tooltip'"
+       [clearAllLabel]="'applications.content.filters.clearAll' | translate"
        (onTagRemove)="removeTag($event)"
        (onRemoveAll)="removeAllTags()"
        (onTagsChange)="onTagsChange.emit($event)">
