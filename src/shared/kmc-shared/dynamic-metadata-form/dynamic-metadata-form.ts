@@ -8,13 +8,6 @@ import { FormGroup } from '@angular/forms';
 export class DynamicMetadataForm
 {
     private _formGroup : FormGroup;
-    private _xmlCharMap = {
-        '<': '&lt;',
-        '>': '&gt;',
-        '&': '&amp;',
-        '"': '&quot;',
-        "'": '&apos;'
-    };
     private _isDisabled = false;
 
     public get isReady() : boolean
@@ -47,7 +40,7 @@ export class DynamicMetadataForm
                 let formValue = {};
 
                 if (this._metadataProfile && serverMetadata && serverMetadata.xml) {
-                    const rawValue = XmlParser.toJson(serverMetadata.xml, false);
+                    const rawValue = XmlParser.toJson(serverMetadata.xml);
                     formValue = this._toFormValue(rawValue['metadata'], this._metadataProfile.items);
                 }
 
@@ -94,10 +87,6 @@ export class DynamicMetadataForm
         }else {
             throw new Error("expected value to be of type number")
         }
-    }
-
-    private _escapeXml (value: string) {
-        return String(value || '').replace(/[&<>"']/g, char => this._xmlCharMap[char]);
     }
 
     private _toServerValue(formValue : {}, fields : MetadataItem[]) : {} {
@@ -147,10 +136,10 @@ export class DynamicMetadataForm
                     if (fieldValue) {
                         if (field.allowMultiple && fieldValue instanceof Array) {
                             value = fieldValue.map(fieldItem => {
-                                return this._escapeXml(fieldItem[fieldKey]);
+                                return fieldItem[fieldKey] || '';
                             });
                         } else if (!field.allowMultiple && fieldValue) {
-                            value = this._escapeXml(fieldValue);
+                            value = fieldValue || '';
                         }
                     }
 
