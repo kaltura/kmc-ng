@@ -136,8 +136,9 @@ npm run build:prod
 5. Create a version deployable zip using the following structure:
 ```
 kmc-ng-vX.X.X.zip
-| -> deploy (folder - copied from /deploy)
-| -> /dist content should be copied to the zip root
+| -> vX.X.X
+  |----> deploy folder (copied from /deploy)
+  |----> app content (copied from /dist)
 ```
 **Note**: replace `vX.X.X` with the actual version number
 
@@ -163,19 +164,6 @@ git merge <branchName>
 ```
 npm run standalone:update
 ```
-
-#### provide debug version
-1. Rebuild the application **without** production flag.
-```
-npm run build
-```
-
-2. Create a version deployable zip, **add a suffix** `-DEBUG-ONLY` to the zip file name
-```
-cd dist
-zip -r kmc-ng-vX.X.X-DEBUG-ONLY.zip .
-```
-   * replace `vX.X.X` with the actual version number
 
 3. Add zip to the release tag in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases).
 
