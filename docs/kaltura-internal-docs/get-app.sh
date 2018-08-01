@@ -32,7 +32,7 @@ function download_version() {
      echo "removing previous version of ${VERSION}"
   fi
 
-  unzip ${FILE_NAME} -d ${VERSION}
+  unzip ${FILE_NAME} 
   echo "Removing ${VERSION}.zip"
   rm -f ${FILE_NAME}
 
