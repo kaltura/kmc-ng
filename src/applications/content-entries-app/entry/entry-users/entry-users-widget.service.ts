@@ -120,7 +120,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
       ))
         .pipe(cancelOnDestroy(this, this.widgetReset$))
         .map(([creatorResponse, ownerResponse]) => {
-          if (ownerResponse.error && ownerResponse.error.code !== 'INVALID_USER_ID') {
+          if ((creatorResponse.error && creatorResponse.error.code !== 'INVALID_USER_ID') || (ownerResponse.error && ownerResponse.error.code !== 'INVALID_USER_ID')) {
             throw new Error('failed to fetch users data');
           } else {
             const creator = creatorResponse.result;
