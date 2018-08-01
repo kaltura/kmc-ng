@@ -140,7 +140,10 @@ kmc-ng-vX.X.X.zip
   |----> deploy folder (copied from /deploy)
   |----> app content (copied from /dist)
 ```
-**Note**: replace `vX.X.X` with the actual version number
+
+**Note**: 
+- replace `vX.X.X` with the actual version number
+- make sure you don't zip `__MACOSX` folder. you can use the following command `zip -r vX.X.X.zip . -x "*.DS_Store" -x "__MACOSX"`
 
 6.in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases), edit the version release notes:
 
