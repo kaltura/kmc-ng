@@ -9,7 +9,7 @@
 		<div *ngIf="_categoriesUpdating && !_selectedCategories.length && !_categoriesLocked" class="k-spinner-background kSpinnerBkg" kTooltip="{{'applications.content.categories.categoriesUpdateMsg' | translate}}">
 			<div class="k-spinner-animation kSpinnerAnim"></div>
 		</div>
-		<kTags #tags *ngIf="_selectedCategories?.length" [data]="_selectedCategories" [labelField]="'name'"  (onTagRemove)="_removeTag($event)" (onRemoveAll)="_removeAllTag()">
+		<kTags #tags *ngIf="_selectedCategories?.length" [data]="_selectedCategories" [labelField]="'name'"  (onTagRemove)="_removeTag($event)" (onRemoveAll)="_removeAllTag()" [clearAllLabel]="'applications.content.filters.clearAll' | translate">
 			<ng-template let-item="item">
 				<div class="kTagContent" [kTooltip]="item.data | kCategoryTooltip">
 					<span class="kTagLabel">{{item.label}}</span>

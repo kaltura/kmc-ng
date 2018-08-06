@@ -80,7 +80,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 						this._validationErrorMsg = "";
 						this.fileToUpload = null;
 						this.captionsEditForm.get("label").setValue(this.currentCaption.label);
-						this.captionsEditForm.get("language").setValue(this.currentCaption.language);
+						this.captionsEditForm.get("language").setValue(this._languageOptions.getValueByLabel(this.currentCaption.language));
 						this.captionsEditForm.get("format").setValue(this.currentCaption.format);
 					}
 					if (event.state === PopupWidgetStates.BeforeClose) {
@@ -128,7 +128,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 			}
 		}
 		if (this.captionsEditForm.get("language").dirty) {
-			this.currentCaption.language = this.captionsEditForm.get("language").value;
+            this.currentCaption.language = this._languageOptions.getLabelByValue(this.captionsEditForm.get("language").value);
 		}
 		if (this.captionsEditForm.get("format").dirty) {
 			this.currentCaption.format = this.captionsEditForm.get("format").value;

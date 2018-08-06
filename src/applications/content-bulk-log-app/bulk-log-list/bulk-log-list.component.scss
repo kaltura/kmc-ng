@@ -119,10 +119,7 @@
     margin-left: auto;
   }
   .kCategoriesFilter {
-    border: 1px solid $kGrayscale4;
-    border-radius: 4px;
     display: flex;
-    background-color: #ffffff;
     height: 32px;
     align-items: center;
     cursor: pointer;
@@ -137,15 +134,6 @@
       color: $kGrayscale4;
       &.dropdown {
         font-size: 10px;
-      }
-    }
-    &:hover {
-      color: $kPrimary;
-      i {
-        color: $kPrimary;
-      }
-      i.kIcondropdown_arrow_bottom.dropdown {
-        color: $kGrayscale3;
       }
     }
     .dropdown {

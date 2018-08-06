@@ -38,7 +38,7 @@
   </k-area-blocker>
 </div>
 
-<kPopupWidget #addEntries [popupWidth]="995" [slider]="true">
+<kPopupWidget #addEntries data-aid="addEntries" [popupWidth]="995" [slider]="true">
   <ng-template>
     <k-linked-entries-add-entries-popup [parentPopup]="addEntries"
                                         [allowMultiple]="control?.allowMultipleEntries"

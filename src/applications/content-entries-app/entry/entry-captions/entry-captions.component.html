@@ -3,9 +3,14 @@
     <div class="kCaptions" #captions>
         <p class="kTitle">{{'applications.content.entryDetails.captions.captions' | translate}}</p>
         <button type="button" class="kButtonDefault" pButton
+                icon="kIconplus"
                 label="{{'applications.content.entryDetails.captions.add' | translate}}"
                 *ngIf="_kmcPermissions.CAPTION_MODIFY | kNgIfPermitted"
                 (click)="_addCaption()"></button>
+        <button type="button" class="kButtonDefault" pButton
+                label="{{'applications.content.entryDetails.captions.request' | translate}}"
+                *ngIf="_requestCaptionsAvailable"
+                (click)="_requestCaptions()"></button>
         <div class="kTable">
             <p-table scrollHeight="100%"
                      [value]="(_widgetService._captions$ | async)?.items"
@@ -80,7 +85,7 @@
         </div>
     </div>
 
-    <kPopupWidget #editPopup [popupWidth]="380" [popupHeight]="472" [modal]="true">
+    <kPopupWidget #editPopup data-aid="editCaptionPopup" [popupWidth]="380" [popupHeight]="472" [modal]="true">
         <ng-template>
             <kEntryCaptionsEdit [currentCaption]="_widgetService.currentCaption"
                                 [parentPopupWidget]="editPopup"></kEntryCaptionsEdit>

@@ -12,7 +12,7 @@
          (click)="_toggleRecord()"></div>
 </div>
 
-<kPopupWidget #recordPopup [popupWidth]="500" [popupHeight]="_isRecording ? 250 : 450"
+<kPopupWidget #recordPopup data-aid="recordPopup" [popupWidth]="500" [popupHeight]="_isRecording ? 250 : 450"
               [modal]="true" [closeBtn]="false"
               [closeBtnInside]="true" [closeOnClickOutside]="false">
     <ng-template>
