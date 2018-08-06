@@ -243,6 +243,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit, OnDestroy
                             label: this._appLocalization.get('app.common.ok'),
                             action: () => {
                                 this._transcodingProfileError = null;
+                                this._appEvents.publish(new UpdateEntriesListEvent());
                                 this.parentPopupWidget.close();
                             }
                         }]

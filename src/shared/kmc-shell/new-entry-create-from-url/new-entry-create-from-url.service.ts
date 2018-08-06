@@ -5,12 +5,13 @@ import {
     KalturaClient,
     KalturaMediaEntry,
     KalturaMediaType,
+    KalturaMultiRequest,
     KalturaUrlResource,
     MediaAddAction,
     MediaUpdateContentAction,
 } from 'kaltura-ngx-client';
-import { from as ObservableFrom, Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 
 export interface KmcNewEntryUpload {
@@ -20,15 +21,15 @@ export interface KmcNewEntryUpload {
 
 @Injectable()
 export class NewEntryCreateFromUrlService implements OnDestroy {
-    constructor(private _kalturaServerClient: KalturaClient) {
+    constructor(private _kalturaServerClient: KalturaClient,
+                private _appLocalization: AppLocalization) {
     }
 
     ngOnDestroy() {
 
     }
 
-    private _updateMediaContent(entry: KalturaMediaEntry, file: KmcNewEntryUpload): Observable<KalturaMediaEntry> {
-        const entryId = entry.id;
+    private _getUpdateMediaContentAction(file: KmcNewEntryUpload): MediaUpdateContentAction {
         const resource = new KalturaAssetsParamsResourceContainers({
             resources: [
                 new KalturaAssetParamsResourceContainer({
@@ -38,25 +39,30 @@ export class NewEntryCreateFromUrlService implements OnDestroy {
             ]
         });
 
-        return this._kalturaServerClient.request(new MediaUpdateContentAction({ entryId, resource }));
+        return new MediaUpdateContentAction({ entryId: '0', resource });
     }
 
-    private _createMediaEntry(conversionProfileId: number): Observable<KalturaMediaEntry> {
-        return this._kalturaServerClient.request(new MediaAddAction({
+    private _getMediaEntryAction(conversionProfileId: number): MediaAddAction {
+        return new MediaAddAction({
             entry: new KalturaMediaEntry({ conversionProfileId, mediaType: KalturaMediaType.video })
-        }));
+        });
     }
 
     public import(files: KmcNewEntryUpload[], transcodingProfileId: number): Observable<void> {
-        return ObservableFrom(files)
-            .pipe(
-                switchMap((file: KmcNewEntryUpload) =>
-                    this._createMediaEntry(transcodingProfileId)
-                        .pipe(map(entry => ({ entry, file })))
-                ),
-                switchMap(({ entry, file }) => this._updateMediaContent(entry, file)),
-                map(() => {
-                })
-            );
+        const createMediaEntryActions = files.map(() => this._getMediaEntryAction(transcodingProfileId));
+        const updateMediaContentActions = files.map((file, index) =>
+            this._getUpdateMediaContentAction(file).setDependency(['entryId', index, 'id'])
+        );
+        return this._kalturaServerClient.multiRequest(new KalturaMultiRequest(
+            ...createMediaEntryActions,
+            ...updateMediaContentActions
+        )).map(responses => {
+            if (responses.hasErrors()) {
+                const message = responses.every(response => !!response.error)
+                    ? this._appLocalization.get('applications.upload.uploadSettings.createFromUrlError.all')
+                    : this._appLocalization.get('applications.upload.uploadSettings.createFromUrlError.some');
+                throw Error(message);
+            }
+        });
     }
 }

@@ -353,6 +353,10 @@
                 "profilePlaceholder": "Default",
                 "fileUrl": "File URL",
                 "fileUrlPlaceholder": "http://",
+                "createFromUrlError": {
+                    "all": "Failed to create entries, please try again",
+                    "some": "Failed to create some entries, please review entries list"
+                },
                 "mediaTypes": {
                     "video": "Video",
                     "audio": "Audio",
