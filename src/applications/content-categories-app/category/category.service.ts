@@ -1,14 +1,8 @@
-import {CategoriesService} from './../categories/categories.service';
+import { CategoriesService } from '../categories/categories.service';
 import {Host, Injectable, OnDestroy} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
-import {ISubscription} from 'rxjs/Subscription';
-import { Observable } from 'rxjs';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/subscribeOn';
-import 'rxjs/add/operator/switchMap';
+import { Observable, Subject, BehaviorSubject, Unsubscribable } from 'rxjs';
 
 import {KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory} from 'kaltura-ngx-client';
 import {KalturaCategory} from 'kaltura-ngx-client';
@@ -53,7 +47,7 @@ declare interface StatusArgs {
 export class CategoryService implements OnDestroy {
     private _notifications = new Subject<{ type: NotificationTypes, error?: Error }>();
     public notifications$ = this._notifications.asObservable();
-    private _loadCategorySubscription: ISubscription;
+    private _loadCategorySubscription: Unsubscribable;
     private _state = new BehaviorSubject<StatusArgs>({action: ActionTypes.CategoryLoading, error: null});
 
     private _saveCategoryInvoked = false;
@@ -168,6 +162,7 @@ export class CategoryService implements OnDestroy {
 						const currentCategoryId = this._categoryRoute.snapshot.params.id;
                         const category = this._category.getValue();
                         if (!category || (category && category.id.toString() !== currentCategoryId)) {
+                          this._subcategoriesMoved = false;
                           this._loadCategory(currentCategoryId);
                         } else {
                             this._notifications.next({ type: NotificationTypes.ViewEntered });
