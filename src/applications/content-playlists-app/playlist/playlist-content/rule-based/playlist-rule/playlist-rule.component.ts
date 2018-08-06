@@ -39,6 +39,12 @@ export class PlaylistRuleComponent implements OnInit {
   public _title: string;
   public _saveBtnLabel: string;
   public _nameRequiredError = false;
+    public _hiddenFilters: Partial<EntriesFilters> = {
+        'mediaTypes': [
+            'other_youtube',
+            'other_quiz'
+        ]
+    };
   public _enforcedFilters: Partial<EntriesFilters> = {
     'moderationStatuses': [
       KalturaEntryModerationStatus.pendingModeration.toString(),

@@ -143,6 +143,7 @@
               kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'refinePopup'" [scrollOffset]="80">
   <ng-template>
     <k-entries-refine-filters [refineFilters]="_refineFilters"
+                              [hiddenFilters]="hiddenFilters"
                               [showEnforcedFilters]="showEnforcedFilters"
                               [enforcedFilters] = "enforcedFilters"
                               [parentPopupWidget]="refinePopup"></k-entries-refine-filters>

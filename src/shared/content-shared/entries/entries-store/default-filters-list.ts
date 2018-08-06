@@ -3,17 +3,19 @@ import { KalturaEntryStatus } from 'kaltura-ngx-client';
 export interface DefaultFilterList {
     label: string;
     name: string;
-    items: { value: string, label: string }[]
+    items: { value: string, label: string }[];
 }
 
 export const DefaultFiltersList: DefaultFilterList[] = [
   {
     name: 'mediaTypes', label: 'Media Types',
     items: [
-      { value: '1', label: 'Video' },
-      { value: '2', label: 'Image' },
-      { value: '5', label: 'Audio' },
-      { value: '201', label: 'Live Stream' }
+      { value: 'mediaType_1', label: 'Video' },
+      { value: 'mediaType_2', label: 'Image' },
+      { value: 'mediaType_5', label: 'Audio' },
+      { value: 'mediaType_201', label: 'Live Stream' },
+      { value: 'other_youtube', label: 'Youtube Video' },
+      { value: 'other_quiz', label: 'Video with Quiz' }
     ]
   },
     {

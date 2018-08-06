@@ -1,27 +1,29 @@
-import {Injectable, OnDestroy} from '@angular/core';
-import {EntriesDataProvider, EntriesFilters, MetadataProfileData, SortDirection} from './entries-store.service';
-import {KalturaBaseEntry} from 'kaltura-ngx-client';
+import { Injectable, OnDestroy } from '@angular/core';
+import { EntriesDataProvider, EntriesFilters, MetadataProfileData, SortDirection } from './entries-store.service';
+import {
+    BaseEntryListAction,
+    KalturaBaseEntry,
+    KalturaClient,
+    KalturaContentDistributionSearchItem,
+    KalturaDetachedResponseProfile,
+    KalturaExternalMediaEntry, KalturaExternalMediaEntryFilter, KalturaExternalMediaSourceType,
+    KalturaFilterPager,
+    KalturaLiveStreamAdminEntry,
+    KalturaLiveStreamEntry,
+    KalturaMediaEntryFilter,
+    KalturaMetadataSearchItem,
+    KalturaNullableBoolean,
+    KalturaQuizAdvancedFilter,
+    KalturaResponseProfileType,
+    KalturaSearchCondition,
+    KalturaSearchOperator,
+    KalturaSearchOperatorType
+} from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
-import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
-import {KalturaMetadataSearchItem} from 'kaltura-ngx-client';
-import {KalturaNullableBoolean} from 'kaltura-ngx-client';
-import {KalturaSearchOperatorType} from 'kaltura-ngx-client';
-import {KalturaSearchOperator} from 'kaltura-ngx-client';
-import {KalturaSearchCondition} from 'kaltura-ngx-client';
-import {KalturaContentDistributionSearchItem} from 'kaltura-ngx-client';
-import {KalturaLiveStreamEntry} from 'kaltura-ngx-client';
-import {KalturaExternalMediaEntry} from 'kaltura-ngx-client';
-import {KalturaFilterPager} from 'kaltura-ngx-client';
-import {KalturaResponseProfileType} from 'kaltura-ngx-client';
-import {BaseEntryListAction} from 'kaltura-ngx-client';
-import {KalturaMediaEntryFilter} from 'kaltura-ngx-client';
-import {KalturaLiveStreamAdminEntry} from 'kaltura-ngx-client';
-import {KalturaUtils} from '@kaltura-ng/kaltura-common';
-import {KalturaClient} from 'kaltura-ngx-client';
-import {CategoriesModes} from 'app-shared/content-shared/categories/categories-mode-type';
-import {MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes} from 'app-shared/kmc-shared';
+import { cancelOnDestroy, KalturaUtils } from '@kaltura-ng/kaltura-common';
+import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
+import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy {
@@ -64,10 +66,31 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
     try {
       return this._getMetadataProfiles()
         .map(metadataProfiles => {
-          // create request items
-          const filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter({});
-          const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
-          advancedSearch.type = KalturaSearchOperatorType.searchAnd;
+            // create request items
+            let filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter({});
+            const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
+            advancedSearch.type = KalturaSearchOperatorType.searchAnd;
+
+            const mediaTypes = data.mediaTypes
+                .filter(item => item.startsWith('mediaType'))
+                .map(item => item.replace('mediaType_', ''));
+            const otherMediaTypes = data.mediaTypes.filter(item => item.startsWith('other'));
+            otherMediaTypes.forEach(item => {
+                const value = item.replace('other_', '');
+                switch (value) {
+                    case 'youtube':
+                        filter = new KalturaExternalMediaEntryFilter({ externalSourceTypeEqual: KalturaExternalMediaSourceType.youtube });
+                        break;
+                    case 'quiz':
+                        advancedSearch.items.push(new KalturaSearchOperator({
+                            type: KalturaSearchOperatorType.searchOr,
+                            items: [new KalturaQuizAdvancedFilter({ isQuiz: KalturaNullableBoolean.trueValue })]
+                        }));
+                        break;
+                    default:
+                        break;
+                }
+            });
 
           // filter 'freeText'
           if (data.freetext) {
@@ -86,7 +109,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
           }
 
           // filters of joined list
-          this._updateFilterWithJoinedList(data.mediaTypes, filter, 'mediaTypeIn');
+          this._updateFilterWithJoinedList(mediaTypes, filter, 'mediaTypeIn');
           this._updateFilterWithJoinedList(data.ingestionStatuses, filter, 'statusIn');
           this._updateFilterWithJoinedList(data.durations, filter, 'durationTypeMatchOr');
           this._updateFilterWithJoinedList(data.moderationStatuses, filter, 'moderationStatusIn');
