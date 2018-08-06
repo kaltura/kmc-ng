@@ -33,7 +33,7 @@ export class CategoriesBulkChangeCategoryListingService extends CategoriesBulkAc
           observer.complete();
         },
         error => {
-          observer.error(error);
+          observer.error({});
         }
       );
     });

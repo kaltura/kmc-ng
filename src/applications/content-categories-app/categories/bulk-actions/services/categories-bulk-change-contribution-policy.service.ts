@@ -33,7 +33,7 @@ export class CategoriesBulkChangeContributionPolicyService extends CategoriesBul
           observer.complete();
         },
         error => {
-          observer.error(error);
+          observer.error({});
         }
       );
     });
