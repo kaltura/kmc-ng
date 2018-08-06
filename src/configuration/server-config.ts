@@ -69,6 +69,11 @@ export interface ServerConfig {
         serverUri: string,
         securedServerUri: string
     };
+    externalAPI: {
+        youtube: {
+            uri: string;
+        }
+    };
     externalApps: ExternalApplications;
     externalLinks: {
         previewAndEmbed?: {

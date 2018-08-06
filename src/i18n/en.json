@@ -289,6 +289,8 @@
                 "invalidUrl": "URL is invalid"
             },
             "uploadMenu": {
+                "createFromUrl": "Upload from URL",
+                "createFromYoutube": "Upload from YouTube",
                 "uploadFromDesktop": "Upload from Desktop",
                 "needHighSpeed": "Need High-speed Upload?",
                 "highSpeed": "High-Speed Upload",
@@ -309,11 +311,52 @@
                     "prepareEntry": "An error occurred while preparing an entry."
                 }
             },
+            "createFromUrl": {
+                "uploadFromUrl": "Upload from URL",
+                "transcodingProfile": "Transcoding Profile",
+                "profilePlaceholder": "Default",
+                "addFile": "Add File",
+                "fileUrl": "File URL",
+                "fileUrlPlaceholder": "http://",
+                "transcodingFlavor": "Transcoding Flavor",
+                "selectFlavor": "Select Flavor",
+                "remove": "Remove File",
+                "link": "Link",
+                "cancel": "Cancel",
+                "noFlavors": "No Flavors",
+                "missingFlavor": "Some required Transcoding Flavors are missing. Continue?",
+                "continue": "Continue",
+                "emptyMessage": {
+                    "title": "No files to upload",
+                    "getStarted": "Add some files to get started. ",
+                    "browse": "Add"
+                }
+            },
+            "uploadFromYoutube": {
+                "uploadFromYoutube": "Upload from YouTube",
+                "linkLabel": "Add video page Link or Content Id",
+                "inputPlaceholder": "http://",
+                "cancel": "Cancel",
+                "upload": "Upload",
+                "note": "Note: Only public YouTube videos are supported",
+                "invalidUrl": "Unsupported URL or ID provided",
+                "success": "Success",
+                "successMessage": "YouTube Entry has been created successfully.\nDo you want to view entry details?",
+                "notSupported": "Upload from YouTube is not available!"
+            },
             "uploadSettings": {
-                "title": "Upload Settings",
+                "uploadSettings": "Upload Settings",
+                "uploadFromUrl": "Upload from URL",
+                "cancel": "Cancel",
                 "profile": "Transcoding Profile",
                 "addFileBtn": "Add Files",
                 "profilePlaceholder": "Default",
+                "fileUrl": "File URL",
+                "fileUrlPlaceholder": "http://",
+                "createFromUrlError": {
+                    "all": "Failed to create entries, please try again",
+                    "some": "Failed to create some entries, please review entries list"
+                },
                 "mediaTypes": {
                     "video": "Video",
                     "audio": "Audio",
@@ -330,10 +373,12 @@
                     "emptyMessage": {
                         "title": "No files to upload",
                         "getStarted": "Add some files to get started. ",
-                        "browse": "Browse"
+                        "browse": "Browse",
+                        "add": "Add"
                     }
                 },
-                "uploadBtn": "Upload"
+                "upload": "Upload",
+                "link": "Link"
             },
             "uploadMonitor": {
                 "uploadFromDesktop": "Upload from Desktop",
@@ -1582,7 +1627,6 @@
                         "replaceVideo": "Replace Video",
                         "noFlavors": "No Flavors",
                         "addVideo": "Add Video",
-                        "replaceVideo": "Replace Video",
                         "addAudio": "Add Audio",
                         "replaceAudio": "Replace Audio",
                         "uploadFile": "Upload file",
