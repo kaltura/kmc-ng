@@ -2,7 +2,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CheckboxModule, DropdownModule, SharedModule } from 'primeng/primeng';
-import { TranslateModule } from 'ng2-translate/ng2-translate';
+import { TranslateModule } from '@ngx-translate/core';
 import { PowerUserConsoleModule } from '@kaltura-ng/mc-shared';
 import { LogsRecordComponent } from 'app-shared/kmc-shell/kmc-logs/logs-record/logs-record.component';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';

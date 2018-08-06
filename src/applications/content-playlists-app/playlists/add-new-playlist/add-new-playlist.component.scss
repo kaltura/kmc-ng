@@ -54,6 +54,11 @@
         width: 100%;
       }
 
+      .kHasError {
+          border: 1px solid $kDandger;
+          background: initial;
+      }
+
       textarea {
         min-height: 74px;
       }

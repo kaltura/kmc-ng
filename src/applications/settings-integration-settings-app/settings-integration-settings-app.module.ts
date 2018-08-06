@@ -5,7 +5,7 @@ import {RouterModule} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ButtonModule, DropdownModule, InputTextModule, MenuModule} from 'primeng/primeng';
 import {AreaBlockerModule, InputHelperModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
-import {TranslateModule} from 'ng2-translate';
+import {TranslateModule} from '@ngx-translate/core';
 import {SettingsIntegrationSettingsComponent} from './settings-integration-settings.component';
 import {AccountInfoComponent} from './account-info/account-info.component';
 import {EntitlementComponent} from './entitlement/entitlement.component';

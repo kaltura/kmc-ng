@@ -14,7 +14,8 @@
       </div>
       <div class="kRow">
         <div class="kControl">
-          <input kAutofocus formControlName="name" type="text" placeholder="{{'applications.content.addNewPlaylist.playlistName' | translate}}" pInputText />
+          <input kAutofocus formControlName="name" type="text" placeholder="{{'applications.content.addNewPlaylist.playlistName' | translate}}" pInputText
+                 [ngClass]="{'kHasError':!addNewPlaylistForm.get('name').valid && addNewPlaylistForm.get('name').touched}"/>
         </div>
       </div>
       <div class="kRow">
