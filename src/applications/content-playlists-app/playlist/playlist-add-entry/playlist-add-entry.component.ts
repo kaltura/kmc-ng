@@ -3,11 +3,16 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { EntriesFilters } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kAddEntry',
   templateUrl: './playlist-add-entry.component.html',
-  styleUrls: ['./playlist-add-entry.component.scss']
+  styleUrls: ['./playlist-add-entry.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'manual-playlist-add-entries-table' }
+    ]
 })
 export class PlaylistAddEntryComponent {
   @Output() onClosePopupWidget = new EventEmitter<void>();

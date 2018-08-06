@@ -1,54 +1,90 @@
-<div class="kTranscodingProfilesTable" [class.noResults]="!_profiles?.length">
-  <p-dataTable
-    #dataTable
-    [value]="_profiles"
-    (selectionChange)="_onSelectionChange($event)"
-    [(selection)]="selectedProfiles"
-    [emptyMessage]="_emptyMessage"
-    scrollable="true"
-    scrollHeight="100%"
-    dataKey="id"
-    [rowTrackBy]="rowTrackBy">
-    <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
-    <p-column field="name" [header]="'applications.settings.transcoding.table.name' | translate">
-      <ng-template let-col let-profile="rowData" pTemplate="body">
-        <div class="kTranscodingProfileNameWrapper">
-          <div class="kTranscodingProfileName kTableColumn"
-               [kTooltip]="profile[col.field]"
-               (click)="_onActionSelected('edit',profile)">
-            {{profile[col.field]}}
-          </div>
-          <span *ngIf="profile?.isDefault" class="kTranscodingProfileNameDefault">
-            {{'applications.settings.transcoding.table.default' | translate}}
-          </span>
-        </div>
-      </ng-template>
-    </p-column>
-    <p-column field="description"
-              [header]="'applications.settings.transcoding.table.description' | translate">
-      <ng-template let-col let-profile="rowData" pTemplate="body">
-        <span class="kTableColumn" [kTooltip]="profile[col.field]" [maxWidth]="300">
-          {{profile[col.field]}}
-        </span>
-      </ng-template>
-    </p-column>
-    <p-column field="id" [style]="{'width':'90px'}"
-              [header]="'applications.settings.transcoding.table.id' | translate"></p-column>
-    <p-column field="flavors" [style]="{'width':'110px'}"
-              [header]="'applications.settings.transcoding.table.flavors' | translate">
-      <ng-template let-col let-profile="rowData" pTemplate="body">
-        {{profile[col.field]}}
-        {{'applications.settings.transcoding.table.flavors' | translate}}
-      </ng-template>
-    </p-column>
-    <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
-      <ng-template let-col let-profile="rowData" pTemplate="body">
-        <div class="kTranscodingProfilesTableActions">
-          <button class="kMoreActionsButton" type="button" pButton icon="kIconmore"
-                  (click)="_openActionsMenu($event, profile)"></button>
-        </div>
-      </ng-template>
-    </p-column>
-  </p-dataTable>
-  <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+<div class="kTranscodingProfilesTable" [ngClass]="{'noResults' :!_profiles?.length, 'kSingleTableMode': singleTableMode}">
+    <p-table
+        scrollHeight="100%"
+        dataKey="id"
+        [value]="_profiles"
+        [resizableColumns]="true"
+        [scrollable]="true"
+        [rowTrackBy]="rowTrackBy"
+        (selectionChange)="_onSelectionChange($event)"
+        (onColResize)="_onColumnResize($event)"
+        [(selection)]="selectedProfiles">
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                <col [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
+                <col data-cid="name">
+                <col data-cid="description">
+                <col data-cid="profileId" [ngStyle]="{'width': '90px'}">
+                <col data-cid="flavors" [ngStyle]="{'width': '110px'}">
+                <col [ngStyle]="{'overflow':'visible', 'width':'80px'}">
+            </colgroup>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th data-cid="name" pResizableColumn>
+                    {{'applications.settings.transcoding.table.name' | translate}}
+                </th>
+                <th data-cid="description" pResizableColumn>
+                    {{'applications.settings.transcoding.table.description' | translate}}
+                </th>
+                <th data-cid="profileId" pResizableColumn [ngStyle]="{'width': '90px'}">
+                    {{'applications.settings.transcoding.table.id' | translate}}
+                </th>
+                <th data-cid="flavors" [ngStyle]="{'width': '110px'}">
+                    {{'applications.settings.transcoding.table.flavors' | translate}}
+                </th>
+                <th [ngStyle]="{'overflow':'visible', 'width':'80px'}"></th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-profile>
+            <tr [pSelectableRow]="profile">
+                <td [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
+                    <p-tableCheckbox [value]="profile"></p-tableCheckbox>
+                </td>
+                <td class="ui-resizable-column">
+                    <div class="kTranscodingProfileNameWrapper">
+                        <div class="kTranscodingProfileName kTableColumn"
+                             [kTooltip]="profile.name"
+                             (click)="_onActionSelected('edit', profile)">
+                            {{profile.name}}
+                        </div>
+                        <span *ngIf="profile?.isDefault" class="kTranscodingProfileNameDefault">
+                            {{'applications.settings.transcoding.table.default' | translate}}
+                        </span>
+                    </div>
+                </td>
+                <td class="ui-resizable-column">
+                    <span class="kTableColumn" [kTooltip]="profile.description" [showOnEllipsis]="true" [maxWidth]="300">
+                        {{profile.description}}
+                    </span>
+                </td>
+                <td class="ui-resizable-column">{{profile.id}}</td>
+                <td>
+                    <span class="kTableColumn"
+                          [kTooltip]="'applications.settings.transcoding.profile.flavors' | translate:[profile.flavors || 0]"
+                          [showOnEllipsis]="true">
+                        {{'applications.settings.transcoding.profile.flavors' | translate:[profile.flavors || 0]}}
+                    </span>
+                </td>
+                <td [ngStyle]="{'overflow':'visible', 'width':'80px'}">
+                    <div class="kTranscodingProfilesTableActions">
+                        <button class="kMoreActionsButton" type="button" pButton icon="kIconmore"
+                                (click)="_openActionsMenu($event, profile)"></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <div class="emptymessage">
+                <div class="kEmptyMessage">{{_emptyMessage}}</div>
+            </div>
+        </ng-template>
+    </p-table>
+    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 </div>

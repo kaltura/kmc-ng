@@ -1,10 +1,9 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
-import { modulesConfig } from 'config/modules';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import {  RefineGroup } from '../entries-store/entries-refine-filters.service';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { RefineGroup } from '../entries-store/entries-refine-filters.service';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { subApplicationsConfig } from 'config/sub-applications';
@@ -26,13 +25,12 @@ const listOfFilterNames: (keyof EntriesFilters)[] = [
     'customMetadata'
 ];
 
-export interface PrimeListItem
-{
-    label: string,
-    value: string,
-    parent: PrimeListItem,
-    listName: string,
-    children: PrimeListItem[]
+export interface PrimeListItem {
+    label: string;
+    value: string;
+    parent: PrimeListItem;
+    listName: string;
+    children: PrimeListItem[];
 }
 
 export interface PrimeList {
@@ -56,6 +54,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
     @Input() refineFilters: RefineGroup[];
+    @Input() showEnforcedFilters = false;
 
     @Input() enforcedFilters: Partial<EntriesFilters>;
 
@@ -255,32 +254,34 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
 
                 if (list.items.length > 0) {
                     const primeList = {items: [], selections: [], group: list.group};
+                    const relevantEnforceFilter = this.enforcedFilters ? this.enforcedFilters[list.name] : null;
 
-                    const shouldAllowFilter = (!this.enforcedFilters || !this.enforcedFilters[list.name]);
+                    if (!relevantEnforceFilter || this.showEnforcedFilters) {
+                        const listItems = list.items
+                            .filter(item => relevantEnforceFilter ? relevantEnforceFilter.indexOf(item.value) === -1 : true);
 
-                    if (shouldAllowFilter) {
-                        this._primeListsMap[list.name] = primeList;
-                        filtersGroup.lists.push(primeList);
+                        if (listItems.length) {
+                            this._primeListsMap[list.name] = primeList;
+                            filtersGroup.lists.push(primeList);
+                            const listRootNode: PrimeListItem = {
+                                label: list.label,
+                                value: null,
+                                listName: list.name,
+                                parent: null,
+                                children: []
+                            };
 
-                        const listRootNode: PrimeListItem = {
-                            label: list.label,
-                            value: null,
-                            listName: list.name,
-                            parent: null,
-                            children: []
-                        };
-
-                        list.items.forEach(item => {
-                            listRootNode.children.push({
-                                label: item.label,
-                                value: item.value,
-                                children: [],
-                                listName: <any>list.name,
-                                parent: listRootNode
-                            })
-                        });
-
-                        primeList.items.push(listRootNode);
+                            listItems.forEach(item => {
+                                listRootNode.children.push({
+                                    label: item.label,
+                                    value: item.value,
+                                    children: [],
+                                    listName: <any>list.name,
+                                    parent: listRootNode
+                                });
+                            });
+                            primeList.items.push(listRootNode);
+                        }
                     }
                 }
             });
@@ -314,6 +315,10 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
       this._closeCalendar(this.scheduledFrom);
       this._closeCalendar(this.scheduledTo);
       this._entriesStore.resetFilters(listOfFilterNames);
+
+      if (this.enforcedFilters) {
+          this._entriesStore.filter(this.enforcedFilters);
+      }
   }
 
   public _onCreatedChanged(): void {

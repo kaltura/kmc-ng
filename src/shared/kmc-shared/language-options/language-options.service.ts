@@ -34,6 +34,35 @@ export class LanguageOptionsService {
         this._options.unshift({ label: this._appLocalization.get('languages.EN'), value: 'EN' });
     }
 
+    public getLabelByValue(value: string) : KalturaLanguage {
+        let result = null;
+        if (value) {
+            let langCode = value.toString().toLowerCase();
+            if (langCode.length === 4) {
+                langCode = langCode.substr(0, 2) + langCode.charAt(2).toUpperCase() + langCode.slice(3);
+            }
+            result = KalturaLanguage[langCode];
+        }
+
+        return result;
+
+    }
+
+    public getValueByLabel(label: string) : string {
+        let result = null;
+        if (label) {
+            const excludedLanguages = ['he', 'id', 'yi'];
+            for (const lang in KalturaLanguage) {
+                if (KalturaLanguage[lang] === label && excludedLanguages.indexOf(lang) === -1) {
+                    result = lang.toUpperCase();
+                }
+            }
+        }
+
+        return result;
+
+    }
+
     public get (): { value: string, label: string }[] {
         return this._options;
     }

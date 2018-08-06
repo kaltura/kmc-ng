@@ -10,7 +10,7 @@
 <!--since we append the menu to the body, any styling modifications are currently not available-->
 <p-tieredMenu #menu kMenuCloseOnScroll [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"></p-tieredMenu>
 
-<kPopupWidget #bulkActionsPopup [modal]="true" [popupWidth]="500">
+<kPopupWidget #bulkActionsPopup data-aid="bulkActionsPopup" [modal]="true" [popupWidth]="500">
   <ng-template>
     <div [ngSwitch]="_bulkAction">
       <kCategoriesBulkAddTags *ngSwitchCase="'addTags'" [parentPopupWidget]="bulkActionsPopup" (addTagsChanged)="onAddTagsChanged($event)"></kCategoriesBulkAddTags>

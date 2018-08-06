@@ -4,12 +4,13 @@
               (onActionsSelected)="_onActionSelected($event)">
   <div class="bulk-actions">
     <kBulkActions [selectedEntries]="_entriesList.selectedEntries"
-                  (onBulkChange)="_entriesList.onBulkChange($event)"></kBulkActions>
+                  (onBulkChange)="_entriesList.onBulkChange($event)"
+                  [(blockerMessage)]="_blockerMessage"></kBulkActions>
   </div>
 </kEntriesList>
 </k-area-blocker>
 
-<kPopupWidget #liveDashboard [fullScreen]="true">
+<kPopupWidget #liveDashboard data-aid="liveDashboard" [fullScreen]="true">
   <ng-template>
     <kLiveDashboard [entryId]="_entryId" [parentPopupWidget]="liveDashboard"></kLiveDashboard>
   </ng-template>

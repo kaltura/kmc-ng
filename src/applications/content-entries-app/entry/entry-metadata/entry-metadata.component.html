@@ -115,7 +115,7 @@
   </div>
 
 
-  <kPopupWidget #categoriesPopup [popupWidth]="560" [popupHeight]="586" [closeBtn]="true" [modal]="true">
+  <kPopupWidget #categoriesPopup data-aid="categoriesPopup" [popupWidth]="560" [popupHeight]="586" [closeBtn]="true" [modal]="true">
     <ng-template>
       <kCategoriesSelector [parentPopupWidget]="categoriesPopup" (valueChange)="_updateEntryCategories($event)"
                            [value]="_widgetService.metadataForm.value.categories"

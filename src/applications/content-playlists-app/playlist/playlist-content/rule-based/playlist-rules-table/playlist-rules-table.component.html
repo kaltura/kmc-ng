@@ -1,59 +1,66 @@
 <k-area-blocker [showLoader]="_deferredLoading">
-  <div class="kPlaylistRulesTable" [class.noResults]="!_rules.length">
-    <p-dataTable
-      #dataTable
-      dataKey="selectionId"
-      scrollHeight="100%"
-      [immutable]="false"
-      [scrollable]="true"
-      [value]="_rules"
-      [emptyMessage]="_emptyMessage"
-      (selectionChange)="_onSelectionChange($event)"
-      [(selection)]="selectedRules">
-      <p-column selectionMode="multiple" [style]="{'width':'44px', 'padding-left': '14px'}"></p-column>
+    <div class="kPlaylistRulesTable" [class.noResults]="!_rules.length">
+        <p-table
+            dataKey="selectionId"
+            scrollHeight="100%"
+            [scrollable]="true"
+            [value]="_rules"
+            (selectionChange)="_onSelectionChange($event)"
+            [(selection)]="selectedRules">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th>
+                        {{'applications.content.table.ruleName' | translate}}
+                    </th>
+                    <th [ngStyle]="{'width': '80px'}">
+                        {{'applications.content.table.entriesCount' | translate}}
+                    </th>
+                    <th [ngStyle]="{'width': '100px'}">
+                        {{'applications.content.table.limit' | translate}}
+                    </th>
+                    <th [ngStyle]="{'width': '120px'}">
+                        {{'applications.content.table.orderBy' | translate}}
+                    </th>
+                    <th [ngStyle]="{'width': '70px'}">
+                        {{'applications.content.table.duration' | translate}}
+                    </th>
+                    <th [ngStyle]="{'width': '70px'}"
+                        *ngIf="_isNewPlaylist || (_kmcPermissions.PLAYLIST_UPDATE | kNgIfPermitted)">
+                    </th>
+                </tr>
+            </ng-template>
 
-      <p-column field="name" header="{{'applications.content.table.ruleName' | translate}}">
-        <ng-template let-col let-rule="rowData" pTemplate="body">
-          <span class="kTitle kTableColumn"
-                [kTooltip]="rule[col.field]"
-                (click)="_viewRule(rule)">{{rule[col.field]}}</span>
-        </ng-template>
-      </p-column>
+            <ng-template pTemplate="body" let-rule let-index="rowIndex">
+                <tr [pSelectableRow]="rule">
+                    <td [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
+                        <p-tableCheckbox [value]="rule"></p-tableCheckbox>
+                    </td>
+                    <td>
+                    <span class="kTitle kTableColumn" [kTooltip]="rule.name" (click)="_viewRule(rule)">
+                        {{rule.name}}
+                    </span>
+                    </td>
+                    <td [ngStyle]="{'width': '80px'}">{{rule.entriesCount}}</td>
+                    <td [ngStyle]="{'width': '100px'}">{{rule.limit}}</td>
+                    <td [ngStyle]="{'width': '120px'}">{{rule | playlistRuleOrderBy}}</td>
+                    <td [ngStyle]="{'width': '70px'}">{{rule.entriesDuration | kTime}}</td>
+                    <td [ngStyle]="{'width': '70px'}"
+                        *ngIf="_isNewPlaylist || (_kmcPermissions.PLAYLIST_UPDATE | kNgIfPermitted)">
+                        <div class="kPlaylistRulesTableActions">
+                            <button type="button" pButton icon="kIconmore" class="kMoreActionsButton"
+                                    (click)="_openActionsMenu($event, index, rule)"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
 
-      <p-column field="entriesCount"
-                [style]="{'width': '80px'}"
-                [header]="'applications.content.table.entriesCount' | translate">
-      </p-column>
-
-      <p-column field="limit"
-                [style]="{'width': '100px'}"
-                [header]="'applications.content.table.limit' | translate">
-      </p-column>
-
-      <p-column field="orderBy"
-                [style]="{'width': '120px'}"
-                [header]="'applications.content.table.orderBy' | translate">
-        <ng-template let-col let-rule="rowData" pTemplate="body">
-          <span>{{rule | playlistRuleOrderBy}}</span>
-        </ng-template>
-      </p-column>
-
-      <p-column field="entriesDuration"
-                [style]="{'width': '70px'}"
-                [header]="'applications.content.table.duration' | translate">
-        <ng-template let-col let-rule="rowData" pTemplate="body">
-          <span>{{rule[col.field] | kTime}}</span>
-        </ng-template>
-      </p-column>
-
-      <p-column header="" [style]="{'width': '70px'}" *ngIf="_isNewPlaylist || (_kmcPermissions.PLAYLIST_UPDATE | kNgIfPermitted)">
-        <ng-template let-col let-rule="rowData" pTemplate="body" let-i="rowIndex">
-          <div class="kPlaylistRulesTableActions">
-            <button type="button" pButton icon="kIconmore" class="kMoreActionsButton" (click)="_openActionsMenu($event, i, rule)"></button>
-          </div>
-        </ng-template>
-      </p-column>
-    </p-dataTable>
-    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
-  </div>
+            <ng-template pTemplate="emptymessage">
+                <div class="emptymessage">{{_emptyMessage}}</div>
+            </ng-template>
+        </p-table>
+        <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+    </div>
 </k-area-blocker>

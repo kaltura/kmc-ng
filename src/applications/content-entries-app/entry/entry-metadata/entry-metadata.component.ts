@@ -8,7 +8,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui'
 import { MenuItem } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
 import { EntryMetadataWidget } from './entry-metadata-widget.service';
-import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
+import { PageScrollService, PageScrollInstance } from 'ngx-page-scroll';
 import { JumpToSection } from './jump-to-section.component';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { CategoryTooltipPipe } from 'app-shared/content-shared/categories/category-tooltip.pipe';

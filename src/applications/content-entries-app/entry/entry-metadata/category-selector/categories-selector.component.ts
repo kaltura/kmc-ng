@@ -197,9 +197,11 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
   public _onCategoryUnselected(node: number): void {
     this._confirmClose = true;
     const requestedCategoryIndex = this._selectedCategories.findIndex(item => item.id === node);
+    const requestedCategoryTreeIndex = this._treeSelection.findIndex(item => item === node);
 
-    if (requestedCategoryIndex > -1) {
+    if (requestedCategoryIndex > -1 && requestedCategoryTreeIndex > -1) {
       this._selectedCategories.splice(requestedCategoryIndex, 1);
+      this._treeSelection.splice(requestedCategoryTreeIndex, 1);
     }
   }
 

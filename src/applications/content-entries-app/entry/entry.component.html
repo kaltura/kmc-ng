@@ -6,12 +6,17 @@
 					<div class="kContent">
 						<button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
 						<div class="kTitle">{{ _entryName }}</div>
-						<button pButton class="kButtonBranded kSaveBtn"
-                    label="Save"
-                    [disabled]="_isSaveDisabled"
-                    (click)="_save()"></button>
-						<button pButton class="kButtonDefault kNavigationBtnLeft" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
-						<button pButton class="kButtonDefault kNavigationBtnRight" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
+                        <div class="kEntryActionsWrapper">
+                            <button type="button" pButton class="kButtonDefault kEntryActions" icon="kIconmore"
+                                    (click)="actionsmenu.toggle($event)"></button>
+                            <button pButton class="kButtonBranded kSaveBtn"
+                                    label="{{'app.common.save' | translate}}"
+                                    [disabled]="_isSaveDisabled"
+                                    (click)="_save()"></button>
+                            <button pButton class="kButtonDefault kNavigationBtnLeft" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
+                            <button pButton class="kButtonDefault kNavigationBtnRight" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
+                        </div>
+                        <p-menu #actionsmenu popup="popup" [model]="_menuItems" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 					</div>
 				</div>
 			</kSticky>
@@ -36,3 +41,24 @@
 
 	</div>
 </k-area-blocker>
+
+<kPopupWidget #liveDashboard [fullScreen]="true">
+    <ng-template>
+        <kLiveDashboard [entryId]="_currentEntryId" [parentPopupWidget]="liveDashboard"></kLiveDashboard>
+    </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #clipAndTrim [fullScreen]="true">
+    <ng-template>
+        <kEntryEditor [entry]="_entryStore.entry"
+                      [entryHasSource]="true"
+                      [tab]="'editor'"
+                      [parentPopupWidget]="clipAndTrim"></kEntryEditor>
+    </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #bulkActionsPopup [popupWidth]="570" [popupHeight]="245" [modal]="true" [preventPageScroll]="true">
+    <ng-template>
+        <kDownloadEntry [entry]="_entryStore.entry" [parentPopupWidget]="bulkActionsPopup"></kDownloadEntry>
+    </ng-template>
+</kPopupWidget>

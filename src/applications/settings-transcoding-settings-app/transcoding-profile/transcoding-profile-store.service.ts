@@ -33,6 +33,8 @@ import {
 } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { SettingsTranscodingMainViewService } from 'app-shared/kmc-shared/kmc-views/main-views/settings-transcoding-main-view.service';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { TranscodingProfilesUpdatedEvent } from 'app-shared/kmc-shared/events';
+import { AppEventsService } from 'app-shared/kmc-shared';
 
 export enum ActionTypes {
   ProfileLoading,
@@ -84,6 +86,7 @@ export class TranscodingProfileStore implements OnDestroy {
   constructor(@Host() private _widgetsManager: TranscodingProfileWidgetsManager,
               private _kalturaServerClient: KalturaClient,
               private _router: Router,
+              private _appEvents: AppEventsService,
               private _browserService: BrowserService,
               private _profileRoute: ActivatedRoute,
               private _pageExitVerificationService: PageExitVerificationService,
@@ -268,6 +271,7 @@ export class TranscodingProfileStore implements OnDestroy {
 
                     if (isNew) {
                       this._profileIsDirty = false;
+                        this._appEvents.publish(new TranscodingProfilesUpdatedEvent());
                         this._settingsTranscodingProfileViewService.open({ profile: profileResponse.result, section: SettingsTranscodingProfileViewSections.Metadata });
                     } else {
                       this._loadProfile(profileResponse.result.id);

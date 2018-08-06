@@ -77,7 +77,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this._fileDialog.open();
 
-    this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-datatable-scrollable-body');
+    this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-table-scrollable-body');
   }
 
   ngOnInit() {
@@ -90,7 +90,8 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     const newItems = Array.from(files).map(file => {
       const ext = this._getFileExtension(file.name);
       const mediaType = this._getMediaTypeFromExtension(ext);
-      const { name, size } = file;
+      const name = file.name.replace(/\.[^.]*$/, '');
+      const { size } = file;
       return ({ file, mediaType, name, size, isEditing });
     });
 
