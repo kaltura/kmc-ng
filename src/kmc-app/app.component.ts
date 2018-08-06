@@ -10,6 +10,8 @@ import { OpenEmailEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { EmailConfig } from './components/open-email/open-email.component';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { BoostrappingStatus, AppBootstrap } from 'app-shared/kmc-shell';
 /*
  * App Component
  * Top Level Component
@@ -30,18 +32,39 @@ export class AppComponent implements OnInit {
   public _growlMessages: GrowlMessage[] = [];
   public _confirmDialogAlignLeft = false;
   public _openEmailConfig: EmailConfig = {email: "", title: "", message:""};
+  public _confirmationLabels = {
+      yes: "Yes",
+      no: "No",
+      ok: "OK"
+  };
 
   constructor(private _confirmationService: ConfirmationService,
               private _browserService : BrowserService,
               private router: Router,
               private _loggerConfigurator: KmcLoggerConfigurator,
               private _oprationsTagManager: OperationTagManagerService,
-              private _appEvents: AppEventsService
+              private _appEvents: AppEventsService,
+              private _appLocalization: AppLocalization,
+              private appBootstrap: AppBootstrap
               ) {
 
   }
 
   ngOnInit() {
+
+      const statusChangeSubscription = this.appBootstrap.bootstrapStatus$.subscribe(
+          (status : BoostrappingStatus) => {
+              if (status === BoostrappingStatus.Bootstrapped) {
+                  this._confirmationLabels = {
+                      yes: this._appLocalization.get('app.common.yes'),
+                      no: this._appLocalization.get('app.common.no'),
+                      ok: this._appLocalization.get('app.common.ok')
+                  };
+                  statusChangeSubscription.unsubscribe();
+              }
+          }
+      );
+
     this._browserService.registerOnShowConfirmation((confirmationMessage) => {
         const htmlMessageContent = confirmationMessage.message.replace(/\r|\n/g, '<br/>');
         const formattedMessage = Object.assign({}, confirmationMessage, {message: htmlMessageContent});

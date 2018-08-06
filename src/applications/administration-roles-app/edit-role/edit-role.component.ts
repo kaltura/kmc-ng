@@ -1,5 +1,5 @@
 import { Component, Input, IterableDiffers, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { KalturaUserRole } from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaUserRole } from 'kaltura-ngx-client';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observer } from 'rxjs/Observer';
 import { PermissionsTableComponent, RolePermissionFormValue } from '../permissions-table/permissions-table.component';
@@ -9,7 +9,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { RolesStoreService } from '../roles-store/roles-store.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { subApplicationsConfig } from 'config/sub-applications';
-import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
@@ -97,7 +97,6 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
   private _addMissingRolePermissions(permissions: string[]): string[] {
       const result = [...permissions];
-      const uniquePermissions = new Set(permissions || []);
 
       permissions.forEach(permission => {
           const permissionKey = this._kmcPermissionsService.getPermissionKeyByName(permission);
@@ -135,6 +134,24 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
         this._editRoleForm.updateValueAndValidity();
     }
 
+    private _markFormFieldsAsPristine() {
+        for (const controlName in this._editRoleForm.controls) {
+            if (this._editRoleForm.controls.hasOwnProperty(controlName)) {
+                this._editRoleForm.get(controlName).markAsPristine();
+                this._editRoleForm.get(controlName).updateValueAndValidity();
+            }
+        }
+        this._editRoleForm.updateValueAndValidity();
+    }
+
+
+    private _handleInvalidInputError(error: KalturaAPIException): void {
+        if (error.args['PROPERTY_NAME'] === 'name') {
+            this._nameField.setErrors({ unsafeValue: true });
+        } else if (error.args['PROPERTY_NAME'] === 'description') {
+            this._descriptionField.setErrors({ unsafeValue: true });
+        }
+    }
 
     private _getObserver(retryFn: () => void, successFn: () => void = null): Observer<void> {
     return <Observer<void>>{
@@ -147,6 +164,11 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
         this._rolesService.reload();
       },
       error: (error) => {
+          if (error.code === 'UNSAFE_HTML_TAGS') {
+              this._handleInvalidInputError(error);
+              return;
+          }
+
         this._logger.info(`handle failing update by the server`);
         this._blockerMessage = new AreaBlockerMessage(
           {
@@ -270,7 +292,9 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
       return;
     }
 
-    if (this.role) {
+      this._markFormFieldsAsPristine();
+
+    if (this.role && this.role.id) {
       this._updateRole();
     } else {
       this._addRole();

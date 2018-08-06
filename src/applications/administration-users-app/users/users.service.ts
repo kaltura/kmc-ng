@@ -32,10 +32,14 @@ export interface QueryData {
   pageSize: number;
 }
 
+export interface ExtendedKalturaUser extends KalturaUser {
+    roleName: string;
+}
+
 interface UsersData {
-  users: { items: KalturaUser[], totalCount: number },
-  roles: { items: KalturaUserRole[], totalCount: number },
-  partnerInfo: { adminLoginUsersQuota: number, adminUserId: string }
+  users: { items: ExtendedKalturaUser[], totalCount: number };
+  roles: { items: KalturaUserRole[], totalCount: number };
+  partnerInfo: { adminLoginUsersQuota: number, adminUserId: string };
 }
 
 @Injectable()
@@ -118,9 +122,14 @@ export class UsersStore implements OnDestroy {
         response => {
           if (!response.hasErrors()) {
             const [roles, users, partnerInfo] = response;
+              const usersItems = users.result.objects.map(user => {
+                  const relevantRole = roles.result.objects.find(role => String(role.id) === user.roleIds);
+                  user.roleName = relevantRole ? relevantRole.name : '';
+                  return user;
+              });
             this._users.data.next({
               users: {
-                items: users.result.objects,
+                items: usersItems,
                 totalCount: users.result.totalCount
               },
               roles: {

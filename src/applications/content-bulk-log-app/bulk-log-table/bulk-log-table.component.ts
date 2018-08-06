@@ -1,14 +1,30 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component, ElementRef,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaBulkUpload } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kBulkLogTable',
   templateUrl: './bulk-log-table.component.html',
-  styleUrls: ['./bulk-log-table.component.scss']
+  styleUrls: ['./bulk-log-table.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'bulkuploads-table' }
+    ]
 })
 export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input()
@@ -46,8 +62,10 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
-  constructor(private _appLocalization: AppLocalization,
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
+              private _el: ElementRef<HTMLElement>,
               private _cdRef: ChangeDetectorRef) {
   }
 
@@ -69,6 +87,8 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
         this._deferredEntries = null;
       }, 0);
     }
+
+    this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   ngOnDestroy() {
@@ -88,6 +108,7 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
         command: () => this._onActionSelected('downloadFile', bulkLogItem)
       },
       {
+        id: 'delete',
         label: this._appLocalization.get('applications.content.bulkUpload.table.actions.delete'),
         styleClass: 'kDanger',
         command: () => this._onActionSelected('delete', bulkLogItem)

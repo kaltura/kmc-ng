@@ -42,6 +42,7 @@ export class TranscodingProfilesListComponent implements OnInit, OnDestroy {
   @Output() setParentBlockerMessage = new EventEmitter<AreaBlockerMessage>();
 
   public _profilesType: KalturaConversionProfileType;
+  public _profilesTypes = KalturaConversionProfileType;
   public _storeService: BaseTranscodingProfilesStore;
   public _selectedProfiles: KalturaConversionProfileWithAsset[] = [];
   public _tableIsBusy = false;
