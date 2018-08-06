@@ -162,7 +162,6 @@ export class CategoryService implements OnDestroy {
 						const currentCategoryId = this._categoryRoute.snapshot.params.id;
                         const category = this._category.getValue();
                         if (!category || (category && category.id.toString() !== currentCategoryId)) {
-                          this._subcategoriesMoved = false;
                           this._loadCategory(currentCategoryId);
                         } else {
                             this._notifications.next({ type: NotificationTypes.ViewEntered });
@@ -329,6 +328,7 @@ export class CategoryService implements OnDestroy {
 		this._categoryId = id;
 		this._categoryIsDirty = false;
 		this._updatePageExitVerification();
+        this._subcategoriesMoved = false;
 
 		this._state.next({ action: ActionTypes.CategoryLoading });
 		this._widgetsManager.notifyDataLoading(id);
