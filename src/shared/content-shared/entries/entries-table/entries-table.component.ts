@@ -31,8 +31,9 @@ export interface EntriesTableColumns {
 }
 
 export interface CustomMenuItem extends MenuItem {
-  metadata: any;
+  metadata?: any;
   commandName: string;
+  command?: (args?: any) => void;
 }
 
 export interface EntriesTableColumnStyle {

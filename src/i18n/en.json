@@ -1118,6 +1118,8 @@
                 "entriesCount": "No. Entries",
                 "limit": "Limit",
                 "orderBy": "Order By",
+                "download": "Download",
+                "editor": "Launch Editor",
                 "captionRequest": "Caption Request"
             },
             "paginator": {
@@ -1350,6 +1352,11 @@
                     "title": "Editor",
                     "cancelEdit": "Cancel Edit",
                     "discard": "Discard all changes?"
+                },
+                "downloadEntry": {
+                    "title": "Download",
+                    "downloadFlavor": "If you have selected to download a video, please choose the required format:",
+                    "downloadEntry": "Download Entry"
                 },
                 "save": "Save",
                 "sections": {
