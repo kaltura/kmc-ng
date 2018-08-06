@@ -1,14 +1,8 @@
-import {CategoriesService} from './../categories/categories.service';
+import { CategoriesService } from '../categories/categories.service';
 import {Host, Injectable, OnDestroy} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
-import {ISubscription} from 'rxjs/Subscription';
-import { Observable } from 'rxjs';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/subscribeOn';
-import 'rxjs/add/operator/switchMap';
+import { Observable, Subject, BehaviorSubject, Unsubscribable } from 'rxjs';
 
 import {KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory} from 'kaltura-ngx-client';
 import {KalturaCategory} from 'kaltura-ngx-client';
@@ -53,13 +47,14 @@ declare interface StatusArgs {
 export class CategoryService implements OnDestroy {
     private _notifications = new Subject<{ type: NotificationTypes, error?: Error }>();
     public notifications$ = this._notifications.asObservable();
-    private _loadCategorySubscription: ISubscription;
+    private _loadCategorySubscription: Unsubscribable;
     private _state = new BehaviorSubject<StatusArgs>({action: ActionTypes.CategoryLoading, error: null});
 
     private _saveCategoryInvoked = false;
     public state$ = this._state.asObservable();
     private _categoryIsDirty: boolean;
     private _pageExitVerificationToken: string;
+    private _subcategoriesMoved = false;
 
     public get categoryIsDirty(): boolean {
         return this._categoryIsDirty;
@@ -250,7 +245,8 @@ export class CategoryService implements OnDestroy {
                   .map(
                     categorySavedResponse => {
 
-                      if (userModifiedName) {
+                      if (userModifiedName || this._subcategoriesMoved) {
+                          this._subcategoriesMoved = false;
                         this._appEvents.publish(new CategoriesGraphUpdatedEvent());
                       }
 
@@ -332,6 +328,7 @@ export class CategoryService implements OnDestroy {
 		this._categoryId = id;
 		this._categoryIsDirty = false;
 		this._updatePageExitVerification();
+        this._subcategoriesMoved = false;
 
 		this._state.next({ action: ActionTypes.CategoryLoading });
 		this._widgetsManager.notifyDataLoading(id);
@@ -385,6 +382,7 @@ export class CategoryService implements OnDestroy {
 						header: this._appLocalization.get('applications.content.categoryDetails.cancelEdit'),
 						message: this._appLocalization.get('applications.content.categoryDetails.discard'),
 						accept: () => {
+                            this._subcategoriesMoved = false;
                             this._categoryIsDirty = false;
 							observer.next({ allowed: true });
 							observer.complete();
@@ -432,5 +430,9 @@ export class CategoryService implements OnDestroy {
 
         this._contentCategoriesMainViewService.open();
 	}
+
+    public notifySubcategoriesMoved(): void {
+        this._subcategoriesMoved = true;
+    }
 }
 
