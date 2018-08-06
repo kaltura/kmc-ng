@@ -33,7 +33,7 @@ export class CategoriesBulkChangeOwnerService extends CategoriesBulkActionBaseSe
           observer.complete();
         },
         error => {
-          observer.error(error);
+          observer.error({});
         }
       );
     });

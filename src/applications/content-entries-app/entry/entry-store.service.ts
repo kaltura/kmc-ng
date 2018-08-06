@@ -380,7 +380,11 @@ export class EntryStore implements  OnDestroy {
 	}
 
     public returnToEntries(): void {
-        this._contentEntriesMainViewService.open();
+	    if (this._contentEntriesMainViewService.isAvailable()) {
+            this._contentEntriesMainViewService.open();
+        } else {
+            this._browserService.navigateToDefault();
+        }
     }
 
 

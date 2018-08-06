@@ -14,7 +14,7 @@
     </div>
 </k-area-blocker>
 
-<kPopupWidget #advertisements [fullScreen]="true">
+<kPopupWidget #advertisements data-aid="advertisements" [fullScreen]="true">
   <ng-template>
     <kEntryEditor [entry]="_widgetService.data"
                   [entryHasSource]="true"

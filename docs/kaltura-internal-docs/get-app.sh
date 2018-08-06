@@ -5,7 +5,7 @@
 PRODUCT_PATH=/var/www/html
 GITHUB_REPO_DOWNLOADS=https://github.com/kaltura/kmc-ng/releases/download/
 GITHUB_FILE_PREFIX=kmc-ng-
-USAGE="Usage: script for changing kmc-ng version; to run execute: ./get-app <version>"
+USAGE="Usage: script for changing kmc-ng version; to run execute: ./get-app v<version>"
 VERSION=
 
 PARAM=install
@@ -14,7 +14,7 @@ if [ $# -eq 0 ]; then
    exit 1
 fi
 
-VERSION="v$1"
+VERSION="$1"
 cd ${PRODUCT_PATH}
 
 function download_version() {
@@ -32,9 +32,12 @@ function download_version() {
      echo "removing previous version of ${VERSION}"
   fi
 
-  unzip ${FILE_NAME} -d ${VERSION}
+  unzip ${FILE_NAME}
   echo "Removing ${VERSION}.zip"
   rm -f ${FILE_NAME}
+
+  echo "Copy configuration file"
+  wget ${GITHUB_REPO_DOWNLOADS}/${VERSION}/server-config-example.json -O "${VERSION}/server-config.json"
 
   if [ -L next ]; then
     rm next

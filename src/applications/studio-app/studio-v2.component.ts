@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import {AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import {AppEventsService} from 'app-shared/kmc-shared';
-import {getKalturaServerUri, serverConfig} from 'config/server';
+import { buildCDNUrl, getKalturaServerUri, serverConfig } from 'config/server';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { PlayersUpdatedEvent } from 'app-shared/kmc-shared/events';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
@@ -39,7 +39,7 @@ export class StudioV2Component implements OnInit, AfterViewInit, OnDestroy {
                             'name': 'Video Studio V2',
                             'tags': 'studio_v2',
                             'html5_version': serverConfig.externalApps.studioV2.html5_version,
-                            'html5lib': serverConfig.externalApps.studioV2.html5lib
+                            'html5lib': buildCDNUrl(serverConfig.externalApps.studioV2.html5lib)
                         },
                         'showFlashStudio': false,
                         'showStudioV3': false,

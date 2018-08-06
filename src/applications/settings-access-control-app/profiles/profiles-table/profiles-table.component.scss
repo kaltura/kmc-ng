@@ -100,6 +100,10 @@ $kmc-flags-path: '../../styles/flags/';
                     padding: 0;
                     vertical-align: top;
 
+                    .kDescription {
+                        word-wrap: break-word;
+                    }
+
                     div {
                         overflow: hidden;
                         text-overflow: ellipsis;

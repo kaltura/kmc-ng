@@ -33,7 +33,7 @@ export class AppBootstrap implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
         if (!AppBootstrap._executed) {
             AppBootstrap._executed = true;
-            this._bootstrap(state.url);
+            this._bootstrap();
         }
 
         return Observable.create((observer: any) => {
@@ -71,7 +71,7 @@ export class AppBootstrap implements CanActivate {
         });
     }
 
-    private _bootstrap(defaultUrl: string): void {
+    private _bootstrap(): void {
 
         if (!this._initialized) {
             const bootstrapFailure = (error: any) => {
@@ -88,15 +88,7 @@ export class AppBootstrap implements CanActivate {
             const language = this.getCurrentLanguage();
             this.appLocalization.load(language, 'en').subscribe(
                 () => {
-
-                    this.auth.loginAutomatically(defaultUrl).subscribe(
-                        () => {
-                            this._bootstrapStatusSource.next(BoostrappingStatus.Bootstrapped);
-                        },
-                        () => {
-                            bootstrapFailure("Authentication process failed");
-                        }
-                    );
+                    this._bootstrapStatusSource.next(BoostrappingStatus.Bootstrapped);
                 },
                 (error) => {
                     bootstrapFailure(error);

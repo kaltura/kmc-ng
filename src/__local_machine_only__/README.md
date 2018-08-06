@@ -26,12 +26,12 @@ Follow these instructions to test external apps integration:
 "studioV2": {
     "uri": "/__local_machine_only__/studio_v2_2_1/index.html",
     "html5_version":"v2.57.2",
-    "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.57.2/mwEmbedLoader.php"
+    "html5lib":"/html5/html5lib/v2.57.2/mwEmbedLoader.php"
 },
 "studioV3": {
     "uri": "/__local_machine_only__/studio_v3_2_0/index.html",
     "html5_version":"v2.67",
-    "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.67/mwEmbedLoader.php",
+    "html5lib":"/html5/html5lib/v2.67/mwEmbedLoader.php",
     "playerVersionsMap": "{'kaltura-ovp-player':'0.27.4','kaltura-tv-player':'0.27.4','playkit-ima':'0.6.1','playkit-youbora':'0.4.1','playkit-comscore':'1.0.4','playkit-google-analytics':'0.1.3','playkit-offline-manager':'1.0.2'}"       
 },
 "liveDashboard": {
@@ -51,6 +51,9 @@ Follow these instructions to test external apps integration:
 },
 "editor": {
     "uri": "/__local_machine_only__/kea-2.25.0/index.html"
+},
+"reach": {
+    "uri": "/__local_machine_only__/reach-v5_75_08/index.html"
 }
 ```
 
