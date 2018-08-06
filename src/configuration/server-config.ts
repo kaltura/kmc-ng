@@ -71,7 +71,6 @@ export interface ServerConfig {
     };
     externalAPI: {
         youtube: {
-            key: string;
             uri: string;
         }
     };

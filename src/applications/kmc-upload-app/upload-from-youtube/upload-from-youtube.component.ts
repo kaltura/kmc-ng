@@ -49,7 +49,7 @@ export class UploadFromYoutubeComponent implements OnDestroy {
                 private _browserService: BrowserService,
                 private _serverClient: KalturaClient) {
         if (!serverConfig.externalAPI || !serverConfig.externalAPI
-            || !serverConfig.externalAPI.youtube.key || !serverConfig.externalAPI.youtube.uri) {
+            || !serverConfig.externalAPI.youtube || !serverConfig.externalAPI.youtube.uri) {
             this._browserService.alert({
                 header: this._appLocalization.get('app.common.attention'),
                 message: this._appLocalization.get('applications.upload.uploadFromYoutube.notSupported'),
@@ -82,108 +82,15 @@ export class UploadFromYoutubeComponent implements OnDestroy {
         return null;
     }
 
-    private _getVideoMetadata(referenceId: string): Observable<YoutubeMetadata> {
-        const { uri, key } = serverConfig.externalAPI.youtube;
-        const url = `${uri}?part=contentDetails,snippet&fields=items(snippet(title),contentDetails(duration))&id=${referenceId}&key=${key}`;
-        return this._http.get(url)
-            .pipe(map((response: { items: any[] }) => {
-                if (response && Array.isArray(response.items) && response.items.length) {
-                    const data = response.items[0] || {};
-                    let title = `Youtube Entry ${referenceId}`;
-                    let duration = 0;
-
-                    if (data.hasOwnProperty('snippet') && data.snippet.hasOwnProperty('title')) {
-                        title = data.snippet.title;
-                    }
-
-                    if (data.hasOwnProperty('contentDetails') && data.contentDetails.hasOwnProperty('duration')) {
-                        duration = moment.duration(data.contentDetails.duration).asMilliseconds();
-                    }
-
-                    return { title, duration };
-                }
-
-                throw Error('invalid_referenceId');
-            }));
-    }
-
-    private _createExternalEntry(referenceId: string, metadata: YoutubeMetadata): Observable<KalturaExternalMediaEntry> {
-        const requests = [
-            new ExternalMediaAddAction({
-                entry: new KalturaExternalMediaEntry({
-                    externalSourceType: KalturaExternalMediaSourceType.youtube,
-                    mediaType: KalturaMediaType.video,
-                    name: metadata.title,
-                    msDuration: metadata.duration,
-                    referenceId: referenceId,
-                })
-            }),
-            new ThumbAssetAddAction({
-                entryId: '',
-                thumbAsset: new KalturaThumbAsset()
-            }).setDependency(['entryId', 0, 'id']),
-            new ThumbAssetSetContentAction({
-                id: '',
-                contentResource: new KalturaUrlResource({ url: `http://img.youtube.com/vi/${referenceId}/hqdefault.jpg` })
-            }).setDependency(['id', 1, 'id']),
-            new ThumbAssetSetAsDefaultAction({
-                thumbAssetId: ''
-            }).setDependency(['thumbAssetId', 1, 'id'])
-        ];
-
-        return this._serverClient.multiRequest(new KalturaMultiRequest(...requests))
-            .pipe(map((responses: KalturaMultiResponse) => {
-                if (responses.hasErrors()) {
-                    const errorMessage = responses.reduce((acc, val) => `${acc}${val.error ? `${val.error.message}\n` : ''}`, '');
-                    throw Error(errorMessage);
-                }
-
-                return responses[0].result;
-            }));
-    }
-
     private _createYoutubeEntry(referenceId: string): void {
-        if (!referenceId) {
-            this._sourceInvalid = true;
-            return;
-        }
-
-        this._getVideoMetadata(referenceId)
-            .pipe(
-                switchMap(metadata => this._createExternalEntry(referenceId, metadata)),
-                tag('block-shell'),
-                cancelOnDestroy(this)
-            )
-            .subscribe(
-                (entry) => {
-                    this.parentPopupWidget.close();
-
-                    this._browserService.confirm({
-                        header: this._appLocalization.get('applications.upload.uploadFromYoutube.success'),
-                        message: this._appLocalization.get('applications.upload.uploadFromYoutube.successMessage'),
-                        accept: () => {
-                            this._contentEntryViewService.open({
-                                entry: entry,
-                                section: ContentEntryViewSections.Metadata,
-                                reloadEntriesListOnNavigateOut: true
-                            });
-                        },
-                        reject: () => {
-                            this._appEvents.publish(new UpdateEntriesListEvent());
-                        }
-                    });
-                },
-                error => {
-                    if (error.message === 'invalid_referenceId') {
-                        this._sourceInvalid = true;
-                        return;
-                    }
-
-                    this._browserService.alert({
-                        header: this._appLocalization.get('app.common.error'),
-                        message: error.message
-                    });
-                });
+        // Developer notice: this feature will be added soon.
+        this._browserService.alert({
+            header: this._appLocalization.get('app.common.attention'),
+            message: this._appLocalization.get('applications.upload.uploadFromYoutube.notSupported'),
+            accept: () => {
+                this.parentPopupWidget.close();
+            }
+        });
     }
 
     public _upload(): void {

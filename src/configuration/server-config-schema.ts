@@ -51,10 +51,9 @@ export const ServerConfigSchema = {
             properties: {
                 youtube: {
                     properties: {
-                        uri: {type: 'string'},
-                        key: {type: 'string'}
+                        uri: {type: 'string'}
                     },
-                    required: ['uri', 'key'],
+                    required: ['uri'],
                     additionalProperties: false
                 }
             },
