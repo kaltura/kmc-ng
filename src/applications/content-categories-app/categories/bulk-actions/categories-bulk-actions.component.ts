@@ -378,7 +378,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
         error => {
           this._browserService.alert({
               header: this._appLocalization.get('app.common.attention'),
-            message: this._appLocalization.get('applications.content.bulkActions.errorCategories')
+              message: error.message || this._appLocalization.get('applications.content.bulkActions.errorCategories')
           });
           this.onBulkChange.emit({ reload: reloadCategories });
         }
