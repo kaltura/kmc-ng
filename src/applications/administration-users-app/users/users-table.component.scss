@@ -42,3 +42,9 @@
 :host /deep/ p-table .ui-widget-header.ui-table-scrollable-header {
   border-top: none;
 }
+
+:host /deep/ p-table {
+    .ui-table .ui-table-thead > tr > th {
+        border-left: 1px solid $kGrayscale6;
+    }
+}

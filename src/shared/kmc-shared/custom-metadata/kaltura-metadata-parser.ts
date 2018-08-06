@@ -99,7 +99,7 @@ export class MetadataProfileParser {
 			if (kalturaMetadataProfile.xsd && kalturaMetadataProfile.xsd !== 'false' && kalturaMetadataProfile.xsd !== '<xml></xml>') {
 
 			    const escapedSchema = kalturaMetadataProfile.xsd.replace(/&(?![^ ]+;)/g, '&amp;');
-				const schemaContext: any = XmlParser.toJson(escapedSchema, false);
+				const schemaContext: any = XmlParser.toJson(escapedSchema);
 				const metadataElement = schemaContext.schema.element;
 
 				if (metadataElement.attr.name.value === 'metadata') {
@@ -132,7 +132,8 @@ export class MetadataProfileParser {
 			}
 		}
 		catch (e) {
-			result = {profile: null, error: e};
+            console.warn("[kaltura] -> Error occured: " + e.message);
+			result = {profile: null};
 		}
 
 		return result;
@@ -150,8 +151,8 @@ export class MetadataProfileParser {
 			if (annotation.appinfo) {
 				item.label = annotation.appinfo.label && annotation.appinfo.label.text ? annotation.appinfo.label.text : '';
 				item.key = annotation.appinfo.key && annotation.appinfo.key.text ? annotation.appinfo.key.text : '';
-				item.isSearchable = annotation.appinfo.searchable && annotation.appinfo.searchable.text;
-				item.isTimeControl = annotation.appinfo.timeControl && annotation.appinfo.timeControl.text;
+				item.isSearchable = annotation.appinfo.searchable && (annotation.appinfo.searchable.text === 'true' || annotation.appinfo.searchable.text === '1');
+				item.isTimeControl = annotation.appinfo.timeControl && (annotation.appinfo.timeControl.text === 'true' || annotation.appinfo.timeControl.text === '1');
 				item.description = annotation.appinfo.description && annotation.appinfo.description.text ? annotation.appinfo.description.text : '';
 
 			}

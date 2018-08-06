@@ -3,7 +3,7 @@
     <div class="kHeader">
       <span class="kTitle">{{'applications.content.playlists.addEntry' | translate}}</span>
       <div class="kButtons">
-        <a class="kCancel" (click)="onClosePopupWidget.emit()">Cancel</a>
+        <a class="kCancel" (click)="onClosePopupWidget.emit()">{{'app.common.cancel' | translate}}</a>
         <button type="button"
                 class="kButtonBranded"
                 [disabled]="_selectedEntries.length === 0"

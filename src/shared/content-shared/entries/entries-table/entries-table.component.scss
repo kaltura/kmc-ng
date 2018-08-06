@@ -30,8 +30,21 @@
     text-align: center;
     border-radius: 3px;
     cursor: pointer;
+    i{
+        font-size: 24px;
+        margin-top: 11px;
+        display: block;
+        color: $kGrayscale3;
+        opacity: 0;
+    }
     &.disable {
       cursor: auto;
+    }
+    &.error{
+        border: 1px solid $kGrayscale4;
+        i{
+            opacity: 1;
+        }
     }
     img {
       position: absolute;
@@ -60,6 +73,7 @@
   }
   .kMediaTypeIcon{
     font-size: 16px;
+    text-align: center;
     div{
       display: inline-block;
     }

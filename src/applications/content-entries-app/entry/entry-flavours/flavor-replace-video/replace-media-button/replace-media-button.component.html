@@ -20,8 +20,7 @@
         [label]="'applications.content.entryDetails.flavours.replaceVideo.matchFromDropFolder' | translate"
         (click)="matchDropFolder.open()"></button>
 
-<kPopupWidget #uploadMenu data-aid="uploadMenu" [popupWidth]="791" [popupHeight]="607"
-              [closeBtn]="true" [modal]="true" [preventPageScroll]="true">
+<kPopupWidget #uploadMenu data-aid="uploadMenu" [popupWidth]="791" [popupHeight]="607" [modal]="true" [preventPageScroll]="true">
     <ng-template>
         <kFlavorReplaceFile [entry]="entry"
                             [flavors]="flavors"
@@ -30,8 +29,7 @@
     </ng-template>
 </kPopupWidget>
 
-<kPopupWidget #matchDropFolder data-aid="matchDropFolder" [popupWidth]="791" [popupHeight]="560" [closeOnClickOutside]="false"
-              [closeBtn]="false" [modal]="true" [preventPageScroll]="true">
+<kPopupWidget #matchDropFolder data-aid="matchDropFolder" [popupWidth]="791" [popupHeight]="560" [modal]="true" [preventPageScroll]="true">
     <ng-template>
         <kReplaceMatchDropFolder [entry]="entry"
                                  [parentPopupWidget]="matchDropFolder"></kReplaceMatchDropFolder>

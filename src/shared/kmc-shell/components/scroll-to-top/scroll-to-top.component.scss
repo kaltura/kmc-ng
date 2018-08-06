@@ -13,6 +13,9 @@
   font-size: 24px;
   box-sizing: border-box;
   transition: bottom 0.25s;
+    &:hover{
+        background-color: #666666;
+    }
 }
 .show{
   bottom: 30px;

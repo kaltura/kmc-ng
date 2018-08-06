@@ -18,6 +18,7 @@ export class UploadMenuComponent {
   public _enableNeedHighSpeedLink: boolean;
   public _enableBulkUploadSamples: boolean;
     public _uploadFromYoutubeAllowed = !!serverConfig.externalAPI && !!serverConfig.externalAPI.youtube;
+    public _bulkUploadAvailable: boolean;
 
   constructor(private _browserService: BrowserService,
               private _permissionsService: KMCPermissionsService) {
@@ -26,6 +27,12 @@ export class UploadMenuComponent {
       this._showNeedHighSpeedLink = !!serverConfig.externalLinks.uploads && !this._showHighSpeedLink && !this._permissionsService.hasPermission(KMCPermissions.FEATURE_HIDE_ASPERA_LINK);
       this._enableNeedHighSpeedLink = !!serverConfig.externalLinks.uploads && !!serverConfig.externalLinks.uploads.needHighSpeedUpload;
       this._enableBulkUploadSamples = !!serverConfig.externalLinks.uploads && !!serverConfig.externalLinks.uploads.bulkUploadSamples;
+      this._bulkUploadAvailable = this._permissionsService.hasAnyPermissions([
+          KMCPermissions.CONTENT_INGEST_BULK_UPLOAD,
+          KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES,
+          KMCPermissions.ADMIN_USER_BULK,
+          KMCPermissions.CONTENT_MANAGE_CATEGORY_USERS
+      ]);
   }
 
   onHighSpeedLinkClicked() {

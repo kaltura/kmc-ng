@@ -100,6 +100,7 @@ npm run build:prod
 
 6. Test the updated kmc-ng and make sure it works correctly
 ```
+cp src/configuration/server-config-example.json dist/server-config.json
 cd dist
 ws --spa index.html
 ```
@@ -135,24 +136,27 @@ npm run build:prod
 5. Create a version deployable zip using the following structure:
 ```
 kmc-ng-vX.X.X.zip
-| -> deploy (folder - copied from /deploy)
-| -> server-config-example.json (file - copied from /src/configuration)
-| -> vX.X.X (folder - copied from /dist)
+| -> vX.X.X
+  |----> deploy folder (copied from /deploy)
+  |----> app content (copied from /dist)
 ```
-**Note**: replace `vX.X.X` with the actual version number
+
+**Note**: 
+- replace `vX.X.X` with the actual version number
+- make sure you don't zip `__MACOSX` folder. you can use the following command `zip -r vX.X.X.zip . -x "*.DS_Store" -x "__MACOSX"`
 
 6.in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases), edit the version release notes:
 
-6.1 update the title of the release, add `(Beta)` to the versin name
-
-6.2 add the following information at the bottom of the release notes
+6.1 add the following information at the bottom of the release notes
 ```
 ## Installation:
-1.  Unzip *inner folder* `v<version number>` into `/opt/kaltura/apps/kmcng/v<version number>`
+1.  Unzip `v<version number>`.zip into `/opt/kaltura/apps/kmcng/v<version number>`
 2.  Run uiconf deployment with `--ini=v<version number>/deploy/config.ini`
 ```
 
-6.3 upload the zip file you created in step 5
+6.2 upload the zip file you created in step 5
+
+6.3 upload server-config-example.json (file - copied from /src/configuration)
 
 7.1 Make sure you are working on the master branch before proceeding with this step. If you published from a different branch, first merge it to master: 
 ```
@@ -164,19 +168,6 @@ git merge <branchName>
 npm run standalone:update
 ```
 
-#### provide debug version
-1. Rebuild the application **without** production flag.
-```
-npm run build
-```
-
-2. Create a version deployable zip, **add a suffix** `-DEBUG-ONLY` to the zip file name
-```
-cd dist
-zip -r kmc-ng-vX.X.X-DEBUG-ONLY.zip .
-```
-   * replace `vX.X.X` with the actual version number
-
 3. Add zip to the release tag in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases).
 
 ## Step 3: deploy kaltura to the dev server
@@ -185,7 +176,7 @@ If you want to setup a version that was deployed to kmc-ng github repository and
 ```
 ssh {kaltura-user-name}@{kaltura-server-name}
 cd /opt/kaltura/kmcng
-sudo ./get-app X.X.X
+sudo ./get-app vX.X.X
 ```
 - replace `X.X.X` with actual version. ie `./get-app 3.5.0`
 

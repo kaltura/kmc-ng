@@ -118,7 +118,14 @@ export const ServerConfigSchema = {
                     },
                     required: ['uri'],
                     additionalProperties: true
-                }
+                },
+                reach: {
+                    properties: {
+                        uri: {type: 'string'}
+                    },
+                    required: ['uri'],
+                    additionalProperties: true
+                },
             },
             required: [],
             additionalProperties: true

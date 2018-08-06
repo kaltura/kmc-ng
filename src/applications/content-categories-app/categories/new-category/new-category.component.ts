@@ -13,6 +13,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { SelectedCategory } from 'app-shared/content-shared/categories/category-selector/category-selector.component';
 import { KalturaCategory } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kNewCategory',
@@ -38,6 +39,7 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
               private _categoriesService: CategoriesService,
               private _browserService: BrowserService,
               private _logger: KalturaLogger,
+              private _contentEntriesMainViewServie: ContentEntriesMainViewService,
               private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
 
     this.newCategoryForm = this._fb.group({
@@ -200,5 +202,10 @@ export class NewCategoryComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
         this._logger.info(`no parentPopupWidget was provided, do nothing`);
     }
+
+      if (this.linkedEntries.length) {
+          this._logger.info(`linked entries provided, redirect to entries list`);
+          this._contentEntriesMainViewServie.open();
+      }
   }
 }

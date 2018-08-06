@@ -176,3 +176,6 @@
 :host /deep/ .uploadMonitorPopup .tooltipUp{
     margin-left: 234px !important;
 }
+:host /deep/ .kPopupWidget {
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .24);
+}
