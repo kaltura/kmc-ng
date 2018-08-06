@@ -27,20 +27,22 @@
   }
 
   .kContent {
-    flex: 1 1 auto;
-    padding: 20px 0 24px 0;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+      flex: 1 1 auto;
+      padding-top: 20px;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
 
     .kProfile {
-      padding: 0 28px 20px 28px;
-      border-bottom: 1px $kGrayscale6 solid;
-      font-size: 15px;
+        padding: 0 28px 20px 28px;
+        border-bottom: 1px $kGrayscale6 solid;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
 
-      span {
-        font-weight: bold;
-      }
+        span {
+            font-weight: bold;
+        }
 
       .kTranscodingProfile {
         margin-left: 7px;
@@ -61,15 +63,13 @@
       }
     }
 
-    .kAddFile {
-      padding: 20px 28px;
-
       .kAddFileButton {
-        height: 34px;
-        font-size: 14px;
-        color: $kGrayscale1;
+          width: 110px;
+          height: 34px;
+          font-size: 14px;
+          color: $kGrayscale1;
+          margin-left: 24px;
       }
-    }
 
     .kTable {
       .kFileNameInput {
@@ -104,6 +104,9 @@
       .kIconError {
         font-size: 24px;
         color: $kDandger;
+          bottom: 22px;
+          position: absolute;
+          right: 5px;
       }
 
       .kIconRemoveFile {
@@ -111,6 +114,14 @@
         display: none;
         cursor: pointer;
       }
+
+        .kImportUrl {
+            width: 630px;
+
+            &.kHasError {
+                border-color: $kDandger;
+            }
+        }
     }
 
     .kEmptyMessage {
@@ -142,12 +153,14 @@
     text-align: center;
 
     .kUploadButton {
-      width: 100px;
-      height: 34px;
-      background-color: $kPrimary;
-      color: white;
-      font-weight: normal;
-      font-size: 14px;
+        width: 140px;
+        height: 34px;
+        font-size: 14px;
+        margin-right: 16px;
+
+        &:last-child {
+            margin-right: 0;
+        }
     }
   }
 }
@@ -184,7 +197,7 @@
 
 :host /deep/ .kTable .ui-table-scrollable-body {
   margin-bottom: -1px;
-    max-height: 280px !important;
+    max-height: 348px !important;
 }
 
 :host /deep/ .kTable tr:hover .kIconRemoveFile, // show remove icon when hovering a row

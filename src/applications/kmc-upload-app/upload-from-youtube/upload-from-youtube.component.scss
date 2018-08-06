@@ -1,0 +1,94 @@
+@import 'app-theme/_variables.scss';
+
+.kUploadFromYoutube {
+    color: $kGrayscale1;
+    height: 357px;
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+
+    .kHeader, .kFooter {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .kHeader {
+        text-align: center;
+        height: 77px;
+        border-bottom: 1px $kGrayscale4 solid;
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+    }
+
+    .kContent {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        .kNote {
+            margin-left: 28px;
+            margin-top: 35px;
+        }
+
+        .kRow {
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+            margin-top: 60px;
+            padding: 0 28px;
+
+            label {
+                display: inline-block;
+                width: 120px;
+                font-weight: normal;
+                font-size: 15px;
+                line-height: 24px;
+            }
+
+            .kInput {
+                position: relative;
+
+                input {
+                    width: 500px;
+                    margin-left: 28px;
+
+                    &.kHasError {
+                        border-color: $kDandger;
+                    }
+                }
+
+                .kError {
+                    position: absolute;
+                    margin-left: 28px;
+                    color: $kDandger;
+                    font-size: 12px;
+                    margin-top: 10px;
+                }
+            }
+        }
+    }
+
+    .kFooter {
+        z-index: 1;
+        height: 66px;
+        border-top: 1px $kGrayscale4 solid;
+        text-align: center;
+
+        .kUploadButton {
+            width: 140px;
+            height: 34px;
+            font-size: 14px;
+            margin-right: 16px;
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+}

@@ -47,6 +47,18 @@ export const ServerConfigSchema = {
             required: ['serverUri', 'securedServerUri'],
             additionalProperties: true
         },
+        externalAPI: {
+            properties: {
+                youtube: {
+                    properties: {
+                        uri: {type: 'string'}
+                    },
+                    required: ['uri'],
+                    additionalProperties: false
+                }
+            },
+            additionalProperties: true
+        },
         externalApps: {
             properties: {
                 studioV2: {

@@ -1,7 +1,7 @@
 <k-area-blocker [showLoader]="_transcodingProfileLoading" [message]="_transcodingProfileError">
     <div class="kUploadSettings">
         <div class="kHeader">
-            <h1>{{ 'applications.upload.uploadSettings.title' | translate }}</h1>
+            <h1>{{_title}}</h1>
         </div>
         <div class="kContent">
             <form [formGroup]="_profileForm" class="kProfile">
@@ -15,25 +15,31 @@
                         <span class="kTranscodingProfileItem" [kTooltip]="profile.label">{{profile.label}}</span>
                     </ng-template>
                 </p-dropdown>
-            </form>
 
-            <div class="kAddFile">
                 <button type="button"
                         class="kButtonDefault kAddFileButton"
                         pButton icon="kIconplus"
                         [label]="'applications.upload.uploadSettings.addFileBtn' | translate"
-                        (click)="fileDialog.open()"></button>
-            </div>
+                        (click)="_addFile()"></button>
+            </form>
+
             <div class="kTable" [class.empty]="_files.length === 0">
                 <p-table [value]="_files" [scrollable]="true">
                     <ng-template pTemplate="header">
                         <tr>
                             <th [ngStyle]="{'width': '28px'}"></th>
-                            <th>{{'applications.upload.uploadSettings.table.header.fileName' | translate}}</th>
-                            <th [ngStyle]="{'width': '150px', 'overflow':'visible'}">
+                            <th *ngIf="creationType === _creationTypes.import">
+                                {{'applications.upload.uploadSettings.fileUrl' | translate}}
+                            </th>
+                            <th *ngIf="creationType === _creationTypes.upload">
+                                {{'applications.upload.uploadSettings.table.header.fileName' | translate}}
+                            </th>
+                            <th *ngIf="creationType === _creationTypes.upload"
+                                [ngStyle]="{'width': '150px', 'overflow':'visible'}">
                                 {{'applications.upload.uploadSettings.table.header.mediaType' | translate}}
                             </th>
-                            <th [ngStyle]="{'width': '100px'}">
+                            <th *ngIf="creationType === _creationTypes.upload"
+                                [ngStyle]="{'width': '100px'}">
                                 {{'applications.upload.uploadSettings.table.header.size' | translate}}
                             </th>
                             <th [ngStyle]="{'width': '40px', 'text-align': 'center'}"></th>
@@ -45,7 +51,14 @@
                     <ng-template pTemplate="body" let-file>
                         <tr>
                             <td [ngStyle]="{'width': '28px'}"></td>
-                            <td>
+                            <td *ngIf="creationType === _creationTypes.import">
+                                <input pInputText type="text"
+                                       class="kImportUrl"
+                                       [placeholder]="'applications.upload.uploadSettings.fileUrlPlaceholder' | translate"
+                                       [class.kHasError]="file.hasError"
+                                       [(ngModel)]="file.url">
+                            </td>
+                            <td *ngIf="creationType === _creationTypes.upload">
                                 <div *ngIf="!file.isEditing" class="kFileNameCell">
                                     <span class="kFileName">{{ file.name }}</span>
                                     <i class="kIconpen kIconEditFileName"
@@ -63,7 +76,8 @@
                                            (keyup.enter)="_cancelEdit(file)">
                                 </div>
                             </td>
-                            <td [ngStyle]="{ 'width': '150px', 'overflow':'visible' }">
+                            <td *ngIf="creationType === _creationTypes.upload"
+                                [ngStyle]="{ 'width': '150px', 'overflow':'visible' }">
                                 <p-dropdown class="kFileType"
                                             [options]="_fileTypes"
                                             [autoWidth]="false"
@@ -74,8 +88,10 @@
                                             (onChange)="_updateFileValidityOnTypeChange(file)"
                                             [placeholder]="'applications.content.entryDetails.related.select' | translate"></p-dropdown>
                             </td>
-                            <td [ngStyle]="{ 'width': '100px' }">{{ file.size | kFileSize }}</td>
-                            <td [ngStyle]="{'width': '40px', 'text-align': 'center'}">
+                            <td *ngIf="creationType === _creationTypes.upload"
+                                [ngStyle]="{ 'width': '100px' }">{{ file.size | kFileSize }}
+                            </td>
+                            <td [ngStyle]="{'width': '40px', 'text-align': 'center', 'position': 'relative'}">
                                 <i *ngIf="file.hasError"
                                    class="kIconerror kIconError"
                                    [kTooltip]="file.errorToken | translate"
@@ -95,8 +111,11 @@
                     <h1>{{ 'applications.upload.uploadSettings.table.emptyMessage.title' | translate }}</h1>
                     <p>
                         {{ 'applications.upload.uploadSettings.table.emptyMessage.getStarted' | translate }}
-                        <a (click)="fileDialog.open()">
+                        <a *ngIf="creationType === _creationTypes.upload" (click)="_addFile()">
                             {{ 'applications.upload.uploadSettings.table.emptyMessage.browse' | translate }}
+                        </a>
+                        <a *ngIf="creationType === _creationTypes.import" (click)="_addFile()">
+                            {{ 'applications.upload.uploadSettings.table.emptyMessage.add' | translate }}
                         </a>
                     </p>
 
@@ -106,8 +125,13 @@
         <div class="kFooter">
             <button class="kButtonDefault kUploadButton"
                     pButton
+                    [label]="'applications.upload.uploadSettings.cancel' | translate"
+                    (click)="parentPopupWidget?.close()"></button>
+
+            <button class="kButtonBranded kUploadButton"
+                    pButton
                     [disabled]="_files.length === 0 || _transcodingProfileLoading || !!_transcodingProfileError"
-                    [label]="'applications.upload.uploadSettings.uploadBtn' | translate"
+                    [label]="_uploadBtnLabel"
                     (click)="_upload()"></button>
         </div>
     </div>

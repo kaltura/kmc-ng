@@ -1,4 +1,4 @@
-<button pButton [disabled]="disabled"
+<button pButton [disabled]="_disabled"
         label="{{'app.titles.create' | translate | uppercase}}"
         class="kButtonDefault kUploadBtn"
         (click)="uploadmenu.open()"></button>
@@ -12,7 +12,7 @@
 
 <kPopupWidget #uploadsettings data-aid="uploadsettings" [popupWidth]="791" [popupHeight]="607" [closeBtn]="true" [modal]="true" [preventPageScroll]="true">
   <ng-template>
-    <kKMCUploadSettings [parentPopupWidget]="uploadsettings"></kKMCUploadSettings>
+    <kKMCUploadSettings [parentPopupWidget]="uploadsettings" [creationType]="_creationType"></kKMCUploadSettings>
   </ng-template>
 </kPopupWidget>
 
@@ -27,5 +27,11 @@
 <kPopupWidget #createLive data-aid="createLive" [popupWidth]="791" [popupHeight]="675" [closeBtn]="true" [modal]="true">
   <ng-template>
     <kCreateLive [parentPopupWidget]="createLive"></kCreateLive>
+  </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #createFromYoutube data-aid="createFromYoutube" [popupWidth]="791" [popupHeight]="357" [closeBtn]="true" [modal]="true">
+  <ng-template>
+    <kKMCUploadFromYoutube [parentPopupWidget]="createFromYoutube"></kKMCUploadFromYoutube>
   </ng-template>
 </kPopupWidget>

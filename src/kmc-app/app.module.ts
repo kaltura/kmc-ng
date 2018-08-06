@@ -107,6 +107,7 @@ import { ContextualHelpModule } from 'app-shared/kmc-shared/contextual-help/cont
 import { PersistLoginByKsComponent } from './components/app-actions/persist-login-by-ks.component';
 import { ColumnsResizeManagerModule } from 'app-shared/kmc-shared/columns-resize-manager';
 import { CaptionRequestAppModule } from '../applications/caption-request-app/caption-request-app.module';
+import { NewEntryCreateFromUrlModule } from 'app-shared/kmc-shell/new-entry-create-from-url/new-entry-create-from-url.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -179,6 +180,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       ContextualHelpModule.forRoot(),
       KmcViewsModule.forRoot(),
       LocalizationModule.forRoot(),
+      NewEntryCreateFromUrlModule.forRoot(),
       CaptionRequestAppModule,
       ColumnsResizeManagerModule.forRoot()
   ],
