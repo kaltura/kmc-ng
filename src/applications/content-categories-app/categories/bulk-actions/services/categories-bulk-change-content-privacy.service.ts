@@ -33,7 +33,7 @@ export class CategoriesBulkChangeContentPrivacyService extends CategoriesBulkAct
           observer.complete();
         },
         error => {
-          observer.error(error);
+          observer.error({});
         }
       );
     });

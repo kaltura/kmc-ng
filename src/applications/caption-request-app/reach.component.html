@@ -1,0 +1,12 @@
+<div class="kReach">
+    <div class="kHeader">
+        <div>
+            <i class="kIconclose_small kClose" (click)="parentPopup.close()"></i>
+            <span class="kTitle">{{_title}}</span>
+        </div>
+    </div>
+
+    <div class="kContent">
+        <kReachFrame [page]="page" [data]="data" (closeApp)="parentPopup.close()"></kReachFrame>
+    </div>
+</div>

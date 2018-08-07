@@ -2,7 +2,7 @@
     <div class="kComingSoonWrapper">
         <div class="kComingSoon">
             <h1>{{'applications.analytics.comingSoon' | translate}}</h1>
-            {{'applications.analytics.releaseSupports' | translate}}
+            <span [innerHTML]="'applications.analytics.releaseSupports' | translate: [_legacyUrl]"></span>
         </div>
     </div>
     <kAnalyticsLiveFrame *ngIf="_enabled"></kAnalyticsLiveFrame>

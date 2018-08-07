@@ -1,6 +1,8 @@
 <k-area-blocker [message]="_blockerMessage" [bodyScroll]="true">
 <kEntriesList [columns]="_columns"
               [rowActions]="_rowActions"
+              [enforcedFilters]="_enforcedFilters"
+              [showEnforcedFilters]="true"
               [defaultFilters]="_defaultFilters"
               (onActionsSelected)="_onActionSelected($event)">
   <div class="kBulkActions bulk-actions">
@@ -14,7 +16,7 @@
 </kEntriesList>
 </k-area-blocker>
 
-<kPopupWidget #moderationDetails [slider]="true" [popupWidth]="792" [popupHeight]="700" [modal]="true"
+<kPopupWidget #moderationDetails data-aid="moderationDetails" [slider]="true" [popupWidth]="792" [popupHeight]="700" [modal]="true"
               [closeBtn]="false" class="kPopupWidgetWrap">
   <ng-template>
     <kEntryReport

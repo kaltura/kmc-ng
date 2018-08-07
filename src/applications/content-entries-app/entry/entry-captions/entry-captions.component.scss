@@ -3,6 +3,7 @@
 .kCaptions{
 	button{
 		margin-left: 24px;
+        font-weight: bold;
 	}
 	.kTitle{
 		padding-left: 24px;
@@ -28,7 +29,7 @@
 		color: $kDandger;
 	}
 }
-:host /deep/ .ui-datatable .ui-datatable-data tr.uoloading{
+:host /deep/ .ui-table .ui-table-data tr.uoloading{
 	background: repeating-linear-gradient(
 			-75deg,
 			#ffffff,

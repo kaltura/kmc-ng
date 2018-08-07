@@ -1,0 +1,15 @@
+<k-area-blocker [showLoader]="_loading" [message]="_sectionBlockerMessage">
+  <div class="kDownloadContainer kOverrideFAIcons">
+    <span class="kTitle">{{'applications.content.entryDetails.downloadEntry.title' | translate}}</span>
+    <div class="kDownload">
+      <span class="kLabel">{{'applications.content.entryDetails.downloadEntry.downloadFlavor' | translate }}</span>
+      <p-dropdown [options]="_flavors" [(ngModel)]="_selectedFlavor" appendTo="body"></p-dropdown>
+
+    </div>
+    <div class="kFooter">
+      <button type="button" class="kButtonBranded" pButton
+              [label]="'applications.content.entryDetails.downloadEntry.downloadEntry' | translate"
+              (click)="_downloadFlavor(_selectedFlavor)"></button>
+    </div>
+  </div>
+</k-area-blocker>

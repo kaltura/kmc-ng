@@ -202,12 +202,14 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
   private _moveUpSubcategories(selectedSubcategories: KalturaCategory[]): void {
     if (KalturaUtils.moveUpItems(this._subcategories.getValue(), selectedSubcategories)) {
+        this._categoryService.notifySubcategoriesMoved();
       this._setDirty();
     }
   }
 
   private _moveDownSubcategories(selectedSubcategories: KalturaCategory[]): void {
     if (KalturaUtils.moveDownItems(this._subcategories.getValue(), selectedSubcategories)) {
+        this._categoryService.notifySubcategoriesMoved();
       this._setDirty();
     }
   }

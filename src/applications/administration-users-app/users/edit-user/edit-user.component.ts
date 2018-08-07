@@ -43,8 +43,9 @@ export class EditUserComponent implements OnInit, OnDestroy {
   public _isNewUser = true;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
-  public _invalidUserId = false;
   public _saveBtnShown = false;
+  public _idServerError = false;
+  public _emailServerError = false;
 
   constructor(public _usersStore: UsersStore,
               private _formBuilder: FormBuilder,
@@ -140,6 +141,17 @@ export class EditUserComponent implements OnInit, OnDestroy {
         }
     }
 
+    private _markFormFieldsAsPristine(): void {
+        this._idServerError = false;
+        this._emailServerError = false;
+        for (const control in this._userForm.controls) {
+            if (this._userForm.controls.hasOwnProperty(control)) {
+                this._userForm.get(control).markAsPristine();
+                this._userForm.get(control).updateValueAndValidity();
+            }
+        }
+    }
+
   private _createUser(): void {
       if (!this._userForm.valid) {
           return;
@@ -189,8 +201,6 @@ export class EditUserComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this._invalidUserId = false;
-
     const { roleIds, id, email } = this._userForm.getRawValue();
     this._usersStore.updateUser({ roleIds, email, id: (id || '').trim() }, this.user.id)
       .pipe(tag('block-shell'))
@@ -205,34 +215,21 @@ export class EditUserComponent implements OnInit, OnDestroy {
           this.parentPopupWidget.close();
         },
         error => {
-          let buttons = [
-            {
-              label: this._appLocalization.get('app.common.retry'),
-              action: () => {
-                this._blockerMessage = null;
-                this._updateUser();
-              }
-            },
-            {
-              label: this._appLocalization.get('app.common.cancel'),
-              action: () => {
-                this._blockerMessage = null;
-              }
+            let errorMessage = error.message;
+            this._idServerError = error.code === 'DUPLICATE_USER_BY_ID';
+            if (error.code === 'INVALID_FIELD_VALUE' && error.args['FIELD_NAME'] === 'id') {
+                errorMessage = this._appLocalization.get('applications.administration.users.publisherIdFormat');
+                this._idServerError = true;
             }
-          ];
-          if (error.message === 'Invalid user id' || error.code === 'DUPLICATE_USER_BY_ID') {
-            this._invalidUserId = true;
-            buttons = [{
-              label: this._appLocalization.get('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-              }
-            }];
-          }
           this._blockerMessage = new AreaBlockerMessage(
             {
-              message: error.message,
-              buttons: buttons
+              message: errorMessage,
+              buttons: [{
+                  label: this._appLocalization.get('app.common.ok'),
+                  action: () => {
+                      this._blockerMessage = null;
+                  }
+              }]
             }
           );
         }
@@ -273,11 +270,15 @@ export class EditUserComponent implements OnInit, OnDestroy {
                               switch (addUserError.args['FIELD_NAME']) {
                                   case 'email':
                                       errorMessage = this._appLocalization.get('applications.administration.users.emailFormat');
+                                      this._emailServerError = true;
                                       break;
                                   case 'id':
                                       errorMessage = this._appLocalization.get('applications.administration.users.publisherIdFormat');
+                                      this._idServerError = true;
                                       break;
                               }
+                          } else if (addUserError.code === 'DUPLICATE_USER_BY_ID') {
+                              this._idServerError = true;
                           }
                           this._blockerMessage = new AreaBlockerMessage({
                               message: errorMessage,
@@ -351,6 +352,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
             } else {
                 this._updateUser();
             }
+            this._markFormFieldsAsPristine();
         } else {
             this._markFormFieldsAsTouched();
         }

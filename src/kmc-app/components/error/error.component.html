@@ -1,9 +1,9 @@
 <div *ngIf="showPage" class="container">
     <div class="scene">
-        <div class="text">KMC is currently unavailable.</div>
+        <div class="text">{{eggReady ?  'KMC is Awesome!' : 'KMC is currently unavailable.'}}</div>
         <br><br>
-        <div class="text2">An unexpected condition was encountered.</div>
-        <div class="text2">Please contact Kaltura support for assistance.</div>
+        <div class="text2" [class.hidden]="eggReady">An unexpected condition was encountered.</div>
+        <div class="text2" [class.hidden]="eggReady">Please contact Kaltura support for assistance.</div>
         <br><br>
         <div class="sheep">
     <span class="top">

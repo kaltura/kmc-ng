@@ -5,7 +5,6 @@ import {AreaBlockerModule, KalturaUIModule, TooltipModule} from '@kaltura-ng/kal
 import {
   ButtonModule,
   CheckboxModule,
-  DataTableModule,
   DropdownModule,
   InputSwitchModule,
   InputTextModule,
@@ -33,12 +32,13 @@ import { BulkUploadMonitorService } from './upload-monitor/bulk-upload-monitor.s
 import { DropFoldersMonitorService } from './upload-monitor/drop-folders-monitor.service';
 import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { TableModule } from 'primeng/table';
+import { UploadFromYoutubeComponent } from './upload-from-youtube/upload-from-youtube.component';
 
 @NgModule({
   imports: [
     CommonModule,
     AreaBlockerModule,
-    DataTableModule,
     LocalizationModule,
     KalturaUIModule,
     TooltipModule,
@@ -53,7 +53,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     SharedModule,
     InputSwitchModule,
     CheckboxModule,
-    KMCPermissionsModule
+    KMCPermissionsModule,
+      TableModule
   ],
   declarations: [
     UploadMenuComponent,
@@ -69,7 +70,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     CreateLiveComponent,
     KalturaLiveStreamComponent,
     UniversalLiveComponent,
-    ManualLiveComponent
+    ManualLiveComponent,
+      UploadFromYoutubeComponent
   ],
   exports: [
     UploadButtonComponent,

@@ -33,7 +33,7 @@ export class CreateLiveService {
       conversionProfileId: data.transcodingProfile,
       dvrStatus: data.liveDVR ? KalturaDVRStatus.enabled : KalturaDVRStatus.disabled,
       dvrWindow: data.liveDVR ? 120 : null,
-        explicitLive: data.previewMode ? KalturaNullableBoolean.falseValue : KalturaNullableBoolean.trueValue
+        explicitLive: data.previewMode ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue
     });
 
     return this._kalturaServerClient
