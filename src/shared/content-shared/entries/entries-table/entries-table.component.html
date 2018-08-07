@@ -131,7 +131,7 @@
                          (click)="_onActionSelected('view',entry)">
                         <img *ngIf="entry.thumbnailUrl" src="{{entry.thumbnailUrl}}/quality/80/width/80/height/46/nearest_aspect_ratio/1" onError="this.onerror=null;this.style.display='none'" (error)="holder.classList.add('error')">
                         <i class="kIconwarning"></i>
-                        <i class="kIconquiz kThumbnailTypeIcon" *ngIf="entry.capabilities === 'quiz.quiz'"></i>
+                        <i class="kIconquiz kThumbnailTypeIcon" *ngIf="entry.isQuizEntry"></i>
                     </div>
                 </td>
 

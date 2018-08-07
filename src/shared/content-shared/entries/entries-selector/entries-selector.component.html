@@ -14,7 +14,7 @@
           <div class="kThumbnailHolder">
             <img [src]="entry.thumbnailUrl" [alt]="entry.name" onError="this.onerror=null;this.style.display='none'"
                  *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
-            <i class="kIconquiz kThumbnailTypeIcon" *ngIf="entry.capabilities === 'quiz.quiz'"></i>
+            <i class="kIconquiz kThumbnailTypeIcon" *ngIf="entry.isQuizEntry"></i>
           </div>
         <span [kTooltip]="entry.name">{{ entry.name }}</span>
         <i class="kIcontrash" (click)="_removeSelected(entry)"></i>
