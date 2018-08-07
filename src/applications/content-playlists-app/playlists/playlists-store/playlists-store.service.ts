@@ -140,7 +140,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
 
   private _extendPlaylistsWithTooltip(playlists: ExtendedPlaylist[]): ExtendedPlaylist[] {
       playlists.forEach(playlist => {
-          const tags = playlist.tags ? playlist.tags.split(', ').join('\n') : null;
+          const tags = playlist.tags ? playlist.tags.split(',').filter(item => !!item).map(item => item.trim()).join('\n') : null;
           playlist.tooltip = tags
               ? this._appLocalization.get('applications.content.table.nameTooltip', [playlist.name, tags])
               : playlist.name;
