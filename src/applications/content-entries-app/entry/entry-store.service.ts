@@ -16,7 +16,6 @@ import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client';
 import { BaseEntryDeleteAction } from 'kaltura-ngx-client';
-import { Location } from '@angular/common';
 import { BehaviorSubject, Observable, Subject, Unsubscribable } from 'rxjs';
 
 export enum ActionTypes
@@ -79,7 +78,6 @@ export class EntryStore implements OnDestroy {
 				private _router: Router,
 				private _browserService : BrowserService,
 				private _entriesStore : EntriesStore,
-				private _location: Location,
 				@Host() private _widgetsManager: EntryWidgetsManager,
 				private _entryRoute: ActivatedRoute,
         private _contentEntryViewService: ContentEntryViewService,
@@ -93,7 +91,7 @@ export class EntryStore implements OnDestroy {
 		this._onSectionsStateChanges();
 		this._onRouterEvents();
 
-        const { reloadEntriesListOnNavigateOut, draftEntry } = this._contentEntryViewService.popOpenArgs() || {};
+        const { reloadEntriesListOnNavigateOut, draftEntry } = this._contentEntryViewService.popOpenArgs() || { reloadEntriesListOnNavigateOut: false, draftEntry: false };
         this._refreshEntriesListUponLeave = !!reloadEntriesListOnNavigateOut;
         this._isNewDraftEntry = !!draftEntry;
     }
@@ -111,6 +109,7 @@ export class EntryStore implements OnDestroy {
 					{
 						console.log(`entry store: update entry is dirty state to ${newDirtyState}`);
 						this._entryIsDirty = newDirtyState;
+                        this._isNewDraftEntry = false;
 
 						this._updatePageExitVerification();
 

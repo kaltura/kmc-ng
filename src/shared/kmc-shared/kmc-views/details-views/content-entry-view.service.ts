@@ -302,14 +302,10 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
                     throw new Error(`invalid type provided, expected KalturaMediaEntry, got ${typeof response}`);
                 }
             })
-            .switchMap(entry => {
-                this._logger.info(`handle successful request, proceed navigation`);
-                this._setOpenArgs({ entry, section: ContentEntryViewSections.Metadata, reloadEntriesListOnNavigateOut, draftEntry });
-                return this._open({ entry, section: ContentEntryViewSections.Metadata, reloadEntriesListOnNavigateOut, draftEntry });
-            })
-
             .subscribe(
-                () => {},
+                (entry) => {
+                    this.open({ entry, section: ContentEntryViewSections.Metadata, reloadEntriesListOnNavigateOut, draftEntry });
+                },
                 (error) => {
                     this._logger.info(`handle failed request, show alert, abort navigation`);
                     this._browserService.alert({
