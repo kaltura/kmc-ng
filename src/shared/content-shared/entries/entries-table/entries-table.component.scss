@@ -37,6 +37,29 @@
         color: $kGrayscale3;
         opacity: 0;
     }
+      .kThumbnailTypeIcon {
+          position: absolute;
+          color: #FFFFFF;
+
+          &.kIconyoutube {
+              font-size: 30px;
+              top: 7px;
+              right: 1px;
+              z-index: 2;
+              color: $kDandger;
+              opacity: 1;
+          }
+      }
+
+      .kYoutubeIconFix {
+          position: absolute;
+          width: 15px;
+          height: 15px;
+          top: 25px;
+          right: 10px;
+          background-color: #FFFFFF;
+          z-index: 1;
+      }
     &.disable {
       cursor: auto;
     }

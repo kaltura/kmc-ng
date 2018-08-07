@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { KalturaMediaType } from 'kaltura-ngx-client';
+import { KalturaExternalMediaSourceType, KalturaMediaType } from 'kaltura-ngx-client';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaSourceType } from 'kaltura-ngx-client';
@@ -93,6 +93,8 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   public _columns?: EntriesTableColumns = this._defaultColumns;
 
+
+    public _youtubeExternalSourceType = KalturaExternalMediaSourceType.youtube;
   public _entries: any[] = [];
   private _deferredLoading = true;
   public _emptyMessage = '';

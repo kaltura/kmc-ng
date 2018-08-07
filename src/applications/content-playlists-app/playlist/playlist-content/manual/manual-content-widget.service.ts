@@ -99,7 +99,7 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
 
     const responseProfile = new KalturaDetachedResponseProfile({
       type: KalturaResponseProfileType.includeFields,
-      fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration'
+      fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration,externalSourceType'
     });
     if (this.isNewData) {
       if (this.data.playlistContent) {

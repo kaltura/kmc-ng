@@ -19,13 +19,55 @@
         background-color: $kGrayscale6;
       }
 
-      img {
-        width: 64px;
-        height: 36px;
-        object-fit: cover;
-        margin-right: 8px;
-        border-radius: 3px;
-      }
+        .kThumbnailHolder {
+            flex: 1 0 auto;
+            margin-right: 8px;
+            overflow: hidden;
+            position: relative;
+            width: 64px;
+            height: 36px;
+            background-color: $kGrayscale7;
+            white-space: nowrap;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            &.disable {
+                cursor: auto;
+            }
+            img {
+                position: absolute;
+                left: -100%;
+                right: -100%;
+                top: -100%;
+                bottom: -100%;
+                margin: auto;
+                width: 64px;
+                height: auto;
+                border-radius: 5px;
+            }
+            .kThumbnailTypeIcon {
+                position: absolute;
+                color: #FFFFFF;
+
+                &.kIconyoutube {
+                    font-size: 20px;
+                    top: 15px;
+                    right: 1px;
+                    z-index: 2;
+                    color: $kDandger;
+                }
+            }
+
+            .kYoutubeIconFix {
+                position: absolute;
+                width: 10px;
+                height: 10px;
+                top: 20px;
+                right: 6px;
+                background-color: #FFFFFF;
+                z-index: 1;
+            }
+        }
 
       span {
         font-size: 15px;
