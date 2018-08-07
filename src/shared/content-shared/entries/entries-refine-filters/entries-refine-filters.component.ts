@@ -55,6 +55,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
     @Input() refineFilters: RefineGroup[];
     @Input() showEnforcedFilters = false;
+    @Input() hiddenFilters: Partial<EntriesFilters>;
 
     @Input() enforcedFilters: Partial<EntriesFilters>;
 
@@ -272,13 +273,18 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                             };
 
                             listItems.forEach(item => {
-                                listRootNode.children.push({
-                                    label: item.label,
-                                    value: item.value,
-                                    children: [],
-                                    listName: <any>list.name,
-                                    parent: listRootNode
-                                });
+                                const shouldPushChild = !this.hiddenFilters
+                                    || !this.hiddenFilters.hasOwnProperty(list.name)
+                                    || this.hiddenFilters[list.name].indexOf(item.value) === -1;
+                                if (shouldPushChild) {
+                                    listRootNode.children.push({
+                                        label: item.label,
+                                        value: item.value,
+                                        children: [],
+                                        listName: <any>list.name,
+                                        parent: listRootNode
+                                    });
+                                }
                             });
                             primeList.items.push(listRootNode);
                         }

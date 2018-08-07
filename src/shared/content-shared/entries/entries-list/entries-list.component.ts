@@ -28,6 +28,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     @Input() enforcedFilters: Partial<EntriesFilters>;
     @Input() defaultFilters: Partial<EntriesFilters>;
     @Input() showEnforcedFilters = false;
+    @Input() hiddenFilters: Partial<EntriesFilters>;
 
     @ViewChild('tags') private tags: StickyComponent;
 

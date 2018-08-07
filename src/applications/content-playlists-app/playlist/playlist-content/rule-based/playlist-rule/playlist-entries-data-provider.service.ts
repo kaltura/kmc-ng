@@ -87,8 +87,11 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
             }
           }
 
-          // filters of joined list
-          this._updateFilterWithJoinedList(data.mediaTypes, filter, 'mediaTypeIn');
+            // filters of joined list
+            const mediaTypes = data.mediaTypes
+                .filter(item => item.startsWith('mediaType'))
+                .map(item => item.replace('mediaType_', ''));
+          this._updateFilterWithJoinedList(mediaTypes, filter, 'mediaTypeIn');
           this._updateFilterWithJoinedList(data.durations, filter, 'durationTypeMatchOr');
           this._updateFilterWithJoinedList(data.replacementStatuses, filter, 'replacementStatusIn');
           this._updateFilterWithJoinedList(data.flavors, filter, 'flavorParamsIdsMatchOr');

@@ -109,11 +109,11 @@ export class PlaylistRuleParserService implements OnDestroy {
 
   public toEntriesFilters(rule: PlaylistRule): Observable<Partial<EntriesFilters>> {
     const { originalFilter } = rule;
-    const getListTypeFilterFromRule = (ruleItem: string): any[] => {
+    const getListTypeFilterFromRule = (ruleItem: string, prefix = ''): any[] => {
       if (!ruleItem) {
         return null;
       }
-      return ruleItem.split(',');
+      return ruleItem.split(',').map(item => `${prefix}${item}`);
     };
 
     const getSortDirection = (value) => value === '+' ? SortDirection.Asc : SortDirection.Desc;
@@ -126,7 +126,7 @@ export class PlaylistRuleParserService implements OnDestroy {
     return this._mapCustomMetadata(<KalturaSearchOperator>originalFilter.advancedSearch)
       .map(customMetadata => {
         const result = <EntriesFilters>{
-          mediaTypes: getListTypeFilterFromRule(originalFilter.mediaTypeIn),
+          mediaTypes: getListTypeFilterFromRule(originalFilter.mediaTypeIn, 'mediaType'),
           durations: getListTypeFilterFromRule(originalFilter.durationTypeMatchOr),
           replacementStatuses: getListTypeFilterFromRule(originalFilter.replacementStatusIn),
           flavors: getListTypeFilterFromRule(originalFilter.flavorParamsIdsMatchOr),

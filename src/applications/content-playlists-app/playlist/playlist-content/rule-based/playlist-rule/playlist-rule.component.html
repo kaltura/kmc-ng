@@ -13,7 +13,8 @@
         </div>
       </div>
       <div class="kContainer">
-        <kEntriesList [columns]="_columns" [enforcedFilters]="_enforcedFilters" [showReload]="false">
+        <kEntriesList [columns]="_columns" [enforcedFilters]="_enforcedFilters" [showReload]="false"
+                      [hiddenFilters]="_hiddenFilters">
           <div class="additional-filters kFilters">
             <label for="ruleNameInput" class="kRuleNameLabel">
               {{'applications.content.entries.ruleName' | translate}}
