@@ -30,12 +30,13 @@ import {
     ContentNewCategoryViewService,
     ContentPlaylistViewService,
     SettingsTranscodingProfileViewService,
-    RestorePasswordViewService
+    RestorePasswordViewService,
+    ReachAppViewService
 } from './details-views';
 import {
     AdvertisementsAppViewService,
     ClipAndTrimAppViewService,
-    LiveDashboardAppViewService
+    LiveDashboardAppViewService,
 } from './component-views';
 import { QuizAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 
@@ -83,6 +84,7 @@ export class KmcViewsModule {
                 AdvertisementsAppViewService,
                 QuizAppViewService,
                 RestorePasswordViewService,
+                ReachAppViewService,
                 KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
             ]
         };

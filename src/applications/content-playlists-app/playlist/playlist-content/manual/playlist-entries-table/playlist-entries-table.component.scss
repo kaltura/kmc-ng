@@ -27,6 +27,29 @@
       height: auto;
       border-radius: 3px;
     }
+
+      .kThumbnailTypeIcon {
+          position: absolute;
+          color: #FFFFFF;
+
+          &.kIconyoutube {
+              color: $kDandger;
+              font-size: 30px;
+              top: 15px;
+              right: 1px;
+              z-index: 2;
+          }
+      }
+
+      .kYoutubeIconFix {
+          position: absolute;
+          width: 15px;
+          height: 15px;
+          top: 22px;
+          right: 10px;
+          background-color: #FFFFFF;
+          z-index: 1;
+      }
   }
 
   .kPlaylistEntriesTableActions {
@@ -58,26 +81,26 @@
   padding-left: 14px!important;
 }
 
-:host /deep/ .ui-datatable .thumbnailColumn {
+:host /deep/ .ui-table .thumbnailColumn {
   width: 100px;
 }
 
-:host /deep/ .ui-datatable .mediaTypeColumn {
+:host /deep/ .ui-table .mediaTypeColumn {
   width: 80px;
   text-align: center;
 }
 
-:host /deep/ .ui-datatable .createdAtColumn {
+:host /deep/ .ui-table .createdAtColumn {
   width: 140px;
   text-align: center;
 }
 
-:host /deep/ .ui-datatable .durationColumn {
+:host /deep/ .ui-table .durationColumn {
   width: 100px;
   text-align: center;
 }
 
-:host /deep/ .ui-datatable .actionsColumn {
+:host /deep/ .ui-table .actionsColumn {
   overflow: visible;
   width: 80px;
 }
@@ -89,7 +112,7 @@
   flex-direction: column;
 }
 
-:host /deep/ p-datatable .stickyHeader{
+:host /deep/ p-table .stickyHeader{
   z-index: 10;
   display: table;
 }

@@ -1,60 +1,85 @@
 <k-area-blocker [showLoader]="_deferredLoading">
-  <div class="kPlaylistEntriesTable" [class.noResults]="!_entries?.length">
-    <p-dataTable
-      #dataTable
-      dataKey="selectionId"
-      scrollable="true"
-      scrollHeight="100%"
-      [immutable]="false"
-      [value]="_entries"
-      [sortField]="filter.sortBy"
-      [emptyMessage]="_emptyMessage"
-      [defaultSortOrder]="_defaultSortOrder"
-      [sortOrder]="filter.sortDirection"
-      (selectionChange)="_onSelectionChange($event)"
-      (onSort)="_onSortChanged($event)"
-      [(selection)]="selectedEntries">
-      <p-column styleClass="selectionColumn" selectionMode="multiple"></p-column>
-      <p-column styleClass="thumbnailColumn" field="thumbnailUrl" header="{{'applications.content.table.thumbnail' | translate}}">
-        <ng-template let-col let-entry="rowData" pTemplate="body">
-          <div class="kThumbnailHolder" [class.kShowAsDisabled]="_kmcPermissions.CONTENT_MANAGE_BASE | kDisabledIfNotPermitted" (click)="_goToEntry(entry)">
-            <img src="{{entry[col.field]}}" onError="this.onerror=null;this.style.display='none'">
-          </div>
-        </ng-template>
-      </p-column>
-      <p-column field="name" header="{{'applications.content.table.name' | translate}}" sortable="custom">
-        <ng-template let-col let-entry="rowData" pTemplate="body">
-          <span class="kTitle kTableColumn"
-                [class.kShowAsDisabled]="_kmcPermissions.CONTENT_MANAGE_BASE | kDisabledIfNotPermitted"
-                [kTooltip]="entry[col.field]"
-                (click)="_goToEntry(entry)">{{entry[col.field]}}</span>
-        </ng-template>
-      </p-column>
-      <p-column field="mediaType" header="{{'applications.content.table.type' | translate}}" styleClass="mediaTypeColumn" sortable="custom">
-        <ng-template let-col let-entry="rowData" pTemplate="body">
-          <div [kTooltip]="entry[col.field] | entryType: true" [class]="entry[col.field] | entryType: false"></div>
-        </ng-template>
-      </p-column>
-      <p-column field="createdAt" header="Created On" styleClass="createdAtColumn" sortable="custom">
-        <ng-template let-col let-entry="rowData" pTemplate="body">
-          <span>{{entry[col.field] | kDate}}</span>
-        </ng-template>
-      </p-column>
+    <div class="kPlaylistEntriesTable" [class.noResults]="!_entries?.length">
+        <p-table
+            dataKey="selectionId"
+            scrollHeight="100%"
+            [scrollable]="true"
+            [value]="_entries"
+            [sortField]="filter.sortBy"
+            [defaultSortOrder]="_defaultSortOrder"
+            [sortOrder]="filter.sortDirection"
+            (selectionChange)="_onSelectionChange($event)"
+            (onSort)="_onSortChanged($event)"
+            [(selection)]="selectedEntries">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="selectionColumn">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th class="thumbnailColumn" *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
+                        {{'applications.content.table.thumbnail' | translate}}
+                    </th>
+                    <th [kpSortableColumn]="'name'">
+                        {{'applications.content.table.name' | translate}}
+                        <p-sortIcon [field]="'name'"></p-sortIcon>
+                    </th>
+                    <th class="mediaTypeColumn" [kpSortableColumn]="'mediaType'">
+                        {{'applications.content.table.type' | translate}}
+                        <p-sortIcon [field]="'mediaType'"></p-sortIcon>
+                    </th>
+                    <th class="createdAtColumn" [kpSortableColumn]="'createdAt'">
+                        {{'applications.content.table.createdOn' | translate}}
+                        <p-sortIcon [field]="'createdAt'"></p-sortIcon>
+                    </th>
+                    <th class="durationColumn" [kpSortableColumn]="'duration'">
+                        {{'applications.content.table.duration' | translate}}
+                        <p-sortIcon [field]="'duration'"></p-sortIcon>
+                    </th>
+                    <th class="actionsColumn"
+                        *ngIf="isNewPlaylist || (_kmcPermissions.PLAYLIST_UPDATE | kNgIfPermitted)"></th>
+                </tr>
+            </ng-template>
 
-      <p-column field="duration" header="{{'applications.content.table.duration' | translate}}" styleClass="durationColumn"
-                sortable="custom">
-        <ng-template let-col let-entry="rowData" pTemplate="body">
-          <span>{{entry[col.field] | kTime | entryDuration:entry}}</span>
-        </ng-template>
-      </p-column>
-      <p-column header="" styleClass="actionsColumn" *ngIf="isNewPlaylist || (_kmcPermissions.PLAYLIST_UPDATE | kNgIfPermitted)">
-        <ng-template let-col let-entry="rowData" pTemplate="body" let-i="rowIndex">
-          <div class="kPlaylistEntriesTableActions">
-            <button type="button" pButton class="kMoreActionsButton" icon="kIconmore" (click)="_openActionsMenu($event, i, entry)"></button>
-          </div>
-        </ng-template>
-      </p-column>
-    </p-dataTable>
-    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
-  </div>
+            <ng-template pTemplate="body" let-entry let-i="rowIndex">
+                <tr [pSelectableRow]="entry">
+
+                    <td class="selectionColumn">
+                        <p-tableCheckbox [value]="entry"></p-tableCheckbox>
+                    </td>
+                    <td class="thumbnailColumn" *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
+                        <div class="kThumbnailHolder"
+                             [class.kShowAsDisabled]="_kmcPermissions.CONTENT_MANAGE_BASE | kDisabledIfNotPermitted"
+                             (click)="_goToEntry(entry)">
+                            <img [src]="entry.thumbnailUrl" onError="this.onerror=null;this.style.display='none'">
+                            <i class="kIconyoutube kThumbnailTypeIcon" *ngIf="entry.externalSourceType === _youtubeExternalSourceType"></i>
+                            <div class="kYoutubeIconFix" *ngIf="entry.externalSourceType === _youtubeExternalSourceType"></div>
+                        </div>
+                    </td>
+                    <td>
+                    <span class="kTitle kTableColumn"
+                          [class.kShowAsDisabled]="_kmcPermissions.CONTENT_MANAGE_BASE | kDisabledIfNotPermitted"
+                          [kTooltip]="entry.name"
+                          (click)="_goToEntry(entry)">{{entry.name}}</span>
+                    </td>
+                    <td class="mediaTypeColumn">
+                        <div [kTooltip]="entry.mediaType | entryType: true"
+                             [ngClass]="entry.mediaType | entryType: false"></div>
+                    </td>
+                    <td class="createdAtColumn">{{entry.createdAt | kDate}}</td>
+                    <td class="durationColumn">{{entry.duration | kTime | entryDuration:entry}}</td>
+                    <td class="actionsColumn">
+                        <div class="kPlaylistEntriesTableActions">
+                            <button type="button" pButton class="kMoreActionsButton" icon="kIconmore"
+                                    (click)="_openActionsMenu($event, i, entry)"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <div class="emptymessage">{{_emptyMessage}}</div>
+            </ng-template>
+        </p-table>
+        <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+    </div>
 </k-area-blocker>

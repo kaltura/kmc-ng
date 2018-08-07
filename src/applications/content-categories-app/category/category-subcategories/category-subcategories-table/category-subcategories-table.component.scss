@@ -22,21 +22,21 @@
   padding-left: 14px!important;
 }
 
-:host /deep/ .ui-datatable .nameColumn {
+:host /deep/ .ui-table .nameColumn {
   width: 100px;
 }
 
-:host /deep/ .ui-datatable .createdAtColumn {
+:host /deep/ .ui-table .createdAtColumn {
   width: 40px;
   text-align: center;
 }
 
-:host /deep/ .ui-datatable .entriesCountColumn {
+:host /deep/ .ui-table .entriesCountColumn {
   width: 50px;
   text-align: center;
 }
 
-:host /deep/ .ui-datatable .actionsColumn {
+:host /deep/ .ui-table .actionsColumn {
   overflow: visible;
   width: 30px;
 }
@@ -49,12 +49,12 @@
   flex-direction: column;
 }
 
-:host /deep/ p-datatable{
+:host /deep/ p-table{
   width: 100%;
 }
 
 
-:host /deep/ p-datatable .stickyHeader{
+:host /deep/ p-table .stickyHeader{
   z-index: 10;
   display: table;
 }

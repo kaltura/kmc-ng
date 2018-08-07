@@ -4,6 +4,7 @@
     <div class="kTranscodingProfilesListsHolder kContent"
          [class.kSingleTableMode]="!(_kmcPermissions.FEATURE_KALTURA_LIVE_STREAM | kNgIfPermitted)">
       <k-transcoding-profiles-list [storeFor]="_kalturaConversionProfileType.media"
+                                   [singleTableMode]="!(_kmcPermissions.FEATURE_KALTURA_LIVE_STREAM | kNgIfPermitted)"
                                    [title]="'applications.settings.transcoding.transcodingProfiles'| translate"
                                    (addProfile)="_addProfile($event)"
                                    (setParentBlockerMessage)="_setBlockerMessage($event)">
@@ -21,7 +22,7 @@
   </div>
 </k-area-blocker>
 
-<kPopupWidget #addNewProfile [popupWidth]="586" [popupHeight]="435" [modal]="true" [preventPageScroll]="true">
+<kPopupWidget #addNewProfile data-aid="addNewProfile" [popupWidth]="586" [popupHeight]="435" [modal]="true" [preventPageScroll]="true">
   <ng-template>
     <kAddNewTranscodingProfile [parentPopupWidget]="addNewProfile"
                                [profileType]="_newProfileType"></kAddNewTranscodingProfile>

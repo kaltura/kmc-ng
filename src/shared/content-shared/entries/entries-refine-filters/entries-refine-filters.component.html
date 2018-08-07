@@ -41,11 +41,14 @@
                     <p-calendar class="kDateRangeFirst" #scheduledfrom [(ngModel)]="_scheduledAfter" [showIcon]="true"
                                 icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true"
                                 [yearNavigator]="true" [yearRange]="_createdAtDateRange" [readonlyInput]="true"
+                                (onBlur)="_fixCalendarBlurPropagation($event, scheduledfrom)"
                                 (onSelect)="_onSchedulingChanged(scheduledfrom)"></p-calendar>
                     <p-calendar class="kDateRangeLast kPullLeft120" #scheduledto [(ngModel)]="_scheduledBefore"
                                 [showIcon]="true" icon="kIconcalendar" [disabled]="!_scheduledSelected"
                                 [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
-                                [readonlyInput]="true" (onSelect)="_onSchedulingChanged(scheduledto)"></p-calendar>
+                                [readonlyInput]="true"
+                                (onBlur)="_fixCalendarBlurPropagation($event, scheduledto)"
+                                (onSelect)="_onSchedulingChanged(scheduledto)"></p-calendar>
                   </div>
                   <span *ngIf="_scheduledSelected && _scheduledFilterError"
                         class="kError">{{_scheduledFilterError}}</span>

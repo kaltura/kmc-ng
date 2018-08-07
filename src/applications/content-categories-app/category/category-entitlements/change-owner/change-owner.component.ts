@@ -124,6 +124,7 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
             this._logger.info(`handle successful search users action`);
           const suggestions = [];
           (data.objects || []).forEach((suggestedUser: KalturaUser) => {
+              suggestedUser['__tooltip'] = suggestedUser.id;
             suggestions.push({
               name: suggestedUser.screenName + '(' + suggestedUser.id + ')',
               item: suggestedUser,

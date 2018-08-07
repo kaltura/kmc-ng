@@ -52,7 +52,7 @@
   </div>
 </k-area-blocker>
 
-<kPopupWidget #feedDetails [popupWidth]="995" [slider]="true">
+<kPopupWidget #feedDetails data-aid="feedDetails" [popupWidth]="995" [slider]="true">
   <ng-template>
     <kFeedDetails [parentPopupWidget]="feedDetails" [feed]="_currentEditFeed" [playlists]="_playlists"></kFeedDetails>
   </ng-template>

@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
 import { Observable } from 'rxjs';
 import { subApplicationsConfig } from 'config/sub-applications';
-import {Http} from '@angular/http';
+import {HttpClient} from '@angular/common/http';
 import { serverConfig } from 'config/server';
 
 @Injectable()
 export class UniversalLiveService {
 
-  constructor(private _http: Http) {
+  constructor(private _http: HttpClient) {
   }
 
   public getDefaultIp(): Observable<string> {
@@ -21,10 +21,9 @@ export class UniversalLiveService {
       akamaiEdgeServerIpURL = window.location.protocol + '//' + akamaiEdgeServerIpURL;
     }
 
-    return this._http.get(akamaiEdgeServerIpURL)
+    return this._http.get(akamaiEdgeServerIpURL, { responseType: 'text' })
       .map(res => {
-        // extract the IP from the text of the response
-        const defaultIP = res.text();
+        const defaultIP = res;
         const match = defaultIP.match(/<serverip>(.*)<\/serverip>/);
         if (match.length > 1) {
           return match[1];

@@ -6,63 +6,27 @@ Thank you for running Kaltura and pushing the limits of online video! By joining
 ## Setup KMC-ng solution
 KMC-ng application is built on-top of several Kaltura infrastructures packages which are part of [kaltura-ng](https://github.com/kaltura/kaltura-ng) repository.
 
-> The following guide was copied from [kaltura-ng-dev-workspace getting started guide](https://github.com/kaltura/kaltura-ng-dev-workspace#getting-started).
-
 ### Prerequisites
- - [x] Ensure you have [node.js installed](https://nodejs.org/en/download/current/), version 7.0.0 or above.
+ - [x] Ensure you have [node.js installed](https://nodejs.org/en/download/current/), version LTS or above.
  - [x] Ensure you have [git installed](https://git-for-windows.github.io/)
  - [x] Ensure you have npm installed, version 5.0.0 or above.
 
 ### Getting started
-1. create a folder to hold your packages (your workspace **root folder**). Note that **it is not** the kmc-ng repository folder.
-2. create `package.json` in your **root folder**  by running the following command:
- ```
-  $ npm init -y
-  ```
-3. add this tool to your folder in your root folder by running the following command:
- ```
- $ npm install @kaltura-ng/dev-workspace
- ```
-
-4. create file `kaltura-ws.json` in your root folder with the following format:
-
- ```json
- {
-   "version" : "2.0.0",
-   "repositories": [
-     { "origin" : "github", "uri": "https://github.com/kaltura/kaltura-ng.git"},
-     { "origin" : "github", "uri": "https://github.com/kaltura/kmc-ng.git"}
-   ]
- }
- ```
-
-5. add the following to your `package.json`:
- ```json
-   "scripts" : {
-     "kws" : "kws",
-     "setup" : "kws setup",
-     "build" : "kws run build",
-     "licenses" : "kws licenses --type=direct",
-     "clean" : "kws clean"
-   }
- ```
-
-6. run setup command to build & symlink your repositories (**Note** It might take a few minutes)
- ```bash
- $ npm run setup
- ```
-
-7. once the setup complete open the `kmc-ng` repo and try to serve it:
- ```bash
-$ cd kmc-ng
-$ npm start
+1. git clone [kaltura-ng](https://github.com/kaltura/kaltura-ng) repository 
+2. git clone [kmc-ng](https://github.com/kaltura/kmc-ng) repository
+3. in `kaltura-ng` local folder run the following:
+```
+npm install
+npm run setup
+```
+4. in `kmc-ng` local folder run the following:
+```
+npm install
+npm run setup
+npm start
 ```
 
 You should be able to open kmc-ng application in your browser at `http://localhost:4200`.
-
-## <a name="question"></a> Got a Question or Problem?
-
-If you have questions about how to *use* our infrastructure, write us in [Gitter][gitter].
 
 ## <a name="issue"></a> Found an Issue?
 If you find a bug in the source code, you can help us by
@@ -106,5 +70,4 @@ Please sign our Contributor License Agreement (CLA) before sending pull requests
 [dev-doc]: DEVELOPER.md
 [github]: https://github.com/kaltura/kmc-ng
 [github-issues]: https://github.com/kaltura/kmc-ng/issues
-[gitter]: https://gitter.im/kaltura-ng
 [js-style-guide]: https://google.github.io/styleguide/javascriptguide.xml

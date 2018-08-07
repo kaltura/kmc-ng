@@ -1,0 +1,33 @@
+<div class="kUploadFromYoutube">
+    <div class="kHeader">
+        <h1>{{'applications.upload.uploadFromYoutube.uploadFromYoutube' | translate}}</h1>
+    </div>
+    <div class="kContent">
+        <div class="kRow">
+            <label for="source">{{'applications.upload.uploadFromYoutube.linkLabel' | translate}}</label>
+            <div class="kInput">
+                <input id="source" type="text" pInputText
+                       [class.kHasError]="_sourceInvalid"
+                       [placeholder]="'applications.upload.uploadFromYoutube.inputPlaceholder' | translate"
+                       (ngModelChange)="_sourceInvalid = false"
+                       [(ngModel)]="_source">
+                <div class="kError" *ngIf="_sourceInvalid">
+                    {{'applications.upload.uploadFromYoutube.invalidUrl' | translate}}
+                </div>
+            </div>
+        </div>
+        <div class="kNote">{{'applications.upload.uploadFromYoutube.note' | translate}}</div>
+
+    </div>
+    <div class="kFooter">
+        <button class="kButtonDefault kUploadButton"
+                pButton
+                [label]="'applications.upload.uploadFromYoutube.cancel' | translate"
+                (click)="parentPopupWidget?.close()"></button>
+
+        <button class="kButtonBranded kUploadButton"
+                pButton
+                [label]="'applications.upload.uploadFromYoutube.upload' | translate"
+                (click)="_upload()"></button>
+    </div>
+</div>

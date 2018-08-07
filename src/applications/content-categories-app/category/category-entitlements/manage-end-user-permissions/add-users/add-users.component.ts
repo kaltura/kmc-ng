@@ -51,6 +51,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
   constructor( private _appLocalization: AppLocalization,
                private _addUsersService: AddUsersService,
                private _logger: KalturaLogger) {
+      this._convertUserInputToValidValue = this._convertUserInputToValidValue.bind(this);
   }
 
   ngOnInit() {
@@ -99,6 +100,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
             this._logger.info(`handle successful search users action by user`);
           const suggestions = [];
           (data.objects || []).forEach((suggestedUser: KalturaUser) => {
+              suggestedUser['__tooltip'] = suggestedUser.id;
             suggestions.push({
               name: suggestedUser.screenName + '(' + suggestedUser.id + ')',
               item: suggestedUser,
@@ -116,14 +118,15 @@ export class AddUsersComponent implements OnInit, OnDestroy {
 
   public _convertUserInputToValidValue(value: string): KalturaUser {
     let result = null;
+    const tooltip = this._appLocalization.get('applications.content.bulkActions.userTooltip', {0: value});
 
     if (value) {
-      result = new KalturaUser(
-        {
-          id: value,
-          screenName: value
-        }
-      );
+        result = {
+            id: value,
+            screenName: value,
+            __tooltip: tooltip,
+            __class: 'userAdded'
+        };
     }
     return result;
   }
