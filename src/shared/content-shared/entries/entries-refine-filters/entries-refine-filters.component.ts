@@ -393,7 +393,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                   newFilterItems = newFilterValue[node.listName] = newFilterValue[node.listName] || [];
                   newFilterName = 'customMetadata';
               } else {
-                  newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, []);
+                  if (node.listName === 'videoQuiz') {
+                      newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, KalturaNullableBoolean.nullValue);
+                  } else {
+                      newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, []);
+                  }
                   newFilterName = node.listName;
               }
 
@@ -453,18 +457,20 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                           const itemIndex = newFilterItems.findIndex(item => item === selectedNode.value);
                           if (itemIndex > -1) {
                               newFilterItems.splice(itemIndex, 1);
+
+                              if (node.listName === 'timeScheduling' && selectedNode.value === 'scheduled') {
+                                  this._closeCalendar(this.scheduledFrom);
+                                  this._closeCalendar(this.scheduledTo);
+                                  this._entriesStore.filter({
+                                      scheduledAt: {
+                                          fromDate: null,
+                                          toDate: null
+                                      }
+                                  });
+                              }
                           }
                       } else {
-                          if (node.listName === 'timeScheduling' && selectedNode.value === 'scheduled') {
-                              this._closeCalendar(this.scheduledFrom);
-                              this._closeCalendar(this.scheduledTo);
-                              this._entriesStore.filter({
-                                  scheduledAt: {
-                                      fromDate: null,
-                                      toDate: null
-                                  }
-                              });
-                          } else if (node.listName === 'videoQuiz') {
+                          if (node.listName === 'videoQuiz') {
                               newFilterValue = KalturaNullableBoolean.nullValue;
                           } else {
                               newFilterValue = null;
