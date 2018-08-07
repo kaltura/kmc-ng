@@ -22,6 +22,7 @@ import { KalturaCategoryFilter } from 'kaltura-ngx-client';
 import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentCategoriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { modulesConfig } from 'config/modules';
 
 export enum ActionTypes {
   CategoryLoading,
@@ -215,6 +216,11 @@ export class CategoryService implements OnDestroy {
     });
   }
 
+    private _shouldRedirectToMetadata(category: KalturaCategory): boolean {
+        return (!category.directSubCategoriesCount || category.directSubCategoriesCount > modulesConfig.contentShared.categories.subCategoriesLimit)
+          && this._categoryRoute.snapshot.firstChild.url[0].path === 'subcategories';
+    }
+
 	private _transmitSaveRequest(newCategory: KalturaCategory) {
 		this._state.next({ action: ActionTypes.CategorySaving });
 
@@ -320,6 +326,30 @@ export class CategoryService implements OnDestroy {
 	}
 
 	private _loadCategory(id: number): void {
+        const categoryLoadedHandler = (category) => {
+            this._category.next(category);
+            this._notifications.next({ type: NotificationTypes.ViewEntered });
+
+            if (this._contentCategoryView.isAvailable({
+                category,
+                activatedRoute: this._categoryRoute,
+                section: ContentCategoryViewSections.ResolveFromActivatedRoute
+            })) {
+                this._loadCategorySubscription = null;
+
+                const dataLoadedResult = this._widgetsManager.notifyDataLoaded(category, { isNewData: false });
+
+                if (dataLoadedResult.errors.length) {
+                    this._state.next({
+                        action: ActionTypes.CategoryLoadingFailed,
+                        error: new Error(`one of the widgets failed while handling data loaded event`)
+                    });
+                } else {
+                    this._state.next({ action: ActionTypes.CategoryLoaded });
+                }
+            }
+        };
+
 		if (this._loadCategorySubscription) {
 			this._loadCategorySubscription.unsubscribe();
 			this._loadCategorySubscription = null;
@@ -342,23 +372,20 @@ export class CategoryService implements OnDestroy {
       .request(new CategoryGetAction({id}))
 			.pipe(cancelOnDestroy(this))
 			.subscribe(category => {
-			    this._logger.info(`handle successful loading of category data`);
-                    this._category.next(category);
-                    this._notifications.next({ type: NotificationTypes.ViewEntered });
-
-                if (this._contentCategoryView.isAvailable({ category, activatedRoute: this._categoryRoute, section: ContentCategoryViewSections.ResolveFromActivatedRoute  })) {
-                    this._loadCategorySubscription = null;
-
-                    const dataLoadedResult = this._widgetsManager.notifyDataLoaded(category, { isNewData: false });
-
-                    if (dataLoadedResult.errors.length) {
-                        this._state.next({
-                            action: ActionTypes.CategoryLoadingFailed,
-                            error: new Error(`one of the widgets failed while handling data loaded event`)
+                this._logger.info(`handle successful loading of category data`);
+                if (this._shouldRedirectToMetadata(category)) {
+                    this._logger.info(`category children were removed redirect to metadata section`);
+                    this._contentCategoryView
+                        .open$({ category, section: ContentCategoryViewSections.Metadata })
+                        .subscribe(result => {
+                            if (result) {
+                                categoryLoadedHandler(category);
+                            } else {
+                                this._browserService.handleUnpermittedAction(true);
+                            }
                         });
-                    } else {
-                        this._state.next({ action: ActionTypes.CategoryLoaded });
-                    }
+                } else {
+                    categoryLoadedHandler(category);
                 }
             },
 			error => {
