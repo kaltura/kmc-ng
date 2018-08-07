@@ -23,9 +23,12 @@
               <input class="kControl" pInputText
                      [formControl]="_nameField"
                      [class.kHasError]="_nameField.invalid && _nameField.touched">
-              <div *ngIf="_nameField.invalid && _nameField.touched" class="kError">
+              <div *ngIf="_nameField.hasError('required') && _nameField.touched" class="kError">
                 {{'applications.administration.role.errors.required' | translate}}
               </div>
+                <div *ngIf="_nameField.hasError('unsafeValue') && _nameField.pristine" class="kError">
+                    {{'applications.administration.role.errors.unsafeValue' | translate}}
+                </div>
             </div>
           </div>
 
@@ -37,9 +40,12 @@
                         [formControl]="_descriptionField"
                         [class.kHasError]="_descriptionField.invalid && _descriptionField.touched">
               </textArea>
-              <div *ngIf="_descriptionField.invalid && _descriptionField.touched" class="kError">
+              <div *ngIf="_descriptionField.hasError('required') && _descriptionField.touched" class="kError">
                 {{'applications.administration.role.errors.required' | translate}}
               </div>
+                <div *ngIf="_descriptionField.hasError('unsafeValue') && _descriptionField.pristine" class="kError">
+                    {{'applications.administration.role.errors.unsafeValue' | translate}}
+                </div>
             </div>
           </div>
         </form>

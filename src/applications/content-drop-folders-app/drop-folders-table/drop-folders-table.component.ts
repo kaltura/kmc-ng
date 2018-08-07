@@ -1,13 +1,13 @@
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component, ElementRef,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
 } from '@angular/core';
 import {Menu, MenuItem} from 'primeng/primeng';
 import {KalturaDropFolderFile} from 'kaltura-ngx-client';
@@ -15,11 +15,16 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
 import { globalConfig } from 'config/global';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kDropFoldersListTable',
   templateUrl: './drop-folders-table.component.html',
-  styleUrls: ['./drop-folders-table.component.scss']
+  styleUrls: ['./drop-folders-table.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'dropfolders-table' }
+    ]
 })
 
 export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -52,7 +57,9 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
   public _kmcPermissions = KMCPermissions;
 
-  constructor(private _appLocalization: AppLocalization,
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private _appLocalization: AppLocalization,
+              private _el: ElementRef<HTMLElement>,
               private cdRef: ChangeDetectorRef) {
   }
 
@@ -70,6 +77,8 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
         this._deferredDropFolders = null;
       }, 0);
     }
+
+    this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   ngOnDestroy() {

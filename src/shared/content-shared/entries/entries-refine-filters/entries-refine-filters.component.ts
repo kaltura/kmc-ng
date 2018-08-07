@@ -1,13 +1,13 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
-import { modulesConfig } from 'config/modules';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import {  RefineGroup } from '../entries-store/entries-refine-filters.service';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { RefineGroup } from '../entries-store/entries-refine-filters.service';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { subApplicationsConfig } from 'config/sub-applications';
+import { Calendar } from 'primeng/primeng';
 
 const listOfFilterNames: (keyof EntriesFilters)[] = [
     'createdAt',
@@ -28,10 +28,10 @@ const listOfFilterNames: (keyof EntriesFilters)[] = [
 
 export interface PrimeListItem {
     label: string;
+    value: string;
     parent: PrimeListItem;
     listName: string;
     children: PrimeListItem[];
-    value: any;
 }
 
 export interface PrimeList {
@@ -55,11 +55,15 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
     @Input() refineFilters: RefineGroup[];
+    @Input() showEnforcedFilters = false;
 
     @Input() enforcedFilters: Partial<EntriesFilters>;
 
   @ViewChildren(RefinePrimeTree)
   public _primeTreesActions: RefinePrimeTree[];
+
+    @ViewChild('scheduledfrom') scheduledFrom: Calendar;
+    @ViewChild('scheduledto') scheduledTo: Calendar;
 
   private _primeListsMap: { [key: string]: PrimeList } = {};
 
@@ -184,6 +188,18 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
       }
   }
 
+    /**
+     * Close calendar overlay
+     * Not part of the API, don't use it from outside this component
+     *
+     * @param {Calendar} calendar
+     * @private
+     */
+    private _closeCalendar(calendar: Calendar): void {
+        if (calendar) {
+            calendar.overlayVisible = false;
+        }
+    }
 
   private _registerToFilterStoreDataChanges(): void {
         this._entriesStore.filtersChange$
@@ -245,19 +261,23 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
             this._primeListsGroups.push(filtersGroup);
 
             group.lists.forEach(list => {
-                const primeList = { items: [], selections: [], group: list.group };
-                const shouldAllowFilter = (!this.enforcedFilters || !this.enforcedFilters[list.name]);
+                const primeList = {items: [], selections: [], group: list.group};
+                const relevantEnforcedFilter = this.enforcedFilters ? this.enforcedFilters[list.name] : null;
+                const shouldAllowFilter = (!relevantEnforcedFilter || this.showEnforcedFilters);
                 if (shouldAllowFilter) {
+                    const listItems = list.items
+                        .filter(item => relevantEnforcedFilter ? relevantEnforcedFilter.indexOf(item.value) === -1 : true);
+
                     this._primeListsMap[list.name] = primeList;
                     filtersGroup.lists.push(primeList);
                     const listRootNode: PrimeListItem = {
                         label: list.label,
-                        value: list.value,
+                        value: list.value || null,
                         listName: list.name,
                         parent: null,
                         children: []
                     };
-                    list.items.forEach(item => {
+                    listItems.forEach(item => {
                         listRootNode.children.push({
                             label: item.label,
                             value: item.value,
@@ -295,7 +315,13 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
    * Not part of the API, don't use it from outside this component
    */
   public _clearAllComponents(): void {
+      this._closeCalendar(this.scheduledFrom);
+      this._closeCalendar(this.scheduledTo);
       this._entriesStore.resetFilters(listOfFilterNames);
+
+      if (this.enforcedFilters) {
+          this._entriesStore.filter(this.enforcedFilters);
+      }
   }
 
   public _onCreatedChanged(): void {
@@ -325,7 +351,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
    *
    * Not part of the API, don't use it from outside this component
    */
-  public _onSchedulingChanged(calendarRef: any): void {
+  public _onSchedulingChanged(calendarRef: Calendar): void {
       const updateResult = this._entriesStore.filter({
           scheduledAt: {
               fromDate: this._scheduledAfter,
@@ -346,10 +372,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
           this._scheduledFilterError = null;
       }
 
-      if (calendarRef && calendarRef.overlayVisible) {
-          calendarRef.overlayVisible = false;
-      }
-
+      this._closeCalendar(calendarRef);
   }
 
   public _onTreeNodeSelect({ node }: { node: PrimeListItem }) {
@@ -369,7 +392,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                   newFilterItems = newFilterValue[node.listName] = newFilterValue[node.listName] || [];
                   newFilterName = 'customMetadata';
               } else {
-                  newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, []);
+                  if (node.listName === 'youtubeVideo') {
+                      newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, null);
+                  } else {
+                      newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, []);
+                  }
                   newFilterName = node.listName;
               }
 
@@ -430,6 +457,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                               newFilterItems.splice(itemIndex, 1);
 
                               if (node.listName === 'timeScheduling' && selectedNode.value === 'scheduled') {
+                                  this._closeCalendar(this.scheduledFrom);
+                                  this._closeCalendar(this.scheduledTo);
                                   this._entriesStore.filter({
                                       scheduledAt: {
                                           fromDate: null,
@@ -442,7 +471,6 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                           newFilterValue = null;
                       }
                   });
-
               this._entriesStore.filter({[newFilterName]: newFilterValue});
           }
       }
@@ -467,4 +495,24 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
       this.parentPopupWidget.close();
     }
   }
+
+    /**
+    * Fixed calendar closing issue originated by {@link _blockScheduleToggle}
+    * Not part of the API, don't use it from outside this component
+    *
+    * @param {FocusEvent} event
+    * @param {Calendar} calendar
+    * @private
+    */
+    public _fixCalendarBlurPropagation(event: FocusEvent, calendar: Calendar): void {
+        const findByClassName = (element, className) => {
+            return element && element.classList
+                ? element.classList.contains(className) || findByClassName(element.parentNode, className)
+                : false;
+        };
+        const shouldCloseCalendar = event.relatedTarget === null ? false : !findByClassName(event.relatedTarget, 'ui-datepicker');
+        if (shouldCloseCalendar) {
+            this._closeCalendar(calendar);
+        }
+    }
 }

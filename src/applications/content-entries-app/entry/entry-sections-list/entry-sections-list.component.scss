@@ -5,27 +5,8 @@
 	height: 100%;
 	overflow-y: hidden;
 	background-color: #ffffff;
-	border: 1px solid #ffffff;
+	border: 0px solid #ffffff;
 	border-radius: 3px;
-	ul {
-		list-style-type: none;
-		padding-left: 0px;
-		width: 100%;
-		li{
-			line-height: 44px;
-			cursor: pointer;
-			color: $kGrayscale3;
-			font-weight: 700;
-			padding-left: 24px;
-			&:hover{
-				color: $kTertiary;
-			}
-			&.active{
-				color: $kTertiary;
-				cursor: default;
-			}
-		}
-	}
 }
 
 :host /deep/ .kStickySections{

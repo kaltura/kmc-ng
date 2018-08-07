@@ -30,16 +30,22 @@ export class EntryClips implements OnInit, OnDestroy {
                 private _store: EntryStore) {
     }
 
-    _convertSortValue(value: boolean): number {
+    public _rowTrackBy(index: number, item: any): string {
+        return item.id;
+    }
+
+    public _convertSortValue(value: boolean): number {
         return value ? 1 : -1;
 
     }
 
     public _onSortChanged(event: any) {
-        this._widgetService.sortAsc = event.order === 1;
-        this._widgetService.sortBy = event.field;
+        if (event.field && event.order && (this._widgetService.sortOrder !== event.order || this._widgetService.sortBy !== event.field)) {
+            this._widgetService.sortOrder = event.order;
+            this._widgetService.sortBy = event.field;
 
-        this._widgetService.updateClips();
+            this._widgetService.updateClips();
+        }
     }
 
     public _onPaginationChanged(state: any): void {

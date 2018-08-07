@@ -10,50 +10,51 @@
             [(selection)]="selectedBulkLogItems"
             [resizableColumns]="true"
             (selectionChange)="_onSelectionChange($event)"
+            (onColResize)="_columnsResizeManager.onColumnResize($event)"
             kStickyHeader [sticksTo]="'bulklogTags'" stickyClass="stickyHeader" [stickyId]="'bulklogTable'">
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
-                <col style="width:44px; padding-left: 13px">
-                <col style="width:350px">
-                <col style="width:90px">
-                <col>
-                <col>
-                <col style="width: 80px">
-                <col>
-                <col style="width: 80px" *ngIf="_actionsAllowed">
+                <col [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
+                <col data-cid="name" [ngStyle]="{'width': '350px'}">
+                <col data-cid="type" [ngStyle]="{'width': '90px'}">
+                <col data-cid="user">
+                <col data-cid="time">
+                <col data-cid="count" [ngStyle]="{'width': '80px'}">
+                <col data-cid="status">
+                <col [ngStyle]="{'width': '80px'}" *ngIf="_actionsAllowed">
             </colgroup>
         </ng-template>
       <ng-template pTemplate="header">
         <tr>
-          <th style="width:44px; padding-left: 13px">
+          <th [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
           </th>
-          <th pResizableColumn>
+          <th data-cid="name" [ngStyle]="{'width': '350px'}" pResizableColumn>
             {{'applications.content.bulkUpload.table.fileName' | translate}}
           </th>
-          <th pResizableColumn>
+          <th data-cid="type" [ngStyle]="{'width': '90px'}" pResizableColumn>
             {{'applications.content.bulkUpload.table.uploadedItem' | translate}}
           </th>
-          <th pResizableColumn>
+          <th data-cid="user" pResizableColumn>
             {{'applications.content.bulkUpload.table.uploadedBy' | translate}}
           </th>
-          <th pResizableColumn>
+          <th data-cid="time" pResizableColumn>
             {{'applications.content.bulkUpload.table.uploadedOn' | translate}}
           </th>
-          <th pResizableColumn>
+          <th data-cid="count" [ngStyle]="{'width': '80px'}" pResizableColumn>
             {{'applications.content.bulkUpload.table.numOfObjects' | translate}}
           </th>
-          <th>
+          <th data-cid="status">
             {{'applications.content.bulkUpload.table.status' | translate}}
           </th>
-          <th style="width: 80px" *ngIf="_actionsAllowed"></th>
+          <th id="actions" [ngStyle]="{'width': '80px'}" *ngIf="_actionsAllowed"></th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-bulkLogItem>
         <tr [pSelectableRow]="bulkLogItem">
 
-          <td style="width:44px; padding-left: 13px">
+          <td [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
             <p-tableCheckbox [value]="bulkLogItem"></p-tableCheckbox>
           </td>
 
@@ -63,30 +64,37 @@
 
           <td class="ui-resizable-column">
             <span [kTooltip]="bulkLogItem.bulkUploadObjectType | kBulkLogTableObjectType">
-              {{ bulkLogItem.bulkUploadObjectType | kBulkLogTableObjectType }}
+              {{bulkLogItem.bulkUploadObjectType | kBulkLogTableObjectType}}
             </span>
           </td>
 
           <td class="ui-resizable-column">
             <span [kTooltip]="bulkLogItem.uploadedBy || bulkLogItem.uploadedByUserId">
-              {{ bulkLogItem.uploadedBy || bulkLogItem.uploadedByUserId }}
+              {{bulkLogItem.uploadedBy || bulkLogItem.uploadedByUserId}}
             </span>
           </td>
 
           <td class="ui-resizable-column">
-            <span>{{ bulkLogItem.uploadedOn | kDate }}</span>
+              <span class="kTableColumn" [kTooltip]="bulkLogItem.uploadedOn | kDate" [showOnEllipsis]="true">
+                  {{bulkLogItem.uploadedOn | kDate}}
+              </span>
           </td>
 
           <td class="ui-resizable-column">
-            <span>{{ !bulkLogItem.numOfObjects || bulkLogItem.numOfObjects < 0 ? 0 : bulkLogItem.numOfObjects }}</span>
+              <span class="kTableColumn"
+                    [kTooltip]="!bulkLogItem.numOfObjects || bulkLogItem.numOfObjects < 0 ? 0 : bulkLogItem.numOfObjects"
+                    [showOnEllipsis]="true">
+                  {{!bulkLogItem.numOfObjects || bulkLogItem.numOfObjects < 0 ? 0 : bulkLogItem.numOfObjects}}</span>
           </td>
 
           <td class="ui-resizable-column">
             <i [class]="bulkLogItem.status | kBulkLogTableStatusIcon"></i>
-            <span class="kBulkLogTableStatusMessage">{{ bulkLogItem.status | kBulkLogTableStatus }}</span>
+            <span class="kTableColumn" [kTooltip]="bulkLogItem.status | kBulkLogTableStatus" [showOnEllipsis]="true">
+              {{bulkLogItem.status | kBulkLogTableStatus}}
+            </span>
           </td>
 
-          <td style="overflow: visible; width: 80px" *ngIf="_actionsAllowed">
+          <td [ngStyle]="{'width': '80px'}" *ngIf="_actionsAllowed">
             <div class="kBulkLogTableActions">
               <button class="kMoreActionsButton" type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, bulkLogItem)"></button>
             </div>

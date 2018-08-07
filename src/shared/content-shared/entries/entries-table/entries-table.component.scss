@@ -30,8 +30,44 @@
     text-align: center;
     border-radius: 3px;
     cursor: pointer;
+    i{
+        font-size: 24px;
+        margin-top: 11px;
+        display: block;
+        color: $kGrayscale3;
+        opacity: 0;
+    }
+      .kThumbnailTypeIcon {
+          position: absolute;
+          color: #FFFFFF;
+
+          &.kIconyoutube {
+              font-size: 30px;
+              top: 7px;
+              right: 1px;
+              z-index: 2;
+              color: $kDandger;
+              opacity: 1;
+          }
+      }
+
+      .kYoutubeIconFix {
+          position: absolute;
+          width: 15px;
+          height: 15px;
+          top: 25px;
+          right: 10px;
+          background-color: #FFFFFF;
+          z-index: 1;
+      }
     &.disable {
       cursor: auto;
+    }
+    &.error{
+        border: 1px solid $kGrayscale4;
+        i{
+            opacity: 1;
+        }
     }
     img {
       position: absolute;
@@ -60,6 +96,7 @@
   }
   .kMediaTypeIcon{
     font-size: 16px;
+    text-align: center;
     div{
       display: inline-block;
     }

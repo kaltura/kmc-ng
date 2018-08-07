@@ -4,9 +4,9 @@ import { SettingsTranscodingSettingsComponent } from './settings-transcoding-set
 import { routing } from './settings-transcoding-settings-app.routes';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ButtonModule, DataTableModule, DropdownModule, InputTextModule, InputTextareaModule, PaginatorModule } from 'primeng/primeng';
+import { ButtonModule, DropdownModule, InputTextModule, InputTextareaModule, PaginatorModule } from 'primeng/primeng';
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
-import { TranslateModule } from 'ng2-translate';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranscodingProfilesComponentsList } from './transcoding-profiles/components-list';
 import { KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import { MenuModule } from 'primeng/menu';
@@ -16,6 +16,7 @@ import { DetailsBarModule } from '@kaltura-ng/kaltura-ui';
 import { TranscodingProfileCanDeactivate } from './transcoding-profile/transcoding-profile-can-deactivate.service';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   imports: [
@@ -29,7 +30,6 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     AreaBlockerModule,
     TranslateModule,
     TooltipModule,
-    DataTableModule,
     LocalizationModule,
     KalturaUIModule,
     PaginatorModule,
@@ -39,7 +39,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     TooltipModule,
     PopupWidgetModule,
     DropdownModule,
-    KMCPermissionsModule
+    KMCPermissionsModule,
+      TableModule
   ],
   declarations: [
     SettingsTranscodingSettingsComponent,

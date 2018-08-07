@@ -1,6 +1,19 @@
 @import 'app-theme/_variables.scss';
 
 .kTranscodingProfilesTable {
+    .emptymessage {
+        display: table-row;
+        border: 0;
+        height: 200px;
+
+        .kEmptyMessage {
+            position: absolute;
+            width: 100%;
+            height: 200px;
+            border-bottom: 1px solid $kGrayscale4;
+        }
+    }
+
   .kTranscodingProfileNameWrapper {
     display: flex;
     align-items: center;
@@ -17,9 +30,10 @@
       font-weight: bold;
       color: #FFFFFF;
       background-color: $kSecondary;
-      border-radius: 10px;
-      padding: 0 10px;
+      border-radius: 9px;
+      padding: 3px 10px;
       margin-left: 35px;
+      height: 18px;
     }
   }
 
@@ -33,7 +47,24 @@
 }
 
 :host /deep/ .kTranscodingProfilesTable {
-  .ui-datatable-scrollable-table-wrapper {
-    max-height: 261px;
-  }
+    &:not(.kSingleTableMode) {
+        .ui-table-scrollable-body {
+            max-height: 280px !important;
+        }
+    }
+
+    .ui-widget-header,
+    .ui-table-scrollable-body-table {
+        background: #FFFFFF;
+    }
+
+    .ui-table-scrollable-table-wrapper {
+        max-height: 261px !important;
+    }
+}
+
+:host /deep/ p-table {
+    .ui-table .ui-table-thead > tr > th {
+        border-left: 1px solid $kGrayscale6;
+    }
 }

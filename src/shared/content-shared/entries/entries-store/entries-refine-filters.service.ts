@@ -31,8 +31,11 @@ import { KalturaAccessControlListResponse } from 'kaltura-ngx-client';
 import { KalturaDistributionProfileListResponse } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
-export interface RefineGroupListItem
-{ value: string, label: string }
+export interface RefineGroupListItem {
+    value: string;
+    label: string;
+    disabled?: boolean;
+}
 
 export class RefineGroupList {
     public items: RefineGroupListItem[] = [];

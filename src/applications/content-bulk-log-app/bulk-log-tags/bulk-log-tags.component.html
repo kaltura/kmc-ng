@@ -3,6 +3,7 @@
        [data]="_tags"
        [labelField]="'label'"
        [tooltipField]="'tooltip'"
+       [clearAllLabel]="'applications.content.filters.clearAll' | translate"
        (onTagRemove)="removeTag($event)"
        (onRemoveAll)="removeAllTags()"
        (onTagsChange)="onTagsChange.emit($event)">

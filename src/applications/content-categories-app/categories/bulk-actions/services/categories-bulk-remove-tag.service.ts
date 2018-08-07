@@ -47,7 +47,7 @@ export class CategoriesBulkRemoveTagsService extends CategoriesBulkActionBaseSer
           observer.complete();
         },
         error => {
-          observer.error(error);
+          observer.error({});
         }
       );
     });

@@ -14,6 +14,7 @@ import { KalturaEntryModerationStatus } from 'kaltura-ngx-client';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { PlaylistRule } from './playlist-rule.interface';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 @Component({
   selector: 'kPlaylistRule',
@@ -21,7 +22,9 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
   styleUrls: ['./playlist-rule.component.scss'],
   providers: [
     PlaylistRuleParserService,
-    { provide: EntriesStorePaginationCacheToken, useValue: 'entries-list' }
+    ColumnsResizeManagerService,
+    { provide: EntriesStorePaginationCacheToken, useValue: 'entries-list' },
+    { provide: ResizableColumnsTableName, useValue: 'rulebased-playlist-entries-table' }
   ]
 })
 export class PlaylistRuleComponent implements OnInit {
@@ -55,7 +58,7 @@ export class PlaylistRuleComponent implements OnInit {
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
     name: {},
-    id: { width: '100px' },
+    id: { width: '120px' },
     mediaType: { width: '80px', align: 'center' },
     createdAt: { width: '140px' },
     duration: { width: '104px' },

@@ -12,9 +12,14 @@
         <div class="kCaption">{{'applications.administration.users.personalDetails' | translate}}</div>
         <div class="kRow kValign">
           <span class="kLabel">{{'applications.administration.users.loginEmailAddress' | translate}}</span>
-          <div class="kRequired" [ngClass]="{'kHasError':_emailField.invalid && _emailField.touched}">*</div>
+          <div class="kRequired"
+               [ngClass]="{'kHasError':(_emailField.invalid && _emailField.touched) || (_emailServerError && _emailField.pristine)}">
+              *
+          </div>
           <div class="kControl">
-            <input [formControl]="_emailField" type="text" pInputText/>
+            <input [formControl]="_emailField"
+                   [ngClass]="{'kHasError': (_emailField.invalid && _emailField.touched) || (_emailServerError && _emailField.pristine)}"
+                   type="text" pInputText/>
           </div>
         </div>
         <div class="kErrorRow" *ngIf="_emailField.invalid && _emailField.touched">
@@ -50,7 +55,7 @@
         <div class="kRow kValign">
           <span class="kLabel kExtraWidth">{{'applications.administration.users.publisherUserId' | translate}}</span>
           <div class="kControl">
-            <input [formControl]="_idField" [ngClass]="{'kHasError': _invalidUserId}" type="text" pInputText/>
+            <input [formControl]="_idField" [ngClass]="{'kHasError': _idField.pristine && _idServerError}" type="text" pInputText/>
           </div>
         </div>
         <div class="kRow kValign">

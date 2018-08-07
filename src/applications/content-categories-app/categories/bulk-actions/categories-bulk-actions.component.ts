@@ -301,7 +301,10 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
             this._logger.info(`handle delete categories request`);
           setTimeout(() => {
             this.executeService(
-              this.selectedCategories,
+              this.selectedCategories
+                .filter(category =>
+                    !category.parentId || !this.selectedCategories.find(({ id }) => id === category.parentId)
+                ),
               this._bulkDeleteService,
               {},
               true,
@@ -375,7 +378,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
         error => {
           this._browserService.alert({
               header: this._appLocalization.get('app.common.attention'),
-            message: this._appLocalization.get('applications.content.bulkActions.errorCategories')
+              message: error.message || this._appLocalization.get('applications.content.bulkActions.errorCategories')
           });
           this.onBulkChange.emit({ reload: reloadCategories });
         }
