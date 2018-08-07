@@ -1,27 +1,29 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { PlaylistListAction } from 'kaltura-ngx-client/api/types/PlaylistListAction';
-import { KalturaPlaylistFilter } from 'kaltura-ngx-client/api/types/KalturaPlaylistFilter';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { PlaylistDeleteAction } from 'kaltura-ngx-client/api/types/PlaylistDeleteAction';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { PlaylistListAction } from 'kaltura-ngx-client';
+import { KalturaPlaylistFilter } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client';
+import { PlaylistDeleteAction } from 'kaltura-ngx-client';
+import { KalturaPlaylist } from 'kaltura-ngx-client';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-shared/filters/filter-types/dates-range-type';
-import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters/filters-store-base';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client/api/types/KalturaBaseEntryListResponse';
-import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
-import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
-import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/string-type';
-import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
+import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-shared';
+import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { KalturaSearchOperatorType } from 'kaltura-ngx-client';
+import { KalturaSearchOperator } from 'kaltura-ngx-client';
+import { StringTypeAdapter } from '@kaltura-ng/mc-shared';
+import { NumberTypeAdapter } from '@kaltura-ng/mc-shared';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { ContentPlaylistsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { globalConfig } from 'config/global';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaPlaylistListResponse } from 'kaltura-ngx-client';
 
 export enum SortDirection {
   Desc = -1,
@@ -37,12 +39,16 @@ export interface PlaylistsFilters {
   createdAt: DatesRangeType
 }
 
+export interface ExtendedPlaylist extends KalturaPlaylist {
+    tooltip?: string;
+}
+
 const localStoragePageSizeKey = 'playlists.list.pageSize';
 
 @Injectable()
 export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implements OnDestroy {
   private _playlists = {
-    data: new BehaviorSubject<{ items: KalturaPlaylist[], totalCount: number }>({ items: [], totalCount: 0 }),
+    data: new BehaviorSubject<{ items: ExtendedPlaylist[], totalCount: number }>({ items: [], totalCount: 0 }),
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
   private _isReady = false;
@@ -55,6 +61,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
   };
 
   constructor(private _kalturaServerClient: KalturaClient,
+              private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               contentPlaylistsMainView: ContentPlaylistsMainViewService,
               _logger: KalturaLogger) {
@@ -92,7 +99,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
 
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._executeQuery();
       });
@@ -112,7 +119,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
 
     this._playlists.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         response => {
           this._querySubscription = null;
@@ -120,7 +127,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
           this._playlists.state.next({ loading: false, errorMessage: null });
 
           this._playlists.data.next({
-            items: <any[]>response.objects,
+            items: this._extendPlaylistsWithTooltip(response.objects),
             totalCount: <number>response.totalCount
           });
         },
@@ -131,7 +138,16 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
         });
   }
 
-  private _buildQueryRequest(): Observable<KalturaBaseEntryListResponse> {
+  private _extendPlaylistsWithTooltip(playlists: ExtendedPlaylist[]): ExtendedPlaylist[] {
+      playlists.forEach(playlist => {
+          const tags = playlist.tags ? playlist.tags.split(',').filter(item => !!item).map(item => item.trim()).join('\n') : null;
+          playlist.tooltip = tags
+              ? this._appLocalization.get('applications.content.table.nameTooltip', [playlist.name, tags])
+              : playlist.name;
+      });
+      return playlists;
+  }
+    private _buildQueryRequest(): Observable<KalturaPlaylistListResponse> {
     try {
 
       // create request items
@@ -158,7 +174,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       // update desired fields of entries
         responseProfile = new KalturaDetachedResponseProfile({
           type: KalturaResponseProfileType.includeFields,
-          fields: 'id,name,createdAt,playlistType,status'
+          fields: 'id,name,createdAt,playlistType,status,tags'
         });
 
       // update the sort by args
@@ -182,7 +198,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       }
 
       // build the request
-      return <any>this._kalturaServerClient.request(
+      return this._kalturaServerClient.request(
         new PlaylistListAction({ filter, pager}).setRequestOptions({
             responseProfile
         })

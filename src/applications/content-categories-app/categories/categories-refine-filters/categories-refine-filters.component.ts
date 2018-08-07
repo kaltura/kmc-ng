@@ -1,10 +1,10 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren} from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
 import { subApplicationsConfig } from 'config/sub-applications';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {ScrollToTopContainerComponent} from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import {ScrollToTopContainerComponent} from '@kaltura-ng/kaltura-ui';
 import {CategoriesFilters, CategoriesService} from '../categories.service';
 import {RefineGroup} from '../categories-refine-filters.service';
 
@@ -156,7 +156,7 @@ export class CategoriesRefineFiltersComponent implements OnInit, OnDestroy, OnCh
 
   private _registerToFilterStoreDataChanges(): void {
     this._categoriesService.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         ({changes}) => {
           this._updateComponentState(changes);

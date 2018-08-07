@@ -1,13 +1,13 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
-import { modulesConfig } from 'config/modules';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {  RefineGroup } from '../entries-store/entries-refine-filters.service';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { RefineGroup } from '../entries-store/entries-refine-filters.service';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { subApplicationsConfig } from 'config/sub-applications';
+import { Calendar } from 'primeng/primeng';
 
 const listOfFilterNames: (keyof EntriesFilters)[] = [
     'createdAt',
@@ -25,13 +25,12 @@ const listOfFilterNames: (keyof EntriesFilters)[] = [
     'customMetadata'
 ];
 
-export interface PrimeListItem
-{
-    label: string,
-    value: string,
-    parent: PrimeListItem,
-    listName: string,
-    children: PrimeListItem[]
+export interface PrimeListItem {
+    label: string;
+    value: string;
+    parent: PrimeListItem;
+    listName: string;
+    children: PrimeListItem[];
 }
 
 export interface PrimeList {
@@ -55,11 +54,15 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
     @Input() refineFilters: RefineGroup[];
+    @Input() showEnforcedFilters = false;
 
     @Input() enforcedFilters: Partial<EntriesFilters>;
 
   @ViewChildren(RefinePrimeTree)
   public _primeTreesActions: RefinePrimeTree[];
+
+    @ViewChild('scheduledfrom') scheduledFrom: Calendar;
+    @ViewChild('scheduledto') scheduledTo: Calendar;
 
   private _primeListsMap: { [key: string]: PrimeList } = {};
 
@@ -180,10 +183,22 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
       }
   }
 
+    /**
+     * Close calendar overlay
+     * Not part of the API, don't use it from outside this component
+     *
+     * @param {Calendar} calendar
+     * @private
+     */
+    private _closeCalendar(calendar: Calendar): void {
+        if (calendar) {
+            calendar.overlayVisible = false;
+        }
+    }
 
   private _registerToFilterStoreDataChanges(): void {
         this._entriesStore.filtersChange$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 ({changes}) => {
                     this._updateComponentState(changes);
@@ -239,32 +254,34 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
 
                 if (list.items.length > 0) {
                     const primeList = {items: [], selections: [], group: list.group};
+                    const relevantEnforceFilter = this.enforcedFilters ? this.enforcedFilters[list.name] : null;
 
-                    const shouldAllowFilter = (!this.enforcedFilters || !this.enforcedFilters[list.name]);
+                    if (!relevantEnforceFilter || this.showEnforcedFilters) {
+                        const listItems = list.items
+                            .filter(item => relevantEnforceFilter ? relevantEnforceFilter.indexOf(item.value) === -1 : true);
 
-                    if (shouldAllowFilter) {
-                        this._primeListsMap[list.name] = primeList;
-                        filtersGroup.lists.push(primeList);
+                        if (listItems.length) {
+                            this._primeListsMap[list.name] = primeList;
+                            filtersGroup.lists.push(primeList);
+                            const listRootNode: PrimeListItem = {
+                                label: list.label,
+                                value: null,
+                                listName: list.name,
+                                parent: null,
+                                children: []
+                            };
 
-                        const listRootNode: PrimeListItem = {
-                            label: list.label,
-                            value: null,
-                            listName: list.name,
-                            parent: null,
-                            children: []
-                        };
-
-                        list.items.forEach(item => {
-                            listRootNode.children.push({
-                                label: item.label,
-                                value: item.value,
-                                children: [],
-                                listName: <any>list.name,
-                                parent: listRootNode
-                            })
-                        });
-
-                        primeList.items.push(listRootNode);
+                            listItems.forEach(item => {
+                                listRootNode.children.push({
+                                    label: item.label,
+                                    value: item.value,
+                                    children: [],
+                                    listName: <any>list.name,
+                                    parent: listRootNode
+                                });
+                            });
+                            primeList.items.push(listRootNode);
+                        }
                     }
                 }
             });
@@ -295,7 +312,13 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
    * Not part of the API, don't use it from outside this component
    */
   public _clearAllComponents(): void {
+      this._closeCalendar(this.scheduledFrom);
+      this._closeCalendar(this.scheduledTo);
       this._entriesStore.resetFilters(listOfFilterNames);
+
+      if (this.enforcedFilters) {
+          this._entriesStore.filter(this.enforcedFilters);
+      }
   }
 
   public _onCreatedChanged(): void {
@@ -325,7 +348,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
    *
    * Not part of the API, don't use it from outside this component
    */
-  public _onSchedulingChanged(calendarRef: any): void {
+  public _onSchedulingChanged(calendarRef: Calendar): void {
       const updateResult = this._entriesStore.filter({
           scheduledAt: {
               fromDate: this._scheduledAfter,
@@ -346,10 +369,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
           this._scheduledFilterError = null;
       }
 
-      if (calendarRef && calendarRef.overlayVisible) {
-          calendarRef.overlayVisible = false;
-      }
-
+      this._closeCalendar(calendarRef);
   }
 
   public _onTreeNodeSelect({ node }: { node: PrimeListItem }) {
@@ -425,6 +445,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                           newFilterItems.splice(itemIndex, 1);
 
                           if (node.listName === 'timeScheduling' && selectedNode.value === 'scheduled') {
+                              this._closeCalendar(this.scheduledFrom);
+                              this._closeCalendar(this.scheduledTo);
                               this._entriesStore.filter({
                                   scheduledAt: {
                                       fromDate: null,
@@ -459,4 +481,24 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
       this.parentPopupWidget.close();
     }
   }
+
+    /**
+    * Fixed calendar closing issue originated by {@link _blockScheduleToggle}
+    * Not part of the API, don't use it from outside this component
+    *
+    * @param {FocusEvent} event
+    * @param {Calendar} calendar
+    * @private
+    */
+    public _fixCalendarBlurPropagation(event: FocusEvent, calendar: Calendar): void {
+        const findByClassName = (element, className) => {
+            return element && element.classList
+                ? element.classList.contains(className) || findByClassName(element.parentNode, className)
+                : false;
+        };
+        const shouldCloseCalendar = event.relatedTarget === null ? false : !findByClassName(event.relatedTarget, 'ui-datepicker');
+        if (shouldCloseCalendar) {
+            this._closeCalendar(calendar);
+        }
+    }
 }

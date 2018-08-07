@@ -1,9 +1,10 @@
 import {Component, Input, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 
 import { RefineList } from '../manage-end-user-permissions-refine-filters.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {ManageEndUserPermissionsService, UsersFilters} from '../manage-end-user-permissions.service';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface TagItem {
   type: string,
@@ -121,7 +122,7 @@ export class ManageEndUserPermissionsFilterTagsComponent implements OnInit, OnDe
 
   private _registerToFilterStoreDataChanges(): void {
     this._manageEndUserPermissionsService.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({changes}) => {
         this._updateComponentState(changes);
 

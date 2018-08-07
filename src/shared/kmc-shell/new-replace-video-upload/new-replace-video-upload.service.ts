@@ -1,22 +1,23 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewReplaceVideoUploadFile } from './new-replace-video-upload-file';
-import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client/api/types/KalturaUploadedFileTokenResource';
-import { KalturaAssetParamsResourceContainer } from 'kaltura-ngx-client/api/types/KalturaAssetParamsResourceContainer';
-import { KalturaAssetsParamsResourceContainers } from 'kaltura-ngx-client/api/types/KalturaAssetsParamsResourceContainers';
-import { MediaUpdateContentAction } from 'kaltura-ngx-client/api/types/MediaUpdateContentAction';
-import { UploadTokenDeleteAction } from 'kaltura-ngx-client/api/types/UploadTokenDeleteAction';
-import { TrackedFileData } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { KalturaUrlResource } from 'kaltura-ngx-client/api/types/KalturaUrlResource';
+import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client';
+import { KalturaAssetParamsResourceContainer } from 'kaltura-ngx-client';
+import { KalturaAssetsParamsResourceContainers } from 'kaltura-ngx-client';
+import { MediaUpdateContentAction } from 'kaltura-ngx-client';
+import { UploadTokenDeleteAction } from 'kaltura-ngx-client';
+import { TrackedFileData } from '@kaltura-ng/kaltura-common';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { KalturaUrlResource } from 'kaltura-ngx-client';
 import { Subject } from 'rxjs/Subject';
-import { MediaCancelReplaceAction } from 'kaltura-ngx-client/api/types/MediaCancelReplaceAction';
+import { MediaCancelReplaceAction } from 'kaltura-ngx-client';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaRemoteStorageResource } from 'kaltura-ngx-client/api/types/KalturaRemoteStorageResource';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { KalturaRemoteStorageResource } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface KmcNewReplaceEntryLink {
     url: string;
@@ -59,7 +60,7 @@ export class NewReplaceVideoUploadService implements OnDestroy {
 
     private _monitorTrackedFilesChanges(): void {
         this._uploadManagement.onTrackedFileChanged$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .filter(trackedFile => trackedFile.data instanceof NewReplaceVideoUploadFile)
             .subscribe(
                 trackedFile => {
@@ -88,8 +89,8 @@ export class NewReplaceVideoUploadService implements OnDestroy {
             .forEach(file => this._cancelUpload(file));
 
         this._kalturaServerClient.request(new MediaCancelReplaceAction({ entryId }))
-            .cancelOnDestroy(this)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this))
+            .pipe(tag('block-shell'))
             .subscribe(
                 () => {
                 },

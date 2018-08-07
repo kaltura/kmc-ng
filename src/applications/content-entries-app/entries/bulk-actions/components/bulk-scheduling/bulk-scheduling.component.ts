@@ -1,14 +1,15 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { SchedulingParams } from '../../services';
 import { async } from 'rxjs/scheduler/async';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 function datesValidation(checkRequired: boolean = false): ValidatorFn {
   return (c: AbstractControl): {[key: string]: boolean} | null => {
@@ -102,7 +103,7 @@ export class BulkScheduling implements OnInit, OnDestroy, AfterViewInit {
       enableEndDate: false
     }, { validator: datesValidation(false) });
     this.schedulingForm.get('scheduling').valueChanges
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         value => {
           if (value === "anytime"){
@@ -120,7 +121,7 @@ export class BulkScheduling implements OnInit, OnDestroy, AfterViewInit {
         }
       );
     this.schedulingForm.get('enableEndDate').valueChanges
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         value => {
           if (value){
@@ -134,7 +135,7 @@ export class BulkScheduling implements OnInit, OnDestroy, AfterViewInit {
 
     Observable.merge(this.schedulingForm.valueChanges,
       this.schedulingForm.statusChanges)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
       .subscribe(
         () => {

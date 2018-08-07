@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaEntryDistribution } from 'kaltura-ngx-client/api/types/KalturaEntryDistribution';
-import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionStatus';
-import { KalturaEntryDistributionFlag } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionFlag';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaEntryDistribution } from 'kaltura-ngx-client';
+import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client';
+import { KalturaEntryDistributionFlag } from 'kaltura-ngx-client';
 
 @Pipe({ name: 'kEntriesDistributionStatus' })
 export class DistributionStatusPipe implements PipeTransform {

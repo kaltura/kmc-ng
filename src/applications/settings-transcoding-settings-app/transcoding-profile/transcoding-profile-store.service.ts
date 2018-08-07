@@ -1,37 +1,40 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
-import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
+import { Observable } from 'rxjs';
+import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
 import { TranscodingProfileWidgetsManager } from './transcoding-profile-widgets-manager';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { KalturaConversionProfileFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsFilter';
-import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client/api/types/ConversionProfileAssetParamsListAction';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { KalturaConversionProfileFilter } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaConversionProfileAssetParamsFilter } from 'kaltura-ngx-client';
+import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client';
 import {
   BaseTranscodingProfilesStore,
   KalturaConversionProfileWithAsset
 } from '../transcoding-profiles/transcoding-profiles-store/base-transcoding-profiles-store.service';
-import { ConversionProfileGetAction } from 'kaltura-ngx-client/api/types/ConversionProfileGetAction';
-import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
+import { ConversionProfileGetAction } from 'kaltura-ngx-client';
+import { KalturaConversionProfile } from 'kaltura-ngx-client';
 import { TranscodingProfileCreationService } from 'app-shared/kmc-shared/events/transcoding-profile-creation';
-import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui/widgets/widgets-manager-base';
-import { ConversionProfileAddAction } from 'kaltura-ngx-client/api/types/ConversionProfileAddAction';
-import { ConversionProfileUpdateAction } from 'kaltura-ngx-client/api/types/ConversionProfileUpdateAction';
+import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
+import { ConversionProfileAddAction } from 'kaltura-ngx-client';
+import { ConversionProfileUpdateAction } from 'kaltura-ngx-client';
 import { MediaTranscodingProfilesStore } from '../transcoding-profiles/transcoding-profiles-store/media-transcoding-profiles-store.service';
 import { LiveTranscodingProfilesStore } from '../transcoding-profiles/transcoding-profiles-store/live-transcoding-profiles-store.service';
-import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
 import {
     SettingsTranscodingProfileViewSections,
     SettingsTranscodingProfileViewService
 } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { SettingsTranscodingMainViewService } from 'app-shared/kmc-shared/kmc-views/main-views/settings-transcoding-main-view.service';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { TranscodingProfilesUpdatedEvent } from 'app-shared/kmc-shared/events';
+import { AppEventsService } from 'app-shared/kmc-shared';
 
 export enum ActionTypes {
   ProfileLoading,
@@ -83,6 +86,7 @@ export class TranscodingProfileStore implements OnDestroy {
   constructor(@Host() private _widgetsManager: TranscodingProfileWidgetsManager,
               private _kalturaServerClient: KalturaClient,
               private _router: Router,
+              private _appEvents: AppEventsService,
               private _browserService: BrowserService,
               private _profileRoute: ActivatedRoute,
               private _pageExitVerificationService: PageExitVerificationService,
@@ -102,7 +106,7 @@ export class TranscodingProfileStore implements OnDestroy {
 
   private _onSectionsStateChanges(): void {
     this._widgetsManager.widgetsState$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .debounce(() => Observable.timer(500))
       .subscribe(
         sectionsState => {
@@ -161,7 +165,7 @@ export class TranscodingProfileStore implements OnDestroy {
 
   private _onRouterEvents(): void {
     this._router.events
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         event => {
           if (event instanceof NavigationEnd) {
@@ -239,8 +243,8 @@ export class TranscodingProfileStore implements OnDestroy {
     const request = new KalturaMultiRequest(action);
 
     this._widgetsManager.notifyDataSaving(newProfile, request, this.profile.data())
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .flatMap(prepareResponse => {
         if (prepareResponse.ready) {
           return this._checkFlavors(newProfile)
@@ -250,7 +254,7 @@ export class TranscodingProfileStore implements OnDestroy {
               }
 
               return this._kalturaServerClient.multiRequest(request)
-                .tag('block-shell')
+                .pipe(tag('block-shell'))
                 .map(multiResponse => {
                   if (multiResponse.hasErrors()) {
                     const errorMessage = multiResponse.map(response => {
@@ -267,6 +271,7 @@ export class TranscodingProfileStore implements OnDestroy {
 
                     if (isNew) {
                       this._profileIsDirty = false;
+                        this._appEvents.publish(new TranscodingProfilesUpdatedEvent());
                         this._settingsTranscodingProfileViewService.open({ profile: profileResponse.result, section: SettingsTranscodingProfileViewSections.Metadata });
                     } else {
                       this._loadProfile(profileResponse.result.id);
@@ -305,7 +310,7 @@ export class TranscodingProfileStore implements OnDestroy {
 
   public saveProfile(): void {
       const profile = this.profile.data();
-      const newProfile = <KalturaConversionProfileWithAsset>KalturaTypesFactory.createObject(profile);
+      const newProfile = <KalturaConversionProfileWithAsset>KalturaObjectBaseFactory.createObject(profile);
       if (newProfile && newProfile instanceof KalturaConversionProfile) {
           if (this.profileId === 'new') {
               newProfile.type = profile.type;
@@ -340,7 +345,7 @@ export class TranscodingProfileStore implements OnDestroy {
     this._widgetsManager.notifyDataLoading(profileId);
 
     this._loadProfileSubscription = this._getProfile(profileId)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         response => {
             this._profile.data.next(response);
@@ -413,7 +418,7 @@ export class TranscodingProfileStore implements OnDestroy {
   public openProfile(profile: KalturaConversionProfileWithAsset): void {
     this.canLeave()
         .filter(({ allowed }) => allowed)
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe(() => {
             this._settingsTranscodingProfileViewService.open({ profile, section: SettingsTranscodingProfileViewSections.Metadata });
         });

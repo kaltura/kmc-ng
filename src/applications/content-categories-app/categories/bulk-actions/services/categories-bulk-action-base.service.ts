@@ -1,27 +1,21 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { subApplicationsConfig } from 'config/sub-applications';
-
-import { KalturaClient } from 'kaltura-ngx-client';
-import { KalturaRequest, KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-ngx-client';
-import { KalturaCategory } from "kaltura-ngx-client/api/types/KalturaCategory";
-
+import { KalturaClient, KalturaCategory, KalturaRequest, KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-ngx-client';
 
 export abstract class CategoriesBulkActionBaseService<T> {
-
   constructor(public _kalturaServerClient: KalturaClient) {
   }
 
-  public abstract execute(selectedCategories: KalturaCategory[] , params : T) : Observable<any>;
+  public abstract execute(selectedCategories: KalturaCategory[], params: T): Observable<any>;
 
-  transmit(requests : KalturaRequest<any>[], chunk : boolean) : Observable<{}>
-  {
+  transmit(requests: KalturaRequest<any>[], chunk: boolean): Observable<void> {
     let maxRequestsPerMultiRequest = requests.length;
-    if (chunk){
+    if (chunk) {
       maxRequestsPerMultiRequest = subApplicationsConfig.shared.bulkActionsLimit;
     }
 
-    let multiRequests: Observable<KalturaMultiResponse>[] = [];
-    let mr :KalturaMultiRequest = new KalturaMultiRequest();
+    const multiRequests: Observable<KalturaMultiResponse>[] = [];
+    let mr: KalturaMultiRequest = new KalturaMultiRequest();
 
     let counter = 0;
     for (let i = 0; i < requests.length; i++){
@@ -37,14 +31,11 @@ export abstract class CategoriesBulkActionBaseService<T> {
 
     return Observable.forkJoin(multiRequests)
       .map(responses => {
-        const mergedResponses = [].concat.apply([], responses);
-        let hasFailure = mergedResponses.filter(function ( response ) {return response.error}).length > 0;
-        if (hasFailure) {
-          throw new Error("error");
-        } else {
-          return {};
-        }
+          const mergedResponses = [].concat.apply([], responses);
+          const errorMessage = mergedResponses.reduce((acc, val) => `${acc}${val.error ? val.error.message : ''}\n`, '').trim();
+          if (errorMessage) {
+              throw new Error(errorMessage);
+          }
       });
   }
-
 }

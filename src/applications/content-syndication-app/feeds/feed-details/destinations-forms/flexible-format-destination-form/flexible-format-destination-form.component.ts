@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import { DestinationComponentBase, FeedFormMode } from '../../feed-details.component';
-import {KalturaGenericXsltSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaGenericXsltSyndicationFeed';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import {KalturaGenericXsltSyndicationFeed} from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kFlexibleFormatDestinationForm',

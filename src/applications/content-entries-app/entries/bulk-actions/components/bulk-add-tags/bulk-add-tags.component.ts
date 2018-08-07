@@ -3,15 +3,16 @@ import { ISubscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 
 import { KalturaClient } from 'kaltura-ngx-client';
-import { TagSearchAction } from 'kaltura-ngx-client/api/types/TagSearchAction';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaTagFilter } from 'kaltura-ngx-client/api/types/KalturaTagFilter';
-import { KalturaTaggedObjectType } from 'kaltura-ngx-client/api/types/KalturaTaggedObjectType';
-import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { TagSearchAction } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaTagFilter } from 'kaltura-ngx-client';
+import { KalturaTaggedObjectType } from 'kaltura-ngx-client';
+import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kBulkAddTags',
@@ -98,7 +99,7 @@ export class BulkAddTags implements OnInit, OnDestroy, AfterViewInit {
         }
       )
     )
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         result =>
         {

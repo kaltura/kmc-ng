@@ -1,13 +1,13 @@
 import {MenuItem} from 'primeng/primeng';
 import {ISubscription} from 'rxjs/Subscription';
-import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
+import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
 import {Subject} from 'rxjs/Subject';
 import {Component, ElementRef, Inject, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {JumpToSection} from './jump-to-section.component';
-import {DOCUMENT} from '@angular/platform-browser';
-import {PageScrollInstance, PageScrollService} from 'ng2-page-scroll';
+import {DOCUMENT} from '@angular/common';
+import {PageScrollInstance, PageScrollService} from 'ngx-page-scroll';
 import {CategoryMetadataWidget} from './category-metadata-widget.service';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kmc-category-metadata',
@@ -72,7 +72,7 @@ export class CategoryMetadataComponent implements OnInit {
   ngAfterViewInit() {
 
     this._jumpToSectionQuery.changes
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe((query) => {
         this._updateJumpToSectionsMenu();
       });

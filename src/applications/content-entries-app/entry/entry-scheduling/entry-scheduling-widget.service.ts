@@ -1,10 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { EntryWidget } from '../entry-widget';
 import { async } from 'rxjs/scheduler/async';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
@@ -114,7 +114,7 @@ export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
 
     if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_SCHEDULE)) {
       this.schedulingForm.get('scheduling').valueChanges
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe(
           value => {
             if (value === 'anytime') {
@@ -132,7 +132,7 @@ export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
           }
         );
       this.schedulingForm.get('enableEndDate').valueChanges
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe(
           value => {
             if (value) {
@@ -147,7 +147,7 @@ export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
       Observable.merge(this.schedulingForm.valueChanges,
         this.schedulingForm.statusChanges)
         .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe(
           () => {
             super.updateState({

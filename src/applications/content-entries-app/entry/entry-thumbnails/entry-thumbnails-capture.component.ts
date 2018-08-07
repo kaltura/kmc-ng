@@ -1,6 +1,6 @@
 import { Component, AfterContentInit, Input } from '@angular/core';
 import { AppAuthentication } from 'app-shared/kmc-shell';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { serverConfig, getKalturaServerUri } from 'config/server';
 
 @Component({

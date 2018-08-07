@@ -1,20 +1,35 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { ConversionProfileListAction } from 'kaltura-ngx-client/api/types/ConversionProfileListAction';
-import { KalturaConversionProfileFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
-import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaConversionProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaConversionProfileListResponse';
-import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
+import { ConversionProfileListAction } from 'kaltura-ngx-client';
+import { KalturaConversionProfileFilter } from 'kaltura-ngx-client';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaConversionProfileListResponse } from 'kaltura-ngx-client';
+import { KalturaConversionProfile } from 'kaltura-ngx-client';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { TranscodingProfilesUpdatedEvent } from 'app-shared/kmc-shared/events';
 
 @Injectable()
-export class TranscodingProfileManagement {
+export class TranscodingProfileManagement implements OnDestroy {
   private _transcodingProfileCache$;
 
-  constructor(private _serverClient: KalturaClient) {
-
+  constructor(private _serverClient: KalturaClient,
+              _appEvents: AppEventsService) {
+      _appEvents.event(TranscodingProfilesUpdatedEvent)
+          .pipe(cancelOnDestroy(this))
+          .subscribe(() => {
+              this._clearCache();
+          });
   }
+
+    ngOnDestroy() {
+    }
+
+    private _clearCache(): void {
+        this._transcodingProfileCache$ = null;
+    }
 
   private _loadTranscodingProfiles(): Observable<KalturaConversionProfile[]> {
     return this._serverClient
@@ -40,9 +55,5 @@ export class TranscodingProfileManagement {
     }
 
     return this._transcodingProfileCache$;
-  }
-
-  public clearCache(): void {
-    this._transcodingProfileCache$ = null;
   }
 }

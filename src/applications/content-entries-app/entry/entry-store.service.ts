@@ -1,19 +1,11 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
-import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/subscribeOn';
-import 'rxjs/add/operator/switchMap';
-
-import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
-import { BaseEntryUpdateAction } from 'kaltura-ngx-client/api/types/BaseEntryUpdateAction';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { BaseEntryGetAction } from 'kaltura-ngx-client';
+import { BaseEntryUpdateAction } from 'kaltura-ngx-client';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { EntryWidgetsManager } from './entry-widgets-manager';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
@@ -22,9 +14,10 @@ import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-veri
 import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
-import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client/api/types/FlavorAssetGetFlavorAssetsWithParamsAction';
-import { BaseEntryDeleteAction } from 'kaltura-ngx-client/api/types/BaseEntryDeleteAction';
+import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client';
+import { BaseEntryDeleteAction } from 'kaltura-ngx-client';
 import { Location } from '@angular/common';
+import { BehaviorSubject, Observable, Subject, Unsubscribable } from 'rxjs';
 
 export enum ActionTypes
 {
@@ -49,8 +42,8 @@ declare interface StatusArgs {
 }
 
 @Injectable()
-export class EntryStore implements  OnDestroy {
-	private _loadEntrySubscription : ISubscription;
+export class EntryStore implements OnDestroy {
+	private _loadEntrySubscription: Unsubscribable;
 	private _state = new BehaviorSubject<StatusArgs>({ action : ActionTypes.EntryLoading, error : null});
     private _pageExitVerificationToken: string;
     private _notifications = new Subject<{ type: NotificationTypes, error?: Error }>();
@@ -100,7 +93,8 @@ export class EntryStore implements  OnDestroy {
 		this._onSectionsStateChanges();
 		this._onRouterEvents();
 
-    this._entryRoute.queryParams.cancelOnDestroy(this)
+		// hard reload the entries upon navigating back from entry (by adding 'reloadEntriesListOnNavigateOut' to the queryParams)
+    this._entryRoute.queryParams.pipe(cancelOnDestroy(this))
       .first()
       .subscribe(queryParams => {
           // hard reload the entries upon navigating back from entry (by adding 'reloadEntriesListOnNavigateOut' to the queryParams)
@@ -118,7 +112,7 @@ export class EntryStore implements  OnDestroy {
     private _onSectionsStateChanges()
 	{
 		this._widgetsManager.widgetsState$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .debounce(() => Observable.timer(500))
             .subscribe(
 				sectionsState =>
@@ -166,7 +160,7 @@ export class EntryStore implements  OnDestroy {
 
 	private _onRouterEvents() : void {
         this._router.events
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 event => {
                     if (event instanceof NavigationEnd) {
@@ -197,15 +191,15 @@ export class EntryStore implements  OnDestroy {
 		);
 
 		this._widgetsManager.notifyDataSaving(newEntry, request, this.entry)
-            .cancelOnDestroy(this)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this))
+            .pipe(tag('block-shell'))
             .flatMap(
 				(response) => {
 					if (response.ready) {
 						this._refreshEntriesListUponLeave = true;
 
 						return this._kalturaServerClient.multiRequest(request)
-                            .tag('block-shell')
+                            .pipe(tag('block-shell'))
                             .map(
 								response => {
 									if (response.hasErrors()) {
@@ -248,7 +242,7 @@ export class EntryStore implements  OnDestroy {
 	}
 	public saveEntry() : void {
 
-		const newEntry = KalturaTypesFactory.createObject(this.entry);
+		const newEntry = KalturaObjectBaseFactory.createObject(this.entry);
 
 		if (newEntry && newEntry instanceof KalturaMediaEntry) {
 			this._transmitSaveRequest(newEntry)
@@ -286,7 +280,7 @@ export class EntryStore implements  OnDestroy {
 		this._widgetsManager.notifyDataLoading(entryId);
 
 		this._loadEntrySubscription = this._getEntry(entryId)
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 ({ entry, hasSource }) => {
                     this._entry.next(entry);
@@ -355,7 +349,7 @@ export class EntryStore implements  OnDestroy {
         if (entryId !== this.entryId) {
             this.canLeave()
                 .filter(({ allowed }) => allowed)
-                .cancelOnDestroy(this)
+                .pipe(cancelOnDestroy(this))
                 .subscribe(() => {
                     if (entry instanceof KalturaMediaEntry) {
                         this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
@@ -386,8 +380,10 @@ export class EntryStore implements  OnDestroy {
                         },
                         reject: () => {
                             this._deleteEntry(this._entryId)
-                                .tag('block-shell')
-                                .cancelOnDestroy(this)
+                                .pipe(
+                                    tag('block-shell'),
+                                    cancelOnDestroy(this)
+                                )
                                 .subscribe(
                                     () => allowed(),
                                     error => {
@@ -422,7 +418,11 @@ export class EntryStore implements  OnDestroy {
     }
 
     public returnToEntries(): void {
-        this._contentEntriesMainViewService.open();
+	    if (this._contentEntriesMainViewService.isAvailable()) {
+            this._contentEntriesMainViewService.open();
+        } else {
+            this._browserService.navigateToDefault();
+        }
     }
 
 

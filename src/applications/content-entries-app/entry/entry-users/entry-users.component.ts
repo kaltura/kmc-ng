@@ -1,10 +1,10 @@
 import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ISubscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
-import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
-import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { KalturaUser } from 'kaltura-ngx-client';
+import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { EntryUsersWidget } from './entry-users-widget.service';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';

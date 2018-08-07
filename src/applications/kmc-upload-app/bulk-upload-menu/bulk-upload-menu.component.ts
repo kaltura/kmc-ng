@@ -1,17 +1,17 @@
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { KalturaAPIException } from 'kaltura-ngx-client';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { BulkUploadService, BulkUploadTypes } from 'app-shared/kmc-shell/bulk-upload';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events';
-import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
+import { KalturaBulkUpload } from 'kaltura-ngx-client';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentBulkUploadsMainViewService } from 'app-shared/kmc-shared/kmc-views';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 @Component({
   selector: 'kKMCBulkUploadMenu',
   templateUrl: './bulk-upload-menu.component.html',
@@ -96,7 +96,7 @@ export class BulkUploadMenuComponent {
   private _invokeUpload(): void {
     if (this._selectedFiles) {
       this._bulkUploadService.upload(this._selectedFiles, this._selectedType)
-        .tag('block-shell')
+        .pipe(tag('block-shell'))
         .subscribe(
           (response) => this._handleUploadSuccess(response),
           (error) => this._handleUploadError(error)

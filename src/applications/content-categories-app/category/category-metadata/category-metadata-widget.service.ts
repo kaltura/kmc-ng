@@ -1,16 +1,16 @@
-import {MetadataAddAction} from 'kaltura-ngx-client/api/types/MetadataAddAction';
-import {MetadataUpdateAction} from 'kaltura-ngx-client/api/types/MetadataUpdateAction';
-import {KalturaTagFilter} from 'kaltura-ngx-client/api/types/KalturaTagFilter';
-import {TagSearchAction} from 'kaltura-ngx-client/api/types/TagSearchAction';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import {KalturaTaggedObjectType} from 'kaltura-ngx-client/api/types/KalturaTaggedObjectType';
-import {MetadataListAction} from 'kaltura-ngx-client/api/types/MetadataListAction';
-import {KalturaMetadataObjectType} from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
+import {MetadataAddAction} from 'kaltura-ngx-client';
+import {MetadataUpdateAction} from 'kaltura-ngx-client';
+import {KalturaTagFilter} from 'kaltura-ngx-client';
+import {TagSearchAction} from 'kaltura-ngx-client';
+import {KalturaFilterPager} from 'kaltura-ngx-client';
+import {KalturaTaggedObjectType} from 'kaltura-ngx-client';
+import {MetadataListAction} from 'kaltura-ngx-client';
+import {KalturaMetadataObjectType} from 'kaltura-ngx-client';
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
-import {KalturaMetadataFilter} from 'kaltura-ngx-client/api/types/KalturaMetadataFilter';
-import {KalturaMetadata} from 'kaltura-ngx-client/api/types/KalturaMetadata';
-import {Observable} from 'rxjs/Observable';
+import {KalturaCategory} from 'kaltura-ngx-client';
+import {KalturaMetadataFilter} from 'kaltura-ngx-client';
+import {KalturaMetadata} from 'kaltura-ngx-client';
+import { Observable } from 'rxjs';
 import {
   DynamicMetadataForm,
   DynamicMetadataFormFactory,
@@ -24,7 +24,8 @@ import {CategoryWidget} from '../category-widget';
 import {async} from 'rxjs/scheduler/async';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy {
@@ -62,7 +63,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
         });
 
         Observable.merge(...formsChanges)
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
             .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
             .subscribe(
             () => {
@@ -195,7 +196,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
                 )
             }
         ))
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
             .do(response => {
                 this._categoryMetadata = response.objects;
             })
@@ -211,7 +212,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             type: MetadataProfileTypes.Category,
             ignoredCreateMode: MetadataProfileCreateModes.App
         })
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .do(response => {
 
                 this.customDataForms = [];
@@ -289,7 +290,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
                         }
                     )
                 )
-                    .cancelOnDestroy(this, this.widgetReset$)
+                    .pipe(cancelOnDestroy(this, this.widgetReset$))
                     .subscribe(
                     result => {
                         const tags = result.objects.map(item => item.tag);

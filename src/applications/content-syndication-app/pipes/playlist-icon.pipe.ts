@@ -1,6 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
-import {KalturaPlaylistType} from "kaltura-ngx-client/api/types/KalturaPlaylistType";
+import {KalturaPlaylist} from 'kaltura-ngx-client';
+import {KalturaPlaylistType} from 'kaltura-ngx-client';
 
 @Pipe({name: 'kToPlaylistIcon'})
 export class PlaylistIconPipe implements PipeTransform {

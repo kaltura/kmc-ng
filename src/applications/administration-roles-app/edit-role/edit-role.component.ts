@@ -1,16 +1,17 @@
 import { Component, Input, IterableDiffers, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { KalturaAPIException, KalturaUserRole } from 'kaltura-ngx-client';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observer } from 'rxjs/Observer';
 import { PermissionsTableComponent, RolePermissionFormValue } from '../permissions-table/permissions-table.component';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { RolesStoreService } from '../roles-store/roles-store.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { subApplicationsConfig } from 'config/sub-applications';
-import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kEditRole',
@@ -96,7 +97,6 @@ import { BrowserService } from 'app-shared/kmc-shell';
 
   private _addMissingRolePermissions(permissions: string[]): string[] {
       const result = [...permissions];
-      const uniquePermissions = new Set(permissions || []);
 
       permissions.forEach(permission => {
           const permissionKey = this._kmcPermissionsService.getPermissionKeyByName(permission);
@@ -134,6 +134,24 @@ import { BrowserService } from 'app-shared/kmc-shell';
         this._editRoleForm.updateValueAndValidity();
     }
 
+    private _markFormFieldsAsPristine() {
+        for (const controlName in this._editRoleForm.controls) {
+            if (this._editRoleForm.controls.hasOwnProperty(controlName)) {
+                this._editRoleForm.get(controlName).markAsPristine();
+                this._editRoleForm.get(controlName).updateValueAndValidity();
+            }
+        }
+        this._editRoleForm.updateValueAndValidity();
+    }
+
+
+    private _handleInvalidInputError(error: KalturaAPIException): void {
+        if (error.args['PROPERTY_NAME'] === 'name') {
+            this._nameField.setErrors({ unsafeValue: true });
+        } else if (error.args['PROPERTY_NAME'] === 'description') {
+            this._descriptionField.setErrors({ unsafeValue: true });
+        }
+    }
 
     private _getObserver(retryFn: () => void, successFn: () => void = null): Observer<void> {
     return <Observer<void>>{
@@ -146,6 +164,11 @@ import { BrowserService } from 'app-shared/kmc-shell';
         this._rolesService.reload();
       },
       error: (error) => {
+          if (error.code === 'UNSAFE_HTML_TAGS') {
+              this._handleInvalidInputError(error);
+              return;
+          }
+
         this._logger.info(`handle failing update by the server`);
         this._blockerMessage = new AreaBlockerMessage(
           {
@@ -233,8 +256,8 @@ import { BrowserService } from 'app-shared/kmc-shell';
     };
 
     this._rolesService.updateRole(this.role.id, editedRole)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(this._getObserver(retryFn, successFn));
   }
 
@@ -249,8 +272,8 @@ import { BrowserService } from 'app-shared/kmc-shell';
     this.role = new KalturaUserRole({ name, description, permissionNames });
 
     this._rolesService.addRole(this.role)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(this._getObserver(retryFn));
   }
 
@@ -269,7 +292,9 @@ import { BrowserService } from 'app-shared/kmc-shell';
       return;
     }
 
-    if (this.role) {
+      this._markFormFieldsAsPristine();
+
+    if (this.role && this.role.id) {
       this._updateRole();
     } else {
       this._addRole();

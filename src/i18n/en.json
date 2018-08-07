@@ -73,6 +73,7 @@
             "productTour": "Watch the Product Tour",
             "support": "Help and Support",
             "userManual": "Download User Manual",
+            "legacy": "Legacy KMC",
             "contact": "Contact Support",
             "currentPage": "Current Page",
             "changelog": "Changelog"
@@ -89,6 +90,7 @@
             "off": "Off",
             "ok": "OK",
             "cancel": "Cancel",
+            "continue": "Continue",
             "retry": "Retry",
             "dismiss": "Dismiss",
             "reload": "Reload",
@@ -287,6 +289,8 @@
                 "invalidUrl": "URL is invalid"
             },
             "uploadMenu": {
+                "createFromUrl": "Upload from URL",
+                "createFromYoutube": "Upload from YouTube",
                 "uploadFromDesktop": "Upload from Desktop",
                 "needHighSpeed": "Need High-speed Upload?",
                 "highSpeed": "High-Speed Upload",
@@ -307,11 +311,52 @@
                     "prepareEntry": "An error occurred while preparing an entry."
                 }
             },
+            "createFromUrl": {
+                "uploadFromUrl": "Upload from URL",
+                "transcodingProfile": "Transcoding Profile",
+                "profilePlaceholder": "Default",
+                "addFile": "Add File",
+                "fileUrl": "File URL",
+                "fileUrlPlaceholder": "http://",
+                "transcodingFlavor": "Transcoding Flavor",
+                "selectFlavor": "Select Flavor",
+                "remove": "Remove File",
+                "link": "Link",
+                "cancel": "Cancel",
+                "noFlavors": "No Flavors",
+                "missingFlavor": "Some required Transcoding Flavors are missing. Continue?",
+                "continue": "Continue",
+                "emptyMessage": {
+                    "title": "No files to upload",
+                    "getStarted": "Add some files to get started. ",
+                    "browse": "Add"
+                }
+            },
+            "uploadFromYoutube": {
+                "uploadFromYoutube": "Upload from YouTube",
+                "linkLabel": "Add video page Link or Content Id",
+                "inputPlaceholder": "http://",
+                "cancel": "Cancel",
+                "upload": "Upload",
+                "note": "Note: Only public YouTube videos are supported",
+                "invalidUrl": "Unsupported URL or ID provided",
+                "success": "Success",
+                "successMessage": "YouTube Entry has been created successfully.\nDo you want to view entry details?",
+                "notSupported": "Upload from YouTube is not available!"
+            },
             "uploadSettings": {
-                "title": "Upload Settings",
+                "uploadSettings": "Upload Settings",
+                "uploadFromUrl": "Upload from URL",
+                "cancel": "Cancel",
                 "profile": "Transcoding Profile",
                 "addFileBtn": "Add Files",
                 "profilePlaceholder": "Default",
+                "fileUrl": "File URL",
+                "fileUrlPlaceholder": "http://",
+                "createFromUrlError": {
+                    "all": "Failed to create entries, please try again",
+                    "some": "Failed to create some entries, please review entries list"
+                },
                 "mediaTypes": {
                     "video": "Video",
                     "audio": "Audio",
@@ -328,10 +373,12 @@
                     "emptyMessage": {
                         "title": "No files to upload",
                         "getStarted": "Add some files to get started. ",
-                        "browse": "Browse"
+                        "browse": "Browse",
+                        "add": "Add"
                     }
                 },
-                "uploadBtn": "Upload"
+                "upload": "Upload",
+                "link": "Link"
             },
             "uploadMonitor": {
                 "uploadFromDesktop": "Upload from Desktop",
@@ -527,6 +574,7 @@
                 "viewEntries": "View Entries",
                 "moveCategory": "Move Category",
                 "cancel": "Cancel",
+                "addServiceRule": "Add Service Rule",
                 "bActions": {
                     "addRemoveTags": "Add / Remove Tags",
                     "addTags": "Add Tags",
@@ -750,6 +798,7 @@
                                 "explanation": "Enter the URL template that you would like to appear in the iTunes Store Podcast for each video in this feed. The system will append the specific entry id for each entry. For example:\"http://mysite.com?videoid=\""
                             },
                             "feedAuthor": "Feed Author",
+                            "enforceFeedAuthor": "Use this name as the Episode Author for all episodes",
                             "website": "Website",
                             "description": "Feed Description",
                             "categories": {
@@ -1113,7 +1162,11 @@
                 "ruleName": "Rule Name",
                 "entriesCount": "No. Entries",
                 "limit": "Limit",
-                "orderBy": "Order By"
+                "orderBy": "Order By",
+                "nameTooltip": "{{0}}\nTags:\n{{1}}",
+                "download": "Download",
+                "editor": "Launch Editor",
+                "captionRequest": "Caption Request"
             },
             "paginator": {
                 "showRows": "Show rows:"
@@ -1264,6 +1317,7 @@
                 "dismiss": "Dismiss"
             },
             "bulkActions": {
+                "captionRequest": "Caption Request",
                 "setScheduling": "Set Scheduling",
                 "setAccessControl": "Set Access Control",
                 "addRemovePublishers": "Add / Remove Co-Publishers",
@@ -1327,19 +1381,28 @@
                 "reject": "Reject",
                 "newPlaylist": "New Playlist",
                 "createPlaylistWarning": "New Playlist",
-                "createPlaylistWarningMsg": "Some of the selected entries have invalid statuses.\nYou can continue, but invalid entries will be ignored\n{{0}}",
+                "createPlaylistWarningMsg": "Some of the selected entries have invalid statuses.\nYou can continue, but invalid entries will be ignored:\n{{0}}",
+                "createPlaylistWarningMsgShort": "{{0}} of the selected entries have invalid statuses.\nYou can continue, but invalid entries will be ignored.",
                 "createPlaylistErrorMsg": "All selected entries have invalid statuses.\nYou cannot create a new playlist to include those entries",
                 "viewRule": "View/Edit Rule",
                 "deleteRule": "Delete Rule",
                 "noCategoriesOrEntries": "No categories or entries were selected.",
                 "entryAlreadyAssignedToCategory": "Entry {{0}} is already assigned to category {{1}}.",
-                "downloadFailed": "The Download request failed."
+                "downloadFailed": "The Download request failed.",
+                "captionRequestAllInvalid": "The selected entries do not support captions ordering. Please select only Video / Audio entries that are ready for playback",
+                "captionRequestSomeInvalid": "Please note that a few entries do not support captions ordering and will be ignored. Continue?"
+
             },
             "entryDetails": {
                 "entryEditor": {
                     "title": "Editor",
                     "cancelEdit": "Cancel Edit",
                     "discard": "Discard all changes?"
+                },
+                "downloadEntry": {
+                    "title": "Download",
+                    "downloadFlavor": "If you have selected to download a video, please choose the required format:",
+                    "downloadEntry": "Download Entry"
                 },
                 "save": "Save",
                 "newDraftEntryWarning": "Entry was automatically saved. Do you want to keep this entry?",
@@ -1364,6 +1427,7 @@
                     "details": "Details",
                     "entryID": "ID:",
                     "creator": "Created By:",
+                    "owner": "Owner:",
                     "creationDate": "Creation Date:",
                     "updateDate": "Last Update:",
                     "landingPage": "Landing Page:",
@@ -1511,7 +1575,8 @@
                         "preview": "Preview",
                         "reconvert": "Reconvert",
                         "drm": "View DRM Details",
-                        "link": "Link"
+                        "link": "Link",
+                        "match": "Drop Folder"
                     },
                     "drm": {
                         "header": "DRM Details",
@@ -1561,9 +1626,9 @@
                     "downloadFailure": "Flavor download failed.",
                     "importFailure": "Flavor import failed.",
                     "replaceVideo": {
+                        "replaceVideo": "Replace Video",
                         "noFlavors": "No Flavors",
                         "addVideo": "Add Video",
-                        "replaceVideo": "Replace Video",
                         "addAudio": "Add Audio",
                         "replaceAudio": "Replace Audio",
                         "uploadFile": "Upload file",
@@ -1599,6 +1664,20 @@
                         "approveReplacementTooltip": "All current flavors will be replaced upon replacement approval. Any time based metadata may be effected as well.",
                         "currentFlavors": "Current Flavors",
                         "replacementFlavors": "Replacement Flavors",
+                        "setReferenceId": "Set Reference ID",
+                        "addFilesBtn": "Add File/s",
+                        "referenceId": "Reference ID:",
+                        "selectDropFolder": "Select Drop Folder",
+                        "searchFolder": "Search Folder",
+                        "mediaPackageName": "Media Package Name",
+                        "mediaName": "Media Name",
+                        "createdOn": "Created On",
+                        "waiting": "Waiting",
+                        "error": "* Error *",
+                        "setReferenceIdWarning": "The automatic ingestion action is now in process, please check again in a few minutes.",
+                        "addFilesWarning": "Adding this file manually will interrupt the automatic ingestion process and should be done only as a fallback option. Do you want to continue?",
+                        "noDropFolders": "No drop folders available",
+                        "noDropFoldersWarning": "Your account configuration does not support automatic matching of media packages from drop folders.",
                         "storageProfile": {
                             "name": "Name:",
                             "id": "ID:",
@@ -1626,6 +1705,7 @@
                 "captions": {
                     "captions": "Captions",
                     "add": "Add Caption",
+                    "request": "Request Captions",
                     "label": "Label",
                     "type": "File Type",
                     "language": "Language",
@@ -2267,8 +2347,8 @@
                 "personalDetails": "Personal Details",
                 "accountSpecificDetails": "Account Specific Details",
                 "required": "This field is required.",
-                "emailFormat": "This Email format is not valid",
-                "publisherIdFormat": "This Publisher Id format is not valid",
+                "emailFormat": "Invalid email format",
+                "publisherIdFormat": "Invalid publisher ID format",
                 "userAlreadyExist": "{{0}} is already listed in the system and is associated with another KMC account. \nDo you want to associate this user with this account as well?",
                 "alreadyExist": "User already exists",
                 "alreadyExistError": "Login Email {{0}} is already listed in the system as an authorized user in your account.",
@@ -2294,6 +2374,7 @@
         "roleUpdatedMessage": "Changes will take effect immediately.\nBrowser page refresh should be recommended to the existing users associated with this role",
         "errors": {
                     "required": "This field is required.",
+                    "unsafeValue": "Potential Unsafe HTML tags",
                     "validationError": "The form contains some invalid information. Please review the sections marked as invalid."
                 },
                 "permissionsTable": {
@@ -2387,7 +2468,7 @@
                     "entries": "Entries",
                     "categories": "Categories",
                     "schemaNameRequired": "Name is required",
-                    "schemaNameMaxLength": "Name must be less then {{0}} characters long"
+                    "schemaNameMaxLength": "Name must be less than {{0}} characters long"
                 },
                 "table": {
                     "disabledLabel": "Data Schema was manually set up by Kaltura Professional Services. Please reach out to Account manager for updates / changes.",
@@ -2551,7 +2632,7 @@
                 "strongPassword": "Use a strong password that you are not using elsewhere.",
                 "currentPassword": "Current Password",
                 "newPassword": "New password",
-                "reTypeNewPassword": "Re-type the new password.",
+                "reTypeNewPassword": "Re-type the new password",
                 "errors": {
                     "required": "This field is required.",
                     "doNotMuchPasswords": "Password fields do not match.",
@@ -2795,7 +2876,11 @@
         },
         "analytics": {
             "comingSoon": "Coming soon! Analytics for all media types.",
-            "releaseSupports": "This release supports analytics for “Live” entries only. For all other media, please login to the legacy KMC to view and create analytics and reports. Analytics for all media should be available soon"
+           "releaseSupports": "This release supports analytics for “Live” entries only. For all other media, please <a href=\"{{0}}\" target=\"_blank\">login to the legacy KMC</a> to view and create analytics and reports. Analytics for all media should be available soon"
+        },
+        "reach": {
+            "captionRequests": "Caption Requests",
+            "addServiceRule": "Add Service Rule"
         }
     },
     "entriesShared": {

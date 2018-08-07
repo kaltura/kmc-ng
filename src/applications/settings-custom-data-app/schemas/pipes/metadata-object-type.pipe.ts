@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KalturaMetadataObjectType } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 @Pipe({ name: 'kMetadataObjectType' })
 export class MetadataObjectTypePipe implements PipeTransform {

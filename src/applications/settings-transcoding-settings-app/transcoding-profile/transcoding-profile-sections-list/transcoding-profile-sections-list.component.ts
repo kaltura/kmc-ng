@@ -3,7 +3,7 @@ import { StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { SectionWidgetItem, TranscodingProfileSectionsListWidget } from './transcoding-profile-sections-list-widget.service';
 import { TranscodingProfileStore } from '../transcoding-profile-store.service';
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kTranscodingProfileSectionsList',
@@ -27,7 +27,7 @@ export class TranscodingProfileSectionsListComponent implements OnInit, OnDestro
     this._widgetService.attachForm();
 
     this._widgetService.sections$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         sections => {
           this._loading = false;

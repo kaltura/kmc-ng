@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
 import { KMCPermissionsService, KMCPermissions } from '../../kmc-permissions';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { DetailsViewMetadata, KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import { KalturaExternalMediaEntry } from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
-import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaMediaType } from 'kaltura-ngx-client';
+import { KalturaExternalMediaEntry } from 'kaltura-ngx-client';
+import { BaseEntryGetAction } from 'kaltura-ngx-client';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { Title } from '@angular/platform-browser';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum ContentEntryViewSections {
     Metadata = 'Metadata',
@@ -304,7 +305,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
 
         this._kalturaClient
             .request(baseEntryAction)
-            .tag('block-shell')
+            .pipe(tag('block-shell'))
             .map(response => {
                 if (response instanceof KalturaMediaEntry) {
                     return response;

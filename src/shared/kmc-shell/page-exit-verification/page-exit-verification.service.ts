@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { FriendlyHashId } from '@kaltura-ng/kaltura-common';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
 export class PageExitVerificationService implements OnDestroy{

@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, HostListener } from '@angular/core';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({

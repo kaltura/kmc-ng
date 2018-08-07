@@ -7,23 +7,23 @@ import { AreaBlockerModule, KalturaUIModule } from '@kaltura-ng/kaltura-ui';
 import { SchemasComponents } from './schemas/schemas-components-list';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, DropdownModule, InputSwitchModule, InputTextModule, MenuModule,
+  ButtonModule, CalendarModule, CheckboxModule, DropdownModule, InputSwitchModule, InputTextModule, MenuModule,
   PaginatorModule,
   RadioButtonModule, SharedModule, TieredMenuModule
 } from 'primeng/primeng';
 import { EntriesModule } from 'app-shared/content-shared/entries/entries.module.ts';
-import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
-import { TooltipModule } from '@kaltura-ng/kaltura-ui/tooltip/k-tooltip.module';
-import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.module';
-import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui/kaltura-primeng-ui.module';
-import { StickyModule } from '@kaltura-ng/kaltura-ui/sticky/sticky.module';
+import {LocalizationModule} from '@kaltura-ng/mc-shared';
+import { TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
+import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { StickyModule } from '@kaltura-ng/kaltura-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   imports: [
     CommonModule,
     AreaBlockerModule,
-    DataTableModule,
     LocalizationModule,
     KalturaUIModule,
     PaginatorModule,
@@ -45,7 +45,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     EntriesModule,
     DropdownModule,
     InputSwitchModule,
-    KMCPermissionsModule
+    KMCPermissionsModule,
+      TableModule
   ],
   declarations: [
     SettingsCustomDataComponent,

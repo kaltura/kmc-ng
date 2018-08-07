@@ -1,24 +1,24 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import {KalturaClient} from 'kaltura-ngx-client';
-import {KalturaMediaEntryFilter} from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import {KalturaClipAttributes} from 'kaltura-ngx-client/api/types/KalturaClipAttributes';
-import {KalturaOperationAttributes} from 'kaltura-ngx-client/api/types/KalturaOperationAttributes';
-import {BaseEntryListAction} from 'kaltura-ngx-client/api/types/BaseEntryListAction';
+import {KalturaMediaEntryFilter} from 'kaltura-ngx-client';
+import {KalturaFilterPager} from 'kaltura-ngx-client';
+import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
+import {KalturaResponseProfileType} from 'kaltura-ngx-client';
+import {KalturaMediaEntry} from 'kaltura-ngx-client';
+import {KalturaClipAttributes} from 'kaltura-ngx-client';
+import {KalturaOperationAttributes} from 'kaltura-ngx-client';
+import {BaseEntryListAction} from 'kaltura-ngx-client';
 import {KalturaUtils} from '@kaltura-ng/kaltura-common';
-import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 
 
 import {EntryStore} from '../entry-store.service';
 import {BrowserService} from "app-shared/kmc-shell/providers/browser.service";
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 import {EntryWidget} from '../entry-widget';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
@@ -37,7 +37,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
   private _clips = new BehaviorSubject<ClipsData>({items: null, totalItems: 0});
   public entries$ = this._clips.asObservable();
   public sortBy: string = 'createdAt';
-  public sortAsc: boolean = false;
+  public sortOrder = 1;
 
   private _pageSize: number = 50;
   public set pageSize(value: number) {
@@ -61,7 +61,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
     super(ContentEntryViewSections.Clips, logger);
 
       this._appEvents.event(UpdateClipsEvent)
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(() => {
               this.updateClips();
               this._store.setRefreshEntriesListUponLeave();
@@ -74,7 +74,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
    */
   protected onReset(): void {
     this.sortBy = 'createdAt';
-    this.sortAsc = false;
+    this.sortOrder = 1;
     this.pageIndex = 0;
 
     const defaultPageSize = this.browserService.getFromLocalStorage("clipsPageSize");
@@ -89,6 +89,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
    * Updates list of clips
    */
   public updateClips(): void {
+
     if (this.data) {
       this._getEntryClips('reload').subscribe(() => {
         // do nothing
@@ -137,7 +138,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
         filter: new KalturaMediaEntryFilter(
           {
             rootEntryIdEqual: entry.id,
-            orderBy: `${this.sortAsc ? '+' : '-'}${this.sortBy}`
+            orderBy: `${this.sortOrder === 1 ? '+' : '-'}${this.sortBy}`
           }
         ),
         pager: new KalturaFilterPager(
@@ -152,7 +153,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
           fields: 'id,name,plays,createdAt,duration,status,offset,operationAttributes,moderationStatus'
         })
       }))
-        .cancelOnDestroy(this, this.widgetReset$)
+        .pipe(cancelOnDestroy(this, this.widgetReset$))
         .subscribe(
           response => {
             super._hideLoader();

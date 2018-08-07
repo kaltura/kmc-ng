@@ -2,7 +2,7 @@ import {
     KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaRequest, KalturaRequestBase
 } from 'kaltura-ngx-client';
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ServerPolls } from '@kaltura-ng/kaltura-common';
 import { Subject } from 'rxjs/Subject';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';

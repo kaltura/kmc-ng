@@ -1,14 +1,15 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { DestinationComponentBase, FeedFormMode } from '../../feed-details.component';
-import { KalturaITunesSyndicationFeed } from 'kaltura-ngx-client/api/types/KalturaITunesSyndicationFeed';
+import { KalturaITunesSyndicationFeed } from 'kaltura-ngx-client';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { KalturaValidators } from '@kaltura-ng/kaltura-ui/validators/validators';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
-import { KalturaITunesSyndicationFeedAdultValues } from 'kaltura-ngx-client/api/types/KalturaITunesSyndicationFeedAdultValues';
+import { KalturaValidators } from '@kaltura-ng/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaFlavorParams } from 'kaltura-ngx-client';
+import { KalturaITunesSyndicationFeedAdultValues } from 'kaltura-ngx-client';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { LanguageOptionsService } from 'app-shared/kmc-shared/language-options';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kItunesDestinationForm',
@@ -101,6 +102,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
   public _addToDefaultTranscodingProfileField: AbstractControl;
   public _landingPageField: AbstractControl;
   public _feedAuthorField: AbstractControl;
+  public _enforceFeedAuthorField: AbstractControl;
   public _websiteField: AbstractControl;
   public _feedDescriptionField: AbstractControl;
   public _categoriesField: AbstractControl;
@@ -166,7 +168,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
       });
 
       this._form.valueChanges
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe(
           () => {
             this.onFormStateChanged.emit({
@@ -215,6 +217,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
         addToDefaultTranscodingProfile: this.feed.addToDefaultConversionProfile,
         landingPage: this.feed.landingPage,
         feedAuthor: this.feed.feedAuthor,
+        enforceFeedAuthor: this.feed.enforceFeedAuthor || false,
         website: this.feed.feedLandingPage,
         feedDescription: this.feed.feedDescription,
         categories: this.feed.categories.split(','),
@@ -239,6 +242,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
       addToDefaultTranscodingProfile: '',
       landingPage: ['', [KalturaValidators.urlHttp, Validators.required]],
       feedAuthor: '',
+        enforceFeedAuthor: false,
       website: ['', KalturaValidators.urlHttp],
       feedDescription: '',
       categories: ['', Validators.required],
@@ -253,6 +257,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
     this._addToDefaultTranscodingProfileField = this._form.controls['addToDefaultTranscodingProfile'];
     this._landingPageField = this._form.controls['landingPage'];
     this._feedAuthorField = this._form.controls['feedAuthor'];
+    this._enforceFeedAuthorField = this._form.controls['enforceFeedAuthor'];
     this._websiteField = this._form.controls['website'];
     this._feedDescriptionField = this._form.controls['feedDescription'];
     this._categoriesField = this._form.controls['categories'];
@@ -275,6 +280,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
       addToDefaultConversionProfile: formData.addToDefaultTranscodingProfile,
       landingPage: formData.landingPage,
       feedAuthor: formData.feedAuthor,
+        enforceFeedAuthor: formData.enforceFeedAuthor,
       feedLandingPage: formData.website,
       feedDescription: formData.feedDescription,
       categories: formData.categories.join(','),

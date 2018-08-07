@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SettingsMyUserSettingsService } from './settings-my-user-settings.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
-import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
-import { UserUpdateLoginDataActionArgs } from 'kaltura-ngx-client/api/types/UserUpdateLoginDataAction';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { KalturaUser } from 'kaltura-ngx-client';
+import { KalturaUserRole } from 'kaltura-ngx-client';
+import { UserUpdateLoginDataActionArgs } from 'kaltura-ngx-client';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { SettingsMyUserSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
 
@@ -65,7 +65,7 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
     this._areaBlockerMessage = null;
     this._myUserSettingsStore
       .getUserData()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         ({ user, role }) => {
           this._logger.info(
@@ -108,8 +108,8 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
     this._updateBlockerMessage = null;
     this._myUserSettingsStore
       .updateLoginData(userData)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
       .subscribe(
         () => {
           this._logger.info(`handle successful update action`);

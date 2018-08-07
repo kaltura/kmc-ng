@@ -1,9 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification/page-exit-verification.service';
 import { NewEntryUploadFile } from 'app-shared/kmc-shell/new-entry-upload';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class UploadPageExitVerificationService implements OnDestroy {
@@ -34,7 +35,7 @@ export class UploadPageExitVerificationService implements OnDestroy {
 
   public init(): void {
     this._uploadManagement.onTrackedFileChanged$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .filter(({ data }) => data instanceof NewEntryUploadFile || data instanceof NewEntryFlavourFile)
       .filter(({ status, progress }) => !(status === TrackedFileStatuses.uploading && progress > 0))
       .subscribe(({ id, status }) => {

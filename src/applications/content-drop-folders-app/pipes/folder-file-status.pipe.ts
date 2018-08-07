@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { KalturaDropFolderFileStatus } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileStatus';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KalturaDropFolderFileStatus } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 @Pipe({ name: 'kFolderFileStatus' })
 export class FolderFileStatusPipe implements PipeTransform {

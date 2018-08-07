@@ -1,12 +1,12 @@
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {KalturaCategory} from 'kaltura-ngx-client';
 import {AreaBlockerMessage, StickyComponent} from '@kaltura-ng/kaltura-ui';
 import {CategoriesFilters, CategoriesService, SortDirection} from '../categories.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {CategoriesUtilsService} from '../../categories-utils.service';
-import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui';
 
 import {CategoriesModes} from "app-shared/content-shared/categories/categories-mode-type";
 import {CategoriesRefineFiltersService, RefineGroup} from '../categories-refine-filters.service';
@@ -17,11 +17,16 @@ import {
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ViewCategoryEntriesEvent } from 'app-shared/kmc-shared/events/view-category-entries/view-category-entries.event';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import {
+    ContentCategoryViewSections,
+    ContentCategoryViewService,
+    ReachAppViewService, ReachPages
+} from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
 import { async } from 'rxjs/scheduler/async';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContentCategoriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kCategoriesList',
@@ -76,13 +81,14 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 private _contentCategoryView: ContentCategoryViewService,
                 private _contentCategoriesMainViewService: ContentCategoriesMainViewService,
                 private _appEvents: AppEventsService,
+                private _reachAppViewService: ReachAppViewService,
                 private _logger: KalturaLogger) {
     }
 
     ngOnInit() {
         if (this._contentCategoriesMainViewService.viewEntered()) {
             this._categoriesStatusMonitorService.status$
-                .cancelOnDestroy(this)
+                .pipe(cancelOnDestroy(this))
                 .subscribe((status: CategoriesStatus) => {
                     if (this._categoriesLocked && status.lock === false){
                         // categories were locked and now open - reload categories to reflect changes
@@ -107,13 +113,13 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
 
         this._isBusy = true;
         this._refineFiltersService.getFilters()
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .first() // only handle it once, no need to handle changes over time
             .subscribe(
                 groups => {
 
                     this._categoriesService.categories.data$
-                        .cancelOnDestroy(this)
+                        .pipe(cancelOnDestroy(this))
                         .subscribe(response => {
                             this._categoriesTotalCount = response.totalCount;
                         });
@@ -146,7 +152,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     private _registerToDataChanges(): void {
         this._categoriesService.categories.state$
             .observeOn(async)
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(
                 result => {
                   this._clearSelection();
@@ -178,7 +184,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     ngAfterViewInit() {
 
         this.addNewCategory.state$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(event => {
                 if (event.state === PopupWidgetStates.BeforeClose) {
                     this._linkedEntries = [];
@@ -269,7 +275,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
 
     private _registerToFilterStoreDataChanges(): void {
         this._categoriesService.filtersChange$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(({changes}) => {
                 this._updateComponentState(changes);
                 this._clearSelection();
@@ -347,6 +353,14 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 this._logger.debug(`publish 'ViewCategoryEntriesEvent' event`);
               this._appEvents.publish(new ViewCategoryEntriesEvent(category.id));
               break;
+            case 'addServiceRule':
+                this._logger.info(`handle add service rule action by user`, { categoryId: category.id });
+                this._logger.debug(`publish 'CaptionRequestEvent' event`);
+                this._reachAppViewService.open({
+                    category,
+                    page: ReachPages.category
+                });
+                break;
             default:
                 break;
         }
@@ -355,14 +369,14 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     private deleteCategory(category: KalturaCategory): void {
         this._logger.info(`handle delete category action by user`);
         this._categoriesUtilsService.confirmDelete(category)
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe(result => {
                     if (result.confirmed) {
                         this._logger.info(`handle delete category request`);
                         this._blockerMessage = null;
                         this._categoriesService.deleteCategory(category.id)
-                            .cancelOnDestroy(this)
-                            .tag('block-shell')
+                            .pipe(cancelOnDestroy(this))
+                            .pipe(tag('block-shell'))
                             .subscribe(
                                 () => {
                                     this._logger.info(`handle successful delete category request`);

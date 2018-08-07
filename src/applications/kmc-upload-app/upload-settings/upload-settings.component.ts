@@ -1,23 +1,34 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaMediaType } from 'kaltura-ngx-client';
 import { NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { TranscodingProfileManagement } from 'app-shared/kmc-shared/transcoding-profile-management';
 import { globalConfig } from 'config/global';
+import { urlRegex } from '@kaltura-ng/kaltura-ui';
+import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entries-list-event';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { NewEntryCreateFromUrlService } from 'app-shared/kmc-shell/new-entry-create-from-url';
+import { AppEventsService } from 'app-shared/kmc-shared';
+
+export enum KMCFileCreationType {
+    upload = 'upload',
+    import = 'import'
+}
 
 export interface UploadSettingsFile {
-  file: File;
-  mediaType: KalturaMediaType;
-  name: string;
+    url?: string;
+  file?: File;
+  mediaType?: KalturaMediaType;
+  name?: string;
   isEditing?: boolean;
   hasError?: boolean;
   errorToken?: string;
-  size: number;
+  size?: number;
 }
 
 
@@ -26,12 +37,14 @@ export interface UploadSettingsFile {
   templateUrl: './upload-settings.component.html',
   styleUrls: ['./upload-settings.component.scss']
 })
-export class UploadSettingsComponent implements OnInit, AfterViewInit {
-
-
+export class UploadSettingsComponent implements OnInit, AfterViewInit, OnDestroy {
+    @Input() creationType = KMCFileCreationType.upload;
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild('fileDialog') _fileDialog: FileDialogComponent;
 
+    public _creationTypes = KMCFileCreationType;
+    public _uploadBtnLabel: string;
+    public _title: string;
   public _tableScrollableWrapper: Element;
   public _transcodingProfiles: { value: number, label: string }[];
   public _profileForm: FormGroup;
@@ -60,9 +73,10 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     .jpg,.jpeg,.gif,.png
   `;
 
-
   constructor(private _newEntryUploadService: NewEntryUploadService,
+              private _newEntryCreateFromUrlService: NewEntryCreateFromUrlService,
               private _formBuilder: FormBuilder,
+              private _appEvents: AppEventsService,
               private _transcodingProfileManagement: TranscodingProfileManagement,
               private _uploadManagement: UploadManagement,
               private _appLocalization: AppLocalization) {
@@ -75,13 +89,23 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this._fileDialog.open();
+      this._addFile();
 
-    this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-datatable-scrollable-body');
+    this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-table-scrollable-body');
+  }
+
+  ngOnDestroy() {
+
   }
 
   ngOnInit() {
     this._loadTranscodingProfiles();
+      this._uploadBtnLabel = this.creationType === KMCFileCreationType.import
+          ? this._appLocalization.get('applications.upload.uploadSettings.link')
+          : this._appLocalization.get('applications.upload.uploadSettings.upload');
+      this._title = this.creationType === KMCFileCreationType.import
+          ? this._appLocalization.get('applications.upload.uploadSettings.uploadFromUrl')
+          : this._appLocalization.get('applications.upload.uploadSettings.uploadSettings');
   }
 
   public _handleSelectedFiles(files: FileList) {
@@ -90,7 +114,8 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     const newItems = Array.from(files).map(file => {
       const ext = this._getFileExtension(file.name);
       const mediaType = this._getMediaTypeFromExtension(ext);
-      const { name, size } = file;
+      const name = file.name.replace(/\.[^.]*$/, '');
+      const { size } = file;
       return ({ file, mediaType, name, size, isEditing });
     });
 
@@ -176,6 +201,57 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
         });
   }
 
+  private _uploadFiles(transcodingProfileId: number): void {
+      if (this._files.some(({ isEditing }) => isEditing)) {
+          return;
+      }
+
+      if (this._validateUploadFiles(this._files)) {
+          this.parentPopupWidget.close();
+          const uploadFileDataList = this._files.map(fileData => ({
+              file: fileData.file,
+              mediaType: fileData.mediaType,
+              entryName: fileData.name
+          }));
+
+          this._newEntryUploadService.upload(uploadFileDataList, transcodingProfileId);
+      }
+  }
+
+    private _importFiles(transcodingProfileId: number): void {
+        const isValid = this._validateImportFiles(this._files);
+        if (!isValid) {
+            return;
+        }
+
+        const importFileDataList = this._files.map(file => ({ fileUrl: file.url }));
+
+        this._newEntryCreateFromUrlService.import(importFileDataList, transcodingProfileId)
+            .pipe(
+                cancelOnDestroy(this),
+                tag('block-shell')
+            )
+            .subscribe(
+                () => {
+                    this._appEvents.publish(new UpdateEntriesListEvent());
+                    this.parentPopupWidget.close();
+                },
+                error => {
+                    this._transcodingProfileError = new AreaBlockerMessage({
+                        message: error.message,
+                        buttons: [{
+                            label: this._appLocalization.get('app.common.ok'),
+                            action: () => {
+                                this._transcodingProfileError = null;
+                                this._appEvents.publish(new UpdateEntriesListEvent());
+                                this.parentPopupWidget.close();
+                            }
+                        }]
+                    });
+                }
+            );
+    }
+
   public _removeFile(file: UploadSettingsFile): void {
     const fileIndex = this._files.indexOf(file);
     if (fileIndex !== -1) {
@@ -186,41 +262,48 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   }
 
   public _upload(): void {
+      const transcodingProfileId = Number(this._profileForm.value.transcodingProfile);
+      if (Number.isNaN(transcodingProfileId)) {
+          this._transcodingProfileError = new AreaBlockerMessage({
+              message: this._appLocalization.get('applications.upload.validation.missingTranscodingProfile'),
+              buttons: [{
+                  label: this._appLocalization.get('app.common.ok'),
+                  action: () => this._transcodingProfileError = null
+              }]
+          });
+          return;
+      }
 
-    if (this._files.some(({ isEditing }) => isEditing)) {
-      return;
-    }
-
-    const trancodingProfileId = this._profileForm.value.transcodingProfile;
-
-    if (trancodingProfileId === null || typeof trancodingProfileId === 'undefined' || trancodingProfileId.length === 0) {
-      this._transcodingProfileError = new AreaBlockerMessage({
-        message: this._appLocalization.get('applications.upload.validation.missingTranscodingProfile'),
-        buttons: [
-          {
-            label: this._appLocalization.get('app.common.ok'),
-            action: () => {
-              this._transcodingProfileError = null;
-            }
-          }
-        ]
-      });
-      return;
-    }
-
-    if (this._validateFiles(this._files)) {
-      this.parentPopupWidget.close();
-      const uploadFileDataList = this._files.map(fileData => ({
-        file: fileData.file,
-        mediaType: fileData.mediaType,
-        entryName: fileData.name
-      }));
-
-      this._newEntryUploadService.upload(uploadFileDataList, Number(trancodingProfileId));
-    }
+      if (this.creationType === KMCFileCreationType.import) {
+          this._importFiles(transcodingProfileId);
+      } else {
+          this._uploadFiles(transcodingProfileId);
+      }
   }
 
-  private _validateFiles(files: UploadSettingsFile[]): boolean {
+    private _validateImportFiles(files: UploadSettingsFile[]): boolean {
+        let isValid = true;
+
+        files.forEach((file) => {
+            file.errorToken = null;
+            file.hasError = false;
+
+            const url = file.url ? file.url.trim() : '';
+            if (!url) {
+                isValid = false;
+                file.hasError = true;
+                file.errorToken = 'applications.upload.validation.emptyUrl';
+            } else if (!urlRegex.test(url)) {
+                isValid = false;
+                file.hasError = true;
+                file.errorToken = 'applications.upload.validation.invalidUrl';
+            }
+        });
+
+        return isValid;
+    }
+
+  private _validateUploadFiles(files: UploadSettingsFile[]): boolean {
 
     let result = true;
     const allowedTypes = [KalturaMediaType.audio, KalturaMediaType.video, KalturaMediaType.image];
@@ -268,4 +351,14 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
       file.errorToken = 'applications.upload.validation.fileNameRequired';
     }
   }
+
+    public _addFile(): void {
+      if (this.creationType === KMCFileCreationType.import) {
+          setTimeout(() => {
+              this._files = [...this._files, { url: '' }];
+          }, 0);
+      } else {
+          this._fileDialog.open();
+      }
+    }
 }

@@ -2,15 +2,14 @@ import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, EventEmitte
 import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaClient } from 'kaltura-ngx-client';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaMediaEntry } from "kaltura-ngx-client/api/types/KalturaMediaEntry";
-import { BulkRemoveCategoriesService } from '../../services/';
-import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
-import { FlavorParamsListAction } from 'kaltura-ngx-client/api/types/FlavorParamsListAction';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaFlavorParams } from 'kaltura-ngx-client';
+import { FlavorParamsListAction } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
 
 import {SelectItem} from 'primeng/primeng';
 
@@ -37,7 +36,9 @@ export class BulkDownload implements OnInit, OnDestroy, AfterViewInit {
 	private _downloadLabel = {};
 	private _selectionChanged = false;
 
-	constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService, private _bulkRemoveCategoriesService: BulkRemoveCategoriesService) {
+	constructor(private _kalturaServerClient: KalturaClient,
+                private _appLocalization: AppLocalization,
+                private _browserService: BrowserService) {
 	}
 
 	ngOnInit() {

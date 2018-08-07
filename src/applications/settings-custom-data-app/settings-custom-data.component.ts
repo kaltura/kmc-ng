@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { SchemasStore } from './schemas/schemas-store/schemas-store.service';
-import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kmc-settings-custom-data',

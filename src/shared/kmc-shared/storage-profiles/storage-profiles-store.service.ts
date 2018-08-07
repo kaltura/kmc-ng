@@ -1,12 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { PartnerProfileStore } from '../partner-profile';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { KalturaStorageProfileStatus } from 'kaltura-ngx-client/api/types/KalturaStorageProfileStatus';
-import { KalturaStorageProfileFilter } from 'kaltura-ngx-client/api/types/KalturaStorageProfileFilter';
-import { StorageProfileListAction } from 'kaltura-ngx-client/api/types/StorageProfileListAction';
-import { KalturaStorageProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaStorageProfileListResponse';
-import { KalturaStorageProfile } from 'kaltura-ngx-client/api/types/KalturaStorageProfile';
+import { KalturaStorageProfileStatus } from 'kaltura-ngx-client';
+import { KalturaStorageProfileFilter } from 'kaltura-ngx-client';
+import { StorageProfileListAction } from 'kaltura-ngx-client';
+import { KalturaStorageProfileListResponse } from 'kaltura-ngx-client';
+import { KalturaStorageProfile } from 'kaltura-ngx-client';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class StorageProfilesStore extends PartnerProfileStore implements OnDestroy {
@@ -21,7 +22,7 @@ export class StorageProfilesStore extends PartnerProfileStore implements OnDestr
     if (!this._getStorageProfiles$) {
       // execute the request
       this._getStorageProfiles$ = this._buildGetRequest()
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .map(response => ({ items: response ? response.objects : [] }))
         .catch(
           error => {

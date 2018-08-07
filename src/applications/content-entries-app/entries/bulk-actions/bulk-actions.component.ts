@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {MenuItem} from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {
   CategoriesStatus,
@@ -20,17 +20,17 @@ import {
   BulkSchedulingService,
   SchedulingParams
 } from './services';
-import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaExternalMediaEntry, KalturaMediaEntry } from 'kaltura-ngx-client';
 import {BulkActionBaseService} from './services/bulk-action-base.service';
 import {subApplicationsConfig} from 'config/sub-applications';
-import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
-import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import {KalturaAccessControl} from 'kaltura-ngx-client/api/types/KalturaAccessControl';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {AppEventsService} from 'app-shared/kmc-shared';
+import {KalturaUser} from 'kaltura-ngx-client';
+import {KalturaMediaType} from 'kaltura-ngx-client';
+import {KalturaAccessControl} from 'kaltura-ngx-client';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { AppEventsService } from 'app-shared/kmc-shared';
 import {CreateNewPlaylistEvent} from 'app-shared/kmc-shared/events/playlist-creation';
-import {KalturaPlaylistType} from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
-import {KalturaEntryStatus} from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import {KalturaPlaylistType} from 'kaltura-ngx-client';
+import {KalturaEntryStatus} from 'kaltura-ngx-client';
 import {CategoryData} from 'app-shared/content-shared/categories/categories-search.service';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 import {BulkAddPublishersService} from './services/bulk-add-publishers.service';
@@ -38,7 +38,8 @@ import {BulkAddEditorsService} from './services/bulk-add-editors.service';
 import {BulkRemoveEditorsService} from './services/bulk-remove-editors.service';
 import {BulkRemovePublishersService} from './services/bulk-remove-publishers.service';
 import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
-import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentPlaylistViewSections, ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
 @Component({
   selector: 'kBulkActions',
@@ -76,8 +77,10 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   private _categoriesLocked = false;
 
   @Input() selectedEntries: KalturaMediaEntry[];
+    @Input() blockerMessage: AreaBlockerMessage;
 
   @Output() onBulkChange = new EventEmitter<{ reload: boolean }>();
+    @Output() blockerMessageChange = new EventEmitter<AreaBlockerMessage>();
 
   @ViewChild('bulkActionsPopup') public bulkActionsPopup: PopupWidgetComponent;
 
@@ -98,13 +101,14 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     private _appEvents: AppEventsService,
               public _contentNewCategoryView: ContentNewCategoryViewService,
               private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
-              private _permissionsService: KMCPermissionsService) {
+              private _permissionsService: KMCPermissionsService,
+              private _reachAppViewService: ReachAppViewService) {
 
   }
 
   ngOnInit() {
     this._categoriesStatusMonitorService.status$
-	    .cancelOnDestroy(this)
+	    .pipe(cancelOnDestroy(this))
 	    .subscribe((status: CategoriesStatus) => {
           this._categoriesLocked = status.lock;
         });
@@ -137,19 +141,34 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     const canCreate = this.selectedEntries.length !== invalidEntries.length;
 
     if (canCreate) {
-      const invalidEntriesNames = invalidEntries.length < 11 ? invalidEntries.map(entry => `${entry.name}`).join('\n') : '';
-      this._browserService.confirm({
-        header: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarning'),
-        message: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarningMsg', {
-          0: invalidEntriesNames
-        }),
-        accept: () => {
-          creationEvent.data.playlistContent = this.selectedEntries
-            .filter(({ status }) => this._allowedStatusesForPlaylist.indexOf(status.toString()) !== -1) // include only valid
-            .map(({ id }) => id).join(',');
-          this._appEvents.publish(creationEvent);
-        }
-      });
+        const message = invalidEntries.length < 6
+            ? this._appLocalization.get(
+                'applications.content.bulkActions.createPlaylistWarningMsg',
+                [invalidEntries.map(entry => `${entry.name}`).join('\n')]
+            )
+            : this._appLocalization.get('applications.content.bulkActions.createPlaylistWarningMsgShort', [invalidEntries.length]);
+
+        this.blockerMessageChange.emit(new AreaBlockerMessage({
+            title: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarning'),
+            message: message,
+            buttons: [
+                {
+                    label: this._appLocalization.get('app.common.continue'),
+                    action: () => {
+                        creationEvent.data.playlistContent = this.selectedEntries
+                            .filter(({ status }) => this._allowedStatusesForPlaylist.indexOf(status.toString()) !== -1) // include only valid
+                            .map(({ id }) => id).join(',');
+                        this._appEvents.publish(creationEvent);
+                    }
+                },
+                {
+                    label: this._appLocalization.get('app.common.cancel'),
+                    action: () => {
+                        this.blockerMessageChange.emit(null);
+                    }
+                }
+            ]
+        }));
     } else {
       this._browserService.alert({
         header: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarning'),
@@ -287,7 +306,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
     const execute = () => {
       service.execute(this.selectedEntries, data)
-        .tag('block-shell')
+        .pipe(tag('block-shell'))
         .subscribe(
         result => {if (callback) {
             callback(result);
@@ -431,6 +450,11 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               }]
           },
           {
+              id: 'captionRequest',
+              label: this._appLocalization.get('applications.content.bulkActions.captionRequest'),
+              command: () => this._captionRequest(),
+          },
+          {
               id: 'setAccessControl',
               label: this._appLocalization.get('applications.content.bulkActions.setAccessControl'),
               command: (event) => {
@@ -446,6 +470,67 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           }
       ];
 
+      this._permissionsService.filterList(
+          <{ id: string }[]>result,
+          {
+              'captionRequest': this._reachAppViewService.isAvailable({ page: ReachPages.entries, entries: this.selectedEntries })
+          }
+      );
+
       return result;
+  }
+
+  public _captionRequest(): void {
+      if (!this._reachAppViewService.isAvailable({ page: ReachPages.entries, entries: this.selectedEntries })) {
+          return;
+      }
+
+      const invalidEntries = this.selectedEntries
+          .filter(entry => !this._reachAppViewService.isRelevantEntry(entry));
+
+      if (!invalidEntries.length) {
+          this._reachAppViewService.open({ entries: this.selectedEntries, page: ReachPages.entries });
+          return;
+      }
+
+      if (invalidEntries.length === this.selectedEntries.length) {
+          this.blockerMessageChange.emit(new AreaBlockerMessage({
+              title: this._appLocalization.get('app.common.attention'),
+              message: this._appLocalization.get('applications.content.bulkActions.captionRequestAllInvalid'),
+              buttons: [{
+                  label: this._appLocalization.get('app.common.ok'),
+                  action: () => {
+                      this.blockerMessageChange.emit(null);
+                  }
+              }]
+          }));
+          return;
+      }
+
+      const validEntries = this.selectedEntries
+          .filter(entry => this._reachAppViewService.isRelevantEntry(entry));
+
+      this.blockerMessageChange.emit(new AreaBlockerMessage({
+          title: this._appLocalization.get('app.common.attention'),
+          message: this._appLocalization.get('applications.content.bulkActions.captionRequestSomeInvalid'),
+          buttons: [
+              {
+                  label: this._appLocalization.get('app.common.continue'),
+                  action: () => {
+                      this._reachAppViewService.open({
+                          entries: validEntries,
+                          page: ReachPages.entries
+                      });
+                      this.blockerMessageChange.emit(null);
+                  }
+              },
+              {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                      this.blockerMessageChange.emit(null);
+                  }
+              }
+          ]
+      }));
   }
 }

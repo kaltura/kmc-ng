@@ -1,15 +1,16 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {CategoryEntitlementsWidget} from './category-entitlements-widget.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
-import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
-import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
-import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
-import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client';
+import {KalturaUser} from 'kaltura-ngx-client';
+import {KalturaContributionPolicyType} from 'kaltura-ngx-client';
+import {KalturaAppearInListType} from 'kaltura-ngx-client';
+import {KalturaPrivacyType} from 'kaltura-ngx-client';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kCategoryEntitlements',
@@ -35,7 +36,7 @@ export class CategoryEntitlementsComponent implements OnInit, AfterViewInit, OnD
     this._widgetService.attachForm();
 
     this._widgetService.data$
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe(data =>
         {
             this._membersCount = { loading: !data, value: data ? data.membersCount : 0, hasError: false };
@@ -58,14 +59,14 @@ export class CategoryEntitlementsComponent implements OnInit, AfterViewInit, OnD
 
   ngAfterViewInit() {
       this.manageUsersPopup.state$
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .skip(1)
           .subscribe(data => {
                   if (data.state === PopupWidgetStates.Close) {
                       this._membersCount.loading = true;
                       this._membersCount.hasError = false;
                       this._widgetService.fetchUpdatedMembersCount()
-                          .cancelOnDestroy(this)
+                          .pipe(cancelOnDestroy(this))
                           .subscribe(
                               value =>
                               {

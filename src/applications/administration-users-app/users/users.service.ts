@@ -1,30 +1,30 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import { Observable } from 'rxjs/Observable';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { Observable } from 'rxjs';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { IsUserExistsStatuses } from './user-exists-statuses';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
-import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { KalturaUser } from 'kaltura-ngx-client';
+import { KalturaUserRole } from 'kaltura-ngx-client';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
-import { UserRoleListAction } from 'kaltura-ngx-client/api/types/UserRoleListAction';
-import { KalturaUserRoleFilter } from 'kaltura-ngx-client/api/types/KalturaUserRoleFilter';
-import { KalturaUserRoleStatus } from 'kaltura-ngx-client/api/types/KalturaUserRoleStatus';
-import { KalturaUserRoleOrderBy } from 'kaltura-ngx-client/api/types/KalturaUserRoleOrderBy';
-import { UserListAction } from 'kaltura-ngx-client/api/types/UserListAction';
-import { KalturaUserFilter } from 'kaltura-ngx-client/api/types/KalturaUserFilter';
-import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
-import { KalturaUserStatus } from 'kaltura-ngx-client/api/types/KalturaUserStatus';
-import { KalturaUserOrderBy } from 'kaltura-ngx-client/api/types/KalturaUserOrderBy';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { PartnerGetInfoAction } from 'kaltura-ngx-client/api/types/PartnerGetInfoAction';
-import { UserUpdateAction } from 'kaltura-ngx-client/api/types/UserUpdateAction';
-import { UserDeleteAction } from 'kaltura-ngx-client/api/types/UserDeleteAction';
-import { UserGetByLoginIdAction } from 'kaltura-ngx-client/api/types/UserGetByLoginIdAction';
-import { UserGetAction } from 'kaltura-ngx-client/api/types/UserGetAction';
-import { UserEnableLoginAction } from 'kaltura-ngx-client/api/types/UserEnableLoginAction';
-import { UserAddAction } from 'kaltura-ngx-client/api/types/UserAddAction';
+import { UserRoleListAction } from 'kaltura-ngx-client';
+import { KalturaUserRoleFilter } from 'kaltura-ngx-client';
+import { KalturaUserRoleStatus } from 'kaltura-ngx-client';
+import { KalturaUserRoleOrderBy } from 'kaltura-ngx-client';
+import { UserListAction } from 'kaltura-ngx-client';
+import { KalturaUserFilter } from 'kaltura-ngx-client';
+import { KalturaNullableBoolean } from 'kaltura-ngx-client';
+import { KalturaUserStatus } from 'kaltura-ngx-client';
+import { KalturaUserOrderBy } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { PartnerGetInfoAction } from 'kaltura-ngx-client';
+import { UserUpdateAction } from 'kaltura-ngx-client';
+import { UserDeleteAction } from 'kaltura-ngx-client';
+import { UserGetByLoginIdAction } from 'kaltura-ngx-client';
+import { UserGetAction } from 'kaltura-ngx-client';
+import { UserEnableLoginAction } from 'kaltura-ngx-client';
+import { UserAddAction } from 'kaltura-ngx-client';
 import { AdminUsersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 export interface QueryData {
@@ -32,10 +32,14 @@ export interface QueryData {
   pageSize: number;
 }
 
+export interface ExtendedKalturaUser extends KalturaUser {
+    roleName: string;
+}
+
 interface UsersData {
-  users: { items: KalturaUser[], totalCount: number },
-  roles: { items: KalturaUserRole[], totalCount: number },
-  partnerInfo: { adminLoginUsersQuota: number, adminUserId: string }
+  users: { items: ExtendedKalturaUser[], totalCount: number };
+  roles: { items: KalturaUserRole[], totalCount: number };
+  partnerInfo: { adminLoginUsersQuota: number, adminUserId: string };
 }
 
 @Injectable()
@@ -113,14 +117,19 @@ export class UsersStore implements OnDestroy {
         }),
         new PartnerGetInfoAction()
       ])
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         response => {
           if (!response.hasErrors()) {
             const [roles, users, partnerInfo] = response;
+              const usersItems = users.result.objects.map(user => {
+                  const relevantRole = roles.result.objects.find(role => String(role.id) === user.roleIds);
+                  user.roleName = relevantRole ? relevantRole.name : '';
+                  return user;
+              });
             this._users.data.next({
               users: {
-                items: users.result.objects,
+                items: usersItems,
                 totalCount: users.result.totalCount
               },
               roles: {

@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { KalturaDistributionValidationError } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationError';
-import { KalturaDistributionValidationErrorConditionNotMet } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationErrorConditionNotMet';
-import { KalturaDistributionValidationErrorMissingThumbnail } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationErrorMissingThumbnail';
-import { KalturaDistributionValidationErrorMissingMetadata } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationErrorMissingMetadata';
-import { KalturaDistributionValidationErrorMissingFlavor } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationErrorMissingFlavor';
-import { KalturaDistributionValidationErrorInvalidData } from 'kaltura-ngx-client/api/types/KalturaDistributionValidationErrorInvalidData';
+import { KalturaDistributionValidationError } from 'kaltura-ngx-client';
+import { KalturaDistributionValidationErrorConditionNotMet } from 'kaltura-ngx-client';
+import { KalturaDistributionValidationErrorMissingThumbnail } from 'kaltura-ngx-client';
+import { KalturaDistributionValidationErrorMissingMetadata } from 'kaltura-ngx-client';
+import { KalturaDistributionValidationErrorMissingFlavor } from 'kaltura-ngx-client';
+import { KalturaDistributionValidationErrorInvalidData } from 'kaltura-ngx-client';
 import { OverlayPanel } from 'primeng/primeng';
 
 export interface DistributedProfileErrorsGroup {

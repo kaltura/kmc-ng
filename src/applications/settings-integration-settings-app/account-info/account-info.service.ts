@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {KalturaClient} from 'kaltura-ngx-client';
-import {Observable} from 'rxjs/Observable';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {KalturaPartner} from 'kaltura-ngx-client/api/types/KalturaPartner';
-import {PartnerGetInfoAction} from 'kaltura-ngx-client/api/types/PartnerGetInfoAction';
+import { Observable } from 'rxjs';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import {KalturaPartner} from 'kaltura-ngx-client';
+import {PartnerGetInfoAction} from 'kaltura-ngx-client';
 
 export interface AccountInfo {
   partnerId: number;

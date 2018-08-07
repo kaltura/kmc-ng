@@ -1,8 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {KalturaCategory} from 'kaltura-ngx-client';
 import {CategoryDetailsWidget} from './category-details-widget.service';
 import {ActionTypes, CategoryService} from '../category.service';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kCategoryDetails',
@@ -21,7 +22,7 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._categoryStore.state$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
       status => {
 

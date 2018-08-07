@@ -1,18 +1,18 @@
 import { Component,  QueryList, ViewChildren, ElementRef, Inject, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
-import { DOCUMENT } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/common';
 
 import { Subject } from 'rxjs/Subject';
-import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 
 import { MenuItem } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
 import { EntryMetadataWidget } from './entry-metadata-widget.service';
-import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
+import { PageScrollService, PageScrollInstance } from 'ngx-page-scroll';
 import { JumpToSection } from './jump-to-section.component';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { CategoryTooltipPipe } from 'app-shared/content-shared/categories/category-tooltip.pipe';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
@@ -88,7 +88,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         );
 
         this._categoriesStatusMonitorService.status$
-		    .cancelOnDestroy(this)
+		    .pipe(cancelOnDestroy(this))
 		    .subscribe((status: CategoriesStatus) => {
                 this._categoriesLocked = status.lock;
             });
@@ -198,7 +198,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 	    }
 
         this._jumpToSectionQuery.changes
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .subscribe((query) => {
                 this._updateJumpToSectionsMenu();
         });

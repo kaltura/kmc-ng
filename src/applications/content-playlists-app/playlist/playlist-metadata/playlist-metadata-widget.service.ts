@@ -1,18 +1,20 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { PlaylistWidget } from '../playlist-widget';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
-import { Observable } from 'rxjs/Observable';
+import { KalturaPlaylist } from 'kaltura-ngx-client';
+import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TagSearchAction } from 'kaltura-ngx-client/api/types/TagSearchAction';
-import { KalturaTagFilter } from 'kaltura-ngx-client/api/types/KalturaTagFilter';
-import { KalturaTaggedObjectType } from 'kaltura-ngx-client/api/types/KalturaTaggedObjectType';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { TagSearchAction } from 'kaltura-ngx-client';
+import { KalturaTagFilter } from 'kaltura-ngx-client';
+import { KalturaTaggedObjectType } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { async } from 'rxjs/scheduler/async';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+
 @Injectable()
 export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy {
   public metadataForm: FormGroup;
@@ -39,7 +41,7 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
 
   private _monitorFormChanges(): void {
     Observable.merge(this.metadataForm.valueChanges, this.metadataForm.statusChanges)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
         .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
       .subscribe(() => {
           super.updateState({
@@ -113,7 +115,7 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
             }
           )
         )
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(
             result => {
               const tags = result.objects.map(item => item.tag);

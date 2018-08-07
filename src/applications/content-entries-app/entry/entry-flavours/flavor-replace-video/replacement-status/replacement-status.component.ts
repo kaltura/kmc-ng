@@ -1,13 +1,14 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { EntryFlavoursWidget, ReplacementData } from '../../entry-flavours-widget.service';
-import { KalturaEntryReplacementStatus } from 'kaltura-ngx-client/api/types/KalturaEntryReplacementStatus';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaEntryReplacementStatus } from 'kaltura-ngx-client';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { NewReplaceVideoUploadService } from 'app-shared/kmc-shell/new-replace-video-upload';
-import { UploadManagement } from '@kaltura-ng/kaltura-common/upload-management/upload-management.service';
+import { UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewReplaceVideoUploadFile } from 'app-shared/kmc-shell/new-replace-video-upload/new-replace-video-upload-file';
-import { TrackedFileStatuses } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization/app-localization.service';
+import { TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum FlavorsTabs {
     current = 'current',
@@ -67,7 +68,7 @@ export class ReplacementStatusComponent implements OnInit, OnDestroy {
 
     private _monitorTrackedFilesChanges(): void {
         this._uploadManagement.onTrackedFileChanged$
-            .cancelOnDestroy(this)
+            .pipe(cancelOnDestroy(this))
             .filter(trackedFile =>
                 trackedFile.data instanceof NewReplaceVideoUploadFile
                 && trackedFile.data.entryId === this.entry.id

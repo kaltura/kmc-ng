@@ -1,31 +1,32 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {SelectItem} from 'primeng/primeng';
 
 import {KalturaMultiRequest} from 'kaltura-ngx-client';
-import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import {KalturaAccessControl} from 'kaltura-ngx-client/api/types/KalturaAccessControl';
-import {KalturaSiteRestriction} from 'kaltura-ngx-client/api/types/KalturaSiteRestriction';
-import {KalturaSiteRestrictionType} from 'kaltura-ngx-client/api/types/KalturaSiteRestrictionType';
-import {KalturaCountryRestriction} from 'kaltura-ngx-client/api/types/KalturaCountryRestriction';
-import {KalturaCountryRestrictionType} from 'kaltura-ngx-client/api/types/KalturaCountryRestrictionType';
-import {KalturaIpAddressRestriction} from 'kaltura-ngx-client/api/types/KalturaIpAddressRestriction';
-import {KalturaIpAddressRestrictionType} from 'kaltura-ngx-client/api/types/KalturaIpAddressRestrictionType';
-import {KalturaLimitFlavorsRestriction} from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestriction';
-import {KalturaLimitFlavorsRestrictionType} from 'kaltura-ngx-client/api/types/KalturaLimitFlavorsRestrictionType';
-import {KalturaSessionRestriction} from 'kaltura-ngx-client/api/types/KalturaSessionRestriction';
-import {KalturaPreviewRestriction} from 'kaltura-ngx-client/api/types/KalturaPreviewRestriction';
-import {KalturaFlavorParams} from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
+import {KalturaMediaEntry} from 'kaltura-ngx-client';
+import {KalturaAccessControl} from 'kaltura-ngx-client';
+import {KalturaSiteRestriction} from 'kaltura-ngx-client';
+import {KalturaSiteRestrictionType} from 'kaltura-ngx-client';
+import {KalturaCountryRestriction} from 'kaltura-ngx-client';
+import {KalturaCountryRestrictionType} from 'kaltura-ngx-client';
+import {KalturaIpAddressRestriction} from 'kaltura-ngx-client';
+import {KalturaIpAddressRestrictionType} from 'kaltura-ngx-client';
+import {KalturaLimitFlavorsRestriction} from 'kaltura-ngx-client';
+import {KalturaLimitFlavorsRestrictionType} from 'kaltura-ngx-client';
+import {KalturaSessionRestriction} from 'kaltura-ngx-client';
+import {KalturaPreviewRestriction} from 'kaltura-ngx-client';
+import {KalturaFlavorParams} from 'kaltura-ngx-client';
 import {AccessControlProfileStore, FlavoursStore} from 'app-shared/kmc-shared';
 import {KalturaUtils} from '@kaltura-ng/kaltura-common';
-import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
 
 import 'rxjs/add/observable/forkJoin';
 import * as R from 'ramda';
 import {EntryWidget} from '../entry-widget';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
@@ -70,12 +71,12 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
       super._showLoader();
       this._accessControlProfiles.next({items: []});
 
-      const getAPProfiles$ = this._accessControlProfileStore.get().cancelOnDestroy(this);
-      const getFlavours$ = this._flavoursStore.get().cancelOnDestroy(this);
+      const getAPProfiles$ = this._accessControlProfileStore.get().pipe(cancelOnDestroy(this));
+      const getFlavours$ = this._flavoursStore.get().pipe(cancelOnDestroy(this));
 
       return Observable.forkJoin(getAPProfiles$, getFlavours$)
-        .cancelOnDestroy(this)
-        .do(
+        .pipe(cancelOnDestroy(this))
+        .map(
           response => {
             let ACProfiles = response[0].items;
             if (ACProfiles.length) {
@@ -95,6 +96,8 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
               this._setProfile();
               super._hideLoader();
             }
+
+              return {failed: false};
 
           })
         .catch((error, caught) => {

@@ -1,13 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaModerationFlagListResponse } from 'kaltura-ngx-client/api/types/KalturaModerationFlagListResponse';
+import { Observable } from 'rxjs';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaModerationFlagListResponse } from 'kaltura-ngx-client';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
-import { MediaListFlagsAction } from 'kaltura-ngx-client/api/types/MediaListFlagsAction';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { UserNotifyBanAction } from 'kaltura-ngx-client/api/types/UserNotifyBanAction';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { BaseEntryGetAction } from 'kaltura-ngx-client';
+import { MediaListFlagsAction } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { UserNotifyBanAction } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 @Injectable()
 export class ModerationStore implements OnDestroy {

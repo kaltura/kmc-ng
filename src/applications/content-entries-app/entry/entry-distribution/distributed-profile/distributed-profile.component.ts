@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { EntryDistributionWidget, ExtendedKalturaEntryDistribution } from '../entry-distribution-widget.service';
-import { KalturaEntryDistributionFlag } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionFlag';
-import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client/api/types/KalturaEntryDistributionStatus';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaDistributionProviderType } from 'kaltura-ngx-client/api/types/KalturaDistributionProviderType';
+import { KalturaEntryDistributionFlag } from 'kaltura-ngx-client';
+import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaDistributionProviderType } from 'kaltura-ngx-client';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 

@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {SettingsAccountInformationService} from './settings-account-information.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { SettingsAccountInformationMainViewService } from 'app-shared/kmc-shared/kmc-views';
@@ -88,7 +88,7 @@ export class SettingsAccountInformationComponent implements OnInit, OnDestroy {
     this._updateAreaBlockerState(true, null);
     this._accountInformationService
       .sendContactSalesForceInformation(this.contactUsForm.value)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
           this._logger.info(`handle successful send action, show alert`);
           this._updateAreaBlockerState(false, null);

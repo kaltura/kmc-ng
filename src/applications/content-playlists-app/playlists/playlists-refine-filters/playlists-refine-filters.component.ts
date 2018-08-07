@@ -1,8 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { subApplicationsConfig } from 'config/sub-applications';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { PlaylistsFilters, PlaylistsStore } from '../playlists-store/playlists-store.service';
 
 const listOfFilterNames: (keyof PlaylistsFilters)[] = ['createdAt'];
@@ -47,7 +47,7 @@ export class PlaylistsRefineFiltersComponent implements OnInit, OnDestroy {
 
   private _registerToFilterStoreDataChanges(): void {
     this._store.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         ({ changes }) => {
           this._updateComponentState(changes);

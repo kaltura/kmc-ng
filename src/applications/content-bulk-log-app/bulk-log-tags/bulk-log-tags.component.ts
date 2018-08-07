@@ -1,8 +1,9 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {BulkLogFilters, BulkLogStoreService} from '../bulk-log-store/bulk-log-store.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {RefineList} from '../bulk-log-store/bulk-log-refine-filters.service';
 import {DatePipe} from "@kaltura-ng/kaltura-ui";
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface TagItem {
   type: string,
@@ -88,7 +89,7 @@ export class BulkLogTagsComponent implements OnInit, OnDestroy {
 
   private _registerToFilterStoreDataChanges(): void {
     this._store.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({ changes }) => {
         this._updateComponentState(changes);
       });

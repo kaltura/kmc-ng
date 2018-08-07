@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { DetailsViewMetadata, KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { KalturaCategory } from 'kaltura-ngx-client';
 import { modulesConfig } from 'config/modules';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { CategoryGetAction } from 'kaltura-ngx-client/api/types/CategoryGetAction';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { CategoryGetAction } from 'kaltura-ngx-client';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { Title } from '@angular/platform-browser';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum ContentCategoryViewSections {
     Metadata = 'Metadata',
@@ -215,7 +216,7 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
 
         this._kalturaClient
             .request(categoryGetAction)
-            .tag('block-shell')
+            .pipe(tag('block-shell'))
             .switchMap(category => {
                 this._logger.info(`handle successful request, proceed navigation`);
                 return this._open({category, section});

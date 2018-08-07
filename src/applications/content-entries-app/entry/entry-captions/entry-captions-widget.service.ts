@@ -9,31 +9,32 @@ import {
   OnDestroy
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
-import { CaptionAssetListAction } from 'kaltura-ngx-client/api/types/CaptionAssetListAction';
-import { CaptionAssetDeleteAction } from 'kaltura-ngx-client/api/types/CaptionAssetDeleteAction';
-import { CaptionAssetSetAsDefaultAction } from 'kaltura-ngx-client/api/types/CaptionAssetSetAsDefaultAction';
-import { CaptionAssetUpdateAction } from 'kaltura-ngx-client/api/types/CaptionAssetUpdateAction';
-import { CaptionAssetSetContentAction } from 'kaltura-ngx-client/api/types/CaptionAssetSetContentAction';
-import { CaptionAssetAddAction } from 'kaltura-ngx-client/api/types/CaptionAssetAddAction';
-import { KalturaUrlResource } from 'kaltura-ngx-client/api/types/KalturaUrlResource';
-import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client/api/types/KalturaUploadedFileTokenResource';
-import { KalturaCaptionAsset } from 'kaltura-ngx-client/api/types/KalturaCaptionAsset';
-import { KalturaAssetFilter } from 'kaltura-ngx-client/api/types/KalturaAssetFilter';
-import { KalturaCaptionType } from 'kaltura-ngx-client/api/types/KalturaCaptionType';
-import { KalturaCaptionAssetStatus } from 'kaltura-ngx-client/api/types/KalturaCaptionAssetStatus';
-import { KalturaLanguage } from 'kaltura-ngx-client/api/types/KalturaLanguage';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { CaptionAssetServeAction } from 'kaltura-ngx-client/api/types/CaptionAssetServeAction';
+import { CaptionAssetListAction } from 'kaltura-ngx-client';
+import { CaptionAssetDeleteAction } from 'kaltura-ngx-client';
+import { CaptionAssetSetAsDefaultAction } from 'kaltura-ngx-client';
+import { CaptionAssetUpdateAction } from 'kaltura-ngx-client';
+import { CaptionAssetSetContentAction } from 'kaltura-ngx-client';
+import { CaptionAssetAddAction } from 'kaltura-ngx-client';
+import { KalturaUrlResource } from 'kaltura-ngx-client';
+import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client';
+import { KalturaCaptionAsset } from 'kaltura-ngx-client';
+import { KalturaAssetFilter } from 'kaltura-ngx-client';
+import { KalturaCaptionType } from 'kaltura-ngx-client';
+import { KalturaCaptionAssetStatus } from 'kaltura-ngx-client';
+import { KalturaLanguage } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { CaptionAssetServeAction } from 'kaltura-ngx-client';
 import { NewEntryCaptionFile } from './new-entry-caption-file';
 import { EntryWidget } from '../entry-widget';
-import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
+import { FriendlyHashId } from '@kaltura-ng/kaltura-common';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface CaptionRow {
     uploading: boolean;
@@ -83,7 +84,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
 
   private _trackUploadFiles(): void {
     this._uploadManagement.onTrackedFileChanged$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .map(uploadedFile => {
         let relevantCaption = null;
         if (uploadedFile.data instanceof NewEntryCaptionFile) {
@@ -147,8 +148,8 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     return this._kalturaServerClient.request(new CaptionAssetListAction({
       filter: new KalturaAssetFilter({ entryIdEqual: this._entryId })
     }))
-      .cancelOnDestroy(this, this.widgetReset$)
-      .do(response => {
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
+      .map(response => {
         // Restore previous upload state
         this._updateCaptionsResponse(response);
 
@@ -162,6 +163,8 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
           this.captionDiffer[caption.id].diff(caption);
         });
         super._hideLoader();
+
+          return {failed: false};
       })
       .catch(error => {
           super._hideLoader();

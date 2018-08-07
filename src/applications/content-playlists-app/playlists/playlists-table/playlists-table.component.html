@@ -8,60 +8,86 @@
             [rowTrackBy]="rowTrackBy"
             [sortField]="sortField"
             [sortOrder]="sortOrder"
+            [resizableColumns]="true"
             [defaultSortOrder]="_defaultSortOrder"
             (sortFunction)="onSortChanged($event)" [customSort]="true"
+            (onColResize)="_columnsResizeManager.onColumnResize($event)"
             [(selection)]="selectedPlaylists"
             (selectionChange)="onSelectionChange($event)"
             kStickyHeader [sticksTo]="'playlistsTags'" stickyClass="stickyHeader" [stickyId]="'playlistsTable'">
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                <col [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
+                <col data-cid="typeIcon" [ngStyle]="{'width': '44px'}">
+                <col data-cid="name">
+                <col data-cid="playlistId">
+                <col data-cid="type">
+                <col data-cid="createdAt" [ngStyle]="{'width': '140px'}">
+                <col [ngStyle]="{'width': '80px'}">
+            </colgroup>
+        </ng-template>
       <ng-template pTemplate="header">
         <tr>
-          <th style="width:44px; padding-left: 14px">
+          <th [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
           </th>
-          <th [pSortableColumn]="'name'" class="kNameHeader">
+          <th data-cid="typeIcon" [ngStyle]="{'width': '44px'}"></th>
+          <th data-cid="name" pResizableColumn [pSortableColumn]="'name'">
             {{'applications.content.table.name' | translate}}
             <p-sortIcon [field]="'name'"></p-sortIcon>
           </th>
-          <th>
+          <th data-cid="playlistId" pResizableColumn>
             {{'applications.content.table.id' | translate}}
           </th>
-          <th>
+          <th data-cid="type" pResizableColumn>
             {{'applications.content.table.playlistType' | translate}}
           </th>
-          <th style="width: 140px" [pSortableColumn]="'createdAt'">
+          <th data-cid="createdAt" [pSortableColumn]="'createdAt'">
             {{'applications.content.table.createdOn' | translate}}
             <p-sortIcon [field]="'createdAt'"></p-sortIcon>
           </th>
-          <th style="width: 80px"></th>
+          <th [ngStyle]="{'width': '80px'}"></th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-playlist>
         <tr [pSelectableRow]="playlist">
 
-          <td style="width:44px; padding-left: 14px">
+          <td [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
             <p-tableCheckbox [value]="playlist"></p-tableCheckbox>
           </td>
 
-          <td>
+            <td [ngStyle]="{'width': '44px'}">
+                <div [ngClass]="playlist.playlistType | playlistType: true" class="kMediaTypeIcon"></div>
+            </td>
+
+          <td class="ui-resizable-column">
             <div class="kPlaylistsNameWrap">
-              <div [ngClass]="playlist.playlistType | playlistType: true" class="kMediaTypeIcon"></div>
               <div class="kTitle kTableColumn"
-                   [kTooltip]="playlist.name"
+                   [kTooltip]="playlist.tooltip"
                    (click)="onActionSelected('view',playlist)">
                 {{playlist.name}}
               </div>
             </div>
           </td>
 
-          <td>{{playlist.id}}</td>
-
-          <td>{{playlist.playlistType | playlistType}}</td>
-
-          <td style="width: 140px">{{playlist.createdAt | kDate}}
+          <td class="ui-resizable-column">
+              <span class="kTableColumn" [kTooltip]="playlist.id" [showOnEllipsis]="true">{{playlist.id}}</span>
           </td>
 
-          <td style="overflow: visible; width: 80px">
+          <td class="ui-resizable-column">
+              <span class="kTableColumn" [kTooltip]="playlist.playlistType | playlistType" [showOnEllipsis]="true">
+                  {{playlist.playlistType | playlistType}}
+              </span>
+          </td>
+
+          <td class="ui-resizable-column">
+              <span class="kTableColumn" [kTooltip]="playlist.createdAt | kDate" [showOnEllipsis]="true">
+                  {{playlist.createdAt | kDate}}
+              </span>
+          </td>
+
+          <td [ngStyle]="{'width': '80px'}">
             <div class="kPlaylistsTableActions">
               <button class="kMoreActionsButton" type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, playlist)"></button>
             </div>
@@ -71,7 +97,9 @@
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
-        <div class="emptymessage">{{_emptyMessage}}</div>
+          <div class="emptymessage">
+              <div class="kEmptyMessage">{{_emptyMessage}}</div>
+          </div>
       </ng-template>
     </p-table>
 

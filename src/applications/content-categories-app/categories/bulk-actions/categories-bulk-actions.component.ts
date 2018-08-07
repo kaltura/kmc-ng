@@ -9,23 +9,23 @@ import {
 } from './services';
 import {CategoriesBulkActionBaseService} from './services/categories-bulk-action-base.service';
 import {MenuItem} from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {KalturaCategory} from 'kaltura-ngx-client';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {subApplicationsConfig} from 'config/sub-applications';
-import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
+import {KalturaUser} from 'kaltura-ngx-client';
 import {PrivacyMode} from './components/bulk-change-content-privacy/bulk-change-content-privacy.component';
-import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
-import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
+import {KalturaPrivacyType} from 'kaltura-ngx-client';
+import {KalturaAppearInListType} from 'kaltura-ngx-client';
 import {AppearInListType} from './components/bulk-change-category-listing/bulk-change-category-listing.component';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import {KalturaContributionPolicyType} from 'kaltura-ngx-client';
 import {CategoriesUtilsService} from "../../categories-utils.service";
 import {CategoriesStatusMonitorService} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -295,13 +295,16 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       this._logger.info(`handle delete categories action`);
 
     this._categoriesUtilsService.confirmDeleteMultiple(this.selectedCategories)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(result => {
         if (result.confirmed) {
             this._logger.info(`handle delete categories request`);
           setTimeout(() => {
             this.executeService(
-              this.selectedCategories,
+              this.selectedCategories
+                .filter(category =>
+                    !category.parentId || !this.selectedCategories.find(({ id }) => id === category.parentId)
+                ),
               this._bulkDeleteService,
               {},
               true,
@@ -364,7 +367,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
     const execute = () => {
       service.execute(selectedCategories, data)
-        .tag('block-shell')
+        .pipe(tag('block-shell'))
         .subscribe(
         result => {
           if (callback) {
@@ -375,7 +378,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
         error => {
           this._browserService.alert({
               header: this._appLocalization.get('app.common.attention'),
-            message: this._appLocalization.get('applications.content.bulkActions.errorCategories')
+              message: error.message || this._appLocalization.get('applications.content.bulkActions.errorCategories')
           });
           this.onBulkChange.emit({ reload: reloadCategories });
         }

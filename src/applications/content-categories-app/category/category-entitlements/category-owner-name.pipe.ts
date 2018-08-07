@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
+import {KalturaUser} from 'kaltura-ngx-client';
 
 @Pipe({ name: 'kCategoryOwnerName' })
 export class CategoryOwnerNamePipe implements PipeTransform {

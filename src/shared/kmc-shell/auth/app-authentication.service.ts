@@ -1,46 +1,48 @@
 import {Injectable, Optional, Inject} from '@angular/core';
 import { Location } from '@angular/common';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import {KalturaClient, KalturaMultiRequest, KalturaRequestOptions} from 'kaltura-ngx-client';
-import {UserLoginByLoginIdAction} from 'kaltura-ngx-client/api/types/UserLoginByLoginIdAction';
-import {UserGetByLoginIdAction} from 'kaltura-ngx-client/api/types/UserGetByLoginIdAction';
-import {UserGetAction} from 'kaltura-ngx-client/api/types/UserGetAction';
-import {PartnerGetInfoAction} from 'kaltura-ngx-client/api/types/PartnerGetInfoAction';
-import {PermissionListAction} from 'kaltura-ngx-client/api/types/PermissionListAction';
-import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import {KalturaPermissionFilter} from 'kaltura-ngx-client/api/types/KalturaPermissionFilter';
-import {KalturaPermissionListResponse} from 'kaltura-ngx-client/api/types/KalturaPermissionListResponse';
-import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import {KalturaPermissionStatus} from 'kaltura-ngx-client/api/types/KalturaPermissionStatus';
-import {UserRoleGetAction} from 'kaltura-ngx-client/api/types/UserRoleGetAction';
+import {UserLoginByLoginIdAction} from 'kaltura-ngx-client';
+import {UserGetByLoginIdAction} from 'kaltura-ngx-client';
+import {UserGetAction} from 'kaltura-ngx-client';
+import {PartnerGetInfoAction} from 'kaltura-ngx-client';
+import {PermissionListAction} from 'kaltura-ngx-client';
+import {KalturaResponseProfileType} from 'kaltura-ngx-client';
+import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
+import {KalturaPermissionFilter} from 'kaltura-ngx-client';
+import {KalturaPermissionListResponse} from 'kaltura-ngx-client';
+import {KalturaUserRole} from 'kaltura-ngx-client';
+import {KalturaFilterPager} from 'kaltura-ngx-client';
+import {KalturaPermissionStatus} from 'kaltura-ngx-client';
+import {UserRoleGetAction} from 'kaltura-ngx-client';
 import * as Immutable from 'seamless-immutable';
 import {AppUser} from './app-user';
-import {UserResetPasswordAction} from 'kaltura-ngx-client/api/types/UserResetPasswordAction';
-import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminUserUpdatePasswordAction';
+import {UserResetPasswordAction} from 'kaltura-ngx-client';
+import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification/page-exit-verification.service';
 import { UserLoginStatusEvent } from 'app-shared/kmc-shared/events';
-import { KalturaPartner } from 'kaltura-ngx-client/api/types/KalturaPartner';
-import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
+import { KalturaPartner } from 'kaltura-ngx-client';
+import { KalturaUser } from 'kaltura-ngx-client';
 import { AppEventsService } from 'app-shared/kmc-shared/app-events';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { serverConfig } from 'config/server';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { UserLoginByKsAction } from 'kaltura-ngx-client/api/types/UserLoginByKsAction';
+import { UserLoginByKsAction } from 'kaltura-ngx-client';
 import { KmcServerPolls } from '../../kmc-shared/server-polls';
 import { HttpClient } from '@angular/common/http';
-import { buildKalturaServerUri } from 'config/server';
+import { buildBaseUri } from 'config/server';
 import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 
 
 
 const ksSessionStorageKey = 'auth.login.ks';
-import { AdminUserSetInitialPasswordAction } from 'kaltura-ngx-client/api/types/AdminUserSetInitialPasswordAction';
+import { AdminUserSetInitialPasswordAction } from 'kaltura-ngx-client';
 import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
+import { switchMap, map } from 'rxjs/operators';
+import { of as ObservableOf } from 'rxjs';
 
 export interface UpdatePasswordPayload {
     email: string;
@@ -80,9 +82,10 @@ export class AppAuthentication {
     }
 
     private _defaultUrl: string;
-    private _automaticLogin: {  ks: string} = { ks: null };
+    private _automaticLogin: {  ks: string, persistCredentials: boolean } = { ks: null, persistCredentials: false };
     private _logger: KalturaLogger;
     private _appUser: Immutable.ImmutableObject<AppUser> = null;
+    private _autoLoginAttempted = false;
 
     public get defaultUrl(): string {
         return this._defaultUrl;
@@ -242,36 +245,37 @@ export class AppAuthentication {
         );
 
         return <any>(this.kalturaServerClient.multiRequest(request)
-            .switchMap(
-                response => {
-                    if (!response.hasErrors()) {
-                        return this._checkIfPartnerCanAccess(response[2].result);
-                    } else {
-                        return Observable.of(true); // errors will be handled by the map function
-                    }
-                },
-                (response, isPartnerAllowed) => ({ response, isPartnerAllowed })
-            )
-            .map(
-                ({ response, isPartnerAllowed }) => {
-                    if (!response.hasErrors()) {
-                        if (isPartnerAllowed) {
-                            this._afterLogin(response[0].result, true, response[1].result, response[2].result, response[3].result, response[4].result);
-                            return { success: true, error: null };
+                .pipe(
+                    switchMap(response => {
+                        if (!response.hasErrors()) {
+                            return this._checkIfPartnerCanAccess(response[2].result)
+                                .pipe(map(isPartnerAllowed => ({ response, isPartnerAllowed })));
                         } else {
-                            return {
-                                success: false, error: {
-                                    message: 'app.login.error.userForbiddenForBeta',
-                                    custom: false,
-                                    closedForBeta: true
-                                }
-                            };
+                            return ObservableOf(true) // errors will be handled by the map function
+                                .pipe(map(isPartnerAllowed => ({ response, isPartnerAllowed })));
                         }
-                    }
+                    }),
+                    map(
+                        ({ response, isPartnerAllowed }) => {
+                            if (!response.hasErrors()) {
+                                if (isPartnerAllowed) {
+                                    this._afterLogin(response[0].result, true, response[1].result, response[2].result, response[3].result, response[4].result);
+                                    return { success: true, error: null };
+                                } else {
+                                    return {
+                                        success: false, error: {
+                                            message: 'app.login.error.userForbiddenForBeta',
+                                            custom: false,
+                                            closedForBeta: true
+                                        }
+                                    };
+                                }
+                            }
 
-                    return { success: false, error: this._getLoginErrorMessage(response[0]) };
-                }
-            )
+                            return { success: false, error: this._getLoginErrorMessage(response[0]) };
+                        }
+                    )
+                )
         );
     }
 
@@ -281,7 +285,7 @@ export class AppAuthentication {
         }
         const serviceUrl = serverConfig.kalturaServer.limitAccess.serviceUrl;
 
-        const url = buildKalturaServerUri(serviceUrl + partner.id);
+        const url = buildBaseUri(serviceUrl + partner.id);
         this._logger.debug(`check if partner can access the KMC`, {partnerId: partner.id, limitAccess: true, url});
 
         return this._http.get(url, { responseType: 'json' })
@@ -395,16 +399,16 @@ export class AppAuthentication {
                             })
                     ];
 
-                    return this.kalturaServerClient.multiRequest(requests)
-                        .switchMap(
-                            response => {
-                                if (!response.hasErrors()) {
-                                    return this._checkIfPartnerCanAccess(response[1].result);
-                                } else {
-                                    return Observable.of(true); // errors will be handled by the map function
-                                }
-                            },
-                            (response, isPartnerAllowed) => ({ response, isPartnerAllowed })
+                    this.kalturaServerClient.multiRequest(requests)
+                        .pipe(
+                            switchMap(
+                                response => {
+                                    const result = !response.hasErrors()
+                                        ? this._checkIfPartnerCanAccess(response[1].result)
+                                        : ObservableOf(true);
+
+                                    return result.pipe(map(isPartnerAllowed => ({ response, isPartnerAllowed })));
+                                })
                         )
                         .subscribe(
                             ({ response, isPartnerAllowed }) => {
@@ -433,8 +437,9 @@ export class AppAuthentication {
         });
     }
 
-    public setAutomaticLoginCredentials(ks: string) {
+    public setAutomaticLoginCredentials(ks: string, persistCredentials = false) {
         this._automaticLogin.ks = ks;
+        this._automaticLogin.persistCredentials = persistCredentials;
     }
 
 
@@ -453,11 +458,16 @@ export class AppAuthentication {
     }
 
     public loginAutomatically(defaultUrl: string): Observable<boolean> {
+        if (this._autoLoginAttempted || this.isLogged()) {
+            return ObservableOf(this.isLogged());
+        }
+
+        this._autoLoginAttempted = true;
         const ksFromApp = this._automaticLogin.ks;
         if (ksFromApp) {
             this._logger.info(`try to login automatically with KS provided explicitly by the app`);
             this._clearSessionCredentials();
-            return this._loginByKS(ksFromApp, false);
+            return this._loginByKS(ksFromApp, this._automaticLogin.persistCredentials);
         }
 
         const forbiddenUrls = ['/error', '/actions', '/login'];

@@ -1,35 +1,36 @@
 import { Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/observable/forkJoin';
 
-import { ThumbAssetSetAsDefaultAction } from 'kaltura-ngx-client/api/types/ThumbAssetSetAsDefaultAction';
-import { ThumbAssetGetByEntryIdAction } from 'kaltura-ngx-client/api/types/ThumbAssetGetByEntryIdAction';
-import { KalturaThumbAsset } from 'kaltura-ngx-client/api/types/KalturaThumbAsset';
-import { DistributionProfileListAction } from 'kaltura-ngx-client/api/types/DistributionProfileListAction';
-import { KalturaDistributionProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileListResponse';
-import { KalturaDistributionProfile } from 'kaltura-ngx-client/api/types/KalturaDistributionProfile';
-import { KalturaThumbAssetStatus } from 'kaltura-ngx-client/api/types/KalturaThumbAssetStatus';
-import { KalturaDistributionThumbDimensions } from 'kaltura-ngx-client/api/types/KalturaDistributionThumbDimensions';
-import { ThumbAssetDeleteAction } from 'kaltura-ngx-client/api/types/ThumbAssetDeleteAction';
-import { ThumbAssetAddFromImageAction } from 'kaltura-ngx-client/api/types/ThumbAssetAddFromImageAction';
+import { ThumbAssetSetAsDefaultAction } from 'kaltura-ngx-client';
+import { ThumbAssetGetByEntryIdAction } from 'kaltura-ngx-client';
+import { KalturaThumbAsset } from 'kaltura-ngx-client';
+import { DistributionProfileListAction } from 'kaltura-ngx-client';
+import { KalturaDistributionProfileListResponse } from 'kaltura-ngx-client';
+import { KalturaDistributionProfile } from 'kaltura-ngx-client';
+import { KalturaThumbAssetStatus } from 'kaltura-ngx-client';
+import { KalturaDistributionThumbDimensions } from 'kaltura-ngx-client';
+import { ThumbAssetDeleteAction } from 'kaltura-ngx-client';
+import { ThumbAssetAddFromImageAction } from 'kaltura-ngx-client';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { EntryWidget } from '../entry-widget';
-import { KalturaThumbParams } from 'kaltura-ngx-client/api/types/KalturaThumbParams';
-import { ThumbAssetGenerateAction } from 'kaltura-ngx-client/api/types/ThumbAssetGenerateAction';
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import { KalturaThumbParams } from 'kaltura-ngx-client';
+import { ThumbAssetGenerateAction } from 'kaltura-ngx-client';
+import { KalturaEntryStatus } from 'kaltura-ngx-client';
+import { KalturaMediaType } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { serverConfig, getKalturaServerUri } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface ThumbnailRow {
   id: string;
@@ -85,7 +86,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
             : Observable.of({});
 
         return Observable.forkJoin(getThumbnails$, getProfiles$)
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
 
             .catch((error, caught) => {
                 super._hideLoader();
@@ -93,7 +94,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
                 this._thumbnails.next({items: []});
                 return Observable.throw(error);
             })
-            .do(responses => {
+            .map(responses => {
                 const thumbnails = responses[0] || [];
                 this._distributionProfiles = (responses[1] as KalturaDistributionProfileListResponse).objects || [];
                 this.buildThumbnailsData(thumbnails);
@@ -101,6 +102,8 @@ export class EntryThumbnailsWidget extends EntryWidget {
                     && [KalturaEntryStatus.ready.toString(), KalturaEntryStatus.moderate.toString()].indexOf(this.data.status.toString()) !== -1
                     && this.data.mediaType === KalturaMediaType.video);
                 super._hideLoader();
+
+                return {failed: false};
             });
 
     }
@@ -170,7 +173,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
             {
                 entryId: this.data.id
             }))
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
             .subscribe(
                 (responses) => {
                     const thumbnails = responses || [];
@@ -197,8 +200,8 @@ export class EntryThumbnailsWidget extends EntryWidget {
     }
 
     // animate uploading thumbnail row
-    public _getRowStyle(rowData, rowIndex): string {
-        return rowData.uploadStatus ? "uoloading" : '';
+    public getRowStyle(rowData): string {
+        return rowData.uploadStatus ? 'uploading' : '';
     }
 
     public _setAsDefault(thumb: ThumbnailRow): void {
@@ -207,8 +210,8 @@ export class EntryThumbnailsWidget extends EntryWidget {
         const entryId = this.data ? this.data.id : null;
 
         this._kalturaServerClient.request(new ThumbAssetSetAsDefaultAction({thumbAssetId: thumb.id}))
-            .cancelOnDestroy(this, this.widgetReset$)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
+            .pipe(tag('block-shell'))
             .subscribe(
                 () => {
                     thumbs.forEach(thumb => {
@@ -242,8 +245,8 @@ export class EntryThumbnailsWidget extends EntryWidget {
         const thumbs = Array.from(this._thumbnails.getValue().items);
 
         this._kalturaServerClient.request(new ThumbAssetDeleteAction({thumbAssetId: id}))
-            .cancelOnDestroy(this, this.widgetReset$)
-            .tag('block-shell')
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
+            .pipe(tag('block-shell'))
             .subscribe(
                 () => {
                     this._browserService.scrollToTop();
@@ -282,8 +285,8 @@ export class EntryThumbnailsWidget extends EntryWidget {
                     entryId: this.data.id,
                     fileData: fileData
                 }))
-                    .tag('block-shell')
-                    .cancelOnDestroy(this, this.widgetReset$)
+                    .pipe(tag('block-shell'))
+                    .pipe(cancelOnDestroy(this, this.widgetReset$))
                     .subscribe(
                         () => this.reloadThumbnails(),
                         () => {
@@ -309,7 +312,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
         params.stripProfiles = false;
 
         this._kalturaServerClient.request(new ThumbAssetGenerateAction({entryId: this.data.id, thumbParams: params}))
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
             .subscribe(
                 () => {
                     super._hideLoader();

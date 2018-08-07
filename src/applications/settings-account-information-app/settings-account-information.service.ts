@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {Http} from '@angular/http';
+import { Observable } from 'rxjs';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import {HttpClient} from '@angular/common/http';
 import {KalturaClient} from 'kaltura-ngx-client';
-import {KalturaPartnerStatistics} from 'kaltura-ngx-client/api/types/KalturaPartnerStatistics';
-import {PartnerGetStatisticsAction} from 'kaltura-ngx-client/api/types/PartnerGetStatisticsAction';
+import {KalturaPartnerStatistics} from 'kaltura-ngx-client';
+import {PartnerGetStatisticsAction} from 'kaltura-ngx-client';
 import { serverConfig } from 'config/server';
 
 
@@ -17,7 +17,7 @@ export interface AccountInformation {
 @Injectable()
 export class SettingsAccountInformationService {
 
-  constructor(private _http: Http, private _kalturaServerClient: KalturaClient) {
+  constructor(private _http: HttpClient, private _kalturaServerClient: KalturaClient) {
   }
 
   public canContactSalesForceInformation(): boolean {

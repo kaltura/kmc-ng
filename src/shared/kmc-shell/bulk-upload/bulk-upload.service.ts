@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { BulkUploadAddAction } from 'kaltura-ngx-client/api/types/BulkUploadAddAction';
-import { KalturaBulkUploadType } from 'kaltura-ngx-client/api/types/KalturaBulkUploadType';
-import { KalturaBulkUploadCsvJobData } from 'kaltura-ngx-client/api/types/KalturaBulkUploadCsvJobData';
-import { CategoryAddFromBulkUploadAction } from 'kaltura-ngx-client/api/types/CategoryAddFromBulkUploadAction';
-import { KalturaBulkUploadCategoryData } from 'kaltura-ngx-client/api/types/KalturaBulkUploadCategoryData';
-import { KalturaBulkUploadUserData } from 'kaltura-ngx-client/api/types/KalturaBulkUploadUserData';
-import { KalturaBulkUploadCategoryUserData } from 'kaltura-ngx-client/api/types/KalturaBulkUploadCategoryUserData';
-import { UserAddFromBulkUploadAction } from 'kaltura-ngx-client/api/types/UserAddFromBulkUploadAction';
-import { CategoryUserAddFromBulkUploadAction } from 'kaltura-ngx-client/api/types/CategoryUserAddFromBulkUploadAction';
-import { Observable } from 'rxjs/Observable';
-import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
+import { BulkUploadAddAction } from 'kaltura-ngx-client';
+import { KalturaBulkUploadType } from 'kaltura-ngx-client';
+import { KalturaBulkUploadCsvJobData } from 'kaltura-ngx-client';
+import { CategoryAddFromBulkUploadAction } from 'kaltura-ngx-client';
+import { KalturaBulkUploadCategoryData } from 'kaltura-ngx-client';
+import { KalturaBulkUploadUserData } from 'kaltura-ngx-client';
+import { KalturaBulkUploadCategoryUserData } from 'kaltura-ngx-client';
+import { UserAddFromBulkUploadAction } from 'kaltura-ngx-client';
+import { CategoryUserAddFromBulkUploadAction } from 'kaltura-ngx-client';
+import { Observable } from 'rxjs';
+import { KalturaBulkUpload } from 'kaltura-ngx-client';
 
 export enum BulkUploadTypes {
   entries,

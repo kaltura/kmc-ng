@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
-import { UserUpdateLoginDataActionArgs } from 'kaltura-ngx-client/api/types/UserUpdateLoginDataAction';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { KalturaUser } from 'kaltura-ngx-client';
+import { UserUpdateLoginDataActionArgs } from 'kaltura-ngx-client';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kEditUserName',

@@ -3,8 +3,9 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage, KalturaValidators} from '@kaltura-ng/kaltura-ui';
 import {UniversalLiveService} from './universal-live.service';
 import {UniversalLive} from "./universal-live.interface";
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kUniversalLive',
@@ -73,7 +74,7 @@ export class UniversalLiveComponent implements OnInit, OnDestroy {
 
     this._form
       .valueChanges
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(data => {
         this.dataChange.emit(data);
       });
@@ -92,7 +93,7 @@ export class UniversalLiveComponent implements OnInit, OnDestroy {
     // set the retrieved default IP in both primary and secondary IP fields.
     this.universalLiveService
       .getDefaultIp()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(ip => {
           this.data.primaryEncoderIp = ip;
           this.data.secondaryEncoderIp = ip;

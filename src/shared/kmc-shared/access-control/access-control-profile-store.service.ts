@@ -1,16 +1,17 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { PartnerProfileStore } from '../partner-profile';
 
 import { KalturaClient } from 'kaltura-ngx-client';
-import { AccessControlListAction } from 'kaltura-ngx-client/api/types/AccessControlListAction';
+import { AccessControlListAction } from 'kaltura-ngx-client';
 
-import { KalturaAccessControlFilter } from 'kaltura-ngx-client/api/types/KalturaAccessControlFilter';
-import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaAccessControlListResponse } from 'kaltura-ngx-client/api/types/KalturaAccessControlListResponse';
+import { KalturaAccessControlFilter } from 'kaltura-ngx-client';
+import { KalturaAccessControl } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaAccessControlListResponse } from 'kaltura-ngx-client';
 import { AppEventsService } from '../app-events';
 import { AccessControlProfileUpdatedEvent } from '../events/access-control-profile-updated.event';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class AccessControlProfileStore extends PartnerProfileStore implements OnDestroy {
@@ -20,7 +21,7 @@ export class AccessControlProfileStore extends PartnerProfileStore implements On
     super();
 
     _appEvents.event(AccessControlProfileUpdatedEvent)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._clearCache();
       });
@@ -37,7 +38,7 @@ export class AccessControlProfileStore extends PartnerProfileStore implements On
     if (!this._cachedProfiles$) {
       // execute the request
       this._cachedProfiles$ = this._buildGetRequest()
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .map(
           response => {
             return ({items: response ? response.objects : []});

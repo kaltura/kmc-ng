@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { SettingsTranscodingSettingsService } from './settings-transcoding-settings.service';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { MediaTranscodingProfilesStore } from './transcoding-profiles/transcoding-profiles-store/media-transcoding-profiles-store.service';
 import { LiveTranscodingProfilesStore } from './transcoding-profiles/transcoding-profiles-store/live-transcoding-profiles-store.service';
 

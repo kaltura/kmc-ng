@@ -1,13 +1,13 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {KalturaMediaType} from 'kaltura-ngx-client';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {DraftEntry, PrepareEntryService} from './prepare-entry.service';
 import {BrowserService} from 'app-shared/kmc-shell';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions/kmc-permissions.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
-import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
 
 @Component({
   selector: 'kPrepareEntry',
@@ -44,7 +44,7 @@ export class PrepareEntryComponent implements OnDestroy {
 
     /// passing profileId null will cause to create with default profileId
     this._prepareEntryService.createDraftEntry(this._selectedMediaType, selectedProfile.profileId)
-        .tag('block-shell')
+        .pipe(tag('block-shell'))
       .subscribe((draftEntry: DraftEntry) => {
             this._contentEntryViewService.openById(draftEntry.id, ContentEntryViewSections.Metadata, true, true);
         },

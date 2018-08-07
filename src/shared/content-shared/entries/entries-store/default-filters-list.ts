@@ -1,4 +1,4 @@
-import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaEntryStatus } from 'kaltura-ngx-client';
 
 export interface DefaultFilterList {
     label: string;
@@ -13,7 +13,6 @@ export const DefaultFiltersList: DefaultFilterList[] = [
       { value: '1', label: 'Video' },
       { value: '2', label: 'Image' },
       { value: '5', label: 'Audio' },
-      { value: '6', label: 'Video Mix' },
       { value: '201', label: 'Live Stream' }
     ]
   },

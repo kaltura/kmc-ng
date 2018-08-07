@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { KalturaLogger, LogLevels } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { KalturaLogger, LogLevels } from '@kaltura-ng/kaltura-logger';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { globalConfig } from 'config/global';
 import * as moment from 'moment';

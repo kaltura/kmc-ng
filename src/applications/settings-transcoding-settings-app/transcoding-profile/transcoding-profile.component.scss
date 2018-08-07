@@ -7,8 +7,10 @@
   flex: 0 0 auto;
   z-index: 0;
 }
-
-:host /deep/ span.ui-button-icon-left.fa.kIconarrow_forward, :host /deep/ span.ui-button-icon-left.fa.kIconarrow_backward {
+.kSections{
+    height: 100%;
+}
+:host /deep/ span.ui-button-icon-left.pi-kIconarrow_forward, :host /deep/ span.ui-button-icon-left.pi-kIconarrow_backward {
   margin-left: -.5em;
 }
 

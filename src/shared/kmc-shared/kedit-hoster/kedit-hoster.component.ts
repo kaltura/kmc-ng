@@ -8,14 +8,14 @@ import {
     AdvertisementsAppViewService,
     ClipAndTrimAppViewService, QuizAppViewService
 } from 'app-shared/kmc-shared/kmc-views/component-views';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
-import { KalturaMediaEntry } from "kaltura-ngx-client/api/types/KalturaMediaEntry";
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaLiveEntry } from 'kaltura-ngx-client/api/types/KalturaLiveEntry';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaLiveEntry } from 'kaltura-ngx-client';
+import { KalturaMediaType } from 'kaltura-ngx-client';
 
 
 @Component({
@@ -186,8 +186,21 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
 
           if (clipAndTrimAvailable) {
               this._logger.debug('clip&trim views are available, add configuration for tabs: edit, quiz');
+              const clipAndTrimPermissions = [];
+              if (this._permissionService.hasPermission(KMCPermissions.CONTENT_INGEST_INTO_READY)) {
+                  clipAndTrimPermissions.push('trim');
+              }
+
+              if (this._permissionService.hasPermission(KMCPermissions.CONTENT_INGEST_CLIP_MEDIA)) {
+                  clipAndTrimPermissions.push('clip');
+              }
+
               Object.assign(tabs, {
-                  'edit': {name: 'edit', permissions: ['clip', 'trim'], userPermissions: ['clip', 'trim']}
+                  'edit': {
+                      name: 'edit',
+                      permissions: clipAndTrimPermissions,
+                      userPermissions: clipAndTrimPermissions
+                  }
               });
           }
 

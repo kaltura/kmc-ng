@@ -1,15 +1,15 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
-import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { BaseEntryGetAction } from 'kaltura-ngx-client';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { KalturaUtils } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { LinkedEntriesControl } from 'app-shared/kmc-shared/dynamic-metadata-form/linked-entries-control';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { FriendlyHashId } from '@kaltura-ng/kaltura-common';
 
 export interface LinkedMediaEntry extends KalturaMediaEntry {
   selectionId?: string;

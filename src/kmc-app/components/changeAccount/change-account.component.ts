@@ -1,16 +1,16 @@
 import {Component, Input, OnInit, AfterViewInit, OnDestroy, ViewChild} from '@angular/core';
 import {FormGroup, FormBuilder} from '@angular/forms';
 import {ISubscription} from 'rxjs/Subscription';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
-import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui';
 import {KalturaClient} from 'kaltura-ngx-client';
-import {PartnerListPartnersForUserAction} from 'kaltura-ngx-client/api/types/PartnerListPartnersForUserAction';
-import {KalturaPartnerFilter} from 'kaltura-ngx-client/api/types/KalturaPartnerFilter';
-import {KalturaPartnerStatus} from 'kaltura-ngx-client/api/types/KalturaPartnerStatus';
-import {Observable} from 'rxjs/Observable';
+import {PartnerListPartnersForUserAction} from 'kaltura-ngx-client';
+import {KalturaPartnerFilter} from 'kaltura-ngx-client';
+import {KalturaPartnerStatus} from 'kaltura-ngx-client';
+import { Observable } from 'rxjs';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
 
 @Component({
   selector: 'kChangeAccount',

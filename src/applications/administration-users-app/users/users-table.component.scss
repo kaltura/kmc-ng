@@ -23,21 +23,6 @@
   }
 }
 
-:host /deep/ .ui-datatable .kTableStatus {
-  padding-left: 14px;
-  width: 100px;
-}
-
-:host /deep/ .ui-datatable .kTableFullName {
-  width: 350px;
-  padding-left: 1.5em;
-}
-
-:host /deep/ .ui-datatable .kTableActions {
-  overflow: hidden;
-  width: 80px;
-}
-
 :host {
   display: flex;
   flex-flow: row wrap;
@@ -45,15 +30,21 @@
   flex-direction: column;
 }
 
-:host /deep/ p-datatable .ui-datatable-scrollable-body {
+:host /deep/ p-table .ui-table-scrollable-body {
   margin-bottom: 34px;
 }
 
-:host /deep/ p-datatable .stickyHeader {
+:host /deep/ p-table .stickyHeader {
   z-index: 10;
   display: table;
 }
 
-:host /deep/ p-datatable .ui-widget-header.ui-datatable-scrollable-header {
+:host /deep/ p-table .ui-widget-header.ui-table-scrollable-header {
   border-top: none;
+}
+
+:host /deep/ p-table {
+    .ui-table .ui-table-thead > tr > th {
+        border-left: 1px solid $kGrayscale6;
+    }
 }

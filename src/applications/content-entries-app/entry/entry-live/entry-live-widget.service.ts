@@ -1,31 +1,32 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
+import { Observable, of as ObservableOf } from 'rxjs';
 
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
-import {KalturaSourceType} from 'kaltura-ngx-client/api/types/KalturaSourceType';
-import {KalturaLiveStreamBitrate} from 'kaltura-ngx-client/api/types/KalturaLiveStreamBitrate';
-import {KalturaRecordStatus} from 'kaltura-ngx-client/api/types/KalturaRecordStatus';
-import {KalturaLiveStreamEntry} from 'kaltura-ngx-client/api/types/KalturaLiveStreamEntry';
-import {KalturaDVRStatus} from 'kaltura-ngx-client/api/types/KalturaDVRStatus';
-import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import {LiveStreamRegenerateStreamTokenAction} from 'kaltura-ngx-client/api/types/LiveStreamRegenerateStreamTokenAction';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import {KalturaSourceType} from 'kaltura-ngx-client';
+import {KalturaLiveStreamBitrate} from 'kaltura-ngx-client';
+import {KalturaRecordStatus} from 'kaltura-ngx-client';
+import {KalturaLiveStreamEntry} from 'kaltura-ngx-client';
+import {KalturaDVRStatus} from 'kaltura-ngx-client';
+import {KalturaMediaEntry} from 'kaltura-ngx-client';
+import {LiveStreamRegenerateStreamTokenAction} from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
 import {LiveXMLExporter} from './live-xml-exporter';
 import {AVAIL_BITRATES} from './bitrates';
 import {EntryWidget} from '../entry-widget';
-import {ConversionProfileListAction} from 'kaltura-ngx-client/api/types/ConversionProfileListAction';
-import {KalturaConversionProfileFilter} from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import {KalturaConversionProfileType} from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
-import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import {ConversionProfileListAction} from 'kaltura-ngx-client';
+import {KalturaConversionProfileFilter} from 'kaltura-ngx-client';
+import {KalturaFilterPager} from 'kaltura-ngx-client';
+import {KalturaConversionProfileType} from 'kaltura-ngx-client';
+import {KalturaNullableBoolean} from 'kaltura-ngx-client';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {BaseEntryGetAction} from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
+import {BaseEntryGetAction} from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface bitrate {
 	enabled: boolean,
@@ -97,7 +98,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 			(data as KalturaLiveStreamEntry).bitrates = bitrates;
 		}
 		if (this._liveType === "kaltura") {
-			(data as KalturaLiveStreamEntry).explicitLive = this._explicitLive ? KalturaNullableBoolean.falseValue : KalturaNullableBoolean.trueValue;
+			(data as KalturaLiveStreamEntry).explicitLive = this._explicitLive ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
 			(data as KalturaLiveStreamEntry).conversionProfileId = this._selectedConversionProfile;
 		}
 	}
@@ -132,14 +133,14 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
               pageSize: 500
             })
           }))
-            .cancelOnDestroy(this, this.widgetReset$)
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
             .catch((error, caught) => {
               super._hideLoader();
               super._showActivationError();
               this._conversionProfiles.next({ items: [] });
               return Observable.throw(error);
             })
-            .do(response => {
+            .map(response => {
               if (response.objects && response.objects.length) {
                 // set the default profile first in the array
                 response.objects.sort((a, b) => {
@@ -161,6 +162,10 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
                 });
                 this._conversionProfiles.next({ items: conversionProfiles });
                 super._hideLoader();
+
+                  return {failed: false};
+              } else {
+                  return {failed: true};
               }
             });
         } else {
@@ -178,6 +183,8 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 				this._setManualStreams();
 				break;
 		}
+
+        return ObservableOf({failed: false});
 	}
 
 	public _exportXML() {
@@ -197,7 +204,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 				this._dvrWindowAvailable = !isNaN(entry.dvrWindow);
 			}
 		}
-		this._explicitLive = entry.explicitLive === KalturaNullableBoolean.falseValue;
+		this._explicitLive = entry.explicitLive === KalturaNullableBoolean.trueValue;
 	}
 
 	private _setRecordStatus(): void {
@@ -282,8 +289,8 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 
 
 		this._kalturaServerClient.multiRequest(multiRequest)
-			.cancelOnDestroy(this, this.widgetReset$)
-			.tag('block-shell')
+			.pipe(cancelOnDestroy(this, this.widgetReset$))
+			.pipe(tag('block-shell'))
 			.subscribe(
 				response => {
 					if (response.hasErrors()) {

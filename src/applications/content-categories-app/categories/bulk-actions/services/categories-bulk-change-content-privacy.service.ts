@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { KalturaClient } from 'kaltura-ngx-client';
-import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
+import { KalturaUser } from 'kaltura-ngx-client';
 import { CategoriesBulkActionBaseService } from "./categories-bulk-action-base.service";
-import { CategoryUpdateAction } from "kaltura-ngx-client/api/types/CategoryUpdateAction";
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
-import { KalturaPrivacyType } from "kaltura-ngx-client/api/types/KalturaPrivacyType";
+import { CategoryUpdateAction } from 'kaltura-ngx-client';
+import { KalturaCategory } from 'kaltura-ngx-client';
+import { KalturaPrivacyType } from 'kaltura-ngx-client';
 
 @Injectable()
 export class CategoriesBulkChangeContentPrivacyService extends CategoriesBulkActionBaseService<KalturaPrivacyType> {
@@ -33,7 +33,7 @@ export class CategoriesBulkChangeContentPrivacyService extends CategoriesBulkAct
           observer.complete();
         },
         error => {
-          observer.error(error);
+          observer.error({});
         }
       );
     });

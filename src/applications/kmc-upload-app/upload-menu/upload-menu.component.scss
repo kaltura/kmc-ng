@@ -15,13 +15,13 @@
   }
 
   .kUploadMenuListItem {
-    height: 48px;
+    height: 64px;
     margin-bottom: 33px;
     display: flex;
     align-items: center;
 
     &.last {
-      margin-bottom: 48px;
+      margin-bottom: 32px;
     }
 
     i {
@@ -38,6 +38,11 @@
         background-color: $kDandger;
       }
 
+      &.kUploadMenuLinkIcon {
+        cursor: pointer;
+        background-color: $kPrimary;
+      }
+
       &.kUploadMenuBulkUploadIcon {
         cursor: pointer;
         background-color: $kOrange;
@@ -51,6 +56,15 @@
 
     span {
       margin-left: 35px;
+        margin-top: 30px;
+
+        &.kSingleItem {
+            margin-top: 0;
+        }
+
+        &.kUploadMenuListItemLive {
+            margin-top: 0;
+        }
 
       a {
         font-size: 24px;
@@ -58,12 +72,11 @@
       }
 
       .kBulkUploadSamplesLink {
-        margin-top: 8px;
+        margin-top: 16px;
         display: block;
         opacity: 0.6;
         font-size: 14px;
         font-weight: normal;
-        text-decoration: underline;
         &.kDisabled{
             opacity: 0.2;
             cursor: default;
@@ -80,6 +93,7 @@
       font-size: 14px;
       text-transform: uppercase;
       opacity: 0.6;
+        letter-spacing: 1.75px;
     }
 
     .kPrepareEntryListItem {

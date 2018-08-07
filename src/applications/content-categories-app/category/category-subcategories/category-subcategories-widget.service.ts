@@ -1,21 +1,21 @@
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {KalturaCategory} from 'kaltura-ngx-client';
 import {Injectable, OnDestroy} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {KalturaUtils} from '@kaltura-ng/kaltura-common';
-import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {CategoryWidget} from '../category-widget';
-import {KalturaCategoryFilter} from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
-import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
-import {CategoryListAction} from 'kaltura-ngx-client/api/types/CategoryListAction';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import {KalturaCategoryOrderBy} from 'kaltura-ngx-client/api/types/KalturaCategoryOrderBy';
+import {KalturaCategoryFilter} from 'kaltura-ngx-client';
+import {KalturaCategoryListResponse} from 'kaltura-ngx-client';
+import {CategoryListAction} from 'kaltura-ngx-client';
+import {KalturaFilterPager} from 'kaltura-ngx-client';
+import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
+import {KalturaResponseProfileType} from 'kaltura-ngx-client';
+import {KalturaCategoryOrderBy} from 'kaltura-ngx-client';
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
-import {CategoryUpdateAction} from 'kaltura-ngx-client/api/types/CategoryUpdateAction';
+import {CategoryUpdateAction} from 'kaltura-ngx-client';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {CategoryDeleteAction} from 'kaltura-ngx-client/api/types/CategoryDeleteAction';
+import {CategoryDeleteAction} from 'kaltura-ngx-client';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {CategoriesUtilsService} from '../../categories-utils.service';
@@ -68,7 +68,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
   private _loadSubcategories(): Observable<void> {
     return this._getSubcategories(this.data)
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .map(
         response => {
           this._subcategories.next(response.objects || []);
@@ -202,12 +202,14 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
   private _moveUpSubcategories(selectedSubcategories: KalturaCategory[]): void {
     if (KalturaUtils.moveUpItems(this._subcategories.getValue(), selectedSubcategories)) {
+        this._categoryService.notifySubcategoriesMoved();
       this._setDirty();
     }
   }
 
   private _moveDownSubcategories(selectedSubcategories: KalturaCategory[]): void {
     if (KalturaUtils.moveDownItems(this._subcategories.getValue(), selectedSubcategories)) {
+        this._categoryService.notifySubcategoriesMoved();
       this._setDirty();
     }
   }
@@ -240,7 +242,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
     super._showLoader();
 
     this._loadSubcategories()
-      .cancelOnDestroy(this, this.widgetReset$)
+      .pipe(cancelOnDestroy(this, this.widgetReset$))
       .subscribe(() => {
           super._hideLoader();
         },

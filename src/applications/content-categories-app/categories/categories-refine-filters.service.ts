@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/forkJoin';
@@ -17,7 +17,7 @@ import {EntitlementsFiltersList} from './default-filters-list';
 
 import * as R from 'ramda';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 export interface RefineGroupListItem {
   value: string,

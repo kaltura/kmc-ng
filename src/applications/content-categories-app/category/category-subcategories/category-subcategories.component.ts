@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {KalturaCategory} from 'kaltura-ngx-client';
 import {CategorySubcategoriesWidget} from './category-subcategories-widget.service';
-import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
-
+import {AppLocalization} from '@kaltura-ng/mc-shared';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kCategorySubcategories',
@@ -27,7 +27,7 @@ export class CategorySubcategoriesComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._widgetService.attachForm();
     this._widgetService.subcategories$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(subcategories => {
       this._clearSelection();
       this._subcategories = subcategories;

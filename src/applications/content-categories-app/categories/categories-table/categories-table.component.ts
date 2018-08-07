@@ -1,24 +1,30 @@
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component, ElementRef,
+    EventEmitter, HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
 } from '@angular/core';
 import {Menu, MenuItem} from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import {KalturaCategory} from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
+import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 @Component({
   selector: 'kCategoriesTable',
   templateUrl: './categories-table.component.html',
-  styleUrls: ['./categories-table.component.scss']
+  styleUrls: ['./categories-table.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'categories-table' }
+    ]
 })
 export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input()
@@ -58,8 +64,11 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 
   public rowTrackBy: Function = (index: number, item: any) => item.id;
 
-  constructor(private appLocalization: AppLocalization,
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private appLocalization: AppLocalization,
               private cdRef: ChangeDetectorRef,
+              private _reachAppViewService: ReachAppViewService,
+              private _el: ElementRef<HTMLElement>,
               private _permissionsService: KMCPermissionsService) {
   }
 
@@ -81,6 +90,8 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
         this._deferredCategories = null;
       }, 0);
     }
+
+    this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   onActionSelected(action: string, category: KalturaCategory) {
@@ -111,6 +122,11 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
         label: this.appLocalization.get('applications.content.categories.moveCategory'),
         command: () => this.onActionSelected('moveCategory', category)
       },
+        {
+            id: 'addServiceRule',
+            label: this.appLocalization.get('applications.content.categories.addServiceRule'),
+            command: () => this.onActionSelected('addServiceRule', category)
+        },
       {
         id: 'delete',
         label: this.appLocalization.get('applications.content.categories.delete'),
@@ -123,7 +139,8 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
       <{ id: string }[]>this._items,
       {
         'moveCategory': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES,
-        'delete': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES
+        'delete': KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES,
+        'addServiceRule': this._reachAppViewService.isAvailable({ page: ReachPages.category, category })
       }
     );
   }

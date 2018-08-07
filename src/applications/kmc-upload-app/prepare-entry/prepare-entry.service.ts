@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {KalturaClient} from 'kaltura-ngx-client';
-import {Observable} from 'rxjs/Observable';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {MediaAddAction} from "kaltura-ngx-client/api/types/MediaAddAction";
-import {KalturaMediaEntry} from "kaltura-ngx-client/api/types/KalturaMediaEntry";
-import {KalturaMediaType} from "kaltura-ngx-client/api/types/KalturaMediaType";
-import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
+import { Observable } from 'rxjs';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import {MediaAddAction} from 'kaltura-ngx-client';
+import {KalturaMediaEntry} from 'kaltura-ngx-client';
+import {KalturaMediaType} from 'kaltura-ngx-client';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
 
 
 export interface DraftEntry {

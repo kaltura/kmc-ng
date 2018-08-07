@@ -1,10 +1,10 @@
 import { Component, AfterViewInit, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppAuthentication } from 'app-shared/kmc-shell';
-import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
+import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 
 import { EntryThumbnailsWidget, ThumbnailRow } from './entry-thumbnails-widget.service';
 import { Menu, MenuItem } from 'primeng/primeng';

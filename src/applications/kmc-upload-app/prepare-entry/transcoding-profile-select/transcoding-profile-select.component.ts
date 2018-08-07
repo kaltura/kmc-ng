@@ -1,11 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {TranscodingProfilesService} from './transcoding-profiles.service';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {KalturaMediaType} from 'kaltura-ngx-client';
 
 @Component({
   selector: 'kTranscodingProfileSelect',

@@ -1,6 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
-import {AppLocalization} from '@kaltura-ng/mc-shared/localization';
+import {KalturaPlaylist} from 'kaltura-ngx-client';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
 
 @Pipe({name: 'kToPlaylistName'})
 export class PlaylistNamePipe implements PipeTransform {

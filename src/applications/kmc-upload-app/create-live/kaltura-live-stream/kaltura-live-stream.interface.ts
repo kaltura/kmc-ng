@@ -1,4 +1,4 @@
-import {KalturaRecordStatus} from 'kaltura-ngx-client/api/types/KalturaRecordStatus';
+import {KalturaRecordStatus} from 'kaltura-ngx-client';
 
 export interface KalturaLive {
   name: string

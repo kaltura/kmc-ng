@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NotificationTypes, ActionTypes, TranscodingProfileStore } from './transcoding-profile-store.service';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { Observable } from 'rxjs/Observable';
-import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { Observable } from 'rxjs';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client';
 import { TranscodingProfileWidgetsManager } from './transcoding-profile-widgets-manager';
 import { TranscodingProfileSectionsListWidget } from './transcoding-profile-sections-list/transcoding-profile-sections-list-widget.service';
 import { TranscodingProfileDetailsWidget } from './transcoding-profile-details/transcoding-profile-details-widget.service';
@@ -18,6 +18,7 @@ import {
     SettingsTranscodingProfileViewSections,
     SettingsTranscodingProfileViewService
 } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kTranscodingProfile',
@@ -95,7 +96,7 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
       this._profileStore.notifications$
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(
               ({ type, error }) => {
                   switch(type) {
@@ -115,7 +116,7 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
                   }
               });
     this._profileStore.profile.state$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .filter(Boolean)
       .subscribe(
         status => {

@@ -1,15 +1,20 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { UploadFileData } from './upload-list.component';
+import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
 
 @Component({
   selector: 'kUploadListTable',
   templateUrl: './upload-list-table.component.html',
-  styleUrls: ['./upload-list-table.component.scss']
+  styleUrls: ['./upload-list-table.component.scss'],
+    providers: [
+        ColumnsResizeManagerService,
+        { provide: ResizableColumnsTableName, useValue: 'uploads-table' }
+    ]
 })
-export class UploadListTableComponent {
+export class UploadListTableComponent implements AfterViewInit {
   @Input() uploads: UploadFileData[];
   @Input() selectedUploads: UploadFileData[] = [];
 
@@ -19,7 +24,13 @@ export class UploadListTableComponent {
 
   public _emptyMessage = this._appTranslation.get('applications.content.table.noResults');
 
-  constructor(private _appTranslation: AppLocalization) {
+  constructor(public _columnsResizeManager: ColumnsResizeManagerService,
+              private _el: ElementRef<HTMLElement>,
+              private _appTranslation: AppLocalization) {
+  }
+
+  ngAfterViewInit() {
+      this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
   public _hasError(status: TrackedFileStatuses): boolean {

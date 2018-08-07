@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
+import { KalturaUser } from 'kaltura-ngx-client';
 import { AppAuthentication } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 @Pipe({ name: 'accountOwner' })
 export class AccountOwnerPipe implements PipeTransform {

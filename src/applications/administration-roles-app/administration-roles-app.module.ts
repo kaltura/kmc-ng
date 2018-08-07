@@ -3,14 +3,13 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
+import { TagsModule } from '@kaltura-ng/kaltura-ui';
 import {
   AccordionModule,
   ButtonModule,
   CalendarModule,
   CheckboxModule,
   ConfirmDialogModule,
-  DataTableModule,
   DropdownModule, InputSwitchModule,
   InputTextareaModule,
   InputTextModule,
@@ -29,17 +28,17 @@ import { AdministrationRolesComponent } from './administration-roles.component';
 
 import { DynamicMetadataFormModule } from 'app-shared/kmc-shared';
 
-import {LocalizationModule} from '@kaltura-ng/mc-shared/localization';
+import {LocalizationModule} from '@kaltura-ng/mc-shared';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
-import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
-import { DynamicFormModule } from '@kaltura-ng/kaltura-ui/dynamic-form';
-import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
+import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
+import { DynamicFormModule } from '@kaltura-ng/kaltura-ui';
+import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { EditRoleComponent } from './edit-role/edit-role.component';
 import { PermissionsTableComponent } from './permissions-table/permissions-table.component';
 import { TableModule } from 'primeng/table';
-import { MultiSelectModule } from '@kaltura-ng/kaltura-primeng-ui/multi-select/multi-select.module';
+import { MultiSelectModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { RolesListComponent } from './roles-list/roles-list.component';
 import { RolesTableComponent } from './roles-table/roles-table.component';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
@@ -54,7 +53,6 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     CheckboxModule,
     CommonModule,
     ConfirmDialogModule,
-    DataTableModule,
     DropdownModule,
     DynamicFormModule,
     FormsModule,

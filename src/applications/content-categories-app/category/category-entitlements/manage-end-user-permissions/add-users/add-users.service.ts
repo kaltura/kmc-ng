@@ -1,15 +1,15 @@
 import {Injectable} from '@angular/core';
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
-import {UserListAction} from 'kaltura-ngx-client/api/types/UserListAction';
-import {KalturaUserFilter} from 'kaltura-ngx-client/api/types/KalturaUserFilter';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
-import {Observable} from 'rxjs/Observable';
-import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
-import {CategoryUserAddAction} from 'kaltura-ngx-client/api/types/CategoryUserAddAction';
-import {KalturaCategoryUser} from 'kaltura-ngx-client/api/types/KalturaCategoryUser';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import {CategoryUserCopyFromCategoryAction} from "kaltura-ngx-client/api/types/CategoryUserCopyFromCategoryAction";
+import {UserListAction} from 'kaltura-ngx-client';
+import {KalturaUserFilter} from 'kaltura-ngx-client';
+import {KalturaFilterPager} from 'kaltura-ngx-client';
+import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client';
+import { Observable } from 'rxjs';
+import {KalturaUpdateMethodType} from 'kaltura-ngx-client';
+import {CategoryUserAddAction} from 'kaltura-ngx-client';
+import {KalturaCategoryUser} from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import {CategoryUserCopyFromCategoryAction} from 'kaltura-ngx-client';
 import 'rxjs/add/operator/delay';
 
 @Injectable()

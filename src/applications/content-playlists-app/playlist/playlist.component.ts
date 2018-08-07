@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import { Observable } from 'rxjs/Observable';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { Observable } from 'rxjs';
 import { NotificationTypes, ActionTypes, PlaylistStore } from './playlist-store.service';
 import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';
@@ -12,9 +12,10 @@ import { ManualContentWidget } from './playlist-content/manual/manual-content-wi
 import { PlaylistMetadataWidget } from './playlist-metadata/playlist-metadata-widget.service';
 import { PlaylistDetailsWidget } from './playlist-details/playlist-details-widget.service';
 import { RuleBasedContentWidget } from './playlist-content/rule-based/rule-based-content-widget.service';
-import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import { KalturaPlaylistType } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentPlaylistViewSections, ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kPlaylist',
@@ -67,7 +68,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     let errorMessage;
 
       this._playlistStore.notifications$
-          .cancelOnDestroy(this)
+          .pipe(cancelOnDestroy(this))
           .subscribe(
               ({ type, error }) => {
                   switch(type) {
@@ -88,7 +89,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
               });
 
     this._playlistStore.state$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
         status => {
           this._showLoader = false;

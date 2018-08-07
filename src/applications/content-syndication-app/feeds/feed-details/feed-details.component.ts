@@ -1,22 +1,23 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {KalturaPlaylist} from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import {KalturaPlaylist} from 'kaltura-ngx-client';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client/api/types/KalturaBaseSyndicationFeed';
-import {KalturaUiConf} from 'kaltura-ngx-client/api/types/KalturaUiConf';
-import {KalturaFlavorParams} from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
+import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client';
+import {KalturaUiConf} from 'kaltura-ngx-client';
+import {KalturaFlavorParams} from 'kaltura-ngx-client';
 import {FeedsService} from 'applications/content-syndication-app/feeds/feeds.service';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {KalturaSyndicationFeedType} from 'kaltura-ngx-client/api/types/KalturaSyndicationFeedType';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {KalturaSyndicationFeedType} from 'kaltura-ngx-client';
 import {FlavoursStore} from 'app-shared/kmc-shared';
-import {Observable} from 'rxjs/Observable';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
-import {KalturaSyndicationFeedEntryCount} from 'kaltura-ngx-client/api/types/KalturaSyndicationFeedEntryCount';
+import { Observable } from 'rxjs';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import {KalturaSyndicationFeedEntryCount} from 'kaltura-ngx-client';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PlayersStore} from 'app-shared/kmc-shared/players/players-store.service';
-import {KalturaPlaylistType} from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import {KalturaPlaylistType} from 'kaltura-ngx-client';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {PlayerTypes} from 'app-shared/kmc-shared/players';
 import { KMCPermissions , KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export abstract class DestinationComponentBase {
   abstract getData(): KalturaBaseSyndicationFeed;
@@ -155,7 +156,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
 
     this._isBusy = true;
     this._queryData()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(response => {
           this._logger.debug(`handle successful data loading`);
         this._isBusy = false;
@@ -223,17 +224,17 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
       return Observable.throw('An error occurred while trying to load feed');
     }
 
-    const getPlayers$ = this._playersStore.get({type: PlayerTypes.Entry}).cancelOnDestroy(this);
-    const getFlavours$ = this._flavorsStore.get().cancelOnDestroy(this);
+    const getPlayers$ = this._playersStore.get({type: PlayerTypes.Entry}).pipe(cancelOnDestroy(this));
+    const getFlavours$ = this._flavorsStore.get().pipe(cancelOnDestroy(this));
     const requests: Observable<any>[] = [getPlayers$, getFlavours$];
 
     if (this._mode === 'edit' && !this._isPlaylistMissing) {
         this._logger.debug(`get entries for edit mode`);
-      const getEntriesCount$ = this._feedsService.getFeedEntryCount(this.feed.id).cancelOnDestroy(this);
+      const getEntriesCount$ = this._feedsService.getFeedEntryCount(this.feed.id).pipe(cancelOnDestroy(this));
       requests.push(getEntriesCount$);
     }
     return Observable.forkJoin(...requests)
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .map(response => {
         const players = response[0].items.map(player => ({
           id: player.id,
@@ -327,8 +328,8 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
     this._blockerMessage = null;
 
     this._feedsService.create(syndicationFeed)
-      .tag('block-shell')
-      .cancelOnDestroy(this)
+      .pipe(tag('block-shell'))
+      .pipe(cancelOnDestroy(this))
       .subscribe((feed) => {
           this._logger.info(`handle successful request`);
         this._feedsService.reload();
@@ -367,8 +368,8 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
     this._blockerMessage = null;
 
     this._feedsService.update(id, syndicationFeed)
-      .tag('block-shell')
-      .cancelOnDestroy(this)
+      .pipe(tag('block-shell'))
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
           this._logger.info(`handle successful request`);
         this._feedsService.reload();
@@ -421,8 +422,8 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
       this._blockerMessage = null;
       this._logger.info(`handle delete feed request`, { feedId: this.feed.id });
       this._feedsService.deleteFeeds([this.feed.id])
-        .cancelOnDestroy(this)
-        .tag('block-shell')
+        .pipe(cancelOnDestroy(this))
+        .pipe(tag('block-shell'))
         .subscribe(
           result => {
               this._logger.info(`handle successful request`);
@@ -457,7 +458,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
     if (this._mode === 'edit') {
         this._logger.info(`handle delete feeds action in edit mode`);
       this._feedsService.confirmDelete([this.feed])
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe(result => {
           if (result.confirmed) {
             executeDelete();

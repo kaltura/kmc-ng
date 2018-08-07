@@ -1,26 +1,26 @@
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
-import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
+import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
+import {KalturaFilterPager} from 'kaltura-ngx-client';
+import {KalturaResponseProfileType} from 'kaltura-ngx-client';
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
-import {CategoryUserDeleteAction} from 'kaltura-ngx-client/api/types/CategoryUserDeleteAction';
-import {CategoryUserListAction} from 'kaltura-ngx-client/api/types/CategoryUserListAction';
-import {KalturaCategoryUserFilter} from 'kaltura-ngx-client/api/types/KalturaCategoryUserFilter';
-import {UserGetAction} from 'kaltura-ngx-client/api/types/UserGetAction';
-import {KalturaCategoryUser} from 'kaltura-ngx-client/api/types/KalturaCategoryUser';
-import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
-import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
-import {CategoryUserActivateAction} from 'kaltura-ngx-client/api/types/CategoryUserActivateAction';
-import {CategoryUserDeactivateAction} from 'kaltura-ngx-client/api/types/CategoryUserDeactivateAction';
-import {CategoryUserUpdateAction} from 'kaltura-ngx-client/api/types/CategoryUserUpdateAction';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import {KalturaUser} from 'kaltura-ngx-client';
+import {CategoryUserDeleteAction} from 'kaltura-ngx-client';
+import {CategoryUserListAction} from 'kaltura-ngx-client';
+import {KalturaCategoryUserFilter} from 'kaltura-ngx-client';
+import {UserGetAction} from 'kaltura-ngx-client';
+import {KalturaCategoryUser} from 'kaltura-ngx-client';
+import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client';
+import {KalturaUpdateMethodType} from 'kaltura-ngx-client';
+import {CategoryUserActivateAction} from 'kaltura-ngx-client';
+import {CategoryUserDeactivateAction} from 'kaltura-ngx-client';
+import {CategoryUserUpdateAction} from 'kaltura-ngx-client';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {
   BooleanTypeAdapter,
   FiltersStoreBase,
@@ -28,11 +28,13 @@ import {
     ListTypeAdapter,
   StringTypeAdapter,
   TypeAdaptersMapping
-} from '@kaltura-ng/mc-shared/filters';
-import {KalturaSearchOperator} from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
-import {KalturaSearchOperatorType} from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
-import {KalturaCategoryUserStatus} from 'kaltura-ngx-client/api/types/KalturaCategoryUserStatus';
-import { CategoryGetAction } from 'kaltura-ngx-client/api/types/CategoryGetAction';
+} from '@kaltura-ng/mc-shared';
+import {KalturaSearchOperator} from 'kaltura-ngx-client';
+import {KalturaSearchOperatorType} from 'kaltura-ngx-client';
+import {KalturaCategoryUserStatus} from 'kaltura-ngx-client';
+import { CategoryGetAction } from 'kaltura-ngx-client';
+import { switchMap, map } from 'rxjs/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface LoadingStatus {
   loading: boolean;
@@ -120,7 +122,7 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
 
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(() => {
         this._executeQuery();
       });
@@ -158,7 +160,7 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
     this._logger.info(`handle loading category data`);
 
       this._querySubscription = this.buildQueryRequest()
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(response => {
               this._logger.info(`handle successful loading category data`);
           this._querySubscription = null;
@@ -251,36 +253,41 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
           );
 
           return this._kalturaClient.multiRequest(requests)
-              .map(result => {
-                  if (result.hasErrors()) {
-                      throw new Error(result.find(item => !!item.error).error.message);
-                  } else {
-                      const users = result[0].result.objects;
-                      const totalCount = result[0].result.totalCount;
-                      const actualUsersCount = result[1].result.membersCount;
-                      return {users, totalCount, actualUsersCount};
-                  }
-              })
-              .switchMap(
-                  result => this._getKalturaUsers(result.users.map(item => item.userId)),
-                  (categoryUserListResult, getKalturaUsersResult) => {
-                      const items = categoryUserListResult.users.map((categoryUser, index) => {
-                          const kalturaUser = getKalturaUsersResult[index];
-                          return {
-                              id: categoryUser.userId,
-                              name: kalturaUser.screenName || categoryUser.userId,
-                              permissionLevel: categoryUser.permissionLevel,
-                              status: categoryUser.status,
-                              updateMethod: categoryUser.updateMethod,
-                              updatedAt: categoryUser.updatedAt
-                          };
-                      });
-                      return {
-                          items,
-                          totalCount: categoryUserListResult.totalCount,
-                          actualUsersCount: categoryUserListResult.actualUsersCount
-                      };
-                  }
+              .pipe(
+                  map(result => {
+                      if (result.hasErrors()) {
+                          throw new Error(result.find(item => !!item.error).error.message);
+                      } else {
+                          const users = result[0].result.objects;
+                          const totalCount = result[0].result.totalCount;
+                          const actualUsersCount = result[1].result.membersCount;
+                          return {users, totalCount, actualUsersCount};
+                      }
+                  }),
+                  switchMap(
+                      categoryUserListResult =>
+                          this._getKalturaUsers(categoryUserListResult.users.map(item => item.userId))
+                          .pipe(
+                              map((getKalturaUsersResult) => {
+                                  const items = categoryUserListResult.users.map((categoryUser, index) => {
+                                      const kalturaUser = getKalturaUsersResult[index];
+                                      return {
+                                          id: categoryUser.userId,
+                                          name: kalturaUser.screenName || categoryUser.userId,
+                                          permissionLevel: categoryUser.permissionLevel,
+                                          status: categoryUser.status,
+                                          updateMethod: categoryUser.updateMethod,
+                                          updatedAt: categoryUser.updatedAt
+                                      };
+                                  });
+                                  return {
+                                      items,
+                                      totalCount: categoryUserListResult.totalCount,
+                                      actualUsersCount: categoryUserListResult.actualUsersCount
+                                  };
+                              })
+                          )
+                  )
               );
       } catch (err) {
           return Observable.throw(err);

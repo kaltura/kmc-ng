@@ -1,8 +1,9 @@
 import {Component, ViewChild} from '@angular/core';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {KalturaMediaType} from 'kaltura-ngx-client';
 import {PrepareEntryComponent} from '../prepare-entry/prepare-entry.component';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCFileCreationType } from '../upload-settings/upload-settings.component';
 
 @Component({
   selector: 'kUploadButton',
@@ -15,11 +16,14 @@ export class UploadButtonComponent {
   @ViewChild('createLive') createLivePopup: PopupWidgetComponent;
   @ViewChild('prepareEntry') prepareEntryComponent: PrepareEntryComponent;
   @ViewChild('bulkuploadmenu') bulkUploadMenu: PopupWidgetComponent;
+  @ViewChild('createFromYoutube') createFromYoutube: PopupWidgetComponent;
 
-  disabled = true;
+    public _disabled = true;
+    public _creationTypes = KMCFileCreationType;
+    public _creationType = this._creationTypes.upload;
 
   constructor(private _appPermissions: KMCPermissionsService) {
-      this.disabled = !this._appPermissions.hasAnyPermissions([
+      this._disabled = !this._appPermissions.hasAnyPermissions([
           KMCPermissions.CONTENT_INGEST_UPLOAD,
           KMCPermissions.CONTENT_INGEST_BULK_UPLOAD,
           KMCPermissions.CONTENT_INGEST_ORPHAN_VIDEO,
@@ -33,7 +37,8 @@ export class UploadButtonComponent {
 
     switch (item) {
       case 'uploadFromDesktop':
-        this.uploadSettingsPopup.open();
+          this._creationType = KMCFileCreationType.upload;
+          this.uploadSettingsPopup.open();
         break;
       case 'bulkUpload':
         this.bulkUploadMenu.open();
@@ -46,6 +51,13 @@ export class UploadButtonComponent {
         break;
       case 'createLive':
         this.createLivePopup.open();
+        break;
+    case 'createFromUrl':
+        this._creationType = KMCFileCreationType.import;
+        this.uploadSettingsPopup.open();
+        break;
+    case 'createFromYoutube':
+        this.createFromYoutube.open();
         break;
       default:
         break;

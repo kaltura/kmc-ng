@@ -1,14 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaFeatureStatusListResponse } from 'kaltura-ngx-client/api/types/KalturaFeatureStatusListResponse';
-import { KalturaFeatureStatusType } from 'kaltura-ngx-client/api/types/KalturaFeatureStatusType';
+import { KalturaFeatureStatusListResponse } from 'kaltura-ngx-client';
+import { KalturaFeatureStatusType } from 'kaltura-ngx-client';
 import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
 import { modulesConfig } from 'config/modules';
 import { CategoriesStatusRequestFactory } from './categories-status-request-factory';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { KalturaFeatureStatus } from 'kaltura-ngx-client/api/types/KalturaFeatureStatus';
+import { KalturaFeatureStatus } from 'kaltura-ngx-client';
 import { PollInterval } from '@kaltura-ng/kaltura-common';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface CategoriesStatus {
     lock: boolean;
@@ -27,7 +28,7 @@ export class CategoriesStatusMonitorService implements OnDestroy {
     private _logger: KalturaLogger;
 
     private _categoriesStatusRequestFactory = new CategoriesStatusRequestFactory();
-    
+
 
     constructor( private _kmcServerPolls: KmcServerPolls, private _kalturaClient: KalturaClient, _logger: KalturaLogger ) {
         this._logger = _logger.subLogger('categoriesStatusMonitor');
@@ -35,19 +36,19 @@ export class CategoriesStatusMonitorService implements OnDestroy {
         this._startPolling();
     }
 
-   
+
     ngOnDestroy() {
         this._logger.debug('ngOnDestroy()');
         this._status.complete();
     }
-    
+
     private _startPolling(): void {
         if (this._pollingState !== 'running') {
             this._pollingState = 'running';
             this._logger.info(`start server polling every ${this._pollingInterval} seconds to get categories status`);
 
             this._kmcServerPolls.register<KalturaFeatureStatusListResponse>(this._pollingInterval , this._categoriesStatusRequestFactory)
-                .cancelOnDestroy(this)
+                .pipe(cancelOnDestroy(this))
                 .subscribe(response => {
                     this._handleResponse(response);
                 });
@@ -85,7 +86,7 @@ export class CategoriesStatusMonitorService implements OnDestroy {
 
     // API to invoke immediate categories status update
     public updateCategoriesStatus():void{
-        this._kalturaClient.request(this._categoriesStatusRequestFactory.create()).cancelOnDestroy(this)
+        this._kalturaClient.request(this._categoriesStatusRequestFactory.create()).pipe(cancelOnDestroy(this))
 	        .subscribe(response => {
                 this._handleResponse(response);
             });

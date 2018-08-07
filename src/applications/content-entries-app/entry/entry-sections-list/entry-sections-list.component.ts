@@ -2,7 +2,7 @@ import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/
 import { EntryStore } from '../entry-store.service';
 import { StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { EntrySectionsListWidget, SectionWidgetItem } from './entry-sections-list-widget.service';
 
 
@@ -37,7 +37,7 @@ export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
 		this._widgetService.attachForm();
 
         this._widgetService.sections$
-        .cancelOnDestroy(this)
+        .pipe(cancelOnDestroy(this))
         .subscribe(
 			sections =>
 			{

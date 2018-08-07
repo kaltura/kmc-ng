@@ -217,7 +217,7 @@
   </div>
 </k-area-blocker>
 
-<kPopupWidget #changeOwnerPopup [popupWidth]="586" [popupHeight]="278" [closeBtn]="true" [modal]="true">
+<kPopupWidget #changeOwnerPopup data-aid="changeOwnerPopup" [popupWidth]="586" [popupHeight]="278" [closeBtn]="true" [modal]="true">
   <ng-template>
     <kCategoryChangeOwner [parentPopupWidget]="changeOwnerPopup" (ownerChanged)="onOwnerChanged($event)"
                           [category]="_widgetService.data"></kCategoryChangeOwner>
@@ -225,7 +225,7 @@
 </kPopupWidget>
 
 
-<kPopupWidget #manageUsersPopup [popupWidth]="996" [slider]="true">
+<kPopupWidget #manageUsersPopup data-aid="manageUsersPopup" [popupWidth]="996" [slider]="true">
   <ng-template>
     <kManageEndUsers
       [categoryInheritUserPermissions]="_widgetService.entitlementsForm.controls['inheritUsersPermissions'].value"

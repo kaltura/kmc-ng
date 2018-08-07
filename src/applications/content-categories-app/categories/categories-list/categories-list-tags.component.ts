@@ -1,12 +1,13 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {GroupedListType} from '@kaltura-ng/mc-shared/filters';
+import {GroupedListType} from '@kaltura-ng/mc-shared';
 import {CategoriesFilters, CategoriesService} from '../categories.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {RefineGroup, RefineGroupList} from '../categories-refine-filters.service';
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
 import {ISubscription} from 'rxjs/Subscription';
 import {DatePipe} from '@kaltura-ng/kaltura-ui';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export interface TagItem {
   type: string,
@@ -174,7 +175,7 @@ export class CategoriesListTagsComponent implements OnInit, OnDestroy {
 
   private _registerToFilterStoreDataChanges(): void {
     this._categoriesService.filtersChange$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(({changes}) => {
         this._updateComponentState(changes);
       });
@@ -256,7 +257,7 @@ export class CategoriesListTagsComponent implements OnInit, OnDestroy {
                     newTag.label = `(${this._appLocalization.get('applications.content.filters.loading_lbl')})`;
                     newTag.tooltip = this._appLocalization.get('applications.content.filters.categoryId_tt', {'0': item});
                     newTag.dataFetchSubscription = this._categoriesSearch.getCategory(Number(item))
-                        .cancelOnDestroy(this)
+                        .pipe(cancelOnDestroy(this))
                         .subscribe(
                             result => {
                                 newTag.label = result.name;

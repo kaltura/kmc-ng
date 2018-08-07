@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AppLocalization } from '@kaltura-ng/mc-shared/localization';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppAuthentication } from './app-authentication.service';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 import { globalConfig } from 'config/global';
@@ -33,7 +33,7 @@ export class AppBootstrap implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
         if (!AppBootstrap._executed) {
             AppBootstrap._executed = true;
-            this._bootstrap(state.url);
+            this._bootstrap();
         }
 
         return Observable.create((observer: any) => {
@@ -71,7 +71,7 @@ export class AppBootstrap implements CanActivate {
         });
     }
 
-    private _bootstrap(defaultUrl: string): void {
+    private _bootstrap(): void {
 
         if (!this._initialized) {
             const bootstrapFailure = (error: any) => {
@@ -88,15 +88,7 @@ export class AppBootstrap implements CanActivate {
             const language = this.getCurrentLanguage();
             this.appLocalization.load(language, 'en').subscribe(
                 () => {
-
-                    this.auth.loginAutomatically(defaultUrl).subscribe(
-                        () => {
-                            this._bootstrapStatusSource.next(BoostrappingStatus.Bootstrapped);
-                        },
-                        () => {
-                            bootstrapFailure("Authentication process failed");
-                        }
-                    );
+                    this._bootstrapStatusSource.next(BoostrappingStatus.Bootstrapped);
                 },
                 (error) => {
                     bootstrapFailure(error);

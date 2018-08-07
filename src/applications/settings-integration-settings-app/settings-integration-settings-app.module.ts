@@ -3,18 +3,19 @@ import {CommonModule} from '@angular/common';
 import {routing} from './settings-integration-settings-app.routes';
 import {RouterModule} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
-import {ButtonModule, DataTableModule, DropdownModule, InputTextModule, MenuModule} from 'primeng/primeng';
+import {ButtonModule, DropdownModule, InputTextModule, MenuModule} from 'primeng/primeng';
 import {AreaBlockerModule, InputHelperModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
-import {TranslateModule} from 'ng2-translate';
+import {TranslateModule} from '@ngx-translate/core';
 import {SettingsIntegrationSettingsComponent} from './settings-integration-settings.component';
 import {AccountInfoComponent} from './account-info/account-info.component';
 import {EntitlementComponent} from './entitlement/entitlement.component';
 import {EntitlementTableComponent} from './entitlement/entitlement-table/entitlement-table.component';
-import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
+import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui';
 import {NewEntitlementComponent} from './entitlement/new-entitlement/new-entitlement.component';
 import {EditEntitlementComponent} from './entitlement/edit-entitlement/edit-entitlement.component';
 import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   imports: [
@@ -26,7 +27,6 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     ButtonModule,
     AreaBlockerModule,
     TranslateModule,
-    DataTableModule,
     TooltipModule,
     MenuModule,
     PopupWidgetModule,
@@ -34,7 +34,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     CategoriesModule,
     KMCPermissionsModule,
     InputHelperModule,
-    KMCPermissionsModule
+    KMCPermissionsModule,
+      TableModule
   ],
   declarations: [
     SettingsIntegrationSettingsComponent,

@@ -6,7 +6,7 @@ import {RouterModule} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ButtonModule, InputTextareaModule, InputTextModule} from 'primeng/primeng';
 import {AreaBlockerModule, KalturaUIModule} from '@kaltura-ng/kaltura-ui';
-import {TranslateModule} from 'ng2-translate';
+import {TranslateModule} from '@ngx-translate/core';
 import {AccountInfoComponent} from './account-info/account-info.component';
 
 @NgModule({

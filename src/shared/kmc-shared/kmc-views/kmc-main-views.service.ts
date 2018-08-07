@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ContentCategoriesMainViewService,
     ContentEntriesMainViewService,
     ContentModerationMainViewService,
@@ -22,8 +23,7 @@ import { ContentCategoriesMainViewService,
     SettingsMyUserSettingsMainViewService,
     SettingsAccountInformationMainViewService
 } from './main-views';
-import { Observable } from 'rxjs/Observable';
-
+import { Observable } from 'rxjs';
 
 export interface KMCAppMenuItem {
     menuTitle: string;
@@ -65,7 +65,8 @@ export class KmcMainViewsService {
         private _settingsTranscodingMain: SettingsTranscodingMainViewService,
         private _settingsMetadataMain: SettingsMetadataMainViewService,
         private _settingsMyUserSettingsMain: SettingsMyUserSettingsMainViewService,
-        private _settingsAccountInformationMain: SettingsAccountInformationMainViewService
+        private _settingsAccountInformationMain: SettingsAccountInformationMainViewService,
+        private _appLocalization: AppLocalization
     ) {
         this._logger = logger.subLogger('KmcMainViewsService');
     }
@@ -73,7 +74,7 @@ export class KmcMainViewsService {
     private _getMainViewsList(): KMCAppMenuItem[] {
         return [
             {
-                menuTitle: 'content',
+                menuTitle: this._appLocalization.get('app.titles.content'),
                 isAvailable: true,
                 isActiveView: (activePath: string) => (activePath.indexOf(`/content`) !== -1),
                 position: 'left',
@@ -153,7 +154,7 @@ export class KmcMainViewsService {
                 ]
             },
             {
-                menuTitle: 'studio',
+                menuTitle: this._appLocalization.get('app.titles.studio'),
                 isAvailable: true,
                 isActiveView: (activePath: string) => (activePath.indexOf(`/studio`) !== -1),
                 position: 'left',
@@ -189,7 +190,7 @@ export class KmcMainViewsService {
                 isActiveView: (activePath: string) => activePath.indexOf(`/analytics`) !== -1,
                 position: 'left',
                 isAvailable: true,
-                menuTitle: 'analytics',
+                menuTitle: this._appLocalization.get('app.titles.analytics'),
                 children: [
                     {
                         isAvailable: this._liveAnalyticsMain.isAvailable(),
@@ -209,7 +210,7 @@ export class KmcMainViewsService {
             {
                 isActiveView: (activePath: string) => activePath.indexOf(`/settings`) !== -1,
                 isAvailable: true,
-                menuTitle: 'settings',
+                menuTitle: this._appLocalization.get('app.titles.settings'),
                 icon: 'kIcongear',
                 position: 'right',
                 children: [
@@ -280,7 +281,7 @@ export class KmcMainViewsService {
             }, {
                 isActiveView: (activePath: string) => activePath.indexOf(`/administration`) !== -1,
                 isAvailable: true,
-                menuTitle: 'Administration',
+                menuTitle: this._appLocalization.get('app.titles.administration'),
                 icon: 'kIconuser',
                 position: 'right',
                 children: [

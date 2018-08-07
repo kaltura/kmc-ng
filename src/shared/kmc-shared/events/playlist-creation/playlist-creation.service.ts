@@ -3,8 +3,8 @@ import { AppEventsService } from 'shared/kmc-shared/app-events';
 import { CreateNewPlaylistEvent, CreateNewPlaylistEventArgs } from './create-new-playlist.event';
 import { ISubscription } from 'rxjs/Subscription';
 import { ContentPlaylistViewSections, ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
-import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import { KalturaPlaylist } from 'kaltura-ngx-client';
+import { KalturaPlaylistType } from 'kaltura-ngx-client';
 
 @Injectable()
 export class PlaylistCreationService implements OnDestroy {

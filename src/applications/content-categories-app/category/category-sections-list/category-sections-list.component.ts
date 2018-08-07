@@ -3,7 +3,7 @@ import {CategoryService} from '../category.service';
 import {CategorySectionsListWidget, SectionWidgetItem} from './category-sections-list-widget.service';
 import {StickyComponent} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from "app-shared/kmc-shell";
-
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kCategorySectionsList',
@@ -32,7 +32,7 @@ export class CategorySectionsListComponent implements OnInit, OnDestroy {
       this._widgetService.attachForm();
 
     this._widgetService.sections$
-      .cancelOnDestroy(this)
+      .pipe(cancelOnDestroy(this))
       .subscribe(
       sections => {
         this._loading = false;
