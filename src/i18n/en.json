@@ -1406,6 +1406,7 @@
                     "downloadEntry": "Download Entry"
                 },
                 "save": "Save",
+                "newDraftEntryWarning": "Entry was automatically saved. Do you want to keep this entry?",
                 "sections": {
                     "metadata": "Metadata",
                     "thumbnails": "Thumbnails",
