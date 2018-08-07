@@ -93,21 +93,9 @@ export class EntryStore implements OnDestroy {
 		this._onSectionsStateChanges();
 		this._onRouterEvents();
 
-		// hard reload the entries upon navigating back from entry (by adding 'reloadEntriesListOnNavigateOut' to the queryParams)
-    this._entryRoute.queryParams.pipe(cancelOnDestroy(this))
-      .first()
-      .subscribe(queryParams => {
-          // hard reload the entries upon navigating back from entry (by adding 'reloadEntriesListOnNavigateOut' to the queryParams)
-          this._refreshEntriesListUponLeave = !!queryParams['reloadEntriesListOnNavigateOut']; // convert string to boolean
-
-          // raise confirmation if user tries to leave a new draft entry without updating it
-          this._isNewDraftEntry = !!queryParams['draftEntry'];
-
-          // clean url from queryParams
-          const section = this._entryRoute.snapshot.firstChild.url[0].path;
-          const entryId = this._entryRoute.snapshot.params['id'];
-          this._location.replaceState(`/content/entries/entry/${entryId}/${section}`);
-      });
+        const { reloadEntriesListOnNavigateOut, draftEntry } = this._contentEntryViewService.popOpenArgs() || {};
+        this._refreshEntriesListUponLeave = !!reloadEntriesListOnNavigateOut;
+        this._isNewDraftEntry = !!draftEntry;
     }
     private _onSectionsStateChanges()
 	{

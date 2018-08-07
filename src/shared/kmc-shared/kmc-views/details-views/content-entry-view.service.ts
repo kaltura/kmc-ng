@@ -44,8 +44,6 @@ export interface ContentEntryViewArgs {
 
 @Injectable()
 export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEntryViewArgs> {
-    public reloadEntriesListOnNavigateOut: boolean;
-
     constructor(private _appPermissions: KMCPermissionsService,
                 private _appLocalization: AppLocalization,
                 private _kalturaClient: KalturaClient,
@@ -281,16 +279,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
     protected _open(args: ContentEntryViewArgs): Observable<boolean> {
         const sectionToken = this._getSectionRouteToken(args.section);
         this._logger.info('handle open entry view request by the user', { entryId: args.entry.id, sectionToken });
-        const url = this._router.createUrlTree(
-            ['content', 'entries', 'entry', args.entry.id, sectionToken],
-            {
-                queryParams: {
-                    reloadEntriesListOnNavigateOut: args.reloadEntriesListOnNavigateOut,
-                    draftEntry: args.draftEntry
-                }
-            }
-        );
-        return Observable.fromPromise(this._router.navigateByUrl(url));
+        return Observable.fromPromise(this._router.navigateByUrl(`/content/entries/entry/${args.entry.id}/${sectionToken}`));
     }
 
     public openById(entryId: string, section: ContentEntryViewSections, reloadEntriesListOnNavigateOut?: boolean, draftEntry?: boolean): void {
@@ -315,6 +304,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
             })
             .switchMap(entry => {
                 this._logger.info(`handle successful request, proceed navigation`);
+                this._setOpenArgs({ entry, section: ContentEntryViewSections.Metadata, reloadEntriesListOnNavigateOut, draftEntry });
                 return this._open({ entry, section: ContentEntryViewSections.Metadata, reloadEntriesListOnNavigateOut, draftEntry });
             })
 

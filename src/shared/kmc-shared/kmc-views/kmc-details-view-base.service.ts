@@ -27,6 +27,10 @@ export abstract class KmcDetailsViewBaseService<TArgs extends {}> {
 
     abstract getViewMetadata(args: TArgs): DetailsViewMetadata;
 
+    protected _setOpenArgs(args: TArgs): void {
+        this._lastArgsUsedByOpen = args;
+    }
+
     popOpenArgs(): TArgs | null {
         const result = this._lastArgsUsedByOpen;
         this._lastArgsUsedByOpen = null;
