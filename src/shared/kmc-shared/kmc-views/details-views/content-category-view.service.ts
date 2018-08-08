@@ -217,12 +217,9 @@ export class ContentCategoryViewService extends KmcDetailsViewBaseService<Conten
         this._kalturaClient
             .request(categoryGetAction)
             .pipe(tag('block-shell'))
-            .switchMap(category => {
-                this._logger.info(`handle successful request, proceed navigation`);
-                return this._open({category, section});
-            })
             .subscribe(
-                () => {
+                (category) => {
+                    this.open({category, section});
                 },
                 (error) => {
                     this._logger.info(`handle failed request, show alert, abort navigation`);

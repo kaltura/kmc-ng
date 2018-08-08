@@ -1163,6 +1163,7 @@
                 "entriesCount": "No. Entries",
                 "limit": "Limit",
                 "orderBy": "Order By",
+                "nameTooltip": "{{0}}\nTags:\n{{1}}",
                 "download": "Download",
                 "editor": "Launch Editor",
                 "captionRequest": "Caption Request"
@@ -1404,6 +1405,7 @@
                     "downloadEntry": "Download Entry"
                 },
                 "save": "Save",
+                "newDraftEntryWarning": "Entry was automatically saved. Do you want to keep this entry?",
                 "sections": {
                     "metadata": "Metadata",
                     "thumbnails": "Thumbnails",

@@ -14,6 +14,8 @@
           <div class="kThumbnailHolder">
             <img [src]="entry.thumbnailUrl" [alt]="entry.name" onError="this.onerror=null;this.style.display='none'"
                  *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
+            <i class="kIconyoutube kThumbnailTypeIcon" *ngIf="entry.externalSourceType === _youtubeExternalSourceType"></i>
+            <div class="kYoutubeIconFix" *ngIf="entry.externalSourceType === _youtubeExternalSourceType"></div>
             <i class="kIconquiz kThumbnailTypeIcon" *ngIf="entry.isQuizEntry"></i>
           </div>
         <span [kTooltip]="entry.name">{{ entry.name }}</span>

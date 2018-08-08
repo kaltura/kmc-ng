@@ -1,8 +1,9 @@
-import { Observable } from 'rxjs';
+import { Observable, of as ObservableOf, throwError as ObservableThrowError } from 'rxjs';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { Title } from '@angular/platform-browser';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
+import { catchError, map, tap } from 'rxjs/internal/operators';
 
 
 export interface DetailsViewMetadata {
@@ -55,6 +56,23 @@ export abstract class KmcDetailsViewBaseService<TArgs extends {}> {
             this._lastArgsUsedByOpen = null;
             this._browserService.handleUnpermittedAction(false);
         }
+    }
+
+    open$(args: TArgs): Observable<boolean> {
+        if (this.isAvailable(args)) {
+            this._lastArgsUsedByOpen = args;
+            return this._open(args)
+                .pipe(
+                    map(result => result === null ? true : !!result),
+                    catchError(error => {
+                        this._logger.info('open view operation failed', { errorMessage: error ? error.message : '' });
+                        this._lastArgsUsedByOpen = null;
+                        return ObservableOf(false);
+                    })
+                );
+        }
+
+        return ObservableOf(false);
     }
 
     viewEntered(args: TArgs, redirectToDefault = true): boolean {

@@ -50,11 +50,26 @@
                     top: 15px;
                     right: 1px;
                 }
+                &.kIconyoutube {
+                  font-size: 20px;
+                  top: 15px;
+                  right: 1px;
+                  z-index: 2;
+                  color: $kDandger;
+                }
             }
         }
 
       &:hover {
         background-color: $kGrayscale6;
+      }
+
+      img {
+        width: 64px;
+        height: 36px;
+        object-fit: cover;
+        margin-right: 8px;
+        border-radius: 3px;
       }
 
       span {

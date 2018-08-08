@@ -1,14 +1,6 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
-import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/subscribeOn';
-import 'rxjs/add/operator/switchMap';
-
 import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { BaseEntryGetAction } from 'kaltura-ngx-client';
@@ -23,6 +15,8 @@ import { ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details
 import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client';
+import { BaseEntryDeleteAction } from 'kaltura-ngx-client';
+import { BehaviorSubject, Observable, Subject, Unsubscribable } from 'rxjs';
 
 export enum ActionTypes
 {
@@ -47,8 +41,8 @@ declare interface StatusArgs {
 }
 
 @Injectable()
-export class EntryStore implements  OnDestroy {
-	private _loadEntrySubscription : ISubscription;
+export class EntryStore implements OnDestroy {
+	private _loadEntrySubscription: Unsubscribable;
 	private _state = new BehaviorSubject<StatusArgs>({ action : ActionTypes.EntryLoading, error : null});
     private _pageExitVerificationToken: string;
     private _notifications = new Subject<{ type: NotificationTypes, error?: Error }>();
@@ -67,6 +61,7 @@ export class EntryStore implements  OnDestroy {
     };
 
 	private _refreshEntriesListUponLeave = false;
+	private _isNewDraftEntry = false;
 	private _entry : BehaviorSubject<KalturaMediaEntry> = new BehaviorSubject<KalturaMediaEntry>(null);
 	public entry$ = this._entry.asObservable();
 	private _entryId : string;
@@ -96,17 +91,10 @@ export class EntryStore implements  OnDestroy {
 		this._onSectionsStateChanges();
 		this._onRouterEvents();
 
-		// hard reload the entries upon navigating back from entry (by adding 'reloadEntriesListOnNavigateOut' to the queryParams)
-    this._entryRoute.queryParams.pipe(cancelOnDestroy(this))
-      .first()
-      .subscribe(queryParams => {
-         const reloadEntriesListOnNavigateOut = !!queryParams['reloadEntriesListOnNavigateOut']; // convert string to boolean
-         if (reloadEntriesListOnNavigateOut) {
-           this._refreshEntriesListUponLeave = reloadEntriesListOnNavigateOut;
-         }
-       });
+        const { reloadEntriesListOnNavigateOut, draftEntry } = this._contentEntryViewService.popOpenArgs() || { reloadEntriesListOnNavigateOut: false, draftEntry: false };
+        this._refreshEntriesListUponLeave = !!reloadEntriesListOnNavigateOut;
+        this._isNewDraftEntry = !!draftEntry;
     }
-
     private _onSectionsStateChanges()
 	{
 		this._widgetsManager.widgetsState$
@@ -121,6 +109,7 @@ export class EntryStore implements  OnDestroy {
 					{
 						console.log(`entry store: update entry is dirty state to ${newDirtyState}`);
 						this._entryIsDirty = newDirtyState;
+                        this._isNewDraftEntry = false;
 
 						this._updatePageExitVerification();
 
@@ -203,6 +192,7 @@ export class EntryStore implements  OnDestroy {
 									if (response.hasErrors()) {
 										this._state.next({action: ActionTypes.EntrySavingFailed});
 									} else {
+                                        this._isNewDraftEntry = false;
 										this._loadEntry(this.entryId);
 									}
 
@@ -256,6 +246,12 @@ export class EntryStore implements  OnDestroy {
 			this._loadEntry(this.entryId);
 		}
 	}
+
+    private _deleteEntry(entryId: string): Observable<void> {
+        return this._kalturaServerClient
+            .request(new BaseEntryDeleteAction({ entryId }))
+            .map(() => {});
+    }
 
 	private _loadEntry(entryId : string) : void {
 		if (this._loadEntrySubscription) {
@@ -351,33 +347,62 @@ export class EntryStore implements  OnDestroy {
         }
     }
 
-	public canLeave() : Observable<{ allowed : boolean}>
-	{
-		return Observable.create(observer =>
-		{
-			if (this._entryIsDirty) {
-				this._browserService.confirm(
-					{
-						header: this._appLocalization.get('applications.content.entryDetails.captions.cancelEdit'),
-						message: this._appLocalization.get('applications.content.entryDetails.captions.discard'),
-						accept: () => {
-							this._entryIsDirty = false;
-							observer.next({allowed: true});
-							observer.complete();
-						},
-						reject: () => {
-							observer.next({allowed: false});
-							observer.complete();
-						}
-					}
-				)
-			}else
-			{
-				observer.next({allowed: true});
-				observer.complete();
-			}
-		});
-	}
+    public canLeave(): Observable<{ allowed: boolean }> {
+        const dispatchValue = observer => value => () => {
+            observer.next(value);
+            observer.complete();
+        };
+        return Observable.create(observer => {
+            const allowed = dispatchValue(observer)({ allowed: true });
+            const disallowed = dispatchValue(observer)({ allowed: false });
+
+            if (this._isNewDraftEntry) {
+                this._entryIsDirty = false;
+                this._browserService.confirm(
+                    {
+                        header: this._appLocalization.get('applications.content.entryDetails.save'),
+                        message: this._appLocalization.get('applications.content.entryDetails.newDraftEntryWarning'),
+                        accept: () => {
+                            allowed();
+                        },
+                        reject: () => {
+                            this._deleteEntry(this._entryId)
+                                .pipe(
+                                    tag('block-shell'),
+                                    cancelOnDestroy(this)
+                                )
+                                .subscribe(
+                                    () => allowed(),
+                                    error => {
+                                        this._browserService.alert({
+                                            header: this._appLocalization.get('app.common.error'),
+                                            message: error.message,
+                                            accept: () => allowed()
+                                        });
+                                    }
+                                );
+                        }
+                    }
+                );
+            } else if (this._entryIsDirty) {
+                this._browserService.confirm(
+                    {
+                        header: this._appLocalization.get('applications.content.entryDetails.captions.cancelEdit'),
+                        message: this._appLocalization.get('applications.content.entryDetails.captions.discard'),
+                        accept: () => {
+                            this._entryIsDirty = false;
+                            allowed();
+                        },
+                        reject: () => {
+                            disallowed();
+                        }
+                    }
+                );
+            } else {
+                allowed();
+            }
+        });
+    }
 
     public returnToEntries(): void {
 	    if (this._contentEntriesMainViewService.isAvailable()) {

@@ -40,13 +40,13 @@ export class PrepareEntryComponent implements OnDestroy {
   }
 
 
-  private _loadEntry(selectedProfile: { profileId?: number }) {
+  public _loadEntry(selectedProfile: { profileId?: number }) {
 
     /// passing profileId null will cause to create with default profileId
     this._prepareEntryService.createDraftEntry(this._selectedMediaType, selectedProfile.profileId)
         .pipe(tag('block-shell'))
       .subscribe((draftEntry: DraftEntry) => {
-            this._contentEntryViewService.openById(draftEntry.id, ContentEntryViewSections.Metadata, true);
+            this._contentEntryViewService.openById(draftEntry.id, ContentEntryViewSections.Metadata, true, true);
         },
         error => {
           this._browserService.alert({
