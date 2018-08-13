@@ -5,9 +5,9 @@
             scrollHeight="100%"
             [scrollable]="true"
             [value]="_entries"
-            [sortField]="filter.sortBy"
+            [sortField]="sortBy"
             [defaultSortOrder]="_defaultSortOrder"
-            [sortOrder]="filter.sortDirection"
+            [sortOrder]="sortDirection"
             (selectionChange)="_onSelectionChange($event)"
             (onSort)="_onSortChanged($event)"
             [(selection)]="selectedEntries">

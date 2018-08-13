@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { PlaylistStore } from '../../playlist-store.service';
 import { ManualContentWidget } from './manual-content-widget.service';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
@@ -11,6 +11,8 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 })
 export class ManualContentComponent implements OnInit, OnDestroy {
   public _selectedEntries: KalturaMediaEntry[] = [];
+  public _sortBy: string;
+  public _sortDirection: number;
 
   constructor(public _playlistStore: PlaylistStore,
               public _widgetService: ManualContentWidget) {
@@ -40,6 +42,8 @@ export class ManualContentComponent implements OnInit, OnDestroy {
   }
 
   public _onSortChanged(event: { field: string, order: -1 | 1, multisortmeta: any }): void {
+    this._sortBy = event.field;
+    this._sortDirection = event.order;
     this._clearSelection();
     this._widgetService.onSortChanged(event);
   }

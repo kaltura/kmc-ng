@@ -16,7 +16,8 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
   @Input() selectedEntries: KalturaMediaEntry[] = [];
-  @Input() filter: any = {};
+  @Input() sortBy: string;
+  @Input() sortDirection: number;
   @Input() isNewPlaylist: boolean;
 
   @Input()
@@ -27,7 +28,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
       this._entries = data;
       this._cdRef.detectChanges();
     } else {
-      this._deferredEntries = data
+      this._deferredEntries = data;
     }
   }
 
@@ -94,8 +95,10 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
     ];
   }
 
-  public _onSortChanged(event) {
-    this.sortChanged.emit(event);
+  public _onSortChanged(event: { field: string, order: number}): void {
+      if (event.sortBy !== this.field || event.order !== this.sortDirection) {
+          this.sortChanged.emit(event);
+      }
   }
 
   public _goToEntry(entry: KalturaMediaEntry): void {
