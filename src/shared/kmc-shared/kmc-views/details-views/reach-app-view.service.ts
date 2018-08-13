@@ -42,11 +42,14 @@ export class ReachAppViewService extends KmcDetailsViewBaseService<ReachAppViewA
     }
 
     private _availableByPermission(args: ReachAppViewArgs): boolean {
+        let _available: boolean = this._appPermissions.hasPermission(KMCPermissions.REACH_PLUGIN_PERMISSION);
         if (args.page === ReachPages.category){
-            return this._appPermissions.hasPermission(KMCPermissions.REACH_PLUGIN_PERMISSION) && this._appPermissions.hasPermission(KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES);
-        }else{
-            return this._appPermissions.hasPermission(KMCPermissions.REACH_PLUGIN_PERMISSION);
+            _available = _available && this._appPermissions.hasPermission(KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES);
         }
+        if (args.page === ReachPages.entry || args.page === ReachPages.entries){
+            _available = _available && this._appPermissions.hasPermission(KMCPermissions.CAPTION_MODIFY);
+        }
+        return _available;
     }
 
     private _availableByData(args: ReachAppViewArgs): boolean {
