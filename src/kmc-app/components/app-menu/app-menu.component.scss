@@ -169,6 +169,37 @@
     }
 }
 
+.kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+    .kTitle {
+        color: #333333;
+        font-size: 24px;
+        font-weight: 700;
+    }
+}
+.kContainer {
+    margin: 28px;
+    min-height: 169px;
+    .spaceTop{
+      margin-top: 24px;
+    }
+}
+.kFooter {
+    height: 66px;
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button {
+        height: 34px;
+    }
+}
+
 // prioritize sticky elements of header above other sticky elements in the page
 :host /deep/ .kStickyClass{
     z-index: 550 !important;

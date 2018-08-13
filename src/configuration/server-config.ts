@@ -92,7 +92,9 @@ export interface ServerConfig {
             contactUs?: string,
             upgradeAccount?: string,
             contactSalesforce?: string,
-            dropFoldersManual?: string
+            dropFoldersManual?: string,
+            customerCare?: string,
+            customerPortal?: string
         },
         uploads?: {
             highSpeedUpload?: string,

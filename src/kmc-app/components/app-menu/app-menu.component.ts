@@ -23,6 +23,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 export class AppMenuComponent implements OnInit, OnDestroy{
 
     @ViewChild('helpmenu') private _helpmenu: PopupWidgetComponent;
+    @ViewChild('supportPopup') private _supportPopup: PopupWidgetComponent;
     private _appCachedVersionToken = 'kmc-cached-app-version';
 
     public _showChangelog = false;
@@ -31,7 +32,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     public _userManualLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.userManual;
     public _kmcOverviewLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.kmcOverview;
     public _mediaManagementLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.mediaManagement;
-    public _supportLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.support;
+    public _supportLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.customerCare && !!serverConfig.externalLinks.kaltura.customerPortal;
     public _supportLegacyExists = true;
     public _contextualHelp: ContextualHelpLink[] = [];
 
@@ -40,6 +41,9 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     rightMenuConfig: KMCAppMenuItem[];
     selectedMenuItem: KMCAppMenuItem;
     showSubMenu = true;
+
+    public _customerCareLink = this._supportLinkExists ? serverConfig.externalLinks.kaltura.customerCare : "";
+    public _customerPortalLink = this._supportLinkExists ? serverConfig.externalLinks.kaltura.customerPortal : "";
 
     constructor(public _kmcLogs: KmcLoggerConfigurator,
                 private _contextualHelpService: ContextualHelpService,
@@ -113,7 +117,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     }
 
     openSupport() {
-        this._browserService.openSupport();
+        this._supportPopup.open();
         this._helpmenu.close();
     }
 
