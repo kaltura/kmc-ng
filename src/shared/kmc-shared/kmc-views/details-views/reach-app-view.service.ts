@@ -41,8 +41,12 @@ export class ReachAppViewService extends KmcDetailsViewBaseService<ReachAppViewA
             _titleService, _contextualHelpService);
     }
 
-    private _availableByPermission(): boolean {
-        return this._appPermissions.hasPermission(KMCPermissions.REACH_PLUGIN_PERMISSION);
+    private _availableByPermission(args: ReachAppViewArgs): boolean {
+        if (args.page === ReachPages.category){
+            return this._appPermissions.hasPermission(KMCPermissions.REACH_PLUGIN_PERMISSION) && this._appPermissions.hasPermission(KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES);
+        }else{
+            return this._appPermissions.hasPermission(KMCPermissions.REACH_PLUGIN_PERMISSION);
+        }
     }
 
     private _availableByData(args: ReachAppViewArgs): boolean {
@@ -78,7 +82,7 @@ export class ReachAppViewService extends KmcDetailsViewBaseService<ReachAppViewA
 
     public isAvailable(args: ReachAppViewArgs): boolean {
         const isAvailableByConfig = !!serverConfig.externalApps.reach;
-        const isAvailableByPermission = this._availableByPermission();
+        const isAvailableByPermission = this._availableByPermission(args);
         const isAvailableByData = this._availableByData(args);
 
         return isAvailableByConfig && isAvailableByData && isAvailableByPermission;
