@@ -149,7 +149,9 @@ export const ServerConfigSchema = {
                         contactUs: {type: 'string'},
                         upgradeAccount: {type: 'string'},
                         contactSalesforce: {type: 'string'},
-                        dropFoldersManual: {type: 'string'}
+                        dropFoldersManual: {type: 'string'},
+                        customerCare: {type: 'string'},
+                        customerPortal: {type: 'string'}
                     },
                     required: [],
                     additionalProperties: true

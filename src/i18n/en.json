@@ -115,7 +115,9 @@
         "openMail":{
             "supportMailTitle": "Contact Kaltura Support",
             "supportMailMsg": "Please send an email to the following email address:",
-            "supportMailMsgNoMail": "Please send an email to the Kaltura support team."
+            "supportMailMsgNoMail": "Please send an email to the Kaltura support team.",
+            "customerCare": "Kaltura Customer Care is available 24/7, 365 days a year via the customer portal:",
+            "customerPortal": "The easiest and fastest way to submit a new case, communicate with customer care and track the status of your support tickets is through the Kaltura Customer Portal:"
         },
         "login": {
             "login": {

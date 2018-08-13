@@ -87,3 +87,22 @@
         </div>
     </ng-template>
 </kPopupWidget>
+
+<kPopupWidget #supportPopup data-aid="supportPopup" [modal]="true" [popupWidth]="500" [popupHeight]="370">
+    <ng-template>
+        <div class="kHeader">
+            <span class="kTitle">{{ 'app.openMail.supportMailTitle'| translate}}</span>
+        </div>
+
+        <div class="kContainer">
+            <div>{{ 'app.openMail.customerCare'| translate}}</div>
+            <a href="{{_customerCareLink}}" target="_blank">{{_customerCareLink}}</a>
+            <div class="spaceTop">{{ 'app.openMail.customerPortal'| translate}}</div>
+            <a href="{{_customerPortalLink}}" target="_blank">{{_customerPortalLink}}</a>
+        </div>
+
+        <div class="kFooter">
+            <button type="button" class="kButtonBranded" (click)="supportPopup.close()" pButton  label="{{'app.common.close'| translate}}"></button>
+        </div>
+    </ng-template>
+</kPopupWidget>
