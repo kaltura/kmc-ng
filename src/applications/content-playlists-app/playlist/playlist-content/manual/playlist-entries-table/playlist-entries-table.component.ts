@@ -44,6 +44,8 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   public _items: MenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
     public _youtubeExternalSourceType = KalturaExternalMediaSourceType.youtube;
+    public _sortBy: string;
+    public _sortDirection: number;
 
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
@@ -96,7 +98,9 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   }
 
   public _onSortChanged(event: { field: string, order: number}): void {
-      if (event.sortBy !== this.field || event.order !== this.sortDirection) {
+      if (event.field !== this._sortBy || event.order !== this._sortDirection) {
+          this._sortBy = event.field;
+          this._sortDirection = event.order;
           this.sortChanged.emit(event);
       }
   }

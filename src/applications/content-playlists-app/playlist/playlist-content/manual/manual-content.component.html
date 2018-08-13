@@ -14,8 +14,6 @@
     <kPlaylistEntriesTable
       class="kPlaylistEntriesTable"
       [isNewPlaylist]="_widgetService.isNewData"
-      [sortBy]="_sortBy"
-      [sortDirection]="_sortDirection"
       [entries]="_widgetService.entries"
       (onActionSelected)="_onActionSelected($event)"
       (sortChanged)="_onSortChanged($event)"
