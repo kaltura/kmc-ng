@@ -52,7 +52,9 @@
             "studio": "Studio",
             "analytics": "Analytics",
             "settings": "Settings",
-            "administration": "Administration"
+            "administration": "Administration",
+            "reachDashboardMenuTitle": "Services Dashboard",
+            "reachDashboardPageTitle": "Services Dashboard"
         },
         "userSettings": {
             "changeAccount": "Change Account",
@@ -2882,8 +2884,7 @@
         },
         "reach": {
             "captionRequests": "Caption Requests",
-            "addServiceRule": "Add Service Rule",
-            "dashboard": "Services Dashboard"
+            "addServiceRule": "Add Service Rule"
         }
     },
     "entriesShared": {

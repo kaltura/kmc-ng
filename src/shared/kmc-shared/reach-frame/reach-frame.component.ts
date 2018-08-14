@@ -68,7 +68,7 @@ export class ReachFrameComponent implements OnDestroy, OnChanges {
                         'ks': this._appAuthentication.appUser.ks,
                         'service_url': getKalturaServerUri(),
                         'partner_id': this._appAuthentication.appUser.partnerId,
-                        'cdn_url': buildCDNUrl(""),
+                        'cdn_url': buildCDNUrl(''),
                         'reach': {
                             language: this._appLocalization.selectedLanguage,
                             dashboardEntryLinkAction: (entryId) => {
@@ -119,6 +119,9 @@ export class ReachFrameComponent implements OnDestroy, OnChanges {
                 if (this.data.category) {
                     this._url = `${serverConfig.externalApps.reach.uri}#/category/${this.data.category.id}`;
                 }
+                break;
+            case ReachPages.dashboard:
+                this._url = `${serverConfig.externalApps.reach.uri}#/dashboard`;
                 break;
             default:
                 break;
