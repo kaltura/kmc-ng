@@ -1,69 +1,71 @@
 @import 'app-theme/_variables.scss';
 
 .kUserSettings {
-  margin-left: 12px;
-  padding-top: 3px;
-  padding-bottom: 8px;
+    margin-left: 12px;
+    padding-top: 3px;
+    padding-bottom: 8px;
+    .kLinks {
+        display: flex;
+        flex-direction: column;
+        padding-left: 32px;
+    }
+    a {
+        margin-top: 4px;
+        line-height: 24px;
+        margin-bottom: 4px;
+        color: $kTertiary;
+        &:hover {
+            color: darken($kTertiary, 10%);
+        }
+        &:active {
+            color: $kTertiary;
+        }
+    }
 }
 
 ul {
-  list-style-type: none;
-  padding: 0;
+    list-style-type: none;
+    padding: 0;
+    padding-bottom: 4px;
 }
 
 i {
-  margin-right: 8px;
+    margin-right: 8px;
 }
 
 li {
-  margin-top: 14px;
+    margin-top: 18px;
 }
 
 hr {
-  height: 1px;
-  border: none;
-  margin-left: -12px;
-  color: $kGrayscale4;
-  background-color: $kGrayscale4;
+    height: 1px;
+    border: none;
+    margin-left: -12px;
+    color: $kGrayscale4;
+    background-color: $kGrayscale4;
 }
 
 .kMenuItemLabel {
-  font-size: 15px;
-  color: $kGrayscale1;
+    font-size: 15px;
+    color: $kGrayscale1;
 }
 
 .kMenuItem {
-  display: flex;
-  flex-direction: column;
-  margin-left: 30px;
-  margin-top: -18px;
-  a {
-    margin-top: 4px;
-    color: $kTertiary;
-    &:hover {
-      color: darken($kTertiary, 10%);
-    }
-    &:active {
-      color: $kTertiary;
-    }
-  }
-    span {
-        display: inline-block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
+    display: flex;
+    flex-direction: column;
+    margin-left: 32px;
+    margin-top: -18px;
 }
 
 .kIcon {
-  color: $kGrayscale3;
-  font-size: 18px;
+    color: $kGrayscale1;
+    font-size: 18px;
 }
 
 .kLanguages {
-  margin-bottom: 12px;
+    margin-bottom: 12px;
 }
 
 :host /deep/ .ui-dropdown.ui-widget {
-  width: 215px !important;
+    width: 215px !important;
 }

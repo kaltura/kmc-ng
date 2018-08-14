@@ -68,7 +68,7 @@ export class ReachFrameComponent implements OnDestroy, OnChanges {
                         'ks': this._appAuthentication.appUser.ks,
                         'service_url': getKalturaServerUri(),
                         'partner_id': this._appAuthentication.appUser.partnerId,
-                        'cdn_url': buildCDNUrl(''),
+                        'cdn_host': buildCDNUrl(""),
                         'reach': {
                             language: this._appLocalization.selectedLanguage,
                             dashboardEntryLinkAction: (entryId) => {
