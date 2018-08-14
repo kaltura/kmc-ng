@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { AppAuthentication, BrowserService } from 'shared/kmc-shell';
-import { getKalturaServerUri, serverConfig } from 'config/server';
+import { getKalturaServerUri, serverConfig, buildCDNUrl } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {
@@ -67,6 +67,8 @@ export class ReachFrameComponent implements OnDestroy, OnChanges {
                     'vars': {
                         'ks': this._appAuthentication.appUser.ks,
                         'service_url': getKalturaServerUri(),
+                        'partner_id': this._appAuthentication.appUser.partnerId,
+                        'cdn_url': buildCDNUrl(""),
                         'reach': {
                             language: this._appLocalization.selectedLanguage,
                             dashboardEntryLinkAction: (entryId) => {
