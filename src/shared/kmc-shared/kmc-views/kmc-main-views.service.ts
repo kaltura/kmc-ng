@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { ContentCategoriesMainViewService,
+import {
+    ContentCategoriesMainViewService,
     ContentEntriesMainViewService,
     ContentModerationMainViewService,
     ContentPlaylistsMainViewService,
@@ -21,7 +22,8 @@ import { ContentCategoriesMainViewService,
     SettingsTranscodingMainViewService,
     SettingsMetadataMainViewService,
     SettingsMyUserSettingsMainViewService,
-    SettingsAccountInformationMainViewService
+    SettingsAccountInformationMainViewService,
+    ServicesDashboardMainViewService
 } from './main-views';
 import { Observable } from 'rxjs';
 
@@ -56,6 +58,7 @@ export class KmcMainViewsService {
         private _studioV2Main: StudioV2MainViewService,
         private _studioV3Main: StudioV3MainViewService,
         private _usageDashboardMain: UsageDashboardMainViewService,
+        private _servicesDashboardMain: ServicesDashboardMainViewService,
         private _liveAnalyticsMain: LiveAnalyticsMainViewService,
         private _adminUsersMain: AdminUsersMainViewService,
         private _adminRolesMain: AdminRolesMainViewService,
@@ -206,6 +209,15 @@ export class KmcMainViewsService {
                         menuTitle: 'analyticsKavaMenuTitle'
                     }
                 ]
+            },
+            {
+                isAvailable: this._servicesDashboardMain.isAvailable(),
+                isActiveView:  (path) => this._servicesDashboardMain.isActiveView(path),
+                open: () => {
+                    this._servicesDashboardMain.open();
+                },
+                position: 'left',
+                menuTitle: this._servicesDashboardMain.getViewMetadata().menu,
             },
             {
                 isActiveView: (activePath: string) => activePath.indexOf(`/settings`) !== -1,

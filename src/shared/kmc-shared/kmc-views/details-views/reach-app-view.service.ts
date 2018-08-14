@@ -16,7 +16,8 @@ import { Observable, of as ObservableOf } from 'rxjs';
 export enum ReachPages {
     entry = 'entry',
     entries = 'entries',
-    category = 'category'
+    category = 'category',
+    dashboard = 'dashboard'
 }
 
 export interface ReachAppViewArgs {
@@ -43,10 +44,9 @@ export class ReachAppViewService extends KmcDetailsViewBaseService<ReachAppViewA
 
     private _availableByPermission(args: ReachAppViewArgs): boolean {
         let _available: boolean = this._appPermissions.hasPermission(KMCPermissions.REACH_PLUGIN_PERMISSION);
-        if (args.page === ReachPages.category){
+        if (args.page === ReachPages.category) {
             _available = _available && this._appPermissions.hasPermission(KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES);
-        }
-        if (args.page === ReachPages.entry || args.page === ReachPages.entries){
+        } else if (args.page === ReachPages.entry || args.page === ReachPages.entries){
             _available = _available && this._appPermissions.hasPermission(KMCPermissions.CAPTION_MODIFY);
         }
         return _available;
@@ -57,6 +57,7 @@ export class ReachAppViewService extends KmcDetailsViewBaseService<ReachAppViewA
             case ReachPages.entry:
                 return this.isRelevantEntry(args.entry);
             case ReachPages.entries:
+            case ReachPages.dashboard:
                 return true; // since we build bulk actions menu before entries are selected, always allow by data
             case ReachPages.category:
                 return args.category instanceof KalturaCategory;

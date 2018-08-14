@@ -120,6 +120,10 @@ const routes: Routes = <Routes>[
                         loadChildren: '../applications/usage-dashboard-app/usage-dashboard-app.module#UsageDashboardAppModule'
                     },
                     {
+                        path: 'servicesDashboard',
+                        loadChildren: '../applications/services-dashboard-app/services-dashboard-app.module#ServicesDashboardAppModule'
+                    },
+                    {
                         path: 'analytics', children: [
                         {
                             path: 'kava',

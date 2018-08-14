@@ -120,6 +120,9 @@ export class ReachFrameComponent implements OnDestroy, OnChanges {
                     this._url = `${serverConfig.externalApps.reach.uri}#/category/${this.data.category.id}`;
                 }
                 break;
+            case ReachPages.dashboard:
+                this._url = `${serverConfig.externalApps.reach.uri}#/dashboard`;
+                break;
             default:
                 break;
         }
