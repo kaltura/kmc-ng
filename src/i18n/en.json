@@ -2882,7 +2882,8 @@
         },
         "reach": {
             "captionRequests": "Caption Requests",
-            "addServiceRule": "Add Service Rule"
+            "addServiceRule": "Add Service Rule",
+            "dashboard": "Services Dashboard"
         }
     },
     "entriesShared": {
