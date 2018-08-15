@@ -82,7 +82,7 @@ export class AppBootstrap implements CanActivate {
             this._initialized = true;
 
             // init localization, wait for localization to load before continuing
-            const prefix = serverConfig.kalturaServer.deployUrl ? `${serverConfig.kalturaServer.deployUrl}i18n` : null;
+            const prefix = serverConfig.kalturaServer.deployUrl ? `${serverConfig.kalturaServer.deployUrl}i18n/` : null;
             this.appLocalization.setFilesHash(globalConfig.client.appVersion, prefix);
 
             const language = this.getCurrentLanguage();
