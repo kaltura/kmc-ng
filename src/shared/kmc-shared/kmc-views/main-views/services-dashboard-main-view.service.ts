@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { serverConfig } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KmcMainViewBaseService, ViewMetadata } from '../kmc-main-view-base.service';
@@ -24,7 +25,8 @@ export class ServicesDashboardMainViewService extends KmcMainViewBaseService {
     }
 
     isAvailable(): boolean {
-        return this._appPermissions.hasPermission(KMCPermissions.REACH_PLUGIN_PERMISSION);
+        const reachIsAvailable = !!serverConfig.externalApps.reach;
+        return reachIsAvailable && this._appPermissions.hasPermission(KMCPermissions.REACH_PLUGIN_PERMISSION);
     }
 
     getRoutePath(): string {
