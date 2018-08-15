@@ -4,7 +4,7 @@
 
 ### Bug Fixes
 
-* **admin/roles:** show friendly validation message if trying to save unsafe value ([#770](https://github.com/kaltura/kmc-ng/issues/770)) KMCNG-1843 ([d9091ed](https://github.com/kaltura/kmc-ng/commit/d9091ed))
+* **administration/roles:** show friendly validation message if trying to save unsafe value ([#770](https://github.com/kaltura/kmc-ng/issues/770)) KMCNG-1843 ([d9091ed](https://github.com/kaltura/kmc-ng/commit/d9091ed))
 * **administration/user:** mark invalid form fields ([25ba449](https://github.com/kaltura/kmc-ng/commit/25ba449))
 * **content/categories:** check for "content manage > edit category" and "content manage > modify caption" permissions when enabling Reach ([#788](https://github.com/kaltura/kmc-ng/issues/788)) ([2722b3d](https://github.com/kaltura/kmc-ng/commit/2722b3d))
 * **content/categories:** handle bulk categories deletion correctly if trying to delete a category and its sub categories  ([#767](https://github.com/kaltura/kmc-ng/issues/767)) KMCNG-1892 ([cf2b3a4](https://github.com/kaltura/kmc-ng/commit/cf2b3a4))
@@ -12,14 +12,14 @@
 * **content/categories:** rebuild category tree when user reorder sub categories of a category ([#754](https://github.com/kaltura/kmc-ng/issues/754)) KMCNG-1821 ([1a75ae6](https://github.com/kaltura/kmc-ng/commit/1a75ae6))
 * **content/categories:** show relevant error message if trying to perform bulk operation on a category that was deleted ([#756](https://github.com/kaltura/kmc-ng/issues/756)) KMCNG-1931 ([3aaf6c2](https://github.com/kaltura/kmc-ng/commit/3aaf6c2))
 * **content/category:** enable navigating to another category after data change if the user confirms discarding changes ([4445388](https://github.com/kaltura/kmc-ng/commit/4445388))
-* fix style of required error on new playlist name field ([3df514c](https://github.com/kaltura/kmc-ng/commit/3df514c))
 * **content/entries:** close refine time scheduled filter calendars on blur ([#747](https://github.com/kaltura/kmc-ng/issues/747)) KMCNG-906 ([164d532](https://github.com/kaltura/kmc-ng/commit/164d532))
 * **content/entries:** fix style of media type column (align icon to center) ([ff1250a](https://github.com/kaltura/kmc-ng/commit/ff1250a))
 * **content/playlist:** prevent unwanted sort event firing ([549e865](https://github.com/kaltura/kmc-ng/commit/549e865))
-* **editor:** open editor  with correct clip and trim permissions ([#775](https://github.com/kaltura/kmc-ng/issues/775)) KMCNG-1968 ([9b690f5](https://github.com/kaltura/kmc-ng/commit/9b690f5))
 * **settings/transcoding-profile:** clear transcoding profiles cache once a new profile created ([#751](https://github.com/kaltura/kmc-ng/issues/751)) KMCNG-1945 ([ec9e954](https://github.com/kaltura/kmc-ng/commit/ec9e954))
-* custom metadata text with multiple lines and values escaping issues ([2d50d93](https://github.com/kaltura/kmc-ng/commit/2d50d93))
 * **settings/access-control:** word wrap description in list ([#764](https://github.com/kaltura/kmc-ng/issues/764)) KMCNG-1901 ([215123d](https://github.com/kaltura/kmc-ng/commit/215123d))
+* **editor:** open editor  with correct clip and trim permissions ([#775](https://github.com/kaltura/kmc-ng/issues/775)) KMCNG-1968 ([9b690f5](https://github.com/kaltura/kmc-ng/commit/9b690f5))
+* custom metadata text with multiple lines and values escaping issues ([2d50d93](https://github.com/kaltura/kmc-ng/commit/2d50d93))
+* fix style of required error on new playlist name field ([3df514c](https://github.com/kaltura/kmc-ng/commit/3df514c))
 * fix kea permissions logic ([d0042b7](https://github.com/kaltura/kmc-ng/commit/d0042b7))
 * fix style of help menu and user settings menu ([3114fe0](https://github.com/kaltura/kmc-ng/commit/3114fe0))
 * handle entries in which the entry creator was deleted from the system ([1524002](https://github.com/kaltura/kmc-ng/commit/1524002))
@@ -38,9 +38,8 @@
 * **content/playlists:** display tags in playlist's name tooltip ([#726](https://github.com/kaltura/kmc-ng/issues/726)) KMCNG-1200 ([845ab6e](https://github.com/kaltura/kmc-ng/commit/845ab6e))
 * **create:** prompt to delete draft entry if user tries to leave without changing the entry ([#683](https://github.com/kaltura/kmc-ng/issues/683)) KMCNG-1136 ([1f1595c](https://github.com/kaltura/kmc-ng/commit/1f1595c))
 * Add services dashboard ([00cdfe9](https://github.com/kaltura/kmc-ng/commit/00cdfe9))
-* create entry from url ([#750](https://github.com/kaltura/kmc-ng/issues/750)) KMCNG-1891 ([53e7562](https://github.com/kaltura/kmc-ng/commit/53e7562))
-* show youtube icon on entries of type youtube  ([#748](https://github.com/kaltura/kmc-ng/issues/748)) KMCNG-1808 ([3a08bc0](https://github.com/kaltura/kmc-ng/commit/3a08bc0))
-* support localization ([492de0c](https://github.com/kaltura/kmc-ng/commit/492de0c))
+* Create entry from URL ([#750](https://github.com/kaltura/kmc-ng/issues/750)) KMCNG-1891 ([53e7562](https://github.com/kaltura/kmc-ng/commit/53e7562))
+* Show Youtube icon on entries of type Youtube  ([#748](https://github.com/kaltura/kmc-ng/issues/748)) KMCNG-1808 ([3a08bc0](https://github.com/kaltura/kmc-ng/commit/3a08bc0))
 
 
 
