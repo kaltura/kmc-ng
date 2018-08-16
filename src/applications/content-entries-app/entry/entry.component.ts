@@ -204,6 +204,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                         break;
                     case 'download':
                         item.command = () => this._downloadEntry(entry);
+                        item.disabled = entry.status !== KalturaEntryStatus.ready;
                         break;
                     default:
                         break;
