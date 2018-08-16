@@ -111,7 +111,13 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
             responseProfile
         }))
           .map(response => {
-            return response.objects;
+              return response.objects.map(entry => {
+                  if ((entry.capabilities || '').indexOf('quiz.quiz') !== -1) {
+                      entry['isQuizEntry'] = true;
+                  }
+
+                  return entry;
+              });
           });
       } else {
         return Observable.of([]);
@@ -122,7 +128,15 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
       }).setRequestOptions({
           acceptedTypes: [KalturaMediaEntry],
           responseProfile
-      }));
+      })).map(entries => {
+          return entries.map(entry => {
+              if ((entry.capabilities || '').indexOf('quiz.quiz') !== -1) {
+                  entry['isQuizEntry'] = true;
+              }
+
+              return entry;
+          });
+      });
     }
   }
 
