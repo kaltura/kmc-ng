@@ -187,8 +187,10 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
           if (clipAndTrimAvailable) {
               this._logger.debug('clip&trim views are available, add configuration for tabs: edit, quiz');
               const clipAndTrimPermissions = [];
-              if (this._permissionService.hasPermission(KMCPermissions.CONTENT_INGEST_INTO_READY)
-                  && this._permissionService.hasPermission(KMCPermissions.CONTENT_INGEST_REPLACE)) {
+              if (this._permissionService.hasAnyPermissions([
+                  KMCPermissions.CONTENT_INGEST_INTO_READY,
+                  KMCPermissions.CONTENT_INGEST_REPLACE])
+              ) {
                   clipAndTrimPermissions.push('trim');
               }
 
