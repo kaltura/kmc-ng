@@ -7,8 +7,8 @@
 * **content/entries:** load original thumb instead of minified version to prevent cache issue ([f07c0a0](https://github.com/kaltura/kmc-ng/commit/f07c0a0))
 * **content/entry:** disable download action if entry is not ready ([1fbc19d](https://github.com/kaltura/kmc-ng/commit/1fbc19d))
 * **content/entry:** fix trimming permissions ([665460e](https://github.com/kaltura/kmc-ng/commit/665460e))
+* **content/playlist:** show Quiz icon on playlist content load ([80bd93f](https://github.com/kaltura/kmc-ng/commit/80bd93f))
 * fix bulk end users permissions ([9afce8d](https://github.com/kaltura/kmc-ng/commit/9afce8d))
-* **content/playlist:** show quiz icon on playlist content load ([80bd93f](https://github.com/kaltura/kmc-ng/commit/80bd93f))
 * fix Youtube icon layout in entries list ([e944d9b](https://github.com/kaltura/kmc-ng/commit/e944d9b))
 * hide Reach iframe border on Firefox ([1567815](https://github.com/kaltura/kmc-ng/commit/1567815))
 
