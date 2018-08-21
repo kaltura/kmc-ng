@@ -51,9 +51,7 @@ export class NewEntryCreateFromUrlService implements OnDestroy {
             case audioFiles.indexOf(extension) !== -1:
                 return KalturaMediaType.audio;
             case imageFiles.indexOf(extension) !== -1:
-                // we need to return the image format here but we see API exception for image type so returning video here.
-                // TBD if we want to fix (probably on the backend). If fixed, return KalturaMediaType.image
-                return KalturaMediaType.video;
+                return KalturaMediaType.image;
             default:
                 return KalturaMediaType.video;
         }
@@ -61,15 +59,7 @@ export class NewEntryCreateFromUrlService implements OnDestroy {
     }
 
     private _getUpdateMediaContentAction(file: KmcNewEntryUpload): MediaUpdateContentAction {
-        const resource = new KalturaAssetsParamsResourceContainers({
-            resources: [
-                new KalturaAssetParamsResourceContainer({
-                    resource: new KalturaUrlResource({ url: file.fileUrl }),
-                    assetParamsId: file.assetParamsId || 0
-                })
-            ]
-        });
-
+        const resource = new KalturaUrlResource({ url: file.fileUrl });
         return new MediaUpdateContentAction({ entryId: '0', resource });
     }
 
