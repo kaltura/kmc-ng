@@ -29,6 +29,37 @@ export class NewEntryCreateFromUrlService implements OnDestroy {
 
     }
 
+    private _getMediaTypeFromExtension(extension: string): KalturaMediaType {
+
+         const imageFiles = ['jpg', 'jpeg', 'gif', 'png'];
+         const audioFiles = [
+         'flv', 'asf', 'qt', 'mov', 'mpg',
+         'avi', 'wmv', 'mp3', 'wav', 'ra',
+         'rm', 'wma', 'aif', 'm4a'
+         ];
+         const videoFiles = [
+         'flv', 'asf', 'qt', 'mov', 'mpg',
+         'avi', 'wmv', 'mp4', '3gp', 'f4v',
+         'm4v', 'mpeg', 'mxf', 'rm', 'rv',
+         'rmvb', 'ts', 'ogg', 'ogv', 'vob',
+         'webm', 'mts', 'arf', 'mkv'
+         ];
+
+        switch (true) {
+            case videoFiles.indexOf(extension) !== -1:
+                return KalturaMediaType.video;
+            case audioFiles.indexOf(extension) !== -1:
+                return KalturaMediaType.audio;
+            case imageFiles.indexOf(extension) !== -1:
+                // we need to return the image format here but we see API exception for image type so returning video here.
+                // TBD if we want to fix (probably on the backend). If fixed, return KalturaMediaType.image
+                return KalturaMediaType.video;
+            default:
+                return KalturaMediaType.video;
+        }
+
+    }
+
     private _getUpdateMediaContentAction(file: KmcNewEntryUpload): MediaUpdateContentAction {
         const resource = new KalturaAssetsParamsResourceContainers({
             resources: [
@@ -42,14 +73,18 @@ export class NewEntryCreateFromUrlService implements OnDestroy {
         return new MediaUpdateContentAction({ entryId: '0', resource });
     }
 
-    private _getMediaEntryAction(conversionProfileId: number): MediaAddAction {
+    private _getMediaEntryAction(conversionProfileId: number, file: KmcNewEntryUpload): MediaAddAction {
+        const url = file.fileUrl;
+        const extension = url.substr(url.lastIndexOf(".")+1).toLowerCase();
+        let name = url.substr(url.lastIndexOf("/")+1);
+        name = name.lastIndexOf(".") !== -1 ? name.substr(0, name.lastIndexOf(".")) : name;
         return new MediaAddAction({
-            entry: new KalturaMediaEntry({ conversionProfileId, mediaType: KalturaMediaType.video })
+            entry: new KalturaMediaEntry({ conversionProfileId, name, mediaType: this._getMediaTypeFromExtension(extension) })
         });
     }
 
     public import(files: KmcNewEntryUpload[], transcodingProfileId: number): Observable<void> {
-        const createMediaEntryActions = files.map(() => this._getMediaEntryAction(transcodingProfileId));
+        const createMediaEntryActions = files.map((file) => this._getMediaEntryAction(transcodingProfileId, file));
         const updateMediaContentActions = files.map((file, index) =>
             this._getUpdateMediaContentAction(file).setDependency(['entryId', index, 'id'])
         );
