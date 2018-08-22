@@ -1,3 +1,16 @@
+<a name="5.3.2"></a>
+## [5.3.2](https://github.com/kaltura/kmc-ng/compare/v5.3.1...v5.3.2) (2018-08-22)
+
+
+### Bug Fixes
+
+* **content/entries:** adjust position of the Youtube icon on entry thumbnails ([825d2f3](https://github.com/kaltura/kmc-ng/commit/825d2f3))
+* **content/entry:** disable entry download if user doesn't have the required permissions ([872799b](https://github.com/kaltura/kmc-ng/commit/872799b))
+* **upload:** fix "Create from URL" upload button label ([3439b78](https://github.com/kaltura/kmc-ng/commit/3439b78))
+* **upload:** set entry name and format for entries created from URL ([#798](https://github.com/kaltura/kmc-ng/issues/798)) ([b7d3621](https://github.com/kaltura/kmc-ng/commit/b7d3621))
+
+
+
 <a name="5.3.1"></a>
 ## [5.3.1](https://github.com/kaltura/kmc-ng/compare/v5.3.0...v5.3.1) (2018-08-19)
 
