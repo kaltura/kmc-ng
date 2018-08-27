@@ -192,6 +192,24 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
     }
   }
 
+  private _moveTopEntry(selectedEntry: PlaylistContentMediaEntry): void {
+      const index = this.entries.indexOf(selectedEntry);
+      if (index > 0){
+          this.entries.splice(index, 1);
+          this.entries.unshift(selectedEntry);
+          this._setDirty();
+      }
+  }
+
+  private _moveBottomEntry(selectedEntry: PlaylistContentMediaEntry): void {
+      const index = this.entries.indexOf(selectedEntry);
+      if (index > -1){
+          this.entries.splice(index, 1);
+          this.entries.push(selectedEntry);
+          this._setDirty();
+      }
+  }
+
   public deleteSelectedEntries(entries: PlaylistContentMediaEntry[]): void {
     entries.forEach(entry => this._deleteEntryFromPlaylist(entry));
   }
@@ -209,6 +227,12 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
         break;
       case 'duplicate':
         this._duplicateEntry(entry);
+        break;
+      case 'moveTop':
+        this._moveTopEntry(entry)
+        break;
+      case 'moveBottom':
+        this._moveBottomEntry(entry);
         break;
       default:
         break;

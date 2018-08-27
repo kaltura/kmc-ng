@@ -93,6 +93,16 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
       {
         label: this._appLocalization.get('applications.content.bulkActions.duplicate'),
         command: () => this.onActionSelected.emit({ action: 'duplicate', entry })
+      },
+      {
+          label: this._appLocalization.get('applications.content.bulkActions.moveTop'),
+          command: () => this.onActionSelected.emit({ action: 'moveTop', entry }),
+          disabled: rowIndex === 0
+      },
+      {
+          label: this._appLocalization.get('applications.content.bulkActions.moveBottom'),
+          command: () => this.onActionSelected.emit({ action: 'moveBottom', entry }),
+          disabled: rowIndex + 1 === this._entries.length
       }
     ];
   }

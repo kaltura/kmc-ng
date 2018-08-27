@@ -1379,6 +1379,8 @@
                 "removeFromPlaylist": "Remove from Playlist",
                 "moveUp": "Move Up",
                 "moveDown": "Move Down",
+                "moveTop": "Move to Top",
+                "moveBottom": "Move to Bottom",
                 "duplicate": "Duplicate",
                 "removeCategoriesNone": "No categories to remove",
                 "approve": "Approve",
