@@ -15,14 +15,14 @@
     <hr>
     <!--div class="kMenuItemLabel">
         <span>{{'app.languageMenu.selectLang' | translate}}</span>
-    </div>
+    </div-->
 
     <ul class="kLanguages kOverrideFAIcons">
         <p-dropdown [options]="_languages" [(ngModel)]="_selectedLanguage"
                     (onChange)="onLangSelected($event)"></p-dropdown>
     </ul>
 
-    <hr-->
+    <hr>
     <div class="kLinks">
         <a (click)="changeAccountPopup.open();parentPopup.close()">{{'app.userSettings.changeAccount' | translate}}</a>
         <a (click)="logout()">{{'app.userSettings.logout' | translate}}</a>

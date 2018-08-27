@@ -1,26 +1,24 @@
 @import 'app-theme/_variables.scss';
 
 .kUserSettings {
-    margin-left: 12px;
+    padding-left: 16px;
+    padding-right: 16px;
     padding-top: 3px;
     padding-bottom: 8px;
     .kLinks {
         display: flex;
         flex-direction: column;
-        padding-left: 32px;
         padding-bottom: 4px;
     }
     a {
         margin-top: 4px;
         line-height: 24px;
         margin-bottom: 4px;
-        color: $kTertiary;
+        color: $kGrayscale1;
         &:hover {
-            color: darken($kTertiary, 10%);
+            color: #0D499D;
         }
-        &:active {
-            color: $kTertiary;
-        }
+        text-decoration: none;
     }
 }
 
@@ -38,12 +36,12 @@ li {
     margin-top: 18px;
 }
 
-hr {
+hr{
     height: 1px;
-    border: none;
-    margin-left: -12px;
-    color: $kGrayscale4;
-    background-color: $kGrayscale4;
+    margin-left: -20px;
+    margin-right: -20px;
+    border: 0;
+    border-top: 1px solid $kGrayscale6;
 }
 
 .kMenuItemLabel {
@@ -54,7 +52,7 @@ hr {
 .kMenuItem {
     display: flex;
     flex-direction: column;
-    margin-left: 32px;
+    margin-left: 28px;
     margin-top: -18px;
 }
 
@@ -68,5 +66,5 @@ hr {
 }
 
 :host /deep/ .ui-dropdown.ui-widget {
-    width: 215px !important;
+    width: 208px !important;
 }
