@@ -126,10 +126,15 @@
 
 .kHelpMenu{
     background-color: white;
-    padding-left: 12px;
+    padding-left: 16px;
+    padding-right: 16px;
     overflow: hidden;
+    border: 0px solid white;
+    border-radius: 3px;
     .kHelpTitle{
-        font-size: 14px;
+        font-size: 12px;
+        margin-top: 20px;
+        letter-spacing: 1.5px;
         color: $kGrayscale3;
     }
     .kDisabled{
@@ -137,18 +142,19 @@
         cursor: default;
     }
     .kHelpLink{
+        text-decoration: none;
         font-size: 14px;
         cursor: pointer;
         color: $kGrayscale1;
         &:hover{
-            color: #000000;
+            color: #0D499D;
         }
     }
     .kHelpLinkHidden {
         display: none;
     }
     .kContexualHelp{
-        background-color: $kGrayscale7;
+        // background-color: $kGrayscale7;
         margin: -15px;
         padding: 15px;
         padding-top: 0px;

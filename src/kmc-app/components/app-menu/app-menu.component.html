@@ -44,20 +44,18 @@
     </div>
 </div>
 
-<kPopupWidget #usersettings
+<kPopupWidget #usersettings [appendTo]="appmenu"
               data-aid="usersettings"
               [popupWidth]="240"
               [closeBtn]="false"
               [targetRef]="username"
-              [targetOffset]="{'x': 0, 'y': 30}"
-              [placement]="{'x':'right', 'y': 'top'}"
+              [targetOffset]="{'x': 8, 'y': 30}"
               (onOpen)="username.className='kUserName open'"
-              (onClose)="username.className='kUserName'"
-              kSticky [sticksTo]="'header'" [stickyId]="'usersettingsPopup'" [stickyClass]="'kForceFix'">
+              (onClose)="username.className='kUserName'">
     <kKMCUserSettings [parentPopup]="usersettings"></kKMCUserSettings>
 </kPopupWidget>
 
-<kPopupWidget #helpmenu data-aid="helpmenu" [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="_helpMenuOpened = true" (onClose)="_helpMenuOpened = false">
+<kPopupWidget #helpmenu data-aid="helpmenu" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="_helpMenuOpened = true" (onClose)="_helpMenuOpened = false">
     <ng-template>
         <div class="kHelpMenu">
             <!--p *ngIf="_kmcOverviewLinkExists || _mediaManagementLinkExists" class="kHelpTitle">{{'app.helpMenu.gettingStarted' | translate | uppercase}}</p>
@@ -73,17 +71,17 @@
             <k-logs-record mode="link"
                            *ngIf="(_kmcLogs.logsRecordMode | async).enabled"
                            [logLevel]="(_kmcLogs.logsRecordMode | async).logLevel"></k-logs-record>
-            <hr>
-            <kChangelog [changelogIsShown]="_showChangelog" (showChangelog)="_changelogPopupOpened()"></kChangelog>
             <k-power-user-console *ngIf="_powerUser"></k-power-user-console>
 
             <div class="kContexualHelp" *ngIf="_contextualHelp.length">
                 <hr>
                 <p class="kHelpTitle">{{'app.helpMenu.currentPage' | translate | uppercase}}</p>
-                <p class="kHelpLink" *ngFor="let link of _contextualHelp">
-                    <a [href]="link.value" target="_blank">{{link.label}}</a>
+                <p *ngFor="let link of _contextualHelp">
+                    <a class="kHelpLink" [href]="link.value" target="_blank">{{link.label}}</a>
                 </p>
             </div>
+            <hr>
+            <kChangelog [changelogIsShown]="_showChangelog" (showChangelog)="_changelogPopupOpened()"></kChangelog>
         </div>
     </ng-template>
 </kPopupWidget>

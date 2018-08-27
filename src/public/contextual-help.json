@@ -1,170 +1,601 @@
 [
     {
         "viewKey": "admin-roles",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2113",
+                "label": "Administration Menu"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2113#roles_tab",
+                "label": "The Roles Tab"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2113#create_custom_role",
+                "label": "Create or Edit Custom Roles"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2113#role_management",
+                "label": "Role Management"
+            }
+        ]
     },
     {
         "viewKey": "admin-users",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2113",
+                "label": "Administration Menu"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2113#users_tab",
+                "label": "The Users Tab"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2113#add_user",
+                "label": "Adding a KMC User"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2113#edit_user",
+                "label": "Editing a User"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2113#request",
+                "label": "Purchasing License for Additional Users"
+            }
+        ]
     },
     {
         "viewKey": "content-bulk-uploads",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2121#bulk_upload_log_Page",
+                "label": "Bulk Upload Log Page"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#refine_bulk",
+                "label": "Refining Options for Bulk Uploads"
+            }
+        ]
     },
     {
         "viewKey": "content-categories",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2132#add_category_name",
+                "label": "Add a Category"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#searching_filtering",
+                "label": "Search and Refine Categories"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2132#cat_actions",
+                "label": "Category Table Actions"
+            }
+        ]
     },
     {
         "viewKey": "content-drop-folders",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2113#whatis_drop_folder",
+                "label": "What is a Drop Folder"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2113#drop_folder_table",
+                "label": "Drop Folder Table"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2113#drop_folder_statuses",
+                "label": "Drop Folder Statuses"
+            }
+        ]
     },
     {
         "viewKey": "content-entries",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2121",
+                "label": "Uploading and Ingestion"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2121#upload_media",
+                "label": "Upload Media"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#entries_table",
+                "label": "The Entries Table"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#searching_filtering",
+                "label": "Search and Filter Through Media"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#share_embed",
+                "label": "Share and Embed"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#upload_control",
+                "label": "Upload Control"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#additional_actions",
+                "label": "More (Bulk) Actions"
+            }
+        ]
     },
     {
         "viewKey": "content-moderation",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2123",
+                "label": "Moderate Content"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2123#setting_moderation_flags",
+                "label": "Set Moderation Flags"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2123#set_mod_options",
+                "label": "Setting Moderation Options"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2123#applying_bulk_actions",
+                "label": "Apply Bulk Actions"
+            }
+        ]
     },
     {
         "viewKey": "content-playlists",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2130#playlists_tab",
+                "label": "The Playlists Tab"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2130#create_man_playlist",
+                "label": "Create a Manual Playlist"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2130#create_rule_playlist",
+                "label": "Create a Rule Based Playlist"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2130#add_edit_metadata",
+                "label": "Adding/Editing Metadata to a Playlist"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2130#apply_bulk_actions",
+                "label": "Apply Bulk Actions to Playlists"
+            }
+        ]
     },
     {
         "viewKey": "content-syndication",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2134#content_syndication",
+                "label": "Content Syndication"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2134#syn_to_rss",
+                "label": "Syndicating to a Standard MRSS Feed"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2134#setup_syn",
+                "label": "Setting Up Syndication"
+            }
+        ]
     },
     {
         "viewKey": "content-uploads",
-        "links": []
-    },
-    {
-        "viewKey": "analytics-kava",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#upload_control",
+                "label": "Tracking Your Uploads"
+            }
+        ]
     },
     {
         "viewKey": "analytics-live",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2118",
+                "label": "Live Analytics"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2118#live_content",
+                "label": "Live Content Dashboard Report"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2118#specific_entry",
+                "label": "Live Report v for Specific Entry"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2118#export",
+                "label": "Export Analytics to CSV"
+            }
+        ]
     },
     {
         "viewKey": "settings-access-control",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2128",
+                "label": "Access Control Overview"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2129#create_access_profile",
+                "label": "Create an Access Profile"
+            }
+        ]
     },
     {
         "viewKey": "settings-account-info",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2126",
+                "label": "Monthly Bandwith/Storage Usage"
+            }
+        ]
+    },
+    {
+        "viewKey": "setting_account-info",
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2126",
+                "label": "Upgrade Account"
+            }
+        ]
+    },
+    {
+        "viewKey": "settings_account-info",
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/1994",
+                "label": "Settings Pages"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/1993",
+                "label": "Upgrade Account"
+            }
+        ]
     },
     {
         "viewKey": "settings-account",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/1993",
+                "label": "View Account Information"
+            }
+        ]
     },
     {
         "viewKey": "settings-integration",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/1996",
+                "label": "Account Info Notifications"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/1996#entitlement_settings",
+                "label": "Add Entitlements"
+            }
+        ]
     },
     {
         "viewKey": "settings-metadata",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/1998",
+                "label": "Custom Data"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/1998#custom_metadata_functionality",
+                "label": "Custom Metadata Functionality"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/1998#add_schema",
+                "label": "Add a Schema"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/1998#related_entries",
+                "label": "Related Entries"
+            }
+        ]
     },
     {
         "viewKey": "settings-my-user-settings",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/1997",
+                "label": "Change User Details"
+            }
+        ]
     },
     {
         "viewKey": "settings-transcoding",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2127",
+                "label": "Transcoding Settings"
+            }
+        ]
     },
     {
         "viewKey": "studio-v2",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/1148",
+                "label": "Universal Studio Guide v2 Player"
+            }
+        ]
     },
     {
         "viewKey": "studio-v3",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/1971",
+                "label": "Kaltura TV Platform Studio Information Guide"
+            }
+        ]
     },
     {
         "viewKey": "usage-dashboard",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2103",
+                "label": "The Usage Dashboard"
+            }
+        ]
     },
     {
         "viewKey": "content-category-subcategories",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2132#reordering_sub_cats",
+                "label": "Reordering/Deleting Sub Categories"
+            }
+        ]
     },
     {
         "viewKey": "content-category-entitlements",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/629",
+                "label": "Entitlements Model"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2133#set_entitlement_settings",
+                "label": "Setting the Entitlement Settings"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/1996#add_entitlement_to_cat",
+                "label": "Add Entitlements to Categories"
+            }
+        ]
     },
     {
         "viewKey": "content-category-metadata",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#editing_overview",
+                "label": "Entry Editing Tabs Overview"
+            }
+        ]
     },
     {
         "viewKey": "content-entry-metadata",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#metadata_tab",
+                "label": "Metadata Tab"
+            }
+        ]
     },
     {
         "viewKey": "content-entry-thumbnails",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#thumbnails_tab",
+                "label": "Thumbnails Tab"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#choosing_thumbnails",
+                "label": "Choosing a Thumbnail for your Video"
+            }
+        ]
     },
     {
         "viewKey": "content-entry-accesscontrol",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2129#assign",
+                "label": "Assign Access Control Profile to Entry"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2129#assign_ac_bulk",
+                "label": "Assign Access Control Profile (Bulk)"
+            }
+        ]
     },
     {
         "viewKey": "content-entry-scheduling",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#set_scheduling",
+                "label": "Set Scheduling"
+            }
+        ]
     },
     {
         "viewKey": "content-entry-flavours",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#flavors_tab",
+                "label": "Flavors Tab"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#add_video_audio",
+                "label": "Add Video/Audio"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#upload_from_desktop",
+                "label": "Upload from Desktop"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#import_files",
+                "label": "Import Files"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#link_to_remote_storage",
+                "label": "Link to Remote Storage"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#replacing_media",
+                "label": "Replace Media"
+            }
+        ]
     },
     {
         "viewKey": "content-entry-captions",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#captions_edit",
+                "label": "The Captions Tab"
+            }
+        ]
     },
     {
         "viewKey": "content-entry-live",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2052",
+                "label": "Create a Live Stream Entry in Kaltura Using the KMC NG"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2054",
+                "label": "RTMP Endpoints for Kaltura Live Streaming - KMC-NG"
+            }
+        ]
     },
     {
         "viewKey": "content-entry-related",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#uploading_modifying_related_files",
+                "label": "Uploading and Modifying Related Files"
+            }
+        ]
     },
     {
         "viewKey": "content-entry-clips",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#clips_edit",
+                "label": "Create and Edit Media Clips"
+            }
+        ]
     },
     {
         "viewKey": "content-entry-advertisements",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#advertisements_edit",
+                "label": "Creating Advertisements"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2124",
+                "label": "Advertising and Ad Networks"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2124#cfg_vast_ads",
+                "label": "Configure VAST Ads"
+            }
+        ]
     },
     {
         "viewKey": "content-entry-users",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#users_edit",
+                "label": "Modify Editing and Publishing Rights"
+            }
+        ]
     },
     {
         "viewKey": "content-entry-distribution",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#distribute_entry",
+                "label": "Distributing an Entry"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2120#distribution_edit",
+                "label": "Distribution"
+            }
+        ]
     },
     {
         "viewKey": "content-playlist-metadata",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2130#playlists_tab",
+                "label": "The Playlists Tab -Add a Playlist"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2130#add_edit_metadata",
+                "label": "Add/Edit Metdata to Playlist"
+            }
+        ]
     },
     {
         "viewKey": "content-playlist-content",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2130#create_man_playlist",
+                "label": "Create Manual Playlist"
+            }
+        ]
     },
     {
         "viewKey": "content-playlist-contentrulebased",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2130#create_rule_playlist",
+                "label": "Create Rule-based Playlist"
+            }
+        ]
     },
     {
         "viewKey": "settings-transcoding-profile-metadata",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2122#useful_tips",
+                "label": "Useful Tips"
+            }
+        ]
     },
     {
         "viewKey": "settings-transcoding-profile-flavors",
-        "links": []
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2122#edit_flavors",
+                "label": "Transcoding Profiles - Edit Flavors"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2122#edit_flavors_live",
+                "label": "Trasncoding Profiles - Edit Live Flavors"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2122#transcoding_profiles_for_live",
+                "label": "Trasncoding Profiles for Live Streaming"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2122#assigning_bulk",
+                "label": "Assign Bulk Transcoding Profiles"
+            }
+        ]
     }
 ]
