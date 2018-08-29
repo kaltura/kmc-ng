@@ -52,7 +52,9 @@
             "studio": "Studio",
             "analytics": "Analytics",
             "settings": "Einstellungen",
-            "administration": "Administration"
+            "administration": "Administration",
+            "reachDashboardMenuTitle": "Dienstleistungs-Dashboard",
+            "reachDashboardPageTitle": "Dienstleistungs-Dashboard"
         },
         "userSettings": {
             "changeAccount": "Konto wechseln",
@@ -73,6 +75,7 @@
             "productTour": "Die Produkttour ansehen",
             "support": "Hilfe und Kundendienst",
             "userManual": "Benutzerhandbuch herunterladen",
+            "legacy": "Legacy KMC",
             "contact": "Kundendienst kontaktieren",
             "currentPage": "Aktuelle Seite",
             "changelog": "Änderungsprotokoll"
@@ -89,6 +92,7 @@
             "off": "Aus",
             "ok": "OK",
             "cancel": "Abbrechen",
+            "continue": "Weiter",
             "retry": "Erneut versuchen",
             "dismiss": "Verwerfen",
             "reload": "Neu laden",
@@ -113,7 +117,9 @@
         "openMail":{
             "supportMailTitle": "Kontaktieren Sie den Kaltura-Kundendienst",
             "supportMailMsg": "Schicken Sie bitte eine E-Mail an folgende E-Mail-Adresse:",
-            "supportMailMsgNoMail": "Schicken Sie bitte eine E-Mail an das Kaltura-Kundendienstteam."
+            "supportMailMsgNoMail": "Schicken Sie bitte eine E-Mail an das Kaltura-Kundendienstteam.",
+            "customerCare": "Der Kaltura Kundendienst ist 24/7, 365 Tage lang im Jahr über das Kundenportal verfügbar:",
+            "customerPortal": "Die einfachste und schnellste Weise einen neuen Fall einzureichen, mit dem Kundendienst zu kommunizieren und den Status Ihrer Supportanfragen nachzuverfolgen ist über das Kaltura Kundenportal:"
         },
         "login": {
             "login": {
@@ -171,7 +177,7 @@
         "error": {
           "equal": "Passwörter stimmen nicht überein",
           "required": "Dieses Feld ist ein Pflichtfeld",
-            "failedValidateHash": ". Möchten Sie es erneut versuchen?"
+            "failedValidateHash": "{{0}} Möchten Sie es erneut versuchen?"
         },
         "placeholder": {
           "new": "Neues Passwort eingeben",
@@ -287,6 +293,8 @@
                 "invalidUrl": "URL ungültig"
             },
             "uploadMenu": {
+                "createFromUrl": "Hochladen von URL",
+                "createFromYoutube": "Hochladen von YouTube",
                 "uploadFromDesktop": "Vom Desktop hochladen",
                 "needHighSpeed": "Hochgeschwindigkeits-Upload benötigt?",
                 "highSpeed": "Hochgeschwindigkeits-Upload",
@@ -307,11 +315,52 @@
                     "prepareEntry": "Bei der Vorbereitung eines Eintrags ist ein Fehler aufgetreten"
                 }
             },
+            "createFromUrl": {
+                "uploadFromUrl": "Hochladen von URL",
+                "transcodingProfile": "Transkodierungsprofil",
+                "profilePlaceholder": "Standard",
+                "addFile": "Datei hinzufügen",
+                "fileUrl": "Datei-URL",
+                "fileUrlPlaceholder": "http://",
+                "transcodingFlavor": "Transkodierungsvariante",
+                "selectFlavor": "Variante auswählen",
+                "remove": "Datei entfernen",
+                "link": "Link",
+                "cancel": "Abbrechen",
+                "noFlavors": "Keine Varianten",
+                "missingFlavor": "Einige erforderlichen Transkodierungsvarianten fehlen. Fortfahren?",
+                "continue": "Weiter",
+                "emptyMessage": {
+                    "title": "Keine Dateien zum Hochladen",
+                    "getStarted": "Fügen Sie ein paar Dateien hinzu, um zu beginnen. ",
+                    "browse": "Hinzufügen"
+                }
+            },
+            "uploadFromYoutube": {
+                "uploadFromYoutube": "Hochladen von YouTube",
+                "linkLabel": "Link zur Videoseite oder Inhalts-ID hinzufügen",
+                "inputPlaceholder": "http://",
+                "cancel": "Abbrechen",
+                "upload": "Hochladen",
+                "note": "Hinweis: Es werden nur öffentliche YouTube-Videos unterstützt",
+                "invalidUrl": "Nicht unterstützte URL oder ID angegeben",
+                "success": "Erfolg",
+                "successMessage": "YouTube-Eintrag wurde erfolgreich erstellt. Wollen Sie die Details des Eintrags ansehen?",
+                "notSupported": "Upload von YouTube ist nicht verfügbar!"
+            },
             "uploadSettings": {
-                "title": "Upload-Einstellungen",
+                "uploadSettings": "Upload-Einstellungen",
+                "uploadFromUrl": "Hochladen von URL",
+                "cancel": "Abbrechen",
                 "profile": "Transkodierungsprofil",
                 "addFileBtn": "Dateien hinzufügen",
                 "profilePlaceholder": "Standard",
+                "fileUrl": "Datei-URL",
+                "fileUrlPlaceholder": "http://",
+                "createFromUrlError": {
+                    "all": "Eintragerstellung fehlgeschlagen. Versuchen Sie es erneut",
+                    "some": "Erstellung einiger Einträge fehlgeschlagen, bitte Eintragsliste überprüfen"
+                },
                 "mediaTypes": {
                     "video": "Video",
                     "audio": "Audio",
@@ -328,10 +377,12 @@
                     "emptyMessage": {
                         "title": "Keine Dateien zum Hochladen",
                         "getStarted": "Fügen Sie ein paar Dateien hinzu, um zu beginnen. ",
-                        "browse": "Durchsuchen"
+                        "browse": "Durchsuchen",
+                        "add": "Hinzufügen"
                     }
                 },
-                "uploadBtn": "Hochladen"
+                "upload": "Hochladen",
+                "link": "Link"
             },
             "uploadMonitor": {
                 "uploadFromDesktop": "Vom Desktop hochladen",
@@ -527,6 +578,7 @@
                 "viewEntries": "Einträge ansehen",
                 "moveCategory": "Kategorie verschieben",
                 "cancel": "Abbrechen",
+                "addServiceRule": "Service-Regel hinzufügen",
                 "bActions": {
                     "addRemoveTags": "Tags hinzufügen / entfernen",
                     "addTags": "Tags hinzufügen",
@@ -750,10 +802,11 @@
                                 "explanation": "Geben Sie die URL-Vorlage ein, die Sie als iTunes Store Podcast für jedes Video in diesem Feed angezeigt haben möchten. Das System wird die spezifische Eintrags-ID für jeden Eintrag hinzufügen. Beispielsweise:\"http://mysite.com?videoid=\""
                             },
                             "feedAuthor": "Feed-Verfasser",
+                            "enforceFeedAuthor": "Diesen Namen als Episoden-Verfasser für alle Episoden verwenden",
                             "website": "Webseite",
                             "description": "Feed-Beschreibung",
                             "categories": {
-                                "label": "Kategorie",
+                                "label": "Kategorie ",
                                 "promptText": "Kategorie auswählen",
                                 "itemsSelected":"{0} ausgewählte Kategorien",
                                 "availableCategories": {
@@ -828,7 +881,7 @@
                             },
                             "adultContent": {
                                 "label": "Nicht jugendfreier Inhalt",
-                                "hint": "Falls Sie bei diesem Tag „Ja“ eingeben, erscheint für Erziehungsberechtigte neben Ihrer Podcastabbildung im iTunes Store und in der Namensspalte in iTunes eine „Explicit“ („Ausdrücklich“)-Hinweisgraphik. Der Wert „Clean“ („Sauber“) gilt als Hinweistyp für Erziehungsberechtigte, dass in den Episoden weder Kraftausdrücke noch nicht-jugendfreier Inhalt enthalten sind. Es wird eine „Clean“-Graphik angezeigt. Liegt der „Explicit“-Tag vor, enthält er aber einen anderen Wert (z.&#160;B. „Nein“), sehen Sie keine Angaben - der Standard-Hinweistyp ist „Blank“ („Leer“).",
+                                "hint": "Falls Sie bei diesem Tag „Ja“ eingeben, erscheint für Erziehungsberechtigte neben Ihrer Podcastabbildung im iTunes Store und in der Namensspalte in iTunes eine „Explicit“ („Ausdrücklich“)-Hinweisgraphik. Der Wert „Clean“ („Sauber“) gilt als Hinweistyp für Erziehungsberechtigte, dass in den Episoden weder Kraftausdrücke noch nicht-jugendfreier Inhalt enthalten sind. Es wird eine „Clean“-Graphik angezeigt. Liegt der „Explicit“-Tag vor, enthält er aber einen anderen Wert (z. B. „Nein“), sehen Sie keine Angaben - der Standard-Hinweistyp ist „Blank“ („Leer“).",
                                 "options": {
                                     "yes": "Ja",
                                     "no": "Nein",
@@ -969,8 +1022,8 @@
                 },
                 "deleteConfirmation": {
                     "title": "Löschen bestätigen",
-                    "singleFeed": "Wollen Sie den folgenden Feed wirklich löschen?&#160;{{0}}",
-                    "upTo5Feed": "Wollen Sie die folgenden Feeds wirklich löschen?&#160;{{0}}",
+                    "singleFeed": "Wollen Sie den folgenden Feed wirklich löschen? {{0}}",
+                    "upTo5Feed": "Wollen Sie die folgenden Feeds wirklich löschen? {{0}}",
                     "moreThan5": "Wollen Sie die ausgewählten Feeds wirklich löschen?"
                 },
                 "errors": {
@@ -1113,7 +1166,11 @@
                 "ruleName": "Regelname",
                 "entriesCount": "Anzahl Einträge",
                 "limit": "Begrenzung",
-                "orderBy": "Sortieren nach"
+                "orderBy": "Sortieren nach",
+                "nameTooltip": "{{0}} Tags: {{1}}",
+                "download": "Herunterladen",
+                "editor": "Editor starten",
+                "captionRequest": "Untertitelanforderung"
             },
             "paginator": {
                 "showRows": "Zeilen anzeigen:"
@@ -1264,6 +1321,7 @@
                 "dismiss": "Verwerfen"
             },
             "bulkActions": {
+                "captionRequest": "Untertitelanforderung",
                 "setScheduling": "Planung festlegen",
                 "setAccessControl": "Zugriffskontrolle festlegen",
                 "addRemovePublishers": "Mitverleger hinzufügen/entfernen",
@@ -1295,7 +1353,7 @@
                 "changeOwner": "Inhaber ändern",
                 "changeOwnerLabel": "Einen neuen Inhaber für die ausgewählten Einträge festlegen.",
                 "download": "Herunterladen",
-                "downloadEntries": "Ausgewählte Einträge herunterladen.",
+                "downloadEntries": "Ausgewählte Einträge herunterladen",
                 "download1Label": "Sie haben 1 Eintrag zum Herunterladen ausgewählt.",
                 "downloadManyLabel": "Sie haben {{0}} Einträge zum Herunterladen ausgewählt.",
                 "downloadFlavor": "Falls Sie das Herunterladen eines Videos ausgewählt haben, wählen Sie bitte das benötigte Format:",
@@ -1327,13 +1385,17 @@
                 "reject": "Ablehnen",
                 "newPlaylist": "Neue Wiedergabeliste",
                 "createPlaylistWarning": "Neue Wiedergabeliste",
-                "createPlaylistWarningMsg": "Einige der ausgewählten Einträge haben ungültige Statusangaben. Sie können fortfahren, ungültige Einträge werden jedoch ignoriert {{0}}.",
+                "createPlaylistWarningMsg": "Einige der ausgewählten Einträge haben ungültige Statusangaben. Sie können fortfahren, ungültige Einträge werden jedoch ignoriert: {{0}}.",
+                "createPlaylistWarningMsgShort": "{{0}} der ausgewählten Einträge haben ungültige Statusangaben. Sie können fortfahren, ungültige Einträge werden jedoch ignoriert.",
                 "createPlaylistErrorMsg": "Alle ausgewählten Einträge haben ungültige Statusangaben. Sie können keine neue Wiedergabeliste erstellen, welche diese Einträge enthält",
                 "viewRule": "Regel ansehen/bearbeiten",
                 "deleteRule": "Regel löschen",
                 "noCategoriesOrEntries": "Keine Kategorien oder Einträge ausgewählt.",
                 "entryAlreadyAssignedToCategory": "Eintrag {{0}} ist bereits Kategorie {{1}} zugewiesen.",
-                "downloadFailed": "Die Anfrage zum Herunterladen ist fehlgeschlagen."
+                "downloadFailed": "Die Anfrage zum Herunterladen ist fehlgeschlagen.",
+                "captionRequestAllInvalid": "Die ausgewählten Einträge unterstützen Untertitelanfragen nicht. Bitte wählen Sie nur Video-/Audioeinträge aus, die Playback-bereit sind",
+                "captionRequestSomeInvalid": "Bitte beachten Sie, dass einige Einträge Untertitelanfragen nicht unterstützen und daher ignoriert werden. Fortfahren?"
+
             },
             "entryDetails": {
                 "entryEditor": {
@@ -1341,7 +1403,13 @@
                     "cancelEdit": "Bearbeitung abbrechen",
                     "discard": "Alle Änderungen verwerfen?"
                 },
+                "downloadEntry": {
+                    "title": "Herunterladen",
+                    "downloadFlavor": "Falls Sie das Herunterladen eines Videos ausgewählt haben, wählen Sie bitte das benötigte Format:",
+                    "downloadEntry": "Download-Eintrag"
+                },
                 "save": "Speichern",
+                "newDraftEntryWarning": "Eintrag wurde automatisch gespeichert. Möchten Sie diese Eintrag beibehalten?",
                 "sections": {
                     "metadata": "Metadaten",
                     "thumbnails": "Vorschaubilder",
@@ -1363,6 +1431,7 @@
                     "details": "Details",
                     "entryID": "ID:",
                     "creator": "Erstellt von:",
+                    "owner": "Inhaber",
                     "creationDate": "Erstellungsdatum:",
                     "updateDate": "Letzte Aktualisierung:",
                     "landingPage": "Zielseite:",
@@ -1510,7 +1579,8 @@
                         "preview": "Vorschau",
                         "reconvert": "Rekonvertieren",
                         "drm": "DRM-Details ansehen",
-                        "link": "Link"
+                        "link": "Link",
+                        "match": "Ablageordner"
                     },
                     "drm": {
                         "header": "DRM-Details",
@@ -1560,9 +1630,11 @@
                     "downloadFailure": "Varianten-Herunterladen fehlgeschlagen.",
                     "importFailure": "Varianten-Import fehlgeschlagen.",
                     "replaceVideo": {
+                        "replaceVideo": "Video ersetzen",
                         "noFlavors": "Keine Varianten",
                         "addVideo": "Video hinzufügen",
                         "addAudio": "Audio hinzufügen",
+                        "replaceAudio": "Audio ersetzen",
                         "uploadFile": "Datei hochladen",
                         "uploadFiles": "Dateien hochladen",
                         "importFile": "Datei importieren",
@@ -1596,6 +1668,20 @@
                         "approveReplacementTooltip": "Alle aktuellen Varianten werden nach Austauschgenehmigung ausgetauscht. Zeitbasierte Metadaten können ebenfalls betroffen sein.",
                         "currentFlavors": "Aktuelle Varianten",
                         "replacementFlavors": "Austausch-Varianten",
+                        "setReferenceId": "Referenz-ID festlegen",
+                        "addFilesBtn": "Datei/en hinzufügen",
+                        "referenceId": "Referenz-ID:",
+                        "selectDropFolder": "Ablageordner wählen",
+                        "searchFolder": "Ordner durchsuchen",
+                        "mediaPackageName": "Medienpaket-Name",
+                        "mediaName": "Medienname",
+                        "createdOn": "Erstellt am",
+                        "waiting": "Warten auf Konvertierung",
+                        "error": "* Fehler *",
+                        "setReferenceIdWarning": "Die automatische Aufnahme ist jetzt in Gang, bitte schauen Sie in einigen Minuten noch einmal nach.",
+                        "addFilesWarning": "Das Hinzufügen dieser Datei unterbricht den automatischen Aufnahmeprozess und sollte nur als Ausweichmethode durchgeführt werden. Möchten Sie fortfahren?",
+                        "noDropFolders": "Keine Ablageordner verfügbar",
+                        "noDropFoldersWarning": "Ihre Kontokonfiguration unterstützt automatisches Angleichen der Medienpaketen aus Ablageordnern nicht. ",
                         "storageProfile": {
                             "name": "Name:",
                             "id": "ID:",
@@ -1606,8 +1692,8 @@
                         },
                         "replacementStatus": {
                             "replacementInProcess": "Video-Austausch in Bearbeitung",
-                            "readyForReplacement": "Video bereit zum Austausch",
-                            "replacementFailed": "Video-Austausch fehlgeschlagen"
+                            "readyForReplacement": "Video ist bereit für den Austausch",
+                            "replacementFailed": "Videoersatz ist fehlgeschlagen"
                         },
                         "errors": {
                             "uniqueFlavors": "Mehr als eine Datei wird mit denselben Transkodierungsvarianten-Einstellungen assoziiert.",
@@ -1623,6 +1709,7 @@
                 "captions": {
                     "captions": "Untertitel",
                     "add": "Untertitel hinzufügen",
+                    "request": "Untertitel anfordern",
                     "label": "Beschriftung",
                     "type": "Dateityp",
                     "language": "Sprache",
@@ -2264,8 +2351,8 @@
                 "personalDetails": "Persönliche Details",
                 "accountSpecificDetails": "Kontospezifische Details",
                 "required": "Dieses Feld ist ein Pflichtfeld.",
-                "emailFormat": "Dieses E-Mail-Format ist ungültig",
-                "publisherIdFormat": "Das Format dieser Herausgeber-ID ist nicht gültig",
+                "emailFormat": "Ungültiges E-Mail-Format",
+                "publisherIdFormat": "Ungültiges Herausgeber-ID-Format",
                 "userAlreadyExist": "{{0}} ist bereits im System aufgeführt und mit einem anderen KMC-Konto verbunden. Wollen Sie diesen Benutzer ebenfalls mit diesem Konto verbinden?",
                 "alreadyExist": "Der Benutzer existiert bereits",
                 "alreadyExistError": "Die E-Mail-Adresse für die Anmeldung {{0}} ist im System bereits als autorisierter Benutzer für Ihr Konto aufgelistet.",
@@ -2291,6 +2378,7 @@
         "roleUpdatedMessage": "Änderungen treten sofort in Kraft. Das Aktualisieren des Browserfensters sollte bestehenden Benutzern empfohlen werden, die mit dieser Rolle assoziiert werden",
         "errors": {
                     "required": "Dieses Feld ist ein Pflichtfeld.",
+                    "unsafeValue": "Potenziell unsichere HTML-Tags",
                     "validationError": "Das Formular enthält ungültige Informationen. Bitte überprüfen Sie die Bereiche, die als ungültig markiert wurden."
                 },
                 "permissionsTable": {
@@ -2548,7 +2636,7 @@
                 "strongPassword": "Benutzen Sie ein starkes Passwort, das Sie nirgends sonst verwenden.",
                 "currentPassword": "Aktuelles Passwort",
                 "newPassword": "Neues Passwort",
-                "reTypeNewPassword": "Geben Sie das neue Passwort erneut ein.",
+                "reTypeNewPassword": "Geben Sie das neue Passwort erneut ein",
                 "errors": {
                     "required": "Dieses Feld ist ein Pflichtfeld.",
                     "doNotMuchPasswords": "Die Passwörter stimmen nicht überein.",
@@ -2792,7 +2880,11 @@
         },
         "analytics": {
             "comingSoon": "In Kürze! Analytics für alle Medientypen.",
-            "releaseSupports": "Diese Version unterstützt nur Analytics für „Live“-Einträge. Loggen Sie sich für alle anderen Medien bitte in der Legacy-KMC ein, um Analytics und Berichte anzuzeigen und zu erstellen. Analytics für alle Medien sollte in Kürze verfügbar sein"
+           "releaseSupports": "Diese Version unterstützt nur Analytics für „Live“-Einträge. Für alle anderen Medien <a href=\"{{0}}\" target=\"_blank\">loggen Sie sich bitte in der Legacy-KMC</a> ein, um Analytics und Berichte anzuzeigen und zu erstellen. Analytics für alle Medien sollte in Kürze verfügbar sein"
+        },
+        "reach": {
+            "captionRequests": "Untertitelanforderungen",
+            "addServiceRule": "Service-Regel hinzufügen"
         }
     },
     "entriesShared": {
