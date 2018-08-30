@@ -2595,7 +2595,7 @@
                             "privacyContextLabelRequired": "Please enter a Privacy Context Label",
                             "privacyContextLabelExists": "Category is already set with a Privacy Context Label.",
                             "privacyContextLabelTooShort": "Privacy Context Labels must include at least 4 characters.",
-                            "privacyContextLabelRegex": "Privacy Context Labels must include only alphanumeric characters."
+                            "privacyContextLabelRegex": "Privacy Context Labels must include only English alphanumeric characters."
                         }
                     },
                     "deleteEntitlement": {
