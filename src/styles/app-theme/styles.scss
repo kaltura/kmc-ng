@@ -344,6 +344,11 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
 .ui-column-resizer-helper {
     background-color: $kGrayscale5;
 }
+.ui-button{
+    .ui-button-icon-left{
+        font-size: inherit;
+    }
+}
 body {
     kpopupwidget[data-aid="categoriesFilterPopup"],
     kpopupwidget[data-aid="entriesRefinePopup"],
