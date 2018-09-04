@@ -81,7 +81,6 @@
                     <div class="emptymessage">{{'applications.content.table.noResults' | translate}}</div>
                 </ng-template>
             </p-table>
-            <p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
         </div>
     </div>
 
@@ -92,3 +91,5 @@
         </ng-template>
     </kPopupWidget>
 </k-area-blocker>
+
+<p-menu #actionsmenu [popup]="true" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>

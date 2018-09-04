@@ -105,9 +105,8 @@ export abstract class TranscodingProfilesTableComponent implements OnInit, After
 
   public _openActionsMenu(event: any, profile: KalturaConversionProfileWithAsset): void {
     if (this._actionsMenu) {
-      this._actionsMenu.toggle(event);
       this._buildMenu(profile);
-      this._actionsMenu.show(event);
+      this._actionsMenu.toggle(event);
     }
   }
   public _onActionSelected(action: string, profile: KalturaConversionProfileWithAsset): void {

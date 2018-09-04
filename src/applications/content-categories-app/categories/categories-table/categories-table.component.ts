@@ -100,9 +100,8 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 
   openActionsMenu(event: any, category: KalturaCategory) {
     if (this._actionsMenu) {
-      this._actionsMenu.toggle(event);
       this.buildMenu(category);
-      this._actionsMenu.show(event);
+      this._actionsMenu.toggle(event);
     }
   }
   buildMenu(category: KalturaCategory): void {

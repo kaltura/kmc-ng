@@ -114,9 +114,8 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
 
   public _openActionsMenu(event: any, rowIndex: number, folder: KalturaDropFolderFile) {
     if (this.actionsMenu) {
-      this.actionsMenu.toggle(event);
       this._buildMenu(rowIndex, folder);
-      this.actionsMenu.show(event);
+      this.actionsMenu.toggle(event);
     }
   }
 

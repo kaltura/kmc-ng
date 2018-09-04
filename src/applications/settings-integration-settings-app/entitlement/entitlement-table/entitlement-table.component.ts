@@ -56,7 +56,6 @@ export class EntitlementTableComponent implements OnInit, OnDestroy, AfterViewIn
     if (this.actionsMenu) {
       this._buildMenu(category);
       this.actionsMenu.toggle(event);
-      this.actionsMenu.show(event);
     }
   }
 

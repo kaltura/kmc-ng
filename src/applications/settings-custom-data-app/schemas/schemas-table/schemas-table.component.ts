@@ -112,9 +112,8 @@ export class SchemasTableComponent implements AfterViewInit, OnDestroy {
 
   public _openActionsMenu(event: any, schema: SettingsMetadataProfile): void {
     if (this.actionsMenu) {
-      this.actionsMenu.toggle(event);
       this._buildMenu(schema);
-      this.actionsMenu.show(event);
+      this.actionsMenu.toggle(event);
     }
   }
   public _onSelectionChange(event): void {

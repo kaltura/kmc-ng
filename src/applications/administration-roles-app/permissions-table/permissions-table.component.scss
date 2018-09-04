@@ -49,6 +49,10 @@
     border: 1px solid $kDandger;
   }
 
+  .ui-multiselect .ui-multiselect-panel{
+      z-index: 1;
+  }
+
   .kPermissionsList {
     .ui-multiselect {
       width: 320px;

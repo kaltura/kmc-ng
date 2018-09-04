@@ -114,9 +114,8 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   public _openActionsMenu(event: any, role: KalturaUserRole): void {
     if (this._actionsMenu) {
-      this._actionsMenu.toggle(event);
       this._buildMenu(role);
-      this._actionsMenu.show(event);
+      this._actionsMenu.toggle(event);
     }
   }
 }

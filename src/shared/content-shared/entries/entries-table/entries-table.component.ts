@@ -5,22 +5,16 @@ import {
     Component, ElementRef,
     EventEmitter,
     Input,
-    OnDestroy,
     OnInit,
     Output,
-    ViewChild
 } from '@angular/core';
-import { Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaExternalMediaSourceType, KalturaMediaType } from 'kaltura-ngx-client';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
-import { KalturaSourceType } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
-import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { ColumnsResizeManagerService } from 'app-shared/kmc-shared/columns-resize-manager';
-import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 export interface EntriesTableColumns {
   [key: string]: {
@@ -28,12 +22,6 @@ export interface EntriesTableColumns {
     align?: string;
     sortable?: boolean;
   };
-}
-
-export interface CustomMenuItem extends MenuItem {
-  metadata?: any;
-  commandName: string;
-  command?: (args?: any) => void;
 }
 
 export interface EntriesTableColumnStyle {
@@ -47,7 +35,7 @@ export interface EntriesTableColumnStyle {
   styleUrls: ['./entries-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
+export class EntriesTableComponent implements AfterViewInit, OnInit {
     public _kmcPermissions = KMCPermissions;
 
   @Input() set columns(value: EntriesTableColumns) {
@@ -55,8 +43,6 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   public _columnsMetadata: { [key: string]: { style: EntriesTableColumnStyle, sortable: boolean } } = {};
-
-  @Input() rowActions: { label: string, commandName: string, styleClass: string }[] = [];
 
   @Input()
   set entries(data: any[]) {
@@ -72,6 +58,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
+  @Input() rowActions: { label: string, commandName: string, styleClass: string }[];
   @Input() showBulkSelect = true;
   @Input() sortField: string = null;
   @Input() sortOrder: number = null;
@@ -81,8 +68,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Output() sortChanged = new EventEmitter<{ field: string, order: number }>();
   @Output() actionSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
   @Output() selectedEntriesChange = new EventEmitter<any>();
-
-  @ViewChild('actionsmenu') private actionsMenu: Menu;
+  @Output() openActionsMenu = new EventEmitter<{ event: any, entry: KalturaMediaEntry }>();
 
   private _deferredEntries: any[];
   private _defaultColumns: EntriesTableColumns = {
@@ -94,19 +80,16 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _columns?: EntriesTableColumns = this._defaultColumns;
 
 
-    public _youtubeExternalSourceType = KalturaExternalMediaSourceType.youtube;
+  public _youtubeExternalSourceType = KalturaExternalMediaSourceType.youtube;
   public _entries: any[] = [];
   private _deferredLoading = true;
   public _emptyMessage = '';
-  public _items: CustomMenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
   constructor(public _columnsResizeManager: ColumnsResizeManagerService,
               private _appLocalization: AppLocalization,
-              private _reachAppViewService: ReachAppViewService,
               private _cdRef: ChangeDetectorRef,
-              private _el: ElementRef<HTMLElement>,
-              private _permissionsService: KMCPermissionsService) {
+              private _el: ElementRef<HTMLElement>) {
   }
 
   ngOnInit() {
@@ -118,10 +101,6 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
         sortable: this._columns[columnName].sortable || false
       };
     });
-  }
-
-  ngOnDestroy() {
-    this.actionsMenu.hide();
   }
 
   ngAfterViewInit() {
@@ -139,47 +118,12 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._columnsResizeManager.updateColumns(this._el.nativeElement);
   }
 
-  private _hideMenuItems(entry: KalturaMediaEntry, { commandName }: { commandName: string }): boolean {
-    const { sourceType, status, mediaType } = entry;
-    const isReadyStatus = status === KalturaEntryStatus.ready;
-    const isLiveStreamFlash = mediaType && mediaType === KalturaMediaType.liveStreamFlash;
-    const isPreviewCommand = commandName === 'preview';
-    const isViewCommand = commandName === 'view';
-    const isKalturaLive = sourceType === KalturaSourceType.liveStream;
-    const isLiveDashboardCommand = commandName === 'liveDashboard';
-    const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
-    const isCaptionRequestCommand = commandName === 'captionRequest';
-    return !(
-      (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
-      (!isReadyStatus && isLiveStreamFlash && isViewCommand) || // hide if trying to view live that isn't ready
-      (isLiveDashboardCommand && !isKalturaLive) || // hide live-dashboard menu item for entry that isn't kaltura live
-      cannotDeleteEntry ||
-      (isCaptionRequestCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry })) // hide caption request if not audio/video or if it is then if not ready or it's forbidden by permission
-    );
-  }
-
-  private _buildMenu(entry: KalturaMediaEntry): void {
-    this._items = this.rowActions
-      .filter(item => this._hideMenuItems(entry, item))
-      .map(action =>
-        Object.assign({} as CustomMenuItem, action, {
-          command: ({ item }) => {
-            this._onActionSelected(item.commandName, entry);
-          }
-        })
-      );
+  public _openActionsMenu(event: any, entry: KalturaMediaEntry): void {
+      this.openActionsMenu.emit({event, entry});
   }
 
   public _rowTrackBy(index: number, item: any): string {
     return item.id;
-  }
-
-  public _openActionsMenu(event: any, entry: KalturaMediaEntry): void {
-    if (this.actionsMenu) {
-      this.actionsMenu.toggle(event);
-      this._buildMenu(entry);
-      this.actionsMenu.show(event);
-    }
   }
 
   public _allowDrilldown(action: string, mediaType: KalturaMediaType, status: KalturaEntryStatus): boolean {
