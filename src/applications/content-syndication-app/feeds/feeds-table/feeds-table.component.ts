@@ -109,9 +109,8 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   public _openActionsMenu(event: any, feed: KalturaBaseSyndicationFeed) {
     if (this._actionsMenu) {
-      this._actionsMenu.toggle(event);
       this._buildMenu(feed);
-      this._actionsMenu.show(event);
+      this._actionsMenu.toggle(event);
     }
   }
   public _editFeed(feed: KalturaBaseSyndicationFeed) {

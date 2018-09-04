@@ -125,7 +125,6 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
     if (this.actionsMenu) {
       this._buildMenu(rowIndex, entry);
       this.actionsMenu.toggle(event);
-      this.actionsMenu.show(event);
     }
   }
 

@@ -131,9 +131,8 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   public _openActionsMenu(event: any, bulkLogItem: KalturaBulkUpload): void {
     if (this.actionsMenu) {
-      this.actionsMenu.toggle(event);
       this._buildMenu(bulkLogItem);
-      this.actionsMenu.show(event);
+      this.actionsMenu.toggle(event);
     }
   }
 

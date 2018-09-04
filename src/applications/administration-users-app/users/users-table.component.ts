@@ -164,8 +164,8 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public _openActionsMenu(event: any, user: KalturaUser): void {
     if (this._actionsMenu) {
-      this._actionsMenu.toggle(event);
       this._buildMenu(user);
+      this._actionsMenu.toggle(event);
     }
   }
 }

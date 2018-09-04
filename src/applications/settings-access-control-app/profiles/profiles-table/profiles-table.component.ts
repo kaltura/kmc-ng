@@ -111,9 +111,8 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
 
   public _openActionsMenu(event: Event, profile: KalturaAccessControl): void {
     if (this.actionsMenu) {
-      this.actionsMenu.toggle(event);
       this._buildMenu(profile);
-      this.actionsMenu.show(event);
+      this.actionsMenu.toggle(event);
     }
   }
 

@@ -16,7 +16,7 @@
                             <button pButton class="kButtonDefault kNavigationBtnLeft" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
                             <button pButton class="kButtonDefault kNavigationBtnRight" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
                         </div>
-                        <p-menu #actionsmenu popup="popup" [model]="_menuItems" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+                        <p-menu #actionsmenu [popup]="true" [model]="_menuItems" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 					</div>
 				</div>
 			</kSticky>
