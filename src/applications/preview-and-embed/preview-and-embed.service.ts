@@ -18,7 +18,7 @@ export class PreviewEmbedService {
 
 	listPlayers(isPlaylist: boolean = false): Observable<KalturaUiConfListResponse>{
 
-		const tags = isPlaylist ? 'html5studio,playlist' : 'html5studio,player';
+		const tags = isPlaylist ? 'playlist' : 'player';
 
 		const filter = new KalturaUiConfFilter({
 			'tagsMultiLikeAnd': tags,
