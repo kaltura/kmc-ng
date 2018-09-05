@@ -99,8 +99,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
     this._previewEmbedService.listPlayers(isPlaylist).pipe(cancelOnDestroy(this)).subscribe(
         (res: KalturaUiConfListResponse) => {
-          // create players array from returned UICong list
-          res.objects.forEach(uiConf => {
+          // create players array from returned UICong list. Remove V1 players.
+          res.objects.filter(uiConf => uiConf.html5Url ? uiConf.html5Url.indexOf('html5lib/v1') === -1 : false).forEach(uiConf => {
             this._players.push({label: uiConf.name, value: uiConf});
           });
 
