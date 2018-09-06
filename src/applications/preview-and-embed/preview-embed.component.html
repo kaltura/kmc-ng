@@ -68,7 +68,7 @@
                                 </div>
                                 <p-dropdown [options]="_embedTypes" formControlName="selectedEmbedType"></p-dropdown>
                             </div>
-                            <div class="kSection kRow kAlignTop">
+                            <div class="kSection kRow kAlignTop" [class.kHidden]="_selectedPlayerVersion === 3">
                                 <span class="kCol">{{'applications.embed.seo' | translate}}</span>
                                 <p-inputSwitch formControlName="seo"></p-inputSwitch>
                             </div>
