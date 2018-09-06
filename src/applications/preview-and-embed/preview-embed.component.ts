@@ -18,6 +18,11 @@ import { serverConfig } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
+export type PlayerUIConf = {
+    version: number,
+    uiConf: KalturaUiConf
+}
+
 @Component({
   selector: 'kPreviewEmbedDetails',
   templateUrl: './preview-embed.component.html',
@@ -35,8 +40,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
 
-  public _players: { label: string, value: KalturaUiConf }[] = [];
-  public _playersSortBy: 'name' | 'createdAt' | 'updatedAt' = 'updatedAt';
+  public _players: { label: string, value: PlayerUIConf }[] = [];
+  public _playersSortBy: 'name' | 'version' | 'createdAt' | 'updatedAt' = 'updatedAt';
   public _embedTypes: { label: string, value: string }[] = [];
 
   public _generatedCode = "";
@@ -99,9 +104,11 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
     this._previewEmbedService.listPlayers(isPlaylist).pipe(cancelOnDestroy(this)).subscribe(
         (res: KalturaUiConfListResponse) => {
-          // create players array from returned UICong list. Remove V1 players.
-          res.objects.filter(uiConf => uiConf.html5Url ? uiConf.html5Url.indexOf('html5lib/v1') === -1 : false).forEach(uiConf => {
-            this._players.push({label: uiConf.name, value: uiConf});
+          // create players array from returned UICong list. Remove V1 players. Include V3 players (no html5Url, special tag)
+          res.objects.filter(uiConf => uiConf.html5Url ? uiConf.html5Url.indexOf('html5lib/v1') === -1 : uiConf.tags.indexOf('kalturaPlayerJs') > -1 ).forEach(uiConf => {
+              const version = uiConf.tags.indexOf('kalturaPlayerJs') > -1 ? 3 : 2;
+              const playerUIConf: PlayerUIConf = { uiConf, version }
+            this._players.push({label: uiConf.name, value: playerUIConf});
           });
 
           this.sortPlayers(this._playersSortBy);
@@ -157,8 +164,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   private sortPlayers(sortBy){
     this._players.sort((a,b)=>{
-      let val1 = a.value[sortBy];
-      let val2 = b.value[sortBy];
+      let val1 = sortBy === 'version' ? a.value.version : a.value.uiConf[sortBy];
+      let val2 = sortBy === 'version' ? b.value.version : b.value.uiConf[sortBy];
       if (sortBy === "name" && typeof val1 === "string" && typeof val2 === "string"){
         val1 = val1.toLowerCase();
         val2 = val2.toLowerCase();
@@ -212,9 +219,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     const params = {
       protocol: this.getProtocol(isPreview),
       embedType: this._previewForm.controls['selectedEmbedType'].value,
-      uiConfId: this._previewForm.controls['selectedPlayer'].value.id,
-      width: this._previewForm.controls['selectedPlayer'].value.width,
-      height: this._previewForm.controls['selectedPlayer'].value.height,
+      uiConfId: this._previewForm.controls['selectedPlayer'].value.uiConf.id,
+      width: this._previewForm.controls['selectedPlayer'].value.uiConf.width,
+      height: this._previewForm.controls['selectedPlayer'].value.uiConf.height,
       entryMeta: this.getMediaMetadata(),
       includeSeoMetadata: this._previewForm.controls['seo'].value,
       playerId: 'kaltura_player_' + cacheStr,
@@ -292,7 +299,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       try {
         url = this.getProtocol(isPreview) + '://' + serverConfig.kalturaServer.uri + '/index.php/extwidget/preview';
         url += '/partner_id/' + this._appAuthentication.appUser.partnerId;
-        url += '/uiconf_id/' + this._previewForm.controls['selectedPlayer'].value.id;
+        url += '/uiconf_id/' + this._previewForm.controls['selectedPlayer'].value.uiConf.id;
         if (this.media instanceof KalturaMediaEntry) {
           url += '/entry_id/' + this.media.id;
         }

@@ -34,7 +34,7 @@ export class PreviewEmbedService {
 
 		let responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
 			type: KalturaResponseProfileType.includeFields,
-			fields: 'id,name,html5Url,createdAt,updatedAt,width,height'
+			fields: 'id,name,html5Url,createdAt,updatedAt,width,height,tags'
 		});
 
 		return this._kalturaClient.request(new UiConfListAction({filter, pager}).setRequestOptions({

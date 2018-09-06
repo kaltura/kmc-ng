@@ -241,6 +241,7 @@
             "advanced": "Advanced Settings",
             "settings": "List Arrangement Settings",
             "name": "Name",
+            "version": "Version",
             "added": "Date added",
             "updated": "Date updated",
             "helpTip1": "Auto embed is the default embed code type and is best to get a player quickly on a page without any runtime customizations.",
