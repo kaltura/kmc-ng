@@ -98,9 +98,15 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           this._generatedPreviewCode = this.generateCode(true);
           this.createPreviewLink(false);
       } else {
-          this._generatedCode = this.generateV3code(false);
-          this._generatedPreviewCode = this.generateV3code(true);
-          this.createPreviewLink(false);
+          if (this._previewForm.controls['selectedEmbedType'].value === 'thumb'){
+              // if coming from a V2 player with thumb embed, change the embed type to dynamic. This will trigger another change that will generate the correct embed code.
+              this._previewForm.controls['selectedEmbedType'].setValue('dynamic');
+              this._browserService.setInLocalStorage('previewEmbed.embedType', 'dynamic');
+          } else {
+              this._generatedCode = this.generateV3code(false);
+              this._generatedPreviewCode = this.generateV3code(true);
+              this.createPreviewLink(false);
+          }
       }
       this.showPreview();
     });
@@ -224,10 +230,19 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   private generateV3code(isPreview: boolean): string {
       const embedType = this._previewForm.get('selectedEmbedType').value;
       let code = '';
+      let config = '';
+      const ks = this._appAuthentication.appUser.ks;
       const uiConf = this._previewForm.controls['selectedPlayer'].value.uiConf;
       let serverUri = this._previewForm.controls['secured'].value ?  serverConfig.cdnServers.securedServerUri : serverConfig.cdnServers.serverUri;
       if (isPreview){
+          // build CDN URL according to current protocol
           serverUri = buildCDNUrl('');
+          // pass ks to player for preview only
+          if (embedType === 'dynamic'){
+              config = `ks: '${ks}',`;
+          } else {
+              config = `&config[provider]={"ks":"${ks}"}`;
+          }
       }
       const pid = this._appAuthentication.appUser.partnerId;
       const rnd = Math.floor(Math.random() * 1000000000);
@@ -242,6 +257,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       var kalturaPlayer = KalturaPlayer.setup({
         targetId: "kaltura_player_${rnd}",
         provider: {
+          ${config}
           partnerId: ${pid},
           uiConfId: ${uiConf.id}
         }
@@ -253,11 +269,11 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   </script>`;
               break;
           case 'iframe':
-              code = `<iframe type="text/javascript" src="${serverUri}/p/${pid}/embedPlaykitJs/uiconf_id/${uiConf.id}?iframeembed=true&entry_id=${this.media.id}" style="width: ${uiConf.width}px;height: ${uiConf.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>`;
+              code = `<iframe type="text/javascript" src='${serverUri}/p/${pid}/embedPlaykitJs/uiconf_id/${uiConf.id}?iframeembed=true&entry_id=${this.media.id}${config}' style="width: ${uiConf.width}px;height: ${uiConf.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>`;
               break;
           case 'auto':
               code = `<div id="kaltura_player_${rnd}" style="width: ${uiConf.width}px;height: ${uiConf.height}px"></div>
-<script type="text/javascript" src='${serverUri}/p/${pid}/embedPlaykitJs/uiconf_id/${uiConf.id}?autoembed=true&targetId=kaltura_player_${rnd}&entry_id=${this.media.id}'></script>`
+<script type="text/javascript" src='${serverUri}/p/${pid}/embedPlaykitJs/uiconf_id/${uiConf.id}?autoembed=true&targetId=kaltura_player_${rnd}&entry_id=${this.media.id}${config}'></script>`
               break;
           default:
               break;
