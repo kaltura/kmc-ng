@@ -6,9 +6,9 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { subApplicationsConfig } from 'config/sub-applications';
-import { PreviewEmbedService } from './preview-and-embed.service';
+import { PreviewEmbedService, EmbedConfig } from './preview-and-embed.service';
 
-import { KalturaPlaylist } from 'kaltura-ngx-client';
+import { KalturaPlaylist, UiConfListAction } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaUiConfListResponse } from 'kaltura-ngx-client';
 import { KalturaUiConf } from 'kaltura-ngx-client';
@@ -228,11 +228,21 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   /* V3 specific code starts here */
 
   private generateV3code(isPreview: boolean): string {
-      const embedType = this._previewForm.get('selectedEmbedType').value;
-      let code = '';
-      let config = '';
-      const ks = this._appAuthentication.appUser.ks;
       const uiConf = this._previewForm.controls['selectedPlayer'].value.uiConf;
+      const embedType = this._previewForm.get('selectedEmbedType').value;
+      const ks = this._appAuthentication.appUser.ks;
+      let embedConfig: EmbedConfig = {
+          embedType,
+          ks,
+          entryId: this.media.id,
+          uiConfId: uiConf.id,
+          width: uiConf.width,
+          height: uiConf.height,
+          pid: this._appAuthentication.appUser.partnerId,
+          serverUri: '',
+          playerConfig: ''
+      }
+      let config = '';
       let serverUri = this._previewForm.controls['secured'].value ?  serverConfig.cdnServers.securedServerUri : serverConfig.cdnServers.serverUri;
       if (isPreview){
           // build CDN URL according to current protocol
@@ -244,42 +254,13 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
               config = `&config[provider]={"ks":"${ks}"}`;
           }
       }
-      const pid = this._appAuthentication.appUser.partnerId;
-      const rnd = Math.floor(Math.random() * 1000000000);
+      embedConfig.serverUri = serverUri;
+      embedConfig.playerConfig = config;
 
-      switch (embedType) {
-          case 'dynamic':
-          case 'thumb':
-              code = `<div id="kaltura_player_${rnd}" style="width: ${uiConf.width}px;height: ${uiConf.height}px"></div>
-<script type="text/javascript" src="${serverUri}/p/${pid}/embedPlaykitJs/uiconf_id/${uiConf.id}"></script>
-  <script type="text/javascript">
-    try {
-      var kalturaPlayer = KalturaPlayer.setup({
-        targetId: "kaltura_player_${rnd}",
-        provider: {
-          ${config}
-          partnerId: ${pid},
-          uiConfId: ${uiConf.id}
-        }
-      });
-      kalturaPlayer.loadMedia({entryId: '${this.media.id}'});
-    } catch (e) {
-      console.error(e.message)
-    }
-  </script>`;
-              break;
-          case 'iframe':
-              code = `<iframe type="text/javascript" src='${serverUri}/p/${pid}/embedPlaykitJs/uiconf_id/${uiConf.id}?iframeembed=true&entry_id=${this.media.id}${config}' style="width: ${uiConf.width}px;height: ${uiConf.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>`;
-              break;
-          case 'auto':
-              code = `<div id="kaltura_player_${rnd}" style="width: ${uiConf.width}px;height: ${uiConf.height}px"></div>
-<script type="text/javascript" src='${serverUri}/p/${pid}/embedPlaykitJs/uiconf_id/${uiConf.id}?autoembed=true&targetId=kaltura_player_${rnd}&entry_id=${this.media.id}${config}'></script>`
-              break;
-          default:
-              break;
-      }
-      return code;
+      return this._previewEmbedService.generateV3EmbedCode(embedConfig);
   }
+
+  /* V3 specific code ends here */
 
   private getGenerator():any{
     const baseCdnUrl = serverConfig.cdnServers.serverUri.replace("http://","");
