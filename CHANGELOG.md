@@ -15,7 +15,7 @@
 * support contextual help ([92d898e](https://github.com/kaltura/kmc-ng/commit/92d898e))
 * support language selection ([a83cbae](https://github.com/kaltura/kmc-ng/commit/a83cbae))
 * support languages: English, French, Spanish, German, Japanese ([b67704f](https://github.com/kaltura/kmc-ng/commit/b67704f))
-* support V3 players ([#801](https://github.com/kaltura/kmc-ng/issues/801)) ([293abf1](https://github.com/kaltura/kmc-ng/commit/293abf1))
+* Support for the latest version of the Kaltura player ([#801](https://github.com/kaltura/kmc-ng/issues/801)) ([293abf1](https://github.com/kaltura/kmc-ng/commit/293abf1))
 
 
 
