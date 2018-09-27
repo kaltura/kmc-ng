@@ -1,3 +1,24 @@
+<a name="5.4.0"></a>
+# [5.4.0](https://github.com/kaltura/kmc-ng/compare/v5.3.2...v5.4.0) (2018-09-27)
+
+
+### Bug Fixes
+
+* **content/entry:** handle captions with no label or default state definitions ([9f62334](https://github.com/kaltura/kmc-ng/commit/9f62334))
+* **share-and-embed:** List all V2 players in the partner account ([#800](https://github.com/kaltura/kmc-ng/issues/800)) ([9a10094](https://github.com/kaltura/kmc-ng/commit/9a10094))
+* **upload:** fix "Create from URL" table styling ([888cdda](https://github.com/kaltura/kmc-ng/commit/888cdda))
+
+
+### Features
+
+* **content/playlist:** support "move to top" and "move to bottom" for manual playlist single entries ([5d91b0b](https://github.com/kaltura/kmc-ng/commit/5d91b0b))
+* support contextual help ([92d898e](https://github.com/kaltura/kmc-ng/commit/92d898e))
+* support language selection ([a83cbae](https://github.com/kaltura/kmc-ng/commit/a83cbae))
+* support languages: English, French, Spanish, German, Japanese ([b67704f](https://github.com/kaltura/kmc-ng/commit/b67704f))
+* support V3 players ([#801](https://github.com/kaltura/kmc-ng/issues/801)) ([293abf1](https://github.com/kaltura/kmc-ng/commit/293abf1))
+
+
+
 <a name="5.3.2"></a>
 ## [5.3.2](https://github.com/kaltura/kmc-ng/compare/v5.3.1...v5.3.2) (2018-08-22)
 
