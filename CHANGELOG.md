@@ -5,7 +5,7 @@
 ### Bug Fixes
 
 * style fixes for updated multi-select component ([2b9bdfd](https://github.com/kaltura/kmc-ng/commit/2b9bdfd))
-* update v2 and v3 player icons ([c340f20](https://github.com/kaltura/kmc-ng/commit/c340f20))
+* update v2 and v7 player icons ([c340f20](https://github.com/kaltura/kmc-ng/commit/c340f20))
 
 
 
