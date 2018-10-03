@@ -1,3 +1,14 @@
+<a name="5.4.1"></a>
+## [5.4.1](https://github.com/kaltura/kmc-ng/compare/v5.4.0...v5.4.1) (2018-10-03)
+
+
+### Bug Fixes
+
+* style fixes for updated multi-select component ([2b9bdfd](https://github.com/kaltura/kmc-ng/commit/2b9bdfd))
+* update v2 and v3 player icons ([c340f20](https://github.com/kaltura/kmc-ng/commit/c340f20))
+
+
+
 <a name="5.4.0"></a>
 # [5.4.0](https://github.com/kaltura/kmc-ng/compare/v5.3.2...v5.4.0) (2018-09-27)
 
