@@ -168,8 +168,6 @@ git merge <branchName>
 npm run standalone:update
 ```
 
-3. Add zip to the release tag in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases).
-
 ## Step 3: deploy kaltura to the dev server
 
 If you want to setup a version that was deployed to kmc-ng github repository and the [version release notes](https://github.com/kaltura/kmc-ng/releases) has an attached zip file named `kmc-ng-vX.X.X.zip`, do the following:
