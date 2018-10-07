@@ -1,3 +1,17 @@
+<a name="5.4.2"></a>
+## [5.4.2](https://github.com/kaltura/kmc-ng/compare/v5.4.1...v5.4.2) (2018-10-07)
+
+
+### Bug Fixes
+
+* **content/category:** fix "Move Category" panel height to support other languages ([211ba28](https://github.com/kaltura/kmc-ng/commit/211ba28))
+* **content/entry:** fix entry actions button width on Firefox ([058bb95](https://github.com/kaltura/kmc-ng/commit/058bb95))
+* **help:** add missing help links to settings/account information section ([7b75185](https://github.com/kaltura/kmc-ng/commit/7b75185))
+* hide OTT players from VOD Share & Embed players list ([561d159](https://github.com/kaltura/kmc-ng/commit/561d159))
+* **settings/account-info:** fix form sending error ([6affdc3](https://github.com/kaltura/kmc-ng/commit/6affdc3))
+
+
+
 <a name="5.4.1"></a>
 ## [5.4.1](https://github.com/kaltura/kmc-ng/compare/v5.4.0...v5.4.1) (2018-10-03)
 
