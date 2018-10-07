@@ -237,21 +237,11 @@
             {
                 "value": "https://knowledge.kaltura.com/node/2126",
                 "label": "Monthly Bandwith/Storage Usage"
-            }
-        ]
-    },
-    {
-        "viewKey": "setting_account-info",
-        "links": [
+            },
             {
                 "value": "https://knowledge.kaltura.com/node/2126",
                 "label": "Upgrade Account"
-            }
-        ]
-    },
-    {
-        "viewKey": "settings_account-info",
-        "links": [
+            },
             {
                 "value": "https://knowledge.kaltura.com/node/1994",
                 "label": "Settings Pages"

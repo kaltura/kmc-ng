@@ -1,46 +1,97 @@
 viewKey,linkLabel,linkValue
 admin-roles,Administration Menu,https://knowledge.kaltura.com/node/2113
 admin-roles,The Roles Tab,https://knowledge.kaltura.com/node/2113#roles_tab
+admin-roles,Create or Edit Custom Roles,https://knowledge.kaltura.com/node/2113#create_custom_role
+admin-roles,Role Management,https://knowledge.kaltura.com/node/2113#role_management
 admin-users,Administration Menu,https://knowledge.kaltura.com/node/2113
 admin-users,The Users Tab,https://knowledge.kaltura.com/node/2113#users_tab
-content-bulk-uploads,,
-content-categories,,
-content-drop-folders,,
-content-entries,Test1,https://www.bing.com
-content-entries,Test2,https://google.com
-content-moderation,,
-content-playlists,,
-content-syndication,,
-content-uploads,,
-analytics-kava,,
-analytics-live,,
-settings-access-control,,
-settings-account-info,,
-settings-account,,
-settings-integration,,
-settings-metadata,,
-settings-my-user-settings,,
-settings-transcoding,,
-studio-v2,,
-studio-v3,,
-usage-dashboard,,
-content-category-subcategories,,
-content-category-entitlements,,
-content-category-metadata,,
-content-entry-metadata,,
-content-entry-thumbnails,,
-content-entry-accesscontrol,,
-content-entry-scheduling,,
-content-entry-flavours,,
-content-entry-captions,,
-content-entry-live,,
-content-entry-related,,
-content-entry-clips,,
-content-entry-advertisements,,
-content-entry-users,,
-content-entry-distribution,,
-content-playlist-metadata,,
-content-playlist-content,Test2,https://www.bing.com
-content-playlist-contentrulebased,Test,https://google.com
-settings-transcoding-profile-metadata,,
-settings-transcoding-profile-flavors,,
+admin-users,Adding a KMC User,https://knowledge.kaltura.com/node/2113#add_user
+admin-users,Editing a User,https://knowledge.kaltura.com/node/2113#edit_user
+admin-users,Purchasing License for Additional Users,https://knowledge.kaltura.com/node/2113#request
+content-bulk-uploads,Bulk Upload Log Page,https://knowledge.kaltura.com/node/2121#bulk_upload_log_Page
+content-bulk-uploads,Refining Options for Bulk Uploads,https://knowledge.kaltura.com/node/2120#refine_bulk
+content-categories,Add a Category,https://knowledge.kaltura.com/node/2132#add_category_name
+content-categories,Search and Refine Categories,https://knowledge.kaltura.com/node/2120#searching_filtering
+content-categories,Category Table Actions,https://knowledge.kaltura.com/node/2132#cat_actions
+content-drop-folders,What is a Drop Folder,https://knowledge.kaltura.com/node/2113#whatis_drop_folder
+content-drop-folders,Drop Folder Table,https://knowledge.kaltura.com/node/2113#drop_folder_table
+content-drop-folders,Drop Folder Statuses,https://knowledge.kaltura.com/node/2113#drop_folder_statuses
+content-entries,Uploading and Ingestion,https://knowledge.kaltura.com/node/2121
+content-entries,Upload Media,https://knowledge.kaltura.com/node/2121#upload_media
+content-entries,The Entries Table,https://knowledge.kaltura.com/node/2120#entries_table
+content-entries,Search and Filter Through Media,https://knowledge.kaltura.com/node/2120#searching_filtering
+content-entries,Share and Embed,https://knowledge.kaltura.com/node/2120#share_embed
+content-entries,Upload Control,https://knowledge.kaltura.com/node/2120#upload_control
+content-entries,More (Bulk) Actions,https://knowledge.kaltura.com/node/2120#additional_actions
+content-moderation,Moderate Content,https://knowledge.kaltura.com/node/2123
+content-moderation,Set Moderation Flags,https://knowledge.kaltura.com/node/2123#setting_moderation_flags
+content-moderation,Setting Moderation Options,https://knowledge.kaltura.com/node/2123#set_mod_options
+content-moderation,Apply Bulk Actions,https://knowledge.kaltura.com/node/2123#applying_bulk_actions
+content-playlists,The Playlists Tab,https://knowledge.kaltura.com/node/2130#playlists_tab
+content-playlists,Create a Manual Playlist,https://knowledge.kaltura.com/node/2130#create_man_playlist
+content-playlists,Create a Rule Based Playlist,https://knowledge.kaltura.com/node/2130#create_rule_playlist
+content-playlists,Adding/Editing Metadata to a Playlist,https://knowledge.kaltura.com/node/2130#add_edit_metadata
+content-playlists,Apply Bulk Actions to Playlists,https://knowledge.kaltura.com/node/2130#apply_bulk_actions
+content-syndication,Content Syndication,https://knowledge.kaltura.com/node/2134#content_syndication
+content-syndication,Syndicating to a Standard MRSS Feed,https://knowledge.kaltura.com/node/2134#syn_to_rss
+content-syndication,Setting Up Syndication,https://knowledge.kaltura.com/node/2134#setup_syn
+content-uploads,Tracking Your Uploads,https://knowledge.kaltura.com/node/2120#upload_control
+analytics-live,Live Analytics,https://knowledge.kaltura.com/node/2118
+analytics-live,Live Content Dashboard Report,https://knowledge.kaltura.com/node/2118#live_content
+analytics-live,Live Report v for Specific Entry ,https://knowledge.kaltura.com/node/2118#specific_entry
+analytics-live,Export Analytics to CSV,https://knowledge.kaltura.com/node/2118#export
+settings-access-control,Access Control Overview,https://knowledge.kaltura.com/node/2128
+settings-access-control,Create an Access Profile,https://knowledge.kaltura.com/node/2129#create_access_profile
+settings-account-info,Monthly Bandwith/Storage Usage,https://knowledge.kaltura.com/node/2126
+settings-account-info,Upgrade Account,https://knowledge.kaltura.com/node/2126
+settings-account-info,Settings Pages,https://knowledge.kaltura.com/node/1994
+settings-account-info,Upgrade Account,https://knowledge.kaltura.com/node/1993
+settings-account,View Account Information,https://knowledge.kaltura.com/node/1993
+settings-integration,Account Info Notifications,https://knowledge.kaltura.com/node/1996
+settings-integration,Add Entitlements,https://knowledge.kaltura.com/node/1996#entitlement_settings
+settings-metadata,Custom Data,https://knowledge.kaltura.com/node/1998
+settings-metadata,Custom Metadata Functionality,https://knowledge.kaltura.com/node/1998#custom_metadata_functionality
+settings-metadata,Add a Schema,https://knowledge.kaltura.com/node/1998#add_schema
+settings-metadata,Related Entries,https://knowledge.kaltura.com/node/1998#related_entries
+settings-my-user-settings,Change User Details,https://knowledge.kaltura.com/node/1997
+settings-transcoding,Transcoding Settings,https://knowledge.kaltura.com/node/2127
+studio-v2,Universal Studio Guide v2 Player,https://knowledge.kaltura.com/node/1148
+studio-v3,Kaltura TV Platform Studio Information Guide,https://knowledge.kaltura.com/node/1971
+usage-dashboard,The Usage Dashboard,https://knowledge.kaltura.com/node/2103
+content-category-subcategories,Reordering/Deleting Sub Categories,https://knowledge.kaltura.com/node/2132#reordering_sub_cats
+content-category-entitlements,Entitlements Model,https://knowledge.kaltura.com/node/629
+content-category-entitlements,Setting the Entitlement Settings,https://knowledge.kaltura.com/node/2133#set_entitlement_settings
+content-category-entitlements,Add Entitlements to Categories,https://knowledge.kaltura.com/node/1996#add_entitlement_to_cat
+content-category-metadata,Entry Editing Tabs Overview,https://knowledge.kaltura.com/node/2120#editing_overview
+content-entry-metadata,Metadata Tab,https://knowledge.kaltura.com/node/2120#metadata_tab
+content-entry-thumbnails,Thumbnails Tab,https://knowledge.kaltura.com/node/2120#thumbnails_tab
+content-entry-thumbnails,Choosing a Thumbnail for your Video,https://knowledge.kaltura.com/node/2120#choosing_thumbnails
+content-entry-accesscontrol,Assign Access Control Profile to Entry,https://knowledge.kaltura.com/node/2129#assign
+content-entry-accesscontrol,Assign Access Control Profile (Bulk),https://knowledge.kaltura.com/node/2129#assign_ac_bulk
+content-entry-scheduling,Set Scheduling,https://knowledge.kaltura.com/node/2120#set_scheduling
+content-entry-flavours,Flavors Tab,https://knowledge.kaltura.com/node/2120#flavors_tab
+content-entry-flavours,Add Video/Audio,https://knowledge.kaltura.com/node/2120#add_video_audio
+content-entry-flavours,Upload from Desktop,https://knowledge.kaltura.com/node/2120#upload_from_desktop
+content-entry-flavours,Import Files,https://knowledge.kaltura.com/node/2120#import_files
+content-entry-flavours,Link to Remote Storage,https://knowledge.kaltura.com/node/2120#link_to_remote_storage
+content-entry-flavours,Replace Media,https://knowledge.kaltura.com/node/2120#replacing_media
+content-entry-captions,The Captions Tab,https://knowledge.kaltura.com/node/2120#captions_edit
+content-entry-live,Create a Live Stream Entry in Kaltura Using the KMC NG,https://knowledge.kaltura.com/node/2052
+content-entry-live,RTMP Endpoints for Kaltura Live Streaming - KMC-NG,https://knowledge.kaltura.com/node/2054
+content-entry-related,Uploading and Modifying Related Files,https://knowledge.kaltura.com/node/2120#uploading_modifying_related_files
+content-entry-clips,Create and Edit Media Clips,https://knowledge.kaltura.com/node/2120#clips_edit
+content-entry-advertisements,Creating Advertisements,https://knowledge.kaltura.com/node/2120#advertisements_edit
+content-entry-advertisements,Advertising and Ad Networks,https://knowledge.kaltura.com/node/2124
+content-entry-advertisements,Configure VAST Ads,https://knowledge.kaltura.com/node/2124#cfg_vast_ads
+content-entry-users,Modify Editing and Publishing Rights,https://knowledge.kaltura.com/node/2120#users_edit
+content-entry-distribution,Distributing an Entry,https://knowledge.kaltura.com/node/2120#distribute_entry
+content-entry-distribution,Distribution,https://knowledge.kaltura.com/node/2120#distribution_edit
+content-playlist-metadata,The Playlists Tab -Add a Playlist,https://knowledge.kaltura.com/node/2130#playlists_tab
+content-playlist-metadata,Add/Edit Metdata to Playlist,https://knowledge.kaltura.com/node/2130#add_edit_metadata
+content-playlist-content,Create Manual Playlist,https://knowledge.kaltura.com/node/2130#create_man_playlist
+content-playlist-contentrulebased,Create Rule-based Playlist,https://knowledge.kaltura.com/node/2130#create_rule_playlist
+settings-transcoding-profile-metadata,Useful Tips,https://knowledge.kaltura.com/node/2122#useful_tips
+settings-transcoding-profile-flavors,Transcoding Profiles - Edit Flavors,https://knowledge.kaltura.com/node/2122#edit_flavors
+settings-transcoding-profile-flavors,Trasncoding Profiles - Edit Live Flavors,https://knowledge.kaltura.com/node/2122#edit_flavors_live
+settings-transcoding-profile-flavors,Trasncoding Profiles for Live Streaming,https://knowledge.kaltura.com/node/2122#transcoding_profiles_for_live
+settings-transcoding-profile-flavors,Assign Bulk Transcoding Profiles,https://knowledge.kaltura.com/node/2122#assigning_bulk
