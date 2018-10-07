@@ -128,6 +128,13 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
               } else {
                   showPlayer = uiConf.tags.indexOf('kalturaPlayerJs') > -1 && this._permissionsService.hasPermission(KMCPermissions.FEATURE_V3_STUDIO_PERMISSION); // show V3 players if user has permissions
               }
+              // filter out by tags
+              if (uiConf.tags && uiConf.tags.length){
+                  const tags = uiConf.tags.split(',');
+                  if (tags.indexOf('ott') > -1) {
+                      showPlayer = false;
+                  }
+              }
               return showPlayer;
           }).forEach(uiConf => {
               const version = uiConf.tags.indexOf('kalturaPlayerJs') > -1 ? 3 : 2;
