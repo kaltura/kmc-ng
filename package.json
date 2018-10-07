@@ -61,7 +61,7 @@
     "@angular/router": "~6.1.6",
     "@kaltura-ng/kaltura-common": "~7.0.2",
     "@kaltura-ng/kaltura-logger": "~3.0.1",
-    "@kaltura-ng/kaltura-primeng-ui": "~3.0.5",
+    "@kaltura-ng/kaltura-primeng-ui": "~3.0.6",
     "@kaltura-ng/kaltura-ui": "~7.0.1",
     "@kaltura-ng/mc-shared": "~5.1.2",
     "@kaltura-ng/mc-theme": "~3.0.5",
