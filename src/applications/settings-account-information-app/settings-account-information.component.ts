@@ -6,6 +6,7 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { AppAuthentication } from 'app-shared/kmc-shell';
 import { SettingsAccountInformationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 function phoneValidator(): ValidatorFn {
@@ -42,6 +43,7 @@ export class SettingsAccountInformationComponent implements OnInit, OnDestroy {
               private _fb: FormBuilder,
               private _browserService: BrowserService,
               private _logger: KalturaLogger,
+              private _appAuthentication: AppAuthentication,
               private _settingsAccountInformationMainView: SettingsAccountInformationMainViewService) {
   }
 
@@ -86,8 +88,15 @@ export class SettingsAccountInformationComponent implements OnInit, OnDestroy {
   private _sendContactSalesForceInformation() {
     this._logger.info(`handle send sales force info request by user`);
     this._updateAreaBlockerState(true, null);
+    const pid = this._appAuthentication.appUser.partnerId.toString();
+    const sub_pid = pid+'00';
+    const ks = this._appAuthentication.appUser.ks;
+    const name = this.contactUsForm.controls['name'].value;
+    const comments = this.contactUsForm.controls['comments'].value;
+    const phone = this.contactUsForm.controls['phone'].value;
+    const formData = `name=${name}&comments=${comments}&phone=${phone}&ks=${ks}&services=none&partner_id=${pid}&subp_id=${sub_pid}&format=1`;
     this._accountInformationService
-      .sendContactSalesForceInformation(this.contactUsForm.value)
+      .sendContactSalesForceInformation(formData)
       .pipe(cancelOnDestroy(this))
       .subscribe(() => {
           this._logger.info(`handle successful send action, show alert`);
