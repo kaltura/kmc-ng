@@ -10,6 +10,8 @@ import { KMCAppMenuItem, KmcMainViewsService } from 'app-shared/kmc-shared/kmc-v
 import { ContextualHelpLink, ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 import { globalConfig } from 'config/global';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { UpdateMenuEvent, ResetMenuEvent } from 'app-shared/kmc-shared/events';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -50,6 +52,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
                 public _userAuthentication: AppAuthentication,
                 private _kmcMainViews: KmcMainViewsService,
                 private router: Router,
+                private _appEvents: AppEventsService,
                 private _browserService: BrowserService) {
 
         _contextualHelpService.contextualHelpData$
@@ -82,11 +85,31 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     ngOnInit() {
         const cachedVersion = this._browserService.getFromLocalStorage(this._appCachedVersionToken);
         this._showChangelog = cachedVersion !== globalConfig.client.appVersion;
+
+        this._appEvents.event(UpdateMenuEvent)
+            .pipe(cancelOnDestroy(this))
+            .subscribe((event) => {
+                if (event.position === 'left') {
+                    this.leftMenuConfig = event.menu;
+                }
+                this.setSelectedRoute(this.router.routerState.snapshot.url);
+            });
+
+        this._appEvents.event(ResetMenuEvent)
+            .pipe(cancelOnDestroy(this))
+            .subscribe((event) => {
+                this.leftMenuConfig = this.menuConfig.filter((item: KMCAppMenuItem) => {
+                    return item.position === 'left';
+                });
+            });
     }
 
     setSelectedRoute(path) {
         if (this.menuConfig) {
-            this.selectedMenuItem = this.menuConfig.find(item => item.isActiveView(path));
+            this.selectedMenuItem = this.leftMenuConfig.find(item => item.isActiveView(path));
+            if (!this.selectedMenuItem){
+                this.selectedMenuItem = this.rightMenuConfig.find(item => item.isActiveView(path));
+            }
             this.showSubMenu = this.selectedMenuItem && this.selectedMenuItem.children && this.selectedMenuItem.children.length > 0;
         } else {
             this.selectedMenuItem = null;
