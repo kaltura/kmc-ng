@@ -124,16 +124,8 @@ const routes: Routes = <Routes>[
                         loadChildren: '../applications/services-dashboard-app/services-dashboard-app.module#ServicesDashboardAppModule'
                     },
                     {
-                        path: 'analytics', children: [
-                        {
-                            path: 'kava',
-                            loadChildren: '../applications/analytics-kava-app/analytics-kava-app.module#AnalyticsKavaAppModule'
-                        },
-                        {
-                            path: 'liveAnalytics',
-                            loadChildren: '../applications/analytics-live-app/analytics-live-app.module#AnalyticsLiveAppModule'
-                        },
-                    ]
+                        path: 'analytics',
+                        loadChildren: '../applications/analytics/analytics.module#AnalyticsModule'
                     },
                     {
                         path: '**', component: NotFoundPageComponent

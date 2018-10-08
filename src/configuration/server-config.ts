@@ -37,6 +37,9 @@ export interface ExternalApplications {
     usageDashboard?: {
         uri: string,
     };
+    analytics?: {
+        uri: string,
+    };
     liveAnalytics?: {
         uri: string,
         uiConfId?: string,
@@ -201,6 +204,20 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
         return result;
     },
     liveAnalytics: (configuration) => {
+        let result = false;
+
+        if (configuration) {
+            result = !!configuration.uri &&
+                !configuration.uri.match(/\s/g); // not contains white spaces
+
+            if (result) {
+                configuration.uri = buildBaseUri(configuration.uri);
+            }
+        }
+
+        return result;
+    },
+    analytics: (configuration) => {
         let result = false;
 
         if (configuration) {

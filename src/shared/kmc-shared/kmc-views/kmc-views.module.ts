@@ -22,7 +22,9 @@ import {
     StudioV2MainViewService,
     StudioV3MainViewService,
     UsageDashboardMainViewService,
-    KavaAppMainViewService, ServicesDashboardMainViewService
+    KavaAppMainViewService,
+    AnalyticsMainViewService,
+    ServicesDashboardMainViewService
 } from './main-views';
 import {
     ContentCategoryViewService,
@@ -63,6 +65,7 @@ export class KmcViewsModule {
                 ContentCategoryViewService,
                 StudioV2MainViewService,
                 StudioV3MainViewService,
+                AnalyticsMainViewService,
                 UsageDashboardMainViewService,
                 LiveAnalyticsMainViewService,
                 AdminUsersMainViewService,

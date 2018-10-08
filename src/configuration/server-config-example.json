@@ -8,6 +8,9 @@
         "securedServerUri": "https://cdnapisec.kaltura.com"
     },
     "externalApps": {
+        "analytics": {
+            "uri": "/__local_machine_only__/analytics-v0.1/index.html"
+        }
     },
     "externalLinks": {
         "previewAndEmbed": {
