@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, Renderer2 } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { AppAuthentication } from 'shared/kmc-shell/index';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -21,36 +21,43 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
 
     constructor(private appAuthentication: AppAuthentication,
                 private logger: KalturaLogger,
-                private router: Router
+                private router: Router,
+                private renderer: Renderer2
     ) {
         router.events
             .pipe(cancelOnDestroy(this))
             .subscribe((event) => {
                 if (event instanceof NavigationEnd) {
-                    switch (event.urlAfterRedirects){
-                        case '/analytics/dashboard':
-                            this.sendMessageToAnalyticsApp({'action': 'navigate','url': '/content/top-content'});
-                            break;
-                       case '/analytics/contributors':
-                            this.sendMessageToAnalyticsApp({'action': 'navigate','url': '/system/platforms'});
-                            break;
-                       case '/analytics/audience':
-                            this.sendMessageToAnalyticsApp({'action': 'navigate','url': '/users/top-contributors'});
-                            break;
-                       case '/analytics/publisher':
-                            this.sendMessageToAnalyticsApp({'action': 'navigate','url': '/bandwidth/publisher'});
-                            break;
-                        case '/analytics/enduser':
-                            this.sendMessageToAnalyticsApp({'action': 'navigate','url': '/bandwidth/end-user'});
-                            break;
-                        case '/analytics/live':
-                            this.sendMessageToAnalyticsApp({'action': 'navigate','url': '/live/live-reports'});
-                            break;
-                        default:
-                            break;
-                    }
+                    this.sendMessageToAnalyticsApp({'action': 'navigate','url': this.mapRoutes(event.urlAfterRedirects)});
                 }
             });
+    }
+
+    private mapRoutes(kmcRoute: string): string {
+        let analyticsRoute = kmcRoute;
+        switch (kmcRoute){
+            case '/analytics/dashboard':
+                analyticsRoute = '/content/top-content';
+                break;
+            case '/analytics/contributors':
+                analyticsRoute = '/system/platforms';
+                break;
+            case '/analytics/audience':
+                analyticsRoute = '/users/top-contributors';
+                break;
+            case '/analytics/publisher':
+                analyticsRoute = '/bandwidth/publisher';
+                break;
+            case '/analytics/enduser':
+                analyticsRoute = '/bandwidth/end-user';
+                break;
+            case '/analytics/live':
+                analyticsRoute = '/live/live-reports';
+                break;
+            default:
+                break;
+        }
+        return analyticsRoute;
     }
 
     private sendMessageToAnalyticsApp(message: any): void{
@@ -72,9 +79,10 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             ks: this.appAuthentication.appUser.ks,
             pid: this.appAuthentication.appUser.partnerId,
             locale: "en",
-            showNavBar: false,
             callbacks: {
-                logout: this.appAuthentication.logout
+                loaded: this.analyticsLoaded.bind(this),
+                logout: this.logout.bind(this),
+                updateLayout: this.updateLayout.bind(this)
             }
         }
         try {
@@ -89,5 +97,23 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this._url = null;
         window['analyticsConfig'] = null;
+    }
+
+    private analyticsLoaded(): void {
+        this.sendMessageToAnalyticsApp({'action': 'navigate','url': '/' + this.mapRoutes(this.router.routerState.snapshot.url)});
+    }
+
+    private logout(): void {
+        this.appAuthentication.logout();
+    }
+
+    private updateLayout(): void {
+        if (this.analyticsFrame && this.analyticsFrame.nativeElement.contentWindow) {
+            setTimeout(()=>{
+                // use timeout to allow the report to render before checking the height
+                const newHeight = this.analyticsFrame.nativeElement.contentWindow.document.body.scrollHeight + 'px';
+                this.renderer.setStyle(this.analyticsFrame.nativeElement, 'height', newHeight);
+            },0);
+        }
     }
 }

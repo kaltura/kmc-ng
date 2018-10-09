@@ -2891,6 +2891,7 @@
             }
         },
         "analytics": {
+            "analytics": "Analytics",
             "comingSoon": "Coming soon! Analytics for all media types.",
            "releaseSupports": "This release supports analytics for “Live” entries only. For all other media, please <a href=\"{{0}}\" target=\"_blank\">login to the legacy KMC</a> to view and create analytics and reports. Analytics for all media should be available soon"
         },

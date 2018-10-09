@@ -3,7 +3,7 @@ import { KMCAppMenuItem } from 'app-shared/kmc-shared/kmc-views';
 
 export class UpdateMenuEvent extends AppEvent {
 
-    constructor(public menu: KMCAppMenuItem[], public position: string)
+    constructor(public menuID: string,  public menu: KMCAppMenuItem[], public position: string)
     {
         super('UpdatedMenuEvent');
     }

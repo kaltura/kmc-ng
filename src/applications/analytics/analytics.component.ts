@@ -75,7 +75,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy{
         ]
     }
     ngOnInit(){
-        this._appEvents.publish(new UpdateMenuEvent(this.menuConfig, 'left'));
+        this._appEvents.publish(new UpdateMenuEvent('analytics', this.menuConfig, 'left'));
     }
 
     ngOnDestroy(){

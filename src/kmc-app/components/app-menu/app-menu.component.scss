@@ -80,6 +80,12 @@
         margin-top: 15px;
         float: right;
     }
+    .kMenu-left{
+        opacity: 1;
+        display: flex;
+        align-items: center;
+        transition: all 0.25s ease-in-out;
+    }
     .kMenu-right {
         margin-left: auto;
         display: flex;
@@ -121,6 +127,37 @@
         font-size: 32px;
         margin-left: 16px;
         margin-right: 18px;
+    }
+    .kAnalytics {
+        margin-right: 40px;
+        display: flex;
+        align-items: center;
+        padding-bottom: 2px;
+        div{
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border: 0px solid white;
+            border-radius: 3px;
+            margin-right: 12px;
+            &:hover{
+                background-color: rgba(255,255,255,0.5);
+            }
+            i{
+                color: white;
+                font-size: 12px;
+                font-weight: bold;
+            }
+        }
+
+        span{
+            color: white;
+            font-weight: bold;
+            font-style: italic;
+        }
     }
 }
 
