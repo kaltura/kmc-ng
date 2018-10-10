@@ -24,11 +24,48 @@ export class AnalyticsComponent implements OnInit, OnDestroy{
             },
             {
                 isAvailable: true,
-                isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/audience`) !== -1),
+                isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/technology`) !== -1 ||
+                    activePath.indexOf(`/analytics/geo-location`) !== -1 ||
+                    activePath.indexOf(`/analytics/content-interactions`) !== -1 ||
+                    activePath.indexOf(`/analytics/engagement`) !== -1),
                 open: () => {
-                    this._router.navigateByUrl('/analytics/audience');
+                    this._router.navigateByUrl('/analytics/technology');
                 },
                 menuTitle: this._appLocalization.get('app.titles.audience'),
+                children: [
+                    {
+                        isAvailable: true,
+                        isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/technology`) !== -1),
+                        open: () => {
+                            this._router.navigateByUrl('/analytics/technology');
+                        },
+                        menuTitle: this._appLocalization.get('app.titles.analyticsTechnology')
+                    },
+                    {
+                        isAvailable: true,
+                        isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/geo-location`) !== -1),
+                        open: () => {
+                            this._router.navigateByUrl('/analytics/geo-location');
+                        },
+                        menuTitle: this._appLocalization.get('app.titles.analyticsGeo')
+                    },
+                    {
+                        isAvailable: true,
+                        isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/content-interactions`) !== -1),
+                        open: () => {
+                            this._router.navigateByUrl('/analytics/content-interactions');
+                        },
+                        menuTitle: this._appLocalization.get('app.titles.analyticsInteractions')
+                    },
+                    {
+                        isAvailable: true,
+                        isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/engagement`) !== -1),
+                        open: () => {
+                            this._router.navigateByUrl('/analytics/engagement');
+                        },
+                        menuTitle: this._appLocalization.get('app.titles.analyticsEngagement')
+                    }
+                ]
             },
             {
                 isAvailable: true,
@@ -37,19 +74,21 @@ export class AnalyticsComponent implements OnInit, OnDestroy{
                     this._router.navigateByUrl('/analytics/contributors');
                 },
                 menuTitle: this._appLocalization.get('app.titles.contributors'),
-            },
-            {
-                isAvailable: true,
-                isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/live`) !== -1),
-                open: () => {
-                    this._router.navigateByUrl('/analytics/live');
-                },
-                menuTitle: this._appLocalization.get('app.titles.live'),
+                children: [
+                    {
+                        isAvailable: true,
+                        isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/contributors`) !== -1),
+                        open: () => {
+                            this._router.navigateByUrl('/analytics/contributors');
+                        },
+                        menuTitle: this._appLocalization.get('app.titles.analyticsTopContributors')
+                    }
+                ]
             },
             {
                 menuTitle: this._appLocalization.get('app.titles.analyticsBW'),
                 isAvailable: true,
-                isActiveView: (activePath: string) => (activePath.indexOf(`/analytics`) !== -1),
+                isActiveView: (activePath: string) => (activePath.indexOf(`/analytics/publisher`) !== -1 || activePath.indexOf(`/analytics/enduser`) !== -1 ),
                 open: () => {
                     this._router.navigateByUrl('/analytics/publisher');
                 },
@@ -71,6 +110,14 @@ export class AnalyticsComponent implements OnInit, OnDestroy{
                         menuTitle: this._appLocalization.get('app.titles.analyticsEndUser')
                     }
                 ]
+            },
+            {
+                isAvailable: true,
+                isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/live`) !== -1),
+                open: () => {
+                    this._router.navigateByUrl('/analytics/live');
+                },
+                menuTitle: this._appLocalization.get('app.titles.live'),
             }
         ]
     }

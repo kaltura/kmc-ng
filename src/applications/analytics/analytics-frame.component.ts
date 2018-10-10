@@ -28,36 +28,9 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             .pipe(cancelOnDestroy(this))
             .subscribe((event) => {
                 if (event instanceof NavigationEnd) {
-                    this.sendMessageToAnalyticsApp({'action': 'navigate','url': this.mapRoutes(event.urlAfterRedirects)});
+                    this.sendMessageToAnalyticsApp({'action': 'navigate','url': event.urlAfterRedirects});
                 }
             });
-    }
-
-    private mapRoutes(kmcRoute: string): string {
-        let analyticsRoute = kmcRoute;
-        switch (kmcRoute){
-            case '/analytics/dashboard':
-                analyticsRoute = '/content/top-content';
-                break;
-            case '/analytics/contributors':
-                analyticsRoute = '/system/platforms';
-                break;
-            case '/analytics/audience':
-                analyticsRoute = '/users/top-contributors';
-                break;
-            case '/analytics/publisher':
-                analyticsRoute = '/bandwidth/publisher';
-                break;
-            case '/analytics/enduser':
-                analyticsRoute = '/bandwidth/end-user';
-                break;
-            case '/analytics/live':
-                analyticsRoute = '/live/live-reports';
-                break;
-            default:
-                break;
-        }
-        return analyticsRoute;
     }
 
     private sendMessageToAnalyticsApp(message: any): void{
@@ -100,7 +73,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     }
 
     private analyticsLoaded(): void {
-        this.sendMessageToAnalyticsApp({'action': 'navigate','url': '/' + this.mapRoutes(this.router.routerState.snapshot.url)});
+        this.sendMessageToAnalyticsApp({'action': 'navigate','url': this.router.routerState.snapshot.url});
     }
 
     private logout(): void {
@@ -111,8 +84,8 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
         if (this.analyticsFrame && this.analyticsFrame.nativeElement.contentWindow) {
             setTimeout(()=>{
                 // use timeout to allow the report to render before checking the height
-                const newHeight = this.analyticsFrame.nativeElement.contentWindow.document.body.scrollHeight + 'px';
-                this.renderer.setStyle(this.analyticsFrame.nativeElement, 'height', newHeight);
+                const newHeight = this.analyticsFrame.nativeElement.contentWindow.document.getElementById('analyticsApp').getBoundingClientRect().height;
+                this.renderer.setStyle(this.analyticsFrame.nativeElement, 'height', newHeight + 'px');
             },0);
         }
     }
