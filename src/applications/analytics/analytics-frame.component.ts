@@ -2,8 +2,9 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild, Renderer2 } from '
 import { Router, NavigationEnd } from '@angular/router';
 import { AppAuthentication } from 'shared/kmc-shell/index';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { getKalturaServerUri, serverConfig } from 'config/server';
+import { serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kAnalyticsFrame',
@@ -22,6 +23,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     constructor(private appAuthentication: AppAuthentication,
                 private logger: KalturaLogger,
                 private router: Router,
+                private _browserService: BrowserService,
                 private renderer: Renderer2
     ) {
         router.events
@@ -84,7 +86,13 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
         if (this.analyticsFrame && this.analyticsFrame.nativeElement.contentWindow) {
             setTimeout(()=>{
                 // use timeout to allow the report to render before checking the height
-                const newHeight = this.analyticsFrame.nativeElement.contentWindow.document.getElementById('analyticsApp').getBoundingClientRect().height;
+                let newHeight = this.analyticsFrame.nativeElement.contentWindow.document.getElementById('analyticsApp').getBoundingClientRect().height;
+                if (this._browserService.isSafari()) {
+                    // Safari can't seem to get the correct height here. Using doc height instead but not working perfectly. Need to revise if this logic stays.
+                    const body = this.analyticsFrame.nativeElement.contentWindow.document.body;
+                    const html = this.analyticsFrame.nativeElement.contentWindow.document.documentElement;
+                    newHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+                }
                 this.renderer.setStyle(this.analyticsFrame.nativeElement, 'height', newHeight + 'px');
             },0);
         }
