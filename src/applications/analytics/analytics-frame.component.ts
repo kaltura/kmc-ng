@@ -11,7 +11,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
     template: '<iframe #analyticsFrame frameborder="0px" [src]="_url | safe"></iframe>',
     styles: [
         ':host { display: block; width: 100%; height: 100%; }',
-        'iframe { width: 100%; height: 100% }'
+        'iframe { width: 100%; height: 100%; transition: height 0.3s }'
     ],
     providers: [KalturaLogger.createLogger('AnalyticsFrameComponent')]
 })
