@@ -51,6 +51,8 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             kalturaServer: {
                 uri : "lbd.kaltura.com" // serverConfig.kalturaServer.uri
             },
+            cdnServers: serverConfig.cdnServers,
+            liveAnalytics: serverConfig.externalApps.liveAnalytics,
             ks: this.appAuthentication.appUser.ks,
             pid: this.appAuthentication.appUser.partnerId,
             locale: "en",
