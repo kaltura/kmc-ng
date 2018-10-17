@@ -2053,7 +2053,7 @@
                         "requiresAuthentication": "Requires Authentication",
                         "requiresAuthentication_explanation": "Visible only to authenticated end users,",
                         "private": "Private",
-                        "private_explanation": "Visible only to users with specific permissions to access this category content."
+                        "private_explanation": "Category is visible only to users with specific permissions to access this category content."
                     },
                     "categoryListing": {
                         "label": "Category Listing",
@@ -2061,7 +2061,7 @@
                         "noRestrictions": "No Restrictions",
                         "noRestrictions_explanation": "Visible to everyone with access to the application page.",
                         "private": "Private",
-                        "private_explanation": "Visible only to users with specific permissions to access this category content."
+                        "private_explanation": "Category is visible only to users with specific permissions to access this category content."
                     },
                     "contentPublishPermissions": {
                         "label": "Content Publish Permissions",
