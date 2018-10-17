@@ -13,9 +13,9 @@ content-bulk-uploads,Refining Options for Bulk Uploads,https://knowledge.kaltura
 content-categories,Add a Category,https://knowledge.kaltura.com/node/2132#add_category_name
 content-categories,Search and Refine Categories,https://knowledge.kaltura.com/node/2120#searching_filtering
 content-categories,Category Table Actions,https://knowledge.kaltura.com/node/2132#cat_actions
-content-drop-folders,What is a Drop Folder,https://knowledge.kaltura.com/node/2113#whatis_drop_folder
-content-drop-folders,Drop Folder Table,https://knowledge.kaltura.com/node/2113#drop_folder_table
-content-drop-folders,Drop Folder Statuses,https://knowledge.kaltura.com/node/2113#drop_folder_statuses
+content-drop-folders,What is a Drop Folder,https://knowledge.kaltura.com/node/2121#whatis_drop_folder
+content-drop-folders,Drop Folder Table,https://knowledge.kaltura.com/node/2121#drop_folder_table
+content-drop-folders,Drop Folder Statuses,https://knowledge.kaltura.com/node/2121#drop_folder_statuses
 content-entries,Uploading and Ingestion,https://knowledge.kaltura.com/node/2121
 content-entries,Upload Media,https://knowledge.kaltura.com/node/2121#upload_media
 content-entries,The Entries Table,https://knowledge.kaltura.com/node/2120#entries_table
@@ -36,10 +36,11 @@ content-syndication,Content Syndication,https://knowledge.kaltura.com/node/2134#
 content-syndication,Syndicating to a Standard MRSS Feed,https://knowledge.kaltura.com/node/2134#syn_to_rss
 content-syndication,Setting Up Syndication,https://knowledge.kaltura.com/node/2134#setup_syn
 content-uploads,Tracking Your Uploads,https://knowledge.kaltura.com/node/2120#upload_control
+analytics-kava,,
 analytics-live,Live Analytics,https://knowledge.kaltura.com/node/2118
 analytics-live,Live Content Dashboard Report,https://knowledge.kaltura.com/node/2118#live_content
 analytics-live,Live Report v for Specific Entry ,https://knowledge.kaltura.com/node/2118#specific_entry
-analytics-live,Export Analytics to CSV,https://knowledge.kaltura.com/node/2118#export
+analytics-live,Export Analytics to CSV,https://knowledge.kaltura.com/node/2118#exporting
 settings-access-control,Access Control Overview,https://knowledge.kaltura.com/node/2128
 settings-access-control,Create an Access Profile,https://knowledge.kaltura.com/node/2129#create_access_profile
 settings-account-info,Monthly Bandwith/Storage Usage,https://knowledge.kaltura.com/node/2126
@@ -65,7 +66,7 @@ content-category-entitlements,Add Entitlements to Categories,https://knowledge.k
 content-category-metadata,Entry Editing Tabs Overview,https://knowledge.kaltura.com/node/2120#editing_overview
 content-entry-metadata,Metadata Tab,https://knowledge.kaltura.com/node/2120#metadata_tab
 content-entry-thumbnails,Thumbnails Tab,https://knowledge.kaltura.com/node/2120#thumbnails_tab
-content-entry-thumbnails,Choosing a Thumbnail for your Video,https://knowledge.kaltura.com/node/2120#choosing_thumbnails
+content-entry-thumbnails,Choosing a Thumbnail for your Video,https://knowledge.kaltura.com/node/2120#choosing_thumbnail
 content-entry-accesscontrol,Assign Access Control Profile to Entry,https://knowledge.kaltura.com/node/2129#assign
 content-entry-accesscontrol,Assign Access Control Profile (Bulk),https://knowledge.kaltura.com/node/2129#assign_ac_bulk
 content-entry-scheduling,Set Scheduling,https://knowledge.kaltura.com/node/2120#set_scheduling
@@ -78,13 +79,13 @@ content-entry-flavours,Replace Media,https://knowledge.kaltura.com/node/2120#rep
 content-entry-captions,The Captions Tab,https://knowledge.kaltura.com/node/2120#captions_edit
 content-entry-live,Create a Live Stream Entry in Kaltura Using the KMC NG,https://knowledge.kaltura.com/node/2052
 content-entry-live,RTMP Endpoints for Kaltura Live Streaming - KMC-NG,https://knowledge.kaltura.com/node/2054
-content-entry-related,Uploading and Modifying Related Files,https://knowledge.kaltura.com/node/2120#uploading_modifying_related_files
+content-entry-related,Uploading and Modifying Related Files,https://knowledge.kaltura.com/node/2121#uploading_modifying_related_files
 content-entry-clips,Create and Edit Media Clips,https://knowledge.kaltura.com/node/2120#clips_edit
 content-entry-advertisements,Creating Advertisements,https://knowledge.kaltura.com/node/2120#advertisements_edit
 content-entry-advertisements,Advertising and Ad Networks,https://knowledge.kaltura.com/node/2124
 content-entry-advertisements,Configure VAST Ads,https://knowledge.kaltura.com/node/2124#cfg_vast_ads
 content-entry-users,Modify Editing and Publishing Rights,https://knowledge.kaltura.com/node/2120#users_edit
-content-entry-distribution,Distributing an Entry,https://knowledge.kaltura.com/node/2120#distribute_entry
+content-entry-distribution,Distributing an Entry,https://knowledge.kaltura.com/node/2134#distribute_entry
 content-entry-distribution,Distribution,https://knowledge.kaltura.com/node/2120#distribution_edit
 content-playlist-metadata,The Playlists Tab -Add a Playlist,https://knowledge.kaltura.com/node/2130#playlists_tab
 content-playlist-metadata,Add/Edit Metdata to Playlist,https://knowledge.kaltura.com/node/2130#add_edit_metadata
