@@ -36,7 +36,7 @@ export class YahooDestinationFormComponent extends DestinationComponentBase impl
 
   public _form: FormGroup;
   public _availableContentFlavors: Array<{ value: number, label: string }> = [];
-  public _availablePlayers: Array<{ value: number, label: string }> = [];
+  public _availablePlayers: Array<{ value: number, label: string, version: string }> = [];
   public _availableCategories: Array<{ value: string, label: string }> = [];
   private readonly categories: string[] = ['Action', 'Art &amp; Animation', 'Entertainment &amp; TV', 'Food', 'Games',
     'How-To', 'Music', 'People &amp; Vlogs', 'Science &amp; Environment', 'Transportation',
@@ -151,7 +151,8 @@ export class YahooDestinationFormComponent extends DestinationComponentBase impl
     if (this.players && this.players.length) {
       this._availablePlayers = this.players.map(player => ({
         value: player.id,
-        label: player.name || player.id.toString()
+        label: player.name || player.id.toString(),
+        version: player.version
       }));
     }
   }

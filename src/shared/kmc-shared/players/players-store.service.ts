@@ -15,6 +15,7 @@ import {KalturaResponseProfileType} from 'kaltura-ngx-client';
 import {AppEventsService} from "app-shared/kmc-shared";
 import {PlayersUpdatedEvent} from "app-shared/kmc-shared/events";
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export enum PlayerTypes {
   Entry = 1,
@@ -31,7 +32,7 @@ export class PlayersStore implements OnDestroy {
   private _cachedPlayers: { [key: string]: Observable<KalturaUiConf[]> } = {};
   private _logger: KalturaLogger;
 
-  constructor(private _kalturaServerClient: KalturaClient, logger: KalturaLogger, private _appEvents: AppEventsService) {
+  constructor(private _kalturaServerClient: KalturaClient, logger: KalturaLogger, private _appEvents: AppEventsService, private _permissionsService: KMCPermissionsService) {
     this._logger = logger.subLogger('PlayersStore');
 
     this._appEvents.event(PlayersUpdatedEvent)
@@ -65,14 +66,27 @@ export class PlayersStore implements OnDestroy {
             sub = this._buildRequest(filters, ++currentPageIndex).subscribe(
               response => {
                 sub = null;
-                playersResults = playersResults.concat(response.objects);
+                  response.objects.filter( (uiConf) => {
+                      let showPlayer = true;
+                      if (uiConf.html5Url){
+                          showPlayer = uiConf.html5Url.indexOf('html5lib/v1') === -1; // filter out V1 players
+                      } else {
+                          showPlayer = uiConf.tags.indexOf('kalturaPlayerJs') > -1 && this._permissionsService.hasPermission(KMCPermissions.FEATURE_V3_STUDIO_PERMISSION); // show V3 players if user has permissions
+                      }
+                      // filter out by tags
+                      if (uiConf.tags && uiConf.tags.length){
+                          const tags = uiConf.tags.split(',');
+                          if (tags.indexOf('ott') > -1) {
+                              showPlayer = false;
+                          }
+                      }
+                      return showPlayer;
+                  }).forEach(uiConf => {
+                      playersResults.push(uiConf);
+                  });
 
-                if (playersResults.length >= response.totalCount) {
                   observer.next({items: playersResults});
                   observer.complete();
-                } else {
-                  loadPlayers();
-                }
               },
               error => {
                 sub = null;
@@ -104,18 +118,19 @@ export class PlayersStore implements OnDestroy {
   }
 
   private _buildRequest(filters: GetFilters, pageIndex: number): Observable<KalturaUiConfListResponse> {
-    const tags = filters && filters.type === PlayerTypes.Playlist ? 'html5studio,playlist' : 'html5studio,player';
+    const tags = filters && filters.type === PlayerTypes.Playlist ? 'playlist' : 'player';
 
     const filter: KalturaUiConfFilter = new KalturaUiConfFilter({
       objTypeEqual: KalturaUiConfObjType.player,
       tagsMultiLikeAnd: tags,
       'orderBy': '-updatedAt',
-      'objTypeIn': '1,8'
+      'objTypeIn': '1,8',
+      'creationModeEqual': 2
     });
 
     const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
       type: KalturaResponseProfileType.includeFields,
-      fields: 'id,name,html5Url,createdAt,updatedAt,width,height'
+      fields: 'id,name,html5Url,createdAt,updatedAt,width,height,tags'
     });
 
     const pager = new KalturaFilterPager({pageSize: 500, pageIndex});
