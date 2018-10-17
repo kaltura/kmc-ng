@@ -79,15 +79,15 @@
         "viewKey": "content-drop-folders",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2113#whatis_drop_folder",
+                "value": "https://knowledge.kaltura.com/node/2121#whatis_drop_folder",
                 "label": "What is a Drop Folder"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2113#drop_folder_table",
+                "value": "https://knowledge.kaltura.com/node/2121#drop_folder_table",
                 "label": "Drop Folder Table"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2113#drop_folder_statuses",
+                "value": "https://knowledge.kaltura.com/node/2121#drop_folder_statuses",
                 "label": "Drop Folder Statuses"
             }
         ]
@@ -198,6 +198,10 @@
         ]
     },
     {
+        "viewKey": "analytics-kava",
+        "links": []
+    },
+    {
         "viewKey": "analytics-live",
         "links": [
             {
@@ -213,7 +217,7 @@
                 "label": "Live Report v for Specific Entry"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2118#export",
+                "value": "https://knowledge.kaltura.com/node/2118#exporting",
                 "label": "Export Analytics to CSV"
             }
         ]
@@ -392,7 +396,7 @@
                 "label": "Thumbnails Tab"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2120#choosing_thumbnails",
+                "value": "https://knowledge.kaltura.com/node/2120#choosing_thumbnail",
                 "label": "Choosing a Thumbnail for your Video"
             }
         ]
@@ -474,7 +478,7 @@
         "viewKey": "content-entry-related",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2120#uploading_modifying_related_files",
+                "value": "https://knowledge.kaltura.com/node/2121#uploading_modifying_related_files",
                 "label": "Uploading and Modifying Related Files"
             }
         ]
@@ -518,7 +522,7 @@
         "viewKey": "content-entry-distribution",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2120#distribute_entry",
+                "value": "https://knowledge.kaltura.com/node/2134#distribute_entry",
                 "label": "Distributing an Entry"
             },
             {
