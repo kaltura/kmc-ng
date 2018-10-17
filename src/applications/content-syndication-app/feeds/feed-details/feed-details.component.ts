@@ -238,6 +238,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
       .map(response => {
         const players = response[0].items.map(player => ({
           id: player.id,
+          version: player.tags.indexOf('kalturaPlayerJs') > -1 ? '3' : '2',
           name: player.name || this._appLocalization.get('applications.content.syndication.details.playerName', {0: player.id})
         }));
 
