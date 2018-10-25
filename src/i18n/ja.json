@@ -171,20 +171,20 @@
                 }
             },
             "restorePassword": {
-            "welcome": "Kalturaへようこそ。",
-            "selectPassword": "パスワードを選択してください。",
-        "restored": "新しいパスワードが設定されました。Kaltura管理コンソールにログインしてください。",
-        "error": {
-          "equal": "パスワードが一致しません",
-          "required": "フィールドは必須です",
-            "failedValidateHash": "{{0}} もう一度試しますか?"
-        },
-        "placeholder": {
-          "new": "新しいパスワードを入力してください",
-          "confirm": "新しいパスワードをもう一度入力してください"
-        }
-      },
-      "error": {
+                "welcome": "Kalturaへようこそ。",
+                "selectPassword": "パスワードを選択してください。",
+                "restored": "新しいパスワードが設定されました。Kaltura管理コンソールにログインしてください。",
+                "error": {
+                    "equal": "パスワードが一致しません",
+                    "required": "フィールドは必須です",
+                    "failedValidateHash": "{{0}} もう一度試しますか?"
+                },
+                "placeholder": {
+                    "new": "新しいパスワードを入力してください",
+                    "confirm": "新しいパスワードをもう一度入力してください"
+                }
+            },
+            "error": {
                 "email": "電子メールの形式が不正です",
                 "badCredentials": "入力されたユーザー名またはパスワードが正しくありません。",
                 "retriesExceeded": {
@@ -241,6 +241,7 @@
             "advanced": "高度な設定",
             "settings": "リスト配置設定",
             "name": "名前",
+            "version": "バージョン",
             "added": "追加日",
             "updated": "更新日",
             "helpTip1": "自動埋め込みはデフォルトの埋め込みコードタイプであり、ランタイムカスタマイズが不要で、ページ上ですぐにプレーヤーを開く場合に最適です。",
@@ -586,7 +587,7 @@
                     "removeTags": "タグを削除",
                     "removeTagsLabel": "選択したカテゴリから削除するタグを選択します。",
                     "noTagsToRemove": "削除するタグがありません",
-          "moveCategories": "カテゴリを移動",
+                    "moveCategories": "カテゴリを移動",
                     "changeContentPrivacy": "コンテンツプライバシーを変更",
                     "changeContentPrivacyLabel": "選択したすべてのカテゴリについて、コンテンツプライバシー設定を変更します。",
                     "changeCategoryListing": "カテゴリの一覧表示を変更",
@@ -771,7 +772,7 @@
                         "fromPlaylist": "プレーリストから"
                     },
                     "search": "検索",
-          "playerName": "プレーヤー（{{0}}）",
+                    "playerName": "プレーヤー（{{0}}）",
                     "entriesCountData": {
                         "count": "エントリ数",
                         "numOfEntries": "{{0}}件のエントリ",
@@ -787,7 +788,7 @@
                         "yahoo": "Yahoo",
                         "itunes": "iTunes",
                         "roku": "Roku Direct Publisher",
-                        "opera": "Opera Snap TV",
+                        "opera": "Vewd TV Snap",
                         "flexibleFormat": "フレキシブルフォーマット"
                     },
                     "destinationsForms": {
@@ -1379,6 +1380,8 @@
                 "removeFromPlaylist": "プレーリストから削除",
                 "moveUp": "上に移動",
                 "moveDown": "下に移動",
+                "moveTop": "1番上に移動",
+                "moveBottom": "1番下に移動",
                 "duplicate": "複製",
                 "removeCategoriesNone": "削除するカテゴリがありません",
                 "approve": "承認",
@@ -1626,7 +1629,7 @@
                     "deleteFailure": "フレーバーアセットの削除に失敗しました。",
                     "convertFailure": "フレーバーの変換に失敗しました。",
                     "missingOriginalFlavor": "元のフレーバーアセットが見つかりません",
-          "uploadFailure": "フレーバーのアップロードに失敗しました。",
+                    "uploadFailure": "フレーバーのアップロードに失敗しました。",
                     "downloadFailure": "フレーバーのダウンロードに失敗しました。",
                     "importFailure": "フレーバーのインポートに失敗しました。",
                     "replaceVideo": {
@@ -2375,8 +2378,8 @@
                 "contactUs": "お問い合わせ",
                 "contactUsText": " （アカウントに以下の無効なアイテムを追加する方法について）",
                 "roleUpdated": "ロールが更新されました",
-        "roleUpdatedMessage": "変更はすぐに反映されます。このロールに関連付けられている既存のユーザーは、ブラウザページを更新することをお勧めします。",
-        "errors": {
+                "roleUpdatedMessage": "変更はすぐに反映されます。このロールに関連付けられている既存のユーザーは、ブラウザページを更新することをお勧めします。",
+                "errors": {
                     "required": "このフィールドは必須です。",
                     "unsafeValue": "安全でない可能性のあるHTMLタグ",
                     "validationError": "フォームに無効な情報がいくつか含まれています。無効としてマークされた選択を確認してください。"
@@ -2441,7 +2444,7 @@
                     "header": "アカウントのアップグレードに興味を持っていただきありがとうございます。",
                     "trial": "無料トライアルの期限は{{0}}に切れます。",
                     "gb": " GB",
-          "bandwidth": "今月の帯域幅消費は{{0}}です",
+                    "bandwidth": "今月の帯域幅消費は{{0}}です",
                     "storage": "今月のストレージ使用量は{{0}}です",
                     "contactUs": "他のパッケージと付加価値サービスの詳細については、弊社にお問い合わせください。"
                 }
@@ -2880,7 +2883,7 @@
         },
         "analytics": {
             "comingSoon": "間もなく登場すべてのメディアタイプについて分析します。",
-           "releaseSupports": "このリリースでは、「ライブ」エントリの分析のみがサポートされます。他のすべてのメディアについては、<a href=\"{{0}}\" target=\"_blank\">レガシーKMCにログイン</a>して、分析およびレポートを表示および作成してください。すべてのメディアの分析については、間もなく利用できるようになるはずです"
+            "releaseSupports": "このリリースでは、「ライブ」エントリの分析のみがサポートされます。他のすべてのメディアについては、<a href=\"{{0}}\" target=\"_blank\">レガシーKMCにログイン</a>して、分析およびレポートを表示および作成してください。すべてのメディアの分析については、間もなく利用できるようになるはずです"
         },
         "reach": {
             "captionRequests": "キャプションリクエスト",

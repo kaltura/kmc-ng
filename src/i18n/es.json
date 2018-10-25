@@ -52,7 +52,9 @@
             "studio": "Studio",
             "analytics": "Análisis",
             "settings": "Configuración",
-            "administration": "Administración"
+            "administration": "Administración",
+            "reachDashboardMenuTitle": "Panel de servicios",
+            "reachDashboardPageTitle": "Panel de servicios"
         },
         "userSettings": {
             "changeAccount": "Cambiar cuenta",
@@ -73,6 +75,7 @@
             "productTour": "Hacer recorrido virtual del producto",
             "support": "Ayuda y soporte técnico",
             "userManual": "Descargar manual de usuario",
+            "legacy": "KMC heredada",
             "contact": "Contáctese con el soporte técnico.",
             "currentPage": "Página actual",
             "changelog": "Registro de cambios"
@@ -89,6 +92,7 @@
             "off": "Apagado",
             "ok": "Aceptar",
             "cancel": "Cancelar",
+            "continue": "Continuar",
             "retry": "Reintentar",
             "dismiss": "Descartar",
             "reload": "Volver a cargar",
@@ -113,7 +117,9 @@
         "openMail":{
             "supportMailTitle": "Contáctese con el soporte técnico de Kaltura.",
             "supportMailMsg": "Envíe un mensaje a la siguiente dirección de correo electrónico:",
-            "supportMailMsgNoMail": "Envíe un correo electrónico al equipo de soporte técnico de Kaltura."
+            "supportMailMsgNoMail": "Envíe un correo electrónico al equipo de soporte técnico de Kaltura.",
+            "customerCare": "El servicio de Asistencia al cliente de Kaltura está disponible las 24 horas del día, todos los días, los 365 días del año, a través del portal del cliente:",
+            "customerPortal": "La forma más rápida y sencilla para enviar un caso nuevo, comunicarse con asistencia al cliente y hacer el seguimiento del estatus de las consultas es a través del Portal del cliente de Kaltura: "
         },
         "login": {
             "login": {
@@ -165,20 +171,20 @@
                 }
             },
             "restorePassword": {
-            "welcome": "Bienvenido a Kaltura.",
-            "selectPassword": "Seleccione su contraseña.",
-        "restored": "Se estableció su nueva contraseña. Inicie sesión en la consola de gestión de Kaltura.",
-        "error": {
-          "equal": "Las contraseñas no coinciden.",
-          "required": "El campo es obligatorio.",
-            "failedValidateHash": "{{0}} ¿Desea reintentarlo?"
-        },
-        "placeholder": {
-          "new": "Ingrese una nueva contraseña.",
-          "confirm": "Confirme la nueva contraseña."
-        }
-      },
-      "error": {
+                "welcome": "Bienvenido a Kaltura.",
+                "selectPassword": "Seleccione su contraseña.",
+                "restored": "Se estableció su nueva contraseña. Inicie sesión en la consola de gestión de Kaltura.",
+                "error": {
+                    "equal": "Las contraseñas no coinciden.",
+                    "required": "El campo es obligatorio.",
+                    "failedValidateHash": "{{0}} ¿Desea reintentarlo?"
+                },
+                "placeholder": {
+                    "new": "Ingrese una nueva contraseña.",
+                    "confirm": "Confirme la nueva contraseña."
+                }
+            },
+            "error": {
                 "email": "Formato de correo electrónico incorrecto",
                 "badCredentials": "El nombre de usuario o la contraseña que ingresó es incorrecto.",
                 "retriesExceeded": {
@@ -235,6 +241,7 @@
             "advanced": "Configuración avanzada",
             "settings": "Configuración de la disposición de las listas",
             "name": "Nombre",
+            "version": "Versión",
             "added": "Fecha agregada",
             "updated": "Fecha actualizada",
             "helpTip1": "El tipo predeterminado de código de inserción es la inserción automática que es la mejor para introducir reproductores con rapidez en una página sin personalización del tiempo de ejecución.",
@@ -287,6 +294,8 @@
                 "invalidUrl": "La URL es inválida."
             },
             "uploadMenu": {
+                "createFromUrl": "Cargar desde URL",
+                "createFromYoutube": "Cargar desde YouTube",
                 "uploadFromDesktop": "Cargar desde escritorio",
                 "needHighSpeed": "¿Necesita una carga de alta velocidad?",
                 "highSpeed": "Carga de alta velocidad",
@@ -307,11 +316,52 @@
                     "prepareEntry": "Se produjo un error mientras se preparaba una entrada."
                 }
             },
+            "createFromUrl": {
+                "uploadFromUrl": "Cargar desde URL",
+                "transcodingProfile": "Perfil de transcodificación",
+                "profilePlaceholder": "Predeterminado",
+                "addFile": "Agregar archivo",
+                "fileUrl": "URL del archivo",
+                "fileUrlPlaceholder": "http://",
+                "transcodingFlavor": "Sabor de transcodificación",
+                "selectFlavor": "Seleccionar sabor",
+                "remove": "Quitar archivo",
+                "link": "Enlace",
+                "cancel": "Cancelar",
+                "noFlavors": "No hay sabores.",
+                "missingFlavor": "Faltan algunos sabores de transcodificación requeridos. ¿Continuar?",
+                "continue": "Continuar",
+                "emptyMessage": {
+                    "title": "No hay archivos para cargar.",
+                    "getStarted": "Agregue algunos archivos para comenzar. ",
+                    "browse": "Agregar"
+                }
+            },
+            "uploadFromYoutube": {
+                "uploadFromYoutube": "Cargar desde YouTube",
+                "linkLabel": "Agregar enlace a página de video o ID de contenido",
+                "inputPlaceholder": "http://",
+                "cancel": "Cancelar",
+                "upload": "Cargar",
+                "note": "Nota: Sólo se admiten videos públicos de YouTube.",
+                "invalidUrl": "La URL o ID proporcionada no es compatible.",
+                "success": "Satisfactorio",
+                "successMessage": "La entrada de YouTube se creó correctamente. ¿Desea ver los detalles de la entrada?",
+                "notSupported": "No se puede cargar desde YouTube."
+            },
             "uploadSettings": {
-                "title": "Cargar configuración",
+                "uploadSettings": "Cargar configuración",
+                "uploadFromUrl": "Cargar desde URL",
+                "cancel": "Cancelar",
                 "profile": "Perfil de transcodificación",
                 "addFileBtn": "Agregar archivos",
                 "profilePlaceholder": "Predeterminado",
+                "fileUrl": "URL del archivo",
+                "fileUrlPlaceholder": "http://",
+                "createFromUrlError": {
+                    "all": "Falló la creación de entradas. Vuelva a intentar.",
+                    "some": "Falló la creación de algunas entradas. Revise la lista de entradas."
+                },
                 "mediaTypes": {
                     "video": "Video",
                     "audio": "Audio",
@@ -328,10 +378,12 @@
                     "emptyMessage": {
                         "title": "No hay archivos para cargar.",
                         "getStarted": "Agregue algunos archivos para comenzar. ",
-                        "browse": "Explorar"
+                        "browse": "Examinar",
+                        "add": "Agregar"
                     }
                 },
-                "uploadBtn": "Cargar"
+                "upload": "Cargar",
+                "link": "Enlace"
             },
             "uploadMonitor": {
                 "uploadFromDesktop": "Cargar desde escritorio",
@@ -496,7 +548,7 @@
                     "pending": "Finalizó la carga de archivos. Esperando que comience el procesamiento de la carpeta de entrega.",
                     "processing": "El motor de la carpeta de entrega está procesando este archivo.",
                     "parsedFromXml": "Se analizó la referencia del archivo desde el XML. Se espera el archivo, pero aún no está disponible en la carpeta de entrega.",
-                    "waitingForRelatedFiles": "El procesamiento de este archivo debe continuar una vez disponibles todos los archivos relacionados en la carpeta de entrega (p.&#160;ej., archivo XML, otros archivos multimedia mencionados en el mismo XML u otros sabores previstos para la misma entrada).",
+                    "waitingForRelatedFiles": "El procesamiento de este archivo debe continuar una vez disponibles todos los archivos relacionados en la carpeta de entrega (p. ej., archivo XML, otros archivos multimedia mencionados en el mismo XML u otros sabores previstos para la misma entrada).",
                     "waitingForMatchedEntry": "El procesamiento de este archivo debe continuar cuando se encuentre una entrada coincidente.",
                     "error": "Error en el procesamiento del motor de la carpeta de entrega",
                     "deleteFailed": "Error al eliminar el archivo de la carpeta de entrega.",
@@ -527,6 +579,7 @@
                 "viewEntries": "Ver entradas",
                 "moveCategory": "Mover categoría",
                 "cancel": "Cancelar",
+                "addServiceRule": "Agregar regla de servicio",
                 "bActions": {
                     "addRemoveTags": "Agregar / Quitar etiquetas",
                     "addTags": "Agregar etiquetas",
@@ -534,7 +587,7 @@
                     "removeTags": "Quitar etiquetas",
                     "removeTagsLabel": "Seleccione las etiquetas que desea quitar de las categorías seleccionadas.",
                     "noTagsToRemove": "No hay etiquetas para quitar.",
-          "moveCategories": "Mover categorías",
+                    "moveCategories": "Mover categorías",
                     "changeContentPrivacy": "Cambiar privacidad del contenido",
                     "changeContentPrivacyLabel": "Cambiar la configuración de la privacidad del contenido para todas las categorías seleccionadas.",
                     "changeCategoryListing": "Cambiar listado de categorías",
@@ -651,7 +704,7 @@
             "playlists": {
                 "playlists": "{{0}} Listas de reproducción",
                 "entries": "{{0}} Entradas",
-                "selected": "{{0}} Seleccionadas",
+                "selected": "{{0}} Seleccionados",
                 "bulkActions": "Acciones masivas",
                 "remove": "Quitar",
                 "cancel": "Cancelar",
@@ -679,7 +732,7 @@
             "syndication": {
                 "addFeed": "Agregar fuente",
                 "feeds": "{{0}} Fuentes",
-                "selected": "{{0}} Seleccionadas",
+                "selected": "{{0}} Seleccionados",
                 "table": {
                     "noResults": "Ningún resultado",
                     "allContent": "Todo el contenido",
@@ -719,7 +772,7 @@
                         "fromPlaylist": "Desde la lista de reproducción"
                     },
                     "search": "Buscar",
-          "playerName": "Reproductor ({{0}})",
+                    "playerName": "Reproductor ({{0}})",
                     "entriesCountData": {
                         "count": "Recuento de entradas",
                         "numOfEntries": "{{0}} Entradas",
@@ -735,7 +788,7 @@
                         "yahoo": "Yahoo",
                         "itunes": "iTunes",
                         "roku": "Roku Direct Publisher",
-                        "opera": "Opera Snap TV",
+                        "opera": "Vewd TV Snap",
                         "flexibleFormat": "Formato flexible"
                     },
                     "destinationsForms": {
@@ -750,6 +803,7 @@
                                 "explanation": "Ingrese la plantilla de la URL que desea que aparezca en el podcast de la tienda de iTunes para cada video de esta fuente. El sistema anexará a cada entrada el ID de entrada específico. Por ejemplo, \"http://mysite.com?videoid=\"."
                             },
                             "feedAuthor": "Autor de la fuente",
+                            "enforceFeedAuthor": "Use este nombre como autor de todos los episodios.",
                             "website": "Sitio web",
                             "description": "Descripción de la fuente",
                             "categories": {
@@ -828,7 +882,7 @@
                             },
                             "adultContent": {
                                 "label": "Contenido para adultos",
-                                "hint": "Si escribe en esta etiqueta “Sí”, aparecerá un gráfico de “contenido explícito” de advertencia para los padres junto a la ilustración del podcast en la tienda de iTunes y en la columna Nombre de iTunes. Si el valor es “inofensivo”, se considera que el contenido es inofensivo, es decir, que no hay lenguaje explícito ni contenido para adultos en ningún pasaje de los episodios, y el gráfico aparecerá sin etiquetar. Si hay una etiqueta de contenido explícito con cualquier otro valor (p.&#160;ej., “No”), no verá ningún indicador. El tipo de etiqueta de advertencia predeterminado es en blanco.",
+                                "hint": "Si escribe en esta etiqueta “Sí”, aparecerá un gráfico de “contenido explícito” de advertencia para los padres junto a la ilustración del podcast en la tienda de iTunes y en la columna Nombre de iTunes. Si el valor es “inofensivo”, se considera que el contenido es inofensivo, es decir, que no hay lenguaje explícito ni contenido para adultos en ningún pasaje de los episodios, y el gráfico aparecerá sin etiquetar. Si hay una etiqueta de contenido explícito con cualquier otro valor (p. ej., “No”), no verá ningún indicador. El tipo de etiqueta de advertencia predeterminado es en blanco.",
                                 "options": {
                                     "yes": "Sí",
                                     "no": "No",
@@ -951,7 +1005,7 @@
                         "flexibleFormat": {
                             "xslCode": {
                                 "label": "Código XSL",
-                                "browse": "Explorar",
+                                "browse": "Examinar",
                                 "loading": "Cargando...",
                                 "errors": {
                                     "requiredXslCode": "El código XSL es obligatorio.",
@@ -1014,7 +1068,7 @@
                 "sureToRejectSelected": "¿Está seguro de que desea rechazar las entradas seleccionadas?",
                 "selectAction": "Seleccionar acción",
                 "errors": {
-                    "missingIds": "Argumento entryIds faltantes",
+                    "missingIds": "Argumento entryIds faltante",
                     "bulkApproveEntry": "Se produjo un error al aprobar la entrada. Inténtelo de nuevo.",
                     "bulkRejectEntry": "Se produjo un error al rechazar la entrada. Inténtelo de nuevo."
                 }
@@ -1051,7 +1105,7 @@
                 "mediaTypes": "Tipo de archivo multimedia: {{0}}",
                 "ingestionStatuses": "Estatus: {{0}}",
                 "durations": "Duración: {{0}}",
-                "replacementStatuses": "Estatus de reemplazo: {{0}}",
+                "replacementStatuses": "Estatus de sustitución: {{0}}",
                 "moderationStatuses": "Moderación: {{0}}",
                 "originalClippedEntries": "Original y recortado: {{0}}",
                 "timeScheduling": "Programación: {{0}}",
@@ -1111,9 +1165,13 @@
                 "edit": "Editar",
                 "blockUnblock": "Bloquear / Desbloquear",
                 "ruleName": "Nombre de la regla",
-                "entriesCount": "Cantidad de entradas",
+                "entriesCount": "N° de entradas",
                 "limit": "Límite",
-                "orderBy": "Ordenar por"
+                "orderBy": "Ordenar por",
+                "nameTooltip": "{{0}} Etiquetas: {{1}}",
+                "download": "Descargar",
+                "editor": "Iniciar el editor",
+                "captionRequest": "Solicitud de subtítulo"
             },
             "paginator": {
                 "showRows": "Mostrar filas:"
@@ -1180,7 +1238,7 @@
                     "finishedPartially": "Finalizado con errores"
                 },
                 "list": {
-                    "selected": "Seleccionado",
+                    "selected": "Seleccionadas",
                     "cancel": "Cancelar",
                     "refine": "Refinar",
                     "refresh": "Actualizar"
@@ -1264,6 +1322,7 @@
                 "dismiss": "Descartar"
             },
             "bulkActions": {
+                "captionRequest": "Solicitud de subtítulo",
                 "setScheduling": "Definir programación",
                 "setAccessControl": "Definir control de acceso",
                 "addRemovePublishers": "Agregar / Quitar editores asociados",
@@ -1321,19 +1380,25 @@
                 "removeFromPlaylist": "Quitar de lista de reproducción",
                 "moveUp": "Mover hacia arriba",
                 "moveDown": "Mover hacia abajo",
+                "moveTop": "Ir al principio",
+                "moveBottom": "Ir al final",
                 "duplicate": "Duplicar",
                 "removeCategoriesNone": "No hay categorías para quitar.",
                 "approve": "Aprobar",
                 "reject": "Rechazar",
                 "newPlaylist": "Nueva lista de reproducción",
                 "createPlaylistWarning": "Nueva lista de reproducción",
-                "createPlaylistWarningMsg": "Algunas de las entradas seleccionadas tienen estatus inválidos. Puede continuar, pero se ignorarán las entradas inválidas. {{0}}",
+                "createPlaylistWarningMsg": "Algunas de las entradas seleccionadas tienen estatus inválidos. Puede continuar, pero se ignorarán las entradas inválidas: {{0}}",
+                "createPlaylistWarningMsgShort": "{{0}} de las entradas seleccionadas tienen estatus inválidos. Puede continuar, pero se ignorarán las entradas inválidas.",
                 "createPlaylistErrorMsg": "Todas las entradas seleccionadas tienen estatus inválidos. No puede crear una nueva lista de reproducción para incluir esas entradas.",
                 "viewRule": "Ver/editar regla",
                 "deleteRule": "Eliminar regla",
                 "noCategoriesOrEntries": "No se seleccionaron categorías ni entradas.",
                 "entryAlreadyAssignedToCategory": "La entrada {{0}} ya está asignada a la categoría {{1}}.",
-                "downloadFailed": "Error en la solicitud de descarga."
+                "downloadFailed": "Error en la solicitud de descarga.",
+                "captionRequestAllInvalid": "Las entradas seleccionadas no admiten el ordenamiento de subtítulos. Seleccione solo las entradas de video o audio que estén listas para reproducción.",
+                "captionRequestSomeInvalid": "Tenga en cuenta que algunas entradas no admiten el ordenamiento de subtítulos y serán ignoradas. ¿Continuar?"
+
             },
             "entryDetails": {
                 "entryEditor": {
@@ -1341,7 +1406,13 @@
                     "cancelEdit": "Cancelar edición",
                     "discard": "¿Descarta todos los cambios?"
                 },
+                "downloadEntry": {
+                    "title": "Descargar",
+                    "downloadFlavor": "Si ha seleccionado descargar un video, elija el formato requerido:",
+                    "downloadEntry": "Descargar entrada"
+                },
                 "save": "Guardar",
+                "newDraftEntryWarning": "La entrada se guardó automáticamente. ¿Quiere mantener esta entrada?",
                 "sections": {
                     "metadata": "Metadatos",
                     "thumbnails": "Miniaturas",
@@ -1363,6 +1434,7 @@
                     "details": "Detalles",
                     "entryID": "ID:",
                     "creator": "Creado por:",
+                    "owner": "Propietario:",
                     "creationDate": "Fecha de creación:",
                     "updateDate": "Última actualización:",
                     "landingPage": "Página de aterrizaje:",
@@ -1397,14 +1469,14 @@
                     "addEntries": "Agregar entradas",
                     "removeEntry": "Quitar entrada",
                     "remove": "Quitar",
-                    "selected": "{{0}} Seleccionadas",
+                    "selected": "{{0}} Seleccionados",
                     "clear": "Borrar",
                     "addGroup": "Agregar grupo",
                     "deleteGroup": "Eliminar grupo",
                     "nameRequired": "Debe ingresar un nombre de entrada.",
                     "customDataError": "Error de datos personalizados de “{{0}}”",
                     "missingEntriesWarning": "No se encontraron las siguientes entradas: {{0}}",
-                    "replaceLinkedEntry": "La nueva entrada seleccionada reemplazará a la entrada actual. ¿Continuar?",
+                    "replaceLinkedEntry": "La nueva entrada seleccionada sustituirá a la entrada actual. ¿Continuar?",
                     "maxCategoriesLinked": "La entrada puede estar vinculada a {{0}} categorías como máximo."
                 },
                 "thumbnails": {
@@ -1469,7 +1541,7 @@
                 },
                 "flavours": {
                     "flavours": "Sabores",
-                    "replace": "Reemplazar video",
+                    "replace": "Sustituir video",
                     "flavour": "Sabor",
                     "assetId": "ID de recurso",
                     "format": "Formato",
@@ -1510,7 +1582,8 @@
                         "preview": "Previsualización",
                         "reconvert": "Reconvertir",
                         "drm": "Ver detalles de DRM",
-                        "link": "Enlace"
+                        "link": "Enlace",
+                        "match": "Carpeta de entrega"
                     },
                     "drm": {
                         "header": "Detalles de DRM",
@@ -1556,13 +1629,15 @@
                     "deleteFailure": "Error al eliminar el recurso de sabor",
                     "convertFailure": "Error al convertir el sabor",
                     "missingOriginalFlavor": "Falta el recurso de sabor original.",
-          "uploadFailure": "Error al cargar el sabor",
+                    "uploadFailure": "Error al cargar el sabor",
                     "downloadFailure": "Error al descargar el sabor",
                     "importFailure": "Error al importar el sabor",
                     "replaceVideo": {
+                        "replaceVideo": "Sustituir video",
                         "noFlavors": "No hay sabores.",
                         "addVideo": "Agregar video",
                         "addAudio": "Agregar audio",
+                        "replaceAudio": "Sustituir audio",
                         "uploadFile": "Cargar archivo",
                         "uploadFiles": "Cargar archivos",
                         "importFile": "Importar archivo",
@@ -1596,6 +1671,20 @@
                         "approveReplacementTooltip": "Todos los sabores actuales serán sustituidos cuando se apruebe la sustitución. También pueden verse afectados los metadatos basados en el tiempo.",
                         "currentFlavors": "Sabores actuales",
                         "replacementFlavors": "Sabores de sustitución",
+                        "setReferenceId": "Definir ID de referencia",
+                        "addFilesBtn": "Agregar archivo(s)",
+                        "referenceId": "ID de referencia:",
+                        "selectDropFolder": "Seleccionar carpeta de entrega",
+                        "searchFolder": "Buscar carpeta",
+                        "mediaPackageName": "Nombre del paquete multimedia",
+                        "mediaName": "Nombre del archivo multimedia",
+                        "createdOn": "Creado el",
+                        "waiting": "En espera",
+                        "error": "* Error *",
+                        "setReferenceIdWarning": "La acción de ingesta automática está en proceso. Vuelva a verificar en unos minutos.",
+                        "addFilesWarning": "El agregado manual de este archivo interrumpirá el proceso de ingesta automática. Solo debe hacerse como opción de reserva.  ¿Desea continuar?",
+                        "noDropFolders": "No hay carpetas de entrega disponibles.",
+                        "noDropFoldersWarning": "La configuración de su cuenta no admite la correspondencia automática de paquetes multimedia desde las carpetas de entrega.",
                         "storageProfile": {
                             "name": "Nombre:",
                             "id": "ID:",
@@ -1616,13 +1705,14 @@
                         "emptyMessage": {
                             "title": "No hay archivos para cargar.",
                             "getStarted": "Agregue algunos archivos para comenzar. ",
-                            "browse": "Explorar"
+                            "browse": "Examinar"
                         }
                     }
                 },
                 "captions": {
                     "captions": "Subtítulos",
                     "add": "Agregar subtítulo",
+                    "request": "Solicitar subtítulos",
                     "label": "Etiqueta",
                     "type": "Tipo de archivo",
                     "language": "Idioma",
@@ -1743,7 +1833,7 @@
                     "owner": "Propietario administrativo",
                     "changeOwner": "Cambiar propietario",
                     "changeOwnerText": "Configurar un nuevo propietario para esta entrada",
-                    "changeOwnerPH": "Ingrese el nombre de usuario o la Id. de usuario.",
+                    "changeOwnerPH": "Nombre o ID de usuario",
                     "save": "Guardar",
                     "co-editors": "Co-editores",
                     "co-publishers": "Editores asociados",
@@ -1939,7 +2029,7 @@
                     "thumbnail": "Miniatura",
                     "addEntry": "Agregar entrada",
                     "remove": "Quitar",
-                    "selected": "Seleccionado",
+                    "selected": "Seleccionadas",
                     "clear": "Borrar selección",
                     "addGroup": "Agregar grupo",
                     "deleteGroup": "Eliminar grupo"
@@ -2005,7 +2095,7 @@
                         "notSpecified": "No se especifica.",
                         "changeOwner": "Cambiar propietario",
                         "changeOwnerLabel": "Configurar un nuevo propietario para esta categoría",
-                        "changeOwnerPlaceholder": "Ingresar nombre/Id. de usuario",
+                        "changeOwnerPlaceholder": "Ingresar nombre/ID usuario",
                         "cancelEdit": "Cancelar edición",
                         "discard": "¿Descarta todos los cambios?",
                         "tooltip": "El usuario aún no está en la lista de Kaltura. {{0}} será considerado como el identificador de usuario.",
@@ -2122,7 +2212,7 @@
                         "total": "{{0}} Subcategorías",
                         "addSubcategory": "Agregar subcategoría",
                         "remove": "Eliminar",
-                        "selected": "{{0}} Seleccionadas",
+                        "selected": "{{0}} Seleccionados",
                         "cancel": "Cancelar"
                     },
                     "actions": {
@@ -2186,7 +2276,7 @@
                         "entryName": "Nombre de entrada"
                     },
                     "addRule": "Agregar regla",
-                    "entriesInRules": "{{0}} Entradas en {{1}} reglas"
+                    "entriesInRules": "{{0}} entradas en {{1}} regla"
                 },
                 "errors": {
                     "reload": "Volver a cargar",
@@ -2257,15 +2347,15 @@
                 "addRole": "Agregar función",
                 "addUser": "Agregar usuario",
                 "currentStatus": "Estatus actual:",
-                "usersInfo": "{{0}} KMC {{1}} en uso, {{2}} adicional disponible.",
+                "usersInfo": "{{0}} {{1}} de KMC en uso, {{2}} adicionales disponibles.",
                 "failedLoading": "Error al cargar los datos de usuarios",
                 "cantPerform": "No tiene acceso para realizar esta acción.",
                 "successSavingUser": "Los cambios tendrán efecto de inmediato. Debe instruir al usuario para que actualice su navegador.",
                 "personalDetails": "Datos personales",
                 "accountSpecificDetails": "Datos específicos de la cuenta",
                 "required": "Este campo es obligatorio.",
-                "emailFormat": "Este formato de correo electrónico no es válido.",
-                "publisherIdFormat": "Este formato de Id. de editor no es válido.",
+                "emailFormat": "Formato de correo electrónico inválido",
+                "publisherIdFormat": "Formato de ID de editor inválido",
                 "userAlreadyExist": "{{0}} ya está en la lista del sistema y está asociado con otra cuenta de la KMC. ¿Desea asociar a este usuario con esta cuenta también?",
                 "alreadyExist": "El usuario ya existe.",
                 "alreadyExistError": "El correo electrónico para inicio de sesión {{0}} ya está en la lista del sistema como usuario autorizado en su cuenta.",
@@ -2288,9 +2378,10 @@
                 "contactUs": "Contáctenos",
                 "contactUsText": " para saber más acerca de cómo agregar cualquiera de los siguientes elementos deshabilitados a su cuenta.",
                 "roleUpdated": "Función actualizada",
-        "roleUpdatedMessage": "Los cambios tendrán efecto de inmediato. Debe recomendarse la actualización de la página del navegador a los usuarios existentes asociados con esta función.",
-        "errors": {
+                "roleUpdatedMessage": "Los cambios tendrán efecto de inmediato. Debe recomendarse la actualización de la página del navegador a los usuarios existentes asociados con esta función.",
+                "errors": {
                     "required": "Este campo es obligatorio.",
+                    "unsafeValue": "Etiquetas HTML potencialmente inseguras",
                     "validationError": "El formulario contiene alguna información inválida. Revise las secciones marcadas como inválidas."
                 },
                 "permissionsTable": {
@@ -2318,7 +2409,7 @@
                 "name": "Nombre del editor/empresa",
                 "phone": "Teléfono",
                 "website": "Sitio web",
-                "describeYourself": "Descríbase.",
+                "describeYourself": "Descripción personal",
                 "referenceId": "ID de referencia de la cuenta",
                 "describeYourselfOptions": "Empresa / pequeña empresa / organismo del gobierno, organización educativa, empresa de medios / agencia, CDN / ISP / Integrador / proveedor de alojamiento, otros",
                 "apply": "Aplicar",
@@ -2353,7 +2444,7 @@
                     "header": "Estamos muy contentos de que esté buscando más información sobre cómo actualizar su cuenta.",
                     "trial": "Su prueba sin cargo vence el {{0}}.",
                     "gb": " GB",
-          "bandwidth": "Consumo mensual de banda ancha hasta ahora: {{0}}",
+                    "bandwidth": "Consumo mensual de banda ancha hasta ahora: {{0}}",
                     "storage": "Uso actual del almacenamiento mensual hasta ahora: {{0}}",
                     "contactUs": "Contáctenos para saber más acerca de los diferentes paquetes y servicios con valor agregado."
                 }
@@ -2399,7 +2490,7 @@
                     "shortDescription": "Descripción breve",
                     "labelTT": "Nombre del sistema: {{name}}",
                     "maxValues": "Valores máximos",
-                    "searchable": "Permite búsqueda.",
+                    "searchable": "Permite búsqueda",
                     "deleteCustomDataField": "Eliminar campo de datos personalizados",
                     "bulkDeleteCustomDataField": "Eliminar campo de datos personalizados",
                     "fieldBulkRemoveConfirmation": "¿Está seguro de que desea eliminar los campos seleccionados? Advertencia: Perderá todos los metadatos de los campos eliminados en las entradas existentes. Nota: Si usa archivos XML para cargas masivas, la eliminación de campos de esquemas afectará la validación de los elementos de datos personalizados de los XML. Si elimina campos de esquemas, también debe actualizar su estructura existente de archivos XML de carga masiva a fin de que refleje la eliminación.",
@@ -2434,7 +2525,7 @@
                     "label": "Etiqueta de campo",
                     "shortDescription": "Descripción breve",
                     "description": "Descripción",
-                    "searchable": "Permite búsqueda.",
+                    "searchable": "Permite búsqueda",
                     "includeTime": "Incluir tiempo",
                     "listValues": "Enumerar valores",
                     "listValuesPlaceholder": "Ingresar los valores, uno por renglón",
@@ -2480,7 +2571,7 @@
                 "entitlement": {
                     "title": "Derecho",
                     "helpTip": "",
-                    "explanation": "Para agregar a las categorías la Configuración de derechos, haga clic en “Agregar derechos”.",
+                    "explanation": "Para agregar configuración de derechos a las categorías, haga clic en “Agregar derechos”.",
                     "apiDefault": "Valor predeterminado para API",
                     "entitlementEnforcementDisabled": "Aplicación de derechos deshabilitada",
                     "entitlementEnforcementEnabled": "Aplicación de derechos habilitada",
@@ -2505,7 +2596,7 @@
                             "privacyContextLabelRequired": "Ingrese una etiqueta de contexto de privacidad.",
                             "privacyContextLabelExists": "La categoría ya está configurada con una etiqueta de contexto de privacidad.",
                             "privacyContextLabelTooShort": "Las etiquetas de contexto de privacidad deben incluir al menos 4 caracteres.",
-                            "privacyContextLabelRegex": "Las etiquetas de contexto de privacidad deben incluir solo caracteres alfanuméricos."
+                            "privacyContextLabelRegex": "Las etiquetas de contexto de privacidad deben incluir solo caracteres alfanuméricos ingleses."
                         }
                     },
                     "deleteEntitlement": {
@@ -2560,7 +2651,7 @@
                 }
             },
             "accessControl": {
-                "selected": "{{0}} Seleccionado",
+                "selected": "{{0}} Seleccionados",
                 "cancel": "Cancelar",
                 "save": "Guardar",
                 "addProfile": "Agregar perfil",
@@ -2576,8 +2667,8 @@
                     "blocked": "{{0}} Bloqueado",
                     "flavors": "{{0}} Sabores",
                     "ks": "KS",
-                    "freePreview": ", previsualización sin cargo",
-                    "freePreviewDetails": "Previsualización sin cargo desde ({{0}}m:{{1}}s)"
+                    "freePreview": ", previsualización gratis",
+                    "freePreviewDetails": "Previsualización gratis desde ({{0}}m:{{1}}s)"
                 },
                 "table": {
                     "noAdditionalInfo": "No hay Información adicional.",
@@ -2621,7 +2712,7 @@
                     "secureVideo": "Asegurar este video con un secreto del lado del servidor",
                     "yes": "Sí",
                     "no": "No",
-                    "allowFreePreviewOf": "Permitir previsualización sin cargo de",
+                    "allowFreePreviewOf": "Permitir previsualización gratis de",
                     "followedByPrompt": "Seguido de un mensaje que indique que se debe pagar para seguir viendo.",
                     "ipsPlaceholder": "Ingresar IP",
                     "domainsPlaceholder": "Ingresar dominio",
@@ -2792,7 +2883,11 @@
         },
         "analytics": {
             "comingSoon": "¡Muy pronto! Análisis para todo tipo de medios",
-            "releaseSupports": "Esta versión admite análisis para entradas “en directo” únicamente. Para todos los otros medios, inicie sesión en la KMC heredada para ver y crear análisis e informes. Muy pronto se dispondrá de análisis para todos los medios. "
+            "releaseSupports": "Esta versión admite análisis para entradas “en directo” únicamente. Para todos los otros medios, <a href=\"{{0}}\" target=\"_blank\">inicie sesión en la KMC heredada</a> para ver y crear análisis e informes. Muy pronto se dispondrá de análisis para todos los medios. "
+        },
+        "reach": {
+            "captionRequests": "Solicitudes de subtítulo",
+            "addServiceRule": "Agregar regla de servicio"
         }
     },
     "entriesShared": {
@@ -3086,7 +3181,7 @@
         "GD": "Galés (gaélico escocés)",
         "GL": "Gallego",
         "GN": "Guaraní",
-        "GU": "Gujaratí",
+        "GU": "Guyaratí",
         "HA": "Hausa",
         "HE": "Hebreo",
         "HI": "Hindi",

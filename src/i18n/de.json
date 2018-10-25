@@ -71,7 +71,7 @@
         "helpMenu": {
             "gettingStarted": "Erste Schritte",
             "kmcOverview": "KMC-Übersicht",
-            "mediaManagement": "Medienverwaltung &amp; Abläufe",
+            "mediaManagement": "Medienverwaltung & Abläufe",
             "productTour": "Die Produkttour ansehen",
             "support": "Hilfe und Kundendienst",
             "userManual": "Benutzerhandbuch herunterladen",
@@ -171,20 +171,20 @@
                 }
             },
             "restorePassword": {
-            "welcome": "Willkommen bei Kaltura.",
-            "selectPassword": "Bitte wählen Sie Ihr Passwort.",
-        "restored": "Ihr neues Passwort wurde eingerichtet. Loggen Sie sich bitte in die Managementkonsole von Kaltura ein.",
-        "error": {
-          "equal": "Passwörter stimmen nicht überein",
-          "required": "Dieses Feld ist ein Pflichtfeld",
-            "failedValidateHash": "{{0}} Möchten Sie es erneut versuchen?"
-        },
-        "placeholder": {
-          "new": "Neues Passwort eingeben",
-          "confirm": "Neues Passwort bestätigen"
-        }
-      },
-      "error": {
+                "welcome": "Willkommen bei Kaltura.",
+                "selectPassword": "Bitte wählen Sie Ihr Passwort.",
+                "restored": "Ihr neues Passwort wurde eingerichtet. Loggen Sie sich bitte in die Managementkonsole von Kaltura ein.",
+                "error": {
+                    "equal": "Passwörter stimmen nicht überein",
+                    "required": "Dieses Feld ist ein Pflichtfeld",
+                    "failedValidateHash": "{{0}} Möchten Sie es erneut versuchen?"
+                },
+                "placeholder": {
+                    "new": "Neues Passwort eingeben",
+                    "confirm": "Neues Passwort bestätigen"
+                }
+            },
+            "error": {
                 "email": "Ungültiges E-Mail-Format",
                 "badCredentials": "Der von Ihnen eingegebene Benutzername oder das Passwort ist falsch.",
                 "retriesExceeded": {
@@ -224,7 +224,7 @@
     },
     "applications": {
         "embed":{
-            "previewShare": "Teilen &amp; Einbetten",
+            "previewShare": "Teilen & Einbetten",
             "previewInPlayer": "Vorschau im Player",
             "embedType": "Einbettungsart",
             "selectPlayer": "Player auswählen",
@@ -241,6 +241,7 @@
             "advanced": "Erweiterte Einstellungen",
             "settings": "Einstellungen für Listenanordnungen",
             "name": "Name",
+            "version": "Version",
             "added": "Hinzugefügt am",
             "updated": "Aktualisiert am",
             "helpTip1": "Die automatische Einbettung ist die standardmäßige Code-Einbettungsart und eignet sich am besten dazu, einen Player schnell und ohne Laufzeitanpassungen auf eine Seite zu bringen.",
@@ -586,7 +587,7 @@
                     "removeTags": "Tags entfernen",
                     "removeTagsLabel": "Tags auswählen, die Sie von den ausgewählten Kategorien entfernen möchten.",
                     "noTagsToRemove": "Keine Tags zu entfernen",
-          "moveCategories": "Kategorien verschieben",
+                    "moveCategories": "Kategorien verschieben",
                     "changeContentPrivacy": "Inhalt-Datenschutz ändern",
                     "changeContentPrivacyLabel": "Einstellungen für den Inhalt-Datenschutz für alle ausgewählten Kategorien ändern.",
                     "changeCategoryListing": "Kategorienliste ändern",
@@ -771,7 +772,7 @@
                         "fromPlaylist": "Von Wiedergabeliste"
                     },
                     "search": "Suchen",
-          "playerName": "Player({{0}})",
+                    "playerName": "Player({{0}})",
                     "entriesCountData": {
                         "count": "Anzahl Einträge",
                         "numOfEntries": "{{0}} Einträge",
@@ -787,7 +788,7 @@
                         "yahoo": "Yahoo",
                         "itunes": "iTunes",
                         "roku": "Roku Direct Publisher",
-                        "opera": "Opera Snap TV",
+                        "opera": "Vewd TV Snap",
                         "flexibleFormat": "Flexibles Format"
                     },
                     "destinationsForms": {
@@ -812,7 +813,7 @@
                                 "availableCategories": {
                                     "Arts": "Kunst",
                                     "Arts/Design": "Kunst/Design",
-                                    "Arts/Fashion &amp; Beauty": "Kunst/Mode &amp; Beauty",
+                                    "Arts/Fashion & Beauty": "Kunst/Mode & Beauty",
                                     "Arts/Food": "Kunst/Essen",
                                     "Arts/Literature": "Kunst/Literatur",
                                     "Arts/Performing Arts": "Kunst/Darstellende Kunst",
@@ -821,7 +822,7 @@
                                     "Business/Business News": "Business/Business-News",
                                     "Business/Careers": "Business/Karriere",
                                     "Business/Investing": "Business/Investitionen",
-                                    "Business/Management &amp; Marketing": "Business/Management &amp; Marketing",
+                                    "Business/Management & Marketing": "Business/Management & Marketing",
                                     "Business/Shopping": "Business/Shopping",
                                     "Comedy": "Comedy",
                                     "Education": "Lernen",
@@ -830,53 +831,53 @@
                                     "Education/K-12": "Lernen/K-12",
                                     "Education/Language Courses": "Lernen/Sprachkurse",
                                     "Education/Training": "Lernen/Schulungen",
-                                    "Games &amp; Hobbies": "Spiele &amp; Hobbys",
-                                    "Games &amp; Hobbies/Automotive": "Spiele &amp; Hobbys/Fahrzeuge",
-                                    "Games &amp; Hobbies/Aviation": "Spiele &amp; Hobbys/Flugzeuge",
-                                    "Games &amp; Hobbies/Hobbies": "Spiele &amp; Hobbys/Hobbys",
-                                    "Games &amp; Hobbies/Other Games": "Spiele &amp; Hobbys/Sonstige Spiele",
-                                    "Games &amp; Hobbies/Video Games": "Spiele &amp; Hobbys/Videospiele",
-                                    "Government &amp; Organizations": "Regierung &amp; Organisationen",
-                                    "Government &amp; Organizations/Local": "Regierung &amp; Organisationen/Kommunal",
-                                    "Government &amp; Organizations/National": "Regierung &amp; Organisationen/National",
-                                    "Government &amp; Organizations/Non-Profit": "Regierung &amp; Organisationen/Wohltätigkeit",
-                                    "Government &amp; Organizations/Regional": "Regierung &amp; Organisationen/Regional",
+                                    "Games & Hobbies": "Spiele & Hobbys",
+                                    "Games & Hobbies/Automotive": "Spiele & Hobbys/Fahrzeuge",
+                                    "Games & Hobbies/Aviation": "Spiele & Hobbys/Flugzeuge",
+                                    "Games & Hobbies/Hobbies": "Spiele & Hobbys/Hobbys",
+                                    "Games & Hobbies/Other Games": "Spiele & Hobbys/Sonstige Spiele",
+                                    "Games & Hobbies/Video Games": "Spiele & Hobbys/Videospiele",
+                                    "Government & Organizations": "Regierung & Organisationen",
+                                    "Government & Organizations/Local": "Regierung & Organisationen/Kommunal",
+                                    "Government & Organizations/National": "Regierung & Organisationen/National",
+                                    "Government & Organizations/Non-Profit": "Regierung & Organisationen/Wohltätigkeit",
+                                    "Government & Organizations/Regional": "Regierung & Organisationen/Regional",
                                     "Health": "Gesundheit",
                                     "Health/Alternative Health": "Gesundheit/Alternative Gesundheit",
-                                    "Health/Fitness &amp; Nutrition": "Gesundheit/Fitness &amp; Ernährung",
+                                    "Health/Fitness & Nutrition": "Gesundheit/Fitness & Ernährung",
                                     "Health/Self-Help": "Gesundheit/Eigenbehandlung",
                                     "Health/Sexuality": "Gesundheit/Sexualität",
-                                    "Kids &amp; Family": "Kinder &amp; Familie",
+                                    "Kids & Family": "Kinder & Familie",
                                     "Music": "Musik",
-                                    "News &amp; Politics": "Nachrichten &amp; Politik",
-                                    "Religion &amp; Spirituality": "Religion &amp; Spiritualität",
-                                    "Religion &amp; Spirituality/Buddhism": "Religion &amp; Spiritualität/Buddhismus",
-                                    "Religion &amp; Spirituality/Christianity": "Religion &amp; Spiritualität/Christentum",
-                                    "Religion &amp; Spirituality/Hinduism": "Religion &amp; Spiritualität/Hinduismus",
-                                    "Religion &amp; Spirituality/Islam": "Religion &amp; Spiritualität/Islam",
-                                    "Religion &amp; Spirituality/Judaism": "Religion &amp; Spiritualität/Judentum",
-                                    "Religion &amp; Spirituality/Other": "Religion &amp; Spiritualität/Sonstiges",
-                                    "Religion &amp; Spirituality/Spirituality": "Religion &amp; Spiritualität/Spiritualität",
-                                    "Science &amp; Medicine": "Wissenschaft &amp; Medizin",
-                                    "Science &amp; Medicine/Medicine": "Wissenschaft &amp; Medizin/Medizin",
-                                    "Science &amp; Medicine/Natural Sciences": "Wissenschaft &amp; Medizin/Naturwissenschaften",
-                                    "Science &amp; Medicine/Social Sciences": "Wissenschaft &amp; Medizin/Sozialwissenschaften",
-                                    "Society &amp; Culture": "Gesellschaft &amp; Kultur",
-                                    "Society &amp; Culture/History": "Gesellschaft &amp; Kultur/Geschichte",
-                                    "Society &amp; Culture/Personal Journals": "Gesellschaft &amp; Kultur/Tagebücher",
-                                    "Society &amp; Culture/Philosophy": "Gesellschaft &amp; Kultur/Philosophie",
-                                    "Society &amp; Culture/Places &amp; Travel": "Gesellschaft &amp; Kultur/Orte &amp; Reisen",
-                                    "Sports &amp; Recreation": "Sport &amp; Freizeit",
-                                    "Sports &amp; Recreation/Amateur": "Sport &amp; Freizeit/Amateure",
-                                    "Sports &amp; Recreation/College &amp; High School": "Sport &amp; Freizeit/Realschule &amp; Gymnasium",
-                                    "Sports &amp; Recreation/Outdoor": "Sport &amp; Freizeit/Im Freien",
-                                    "Sports &amp; Recreation/Professional": "Sport &amp; Freizeit/Profis",
+                                    "News & Politics": "Nachrichten & Politik",
+                                    "Religion & Spirituality": "Religion & Spiritualität",
+                                    "Religion & Spirituality/Buddhism": "Religion & Spiritualität/Buddhismus",
+                                    "Religion & Spirituality/Christianity": "Religion & Spiritualität/Christentum",
+                                    "Religion & Spirituality/Hinduism": "Religion & Spiritualität/Hinduismus",
+                                    "Religion & Spirituality/Islam": "Religion & Spiritualität/Islam",
+                                    "Religion & Spirituality/Judaism": "Religion & Spiritualität/Judentum",
+                                    "Religion & Spirituality/Other": "Religion & Spiritualität/Sonstiges",
+                                    "Religion & Spirituality/Spirituality": "Religion & Spiritualität/Spiritualität",
+                                    "Science & Medicine": "Wissenschaft & Medizin",
+                                    "Science & Medicine/Medicine": "Wissenschaft & Medizin/Medizin",
+                                    "Science & Medicine/Natural Sciences": "Wissenschaft & Medizin/Naturwissenschaften",
+                                    "Science & Medicine/Social Sciences": "Wissenschaft & Medizin/Sozialwissenschaften",
+                                    "Society & Culture": "Gesellschaft & Kultur",
+                                    "Society & Culture/History": "Gesellschaft & Kultur/Geschichte",
+                                    "Society & Culture/Personal Journals": "Gesellschaft & Kultur/Tagebücher",
+                                    "Society & Culture/Philosophy": "Gesellschaft & Kultur/Philosophie",
+                                    "Society & Culture/Places & Travel": "Gesellschaft & Kultur/Orte & Reisen",
+                                    "Sports & Recreation": "Sport & Freizeit",
+                                    "Sports & Recreation/Amateur": "Sport & Freizeit/Amateure",
+                                    "Sports & Recreation/College & High School": "Sport & Freizeit/Realschule & Gymnasium",
+                                    "Sports & Recreation/Outdoor": "Sport & Freizeit/Im Freien",
+                                    "Sports & Recreation/Professional": "Sport & Freizeit/Profis",
                                     "Technology": "Technologie",
                                     "Technology/Gadgets": "Technologie/Gadgets",
                                     "Technology/Tech News": "Technologie/Technologie-News",
                                     "Technology/Podcasting": "Technologie/Podcasting",
                                     "Technology/Software How-To": "Technologie/Angewandte Software",
-                                    "TV &amp; Film": "TV &amp; Film"
+                                    "TV & Film": "TV & Film"
                                 }
                             },
                             "adultContent": {
@@ -969,23 +970,23 @@
                                 "itemsSelected":"{0} ausgewählte Kategorien",
                                 "availableCategories": {
                                     "Action": "Aktion",
-                                    "Art &amp; Animation": "Kunst &amp; Animation",
-                                    "Entertainment &amp; TV": "Unterhaltung &amp; Fernsehen",
+                                    "Art & Animation": "Kunst & Animation",
+                                    "Entertainment & TV": "Unterhaltung & Fernsehen",
                                     "Food": "Ernährung",
                                     "Games": "Spiele",
                                     "How-To": "Anleitungen",
                                     "Music": "Musik",
-                                    "People &amp; Vlogs": "Leute &amp; Vlogs",
-                                    "Science &amp; Environment": "Wissenschaft &amp; Umwelt",
+                                    "People & Vlogs": "Leute & Vlogs",
+                                    "Science & Environment": "Wissenschaft & Umwelt",
                                     "Transportation": "Transport",
                                     "Animals": "Tiere",
                                     "Commercials": "Werbung",
                                     "Family": "Familie",
                                     "Funny Videos": "Lustige Videos",
-                                    "Health &amp; Beauty": "Gesundheit &amp; Schönheit",
-                                    "Movies &amp; Shorts": "Filme &amp; Kurzfilme",
-                                    "News &amp; Politics": "Nachrichten &amp; Politik",
-                                    "Products &amp; Tech.": "Produkte &amp; Technik",
+                                    "Health & Beauty": "Gesundheit & Schönheit",
+                                    "Movies & Shorts": "Filme & Kurzfilme",
+                                    "News & Politics": "Nachrichten & Politik",
+                                    "Products & Tech.": "Produkte & Technik",
                                     "Sports": "Sport",
                                     "Travel": "Reisen"
                                 }
@@ -1106,7 +1107,7 @@
                 "durations": "Dauer: {{0}}",
                 "replacementStatuses": "Austausch-Status: {{0}}",
                 "moderationStatuses": "Moderation: {{0}}",
-                "originalClippedEntries": "Original &amp; Zugeschnitten: {{0}}",
+                "originalClippedEntries": "Original & Zugeschnitten: {{0}}",
                 "timeScheduling": "Planung: {{0}}",
                 "accessControlProfiles": "Zugriffskontrolle: {{0}}",
                 "flavors": "Variante: {{0}}",
@@ -1142,7 +1143,7 @@
                 "createdOn": "Erstellt am",
                 "duration": "Dauer",
                 "status": "Status",
-                "previewAndEmbed": "Teilen &amp; Einbetten",
+                "previewAndEmbed": "Teilen & Einbetten",
                 "previewInPlayer": "Vorschau im Player",
                 "liveDashboard": "Live-Dashboard",
                 "delete": "Löschen",
@@ -1153,7 +1154,7 @@
                 "noResults": "Keine Ergebnisse",
                 "flags": "Markierungen",
                 "moderationStatus": "Moderationsstatus",
-                "reportsAndDetails": "Berichte &amp; Details",
+                "reportsAndDetails": "Berichte & Details",
                 "approve": "Freigeben",
                 "reject": "Ablehnen",
                 "userName": "Benutzername",
@@ -1379,6 +1380,8 @@
                 "removeFromPlaylist": "Aus Wiedergabeliste entfernen",
                 "moveUp": "Nach oben",
                 "moveDown": "Nach unten",
+                "moveTop": "Nach oben verschieben",
+                "moveBottom": "Nach unten verschieben",
                 "duplicate": "Duplizieren",
                 "removeCategoriesNone": "Keine Kategorien zum Entfernen",
                 "approve": "Freigeben",
@@ -1426,7 +1429,7 @@
                 },
                 "preview": {
                     "clipAndTrim": "Editor",
-                    "pande": "Teilen &amp; Einbetten",
+                    "pande": "Teilen & Einbetten",
                     "previewInPlayer": "Vorschau im Player",
                     "details": "Details",
                     "entryID": "ID:",
@@ -1626,7 +1629,7 @@
                     "deleteFailure": "Löschen von Varianten-Objekt fehlgeschlagen.",
                     "convertFailure": "Varianten-Konvertierung fehlgeschlagen.",
                     "missingOriginalFlavor": "Das ursprüngliche Varianten-Objekt fehlt",
-          "uploadFailure": "Varianten-Hochladen fehlgeschlagen.",
+                    "uploadFailure": "Varianten-Hochladen fehlgeschlagen.",
                     "downloadFailure": "Varianten-Herunterladen fehlgeschlagen.",
                     "importFailure": "Varianten-Import fehlgeschlagen.",
                     "replaceVideo": {
@@ -1815,7 +1818,7 @@
                     "duration": "Dauer",
                     "status": "Status",
                     "n_a": "k. A.",
-                    "clipTrim": "üemdomZuschneiden &amp; Anpassen"
+                    "clipTrim": "üemdomZuschneiden & Anpassen"
                 },
                 "advertisements": {
                     "title":"Werbeanzeigen",
@@ -2375,8 +2378,8 @@
                 "contactUs": "Kontaktieren Sie uns,",
                 "contactUsText": " um mehr darüber zu erfahren, wie Sie deaktivierte Objekte unten zu Ihrem Konto hinzufügen.",
                 "roleUpdated": "Rolle aktualisiert",
-        "roleUpdatedMessage": "Änderungen treten sofort in Kraft. Das Aktualisieren des Browserfensters sollte bestehenden Benutzern empfohlen werden, die mit dieser Rolle assoziiert werden",
-        "errors": {
+                "roleUpdatedMessage": "Änderungen treten sofort in Kraft. Das Aktualisieren des Browserfensters sollte bestehenden Benutzern empfohlen werden, die mit dieser Rolle assoziiert werden",
+                "errors": {
                     "required": "Dieses Feld ist ein Pflichtfeld.",
                     "unsafeValue": "Potenziell unsichere HTML-Tags",
                     "validationError": "Das Formular enthält ungültige Informationen. Bitte überprüfen Sie die Bereiche, die als ungültig markiert wurden."
@@ -2441,7 +2444,7 @@
                     "header": "Wir freuen uns, dass Sie weitere Informationen zur Aktualisierung Ihres Kontos erhalten möchten!",
                     "trial": "Ihre kostenlose Testversion läuft am {{0}} ab.",
                     "gb": " GB",
-          "bandwidth": "Monatlicher Bandbreitenverbrauch bis jetzt: {{0}}",
+                    "bandwidth": "Monatlicher Bandbreitenverbrauch bis jetzt: {{0}}",
                     "storage": "Bisherige monatliche Speichernutzung: {{0}}",
                     "contactUs": "Kontaktieren Sie uns, um mehr über unterschiedliche Pakete und Mehrwertdienste zu erfahren."
                 }
@@ -2535,9 +2538,9 @@
                         "invalidSystemName": "Das Feld „Systemname“ muss einen einmaligen Namen haben. Bitte geben Sie einen anderen Namen ein.",
                         "emptyLabel": "Bitte geben Sie eine Feldbeschriftung ein",
                         "invalidLabelPrefix": "Der Feldname muss mit einem Buchstaben beginnen.",
-                        "invalidChars": "Ungültige Eingabe. Die Sonderzeichen &lt; > &amp; \" und ' sind nicht erlaubt.",
+                        "invalidChars": "Ungültige Eingabe. Die Sonderzeichen &lt; > & \" und ' sind nicht erlaubt.",
                         "emptyListValues": "Ungültige Eingabe bei „Werte auflisten“: Es muss mindestens eine Option aufgelistet werden.",
-                        "invalidListOptions": "Ungültige Eingabe bei „Werte auflisten“: Erlaubt sind nur Buchstaben, Zahlen und die folgenden Sonderzeichen: ()|-@~&amp;/^$=_%.':",
+                        "invalidListOptions": "Ungültige Eingabe bei „Werte auflisten“: Erlaubt sind nur Buchstaben, Zahlen und die folgenden Sonderzeichen: ()|-@~&/^$=_%.':",
                         "invalidListOptionsPrefix": "Ungültige Eingabe bei „Werte auflisten“: - ist ein ungültiges Präfix."
                     }
                 },
@@ -2593,7 +2596,7 @@
                             "privacyContextLabelRequired": "Bitte geben Sie eine Datenschutzkontext-Beschriftung ein",
                             "privacyContextLabelExists": "Für die Kategorie wurde bereits eine Datenschutzkontext-Beschriftung festgelegt.",
                             "privacyContextLabelTooShort": "Datenschutzkontext-Beschriftungen müssen aus mindestens 4 Zeichen bestehen.",
-                            "privacyContextLabelRegex": "Datenschutzkontext-Beschriftungen dürfen nur alphanumerische Zeichen beinhalten."
+                            "privacyContextLabelRegex": "Datenschutzkontext-Beschriftungen dürfen nur englische alphanumerische Zeichen beinhalten."
                         }
                     },
                     "deleteEntitlement": {
@@ -2880,7 +2883,7 @@
         },
         "analytics": {
             "comingSoon": "In Kürze! Analytics für alle Medientypen.",
-           "releaseSupports": "Diese Version unterstützt nur Analytics für „Live“-Einträge. Für alle anderen Medien <a href=\"{{0}}\" target=\"_blank\">loggen Sie sich bitte in der Legacy-KMC</a> ein, um Analytics und Berichte anzuzeigen und zu erstellen. Analytics für alle Medien sollte in Kürze verfügbar sein"
+            "releaseSupports": "Diese Version unterstützt nur Analytics für „Live“-Einträge. Für alle anderen Medien <a href=\"{{0}}\" target=\"_blank\">loggen Sie sich bitte in der Legacy-KMC</a> ein, um Analytics und Berichte anzuzeigen und zu erstellen. Analytics für alle Medien sollte in Kürze verfügbar sein"
         },
         "reach": {
             "captionRequests": "Untertitelanforderungen",
