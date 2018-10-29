@@ -1,3 +1,21 @@
+<a name="5.5.0"></a>
+# [5.5.0](https://github.com/kaltura/kmc-ng/compare/v5.4.2...v5.5.0) (2018-10-25)
+
+
+### Bug Fixes
+
+* **administration/users:** enable KMC access to existing KMS users when creating a new user using a KMS user ID ([d57ef34](https://github.com/kaltura/kmc-ng/commit/d57ef34))
+* **content/category:** update entitlements options labels ([e4c9fe1](https://github.com/kaltura/kmc-ng/commit/e4c9fe1))
+* **content/playlist:** remove the "Plays" field from the playlist details info ([52d043c](https://github.com/kaltura/kmc-ng/commit/52d043c))
+* **contextual-help:** update broken links in contextual help system ([9b5ee24](https://github.com/kaltura/kmc-ng/commit/9b5ee24))
+
+
+### Features
+
+* **content/syndication:** support the latest version of the Kaltura player in Syndication ([41f4912](https://github.com/kaltura/kmc-ng/commit/41f4912))
+
+
+
 <a name="5.4.2"></a>
 ## [5.4.2](https://github.com/kaltura/kmc-ng/compare/v5.4.1...v5.4.2) (2018-10-07)
 

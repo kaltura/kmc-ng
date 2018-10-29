@@ -171,20 +171,20 @@
                 }
             },
             "restorePassword": {
-            "welcome": "Bienvenue sur Kaltura.",
-            "selectPassword": "Veuillez sélectionner votre mot de passe.",
-        "restored": "Votre nouveau mot de passe a été établi, veuillez vous connecter à la console de gestion de Kaltura.",
-        "error": {
-          "equal": "Les mots de passe ne correspondent pas",
-          "required": "Le champ est requis",
-            "failedValidateHash": "{{0}} Voulez-vous réessayer ?"
-        },
-        "placeholder": {
-          "new": "Saisissez un nouveau mot de passe",
-          "confirm": "Confirmez le nouveau mot de passe"
-        }
-      },
-      "error": {
+                "welcome": "Bienvenue sur Kaltura.",
+                "selectPassword": "Veuillez sélectionner votre mot de passe.",
+                "restored": "Votre nouveau mot de passe a été établi, veuillez vous connecter à la console de gestion de Kaltura.",
+                "error": {
+                    "equal": "Les mots de passe ne correspondent pas",
+                    "required": "Le champ est requis",
+                    "failedValidateHash": "{{0}} Voulez-vous réessayer ?"
+                },
+                "placeholder": {
+                    "new": "Saisissez un nouveau mot de passe",
+                    "confirm": "Confirmez le nouveau mot de passe"
+                }
+            },
+            "error": {
                 "email": "Format d'adresse électronique incorrect",
                 "badCredentials": "Le nom d'utilisateur ou le mot de passe que vous avez saisi est incorrect.",
                 "retriesExceeded": {
@@ -241,6 +241,7 @@
             "advanced": "Paramètres avancés",
             "settings": "Lister les paramètres de disposition",
             "name": "Nom",
+            "version": "Version",
             "added": "Date d'ajout",
             "updated": "Date de mise à jour",
             "helpTip1": "L'intégration automatique est le type de code d'intégration par défaut qui est recommandé pour ajouter rapidement un lecteur sur une page sans aucune personnalisation d'exécution.",
@@ -586,7 +587,7 @@
                     "removeTags": "Supprimer les balises",
                     "removeTagsLabel": "Sélectionnez les balises que vous souhaitez supprimer des catégories sélectionnées.",
                     "noTagsToRemove": "Aucune balise à supprimer",
-          "moveCategories": "Déplacer les catégories",
+                    "moveCategories": "Déplacer les catégories",
                     "changeContentPrivacy": "Modifier la confidentialité du contenu",
                     "changeContentPrivacyLabel": "Modifiez les paramètres de confidentialité du contenu pour toutes les catégories sélectionnées.",
                     "changeCategoryListing": "Modifier le référencement de la catégorie",
@@ -771,7 +772,7 @@
                         "fromPlaylist": "À partir de la liste de lecture"
                     },
                     "search": "Rechercher",
-          "playerName": "Lecteur ({{0}})",
+                    "playerName": "Lecteur ({{0}})",
                     "entriesCountData": {
                         "count": "Nombre d'entrées",
                         "numOfEntries": "{{0}} Entrées",
@@ -787,7 +788,7 @@
                         "yahoo": "Yahoo",
                         "itunes": "iTunes",
                         "roku": "Éditeur direct Roku",
-                        "opera": "Opera Snap TV",
+                        "opera": "Vewd TV Snap",
                         "flexibleFormat": "Format flexible"
                     },
                     "destinationsForms": {
@@ -1379,6 +1380,8 @@
                 "removeFromPlaylist": "Supprimer de la liste de lecture",
                 "moveUp": "Vers le haut",
                 "moveDown": "Vers le bas",
+                "moveTop": "Aller au sommet",
+                "moveBottom": "Aller tout en bas",
                 "duplicate": "Dupliquer",
                 "removeCategoriesNone": "Aucune catégorie à supprimer",
                 "approve": "Approuver",
@@ -1626,7 +1629,7 @@
                     "deleteFailure": "La suppression d'actif de type a échoué.",
                     "convertFailure": "La conversion de type a échoué.",
                     "missingOriginalFlavor": "L'actif de type original est manquant.",
-          "uploadFailure": "Le chargement de type a échoué.",
+                    "uploadFailure": "Le chargement de type a échoué.",
                     "downloadFailure": "Le téléchargement de type a échoué.",
                     "importFailure": "L'importation de type a échoué.",
                     "replaceVideo": {
@@ -2375,8 +2378,8 @@
                 "contactUs": "Contactez-nous",
                 "contactUsText": " pour en savoir plus sur l'ajout d'éléments désactivés ci-dessous à votre compte.",
                 "roleUpdated": "Rôle mis à jour",
-        "roleUpdatedMessage": "Les changements prendront effet immédiatement. L'actualisation de la page du navigateur doit être recommandée aux utilisateurs existants associés à ce rôle.",
-        "errors": {
+                "roleUpdatedMessage": "Les changements prendront effet immédiatement. L'actualisation de la page du navigateur doit être recommandée aux utilisateurs existants associés à ce rôle.",
+                "errors": {
                     "required": "Ce champ est requis.",
                     "unsafeValue": "Balises HTML potentiellement dangereuses.",
                     "validationError": "Le formulaire contient des informations non valides. Veuillez vérifier les sections marquées comme non valides."
@@ -2399,7 +2402,7 @@
         "settings": {
             "accountSettings": {
                 "accountInfo": "Informations de compte",
-                "partnerID": "ID de partenaire ",
+                "partnerID": "ID de partenaire",
                 "adminEmail": "Adresse électronique du propriétaire du compte",
                 "adminUserId": "Nom du propriétaire du compte",
                 "informationMessage": "Veuillez vous assurer que les informations ci-dessous sont à jour.",
@@ -2441,7 +2444,7 @@
                     "header": "Nous sommes ravis que vous cherchiez plus d'informations sur la mise à niveau de votre compte !",
                     "trial": "Votre essai gratuit expire le {{0}}",
                     "gb": " GB",
-          "bandwidth": "Consommation mensuelle de bande passante à ce jour : {{0}}",
+                    "bandwidth": "Consommation mensuelle de bande passante à ce jour : {{0}}",
                     "storage": "Utilisation de stockage mensuel actuelle à ce jour : {{0}}",
                     "contactUs": "Contactez-nous pour en savoir plus sur les différents forfaits et services à valeur ajoutée."
                 }
@@ -2593,7 +2596,7 @@
                             "privacyContextLabelRequired": "Veuillez saisir une étiquette de contexte de confidentialité.",
                             "privacyContextLabelExists": "La catégorie est déjà définie avec une étiquette de contexte de confidentialité.",
                             "privacyContextLabelTooShort": "Les étiquettes de contexte de confidentialité doivent inclure au moins 4 caractères.",
-                            "privacyContextLabelRegex": "Les étiquettes de contexte de confidentialité doivent inclure uniquement des caractères alphanumériques."
+                            "privacyContextLabelRegex": "Les étiquettes de contexte de confidentialité doivent contenir uniquement des caractères alphanumériques anglais."
                         }
                     },
                     "deleteEntitlement": {
@@ -2880,7 +2883,7 @@
         },
         "analytics": {
             "comingSoon": "Bientôt disponible ! Analyses pour tous les types de médias.",
-           "releaseSupports": "Cette version prend en charge uniquement les analyses pour les entrées « en direct ». Pour tous les autres médias, veuillez <a href=\"{{0}}\" target=\"_blank\">vous connecter à l'ancien KMC</a> pour afficher et créer des analyses et des rapports. Des analyses pour tous les médias devraient bientôt être disponibles."
+            "releaseSupports": "Cette version prend en charge uniquement les analyses pour les entrées « en direct ». Pour tous les autres médias, veuillez <a href=\"{{0}}\" target=\"_blank\">vous connecter à l'ancien KMC</a> pour afficher et créer des analyses et des rapports. Des analyses pour tous les médias devraient bientôt être disponibles."
         },
         "reach": {
             "captionRequests": "Demandes de sous-titres",
