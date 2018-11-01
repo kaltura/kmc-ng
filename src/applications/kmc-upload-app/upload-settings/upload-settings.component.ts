@@ -89,7 +89,10 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit(): void {
-      this._addFile();
+      setTimeout(()=>{
+          this._addFile();
+      },0);
+
 
     this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-table-scrollable-body');
   }
