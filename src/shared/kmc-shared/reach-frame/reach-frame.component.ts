@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AppAuthentication, BrowserService } from 'shared/kmc-shell';
 import { getKalturaServerUri, serverConfig, buildCDNUrl } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -28,13 +28,15 @@ export interface ReachData {
     ],
     providers: [KalturaLogger.createLogger('ReachFrameComponent')]
 })
-export class ReachFrameComponent implements OnDestroy, OnChanges {
+export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
     @Input() page: ReachPages;
     @Input() data: ReachData = {};
 
     @Output() closeApp = new EventEmitter<void>();
 
     public _url = null;
+    public _windowEventListener = null;
+    public _reachConfig: any = null;
 
     constructor(private _appAuthentication: AppAuthentication,
                 private _appLocalization: AppLocalization,
@@ -45,6 +47,43 @@ export class ReachFrameComponent implements OnDestroy, OnChanges {
                 private _reachAppView: ReachAppViewService) {
     }
 
+    ngOnInit(){
+        this._windowEventListener = (e) => {
+            let postMessageData;
+            try {
+                postMessageData = e.data;
+            } catch (ex) {
+                return;
+            }
+
+            if (postMessageData.messageType === 'reach-init') {
+                e.source.postMessage({
+                    'messageType': 'reach-config',
+                    'data': this._reachConfig
+                }, e.origin);
+            };
+
+            if (postMessageData.messageType === 'reach-dashboard-entry') {
+                const entryId = postMessageData.data;
+                this._logger.info(`handle 'dashboardEntryLinkAction' event from Reach app`, { entryId });
+                if (entryId) {
+                    this._logger.info(`open entry details view`);
+                    this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata);
+                } else {
+                    this._logger.info(`entryId was not provided, abort action, close popup`);
+                }
+                this.closeApp.emit();
+            };
+
+            if (postMessageData.messageType === 'reach-bulk-order-cancelled') {
+                this._logger.info(`handle 'bulkOrderOnCancel' event from Reach app, close floater, clear entries selection`);
+                this._appEvents.publish(new ClearEntriesSelectionEvent());
+                this.closeApp.emit();
+            };
+
+        };
+    }
+
     ngOnChanges(changes: SimpleChanges) {
         if (changes['data']) {
             this._updateData();
@@ -52,53 +91,39 @@ export class ReachFrameComponent implements OnDestroy, OnChanges {
     }
 
     private _updateData(): void {
-        try {
+        setTimeout(() => {
             const { entries, entry, category } = this.data;
             const page = this.page;
             if (!this._reachAppView.isAvailable({ page, entries, entry, category })) {
                 this._browserService.handleUnpermittedAction(true);
+                this._url = null;
+                this._reachConfig = null;
+                this._removePostMessagesListener();
                 return;
             }
 
             this._updateUrl();
 
-            if (this._url) {
-                window['kmc'] = {
-                    'vars': {
-                        'ks': this._appAuthentication.appUser.ks,
-                        'service_url': getKalturaServerUri(),
-                        'partner_id': this._appAuthentication.appUser.partnerId,
-                        'cdn_host': buildCDNUrl(""),
-                        'reach': {
-                            language: this._appLocalization.selectedLanguage,
-                            dashboardEntryLinkAction: (entryId) => {
-                                this._logger.info(`handle 'dashboardEntryLinkAction' event from Reach app`, { entryId });
-                                if (entryId) {
-                                    this._logger.info(`open entry details view`);
-                                    this._contentEntryViewService.openById(entryId, ContentEntryViewSections.Metadata);
-                                } else {
-                                    this._logger.info(`entryId was not provided, abort action, close popup`);
-                                }
-                                this.closeApp.emit();
-                            },
-                            bulkOrderOnCancel: () => {
-                                this._logger.info(`handle 'bulkOrderOnCancel' event from Reach app, close floater, clear entries selection`);
-                                this._appEvents.publish(new ClearEntriesSelectionEvent());
-                                this.closeApp.emit();
-                            }
-                        }
-                    }
-                };
-
-                if (this.page === ReachPages.entries) {
-                    window['kmc']['vars']['reach']['entryIds'] = this.data.entries.map(({ id }) => id).join(',');
-                }
+            if (!this._url) {
+                this._reachConfig = null;
+                this._removePostMessagesListener();
+                return;
             }
-        } catch (ex) {
-            this._logger.warn(`Could not load reach app, please check that reach configurations are loaded correctly\n error: ${ex}`);
-            this._url = null;
-            window['kmc'] = null;
-        }
+
+            this._reachConfig = {
+                'ks': this._appAuthentication.appUser.ks,
+                'service_url': getKalturaServerUri(),
+                'partner_id': this._appAuthentication.appUser.partnerId,
+                'cdn_host': buildCDNUrl(""),
+                'language': this._appLocalization.selectedLanguage
+            };
+
+            if (this.page === ReachPages.entries) {
+                this._reachConfig['entryIds'] = this.data.entries.map(({ id }) => id).join(',');
+            }
+
+            this._addPostMessagesListener();
+        });
     }
 
     private _updateUrl(): void {
@@ -128,8 +153,17 @@ export class ReachFrameComponent implements OnDestroy, OnChanges {
         }
     }
 
+    private _addPostMessagesListener() {
+        this._removePostMessagesListener();
+        window.addEventListener('message', this._windowEventListener);
+    }
+
+    private _removePostMessagesListener(): void {
+        window.removeEventListener('message', this._windowEventListener);
+    }
+
     ngOnDestroy() {
         this._url = null;
-        window['kmc'] = null;
+        this._removePostMessagesListener();
     }
 }
