@@ -1,3 +1,15 @@
+<a name="5.5.1"></a>
+## [5.5.1](https://github.com/kaltura/kmc-ng/compare/v5.5.0...v5.5.1) (2018-11-04)
+
+
+### Bug Fixes
+
+* **upload:** fix position of upload settings window on MS Edge ([f5e2453](https://github.com/kaltura/kmc-ng/commit/f5e2453))
+* fix create menu icons width in all languages ([ebe3262](https://github.com/kaltura/kmc-ng/commit/ebe3262))
+* fix Yahoo and iTunes category tags translation in German ([4411d2e](https://github.com/kaltura/kmc-ng/commit/4411d2e))
+
+
+
 <a name="5.5.0"></a>
 # [5.5.0](https://github.com/kaltura/kmc-ng/compare/v5.4.2...v5.5.0) (2018-10-25)
 
