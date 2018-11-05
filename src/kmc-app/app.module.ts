@@ -176,7 +176,6 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
       KmcLogsModule.forRoot(),
       KalturaLoggerModule.forRoot('kmc'),
-    KalturaClientModule.forRoot(kalturaClientOptionsFactory),
       ContextualHelpModule.forRoot(),
       KmcViewsModule.forRoot(),
       LocalizationModule.forRoot(),
