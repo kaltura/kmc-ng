@@ -1,3 +1,13 @@
+<a name="5.5.2"></a>
+## [5.5.2](https://github.com/kaltura/kmc-ng/compare/v5.5.1...v5.5.2) (2018-11-07)
+
+
+### Bug Fixes
+
+* **content/entry:** fix position of upload settings window on MS Edge when replacing video ([e952515](https://github.com/kaltura/kmc-ng/commit/e952515))
+
+
+
 <a name="5.5.1"></a>
 ## [5.5.1](https://github.com/kaltura/kmc-ng/compare/v5.5.0...v5.5.1) (2018-11-04)
 
