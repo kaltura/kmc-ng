@@ -49,7 +49,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     }
 
     private _updateUrl(): void {
-        this._url = "http://localhost:1234";
+        this._url = serverConfig.externalApps.analytics.uri;
     }
 
     ngOnInit() {

@@ -225,7 +225,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
                 !configuration.uri.match(/\s/g); // not contains white spaces
 
             if (result) {
-                configuration.uri = buildBaseUri(configuration.uri);
+                configuration.uri = configuration.uri.indexOf('http') === 0 ? configuration.uri : buildBaseUri(configuration.uri);
             }
         }
 
