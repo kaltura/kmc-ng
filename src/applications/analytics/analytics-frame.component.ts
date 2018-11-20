@@ -18,7 +18,10 @@ import { BrowserService } from 'app-shared/kmc-shell';
 export class AnalyticsFrameComponent implements OnInit, OnDestroy {
 
     @ViewChild('analyticsFrame') analyticsFrame: ElementRef;
+    public _windowEventListener = null;
     public _url = null;
+    private initialized = false;
+    private lastNav: string = '';
 
     constructor(private appAuthentication: AppAuthentication,
                 private logger: KalturaLogger,
@@ -30,24 +33,28 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             .pipe(cancelOnDestroy(this))
             .subscribe((event) => {
                 if (event instanceof NavigationEnd) {
-                    this.sendMessageToAnalyticsApp({'action': 'navigate','url': event.urlAfterRedirects});
+                    if (this.initialized) {
+                        this.sendMessageToAnalyticsApp({'action': 'navigate', 'url': event.urlAfterRedirects});
+                    } else {
+                        this.lastNav = event.urlAfterRedirects;
+                    }
                 }
             });
     }
 
     private sendMessageToAnalyticsApp(message: any): void{
         if (this.analyticsFrame && this.analyticsFrame.nativeElement.contentWindow && this.analyticsFrame.nativeElement.contentWindow.postMessage){
-            this.analyticsFrame.nativeElement.contentWindow.postMessage(message, window.location.origin);
+            this.analyticsFrame.nativeElement.contentWindow.postMessage(message, "*");
         }
     }
 
     private _updateUrl(): void {
-        this._url = serverConfig.externalApps.analytics.uri;
+        this._url = "http://localhost:1234";
     }
 
     ngOnInit() {
         // set analytics config
-        window['analyticsConfig'] = {
+        const config = {
             kalturaServer: {
                 uri : "lbd.kaltura.com" // serverConfig.kalturaServer.uri
             },
@@ -55,13 +62,9 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             liveAnalytics: serverConfig.externalApps.liveAnalytics,
             ks: this.appAuthentication.appUser.ks,
             pid: this.appAuthentication.appUser.partnerId,
-            locale: "en",
-            callbacks: {
-                loaded: this.analyticsLoaded.bind(this),
-                logout: this.logout.bind(this),
-                updateLayout: this.updateLayout.bind(this)
-            }
+            locale: "en"
         }
+
         try {
             this._updateUrl();
         } catch (ex) {
@@ -69,15 +72,36 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             this._url = null;
             window['analyticsConfig'] = null;
         }
+
+        this._windowEventListener = (e) => {
+            let postMessageData;
+            try {
+                postMessageData = e.data;
+            } catch (ex) {
+                return;
+            }
+
+            if (postMessageData.messageType === 'analytics-init') {
+                this.sendMessageToAnalyticsApp({'action': 'init','data': config });
+            };
+            if (postMessageData.messageType === 'analytics-init-complete') {
+                this.initialized = true;
+                this.sendMessageToAnalyticsApp({'action': 'navigate', 'url': this.lastNav});
+                this.lastNav = '';
+            };
+            if (postMessageData.messageType === 'logout') {
+                this.logout();
+            };
+            if (postMessageData.messageType === 'updateLayout') {
+                this.updateLayout();
+            };
+        };
+        this._addPostMessagesListener();
     }
 
     ngOnDestroy() {
         this._url = null;
-        window['analyticsConfig'] = null;
-    }
-
-    private analyticsLoaded(): void {
-        this.sendMessageToAnalyticsApp({'action': 'navigate','url': this.router.routerState.snapshot.url});
+        this._removePostMessagesListener();
     }
 
     private logout(): void {
@@ -99,4 +123,14 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             },0);
         }
     }
+
+    private _addPostMessagesListener() {
+        this._removePostMessagesListener();
+        window.addEventListener('message', this._windowEventListener);
+    }
+
+    private _removePostMessagesListener(): void {
+        window.removeEventListener('message', this._windowEventListener);
+    }
+
 }
