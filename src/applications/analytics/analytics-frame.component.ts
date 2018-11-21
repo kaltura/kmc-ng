@@ -93,7 +93,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                 this.logout();
             };
             if (postMessageData.messageType === 'updateLayout') {
-                this.updateLayout();
+                this.updateLayout(postMessageData.payload.height);
             };
         };
         this._addPostMessagesListener();
@@ -108,19 +108,9 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
         this.appAuthentication.logout();
     }
 
-    private updateLayout(): void {
+    private updateLayout(newHeight: number): void {
         if (this.analyticsFrame && this.analyticsFrame.nativeElement.contentWindow) {
-            setTimeout(()=>{
-                // use timeout to allow the report to render before checking the height
-                let newHeight = this.analyticsFrame.nativeElement.contentWindow.document.getElementById('analyticsApp').getBoundingClientRect().height;
-                if (this._browserService.isSafari()) {
-                    // Safari can't seem to get the correct height here. Using doc height instead but not working perfectly. Need to revise if this logic stays.
-                    const body = this.analyticsFrame.nativeElement.contentWindow.document.body;
-                    const html = this.analyticsFrame.nativeElement.contentWindow.document.documentElement;
-                    newHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-                }
-                this.renderer.setStyle(this.analyticsFrame.nativeElement, 'height', newHeight + 'px');
-            },0);
+            this.renderer.setStyle(this.analyticsFrame.nativeElement, 'height', newHeight + 'px');
         }
     }
 
