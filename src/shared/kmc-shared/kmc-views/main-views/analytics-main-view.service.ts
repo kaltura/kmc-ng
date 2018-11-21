@@ -25,7 +25,8 @@ export class AnalyticsMainViewService extends KmcMainViewBaseService {
     }
 
     isAvailable(): boolean {
-        return this._appPermissions.hasPermission(KMCPermissions.ANALYTICS_BASE); // TODO add !!serverConfig.externalApps.analytics &&
+        return (!!serverConfig.externalApps.analytics || !!serverConfig.externalApps.liveAnalytics)
+            && this._appPermissions.hasPermission(KMCPermissions.ANALYTICS_BASE);
     }
 
     getRoutePath(): string {

@@ -23,6 +23,7 @@ import {
     StudioV3MainViewService,
     UsageDashboardMainViewService,
     KavaAppMainViewService,
+    AnalyticsNewMainViewService,
     AnalyticsMainViewService,
     ServicesDashboardMainViewService
 } from './main-views';
@@ -89,6 +90,7 @@ export class KmcViewsModule {
                 RestorePasswordViewService,
                 ReachAppViewService,
                 ServicesDashboardMainViewService,
+                AnalyticsNewMainViewService,
                 KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
             ]
         };
