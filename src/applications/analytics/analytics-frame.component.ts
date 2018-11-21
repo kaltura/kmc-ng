@@ -34,7 +34,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             .subscribe((event) => {
                 if (event instanceof NavigationEnd) {
                     if (this.initialized) {
-                        this.sendMessageToAnalyticsApp({'messageType': 'navigate', data: { 'url': event.urlAfterRedirects }});
+                        this.sendMessageToAnalyticsApp({'messageType': 'navigate', payload: { 'url': event.urlAfterRedirects }});
                     } else {
                         this.lastNav = event.urlAfterRedirects;
                     }
@@ -82,11 +82,11 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             }
 
             if (postMessageData.messageType === 'analytics-init') {
-                this.sendMessageToAnalyticsApp({'messageType': 'init', 'data': config });
+                this.sendMessageToAnalyticsApp({'messageType': 'init', 'payload': config });
             };
             if (postMessageData.messageType === 'analytics-init-complete') {
                 this.initialized = true;
-                this.sendMessageToAnalyticsApp({'messageType': 'navigate', 'data': { 'url': this.lastNav }});
+                this.sendMessageToAnalyticsApp({'messageType': 'navigate', 'payload': { 'url': this.lastNav }});
                 this.lastNav = '';
             };
             if (postMessageData.messageType === 'logout') {
