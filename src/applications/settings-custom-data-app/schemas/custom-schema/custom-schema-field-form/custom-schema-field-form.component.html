@@ -66,12 +66,19 @@
       </div>
     </div>
 
+      <div class="kRow" *ngIf="!_isNew">
+          <span class="kLabel">{{'applications.settings.metadata.table.systemName' | translate}}</span>
+          <span>{{_systemName}}</span>
+      </div>
+
     <div class="kRow">
       <span class="kLabel">{{'applications.settings.metadata.fieldForm.shortDescription' | translate}}</span>
       <div>
         <input class="kControl" pInputText [formControl]="_shortDescriptionField">
       </div>
     </div>
+
+
 
     <div class="kRow">
       <span class="kLabel">{{'applications.settings.metadata.fieldForm.description' | translate}}</span>
