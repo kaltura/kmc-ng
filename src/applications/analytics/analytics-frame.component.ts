@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, Renderer2 } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, Params } from '@angular/router';
 import { AppAuthentication } from 'shared/kmc-shell/index';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { serverConfig } from 'config/server';
@@ -20,8 +20,9 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     @ViewChild('analyticsFrame') analyticsFrame: ElementRef;
     public _windowEventListener = null;
     public _url = null;
-    private initialized = false;
-    private lastNav: string = '';
+    private _initialized = false;
+    private _lastNav = '';
+    private _lastQueryParams: { [key: string]: string }[] = null;
 
     constructor(private appAuthentication: AppAuthentication,
                 private logger: KalturaLogger,
@@ -33,13 +34,28 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             .pipe(cancelOnDestroy(this))
             .subscribe((event) => {
                 if (event instanceof NavigationEnd) {
-                    if (this.initialized) {
-                        this.sendMessageToAnalyticsApp({'messageType': 'navigate', payload: { 'url': event.urlAfterRedirects }});
+                    const { url, queryParams } = this._getUrlWithoutParams(event.urlAfterRedirects);
+                    if (this._initialized) {
+                        this.sendMessageToAnalyticsApp({'messageType': 'navigate', payload: { url }});
+                        this.sendMessageToAnalyticsApp({'messageType': 'updateFilters', payload: { queryParams }});
                     } else {
-                        this.lastNav = event.urlAfterRedirects;
+                        this._lastQueryParams = queryParams;
+                        this._lastNav = url;
                     }
                 }
             });
+    }
+
+    private _getUrlWithoutParams(path: string): { url: string, queryParams: { [key: string]: string }[] } {
+        const urlTree = this.router.parseUrl(path);
+        let url = '/';
+        let queryParams = null;
+        if (urlTree.root.children['primary']) {
+            url = `/${urlTree.root.children['primary'].segments.map(({ path }) => path).join('/')}`;
+            queryParams = urlTree.queryParams;
+        }
+
+        return { url, queryParams };
     }
 
     private sendMessageToAnalyticsApp(message: any): void{
@@ -85,9 +101,11 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                 this.sendMessageToAnalyticsApp({'messageType': 'init', 'payload': config });
             };
             if (postMessageData.messageType === 'analytics-init-complete') {
-                this.initialized = true;
-                this.sendMessageToAnalyticsApp({'messageType': 'navigate', 'payload': { 'url': this.lastNav }});
-                this.lastNav = '';
+                this._initialized = true;
+                this.sendMessageToAnalyticsApp({'messageType': 'navigate', 'payload': { 'url': this._lastNav }});
+                this.sendMessageToAnalyticsApp({'messageType': 'updateFilters', 'payload': { 'queryParams': this._lastQueryParams }});
+                this._lastNav = '';
+                this._lastQueryParams = null;
             };
             if (postMessageData.messageType === 'logout') {
                 this.logout();
@@ -95,6 +113,9 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             if (postMessageData.messageType === 'updateLayout') {
                 this.updateLayout(postMessageData.payload.height);
             };
+            if (postMessageData.messageType === 'navigate') {
+                this._updateQueryParams(postMessageData.payload);
+            }
         };
         this._addPostMessagesListener();
     }
@@ -102,6 +123,12 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this._url = null;
         this._removePostMessagesListener();
+    }
+
+    private _updateQueryParams(queryParams: Params): void {
+        const urlTree = this.router.parseUrl(this.router.url);
+        urlTree.queryParams = queryParams;
+        this.router.navigateByUrl(urlTree);
     }
 
     private logout(): void {
