@@ -1,18 +1,38 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { KMCAppMenuItem } from 'app-shared/kmc-shared/kmc-views';
+import {
+    AnalyticsNewMainViewService,
+    KMCAppMenuItem,
+    LiveAnalyticsMainViewService
+} from 'app-shared/kmc-shared/kmc-views';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { UpdateMenuEvent, ResetMenuEvent } from 'app-shared/kmc-shared/events';
+import { ResetMenuEvent, UpdateMenuEvent } from 'app-shared/kmc-shared/events';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kAnalytics',
     templateUrl: './analytics.component.html',
     styleUrls: ['./analytics.component.scss']
 })
-export class AnalyticsComponent implements OnInit, OnDestroy{
+export class AnalyticsComponent implements OnInit, OnDestroy {
     private menuConfig: KMCAppMenuItem[] = [];
-    constructor(private _appLocalization: AppLocalization, private _appEvents: AppEventsService, private _router: Router){
+
+    constructor(private _appLocalization: AppLocalization,
+                private _appEvents: AppEventsService,
+                private _router: Router,
+                private _browserService: BrowserService,
+                private _analyticsNewView: AnalyticsNewMainViewService,
+                private _liveAnalyticsView: LiveAnalyticsMainViewService) {
+        if (!this._analyticsNewView.isAvailable()) {
+            if (this._liveAnalyticsView.isAvailable()) {
+                this._liveAnalyticsView.open();
+            } else {
+                this._browserService.navigateToDefault();
+            }
+            return;
+        }
+
         this.menuConfig = [
             {
                 isAvailable: true,
@@ -119,13 +139,18 @@ export class AnalyticsComponent implements OnInit, OnDestroy{
                 },
                 menuTitle: this._appLocalization.get('app.titles.live'),
             }
-        ]
-    }
-    ngOnInit(){
-        this._appEvents.publish(new UpdateMenuEvent('analytics', this.menuConfig, 'left'));
+        ];
     }
 
-    ngOnDestroy(){
-        this._appEvents.publish(new ResetMenuEvent());
+    ngOnInit() {
+        if (this._analyticsNewView.isAvailable()) {
+            this._appEvents.publish(new UpdateMenuEvent('analytics', this.menuConfig, 'left'));
+        }
+    }
+
+    ngOnDestroy() {
+        if (this._analyticsNewView.isAvailable()) {
+            this._appEvents.publish(new ResetMenuEvent());
+        }
     }
 }

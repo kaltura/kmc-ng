@@ -24,7 +24,8 @@ import {
     SettingsMetadataMainViewService,
     SettingsMyUserSettingsMainViewService,
     SettingsAccountInformationMainViewService,
-    ServicesDashboardMainViewService
+    ServicesDashboardMainViewService,
+    AnalyticsNewMainViewService,
 } from './main-views';
 import { Observable } from 'rxjs';
 
@@ -61,6 +62,7 @@ export class KmcMainViewsService {
         private _usageDashboardMain: UsageDashboardMainViewService,
         private _servicesDashboardMain: ServicesDashboardMainViewService,
         private _analyticsMainViewService: AnalyticsMainViewService,
+        private _analyticsNewMainViewService: AnalyticsNewMainViewService,
         private _liveAnalyticsMain: LiveAnalyticsMainViewService,
         private _adminUsersMain: AdminUsersMainViewService,
         private _adminRolesMain: AdminRolesMainViewService,
@@ -199,6 +201,18 @@ export class KmcMainViewsService {
                 open: () => {
                     this._analyticsMainViewService.open();
                 },
+                children: !this._analyticsNewMainViewService.isAvailable()
+                    ? [
+                        {
+                            isAvailable: this._liveAnalyticsMain.isAvailable(),
+                            isActiveView: (path) => this._liveAnalyticsMain.isActiveView(path),
+                            open: () => {
+                                this._liveAnalyticsMain.open();
+                            },
+                            menuTitle: this._liveAnalyticsMain.getViewMetadata().menu
+                        }
+                    ]
+                    : []
             },
             {
                 isAvailable: this._servicesDashboardMain.isAvailable(),

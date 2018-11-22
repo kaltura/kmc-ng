@@ -25,7 +25,9 @@ export class LiveAnalyticsMainViewService extends KmcMainViewBaseService {
     }
 
     isAvailable(): boolean {
-        return !!serverConfig.externalApps.liveAnalytics && this._appPermissions.hasPermission(KMCPermissions.ANALYTICS_BASE) && this._appPermissions.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM);
+        return !!serverConfig.externalApps.liveAnalytics
+            && this._appPermissions.hasPermission(KMCPermissions.ANALYTICS_BASE)
+            && this._appPermissions.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM);
     }
 
     getRoutePath(): string {

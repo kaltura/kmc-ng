@@ -10,7 +10,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 @Injectable()
-export class AnalyticsMainViewService extends KmcMainViewBaseService {
+export class AnalyticsNewMainViewService extends KmcMainViewBaseService {
 
     constructor(
         logger: KalturaLogger,
@@ -21,12 +21,13 @@ export class AnalyticsMainViewService extends KmcMainViewBaseService {
         titleService: Title,
         contextualHelpService: ContextualHelpService
     ) {
-        super(logger.subLogger('AnalyticsMainViewService'), browserService, router, titleService, contextualHelpService);
+        super(logger.subLogger('AnalyticsNewMainViewService'), browserService, router, titleService, contextualHelpService);
     }
 
     isAvailable(): boolean {
-        return (!!serverConfig.externalApps.analytics || !!serverConfig.externalApps.liveAnalytics)
-            && this._appPermissions.hasPermission(KMCPermissions.ANALYTICS_BASE);
+        return !!serverConfig.externalApps.analytics
+            && this._appPermissions.hasPermission(KMCPermissions.ANALYTICS_BASE)
+            && this._appPermissions.hasPermission(KMCPermissions.FEATURE_NEW_ANALYTICS_TAB);
     }
 
     getRoutePath(): string {
