@@ -113,7 +113,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
         directory: this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.na')
     };
 
-    public _allowedVideoExtensions = `.flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v`;
+    public _allowedVideoExtensions = `.flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v,.mpeg,.mxf,.rm,.rv,.rmvb,.ts,.ogg,.ogv,.vob,.webm,.mts,.arf,.mkv`;
     public _allowedAudioExtensions = `.flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp3,.wav`;
 
     public _allowedExtensions: string;

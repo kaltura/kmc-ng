@@ -20,15 +20,18 @@
                     {{'applications.settings.metadata.table.fieldType' | translate}}
                 </th>
                 <th>
+                    {{'applications.settings.metadata.table.systemName' | translate}}
+                </th>
+                <th>
                     {{'applications.settings.metadata.table.shortDescription' | translate}}
                 </th>
                 <th>
                     {{'applications.settings.metadata.table.description' | translate}}
                 </th>
-                <th [ngStyle]="{'width':'100px'}">
+                <th [ngStyle]="{'width':'90px'}">
                     {{'applications.settings.metadata.table.maxValues' | translate}}
                 </th>
-                <th [ngStyle]="{'width':'100px'}">
+                <th [ngStyle]="{'width':'90px'}">
                     {{'applications.settings.metadata.table.searchable' | translate}}
                 </th>
                 <th *ngIf="(isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kNgIfPermitted)) || (!isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kNgIfPermitted))"></th>
@@ -45,18 +48,19 @@
                 </td>
                 <td>
                     <div class="kTitle kTableColumn"
-                         [kTooltip]="'applications.settings.metadata.table.labelTT' | translate : {name: field['name']}"
+                         [kTooltip]="field.key"
                          (click)="_editField(field)">
                         {{field.key}}
                     </div>
                 </td>
                 <td [ngStyle]="{'width':'115px'}">{{field.type | kCustomSchemaTypePipe:'label'}}</td>
+                <td>{{field.name}}</td>
                 <td>{{field.description}}</td>
                 <td>{{field.documentations}}</td>
-                <td [ngStyle]="{'width':'100px'}">
+                <td [ngStyle]="{'width':'90px'}">
                     {{field.allowMultiple ? ('applications.settings.metadata.unlimited' | translate) : '1'}}
                 </td>
-                <td [ngStyle]="{'width':'100px'}">
+                <td [ngStyle]="{'width':'90px'}">
                     {{(field.isSearchable ? 'app.common.yes' : 'app.common.no') | translate}}
                 </td>
                 <td *ngIf="(isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_ADD | kNgIfPermitted)) || (!isNew && (_kmcPermissions.CUSTOM_DATA_PROFILE_UPDATE | kNgIfPermitted))">
