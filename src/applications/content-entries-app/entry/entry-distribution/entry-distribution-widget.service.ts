@@ -469,27 +469,15 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       ? this.getProviderName(partnerProfile.providerType)
       : this._appLocalization.get('applications.content.entryDetails.distribution.providerTypes.unknown');
 
-    this.popupMessage = new AreaBlockerMessage({
-      title: this._appLocalization.get('applications.content.entryDetails.distribution.deleteConfirmTitle'),
-      message: this._appLocalization.get('applications.content.entryDetails.distribution.deleteConfirm', [connectorName]),
-      buttons: [
-        {
-          label: this._appLocalization.get('applications.content.entryDetails.distribution.delete'),
-          action: () => {
-            this.popupMessage = null;
+    this._browserService.confirm({
+        header: this._appLocalization.get('applications.content.entryDetails.distribution.deleteConfirmTitle'),
+        message: this._appLocalization.get('applications.content.entryDetails.distribution.deleteConfirm', [connectorName]),
+        acceptLabel: this._appLocalization.get('applications.content.entryDetails.distribution.delete'),
+        rejectLabel: this._appLocalization.get('applications.content.entryDetails.distribution.cancel'),
+        accept: () => {
             this._performDeleteRequest(action, closePopupCallback);
-          }
-        },
-        {
-          label: this._appLocalization.get('applications.content.entryDetails.distribution.cancel'),
-          action: () => {
-            this.popupMessage = null;
-            this._removeBlockerMessage();
-          }
         }
-      ]
     });
-    this._showBlockerMessage(this.popupMessage, false);
   }
 
   public loadMissingFlavors(flavors: Partial<Flavor>[]): Observable<{ id: string, name: string }[]> {

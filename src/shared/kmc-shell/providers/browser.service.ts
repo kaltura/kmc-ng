@@ -30,6 +30,8 @@ export interface Confirmation {
 	reject?: Function;
 	acceptVisible?: boolean;
 	rejectVisible?: boolean;
+	acceptLabel?: string;
+	rejectLabel?: string;
 	acceptEvent?: EventEmitter<any>;
 	rejectEvent?: EventEmitter<any>;
 	alignMessage?: 'left' | 'center' | 'byContent';

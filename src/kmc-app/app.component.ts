@@ -75,6 +75,12 @@ export class AppComponent implements OnInit {
             this._confirmDialogAlignLeft = confirmationMessage.alignMessage === 'left';
         }
 
+        if (!formattedMessage.acceptLabel) {
+            formattedMessage.acceptLabel = this._appLocalization.get('app.common.yes');
+        }
+        if (!formattedMessage.rejectLabel) {
+            formattedMessage.rejectLabel = this._appLocalization.get('app.common.no');
+        }
       this._confirmationService.confirm(formattedMessage);
       // fix for PrimeNG no being able to calculate the correct content height
       setTimeout(() => {
