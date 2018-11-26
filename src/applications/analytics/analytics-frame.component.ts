@@ -36,13 +36,15 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             .subscribe((event) => {
                 if (event instanceof NavigationEnd)  {
                     const { url, queryParams } = this._getUrlWithoutParams(event.urlAfterRedirects);
-                    if (this._initialized && this._currentAppUrl !== url) {
+                    if (this._currentAppUrl !== url) {
                         this._currentAppUrl = url;
-                        this.sendMessageToAnalyticsApp({'messageType': 'navigate', payload: { url }});
-                        this.sendMessageToAnalyticsApp({'messageType': 'updateFilters', payload: { queryParams }});
-                    } else {
-                        this._lastQueryParams = queryParams;
-                        this._lastNav = url;
+                        if (this._initialized) {
+                            this.sendMessageToAnalyticsApp({'messageType': 'navigate', payload: { url }});
+                            this.sendMessageToAnalyticsApp({'messageType': 'updateFilters', payload: { queryParams }});
+                        } else {
+                            this._lastQueryParams = queryParams;
+                            this._lastNav = url;
+                        }
                     }
                 }
             });
