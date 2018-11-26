@@ -22,6 +22,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     public _url = null;
     private _initialized = false;
     private _lastNav = '';
+    private _currentAppUrl: string;
     private _lastQueryParams: { [key: string]: string }[] = null;
 
     constructor(private appAuthentication: AppAuthentication,
@@ -33,9 +34,10 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
         router.events
             .pipe(cancelOnDestroy(this))
             .subscribe((event) => {
-                if (event instanceof NavigationEnd) {
+                if (event instanceof NavigationEnd)  {
                     const { url, queryParams } = this._getUrlWithoutParams(event.urlAfterRedirects);
-                    if (this._initialized) {
+                    if (this._initialized && this._currentAppUrl !== url) {
+                        this._currentAppUrl = url;
                         this.sendMessageToAnalyticsApp({'messageType': 'navigate', payload: { url }});
                         this.sendMessageToAnalyticsApp({'messageType': 'updateFilters', payload: { queryParams }});
                     } else {
@@ -46,8 +48,8 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             });
     }
 
-    private _getUrlWithoutParams(path: string): { url: string, queryParams: { [key: string]: string }[] } {
-        const urlTree = this.router.parseUrl(path);
+    private _getUrlWithoutParams(pathString: string): { url: string, queryParams: { [key: string]: string }[] } {
+        const urlTree = this.router.parseUrl(pathString);
         let url = '/';
         let queryParams = null;
         if (urlTree.root.children['primary']) {
