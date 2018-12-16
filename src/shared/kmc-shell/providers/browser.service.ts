@@ -444,5 +444,36 @@ export class BrowserService implements IAppStorage {
     public navigate(path: string): void {
         this._router.navigateByUrl(path);
     }
+
+    public scrollTo(to: number, duration = 500): void {
+        const start = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+        const change = to - start;
+        const increment = 10;
+        let currentTime = 0;
+
+        const animateScroll = () => {
+            currentTime += increment;
+
+            document.documentElement.scrollTop = document.body.scrollTop = this._easeInOutCubic(currentTime, start, change, duration);
+
+            if (currentTime < duration) {
+                setTimeout(animateScroll, increment);
+            }
+        };
+
+        animateScroll();
+    }
+
+    /**
+     * @link http://easings.net/#easeInOutCubic
+     * @link https://github.com/ai/easings.net/blob/master/vendor/jquery.easing.js#L64
+     */
+    private _easeInOutCubic(t, b, c, d) {
+        if ((t /= d / 2) < 1) {
+            return c / 2 * t * t * t + b;
+        }
+
+        return c / 2 * ((t -= 2) * t * t + 2) + b;
+    }
 }
 
