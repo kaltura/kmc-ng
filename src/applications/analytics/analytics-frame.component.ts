@@ -68,6 +68,14 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
         }
     }
 
+    private _scrollTo(position: string): void {
+        const offset = 50;
+        const intPosition = parseInt(position, 10);
+        if (!isNaN(intPosition)) {
+            this._browserService.scrollTo(intPosition + offset);
+        }
+    }
+
     private _updateUrl(): void {
         this._url = serverConfig.externalApps.analytics.uri;
     }
@@ -119,6 +127,9 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             };
             if (postMessageData.messageType === 'navigate') {
                 this._updateQueryParams(postMessageData.payload);
+            }
+            if (postMessageData.messageType === 'scrollTo') {
+                this._scrollTo(postMessageData.payload);
             }
         };
         this._addPostMessagesListener();
