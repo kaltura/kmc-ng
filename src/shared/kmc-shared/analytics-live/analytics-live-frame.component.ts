@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, OnChanges } from '@angular/core';
 import { AppAuthentication, BrowserService } from 'shared/kmc-shell/index';
-import { getKalturaServerUri, serverConfig } from 'config/server';
+import { buildCDNUrl, getKalturaServerUri, serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { LiveAnalyticsMainViewService } from '../kmc-views/main-views/live-analytics-main-view.service';
 
@@ -48,12 +48,11 @@ export class AnalyticsLiveFrameComponent implements OnInit, OnDestroy, OnChanges
 
             this._updateUrl();
 
-            const cdnUrl = serverConfig.cdnServers.serverUri.replace('http://', '').replace('https://', '');
             window['kmc'] = {
                 'vars': {
                     'ks': this.appAuthentication.appUser.ks,
                     'partner_id': this.appAuthentication.appUser.partnerId,
-                    'cdn_host': cdnUrl,
+                    'cdn_host':  buildCDNUrl(""),
                     'service_url': getKalturaServerUri(),
                     'liveanalytics': {
                         'player_id': +serverConfig.externalApps.liveAnalytics.uiConfId || '',
