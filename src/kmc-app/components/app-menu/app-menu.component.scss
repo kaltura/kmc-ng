@@ -7,9 +7,10 @@
 
 .appMenu {
     background: $menuBkgColor; /* Old browsers */
-    background: -moz-linear-gradient(left, #1b4a97 0%, #2364c3 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(left, #1b4a97 0%,#2364c3 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to right, #1b4a97 0%,#2364c3 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background: -moz-linear-gradient(left, #1B4A97 0%, #3E77D5 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, #1B4A97 0%,#3E77D5 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, #1B4A97 0%,#3E77D5 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+
     height: 54px;
     display: flex;
     align-items: center;
@@ -20,12 +21,12 @@
         color: $mainLinkColor;
         outline: 0;
         opacity: 0.6;
+        display: block;
         cursor: pointer;
-        line-height: $appMenuHeight;
+        line-height: 54px;
         font-size: 12px;
-        letter-spacing: 0.1em;
         margin-right: 30px;
-        letter-spacing: 0.5px;
+        letter-spacing: 1.2px;
         text-decoration: none;
 		&.disabled{
 			color: $kGrayscale4;
@@ -80,6 +81,12 @@
         margin-top: 15px;
         float: right;
     }
+    .kMenu-left{
+        opacity: 1;
+        display: flex;
+        align-items: center;
+        transition: all 0.25s ease-in-out;
+    }
     .kMenu-right {
         margin-left: auto;
         display: flex;
@@ -121,6 +128,34 @@
         font-size: 32px;
         margin-left: 16px;
         margin-right: 18px;
+    }
+    .kAnalytics {
+        margin-right: 20px;
+        display: flex;
+        align-items: center;
+        padding-bottom: 2px;
+        div{
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border: 0px solid white;
+            border-radius: 3px;
+            margin-right: 4px;
+            &:hover{
+                background-color: rgba(255,255,255,0.2);
+            }
+            i{
+                color: white;
+                font-size: 12px;
+                font-weight: bold;
+            }
+        }
+        .k-analytics-logo{
+            margin-top: 3px;
+        }
     }
 }
 

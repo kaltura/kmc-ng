@@ -16,6 +16,7 @@ import {
     LiveAnalyticsMainViewService,
     AdminUsersMainViewService,
     AdminRolesMainViewService,
+    AnalyticsMainViewService,
     SettingsAccountSettingsMainViewService,
     SettingsIntegrationSettingsMainViewService,
     SettingsAccessControlMainViewService,
@@ -23,7 +24,8 @@ import {
     SettingsMetadataMainViewService,
     SettingsMyUserSettingsMainViewService,
     SettingsAccountInformationMainViewService,
-    ServicesDashboardMainViewService
+    ServicesDashboardMainViewService,
+    AnalyticsNewMainViewService,
 } from './main-views';
 import { Observable } from 'rxjs';
 
@@ -59,6 +61,8 @@ export class KmcMainViewsService {
         private _studioV3Main: StudioV3MainViewService,
         private _usageDashboardMain: UsageDashboardMainViewService,
         private _servicesDashboardMain: ServicesDashboardMainViewService,
+        private _analyticsMainViewService: AnalyticsMainViewService,
+        private _analyticsNewMainViewService: AnalyticsNewMainViewService,
         private _liveAnalyticsMain: LiveAnalyticsMainViewService,
         private _adminUsersMain: AdminUsersMainViewService,
         private _adminRolesMain: AdminRolesMainViewService,
@@ -192,23 +196,23 @@ export class KmcMainViewsService {
             {
                 isActiveView: (activePath: string) => activePath.indexOf(`/analytics`) !== -1,
                 position: 'left',
-                isAvailable: true,
-                menuTitle: this._appLocalization.get('app.titles.analytics'),
-                children: [
-                    {
-                        isAvailable: this._liveAnalyticsMain.isAvailable(),
-                        isActiveView:  (path) => this._liveAnalyticsMain.isActiveView(path),
-                        open: () => {
-                            this._liveAnalyticsMain.open();
-                        },
-                        menuTitle: this._liveAnalyticsMain.getViewMetadata().menu
-                    },
-                    {
-                        isAvailable: false,
-                        isActiveView: (path) => false,
-                        menuTitle: 'analyticsKavaMenuTitle'
-                    }
-                ]
+                isAvailable: this._analyticsMainViewService.isAvailable(),
+                menuTitle: this._analyticsMainViewService.getViewMetadata().menu,
+                open: () => {
+                    this._analyticsMainViewService.open();
+                },
+                children: !this._analyticsNewMainViewService.isAvailable()
+                    ? [
+                        {
+                            isAvailable: this._liveAnalyticsMain.isAvailable(),
+                            isActiveView: (path) => this._liveAnalyticsMain.isActiveView(path),
+                            open: () => {
+                                this._liveAnalyticsMain.open();
+                            },
+                            menuTitle: this._liveAnalyticsMain.getViewMetadata().menu
+                        }
+                    ]
+                    : []
             },
             {
                 isAvailable: this._servicesDashboardMain.isAvailable(),

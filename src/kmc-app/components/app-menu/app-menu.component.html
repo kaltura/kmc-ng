@@ -5,12 +5,20 @@
 
             <div class="kIconkaltura_logo kLogo"></div>
 
-            <div *ngFor="let item of leftMenuConfig">
-                <a class="kMenuLink" *ngIf="item.menuTitle.length && !item.icon"
-                   [class.activeLink]="item === selectedMenuItem"
-                   (click)="item.open()">
-                        {{item.menuTitle | uppercase}}
-                </a>
+            <div #leftMenu class="kMenu-left">
+                <div *ngIf="menuID==='analytics'" class="kAnalytics">
+                    <div (click)="navigateToDefault()">
+                        <i class="kIcondropdown_arrow_left"></i>
+                    </div>
+                    <i class="k-analytics-logo"></i>
+                </div>
+                <div *ngFor="let item of leftMenuConfig">
+                    <a class="kMenuLink" *ngIf="item.menuTitle.length && !item.icon"
+                       [class.activeLink]="item === selectedMenuItem"
+                       (click)="item.open()">
+                            {{item.menuTitle | uppercase}}
+                    </a>
+                </div>
             </div>
 
             <div class="kMenu-right">

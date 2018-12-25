@@ -9,3 +9,16 @@
     background: url('../../styles/assets/beta.svg') no-repeat left center;
     display:inline-block;
 }
+.k-analytics-logo {
+    width: 74px;
+    height: 23px;
+    background-image: url('../../styles/assets/analytics_logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: inline-block;
+
+    @media (min-device-pixel-ratio: 2), (min-resolution: 192dpi), (min-resolution: 2dppx) {
+        background-image: url('../../styles/assets/analytics_logo@2x.png');
+    }
+}

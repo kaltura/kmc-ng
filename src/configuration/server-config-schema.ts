@@ -94,6 +94,13 @@ export const ServerConfigSchema = {
                     required: ['uri'],
                     additionalProperties: true
                 },
+                kmcAnalytics: {
+                    properties: {
+                        uri: {type: 'string'}
+                    },
+                    required: ['uri'],
+                    additionalProperties: true
+                },
                 liveAnalytics: {
                     properties: {
                         uri: {type: 'string'},

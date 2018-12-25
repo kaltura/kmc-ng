@@ -37,6 +37,9 @@ export interface ExternalApplications {
     usageDashboard?: {
         uri: string,
     };
+    kmcAnalytics?: {
+        uri: string,
+    };
     liveAnalytics?: {
         uri: string,
         uiConfId?: string,
@@ -209,6 +212,20 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
 
             if (result) {
                 configuration.uri = buildBaseUri(configuration.uri);
+            }
+        }
+
+        return result;
+    },
+    kmcAnalytics: (configuration) => {
+        let result = false;
+
+        if (configuration) {
+            result = !!configuration.uri &&
+                !configuration.uri.match(/\s/g); // not contains white spaces
+
+            if (result) {
+                configuration.uri = configuration.uri.indexOf('http') === 0 ? configuration.uri : buildBaseUri(configuration.uri);
             }
         }
 

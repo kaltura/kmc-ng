@@ -3,14 +3,14 @@ import { KMCPermissions, KMCPermissionsService } from '../../kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KmcMainViewBaseService, ViewMetadata } from '../kmc-main-view-base.service';
 import { Router } from '@angular/router';
-import {serverConfig} from 'config/server';
+import { serverConfig } from 'config/server';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { Title } from '@angular/platform-browser';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 @Injectable()
-export class LiveAnalyticsMainViewService extends KmcMainViewBaseService {
+export class AnalyticsMainViewService extends KmcMainViewBaseService {
 
     constructor(
         logger: KalturaLogger,
@@ -21,24 +21,23 @@ export class LiveAnalyticsMainViewService extends KmcMainViewBaseService {
         titleService: Title,
         contextualHelpService: ContextualHelpService
     ) {
-        super(logger.subLogger('LiveAnalyticsMainViewService'), browserService, router, titleService, contextualHelpService);
+        super(logger.subLogger('AnalyticsMainViewService'), browserService, router, titleService, contextualHelpService);
     }
 
     isAvailable(): boolean {
-        return !!serverConfig.externalApps.liveAnalytics
-            && this._appPermissions.hasPermission(KMCPermissions.ANALYTICS_BASE)
-            && this._appPermissions.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM);
+        return (!!serverConfig.externalApps.kmcAnalytics || !!serverConfig.externalApps.liveAnalytics)
+            && this._appPermissions.hasPermission(KMCPermissions.ANALYTICS_BASE);
     }
 
     getRoutePath(): string {
-        return 'analytics/liveAnalytics';
+        return 'analytics';
     }
 
     getViewMetadata(): ViewMetadata {
         return {
-            viewKey: 'analytics-live',
-            title: this._appLocalization.get('app.titles.analyticsLivePageTitle'),
-            menu: this._appLocalization.get('app.titles.analyticsLiveMenuTitle')
+            viewKey: 'analytics',
+            title: this._appLocalization.get('app.titles.analyticsPageTitle'),
+            menu: this._appLocalization.get('app.titles.analyticsMenuTitle')
         };
     }
 }

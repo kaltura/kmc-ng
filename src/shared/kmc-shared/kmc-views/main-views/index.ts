@@ -21,3 +21,5 @@ export * from './settings-my-user-settings-main-view.service';
 export * from './settings-account-information-main-view.service';
 export * from './kava-app-main-view.service';
 export * from './services-dashboard-main-view.service';
+export * from './analytics-main-view.service';
+export * from './analytics-new-main-view.service';

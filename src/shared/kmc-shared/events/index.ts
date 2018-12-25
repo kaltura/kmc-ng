@@ -6,3 +6,5 @@ export { UserLoginStatusEvent } from './user-login-status-event';
 export { OpenEmailEvent} from './open-email-event';
 export { TranscodingProfilesUpdatedEvent } from './transcoding-profiles-updated.event';
 export { CaptionRequestEvent } from './caption-request-event';
+export { ResetMenuEvent } from './reset-menu-event';
+export { UpdateMenuEvent } from './update-menu-event';
