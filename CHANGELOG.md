@@ -11,7 +11,8 @@
 
 ### Features
 
-* New Analytics ([#808](https://github.com/kaltura/kmc-ng/issues/808)) ([1f49b6e](https://github.com/kaltura/kmc-ng/commit/1f49b6e)), closes [#802](https://github.com/kaltura/kmc-ng/issues/802) [#803](https://github.com/kaltura/kmc-ng/issues/803) [#804](https://github.com/kaltura/kmc-ng/issues/804) [#805](https://github.com/kaltura/kmc-ng/issues/805) [#806](https://github.com/kaltura/kmc-ng/issues/806) [#807](https://github.com/kaltura/kmc-ng/issues/807)
+* Add support for Sami languages when uploading captions to KMC
+* Custom metadata - display field system name
 
 
 
