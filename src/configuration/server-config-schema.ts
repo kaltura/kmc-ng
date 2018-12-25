@@ -94,7 +94,7 @@ export const ServerConfigSchema = {
                     required: ['uri'],
                     additionalProperties: true
                 },
-                analytics: {
+                kmcAnalytics: {
                     properties: {
                         uri: {type: 'string'}
                     },

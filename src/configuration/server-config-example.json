@@ -8,7 +8,7 @@
         "securedServerUri": "https://cdnapisec.kaltura.com"
     },
     "externalApps": {
-        "analytics": {
+        "kmcAnalytics": {
             "uri": "/__local_machine_only__/analytics-v0.1/index.html"
         }
     },
