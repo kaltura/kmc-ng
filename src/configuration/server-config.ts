@@ -37,7 +37,7 @@ export interface ExternalApplications {
     usageDashboard?: {
         uri: string,
     };
-    analytics?: {
+    kmcAnalytics?: {
         uri: string,
     };
     liveAnalytics?: {
@@ -217,7 +217,7 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
 
         return result;
     },
-    analytics: (configuration) => {
+    kmcAnalytics: (configuration) => {
         let result = false;
 
         if (configuration) {

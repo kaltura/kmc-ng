@@ -77,14 +77,14 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     }
 
     private _updateUrl(): void {
-        this._url = serverConfig.externalApps.analytics.uri;
+        this._url = serverConfig.externalApps.kmcAnalytics.uri;
     }
 
     ngOnInit() {
         // set analytics config
         const config = {
             kalturaServer: {
-                uri : "lbd.kaltura.com" // serverConfig.kalturaServer.uri
+                uri : serverConfig.kalturaServer.uri
             },
             cdnServers: serverConfig.cdnServers,
             liveAnalytics: serverConfig.externalApps.liveAnalytics,

@@ -7,9 +7,10 @@
 
 .appMenu {
     background: $menuBkgColor; /* Old browsers */
-    background: -moz-linear-gradient(left, #1b4a97 0%, #2364c3 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(left, #1b4a97 0%,#2364c3 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to right, #1b4a97 0%,#2364c3 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background: -moz-linear-gradient(left, #1B4A97 0%, #3E77D5 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, #1B4A97 0%,#3E77D5 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, #1B4A97 0%,#3E77D5 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+
     height: 54px;
     display: flex;
     align-items: center;
@@ -22,11 +23,10 @@
         opacity: 0.6;
         display: block;
         cursor: pointer;
-        line-height: $appMenuHeight;
+        line-height: 54px;
         font-size: 12px;
-        letter-spacing: 0.1em;
         margin-right: 30px;
-        letter-spacing: 0.5px;
+        letter-spacing: 1.2px;
         text-decoration: none;
 		&.disabled{
 			color: $kGrayscale4;

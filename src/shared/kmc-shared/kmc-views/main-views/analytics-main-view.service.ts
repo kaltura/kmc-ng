@@ -25,7 +25,7 @@ export class AnalyticsMainViewService extends KmcMainViewBaseService {
     }
 
     isAvailable(): boolean {
-        return (!!serverConfig.externalApps.analytics || !!serverConfig.externalApps.liveAnalytics)
+        return (!!serverConfig.externalApps.kmcAnalytics || !!serverConfig.externalApps.liveAnalytics)
             && this._appPermissions.hasPermission(KMCPermissions.ANALYTICS_BASE);
     }
 
