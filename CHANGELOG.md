@@ -1,3 +1,20 @@
+<a name="5.6.0"></a>
+# [5.6.0](https://github.com/kaltura/kmc-ng/compare/v5.5.2...v5.6.0) (2018-12-25)
+
+
+### Bug Fixes
+
+* **content/entry:** fix distribution delete message layout + support passing accept and reject button labels to confirm box ([2d6303d](https://github.com/kaltura/kmc-ng/commit/2d6303d))
+* **content/entry:** support additional video formats when updating flavour or replacing video ([ba5b7ee](https://github.com/kaltura/kmc-ng/commit/ba5b7ee))
+* **live-analytics:** fix cdn_host for secured protocol ([5f8511b](https://github.com/kaltura/kmc-ng/commit/5f8511b))
+
+
+### Features
+
+* New Analytics ([#808](https://github.com/kaltura/kmc-ng/issues/808)) ([1f49b6e](https://github.com/kaltura/kmc-ng/commit/1f49b6e)), closes [#802](https://github.com/kaltura/kmc-ng/issues/802) [#803](https://github.com/kaltura/kmc-ng/issues/803) [#804](https://github.com/kaltura/kmc-ng/issues/804) [#805](https://github.com/kaltura/kmc-ng/issues/805) [#806](https://github.com/kaltura/kmc-ng/issues/806) [#807](https://github.com/kaltura/kmc-ng/issues/807)
+
+
+
 <a name="5.5.2"></a>
 ## [5.5.2](https://github.com/kaltura/kmc-ng/compare/v5.5.1...v5.5.2) (2018-11-07)
 
