@@ -1,3 +1,13 @@
+<a name="5.6.1"></a>
+## [5.6.1](https://github.com/kaltura/kmc-ng/compare/v5.6.0...v5.6.1) (2018-12-26)
+
+
+### Bug Fixes
+
+* **analytics:** fix layout ([a95905f](https://github.com/kaltura/kmc-ng/commit/a95905f))
+
+
+
 <a name="5.6.0"></a>
 # [5.6.0](https://github.com/kaltura/kmc-ng/compare/v5.5.2...v5.6.0) (2018-12-25)
 
