@@ -48,11 +48,13 @@ export class AnalyticsLiveFrameComponent implements OnInit, OnDestroy, OnChanges
 
             this._updateUrl();
 
+            let cdn_host = buildCDNUrl('');
+            cdn_host = cdn_host.substr(cdn_host.indexOf('://')+3); // remove protocol as Live Analytivs app adds it itself
             window['kmc'] = {
                 'vars': {
                     'ks': this.appAuthentication.appUser.ks,
                     'partner_id': this.appAuthentication.appUser.partnerId,
-                    'cdn_host':  buildCDNUrl(""),
+                    'cdn_host':  cdn_host,
                     'service_url': getKalturaServerUri(),
                     'liveanalytics': {
                         'player_id': +serverConfig.externalApps.liveAnalytics.uiConfId || '',
