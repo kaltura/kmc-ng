@@ -33,6 +33,7 @@ import {FeedDetailsComponentsList} from './feeds/feed-details/feed-details-compo
 import {CopyToClipboardModule} from '@kaltura-ng/mc-shared';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { InputHelperModule } from '@kaltura-ng/kaltura-ui';
+import { SearchableDropdownModule } from 'app-shared/kmc-shared/searchable-dropdown';
 
 @NgModule({
   imports: [
@@ -62,7 +63,8 @@ import { InputHelperModule } from '@kaltura-ng/kaltura-ui';
     CopyToClipboardModule,
     TableModule,
     KMCPermissionsModule,
-    InputHelperModule
+    InputHelperModule,
+      SearchableDropdownModule,
   ],
   declarations: [
     DestinationIconPipe,

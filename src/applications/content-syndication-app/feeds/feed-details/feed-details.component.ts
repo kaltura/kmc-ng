@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {KalturaPlaylist} from 'kaltura-ngx-client';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client';
@@ -38,6 +38,8 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   @Input()
   feed: KalturaBaseSyndicationFeed = null;
 
+    @Input() loadingPlaylists = false;
+
     @Input()
     set playlists(data: KalturaPlaylist[]) {
         if (data && data.length) {
@@ -46,8 +48,17 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
                 this._idToPlaylistMap.set(playlist.id, playlist);
             });
             this._playlists = data;
+        } else {
+            this._playlists = [];
         }
+
+        this._availablePlaylists = this._playlists.map(playlist => ({
+            value: playlist.id,
+            label: playlist.name || playlist.id
+        }));
     }
+
+    @Output() searchPlaylists = new EventEmitter<string>();
 
   @ViewChild(DestinationComponentBase) destinationComponent: DestinationComponentBase;
 
@@ -94,7 +105,6 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._newFeedText = this._appLocalization.get('applications.content.syndication.details.header.newFeed');
     this._fillAvailableDestinations();
-    this._fillAvailablePlaylists();
     this._mode = this.feed ? 'edit' : 'new';
     this._restartFormData();
     this._prepare();
@@ -103,16 +113,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  private _fillAvailablePlaylists(): void {
-    if (this._playlists && this._playlists.length) {
-      this._availablePlaylists = this._playlists.map(playlist => ({
-        value: playlist.id,
-        label: playlist.name || playlist.id
-      }));
-    }
-  }
-
-  private _fillAvailableDestinations(): void {
+    private _fillAvailableDestinations(): void {
     this._availableDestinations = [
       {
         value: KalturaSyndicationFeedType.googleVideo,

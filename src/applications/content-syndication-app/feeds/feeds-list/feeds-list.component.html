@@ -52,9 +52,13 @@
   </div>
 </k-area-blocker>
 
-<kPopupWidget #feedDetails data-aid="feedDetails" [popupWidth]="995" [slider]="true">
+<kPopupWidget #feedDetails data-aid="feedDetails" [popupWidth]="995" [slider]="true" (onClose)="_resetPlaylists()">
   <ng-template>
-    <kFeedDetails [parentPopupWidget]="feedDetails" [feed]="_currentEditFeed" [playlists]="_playlists"></kFeedDetails>
+    <kFeedDetails [parentPopupWidget]="feedDetails"
+                  [feed]="_currentEditFeed"
+                  [playlists]="_playlists"
+                  [loadingPlaylists]="_loadingPlaylists"
+                  (searchPlaylists)="_onSearchPlaylists($event)"></kFeedDetails>
   </ng-template>
 </kPopupWidget>
 
