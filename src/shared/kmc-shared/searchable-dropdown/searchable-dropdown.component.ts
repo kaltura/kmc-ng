@@ -38,19 +38,21 @@ export const DROPDOWN_VALUE_ACCESSOR: any = {
 
 export class SearchableDropdownComponent extends Dropdown {
     @Input() loading: boolean;
+    @Input() minLength: number;
 
     @Output() customSearch = new EventEmitter<string>();
 
     public onFilter(event): void {
         const inputValue = event.target.value;
-        if (inputValue && inputValue.length) {
-            this.filterValue = inputValue;
-        } else {
+        if (!inputValue || !inputValue.length) { // clear filter
             this.filterValue = null;
             this.optionsToDisplay = this.options;
+            this.customSearch.emit(this.filterValue);
+            this.optionsChanged = true;
+        } else if (!this.minLength || inputValue.length >= this.minLength) {
+            this.filterValue = inputValue;
+            this.customSearch.emit(this.filterValue);
+            this.optionsChanged = true;
         }
-
-        this.customSearch.emit(this.filterValue);
-        this.optionsChanged = true;
     }
 }

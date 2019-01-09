@@ -366,7 +366,7 @@ export class FeedsListComponent implements OnInit, OnDestroy {
                     this._loadingPlaylists = false;
                 },
                 error => {
-                    this._loadingPlaylists = fasle;
+                    this._loadingPlaylists = false;
                     // TODO handle errors
                 });
     }
