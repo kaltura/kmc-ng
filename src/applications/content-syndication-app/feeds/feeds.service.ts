@@ -225,8 +225,8 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
 
   }
 
-  public getPlaylists(): Observable<KalturaPlaylist[]> {
-    const filter = new KalturaPlaylistFilter({orderBy: KalturaPlaylistOrderBy.createdAtDesc.toString()});
+  public getPlaylists(freeText = ''): Observable<KalturaPlaylist[]> {
+    const filter = new KalturaPlaylistFilter({orderBy: KalturaPlaylistOrderBy.createdAtDesc.toString(), freeText: freeText || ''});
     const pager = new KalturaFilterPager({pageSize: 500});
 
     return this._kalturaClient.request(

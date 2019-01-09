@@ -11,6 +11,7 @@ import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContentSyndicationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { Unsubscribable } from 'rxjs';
 
 @Component({
   selector: 'kFeedsList',
@@ -23,9 +24,11 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 })
 
 export class FeedsListComponent implements OnInit, OnDestroy {
+    private _playlistSearchSubscription: Unsubscribable;
 
   public _kmcPermissions = KMCPermissions;
   public _isBusy = true;
+  public _loadingPlaylists = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isReady = false; // prevents from calling prepare function twice
   public _tableIsBusy = false;
@@ -33,6 +36,7 @@ export class FeedsListComponent implements OnInit, OnDestroy {
   public _selectedFeeds: KalturaBaseSyndicationFeed[] = [];
   public _feedsTotalCount: number = null;
   public _playlists: KalturaPlaylist[] = null;
+  public _originalPlaylists: KalturaPlaylist[] = null;
   public _currentEditFeed: KalturaBaseSyndicationFeed = null;
   @ViewChild('feedDetails') feedDetailsPopup: PopupWidgetComponent;
 
@@ -245,6 +249,7 @@ export class FeedsListComponent implements OnInit, OnDestroy {
       .subscribe(response => {
           this._logger.info(`handle successful data loading`);
           this._playlists = response;
+          this._originalPlaylists = response;
           this._feedsService.reload();
           this._registerToDataChanges();
           this._isBusy = false;
@@ -346,4 +351,27 @@ export class FeedsListComponent implements OnInit, OnDestroy {
     this._currentEditFeed = null;
     this.feedDetailsPopup.open();
   }
+
+    public _onSearchPlaylists(freeText: string): void {
+        this._loadingPlaylists = true;
+        if (this._playlistSearchSubscription) {
+            this._playlistSearchSubscription.unsubscribe();
+            this._playlistSearchSubscription = null;
+        }
+
+        this._playlistSearchSubscription = this._feedsService.getPlaylists(freeText)
+            .pipe(cancelOnDestroy(this))
+            .subscribe(response => {
+                    this._playlists = response;
+                    this._loadingPlaylists = false;
+                },
+                error => {
+                    this._loadingPlaylists = fasle;
+                    // TODO handle errors
+                });
+    }
+
+    public _resetPlaylists(): void {
+        this._playlists = [...this._originalPlaylists];
+    }
 }
