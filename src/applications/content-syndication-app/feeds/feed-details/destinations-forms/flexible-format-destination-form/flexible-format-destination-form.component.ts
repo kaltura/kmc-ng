@@ -83,7 +83,7 @@ export class FlexibleFormatDestinationFormComponent extends DestinationComponent
             showLoadError();
           } else {
             this.onFormStateChanged.emit({isValid: true, isDirty: true});
-            this._xslCode = this._fileReader.result;
+            this._xslCode = <string>this._fileReader.result;
             this._error = null;
           }
         };
