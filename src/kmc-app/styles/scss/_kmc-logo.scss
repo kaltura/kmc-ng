@@ -22,3 +22,13 @@
         background-image: url('../../styles/assets/analytics_logo@2x.png');
     }
 }
+
+.k-analytics-beta {
+    width: 34px;
+    height: 13px;
+    background-image: url('../../styles/assets/beta_indicator.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: inline-block;
+}
