@@ -117,7 +117,7 @@ ws --spa index.html
    * Update KMCng version in deploy/config.ini to the current KMCng version: vX.X.X
    * commit your changes with commit message 'chore: update version of deployed assets'
 
-2. Update  `changelog.md` with new features (provided by product)
+2. Update  `changelog.md` and `changelog-content.component.html` with new features (provided by product) and bug fixes
    * commit your changes with commit message 'chore: update changelog'
 
 3. publish the release
