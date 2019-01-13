@@ -6,6 +6,7 @@
 
 * **advertisements:** Enable advertisements for entries without Source flavor ([e9e29d0](https://github.com/kaltura/kmc-ng/commit/e9e29d0))
 * **analytics:** Fix cdn_host parameter passed to Live-Analytics ([c290579](https://github.com/kaltura/kmc-ng/commit/c290579))
+* **syndication:** Syndication feeds are not created for some playlists
 
 
 
