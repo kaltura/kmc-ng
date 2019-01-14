@@ -37,6 +37,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                 if (event instanceof NavigationEnd)  {
                     const { url, queryParams } = this._getUrlWithoutParams(event.urlAfterRedirects);
                     if (this._currentAppUrl !== url) {
+                        this.updateLayout(window.innerHeight - 54);
                         this._currentAppUrl = url;
                         if (this._initialized) {
                             this.sendMessageToAnalyticsApp({'messageType': 'navigate', payload: { url }});
@@ -84,7 +85,8 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
         // set analytics config
         const config = {
             kalturaServer: {
-                uri : serverConfig.kalturaServer.uri
+                uri : serverConfig.kalturaServer.uri,
+                previewUIConf: serverConfig.kalturaServer.previewUIConf
             },
             cdnServers: serverConfig.cdnServers,
             liveAnalytics: serverConfig.externalApps.liveAnalytics,
@@ -127,6 +129,9 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             };
             if (postMessageData.messageType === 'navigate') {
                 this._updateQueryParams(postMessageData.payload);
+            }
+            if (postMessageData.messageType === 'navigateTo') {
+                this.router.navigateByUrl(postMessageData.payload);
             }
             if (postMessageData.messageType === 'scrollTo') {
                 this._scrollTo(postMessageData.payload);
