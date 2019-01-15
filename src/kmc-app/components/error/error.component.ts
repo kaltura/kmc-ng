@@ -9,7 +9,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 export class ErrorComponent implements OnDestroy{
 
     constructor(private _browserService: BrowserService) {
-        if (typeof this._browserService.previousUrl === 'undefined') {
+        if (typeof this._browserService.previousRoute === 'undefined') {
             this._browserService.navigateToDefault();
         }else{
             document.body.style.overflowY = 'hidden';

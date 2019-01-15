@@ -5,6 +5,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'kAnalyticsFrame',
@@ -24,12 +25,14 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     private _lastNav = '';
     private _currentAppUrl: string;
     private _lastQueryParams: { [key: string]: string }[] = null;
+    private _analyticsDefaultPage = '/analytics/dashboard';
 
     constructor(private appAuthentication: AppAuthentication,
                 private logger: KalturaLogger,
                 private router: Router,
                 private _browserService: BrowserService,
-                private renderer: Renderer2
+                private renderer: Renderer2,
+                private _location: Location,
     ) {
         router.events
             .pipe(cancelOnDestroy(this))
@@ -136,6 +139,9 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             if (postMessageData.messageType === 'scrollTo') {
                 this._scrollTo(postMessageData.payload);
             }
+            if (postMessageData.messageType === 'entryNavigateBack') {
+                this._navigateBack();
+            }
         };
         this._addPostMessagesListener();
     }
@@ -143,6 +149,14 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this._url = null;
         this._removePostMessagesListener();
+    }
+
+    private _navigateBack(): void {
+        if (!!this._browserService.previousRoute) {
+            this._location.back();
+        } else {
+            this.router.navigateByUrl(this._analyticsDefaultPage);
+        }
     }
 
     private _updateQueryParams(queryParams: Params): void {

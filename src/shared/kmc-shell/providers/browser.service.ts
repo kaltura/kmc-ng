@@ -5,13 +5,14 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {Subject} from 'rxjs/Subject';
 import { Observable } from 'rxjs';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { Router, ActivatedRoute, NavigationExtras, NavigationEnd } from '@angular/router';
+import { Router, ActivatedRoute, NavigationExtras, NavigationEnd, RoutesRecognized } from '@angular/router';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 import { AppEventsService } from 'app-shared/kmc-shared/app-events/app-events.service';
 import { OpenEmailEvent } from 'app-shared/kmc-shared/events';
 import { EmailConfig } from '../../../kmc-app/components/open-email/open-email.component';
 import { serverConfig } from 'config/server';
 import { PageExitVerificationService } from '../page-exit-verification';
+import { filter, pairwise } from 'rxjs/operators';
 
 export enum HeaderTypes {
     error = 1,
@@ -60,11 +61,10 @@ export class BrowserService implements IAppStorage {
     private _growlMessage = new Subject<GrowlMessage>();
     private _sessionStartedAt: Date = new Date();
     public growlMessage$ = this._growlMessage.asObservable();
-    private _currentUrl: string;
-    private _previousUrl: string;
+    private _previousRoute: RoutesRecognized;
 
-    public get previousUrl(): string {
-        return this._previousUrl;
+    public get previousRoute(): RoutesRecognized {
+        return this._previousRoute;
     }
 
     private _onConfirmationFn: OnShowConfirmationFn = (confirmation: Confirmation) => {
@@ -100,18 +100,8 @@ export class BrowserService implements IAppStorage {
                 private _appLocalization: AppLocalization,
                 private _pageExitVerificationService: PageExitVerificationService) {
         this._recordInitialQueryParams();
-        this._recordRoutingActions();
     }
 
-    private _recordRoutingActions(): void {
-        this._currentUrl = this._router.url;
-        this._router.events
-            .filter(event => event instanceof NavigationEnd)
-            .subscribe((event: NavigationEnd) => {
-                this._previousUrl = this._currentUrl;
-                this._currentUrl = event.url;
-            });
-    }
     private _downloadContent(url: string): void {
         return Observable.create(observer => {
             const xhr = new XMLHttpRequest();
@@ -474,6 +464,17 @@ export class BrowserService implements IAppStorage {
         }
 
         return c / 2 * ((t -= 2) * t * t + 2) + b;
+    }
+
+    public initLocationListener(): void {
+        this._router.events
+            .pipe(
+                filter(e => e instanceof RoutesRecognized),
+                pairwise()
+            )
+            .subscribe((routes: any) => {
+                this._previousRoute = routes[0] as RoutesRecognized;
+            });
     }
 }
 
