@@ -12,7 +12,7 @@ import { OpenEmailEvent } from 'app-shared/kmc-shared/events';
 import { EmailConfig } from '../../../kmc-app/components/open-email/open-email.component';
 import { serverConfig } from 'config/server';
 import { PageExitVerificationService } from '../page-exit-verification';
-import { filter, pairwise } from 'rxjs/operators';
+import { filter, map, pairwise } from 'rxjs/operators';
 
 export enum HeaderTypes {
     error = 1,
@@ -470,11 +470,30 @@ export class BrowserService implements IAppStorage {
         this._router.events
             .pipe(
                 filter(e => e instanceof RoutesRecognized),
-                pairwise()
+                pairwise(),
+                filter((routes: RoutesRecognized[]) => {
+                    const [previousRoute, currentRoute] = routes;
+                    const { url: prevUrl } = this.getUrlWithoutParams(previousRoute.url);
+                    const { url: currentUrl } = this.getUrlWithoutParams(currentRoute.url);
+                    return currentUrl !== prevUrl;
+                }),
+                map((routes: RoutesRecognized[]) => routes[0])
             )
-            .subscribe((routes: any) => {
-                this._previousRoute = routes[0] as RoutesRecognized;
+            .subscribe((route: RoutesRecognized) => {
+                this._previousRoute = route;
             });
+    }
+
+    public getUrlWithoutParams(pathString: string): { url: string, queryParams: { [key: string]: string }[] } {
+        const urlTree = this._router.parseUrl(pathString);
+        let url = '/';
+        let queryParams = null;
+        if (urlTree.root.children['primary']) {
+            url = `/${urlTree.root.children['primary'].segments.map(({ path }) => path).join('/')}`;
+            queryParams = urlTree.queryParams;
+        }
+
+        return { url, queryParams };
     }
 }
 

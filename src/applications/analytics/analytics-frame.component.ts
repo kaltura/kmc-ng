@@ -38,7 +38,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             .pipe(cancelOnDestroy(this))
             .subscribe((event) => {
                 if (event instanceof NavigationEnd)  {
-                    const { url, queryParams } = this._getUrlWithoutParams(event.urlAfterRedirects);
+                    const { url, queryParams } = this._browserService.getUrlWithoutParams(event.urlAfterRedirects);
                     if (this._currentAppUrl !== url) {
                         this.updateLayout(window.innerHeight - 54);
                         this._currentAppUrl = url;
@@ -52,18 +52,6 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                     }
                 }
             });
-    }
-
-    private _getUrlWithoutParams(pathString: string): { url: string, queryParams: { [key: string]: string }[] } {
-        const urlTree = this.router.parseUrl(pathString);
-        let url = '/';
-        let queryParams = null;
-        if (urlTree.root.children['primary']) {
-            url = `/${urlTree.root.children['primary'].segments.map(({ path }) => path).join('/')}`;
-            queryParams = urlTree.queryParams;
-        }
-
-        return { url, queryParams };
     }
 
     private sendMessageToAnalyticsApp(message: any): void{
@@ -153,7 +141,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
 
     private _navigateBack(): void {
         if (!!this._browserService.previousRoute) {
-            this._location.back();
+            this.router.navigateByUrl(this._browserService.previousRoute.url);
         } else {
             this.router.navigateByUrl(this._analyticsDefaultPage);
         }
