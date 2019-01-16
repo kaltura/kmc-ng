@@ -25,7 +25,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     private _lastNav = '';
     private _currentAppUrl: string;
     private _lastQueryParams: { [key: string]: string }[] = null;
-    private _analyticsDefaultPage = '/analytics/dashboard';
+    private _analyticsDefaultPage = '/analytics/engagement';
 
     constructor(private appAuthentication: AppAuthentication,
                 private logger: KalturaLogger,

@@ -4,7 +4,7 @@ import { AnalyticsComponent } from './analytics.component';
 export const routing: Route[] = [
     {
         path: '',
-        redirectTo: 'dashboard',
+        redirectTo: 'engagement',
         pathMatch: 'full'
     },
     {
