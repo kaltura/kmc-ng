@@ -130,6 +130,12 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             if (postMessageData.messageType === 'entryNavigateBack') {
                 this._navigateBack();
             }
+            if (postMessageData.messageType === 'modalOpened') {
+                this._modalToggle(true);
+            }
+            if (postMessageData.messageType === 'modalClosed') {
+                this._modalToggle(false);
+            }
         };
         this._addPostMessagesListener();
     }
@@ -137,6 +143,27 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this._url = null;
         this._removePostMessagesListener();
+    }
+
+    private _modalToggle(opened: boolean): void {
+        const appMenu = document.querySelector('#appMenu') as HTMLElement;
+        if (!appMenu) {
+            return;
+        }
+
+        if (opened) {
+            document.body.classList.add('kModal');
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'kPopupWidgetModalOverlay';
+            modalOverlay.style.height = `${appMenu.offsetHeight}px`;
+            appMenu.appendChild(modalOverlay);
+        } else {
+            document.body.classList.remove('kModal');
+            const modalOverlay = appMenu.querySelector('.kPopupWidgetModalOverlay');
+            if (modalOverlay) {
+                appMenu.removeChild(modalOverlay);
+            }
+        }
     }
 
     private _navigateBack(): void {
