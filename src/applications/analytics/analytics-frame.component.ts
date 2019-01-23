@@ -147,22 +147,18 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
 
     private _modalToggle(opened: boolean): void {
         const appMenu = document.querySelector('#appMenu') as HTMLElement;
-        if (!appMenu) {
+        const menuCover = document.querySelector('.kMenuCover') as HTMLElement;
+        if (!appMenu || !menuCover) {
             return;
         }
 
         if (opened) {
             document.body.classList.add('kModal');
-            const modalOverlay = document.createElement('div');
-            modalOverlay.className = 'kPopupWidgetModalOverlay';
-            modalOverlay.style.height = `${appMenu.offsetHeight}px`;
-            appMenu.appendChild(modalOverlay);
+            menuCover.style.display = 'block';
+            menuCover.style.height = `${appMenu.offsetHeight}px`;
         } else {
             document.body.classList.remove('kModal');
-            const modalOverlay = appMenu.querySelector('.kPopupWidgetModalOverlay');
-            if (modalOverlay) {
-                appMenu.removeChild(modalOverlay);
-            }
+            menuCover.style.display = 'none';
         }
     }
 
