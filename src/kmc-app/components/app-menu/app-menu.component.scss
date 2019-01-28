@@ -130,10 +130,10 @@
         margin-right: 18px;
     }
     .kAnalytics {
-        margin-right: 20px;
         display: flex;
         align-items: center;
         padding-bottom: 2px;
+        width: 160px;
         div{
             cursor: pointer;
             display: flex;
@@ -144,6 +144,7 @@
             border: 0px solid white;
             border-radius: 3px;
             margin-right: 4px;
+            flex: 0 0 auto;
             &:hover{
                 background-color: rgba(255,255,255,0.2);
             }
@@ -158,10 +159,12 @@
         }
         .k-analytics-logo{
             margin-top: 3px;
+            flex: 0 0 auto;
         }
         .k-analytics-beta{
             top: -12px;
             left: -40px;
+            flex: 0 0 auto;
         }
     }
 }
