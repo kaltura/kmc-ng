@@ -1,3 +1,13 @@
+<a name="5.6.3"></a>
+## [5.6.3](https://github.com/kaltura/kmc-ng/compare/v5.6.2...v5.6.3) (2019-01-29)
+
+
+### Bug Fixes
+
+* **entry/distribution:** fix errors mapping ([7e4419f](https://github.com/kaltura/kmc-ng/commit/7e4419f))
+
+
+
 <a name="5.6.2"></a>
 ## [5.6.2](https://github.com/kaltura/kmc-ng/compare/v5.6.1...v5.6.2) (2019-01-13)
 
