@@ -34,9 +34,14 @@ import { PageExitVerificationService, UploadPageExitVerificationService } from '
     providers: <any[]>[]
 })
 export class KMCShellModule {
-    constructor(@Optional() @Self()  _uploadPageExitVerificationService: UploadPageExitVerificationService) {
+    constructor(@Optional() @Self()  _uploadPageExitVerificationService: UploadPageExitVerificationService,
+                @Optional() @Self()  _browserService: BrowserService) {
         if (_uploadPageExitVerificationService) {
             _uploadPageExitVerificationService.init();
+        }
+
+        if (_browserService) {
+            _browserService.initLocationListener();
         }
     }
 

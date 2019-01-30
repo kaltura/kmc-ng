@@ -40,6 +40,9 @@ Follow these instructions to test external apps integration:
 "kava": {
     "uri": ""
 },
+"kmcAnalytics": {
+    "uri": "/analytics/external/analytics-v0.1/index.html"
+},
 "liveAnalytics": {
     "uri": "/__local_machine_only__/live-analytics-v2.7.1/index.html",
     "uiConfId": "36060752",

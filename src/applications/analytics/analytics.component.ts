@@ -36,23 +36,31 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
         this.menuConfig = [
             {
                 isAvailable: true,
-                isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/dashboard`) !== -1),
-                open: () => {
-                    this._router.navigateByUrl('/analytics/dashboard');
-                },
-                menuTitle: this._appLocalization.get('app.titles.analyticsDashboard'),
-            },
-            {
-                isAvailable: true,
                 isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/technology`) !== -1 ||
                     activePath.indexOf(`/analytics/geo-location`) !== -1 ||
                     activePath.indexOf(`/analytics/content-interactions`) !== -1 ||
                     activePath.indexOf(`/analytics/engagement`) !== -1),
                 open: () => {
-                    this._router.navigateByUrl('/analytics/technology');
+                    this._router.navigateByUrl('/analytics/engagement');
                 },
                 menuTitle: this._appLocalization.get('app.titles.audience'),
                 children: [
+                    {
+                        isAvailable: true,
+                        isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/engagement`) !== -1),
+                        open: () => {
+                            this._router.navigateByUrl('/analytics/engagement');
+                        },
+                        menuTitle: this._appLocalization.get('app.titles.analyticsEngagement')
+                    },
+                    {
+                        isAvailable: true,
+                        isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/content-interactions`) !== -1),
+                        open: () => {
+                            this._router.navigateByUrl('/analytics/content-interactions');
+                        },
+                        menuTitle: this._appLocalization.get('app.titles.analyticsInteractions')
+                    },
                     {
                         isAvailable: true,
                         isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/technology`) !== -1),
@@ -69,22 +77,6 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                         },
                         menuTitle: this._appLocalization.get('app.titles.analyticsGeo')
                     },
-                    {
-                        isAvailable: true,
-                        isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/content-interactions`) !== -1),
-                        open: () => {
-                            this._router.navigateByUrl('/analytics/content-interactions');
-                        },
-                        menuTitle: this._appLocalization.get('app.titles.analyticsInteractions')
-                    },
-                    {
-                        isAvailable: true,
-                        isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/engagement`) !== -1),
-                        open: () => {
-                            this._router.navigateByUrl('/analytics/engagement');
-                        },
-                        menuTitle: this._appLocalization.get('app.titles.analyticsEngagement')
-                    }
                 ]
             },
             {
@@ -94,16 +86,6 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                     this._router.navigateByUrl('/analytics/contributors');
                 },
                 menuTitle: this._appLocalization.get('app.titles.contributors'),
-                children: [
-                    {
-                        isAvailable: true,
-                        isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/contributors`) !== -1),
-                        open: () => {
-                            this._router.navigateByUrl('/analytics/contributors');
-                        },
-                        menuTitle: this._appLocalization.get('app.titles.analyticsTopContributors')
-                    }
-                ]
             },
             {
                 menuTitle: this._appLocalization.get('app.titles.analyticsBW'),

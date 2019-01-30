@@ -1,3 +1,25 @@
+<a name="5.6.3"></a>
+## [5.6.3](https://github.com/kaltura/kmc-ng/compare/v5.6.2...v5.6.3) (2019-01-29)
+
+
+### Bug Fixes
+
+* **entry/distribution:** fix errors mapping ([7e4419f](https://github.com/kaltura/kmc-ng/commit/7e4419f))
+
+
+
+<a name="5.6.2"></a>
+## [5.6.2](https://github.com/kaltura/kmc-ng/compare/v5.6.1...v5.6.2) (2019-01-13)
+
+
+### Bug Fixes
+
+* **advertisements:** Enable advertisements for entries without Source flavor ([e9e29d0](https://github.com/kaltura/kmc-ng/commit/e9e29d0))
+* **analytics:** Fix cdn_host parameter passed to Live-Analytics ([c290579](https://github.com/kaltura/kmc-ng/commit/c290579))
+* **syndication:** Syndication feeds are not created for some playlists
+
+
+
 <a name="5.6.1"></a>
 ## [5.6.1](https://github.com/kaltura/kmc-ng/compare/v5.6.0...v5.6.1) (2018-12-26)
 

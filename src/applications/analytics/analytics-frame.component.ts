@@ -5,6 +5,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'kAnalyticsFrame',
@@ -24,19 +25,22 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     private _lastNav = '';
     private _currentAppUrl: string;
     private _lastQueryParams: { [key: string]: string }[] = null;
+    private _analyticsDefaultPage = '/analytics/engagement';
 
     constructor(private appAuthentication: AppAuthentication,
                 private logger: KalturaLogger,
                 private router: Router,
                 private _browserService: BrowserService,
-                private renderer: Renderer2
+                private renderer: Renderer2,
+                private _location: Location,
     ) {
         router.events
             .pipe(cancelOnDestroy(this))
             .subscribe((event) => {
                 if (event instanceof NavigationEnd)  {
-                    const { url, queryParams } = this._getUrlWithoutParams(event.urlAfterRedirects);
+                    const { url, queryParams } = this._browserService.getUrlWithoutParams(event.urlAfterRedirects);
                     if (this._currentAppUrl !== url) {
+                        this.updateLayout(window.innerHeight - 54);
                         this._currentAppUrl = url;
                         if (this._initialized) {
                             this.sendMessageToAnalyticsApp({'messageType': 'navigate', payload: { url }});
@@ -48,18 +52,6 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                     }
                 }
             });
-    }
-
-    private _getUrlWithoutParams(pathString: string): { url: string, queryParams: { [key: string]: string }[] } {
-        const urlTree = this.router.parseUrl(pathString);
-        let url = '/';
-        let queryParams = null;
-        if (urlTree.root.children['primary']) {
-            url = `/${urlTree.root.children['primary'].segments.map(({ path }) => path).join('/')}`;
-            queryParams = urlTree.queryParams;
-        }
-
-        return { url, queryParams };
     }
 
     private sendMessageToAnalyticsApp(message: any): void{
@@ -84,7 +76,8 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
         // set analytics config
         const config = {
             kalturaServer: {
-                uri : serverConfig.kalturaServer.uri
+                uri : serverConfig.kalturaServer.uri,
+                previewUIConf: serverConfig.kalturaServer.previewUIConf
             },
             cdnServers: serverConfig.cdnServers,
             liveAnalytics: serverConfig.externalApps.liveAnalytics,
@@ -128,8 +121,20 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             if (postMessageData.messageType === 'navigate') {
                 this._updateQueryParams(postMessageData.payload);
             }
+            if (postMessageData.messageType === 'navigateTo') {
+                this.router.navigateByUrl(postMessageData.payload);
+            }
             if (postMessageData.messageType === 'scrollTo') {
                 this._scrollTo(postMessageData.payload);
+            }
+            if (postMessageData.messageType === 'entryNavigateBack') {
+                this._navigateBack();
+            }
+            if (postMessageData.messageType === 'modalOpened') {
+                this._modalToggle(true);
+            }
+            if (postMessageData.messageType === 'modalClosed') {
+                this._modalToggle(false);
             }
         };
         this._addPostMessagesListener();
@@ -138,6 +143,31 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this._url = null;
         this._removePostMessagesListener();
+    }
+
+    private _modalToggle(opened: boolean): void {
+        const appMenu = document.querySelector('#appMenu') as HTMLElement;
+        const menuCover = document.querySelector('.kMenuCover') as HTMLElement;
+        if (!appMenu || !menuCover) {
+            return;
+        }
+
+        if (opened) {
+            document.body.classList.add('kModal');
+            menuCover.style.display = 'block';
+            menuCover.style.height = `${appMenu.offsetHeight}px`;
+        } else {
+            document.body.classList.remove('kModal');
+            menuCover.style.display = 'none';
+        }
+    }
+
+    private _navigateBack(): void {
+        if (!!this._browserService.previousRoute) {
+            this.router.navigateByUrl(this._browserService.previousRoute.url);
+        } else {
+            this.router.navigateByUrl(this._analyticsDefaultPage);
+        }
     }
 
     private _updateQueryParams(queryParams: Params): void {
