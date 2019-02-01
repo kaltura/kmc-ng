@@ -6,6 +6,7 @@ import { serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { Location } from '@angular/common';
+import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
 
 @Component({
     selector: 'kAnalyticsFrame',
@@ -32,7 +33,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private _browserService: BrowserService,
                 private renderer: Renderer2,
-                private _location: Location,
+                private _loggerConfigurator: KmcLoggerConfigurator,
     ) {
         router.events
             .pipe(cancelOnDestroy(this))
@@ -52,6 +53,8 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                     }
                 }
             });
+
+        this.sendMessageToAnalyticsApp({'messageType': 'setLogsLevel', payload: { level: this._loggerConfigurator.currentLogLevel }});
     }
 
     private sendMessageToAnalyticsApp(message: any): void{
