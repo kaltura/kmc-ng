@@ -82,7 +82,7 @@ export class KmcLoggerConfigurator implements OnDestroy {
             const logLevelAsString = this._browserService.getInitialQueryParam('log');
             const logLevel = this._getLogLevel(logLevelAsString);
             const recordLogLevelAsString = this._browserService.getInitialQueryParam('record');
-            const recordLogLevel = this._getLogLevel(recordLogLevelAsString);
+            const recordLogLevel = recordLogLevelAsString ? this._getLogLevel(recordLogLevelAsString) : null;
 
             if (logLevel || recordLogLevel) {
                 console.log(`logger configurator: set log level '${logLevel}' and record log level '${recordLogLevel}'`);
