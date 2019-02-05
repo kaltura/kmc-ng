@@ -283,7 +283,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
         enforceFeedAuthor: formData.enforceFeedAuthor,
       feedLandingPage: formData.website,
       feedDescription: formData.feedDescription,
-      categories: formData.categories.join(','),
+      categories: formData.categories.join(',').replace(' & ', ' &amp; '),
       feedImageUrl: formData.feedImageUrl,
       ownerName: formData.feedOwnerName,
       ownerEmail: formData.feedOwnerEmail,
