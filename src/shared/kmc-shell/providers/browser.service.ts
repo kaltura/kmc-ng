@@ -471,7 +471,7 @@ export class BrowserService implements IAppStorage {
             .pipe(
                 filter(e => e instanceof RoutesRecognized),
                 pairwise(),
-                filter((routes: RoutesRecognized[]) => {
+                filter((routes: any[]) => {
                     const [previousRoute, currentRoute] = routes;
                     const { url: prevUrl } = this.getUrlWithoutParams(previousRoute.url);
                     const { url: currentUrl } = this.getUrlWithoutParams(currentRoute.url);

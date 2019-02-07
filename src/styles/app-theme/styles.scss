@@ -383,3 +383,15 @@ body {
         }
     }
 }
+
+div, span, tr, td {
+    outline: none !important;
+}
+
+.ui-datepicker-trigger {
+    position: absolute;
+}
+
+.ui-table p-sorticon {
+    vertical-align: unset;
+}
