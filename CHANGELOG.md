@@ -1,3 +1,15 @@
+<a name="5.6.4"></a>
+## [5.6.4](https://github.com/kaltura/kmc-ng/compare/v5.6.3...v5.6.4) (2019-02-07)
+
+
+### Bug Fixes
+
+* **entry/captions:** Support ordering captions for Youtube entries ([701dd3f](https://github.com/kaltura/kmc-ng/commit/701dd3f))
+* **entry/related:** Add support to JSON files in entry related files ([bcc05f6](https://github.com/kaltura/kmc-ng/commit/bcc05f6))
+* **syndication:** Encode '&' symbol when creating feeds with categories containing ampersand ([b738b46](https://github.com/kaltura/kmc-ng/commit/b738b46))
+
+
+
 <a name="5.6.3"></a>
 ## [5.6.3](https://github.com/kaltura/kmc-ng/compare/v5.6.2...v5.6.3) (2019-01-29)
 
