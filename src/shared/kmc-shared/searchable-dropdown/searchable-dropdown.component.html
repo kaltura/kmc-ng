@@ -20,7 +20,7 @@
     <div class="ui-helper-hidden-accessible">
         <input #in [attr.id]="inputId" type="text" [attr.aria-label]="selectedOption ? selectedOption.label : ' '"
                readonly (focus)="onInputFocus($event)" role="listbox"
-               (blur)="onInputBlur($event)" (keydown)="onKeydown($event)" [disabled]="disabled"
+               (blur)="onInputBlur($event)" (keydown)="onKeydown($event, true)" [disabled]="disabled"
                [attr.tabindex]="tabindex" [attr.autofocus]="autofocus">
     </div>
     <label
@@ -50,7 +50,7 @@
             <input #filter type="text" autocomplete="off" [value]="filterValue||''"
                    class="ui-dropdown-filter ui-inputtext ui-widget ui-state-default ui-corner-all"
                    [attr.placeholder]="filterPlaceholder"
-                   (keydown.enter)="$event.preventDefault()" (keydown)="onKeydown($event)">
+                   (keydown.enter)="$event.preventDefault()" (keydown)="onKeydown($event, false)">
             <span class="ui-dropdown-filter-icon pi pi-search"></span>
             <div *ngIf="loading" class="ui-dropdown-filter-icon lds-ring">
                 <div></div>
