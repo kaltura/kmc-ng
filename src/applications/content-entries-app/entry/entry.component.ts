@@ -150,7 +150,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                 private _appEvents: AppEventsService,
                 private _entryRoute: ActivatedRoute,
                 private _logger: KalturaLogger,
-                private _analyticsMainViewService: AnalyticsNewMainViewService,
+                private _analyticsNewMainViewService: AnalyticsNewMainViewService,
                 private _router: Router) {
 		entryWidgetsManager.registerWidgets([
 			widget1, widget2, widget3, widget4, widget5, widget6, widget7,
@@ -158,7 +158,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 			widget15
 		]);
 
-        this._analyticsAllowed = this._analyticsMainViewService.isAvailable();
+        this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable();
 	}
 
 	ngOnDestroy() {
