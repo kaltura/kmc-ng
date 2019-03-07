@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { KalturaEntryStatus, KalturaExternalMediaEntry, KalturaMediaEntry, KalturaMediaType, KalturaSourceType } from 'kaltura-ngx-client';
 import { ActionTypes, EntryStore, NotificationTypes } from './entry-store.service';
 import { EntrySectionsListWidget } from './entry-sections-list/entry-sections-list-widget.service';
@@ -32,6 +32,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { ContentEntriesAppService } from '../content-entries-app.service';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
 	selector: 'kEntry',
@@ -119,6 +120,8 @@ export class EntryComponent implements OnInit, OnDestroy {
 		return !this._entryStore.entryIsDirty || !editAccessControlAllowed;
 	}
 
+    public _analyticsAllowed: boolean;
+
 	constructor(entryWidgetsManager: EntryWidgetsManager,
 	            widget1: EntrySectionsListWidget,
 	            widget2: EntryUsersWidget,
@@ -146,12 +149,16 @@ export class EntryComponent implements OnInit, OnDestroy {
                 private _browserService: BrowserService,
                 private _appEvents: AppEventsService,
                 private _entryRoute: ActivatedRoute,
-                private _logger: KalturaLogger) {
+                private _logger: KalturaLogger,
+                private _analyticsMainViewService: AnalyticsNewMainViewService,
+                private _router: Router) {
 		entryWidgetsManager.registerWidgets([
 			widget1, widget2, widget3, widget4, widget5, widget6, widget7,
 			widget8, widget9, widget10, widget11, widget12, widget13, widget14,
 			widget15
 		]);
+
+        this._analyticsAllowed = this._analyticsMainViewService.isAvailable();
 	}
 
 	ngOnDestroy() {
@@ -444,5 +451,11 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public canLeave(): Observable<{ allowed: boolean }> {
 		return this._entryStore.canLeave();
 	}
+
+    public _openEntryAnalytics(): void {
+        if (this._analyticsAllowed) {
+            this._router.navigate(['analytics/entry'], { queryParams: { id: this._currentEntryId }});
+        }
+    }
 }
 

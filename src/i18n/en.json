@@ -713,7 +713,8 @@
                 "orderBy": "Order by: {{0}}",
                 "totalDuration": "Total duration {{0}}",
                 "resultsLimitRange": "1 - 200 Entries",
-                "noEntries": "No entries"
+                "noEntries": "No entries",
+                "viewAnalytics": "View Analytics"
             },
             "playlists": {
                 "playlists": "{{0}} Playlists",
