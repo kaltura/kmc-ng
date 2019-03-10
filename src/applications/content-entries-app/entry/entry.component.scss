@@ -15,6 +15,12 @@
 
     .kAnalytics {
         margin-right: 24px;
+        /deep/ .kIconstatistic {
+            font-size: 24px;
+        }
+        /deep/ .ui-button-text{
+            padding-left: 42px;
+        }
     }
 
     .kEntryActions {
