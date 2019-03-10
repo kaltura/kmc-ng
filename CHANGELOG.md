@@ -5,7 +5,6 @@
 ### Bug Fixes
 
 * **categories:** Show up to 100 sub-categories in the category details panel ([2bb1467](https://github.com/kaltura/kmc-ng/commit/2bb1467))
-* **content/syndication:** fix selecting ITunes categories with ampersand in the category name ([9fbc5eb](https://github.com/kaltura/kmc-ng/commit/9fbc5eb))
 * **login:** fix password expiration message ([56517e1](https://github.com/kaltura/kmc-ng/commit/56517e1))
 
 
