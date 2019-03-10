@@ -1,3 +1,15 @@
+<a name="5.6.5"></a>
+## [5.6.5](https://github.com/kaltura/kmc-ng/compare/v5.6.4...v5.6.5) (2019-03-10)
+
+
+### Bug Fixes
+
+* **categories:** Show up to 100 sub-categories in the category details panel ([2bb1467](https://github.com/kaltura/kmc-ng/commit/2bb1467))
+* **content/syndication:** fix selecting ITunes categories with ampersand in the category name ([9fbc5eb](https://github.com/kaltura/kmc-ng/commit/9fbc5eb))
+* **login:** fix password expiration message ([56517e1](https://github.com/kaltura/kmc-ng/commit/56517e1))
+
+
+
 <a name="5.6.4"></a>
 ## [5.6.4](https://github.com/kaltura/kmc-ng/compare/v5.6.3...v5.6.4) (2019-02-07)
 
