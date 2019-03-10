@@ -173,7 +173,7 @@
                 }
             },
             "passwordExpired": {
-                "title": "Your password is older than 90 days. To continue using the system you need to change your password now.",
+                "title": "Your password has expired. To continue using the system you need to change your password now.",
                 "error": {
                     "equal": "Passwords do not match",
                     "required": "Field is required"
