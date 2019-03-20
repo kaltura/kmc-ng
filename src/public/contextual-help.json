@@ -226,23 +226,23 @@
         "viewKey": "analytics",
         "links": [
             {
-                "value": "https://www.placecage.com/c/200/200",
+                "value": "https://knowledge.kaltura.com/",
                 "label": "Link1"
             },
             {
-                "value": "https://www.placecage.com/c/300/300",
+                "value": "https://knowledge.kaltura.com/",
                 "label": "Link2"
             },
             {
-                "value": "https://www.placecage.com/c/400/400",
+                "value": "https://knowledge.kaltura.com/",
                 "label": "Link3"
             },
             {
-                "value": "https://www.placecage.com/c/500/500",
+                "value": "https://knowledge.kaltura.com/",
                 "label": "Link4"
             },
             {
-                "value": "https://www.placecage.com/c/600/600",
+                "value": "https://knowledge.kaltura.com/",
                 "label": "Link5"
             }
         ]
