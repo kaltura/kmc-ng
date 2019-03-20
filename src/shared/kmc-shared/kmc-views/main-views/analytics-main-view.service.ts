@@ -35,7 +35,7 @@ export class AnalyticsMainViewService extends KmcMainViewBaseService {
 
     getViewMetadata(): ViewMetadata {
         return {
-            viewKey: 'analytics',
+            viewKey: '', // this view is a wrapper which doesn't need to have it's own view key
             title: this._appLocalization.get('app.titles.analyticsPageTitle'),
             menu: this._appLocalization.get('app.titles.analyticsMenuTitle')
         };
