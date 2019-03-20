@@ -127,6 +127,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         if (this._analyticsNewView.isAvailable()) {
             this._appEvents.publish(new UpdateMenuEvent('analytics', this.menuConfig, 'left'));
+            this._analyticsNewView.viewEntered();
         }
     }
 
