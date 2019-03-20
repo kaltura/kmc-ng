@@ -223,6 +223,31 @@
         ]
     },
     {
+        "viewKey": "analytics",
+        "links": [
+            {
+                "value": "https://www.placecage.com/c/200/200",
+                "label": "Link1"
+            },
+            {
+                "value": "https://www.placecage.com/c/300/300",
+                "label": "Link2"
+            },
+            {
+                "value": "https://www.placecage.com/c/400/400",
+                "label": "Link3"
+            },
+            {
+                "value": "https://www.placecage.com/c/500/500",
+                "label": "Link4"
+            },
+            {
+                "value": "https://www.placecage.com/c/600/600",
+                "label": "Link5"
+            }
+        ]
+    },
+    {
         "viewKey": "settings-access-control",
         "links": [
             {
