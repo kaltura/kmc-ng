@@ -113,15 +113,18 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                     }
                 ]
             },
-            {
+        ];
+
+        if (this._liveAnalyticsView.isAvailable()) {
+            this.menuConfig.push({
                 isAvailable: true,
-                isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/live`) !== -1),
+                isActiveView: (activePath: string) => (activePath.indexOf(`/analytics/live`) !== -1),
                 open: () => {
                     this._router.navigateByUrl('/analytics/live');
                 },
                 menuTitle: this._appLocalization.get('app.titles.live'),
-            }
-        ];
+            });
+        }
     }
 
     ngOnInit() {
