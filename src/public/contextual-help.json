@@ -227,23 +227,23 @@
         "links": [
             {
                 "value": "https://knowledge.kaltura.com/",
-                "label": "Link1"
+                "label": "Analytics"
             },
             {
                 "value": "https://knowledge.kaltura.com/",
-                "label": "Link2"
+                "label": "Audience Analytics"
             },
             {
                 "value": "https://knowledge.kaltura.com/",
-                "label": "Link3"
+                "label": "Contributors Analytics"
             },
             {
                 "value": "https://knowledge.kaltura.com/",
-                "label": "Link4"
+                "label": "Usage Analytics"
             },
             {
                 "value": "https://knowledge.kaltura.com/",
-                "label": "Link5"
+                "label": "Entry Level Analytics"
             }
         ]
     },

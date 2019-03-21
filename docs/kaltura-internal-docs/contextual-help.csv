@@ -41,11 +41,11 @@ analytics-live,Live Analytics,https://knowledge.kaltura.com/node/2118
 analytics-live,Live Content Dashboard Report,https://knowledge.kaltura.com/node/2118#live_content
 analytics-live,Live Report v for Specific Entry ,https://knowledge.kaltura.com/node/2118#specific_entry
 analytics-live,Export Analytics to CSV,https://knowledge.kaltura.com/node/2118#exporting
-analytics,Link1,https://knowledge.kaltura.com/
-analytics,Link2,https://knowledge.kaltura.com/
-analytics,Link3,https://knowledge.kaltura.com/
-analytics,Link4,https://knowledge.kaltura.com/
-analytics,Link5,https://knowledge.kaltura.com/
+analytics,Analytics,https://knowledge.kaltura.com/
+analytics,Audience Analytics,https://knowledge.kaltura.com/
+analytics,Contributors Analytics,https://knowledge.kaltura.com/
+analytics,Usage Analytics,https://knowledge.kaltura.com/
+analytics,Entry Level Analytics,https://knowledge.kaltura.com/
 settings-access-control,Access Control Overview,https://knowledge.kaltura.com/node/2128
 settings-access-control,Create an Access Profile,https://knowledge.kaltura.com/node/2129#create_access_profile
 settings-account-info,Monthly Bandwith/Storage Usage,https://knowledge.kaltura.com/node/2126
