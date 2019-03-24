@@ -1,3 +1,19 @@
+<a name="5.7.0"></a>
+# [5.7.0](https://github.com/kaltura/kmc-ng/compare/v5.6.5...v5.7.0) (2019-03-24)
+
+
+### Bug Fixes
+
+* **entry/contribution:** Fix entry size calculation ([eb82ba2](https://github.com/kaltura/kmc-ng/commit/eb82ba2))
+* **entry/preview:** Support Youtube entries playback in mini-preview ([9c18060](https://github.com/kaltura/kmc-ng/commit/9c18060))
+
+
+### Features
+
+* New Analytics ([6609893](https://github.com/kaltura/kmc-ng/commit/6609893))
+
+
+
 <a name="5.6.5"></a>
 ## [5.6.5](https://github.com/kaltura/kmc-ng/compare/v5.6.4...v5.6.5) (2019-03-10)
 
