@@ -38,7 +38,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                 isAvailable: true,
                 isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/technology`) !== -1 ||
                     activePath.indexOf(`/analytics/geo-location`) !== -1 ||
-                    activePath.indexOf(`/analytics/content-interactions`) !== -1 ||
+                    // activePath.indexOf(`/analytics/content-interactions`) !== -1 ||
                     activePath.indexOf(`/analytics/engagement`) !== -1),
                 open: () => {
                     this._router.navigateByUrl('/analytics/engagement');
@@ -53,14 +53,14 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                         },
                         menuTitle: this._appLocalization.get('app.titles.analyticsEngagement')
                     },
-                    {
-                        isAvailable: true,
-                        isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/content-interactions`) !== -1),
-                        open: () => {
-                            this._router.navigateByUrl('/analytics/content-interactions');
-                        },
-                        menuTitle: this._appLocalization.get('app.titles.analyticsInteractions')
-                    },
+                    // {
+                    //     isAvailable: true,
+                    //     isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/content-interactions`) !== -1),
+                    //     open: () => {
+                    //         this._router.navigateByUrl('/analytics/content-interactions');
+                    //     },
+                    //     menuTitle: this._appLocalization.get('app.titles.analyticsInteractions')
+                    // },
                     {
                         isAvailable: true,
                         isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/technology`) !== -1),
