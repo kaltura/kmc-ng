@@ -1,5 +1,5 @@
 <a name="5.7.0"></a>
-# [5.7.0](https://github.com/kaltura/kmc-ng/compare/v5.6.5...v5.7.0) (2019-03-24)
+# [5.7.0](https://github.com/kaltura/kmc-ng/compare/v5.6.5...v5.7.0) (2019-03-31)
 
 
 ### Bug Fixes
