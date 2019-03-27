@@ -11,7 +11,6 @@
                         <i class="kIcondropdown_arrow_left"></i>
                     </div>
                     <i class="k-analytics-logo" (click)="leftMenuConfig[0]?.open()"></i>
-                    <i class="k-analytics-beta" (click)="leftMenuConfig[0]?.open()"></i>
                 </div>
                 <div *ngFor="let item of leftMenuConfig">
                     <a class="kMenuLink" *ngIf="item.menuTitle.length && !item.icon"
