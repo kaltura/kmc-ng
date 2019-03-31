@@ -223,6 +223,31 @@
         ]
     },
     {
+        "viewKey": "analytics",
+        "links": [
+            {
+                "value": "https://knowledge.kaltura.com/node/2235",
+                "label": "Analytics"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2237",
+                "label": "Audience Analytics"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2238",
+                "label": "Contributors Analytics"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2239",
+                "label": "Usage Analytics"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/node/2240",
+                "label": "Entry Level Analytics"
+            }
+        ]
+    },
+    {
         "viewKey": "settings-access-control",
         "links": [
             {
