@@ -53,7 +53,7 @@ Follow these instructions to test external apps integration:
     "uri": "/__local_machine_only__/usage-dashboard-v1_0_0/index.html"
 },
 "editor": {
-    "uri": "/__local_machine_only__/kea-2.25.0/index.html"
+    "uri": "/__local_machine_only__/kea-v2.28.12/index.html"
 },
 "reach": {
     "uri": "/__local_machine_only__/reach-v5_75_08/index.html"
