@@ -10,10 +10,11 @@ import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-
 
 @Component({
     selector: 'kAnalyticsFrame',
-    template: '<iframe #analyticsFrame frameborder="0px" [src]="_url | safe"></iframe>',
+    template: '<span *ngIf="!_initialized" class="kLoading">Loading...</span><iframe #analyticsFrame frameborder="0px" [src]="_url | safe"></iframe>',
     styles: [
         ':host { display: block; width: 100%; height: 100%; }',
-        'iframe { width: 100%; height: 100%; border: 0px; transition: height 0.3s }'
+        'iframe { width: 100%; height: 100%; border: 0px; transition: height 0.3s; }',
+        '.kLoading { display: block; padding: 12px; font-size: 16px; }'
     ],
     providers: [KalturaLogger.createLogger('AnalyticsFrameComponent')]
 })
@@ -22,7 +23,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     @ViewChild('analyticsFrame') analyticsFrame: ElementRef;
     public _windowEventListener = null;
     public _url = null;
-    private _initialized = false;
+    public _initialized = false;
     private _lastNav = '';
     private _currentAppUrl: string;
     private _lastQueryParams: { [key: string]: string }[] = null;
