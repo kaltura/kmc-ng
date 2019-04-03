@@ -7,6 +7,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { Location } from '@angular/common';
 import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
     selector: 'kAnalyticsFrame',
@@ -34,6 +35,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private _browserService: BrowserService,
                 private renderer: Renderer2,
+                private _permissions: KMCPermissionsService,
                 private _loggerConfigurator: KmcLoggerConfigurator,
     ) {
         router.events
@@ -87,8 +89,11 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             liveAnalytics: serverConfig.externalApps.liveAnalytics,
             ks: this.appAuthentication.appUser.ks,
             pid: this.appAuthentication.appUser.partnerId,
-            locale: "en"
-        }
+            locale: 'en',
+            permissions: {
+                lazyLoadCategories: this._permissions.hasPermission(KMCPermissions.DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD)
+            }
+        };
 
         try {
             this._updateUrl();
