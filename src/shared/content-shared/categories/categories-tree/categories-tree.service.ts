@@ -16,7 +16,6 @@ export class CategoriesTreeService {
                 private _permissions: KMCPermissionsService,
                 private appLocalization: AppLocalization) {
         this._inLazyMode = this._permissions.hasPermission(KMCPermissions.DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD);
-        ;
     }
 
     public getCategories(): Observable<{ categories: CategoriesTreeNode[] }> {
