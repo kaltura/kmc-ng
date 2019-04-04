@@ -1,6 +1,10 @@
 <a name="5.7.1"></a>
 ## [5.7.1](https://github.com/kaltura/kmc-ng/compare/v5.7.0...v5.7.1) (2019-04-04)
 
+### Features
+
+* Content interactions dashboard in the analytics dashboards
+* Export to csv functionality in the analytics dashboard
 
 
 <a name="5.7.0"></a>
