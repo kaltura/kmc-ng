@@ -2,9 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KalturaUser } from 'kaltura-ngx-client';
-import { UserUpdateLoginDataActionArgs } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
@@ -17,7 +15,7 @@ export class EditEmailAddressComponent implements OnInit, OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() user: KalturaUser;
   @Input() blockerMessage: AreaBlockerMessage;
-  @Output() updateLoginData = new EventEmitter<UserUpdateLoginDataActionArgs>();
+  @Output() updateEmail = new EventEmitter<string>();
 
   public _editEmailAddressForm: FormGroup;
 
@@ -44,11 +42,7 @@ export class EditEmailAddressComponent implements OnInit, OnDestroy {
     this._logger.info(`handle send update email action by user`);
     if (this._editEmailAddressForm.valid) {
       const formData = this._editEmailAddressForm.value;
-      this.updateLoginData.emit({
-        oldLoginId: this.user.email,
-        password: formData.password,
-        newLoginId: formData.email
-      });
+      this.updateEmail.emit(formData.email);
     } else {
       this._logger.info(`change email form is not valid, abort action`, { errors: this._editEmailAddressForm.errors });
     }
