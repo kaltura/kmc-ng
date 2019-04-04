@@ -65,8 +65,12 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
   }
 }
 
-.kModal .appMenu{
-  z-index: 501 !important;
+.kModal {
+    overflow: hidden;
+
+    .appMenu {
+        z-index: 501 !important;
+    }
 }
 .kmcDetailsLayout {
   font-size: 15px;
