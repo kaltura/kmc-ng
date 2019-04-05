@@ -34,7 +34,6 @@ export class EditEmailAddressComponent implements OnInit, OnDestroy {
   private _createForm(): void {
     this._editEmailAddressForm = this._fb.group({
       email: [this.user ? this.user.email : '', Validators.compose([Validators.required, Validators.email])],
-      password: ['', Validators.required]
     });
   }
 

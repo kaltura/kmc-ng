@@ -17,23 +17,6 @@
             </div>
           </div>
         </div>
-        <div class="kRow">
-          <span class="kLabel">{{'applications.settings.myUserSettings.password' | translate}}</span>
-          <div>
-            <input type="password"
-                   class="kControl"
-                   formControlName="password"
-                   pInputText
-                   [ngClass]="{'kHasError':!_editEmailAddressForm.controls['password'].valid && _editEmailAddressForm.controls['password'].touched}">
-            <div *ngIf="_editEmailAddressForm.controls['password'].touched && _editEmailAddressForm.controls['password'].hasError('required')"
-              class="error">
-              {{'applications.settings.myUserSettings.errors.required' | translate}}
-            </div>
-            <div class="kPasswordRequired">
-              {{'applications.settings.myUserSettings.passwordRequiredEmail' | translate}}
-            </div>
-          </div>
-        </div>
       </div>
     </form>
 
