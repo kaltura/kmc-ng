@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaMultiRequest, UserUpdateAction } from 'kaltura-ngx-client';
 import { UserGetAction } from 'kaltura-ngx-client';
 import { UserRoleGetAction } from 'kaltura-ngx-client';
 import { UserUpdateLoginDataAction, UserUpdateLoginDataActionArgs } from 'kaltura-ngx-client';
@@ -9,6 +9,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaUser } from 'kaltura-ngx-client';
 import { KalturaUserRole } from 'kaltura-ngx-client';
 import { AppAuthentication } from 'app-shared/kmc-shell';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class SettingsMyUserSettingsService {
@@ -39,6 +40,17 @@ export class SettingsMyUserSettingsService {
       .catch(() => {
         return Observable.throw(new Error(this._appLocalization.get('applications.settings.myUserSettings.errors.getUserData')));
       });
+  }
+
+  public updateEmail(user: KalturaUser): Observable<void> {
+      return this._kalturaServerClient
+          .request(new UserUpdateAction({ userId: user.id, user }))
+          .pipe(
+              catchError(error =>
+                  throwError(new Error(this._appLocalization.get('applications.settings.myUserSettings.errors.updateUser')))
+              ),
+              map(() => {}),
+          );
   }
 
   public updateLoginData(userData: UserUpdateLoginDataActionArgs): Observable<void> {

@@ -51,12 +51,12 @@
     </ng-template>
   </kPopupWidget>
 
-  <kPopupWidget #editEmailAddressPopup data-aid="editEmailAddressPopup" [popupWidth]="600" [popupHeight]="370" [modal]="true" [preventPageScroll]="true">
+  <kPopupWidget #editEmailAddressPopup data-aid="editEmailAddressPopup" [popupWidth]="600" [popupHeight]="245" [modal]="true" [preventPageScroll]="true">
     <ng-template>
       <kEditEmailAddress [parentPopupWidget]="editEmailAddressPopup"
                          [user]="_user"
                          [blockerMessage]="_updateBlockerMessage"
-                         (updateLoginData)="_updateLoginData($event, 'editEmailAddressPopup')"></kEditEmailAddress>
+                         (updateEmail)="_updateEmail($event, 'editEmailAddressPopup')"></kEditEmailAddress>
     </ng-template>
   </kPopupWidget>
 
