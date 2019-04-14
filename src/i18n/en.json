@@ -1031,6 +1031,7 @@
                     },
                     "errors": {
                         "loadFailed":  "An error occurred during Feed data loading.",
+                        "deletedPlaylist":  "The playlist used to create this feed could not be found (deleted?)\nMissing playlist ID: {{0}}\n\nPlease create a new feed.",
                         "enterName": "You must enter a Name to save the feed.",
                         "chooseDestination": "You must choose a destination to save the  feed.",
                         "fieldRequired": "This field is required."
