@@ -3,21 +3,24 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs';
-import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
-import { KalturaUser } from 'kaltura-ngx-client';
-import { UserGetAction } from 'kaltura-ngx-client';
-import { UserListAction } from 'kaltura-ngx-client';
-import { KalturaUserFilter } from 'kaltura-ngx-client';
-import { KalturaFilterPager } from 'kaltura-ngx-client';
-import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import {
+    KalturaClient,
+    KalturaFilterPager,
+    KalturaMediaEntry,
+    KalturaMultiRequest, KalturaMultiResponse, KalturaResource, KalturaResponse,
+    KalturaUser,
+    KalturaUserFilter,
+    UserGetAction,
+    UserListAction
+} from 'kaltura-ngx-client';
 
 import 'rxjs/add/observable/forkJoin';
 import { EntryWidget } from '../entry-widget';
 import { async } from 'rxjs/scheduler/async';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
-import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
 export class EntryUsersWidget extends EntryWidget implements OnDestroy
@@ -114,26 +117,44 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
         this.usersForm.disable({ emitEvent: false });
       }
 
-      const fetchUsersData$ = this._kalturaServerClient.multiRequest(new KalturaMultiRequest(
-        new UserGetAction({ userId: this.data.creatorId }),
-        new UserGetAction({ userId: this.data.userId })
-      ))
-        .pipe(cancelOnDestroy(this, this.widgetReset$))
-        .map(([creatorResponse, ownerResponse]) => {
-          if ((creatorResponse.error && creatorResponse.error.code !== 'INVALID_USER_ID') || (ownerResponse.error && ownerResponse.error.code !== 'INVALID_USER_ID')) {
-            throw new Error('failed to fetch users data');
-          } else {
-            const creator = creatorResponse.result;
-            if (creator) {
-                this._creator = creator.screenName ? creator.screenName : creator.id;
-            }else{
-                this._creator = this.data.creatorId;
+        if (!this.data.creatorId && !this.data.userId) {
+            this._creator = '';
+            this._owner = new KalturaUser({ screenName: '' });
+        } else {
+            const getUserActions = [];
+            // if creatorId and userId is the same make single call to reduce number of calls
+            if (this.data.creatorId && this.data.userId && this.data.creatorId === this.data.userId) {
+                getUserActions.push(new UserGetAction({ userId: this.data.creatorId }));
+            } else { // otherwise call for each user separately
+                if (this.data.creatorId) {
+                    getUserActions.push(new UserGetAction({ userId: this.data.creatorId }));
+                }
+
+                if (this.data.userId) {
+                    getUserActions.push(new UserGetAction({ userId: this.data.userId }));
+                }
             }
-            this._owner = ownerResponse.result ? ownerResponse.result : new KalturaUser({ screenName: this.data.userId });
-          }
-          return undefined;
-        });
-      actions.push(fetchUsersData$);
+
+            const fetchUsersData$ = this._kalturaServerClient.multiRequest(new KalturaMultiRequest(...getUserActions))
+                .pipe(cancelOnDestroy(this, this.widgetReset$))
+                .map((responses: KalturaMultiResponse) => {
+                    if (responses.hasErrors()) {
+                        throw new Error('Failed to fetch users data');
+                    }
+
+                    const creatorResponse = responses.find((item: KalturaResponse<KalturaUser>) => item.result.id === this.data.creatorId);
+                    const ownerResponse = responses.find((item: KalturaResponse<KalturaUser>) => item.result.id === this.data.userId);
+
+                    this._creator = creatorResponse
+                        ? (creatorResponse.result.screenName ? creatorResponse.result.screenName : creatorResponse.result.id)
+                        : this.data.creatorId;
+
+                    this._owner = ownerResponse ? ownerResponse.result : new KalturaUser({ screenName: this.data.userId });
+
+                    return undefined;
+                });
+            actions.push(fetchUsersData$);
+        }
 
 	    if (this.data.entitledUsersEdit && this.data.entitledUsersEdit.length) {
 		    const entitledUsersEdit = this.data.entitledUsersEdit.split(",");
