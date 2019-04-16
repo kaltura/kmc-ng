@@ -66,6 +66,10 @@ export class KmcServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIEx
       return this._kalturaClient.multiRequest(multiRequest.setNetworkTag('pr'))
           .pipe(
               map(responses => {
+                  if (responses.hasErrors()) {
+                      throw responses.getFirstError();
+                  }
+
                   return requestsMapping.reduce((aggregatedResponses, requestSize) => {
                       const response = responses.splice(0, requestSize);
                       const unwrappedResponse = response.length === 1 ? response[0] : response;
