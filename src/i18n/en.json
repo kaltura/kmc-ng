@@ -1854,6 +1854,7 @@
                     "save": "Save",
                     "co-editors": "Co-Editors",
                     "co-publishers": "Co-Publishers",
+                    "co-viewers": "Co-Viewers",
                     "tooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier.",
                     "noScreenName": "Cannot apply user, screen name is empty"
 

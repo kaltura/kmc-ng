@@ -7,7 +7,9 @@ import {
     KalturaClient,
     KalturaFilterPager,
     KalturaMediaEntry,
-    KalturaMultiRequest, KalturaMultiResponse, KalturaResource, KalturaResponse,
+    KalturaMultiRequest,
+    KalturaMultiResponse,
+    KalturaResponse,
     KalturaUser,
     KalturaUserFilter,
     UserGetAction,
@@ -43,7 +45,8 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 		this.usersForm = this._formBuilder.group({
 			owners : null,
 			editors: [],
-			publishers: []
+			publishers: [],
+			viewers: [],
 		});
 
 		Observable.merge(this.usersForm.valueChanges,
@@ -91,6 +94,14 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 			}else{
 				data.entitledUsersPublish = null;
 			}
+
+            // save viewers
+            const viewers: KalturaUser[] = this.usersForm.value.viewers;
+            if (viewers && viewers.length) {
+                data.entitledUsersView = viewers.map(({ id }) => id).join(',');
+            } else {
+                data.entitledUsersView = null;
+            }
 		}
 	}
     /**
@@ -139,17 +150,18 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
                 .pipe(cancelOnDestroy(this, this.widgetReset$))
                 .map((responses: KalturaMultiResponse) => {
                     if (responses.hasErrors()) {
-                        throw new Error('Failed to fetch users data');
+                        this._creator = this.data.creatorId;
+                        this._owner = new KalturaUser({ screenName: this.data.userId });
+                    } else {
+                        const creatorResponse = responses.find((item: KalturaResponse<KalturaUser>) => item.result.id === this.data.creatorId);
+                        const ownerResponse = responses.find((item: KalturaResponse<KalturaUser>) => item.result.id === this.data.userId);
+
+                        this._creator = creatorResponse
+                            ? (creatorResponse.result.screenName ? creatorResponse.result.screenName : creatorResponse.result.id)
+                            : this.data.creatorId;
+
+                        this._owner = ownerResponse ? ownerResponse.result : new KalturaUser({ screenName: this.data.userId });
                     }
-
-                    const creatorResponse = responses.find((item: KalturaResponse<KalturaUser>) => item.result.id === this.data.creatorId);
-                    const ownerResponse = responses.find((item: KalturaResponse<KalturaUser>) => item.result.id === this.data.userId);
-
-                    this._creator = creatorResponse
-                        ? (creatorResponse.result.screenName ? creatorResponse.result.screenName : creatorResponse.result.id)
-                        : this.data.creatorId;
-
-                    this._owner = ownerResponse ? ownerResponse.result : new KalturaUser({ screenName: this.data.userId });
 
                     return undefined;
                 });
@@ -165,24 +177,19 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 
 		    const fetchEditorsData$ = this._kalturaServerClient.multiRequest(request)
 			    .pipe(cancelOnDestroy(this, this.widgetReset$))
-			    .map(
-				    responses =>
-				    {
-					    if (responses.hasErrors())
-					    {
-						    throw new Error('failed to fetch editor data');
-					    }else
-					    {
-						    let editors = [];
-						    responses.forEach(res => {
-							    editors.push(res.result);
-						    });
-						    this.usersForm.patchValue({editors: editors});
-					    }
-
-					    return undefined;
-				    }
-			    );
+                .map(
+                    responses => {
+                        const editors = responses.map((response, index) => {
+                            if (response.error) {
+                                const userId = entitledUsersEdit[index];
+                                return new KalturaUser({ id: userId, screenName: userId });
+                            }
+                            return response.result;
+                        });
+                        this.usersForm.patchValue({ editors });
+                        return undefined;
+                    }
+                );
 
 		    actions.push(fetchEditorsData$);
 	    }
@@ -196,27 +203,46 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 
 		    const fetchPublishersData$ = this._kalturaServerClient.multiRequest(request)
 			    .pipe(cancelOnDestroy(this, this.widgetReset$))
-			    .map(
-				    responses =>
-				    {
-					    if (responses.hasErrors())
-					    {
-						    throw new Error('failed to fetch publishers data');
-					    }else
-					    {
-						    let publishers = [];
-						    responses.forEach(res => {
-							    publishers.push(res.result);
-						    });
-						    this.usersForm.patchValue({publishers: publishers});
-					    }
-
-					    return undefined;
-				    }
-			    );
+                .map(
+                    responses => {
+                        const publishers = responses.map((response, index) => {
+                            if (response.error) {
+                                const userId = entitledUsersPublish[index];
+                                return new KalturaUser({ id: userId, screenName: userId });
+                            }
+                            return response.result;
+                        });
+                        this.usersForm.patchValue({ publishers });
+                        return undefined;
+                    }
+                );
 
 		    actions.push(fetchPublishersData$);
 	    }
+
+        if (this.data.entitledUsersView && this.data.entitledUsersView.length) {
+            const entitledUsersView = this.data.entitledUsersView.split(',');
+            const getViewersActions = entitledUsersView.map(userId => new UserGetAction({ userId }));
+
+            const fetchPublishersData$ = this._kalturaServerClient.multiRequest(new KalturaMultiRequest(...getViewersActions))
+                .pipe(cancelOnDestroy(this, this.widgetReset$))
+                .map(
+                    responses => {
+                        const viewers = responses.map((response, index) => {
+                            if (response.error) {
+                                const userId = entitledUsersView[index];
+                                return new KalturaUser({ id: userId, screenName: userId });
+                            }
+                            return response.result;
+                        });
+                        this.usersForm.patchValue({ viewers });
+
+                        return undefined;
+                    }
+                );
+
+            actions.push(fetchPublishersData$);
+        }
 
 	    return Observable.forkJoin(actions)
 		    .map(responses => {
@@ -225,6 +251,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 		    })
 		    .catch((error, caught) =>
 		    {
+		        console.warn(error);
 			    super._hideLoader();
 			    super._showActivationError();
 

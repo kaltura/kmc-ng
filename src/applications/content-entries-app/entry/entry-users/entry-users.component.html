@@ -51,6 +51,23 @@
 								   (completeMethod)="_searchUsers($event, 'publishers')">
 					</kAutoComplete>
 				</div>
+                <div class="kRow">
+                    <span class="kLabels">{{'applications.content.entryDetails.users.co-viewers' | translate}}</span>
+                    <kAutoComplete formControlName="viewers"
+                                   suggestionItemField="item"
+                                   suggestionLabelField="name"
+                                   field="id"
+                                   [multiple]="true"
+                                   [tooltipResolver]="'__tooltip'"
+                                   [classField]="'__class'"
+                                   [onItemAdding]="_convertUserInputToValidValue"
+                                   [limitToSuggestions]="false"
+                                   [minLength]="3"
+                                   suggestionSelectableField="isSelectable"
+                                   [suggestionsProvider]="_usersProvider"
+                                   (completeMethod)="_searchUsers($event, 'viewers')">
+                    </kAutoComplete>
+                </div>
 			</div>
 		</div>
 
