@@ -2,8 +2,8 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {DropFoldersFilters, DropFoldersStoreService} from '../drop-folders-store/drop-folders-store.service';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {RefineList} from '../drop-folders-store/drop-folders-refine-filters.service';
-import {DatePipe} from '@kaltura-ng/kaltura-ui';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { DatePipe } from 'app-shared/kmc-shared/date-format/date.pipe';
 
 export interface TagItem {
   type: string,

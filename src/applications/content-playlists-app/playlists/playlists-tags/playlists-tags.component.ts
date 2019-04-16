@@ -1,8 +1,8 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {PlaylistsFilters, PlaylistsStore} from '../playlists-store/playlists-store.service';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
-import {DatePipe} from '@kaltura-ng/kaltura-ui';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { DatePipe } from 'app-shared/kmc-shared/date-format/date.pipe';
 export interface TagItem {
   type: string,
   value: any,

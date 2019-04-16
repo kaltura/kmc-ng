@@ -206,7 +206,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       RestorePasswordFormComponent,
       InvalidRestorePasswordHashFormComponent,
       ProgressBarComponent,
-      PersistLoginByKsComponent
+      PersistLoginByKsComponent,
   ],
   bootstrap: <any>[
     AppComponent

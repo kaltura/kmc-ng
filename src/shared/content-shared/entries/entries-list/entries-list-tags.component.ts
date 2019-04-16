@@ -7,9 +7,9 @@ import {
   RefineGroupList
 } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
-import {DatePipe} from '@kaltura-ng/kaltura-ui';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { Unsubscribable } from 'rxjs';
+import { DatePipe } from 'app-shared/kmc-shared/date-format/date.pipe';
 
 export interface TagItem {
     type: string;

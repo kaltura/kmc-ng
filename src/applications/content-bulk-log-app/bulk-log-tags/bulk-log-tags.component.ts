@@ -2,8 +2,8 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {BulkLogFilters, BulkLogStoreService} from '../bulk-log-store/bulk-log-store.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {RefineList} from '../bulk-log-store/bulk-log-refine-filters.service';
-import {DatePipe} from "@kaltura-ng/kaltura-ui";
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { DatePipe } from 'app-shared/kmc-shared/date-format/date.pipe';
 
 export interface TagItem {
   type: string,

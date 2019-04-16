@@ -40,7 +40,7 @@
                             {{subcategory.name}}
                         </div>
                     </td>
-                    <td class="createdAtColumn">{{subcategory.createdAt | kDate}}</td>
+                    <td class="createdAtColumn">{{subcategory.createdAt | kmcDate}}</td>
                     <td class="entriesCountColumn">{{subcategory.entriesCount}}</td>
                     <td class="actionsColumn" *ngIf="_kmcPermissions.CONTENT_MANAGE_EDIT_CATEGORIES | kNgIfPermitted">
                         <button type="button" pButton icon="kIconmore" class="kMoreActionsButton"

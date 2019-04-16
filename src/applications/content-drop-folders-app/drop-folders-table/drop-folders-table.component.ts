@@ -12,10 +12,10 @@ import {
 import {Menu, MenuItem} from 'primeng/primeng';
 import {KalturaDropFolderFile} from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
-import {DatePipe} from '@kaltura-ng/kaltura-ui';
 import { globalConfig } from 'config/global';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
+import { DatePipe } from 'app-shared/kmc-shared/date-format/date.pipe';
 
 @Component({
   selector: 'kDropFoldersListTable',

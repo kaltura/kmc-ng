@@ -33,6 +33,7 @@ import { BulkLogStatusIconPipe } from './pipes/bulk-log-status-icon.pipe';
 import { BulkLogTagsComponent } from './bulk-log-tags/bulk-log-tags.component';
 import { FiltersModule } from '@kaltura-ng/mc-shared';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
 
 @NgModule({
   imports: [
@@ -60,7 +61,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     StickyModule,
       FiltersModule,
     TableModule,
-    KMCPermissionsModule
+    KMCPermissionsModule,
+      DateFormatModule,
   ],
   declarations: [
     ContentBulkLogAppComponent,

@@ -5,9 +5,9 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {RefineGroup, RefineGroupList} from '../categories-refine-filters.service';
 import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
 import {ISubscription} from 'rxjs/Subscription';
-import {DatePipe} from '@kaltura-ng/kaltura-ui';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { DatePipe } from 'app-shared/kmc-shared/date-format/date.pipe';
 
 export interface TagItem {
   type: string,

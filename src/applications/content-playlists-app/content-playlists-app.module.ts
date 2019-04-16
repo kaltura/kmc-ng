@@ -27,6 +27,7 @@ import { FiltersModule } from '@kaltura-ng/mc-shared';
 import { SliderModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { KPTableModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
 
 @NgModule({
     imports: [
@@ -60,7 +61,8 @@ import { KPTableModule } from '@kaltura-ng/kaltura-primeng-ui';
     SliderModule,
       TableModule,
       KMCPermissionsModule,
-        KPTableModule
+        KPTableModule,
+        DateFormatModule,
   ],declarations: [
       ContentPlaylistsComponent,
       PlaylistsComponentsList,

@@ -42,6 +42,7 @@ import { MultiSelectModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { RolesListComponent } from './roles-list/roles-list.component';
 import { RolesTableComponent } from './roles-table/roles-table.component';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
 
 @NgModule({
   imports: [
@@ -81,7 +82,7 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     KMCPermissionsModule,
     TableModule,
     InputSwitchModule,
-    KMCPermissionsModule
+      DateFormatModule,
   ],
   declarations: [
     AdministrationRolesComponent,

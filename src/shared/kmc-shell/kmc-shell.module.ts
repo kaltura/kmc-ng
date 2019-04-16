@@ -11,6 +11,7 @@ import { ReleaseNotesComponent } from './components/release-notes/release-notes.
 import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
 import { EntryTypePipe } from 'app-shared/kmc-shell/pipes/entry-type.pipe';
 import { PageExitVerificationService, UploadPageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import { DatePipe } from 'app-shared/kmc-shared/date-format/date.pipe';
 
 @NgModule({
     imports: <any[]>[
@@ -23,13 +24,13 @@ import { PageExitVerificationService, UploadPageExitVerificationService } from '
         AppContainerComponent,
         ReleaseNotesComponent,
         ScrollToTopComponent,
-        EntryTypePipe
+        EntryTypePipe,
     ],
     exports: <any[]>[
         AppContainerComponent,
         ReleaseNotesComponent,
         ScrollToTopComponent,
-        EntryTypePipe
+        EntryTypePipe,
     ],
     providers: <any[]>[]
 })
