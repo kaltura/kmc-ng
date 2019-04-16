@@ -25,6 +25,9 @@ export class KmcServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIEx
       _appEvents.event(UserLoginStatusEvent).subscribe(
           event => {
               this._isLogged = event.isLogged;
+              if (this._isLogged) {
+                  this._isKSValid = true;
+              }
           }
       );
   }
