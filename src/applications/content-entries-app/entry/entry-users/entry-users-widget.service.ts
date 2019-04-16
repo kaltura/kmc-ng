@@ -7,7 +7,9 @@ import {
     KalturaClient,
     KalturaFilterPager,
     KalturaMediaEntry,
-    KalturaMultiRequest, KalturaMultiResponse, KalturaResource, KalturaResponse,
+    KalturaMultiRequest,
+    KalturaMultiResponse,
+    KalturaResponse,
     KalturaUser,
     KalturaUserFilter,
     UserGetAction,
@@ -43,7 +45,8 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 		this.usersForm = this._formBuilder.group({
 			owners : null,
 			editors: [],
-			publishers: []
+			publishers: [],
+			viewers: [],
 		});
 
 		Observable.merge(this.usersForm.valueChanges,
@@ -91,6 +94,14 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 			}else{
 				data.entitledUsersPublish = null;
 			}
+
+            // save viewers
+            const viewers: KalturaUser[] = this.usersForm.value.viewers;
+            if (viewers && viewers.length) {
+                data.entitledUsersView = viewers.map(({ id }) => id).join(',');
+            } else {
+                data.entitledUsersView = null;
+            }
 		}
 	}
     /**
@@ -217,6 +228,27 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 
 		    actions.push(fetchPublishersData$);
 	    }
+
+        if (this.data.entitledUsersView && this.data.entitledUsersView.length) {
+            const entitledUsersView = this.data.entitledUsersView.split(',');
+            const getViewersActions = entitledUsersView.map(userId => new UserGetAction({ userId }));
+
+            const fetchPublishersData$ = this._kalturaServerClient.multiRequest(new KalturaMultiRequest(...getViewersActions))
+                .pipe(cancelOnDestroy(this, this.widgetReset$))
+                .map(
+                    responses => {
+                        if (responses.hasErrors()) {
+                            throw new Error('failed to fetch viewers data');
+                        } else {
+                            this.usersForm.patchValue({ viewers: responses.map(({ result }) => result) });
+                        }
+
+                        return undefined;
+                    }
+                );
+
+            actions.push(fetchPublishersData$);
+        }
 
 	    return Observable.forkJoin(actions)
 		    .map(responses => {
