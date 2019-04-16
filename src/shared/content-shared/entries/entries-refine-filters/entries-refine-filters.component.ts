@@ -8,6 +8,7 @@ import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { Calendar } from 'primeng/primeng';
+import { getCalendarFormat } from 'app-shared/kmc-shared/utils/get-locale-date-string';
 
 const listOfFilterNames: (keyof EntriesFilters)[] = [
     'createdAt',
@@ -78,7 +79,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
   public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
   public _createdAfter: Date;
   public _createdBefore: Date;
-
+    public _calendarFormat = getCalendarFormat();
 
   constructor(private _entriesStore: EntriesStore,
               private _appLocalization: AppLocalization) {

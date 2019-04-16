@@ -7,6 +7,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
 import { DropFoldersFilters, DropFoldersStoreService } from '../drop-folders-store/drop-folders-store.service';
+import { getCalendarFormat } from 'app-shared/kmc-shared/utils/get-locale-date-string';
 
 
 const listOfFilterNames: (keyof DropFoldersFilters)[] = [
@@ -43,6 +44,7 @@ export class DropFoldersRefineFiltersComponent implements OnInit, OnDestroy, OnC
   // properties that are exposed to the template
   public _primeLists: PrimeList[];
 
+    public _calendarFormat = getCalendarFormat();
   public _showLoader = true;
   public _createdAfter: Date;
   public _createdBefore: Date;

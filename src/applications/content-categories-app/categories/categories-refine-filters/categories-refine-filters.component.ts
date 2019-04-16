@@ -7,6 +7,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {ScrollToTopContainerComponent} from '@kaltura-ng/kaltura-ui';
 import {CategoriesFilters, CategoriesService} from '../categories.service';
 import {RefineGroup} from '../categories-refine-filters.service';
+import { getCalendarFormat } from 'app-shared/kmc-shared/utils/get-locale-date-string';
 
 const listOfFilterNames: (keyof CategoriesFilters)[] = [
   'createdAt',
@@ -55,6 +56,7 @@ export class CategoriesRefineFiltersComponent implements OnInit, OnDestroy, OnCh
   // properties that are exposed to the template
   public _primeListsGroups: PrimeListsGroup[] = [];
 
+    public _calendarFormat = getCalendarFormat();
   public _showLoader = true;
   public _createdFilterError: string = null;
   public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;

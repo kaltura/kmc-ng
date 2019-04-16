@@ -9,6 +9,7 @@ import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
 import { RefineList } from '../bulk-log-store/bulk-log-refine-filters.service';
+import { getCalendarFormat } from 'app-shared/kmc-shared/utils/get-locale-date-string';
 
 
 const listOfFilterNames: (keyof BulkLogFilters)[] = [
@@ -46,6 +47,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChang
 
   // properties that are exposed to the template
   public _primeLists: PrimeList[];
+    public _calendarFormat = getCalendarFormat();
 
   public _showLoader = true;
   public _uploadedAfter: Date;

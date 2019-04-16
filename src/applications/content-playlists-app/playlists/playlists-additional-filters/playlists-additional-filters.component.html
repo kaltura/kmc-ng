@@ -14,6 +14,7 @@
 					[yearNavigator]="true"
 					[maxDate]="createdBefore"
 					[yearRange]="_createdAtDateRange"
+                    [dateFormat]="_calendarFormat"
 					icon="kIconcalendar"
 					(onSelect)="_onCreatedChanged()"></p-calendar>
 				<p-calendar
@@ -24,6 +25,7 @@
 					[monthNavigator]="true"
 					[yearNavigator]="true"
 					[minDate]="createdAfter"
+                    [dateFormat]="_calendarFormat"
 					[yearRange]="_createdAtDateRange"
 					icon="kIconcalendar"
 					(onSelect)="_onCreatedChanged()"></p-calendar>
