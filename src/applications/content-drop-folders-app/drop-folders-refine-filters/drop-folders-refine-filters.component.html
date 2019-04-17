@@ -9,10 +9,10 @@
 
         <p-calendar class="kDateRangeFirst" [(ngModel)]="_createdAfter" [readonlyInput]="true" [showIcon]="true"
                     [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
-                    icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
+                    [dateFormat]="_calendarFormat" icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
         <p-calendar class="kDateRangeLast kPullLeft90" [(ngModel)]="_createdBefore" [readonlyInput]="true"
                     [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
-                    icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
+                    [dateFormat]="_calendarFormat" icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
       </div>
       <a class="kClearAll" (click)="_clearCreatedComponents()" [class.kDisabledLink]="!_createdAfter && !_createdBefore">
         {{'applications.content.dropFolders.filters.clearDates' | translate}}

@@ -1,8 +1,8 @@
 <k-details-bar #detailsBar [data]="_currentEntry">
     <kDetailInfo [label]="'applications.content.entryDetails.preview.entryID' | translate" [valueField]="'id'"></kDetailInfo>
     <kDetailInfo [iconStyle]="_currentEntry?.mediaType | entryType: false" [tooltip]="_currentEntry?.mediaType | entryType: true"></kDetailInfo>
-    <kDetailInfo [label]="'applications.content.entryDetails.preview.creationDate' | translate" [value]="_currentEntry?.createdAt | kDate:'dateOnly'" [tooltip]="_currentEntry?.createdAt | kDate"></kDetailInfo>
-    <kDetailInfo [label]="'applications.content.entryDetails.preview.updateDate' | translate" [value]="_currentEntry?.updatedAt | kDate:'dateOnly'" [tooltip]="_currentEntry?.updatedAt | kDate"></kDetailInfo>
+    <kDetailInfo [label]="'applications.content.entryDetails.preview.creationDate' | translate" [value]="_currentEntry?.createdAt | kmcDate:'dateOnly'" [tooltip]="_currentEntry?.createdAt | kmcDate"></kDetailInfo>
+    <kDetailInfo [label]="'applications.content.entryDetails.preview.updateDate' | translate" [value]="_currentEntry?.updatedAt | kmcDate:'dateOnly'" [tooltip]="_currentEntry?.updatedAt | kmcDate"></kDetailInfo>
     <kDetailInfo [label]="'applications.content.entryDetails.preview.owner' | translate" [valueField]="'userId'" [tooltip]="_currentEntry?.userId"></kDetailInfo>
     <kDetailInfo *ngIf="_hasDuration" [label]="'applications.content.entryDetails.preview.duration' | translate" [value]="_currentEntry?.duration | kTime"></kDetailInfo>
     <kDetailInfo *ngIf="_widgetService._landingPage" [label]="'applications.content.entryDetails.preview.landingPage' | translate" [link]="_widgetService._landingPage" [tooltip]="_widgetService._landingPage"></kDetailInfo>

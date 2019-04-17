@@ -37,6 +37,7 @@ import { KMCShellModule } from 'app-shared/kmc-shell';
 import { TagsModule } from '@kaltura-ng/kaltura-ui';
 import { DynamicMetadataFormModule } from 'app-shared/kmc-shared';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
 
 @NgModule({
   imports: [
@@ -73,7 +74,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     PrimeDynamicFormModule,
     ReactiveFormsModule,
     TagsModule,
-    KMCPermissionsModule
+    KMCPermissionsModule,
+      DateFormatModule,
   ],
   declarations: [
     ContentModerationComponent,

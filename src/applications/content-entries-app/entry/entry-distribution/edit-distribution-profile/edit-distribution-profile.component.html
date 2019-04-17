@@ -49,7 +49,7 @@
                 {{'applications.content.entryDetails.distribution.form.lastUpdate' | translate}}
               </span>
             <span class="kReadonlyData">
-              {{_profile?.updatedAt | kDate:'dateOnly'}}
+              {{_profile?.updatedAt | kmcDate:'dateOnly'}}
             </span>
           </div>
 
@@ -84,6 +84,7 @@
                       [yearNavigator]="true"
                       [formControl]="_startDateField"
                       [yearRange]="_createdAtDateRange"
+                      [dateFormat]="_calendarFormat"
                       (onSelect)="_onCreatedChanged()"></p-calendar>
         </div>
 
@@ -99,6 +100,7 @@
                         [yearNavigator]="true"
                         [formControl]="_endDateField"
                         [yearRange]="_createdAtDateRange"
+                        [dateFormat]="_calendarFormat"
                         (onSelect)="_onCreatedChanged()"></p-calendar>
             <div *ngIf="_createdFilterError" class="kError">{{_createdFilterError}}</div>
           </div>

@@ -29,6 +29,7 @@ import { DropFoldersComponentsList } from './drop-folders-components-list';
 import { KMCShellModule } from 'app-shared/kmc-shell';
 import { FiltersModule } from '@kaltura-ng/mc-shared';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
 
 @NgModule({
   imports: [
@@ -58,7 +59,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     RouterModule.forChild(routing),
     FiltersModule,
     TableModule,
-    KMCPermissionsModule
+    KMCPermissionsModule,
+      DateFormatModule,
   ],
   declarations: [
     ContentDropFoldersComponent,

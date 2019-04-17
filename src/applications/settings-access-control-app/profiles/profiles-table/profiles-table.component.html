@@ -68,7 +68,7 @@
                     </span>
                 </td>
                 <td [hidden]="_documentWidth < 1300">{{profile.id}}</td>
-                <td [hidden]="_documentWidth < 1300">{{ profile.createdAt | kDate:'dateOnly' }}</td>
+                <td [hidden]="_documentWidth < 1300">{{ profile.createdAt | kmcDate:'dateOnly' }}</td>
                 <td>
                     <span class="kAccessControlRestriction">
                         <i class="kAccessControlRestrictionIcon" [ngClass]="{

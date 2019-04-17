@@ -1,13 +1,13 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {SettingsAccountInformationService} from '../settings-account-information.service';
-import {AppAuthentication, PartnerPackageTypes} from 'app-shared/kmc-shell';
-import {DatePipe} from '@kaltura-ng/kaltura-ui';
+import { AppAuthentication, BrowserService, PartnerPackageTypes } from 'app-shared/kmc-shell';
 import {KalturaPartnerStatistics} from 'kaltura-ngx-client';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { SettingsAccountInformationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { serverConfig } from 'config/server';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { DatePipe } from 'app-shared/kmc-shared/date-format/date.pipe';
 
 @Component({
   selector: 'kAccountInfo',
@@ -28,6 +28,7 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
               private _appAuthentication: AppAuthentication,
               private _appLocalization: AppLocalization,
               private _logger: KalturaLogger,
+              private _browserService: BrowserService,
               private _settingsAccountInformationMainView: SettingsAccountInformationMainViewService) {
   }
 
@@ -40,7 +41,7 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
       const trialPeriod: number = serverConfig.kalturaServer.freeTrialExpiration.trialPeriodInDays;
 
       this._trialExpirationDateString =
-        (new DatePipe()).transform(this._appAuthentication.appUser.createdAt.getTime() + trialPeriod, 'dateOnly'); // "01/15/1992"
+        (new DatePipe(this._browserService)).transform(this._appAuthentication.appUser.createdAt.getTime() + trialPeriod, 'dateOnly'); // "01/15/1992"
     }
     if (this._settingsAccountInformationMainView.isAvailable()) {
         this.loadStatistics();

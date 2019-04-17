@@ -13,6 +13,7 @@ import {LocalizationModule} from '@kaltura-ng/mc-shared';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { TableModule } from 'primeng/table';
+import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { TableModule } from 'primeng/table';
     StickyModule,
     RouterModule.forChild(routing),
     TooltipModule,
-    KMCPermissionsModule
+    KMCPermissionsModule,
+      DateFormatModule,
   ],
   declarations: [
     AdministrationUsersComponent,

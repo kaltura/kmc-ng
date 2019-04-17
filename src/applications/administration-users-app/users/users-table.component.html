@@ -69,8 +69,8 @@
                         </span>
                     </td>
                     <td>
-                        <span class="kTableColumn" [kTooltip]="(user.lastLoginTime * 1000)| kDate" [showOnEllipsis]="true">
-                            {{(user.lastLoginTime * 1000)| kDate}}
+                        <span class="kTableColumn" [kTooltip]="(user.lastLoginTime * 1000)| kmcDate" [showOnEllipsis]="true">
+                            {{(user.lastLoginTime * 1000)| kmcDate}}
                         </span>
                     </td>
                     <td [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
