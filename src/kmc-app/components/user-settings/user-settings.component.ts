@@ -18,7 +18,7 @@ export class UserSettingsComponent {
       { value: 'day-month-year', label: 'DD/MM/YYYY' },
   ];
   public _selectedLanguage = 'en';
-  public _selectedDateFormat = this._dateFormats[0];
+  public _selectedDateFormat = this.browserService.getFromLocalStorage('kmc_date_format') || 'month-day-year';
 
   constructor(public _userAuthentication: AppAuthentication, private browserService: BrowserService, private _router: Router) {
       kmcAppConfig.locales.forEach(locale => {
