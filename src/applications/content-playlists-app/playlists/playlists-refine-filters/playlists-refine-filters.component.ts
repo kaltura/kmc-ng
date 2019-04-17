@@ -4,7 +4,7 @@ import { subApplicationsConfig } from 'config/sub-applications';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { PlaylistsFilters, PlaylistsStore } from '../playlists-store/playlists-store.service';
-import { getCalendarFormat } from 'app-shared/kmc-shared/utils/get-locale-date-string';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 const listOfFilterNames: (keyof PlaylistsFilters)[] = ['createdAt'];
 
@@ -20,9 +20,10 @@ export class PlaylistsRefineFiltersComponent implements OnInit, OnDestroy {
   public _createdBefore: Date;
   public _createdAtFilterError: string = null;
   public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
-    public _calendarFormat = getCalendarFormat();
+    public _calendarFormat = this._browserService.getCurrentDateFormat(true);
 
   constructor(private _store: PlaylistsStore,
+              private _browserService: BrowserService,
               private _appLocalization: AppLocalization) {
   }
 

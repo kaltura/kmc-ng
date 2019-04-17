@@ -16,7 +16,6 @@ import { KalturaNullableBoolean } from 'kaltura-ngx-client';
 import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client';
 import { KalturaEntryDistributionStatus } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { getCalendarFormat } from 'app-shared/kmc-shared/utils/get-locale-date-string';
 
 export interface ExtendedKalturaDistributionThumbDimensions extends KalturaDistributionThumbDimensions {
   entryThumbnails?: {
@@ -59,7 +58,7 @@ export class EditDistributionProfileComponent implements OnInit {
   public _updatesField: AbstractControl;
   public _startDateField: AbstractControl;
   public _endDateField: AbstractControl;
-    public _calendarFormat = getCalendarFormat();
+    public _calendarFormat = this._browserService.getCurrentDateFormat(true);
 
   constructor(private _appLocalization: AppLocalization,
               private _widget: EntryDistributionWidget,

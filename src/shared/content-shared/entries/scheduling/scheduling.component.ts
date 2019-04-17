@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { modulesConfig } from 'config/modules';
 import { subApplicationsConfig } from 'config/sub-applications';
-import { getCalendarFormat } from 'app-shared/kmc-shared/utils/get-locale-date-string';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kScheduling',
@@ -27,12 +26,12 @@ export class SchedulingComponent implements OnInit, OnDestroy {
 
   @Output() clearDates = new EventEmitter();
 
-    public _calendarFormat = getCalendarFormat();
+    public _calendarFormat = this._browserService.getCurrentDateFormat(true);
   public _schedulingForm: FormGroup;
   public _timeZone: any = {};
   public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
 
-  constructor() {
+  constructor(private _browserService: BrowserService) {
   }
 
   ngOnInit() {

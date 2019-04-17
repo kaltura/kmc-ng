@@ -22,6 +22,11 @@
                     (onChange)="onLangSelected($event)"></p-dropdown>
     </ul>
 
+    <ul class="kLanguages kOverrideFAIcons">
+        <p-dropdown [options]="_dateFormats" [(ngModel)]="_selectedDateFormat"
+                    (onChange)="onDateFormatSelected($event)"></p-dropdown>
+    </ul>
+
     <hr>
     <div class="kLinks">
         <a (click)="changeAccountPopup.open();parentPopup.close()">{{'app.userSettings.changeAccount' | translate}}</a>

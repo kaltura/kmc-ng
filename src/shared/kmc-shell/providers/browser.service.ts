@@ -495,5 +495,12 @@ export class BrowserService implements IAppStorage {
 
         return { url, queryParams };
     }
+
+    public getCurrentDateFormat(forCalendarComponent = false): string {
+        const format = this.getFromLocalStorage('kmc_date_format') || 'US';
+        return forCalendarComponent
+            ? (format === 'US' ? 'mm/dd/yy' : 'dd/mm/yy')
+            : (format === 'US' ? 'MM/DD/YYYY' : 'DD/MM/YYYY');
+    }
 }
 

@@ -1,11 +1,15 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as moment from 'moment';
-import { getLocaleDateString } from 'app-shared/kmc-shared/utils/get-locale-date-string';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Pipe({
     name: 'kmcDate'
 })
 export class DatePipe implements PipeTransform {
+    constructor(private _browserService: BrowserService) {
+
+    }
+
     transform(date: number, format?: string): any {
         if (date) {
             if (!format) {
@@ -14,13 +18,13 @@ export class DatePipe implements PipeTransform {
 
             switch (format) {
                 case 'dateOnly':
-                    format = getLocaleDateString();
+                    format = this._browserService.getCurrentDateFormat();
                     break;
                 case 'timeOnly':
                     format = 'HH:mm';
                     break;
                 case 'dateAndTime':
-                    format = `${getLocaleDateString()} HH:mm`;
+                    format = `${this._browserService.getCurrentDateFormat()} HH:mm`;
                     break;
                 case 'longDateOnly':
                     format = 'MMMM D, YYYY';

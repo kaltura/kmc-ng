@@ -4,6 +4,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {RefineList} from '../bulk-log-store/bulk-log-refine-filters.service';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { DatePipe } from 'app-shared/kmc-shared/date-format/date.pipe';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 export interface TagItem {
   type: string,
@@ -37,7 +38,9 @@ export class BulkLogTagsComponent implements OnInit, OnDestroy {
     private _refineFiltersMap: Map<string, RefineList> = new Map<string, RefineList>();
     public _showTags = false;
 
-  constructor(private _store: BulkLogStoreService, private _appLocalization: AppLocalization) {
+  constructor(private _browserService: BrowserService,
+              private _store: BulkLogStoreService,
+              private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
@@ -107,11 +110,11 @@ export class BulkLogTagsComponent implements OnInit, OnDestroy {
     if (fromDate || toDate) {
       let tooltip = '';
       if (fromDate && toDate) {
-        tooltip = `${(new DatePipe()).transform(fromDate.getTime(), 'longDateOnly')} - ${(new DatePipe()).transform(toDate.getTime(), 'longDateOnly')}`;
+        tooltip = `${(new DatePipe(this._browserService)).transform(fromDate.getTime(), 'longDateOnly')} - ${(new DatePipe(this._browserService)).transform(toDate.getTime(), 'longDateOnly')}`;
       } else if (fromDate) {
-        tooltip = `From ${(new DatePipe()).transform(fromDate.getTime(), 'longDateOnly')}`;
+        tooltip = `From ${(new DatePipe(this._browserService)).transform(fromDate.getTime(), 'longDateOnly')}`;
       } else if (toDate) {
-        tooltip = `Until ${(new DatePipe()).transform(toDate.getTime(), 'longDateOnly')}`;
+        tooltip = `Until ${(new DatePipe(this._browserService)).transform(toDate.getTime(), 'longDateOnly')}`;
       }
       this._tags.push({type: 'createdAt', value: null, label: 'Dates', tooltip});
     }
