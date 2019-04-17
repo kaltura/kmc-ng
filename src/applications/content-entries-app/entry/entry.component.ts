@@ -65,6 +65,7 @@ export class EntryComponent implements OnInit, OnDestroy {
     @ViewChild('bulkActionsPopup') _bulkActionsPopup: PopupWidgetComponent;
 	public _entryName: string;
 	public _entryType: KalturaMediaType;
+	public _sourceType: KalturaSourceType;
 
 	public _showLoader = false;
 	public _areaBlockerMessage: AreaBlockerMessage;
@@ -317,6 +318,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 							    const { entry } = this._entryStore;
 								this._entryName = entry.name;
 								this._entryType = entry.mediaType;
+								this._sourceType = entry.sourceType;
 
                                 this._buildMenu(entry);
 								break;
@@ -454,7 +456,8 @@ export class EntryComponent implements OnInit, OnDestroy {
 
     public _openEntryAnalytics(): void {
         if (this._analyticsAllowed) {
-            this._router.navigate(['analytics/entry'], { queryParams: { id: this._currentEntryId }});
+            const route = this._sourceType === KalturaSourceType.liveStream ? 'analytics/entry-live' : 'analytics/entry';
+            this._router.navigate([route], { queryParams: { id: this._currentEntryId } });
         }
     }
 }

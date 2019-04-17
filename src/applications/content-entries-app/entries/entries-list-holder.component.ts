@@ -12,7 +12,6 @@ import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import {UploadManagement} from '@kaltura-ng/kaltura-common';
 import {TrackedFileStatuses} from '@kaltura-ng/kaltura-common';
 import {UpdateEntriesListEvent} from 'app-shared/kmc-shared/events/update-entries-list-event';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { EntriesListService } from './entries-list.service';
 import {
@@ -22,7 +21,7 @@ import {
     ReachPages
 } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
-import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { AnalyticsNewMainViewService, ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { ClearEntriesSelectionEvent } from 'app-shared/kmc-shared/events/clear-entries-selection-event';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
@@ -37,7 +36,6 @@ import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shar
 })
 export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
-  @ViewChild('liveDashboard') _liveDashboard: PopupWidgetComponent;
 
   public _entryId: string = null;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -94,6 +92,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               private _contentEntriesAppService: ContentEntriesAppService,
               private _contentEntriesMainViewService: ContentEntriesMainViewService,
               private _reachAppViewService: ReachAppViewService,
+              private _analyticsNewMainViewService: AnalyticsNewMainViewService,
               private _liveDashboardAppViewService: LiveDashboardAppViewService) {
       _appEvents.event(ClearEntriesSelectionEvent)
           .pipe(cancelOnDestroy(this))
@@ -157,9 +156,11 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         break;
       case 'liveDashboard':
         if (entry && entry.id) {
-            this._entriesList.clearSelection();
+          this._entriesList.clearSelection();
           this._entryId = entry.id;
-          this._liveDashboard.open();
+            if (this._analyticsNewMainViewService.isAvailable()) {
+                this._router.navigate(['analytics/entry-live'], { queryParams: { id: this._entryId }});
+            }
         }
         break;
 
