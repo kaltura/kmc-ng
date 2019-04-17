@@ -14,8 +14,8 @@ export class UserSettingsComponent {
   @Input() parentPopup: PopupWidgetComponent;
   public _languages = [];
   public _dateFormats = [
-      { value: 'US', label: 'MM/DD/YYYY' },
-      { value: 'OTHER', label: 'DD/MM/YYYY' },
+      { value: 'month-day-year', label: 'MM/DD/YYYY' },
+      { value: 'day-month-year', label: 'DD/MM/YYYY' },
   ];
   public _selectedLanguage = 'en';
   public _selectedDateFormat = this._dateFormats[0];

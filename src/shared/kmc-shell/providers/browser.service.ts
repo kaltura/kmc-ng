@@ -497,10 +497,10 @@ export class BrowserService implements IAppStorage {
     }
 
     public getCurrentDateFormat(forCalendarComponent = false): string {
-        const format = this.getFromLocalStorage('kmc_date_format') || 'US';
+        const format = this.getFromLocalStorage('kmc_date_format') || 'month-day-year';
         return forCalendarComponent
-            ? (format === 'US' ? 'mm/dd/yy' : 'dd/mm/yy')
-            : (format === 'US' ? 'MM/DD/YYYY' : 'DD/MM/YYYY');
+            ? (format === 'month-day-year' ? 'mm/dd/yy' : 'dd/mm/yy')
+            : (format === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY');
     }
 }
 
