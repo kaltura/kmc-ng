@@ -12,7 +12,7 @@
 ### Features
 
 * **entry/users:** Add co-viewers form field ([#828](https://github.com/kaltura/kmc-ng/issues/828)) ([d4222fd](https://github.com/kaltura/kmc-ng/commit/d4222fd))
-* let user chose date format ([#829](https://github.com/kaltura/kmc-ng/issues/829)) ([a163026](https://github.com/kaltura/kmc-ng/commit/a163026))
+* let user choose date format ([#829](https://github.com/kaltura/kmc-ng/issues/829)) ([a163026](https://github.com/kaltura/kmc-ng/commit/a163026))
 
 
 
