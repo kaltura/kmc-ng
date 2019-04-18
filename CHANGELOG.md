@@ -1,3 +1,21 @@
+<a name="5.8.0"></a>
+# [5.8.0](https://github.com/kaltura/kmc-ng/compare/v5.7.1...v5.8.0) (2019-04-18)
+
+
+### Bug Fixes
+
+* Server poll invalid KS handling ([#827](https://github.com/kaltura/kmc-ng/issues/827)) ([6215876](https://github.com/kaltura/kmc-ng/commit/6215876))
+* **content/category:** Allow editing entitlements of categories which owner was deleted ([72219ae](https://github.com/kaltura/kmc-ng/commit/72219ae))
+* **content/syndication:** Handle Syndication feeds which use a playlist which is not loaded in the first 500 playlists ([#826](https://github.com/kaltura/kmc-ng/issues/826)) ([21a1bcc](https://github.com/kaltura/kmc-ng/commit/21a1bcc))
+
+
+### Features
+
+* **entry/users:** Add co-viewers form field ([#828](https://github.com/kaltura/kmc-ng/issues/828)) ([d4222fd](https://github.com/kaltura/kmc-ng/commit/d4222fd))
+* let user chose date format ([#829](https://github.com/kaltura/kmc-ng/issues/829)) ([a163026](https://github.com/kaltura/kmc-ng/commit/a163026))
+
+
+
 <a name="5.7.1"></a>
 ## [5.7.1](https://github.com/kaltura/kmc-ng/compare/v5.7.0...v5.7.1) (2019-04-04)
 
