@@ -42,6 +42,7 @@ import {
     LiveDashboardAppViewService,
 } from './component-views';
 import { QuizAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { HotspotsAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views/hotspots-app-view.service';
 
 @NgModule({
     imports: <any[]>[],
@@ -87,6 +88,7 @@ export class KmcViewsModule {
                 ClipAndTrimAppViewService,
                 AdvertisementsAppViewService,
                 QuizAppViewService,
+                HotspotsAppViewService,
                 RestorePasswordViewService,
                 ReachAppViewService,
                 ServicesDashboardMainViewService,
