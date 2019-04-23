@@ -106,7 +106,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
             firstName: this.user.firstName,
             lastName: this.user.lastName,
             id: this.user.id,
-            roleIds: relevantUser.roleIds ? relevantUser.roleIds : this.user.roleIds
+            roleIds: Number(relevantUser.roleIds ? relevantUser.roleIds : this.user.roleIds)
           });
           this._userForm.get('email').disable();
           this._userForm.get('firstName').disable();
