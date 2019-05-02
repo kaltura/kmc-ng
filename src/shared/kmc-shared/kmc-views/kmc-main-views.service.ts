@@ -16,6 +16,7 @@ import {
     LiveAnalyticsMainViewService,
     AdminUsersMainViewService,
     AdminRolesMainViewService,
+    AdminMultiAccountMainViewService,
     AnalyticsMainViewService,
     SettingsAccountSettingsMainViewService,
     SettingsIntegrationSettingsMainViewService,
@@ -66,6 +67,7 @@ export class KmcMainViewsService {
         private _liveAnalyticsMain: LiveAnalyticsMainViewService,
         private _adminUsersMain: AdminUsersMainViewService,
         private _adminRolesMain: AdminRolesMainViewService,
+        private _adminMultiAccountMain: AdminMultiAccountMainViewService,
         private _settingsAccountSettingsMain: SettingsAccountSettingsMainViewService,
         private _settingsIntegrationSettingsMain: SettingsIntegrationSettingsMainViewService,
         private _settingsAccessControlMain: SettingsAccessControlMainViewService,
@@ -317,6 +319,15 @@ export class KmcMainViewsService {
                             this._adminRolesMain.open();
                         },
                         menuTitle: this._adminRolesMain.getViewMetadata().menu,
+                        'position': 'left'
+                    },
+                    {
+                        isAvailable: this._adminMultiAccountMain.isAvailable(),
+                        isActiveView:  (path) => this._adminMultiAccountMain.isActiveView(path),
+                        open: () => {
+                            this._adminMultiAccountMain.open();
+                        },
+                        menuTitle: this._adminMultiAccountMain.getViewMetadata().menu,
                         'position': 'left'
                     }
                 ]

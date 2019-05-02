@@ -12,6 +12,7 @@ export * from './usage-dashboard-main-view.service';
 export * from './live-analytics-main-view.service';
 export * from './admin-users-main-view.service';
 export * from './admin-roles-main-view.service';
+export * from './admin-multi-account-main-view.service';
 export * from './settings-account-settings-main-view.service';
 export * from './settings-integration-settings-main-view.service';
 export * from './settings-access-control-main-view.service';
