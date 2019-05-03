@@ -29,7 +29,6 @@ export class LoginFormComponent {
   _passwordField: AbstractControl;
   _rememberMeField: AbstractControl;
   _supportAddress: string;
-  _readonly = true;
 
   public get _loginValidationMessage(): string {
     return this._showError(this._usernameField) ? 'app.login.error.email' : '';
@@ -46,10 +45,6 @@ export class LoginFormComponent {
       if (serverConfig.externalLinks.kaltura && serverConfig.externalLinks.kaltura.support) {
           this._supportAddress = serverConfig.externalLinks.kaltura.support;
       }
-
-      setTimeout( () => {
-          this._readonly = false;
-      }, 1000);
   }
 
   private buildForm(): void {

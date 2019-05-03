@@ -17,7 +17,7 @@
 
   <div>
     <input type="password"
-           pInputText [attr.readonly]="_readonly ? 'readonly' : null" autocomplete="user-password"
+           appPreventPasswordAutofill pInputText
            [placeholder]="'app.login.login.placeholder.password' | translate"
            [formControl]="_passwordField"
            [class.has-error]="errorMessage || _showError(_passwordField)">
