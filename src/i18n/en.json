@@ -2320,6 +2320,32 @@
             }
         },
         "administration": {
+            "accounts":{
+                "addAccount": "Add Account",
+                "refresh": "Refresh",
+                "accountsNum": "{{0}} Publishers",
+                "currentUser": "(Parent Account)",
+                "tableColumns": {
+                    "status": "Status",
+                    "id": "Partner ID",
+                    "name": "Account Name",
+                    "refid": "Reference ID",
+                    "website": "Website URL",
+                    "administrator": "Administrator",
+                    "email": "Admin Email",
+                    "phone": "Admin Phone",
+                    "created": "Creation Date"
+                },
+                "actions": {
+                    "kmc": "KMC Login",
+                    "block": "Block",
+                    "unblock": "Unblock",
+                    "remove": "Remove"
+                },
+                "errors": {
+                    "loadError": "Can't load accounts"
+                }
+            },
             "roles": {
                 "addRole": "Add Role",
                 "rolesNum": "{{0}} Roles",
@@ -2339,7 +2365,7 @@
                     "delete": "Delete"
                 },
                 "errors": {
-                    "loadError": "Can't load entries",
+                    "loadError": "Can't load roles",
                     "roleInUse": "The role you selected cannot be deleted since it is currently assigned to existing users.",
                     "cantDeleteRole": "Cannot delete role",
                     "cantDeleteAdminRole": "Cannot delete Administrator role",

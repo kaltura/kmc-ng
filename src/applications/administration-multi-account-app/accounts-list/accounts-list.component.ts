@@ -1,13 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AccountFilters, MultiAccountStoreService } from '../multi-account-store/multi-account-store.service';
-import { KalturaUserRole } from 'kaltura-ngx-client';
+import { AccountFilters, MultiAccountStoreService, SortDirection } from '../multi-account-store/multi-account-store.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import {AdminMultiAccountMainViewService, AdminRolesMainViewService} from 'app-shared/kmc-shared/kmc-views';
+import { AdminMultiAccountMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
@@ -20,12 +18,12 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 export class AccountsListComponent implements OnInit, OnDestroy {
   @ViewChild('newAccountPopup') public newAccountPopup: PopupWidgetComponent;
 
-  public _kmcPermissions = KMCPermissions;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tableIsBusy = false;
   public _tableBlockerMessage: AreaBlockerMessage = null;
   public _query = {
-    createdBefore: null,
+    sortBy: 'createdAt',
+    sortDirection: SortDirection.Asc,
     pageIndex: 0,
     pageSize: 25,
   };
@@ -58,6 +56,8 @@ export class AccountsListComponent implements OnInit, OnDestroy {
       [
         'pageSize',
         'pageIndex',
+        'sortBy',
+        'sortDirection'
       ]
     ));
   }
@@ -69,6 +69,14 @@ export class AccountsListComponent implements OnInit, OnDestroy {
 
     if (typeof updates.pageIndex !== 'undefined') {
       this._query.pageIndex = updates.pageIndex;
+    }
+
+    if (typeof updates.sortBy !== 'undefined') {
+        this._query.sortBy = updates.sortBy;
+    }
+
+    if (typeof updates.sortDirection !== 'undefined') {
+        this._query.sortDirection = updates.sortDirection;
     }
   }
 
@@ -91,7 +99,7 @@ export class AccountsListComponent implements OnInit, OnDestroy {
 
           if (result.errorMessage) {
             this._tableBlockerMessage = new AreaBlockerMessage({
-              message: result.errorMessage || this._appLocalization.get('applications.administration.roles.errors.loadError'),
+              message: result.errorMessage || this._appLocalization.get('applications.administration.accounts.errors.loadError'),
               buttons: [{
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
@@ -183,6 +191,15 @@ export class AccountsListComponent implements OnInit, OnDestroy {
         break;
     }
   }
+
+  public _onSortChanged(event): void {
+      if (event.field !== this._query.sortBy || event.order !== this._query.sortDirection) {
+          this._accountsStore.filter({
+              sortBy: event.field,
+              sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
+          });
+      }
+    }
 
   public _addAccount(): void {
     this._logger.info(`handle create new account action by user`);

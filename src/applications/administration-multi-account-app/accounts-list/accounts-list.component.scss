@@ -4,7 +4,7 @@
   z-index: 500;
 }
 
-.kRoles {
+.kAccounts {
   font-size: 15px;
   background-color: $appBkgColor;
   padding-top: 24px;
@@ -14,7 +14,7 @@
   display: flex;
   flex-flow: row wrap;
   margin: 0px;
-  .kRolesHolder {
+  .kAccountsHolder {
     height: 100%;
     min-height: $minTableHeight;
     border: none;
@@ -44,7 +44,7 @@
     display: block;
     height: 66px;
   }
-  .kRolesTableFilters {
+  .kAccountsTableFilters {
     color: $kGrayscale1;
     border-bottom: 1px solid $kGrayscale5;
     z-index: 500;
@@ -56,11 +56,11 @@
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     display: flex;
-    .kSelectedRolesNum {
+    .kSelectedAccountsNum {
       padding-left: 16px;
     }
   }
-  .kRolesTableFooter {
+  .kAccountsTableFooter {
     bottom: 0px;
     height: 34px;
     background-color: white;
@@ -71,7 +71,7 @@
     padding: 0 14px 28px;
     display: block;
   }
-  .kRolesTable {
+  .kAccountsTable {
     border: none;
     position: relative;
     background-color: white;
@@ -84,7 +84,7 @@
     top: 7px;
     right: 80px;
   }
-  .kAddRoleBtn {
+  .kAddAccountBtn {
     margin-left: 14px;
     height: 36px;
   }

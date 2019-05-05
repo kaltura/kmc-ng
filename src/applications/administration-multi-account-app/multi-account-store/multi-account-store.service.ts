@@ -1,27 +1,22 @@
 import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
-import {KalturaPartner, KalturaPartnerListResponse, KalturaUserRoleFilter, PartnerListAction} from 'kaltura-ngx-client';
+import {
+    KalturaDropFolderFileFilter,
+    KalturaPartner, KalturaPartnerFilter,
+    KalturaPartnerListResponse,
+    PartnerListAction
+} from 'kaltura-ngx-client';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
-import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
-import { KalturaUserRoleListResponse } from 'kaltura-ngx-client';
-import { KalturaUserRole } from 'kaltura-ngx-client';
-import { UserRoleListAction } from 'kaltura-ngx-client';
-import { KalturaUserRoleStatus } from 'kaltura-ngx-client';
-import { KalturaUserRoleOrderBy } from 'kaltura-ngx-client';
-import { UserRoleDeleteAction } from 'kaltura-ngx-client';
-import { UserRoleUpdateAction } from 'kaltura-ngx-client';
-import { UserRoleCloneAction } from 'kaltura-ngx-client';
-import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { UserRoleAddAction } from 'kaltura-ngx-client';
+import { KalturaClient } from 'kaltura-ngx-client';
+import {AppLocalization, StringTypeAdapter} from '@kaltura-ng/mc-shared';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { globalConfig } from 'config/global';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared';
-import {AdminMultiAccountMainViewService, AdminRolesMainViewService} from 'app-shared/kmc-shared/kmc-views';
-import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { AdminMultiAccountMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 export enum SortDirection {
@@ -32,6 +27,8 @@ export enum SortDirection {
 export interface AccountFilters {
   pageSize: number;
   pageIndex: number;
+  sortBy: string;
+  sortDirection: number;
 }
 
 const localStoragePageSizeKey = 'accounts.list.pageSize';
@@ -52,7 +49,6 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
   constructor(private _kalturaClient: KalturaClient,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
-              private _kmcPermissionsService: KMCPermissionsService,
               adminMultiAccountMainViewService: AdminMultiAccountMainViewService,
               _logger: KalturaLogger) {
     super(_logger.subLogger('AccountsStoreService'));
@@ -70,14 +66,18 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
     const pageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey) || globalConfig.client.views.tables.defaultPageSize;
     return {
       pageSize: pageSize,
-      pageIndex: 0
+      pageIndex: 0,
+      sortBy: 'createdAt',
+      sortDirection: SortDirection.Desc
     };
   }
 
   protected _getTypeAdaptersMapping(): TypeAdaptersMapping<AccountFilters> {
     return {
       pageSize: new NumberTypeAdapter(),
-      pageIndex: new NumberTypeAdapter()
+      pageIndex: new NumberTypeAdapter(),
+      sortBy: new StringTypeAdapter(),
+      sortDirection: new NumberTypeAdapter(),
     };
   }
 
@@ -95,15 +95,20 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
     // this function will re-run if preparation failed. execute your logic
     // only after the line where we set isReady to true    if (!this._isReady) {
 
-    this._logger.info(`initiate service`);
+      if (!this._isReady) {
+          this._isReady = true;
+          this._logger.info(`initiate service`);
+          const defaultPageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey);
+          if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
+              this.filter({
+                  pageSize: defaultPageSize
+              });
+          }
 
-    this._accounts.state.next({ loading: true, errorMessage: null });
+          this._registerToFilterStoreDataChanges();
+          this._executeQuery();
+      }
 
-    this._isReady = true;
-
-    this._registerToFilterStoreDataChanges();
-
-    this._executeQuery();
   }
 
   private _registerToFilterStoreDataChanges(): void {
@@ -158,7 +163,7 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
     try {
 
       let pager: KalturaFilterPager = null;
-
+      const filter = new KalturaPartnerFilter({});
       const data: AccountFilters = this._getFiltersAsReadonly();
 
       // update pagination args
@@ -171,9 +176,14 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
         );
       }
 
+        // update the sort by args
+        if (data.sortBy) {
+            filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
+        }
+
       // build the request
       return this._kalturaClient.request(
-        new PartnerListAction({ pager })
+        new PartnerListAction({ filter, pager })
       );
     } catch (err) {
       return Observable.throw(err);

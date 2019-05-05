@@ -1,38 +1,38 @@
 <k-area-blocker [message]="_blockerMessage" [bodyScroll]="true">
-  <!--div class="kRoles kOverrideFAIcons">
-    <div #rolesTableHolder class="kRolesHolder kContent">
+  <div class="kAccounts kOverrideFAIcons">
+    <div class="kAccountsHolder kContent">
       <div class="kContent kFiltersWrapper">
-        <kSticky stickyId="rolesFilters" [sticksTo]="'header'" [scrollOffset]="80">
-          <div class="kRolesTableFilters kContent">
-            <button pButton type="button" class="kButtonBranded kAddRoleBtn"
-                    [label]="'applications.administration.roles.addRole' | translate"
-                    [disabled]="_kmcPermissions.ADMIN_ROLE_ADD | kDisabledIfNotPermitted"
-                    (click)="_addRole()"></button>
-            <span class="kSelectedRolesNum" *ngIf="(_rolesStore.roles.data$ | async)?.totalCount">
-              {{ 'applications.administration.roles.rolesNum' | translate:[(_rolesStore.roles.data$ | async)?.totalCount] }}
+        <kSticky stickyId="accountsFilters" [sticksTo]="'header'" [scrollOffset]="80">
+          <div class="kAccountsTableFilters kContent">
+            <button pButton type="button" class="kButtonBranded kAddAccountBtn"
+                    [label]="'applications.administration.accounts.addAccount' | translate"
+                    (click)="_addAccount()"></button>
+            <span class="kSelectedAccountsNum" *ngIf="(_accountsStore.accounts.data$ | async)?.totalCount">
+              {{ 'applications.administration.accounts.accountsNum' | translate:[(_accountsStore.accounts.data$ | async)?.totalCount] }}
             </span>
             <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh"
-                    [kTooltip]="'applications.administration.roles.refresh' | translate"></button>
+                    [kTooltip]="'applications.administration.accounts.refresh' | translate"></button>
           </div>
         </kSticky>
       </div>
       <k-area-blocker [showLoader]="_tableIsBusy"
                       [message]="_tableBlockerMessage"
                       [bodyScroll]="true">
-        <kRolesTable class="kRolesTable"
-                     [roles]="(_rolesStore.roles.data$ | async)?.items"
+        <kAccountsTable class="kAccountsTable"
+                     [accounts]="(_accountsStore.accounts.data$ | async)?.items"
+                     (sortChanged)="_onSortChanged($event)"
                      (actionSelected)="_onActionSelected($event)">
-        </kRolesTable>
+        </kAccountsTable>
       </k-area-blocker>
-      <div class="kRolesTableFooter kContent" #footer *ngIf="(_rolesStore.roles.data$ | async)?.totalCount">
+      <div class="kAccountsTableFooter kContent" #footer *ngIf="(_accountsStore.accounts.data$ | async)?.totalCount">
         <p-paginator [rows]="_query.pageSize" (onPageChange)="_onPaginationChanged($event)"
                      [first]="_query.pageIndex * _query.pageSize"
-                     [totalRecords]="(_rolesStore.roles.data$ | async)?.totalCount"
+                     [totalRecords]="(_accountsStore.accounts.data$ | async)?.totalCount"
                      [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.administration.paginator.showRows' | translate}}</span>
       </div>
     </div>
-  </div-->
+  </div>
   <kPopupWidget #newAccountPopup data-aid="newAccountPopup" [popupWidth]="995" [slider]="true">
     <ng-template>
       <!--kEditRole [role]="_currentEditRole"
@@ -40,5 +40,4 @@
         <span>New Account</span>
     </ng-template>
   </kPopupWidget>
-    Accounts list
 </k-area-blocker>

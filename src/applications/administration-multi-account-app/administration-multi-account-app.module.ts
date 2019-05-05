@@ -38,6 +38,8 @@ import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura
 import { TableModule } from 'primeng/table';
 import { MultiSelectModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { AccountsListComponent } from './accounts-list/accounts-list.component';
+import { AccountsTableComponent } from './accounts-table/accounts-table.component';
+import { StatusPipe } from './pipes/status.pipe';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
 
@@ -83,7 +85,9 @@ import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.
   ],
   declarations: [
     AdministrationMultiAccountComponent,
-    AccountsListComponent
+    AccountsListComponent,
+    AccountsTableComponent,
+    StatusPipe
   ],
   exports: [],
   providers: [],
