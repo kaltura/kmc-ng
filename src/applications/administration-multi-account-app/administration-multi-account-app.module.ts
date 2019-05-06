@@ -39,6 +39,7 @@ import { TableModule } from 'primeng/table';
 import { MultiSelectModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { AccountsListComponent } from './accounts-list/accounts-list.component';
 import { AccountsTableComponent } from './accounts-table/accounts-table.component';
+import { AccountsRefineFiltersComponent } from './accounts-refine-filters/accounts-refine-filters.component';
 import { StatusPipe } from './pipes/status.pipe';
 import { AccountsTagsComponent } from './accounts-tags/accounts-tags.component';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
@@ -89,6 +90,7 @@ import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.
     AccountsListComponent,
     AccountsTableComponent,
     StatusPipe,
+    AccountsRefineFiltersComponent,
     AccountsTagsComponent
   ],
   exports: [],

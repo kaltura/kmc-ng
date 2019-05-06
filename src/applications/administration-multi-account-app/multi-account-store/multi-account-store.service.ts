@@ -2,7 +2,7 @@ import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
 import {
     KalturaDropFolderFileFilter,
     KalturaPartner, KalturaPartnerFilter,
-    KalturaPartnerListResponse,
+    KalturaPartnerListResponse, KalturaPartnerStatus,
     PartnerListAction
 } from 'kaltura-ngx-client';
 import { Injectable, OnDestroy } from '@angular/core';
@@ -45,6 +45,11 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
   };
   private _isReady = false;
   private _querySubscription: ISubscription;
+    private _allStatusesList = [
+        KalturaPartnerStatus.active,
+        KalturaPartnerStatus.blocked,
+        KalturaPartnerStatus.fullBlock
+    ].join(',');
 
   public readonly accounts = { data$: this._accounts.data.asObservable(), state$: this._accounts.state.asObservable() };
 
@@ -165,6 +170,14 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
     return this._accounts.data.value.items.find(item => item['name'] === name) !== undefined;
   }
 
+    private _updateFilterWithJoinedList(list: string[], requestFilter: KalturaPartnerFilter, requestFilterProperty: keyof KalturaDropFolderFileFilter): void {
+        const value = (list || []).map(item => item).join(',');
+
+        if (value) {
+            requestFilter[requestFilterProperty] = value;
+        }
+    }
+
   private _buildQueryRequest(): Observable<KalturaPartnerListResponse> {
     try {
 
@@ -193,6 +206,15 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
             }
 
         }
+
+        // filters of joined list
+        this._updateFilterWithJoinedList(data.status, filter, 'statusIn');
+
+        // handle default value for statuses
+        if (!filter.statusIn) {
+            filter.statusIn = this._allStatusesList;
+        }
+
 
         // update the sort by args
         if (data.sortBy) {

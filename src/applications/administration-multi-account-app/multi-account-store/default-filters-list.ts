@@ -9,7 +9,6 @@ export const DefaultFiltersList: {
     items: [
       { value: '1', label: 'active' },
       { value: '2', label: 'blocked' },
-      { value: '3', label: 'deleted' },
       { value: '4', label: 'removed' }
     ]
   }

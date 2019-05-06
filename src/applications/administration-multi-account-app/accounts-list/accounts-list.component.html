@@ -51,6 +51,23 @@
       </div>
     </div>
   </div>
+
+    <!-- popup widgets section -->
+    <kPopupWidget #refinePopup
+                  data-aid="accountsRefinePopup"
+                  placement="top"
+                  [popupWidth]="400"
+                  [popupHeight]="400"
+                  [closeBtn]="false"
+                  [targetRef]="statusesFilterBtn"
+                  [targetOffset]="{'x':-215, 'y': -15}"
+                  kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'statusesFilterPopup'"
+                  [scrollOffset]="80">
+        <ng-template>
+            <k-accounts-refine-filters [refineFilters]="_refineFilters" [parentPopupWidget]="refinePopup"></k-accounts-refine-filters>
+        </ng-template>
+    </kPopupWidget>
+
   <kPopupWidget #newAccountPopup data-aid="newAccountPopup" [popupWidth]="995" [slider]="true">
     <ng-template>
       <!--kEditRole [role]="_currentEditRole"

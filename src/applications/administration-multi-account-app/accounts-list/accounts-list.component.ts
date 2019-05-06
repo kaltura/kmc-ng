@@ -63,6 +63,7 @@ export class AccountsListComponent implements OnInit, OnDestroy {
                   this._restoreFiltersState();
                   this._registerToFilterStoreDataChanges();
                   this._registerToDataChanges();
+                  this._accountsStore.filter({ ['status']: ['1','2'] }); // initial filter for active and blocked status
               },
               error => {
                   this._isBusy = false;
