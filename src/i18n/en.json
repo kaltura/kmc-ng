@@ -2325,6 +2325,8 @@
                 "refresh": "Refresh",
                 "accountsNum": "{{0}} Publishers",
                 "currentUser": "(Parent Account)",
+                "confirmDeleteHeader": "Confirm Remove",
+                "confirmDeleteBody": "Are you sure you want to remove the selected account? \n ({{0}})",
                 "tableColumns": {
                     "status": "Status",
                     "id": "Partner ID",

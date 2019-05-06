@@ -7,6 +7,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AdminMultiAccountMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import {KalturaAccessControl, KalturaPartner} from "kaltura-ngx-client";
 
 @Component({
   selector: 'kAccountsList',
@@ -167,19 +168,27 @@ export class AccountsListComponent implements OnInit, OnDestroy {
     }
   }
 
-  public _onActionSelected({ action, pid }: { action: string, pid: number }): void {
-    switch (action) {
-      case 'edit':
+  public _onActionSelected(event: { action: string, account: KalturaPartner }): void {
+    switch (event.action) {
+      case 'kmc':
+          alert("Launch kmc");
         break;
-      case 'delete':
-        this._logger.info(`handle delete account action by user, show confirmation`, { id: pid });
+      case 'block':
+          alert("block account");
+        break;
+      case 'unblock':
+          alert("unblock account");
+        break;
+      case 'remove':
+        this._logger.info(`handle delete account action by user, show confirmation`, { id: event.account.id });
         this._browserService.confirm(
           {
-            header: this._appLocalization.get('applications.administration.roles.confirmDeleteHeader'),
-            message: this._appLocalization.get('applications.administration.roles.confirmDeleteBody', { 0: pid }),
+            header: this._appLocalization.get('applications.administration.accounts.confirmDeleteHeader'),
+            message: this._appLocalization.get('applications.administration.accounts.confirmDeleteBody', { 0: event.account.name }),
             accept: () => {
               this._logger.info(`user confirmed, proceed action`);
-              this._deletAccount(pid);
+              alert("Remove account");
+              // this._deletAccount(pid);
             },
             reject: () => {
               this._logger.info(`user didn't confirmed, abort action`);
