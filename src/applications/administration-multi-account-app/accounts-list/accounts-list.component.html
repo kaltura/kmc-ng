@@ -1,7 +1,7 @@
-<k-area-blocker [message]="_blockerMessage" [bodyScroll]="true">
+<k-area-blocker [message]="_blockerMessage" [bodyScroll]="true" [showLoader]="_isBusy">
   <div class="kAccounts kOverrideFAIcons">
     <div class="kAccountsHolder kContent">
-      <div class="kContent kFiltersWrapper">
+
         <kSticky stickyId="accountsFilters" [sticksTo]="'header'" [scrollOffset]="80">
           <div class="kAccountsTableFilters kContent">
             <button pButton type="button" class="kButtonBranded kAddAccountBtn"
@@ -10,11 +10,29 @@
             <span class="kSelectedAccountsNum" *ngIf="(_accountsStore.accounts.data$ | async)?.totalCount">
               {{ 'applications.administration.accounts.accountsNum' | translate:[(_accountsStore.accounts.data$ | async)?.totalCount] }}
             </span>
+
+              <div class="kFilters">
+                  <input type="text" pInputText class="kSearchInput"
+                         [(ngModel)]="_query.freeText"
+                         (keyup.enter)="_onFreetextChanged()"
+                         [placeholder]="'applications.administration.accounts.search' | translate">
+                  <div #statusesFilterBtn class="kStatusesFilter kDropdown">
+                      <i class="kIconfilter"></i>
+                      <span>{{'applications.content.dropFolders.allStatuses' | translate}}</span>
+                      <i class="kIcondropdown_arrow_bottom dropdown"></i>
+                  </div>
+              </div>
+
             <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh"
                     [kTooltip]="'applications.administration.accounts.refresh' | translate"></button>
           </div>
         </kSticky>
-      </div>
+        <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="accountsTags" [sticksTo]="'accountsFilters'">
+            <div class="kContent">
+                <k-accounts-tags [refineFilters]="_refineFilters" (onTagsChange)="_onTagsChange()"></k-accounts-tags>
+            </div>
+        </kSticky>
+
       <k-area-blocker [showLoader]="_tableIsBusy"
                       [message]="_tableBlockerMessage"
                       [bodyScroll]="true">

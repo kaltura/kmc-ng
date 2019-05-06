@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { KalturaClient } from 'kaltura-ngx-client';
-import {AppLocalization, StringTypeAdapter} from '@kaltura-ng/mc-shared';
+import {AppLocalization, ListTypeAdapter, StringTypeAdapter} from '@kaltura-ng/mc-shared';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { globalConfig } from 'config/global';
@@ -25,10 +25,12 @@ export enum SortDirection {
 }
 
 export interface AccountFilters {
+  freeText: string;
   pageSize: number;
   pageIndex: number;
   sortBy: string;
   sortDirection: number;
+  status: string[];
 }
 
 const localStoragePageSizeKey = 'accounts.list.pageSize';
@@ -65,19 +67,23 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
   protected _createDefaultFiltersValue(): AccountFilters {
     const pageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey) || globalConfig.client.views.tables.defaultPageSize;
     return {
+      freeText: '',
       pageSize: pageSize,
       pageIndex: 0,
       sortBy: 'createdAt',
-      sortDirection: SortDirection.Desc
+      sortDirection: SortDirection.Desc,
+      status: [],
     };
   }
 
   protected _getTypeAdaptersMapping(): TypeAdaptersMapping<AccountFilters> {
     return {
+      freeText: new StringTypeAdapter(),
       pageSize: new NumberTypeAdapter(),
       pageIndex: new NumberTypeAdapter(),
       sortBy: new StringTypeAdapter(),
       sortDirection: new NumberTypeAdapter(),
+      status: new ListTypeAdapter<string>()
     };
   }
 
@@ -175,6 +181,18 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
           }
         );
       }
+
+        // filter 'freeText'
+        if (data.freeText) {
+            if (/^-{0,1}\d+$/.test(data.freeText)){
+                // number - search pid
+                filter.idIn = data.freeText;
+            } else {
+                // string - search account name
+                filter.nameMultiLikeOr = data.freeText;
+            }
+
+        }
 
         // update the sort by args
         if (data.sortBy) {

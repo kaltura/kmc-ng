@@ -1323,7 +1323,8 @@
             "userStatus": {
                 "active": "Active",
                 "blocked": "Blocked",
-                "deleted": "Deleted"
+                "deleted": "Deleted",
+                "removed": "Removed"
             },
             "addNewPlaylist": {
                 "addNewPlaylist": "Add New Playlist",
@@ -2326,6 +2327,7 @@
                 "accountsNum": "{{0}} Publishers",
                 "currentUser": "(Parent Account)",
                 "confirmDeleteHeader": "Confirm Remove",
+                "search": "Search",
                 "confirmDeleteBody": "Are you sure you want to remove the selected account? \n ({{0}})",
                 "tableColumns": {
                     "status": "Status",
@@ -2346,6 +2348,13 @@
                 },
                 "errors": {
                     "loadError": "Can't load accounts"
+                },
+                "statusLabels": {
+                    "allStatuses": "All Statuses",
+                    "active": "Active",
+                    "deleted": "Deleted",
+                    "blocked": "Blocked",
+                    "removed": "Removed"
                 }
             },
             "roles": {

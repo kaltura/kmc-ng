@@ -22,6 +22,46 @@
     display: flex;
     flex-direction: column;
   }
+  .kFilters {
+      display: flex;
+      margin-left: auto;
+      .kSearchInput {
+          width: 280px;
+          height: 34px;
+          background: $kMagnifyingGlassBkg;
+          margin-right: 8px;
+          padding: 9px 4px 8px 38px;
+
+          &:focus {
+              background-color: white;
+          }
+      }
+      .kStatusesFilter {
+          display: flex;
+          height: 32px;
+          align-items: center;
+          cursor: pointer;
+          color: $kGrayscale1;
+          width: 178px;
+          position: relative;
+          margin-right: 8px;
+
+          i {
+              margin-right: 12px;
+              margin-left: 8px;
+              color: $kGrayscale4;
+              &.dropdown {
+                  font-size: 10px;
+              }
+          }
+
+          .dropdown {
+              position: absolute;
+              right: 4px;
+              top: 12px;
+          }
+      }
+  }
   .kRefreshBtn {
     font-size: 24px;
     border: none;
@@ -30,7 +70,6 @@
     width: 40px;
     outline: 0;
     color: $kGrayscale3;
-    margin-left: auto;
     &:active {
       box-shadow: none;
       transform: rotate(45deg);
@@ -40,13 +79,8 @@
       color: $kPrimary;
     }
   }
-  .kFiltersWrapper {
-    display: block;
-    height: 66px;
-  }
   .kAccountsTableFilters {
     color: $kGrayscale1;
-    border-bottom: 1px solid $kGrayscale5;
     z-index: 500;
     height: 66px;
     background-color: white;
@@ -116,7 +150,11 @@
   margin-left: -.5em;
 }
 
-:host /deep/ .kRolesTableFooter {
+:host /deep/ .kStickyClass {
+    border-bottom: 1px solid $kGrayscale5;
+}
+
+:host /deep/ .kAccountsTableFooter {
   .ui-dropdown-panel {
     min-width: 70px;
   }

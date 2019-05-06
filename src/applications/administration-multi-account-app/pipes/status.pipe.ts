@@ -16,8 +16,10 @@ export class StatusPipe implements PipeTransform {
           userStatus = this.appLocalization.get('applications.content.userStatus.active');
           break;
         case KalturaPartnerStatus.blocked.toString():
-        case KalturaPartnerStatus.fullBlock.toString():
           userStatus = this.appLocalization.get('applications.content.userStatus.blocked');
+          break;
+        case KalturaPartnerStatus.fullBlock.toString():
+          userStatus = this.appLocalization.get('applications.content.userStatus.removed');
           break;
         case KalturaPartnerStatus.deleted.toString():
           userStatus = this.appLocalization.get('applications.content.userStatus.deleted');

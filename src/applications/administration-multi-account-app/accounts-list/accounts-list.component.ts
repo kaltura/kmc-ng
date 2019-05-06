@@ -1,37 +1,43 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AccountFilters, MultiAccountStoreService, SortDirection } from '../multi-account-store/multi-account-store.service';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import {PopupWidgetComponent, StickyComponent} from '@kaltura-ng/kaltura-ui';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AdminMultiAccountMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import {KalturaAccessControl, KalturaPartner} from "kaltura-ngx-client";
+import { KalturaPartner} from "kaltura-ngx-client";
+import { MultiAccountRefineFiltersService, RefineList } from '../multi-account-store/multi-account-refine-filters.service';
 
 @Component({
   selector: 'kAccountsList',
   templateUrl: './accounts-list.component.html',
   styleUrls: ['./accounts-list.component.scss'],
-  providers: [KalturaLogger.createLogger('AccountsListComponent')]
+  providers: [MultiAccountRefineFiltersService, KalturaLogger.createLogger('AccountsListComponent')]
 })
 
 export class AccountsListComponent implements OnInit, OnDestroy {
   @ViewChild('newAccountPopup') public newAccountPopup: PopupWidgetComponent;
+  @ViewChild('tags') private _tags: StickyComponent;
 
   public _blockerMessage: AreaBlockerMessage = null;
+  public _isBusy = false;
   public _tableIsBusy = false;
   public _tableBlockerMessage: AreaBlockerMessage = null;
+  public _refineFilters: RefineList[];
   public _query = {
+    freeText: '',
     sortBy: 'createdAt',
     sortDirection: SortDirection.Asc,
     pageIndex: 0,
-    pageSize: 25,
+    pageSize: 25
   };
 
   constructor(public _accountsStore: MultiAccountStoreService,
               private _logger: KalturaLogger,
               private _browserService: BrowserService,
+              private _refineFiltersService: MultiAccountRefineFiltersService,
               private _adminMultiAccountMainViewService: AdminMultiAccountMainViewService,
               private _appLocalization: AppLocalization) {
   }
@@ -47,14 +53,38 @@ export class AccountsListComponent implements OnInit, OnDestroy {
 
   private _prepare(): void {
       this._logger.info(`initiate accounts list view`);
-      this._restoreFiltersState();
-      this._registerToFilterStoreDataChanges();
-      this._registerToDataChanges();
+      this._refineFiltersService.getFilters()
+          .pipe(cancelOnDestroy(this))
+          .first() // only handle it once, no need to handle changes over time
+          .subscribe(
+              lists => {
+                  this._isBusy = false;
+                  this._refineFilters = lists;
+                  this._restoreFiltersState();
+                  this._registerToFilterStoreDataChanges();
+                  this._registerToDataChanges();
+              },
+              error => {
+                  this._isBusy = false;
+                  this._blockerMessage = new AreaBlockerMessage({
+                      message: this._appLocalization.get('applications.content.filters.errorLoading'),
+                      buttons: [{
+                          label: this._appLocalization.get('app.common.retry'),
+                          action: () => {
+                              this._blockerMessage = null;
+                              this._prepare();
+                              this._accountsStore.reload();
+                          }
+                      }
+                      ]
+                  });
+              });
   }
 
   private _restoreFiltersState(): void {
     this._updateComponentState(this._accountsStore.cloneFilters(
       [
+        'freeText',
         'pageSize',
         'pageIndex',
         'sortBy',
@@ -64,6 +94,10 @@ export class AccountsListComponent implements OnInit, OnDestroy {
   }
 
   private _updateComponentState(updates: Partial<AccountFilters>): void {
+    if (typeof updates.freeText !== 'undefined') {
+        this._query.freeText = updates.freeText || '';
+    }
+
     if (typeof updates.pageSize !== 'undefined') {
       this._query.pageSize = updates.pageSize;
     }
@@ -201,6 +235,15 @@ export class AccountsListComponent implements OnInit, OnDestroy {
     }
   }
 
+  public _onFreetextChanged(): void {
+      // prevent searching for empty strings
+      if (this._query.freeText.length > 0 && this._query.freeText.trim().length === 0){
+          this._query.freeText = '';
+      }else {
+          this._accountsStore.filter({freeText: this._query.freeText});
+      }
+  }
+
   public _onSortChanged(event): void {
       if (event.field !== this._query.sortBy || event.order !== this._query.sortDirection) {
           this._accountsStore.filter({
@@ -213,5 +256,9 @@ export class AccountsListComponent implements OnInit, OnDestroy {
   public _addAccount(): void {
     this._logger.info(`handle create new account action by user`);
     this.newAccountPopup.open();
+  }
+
+  public _onTagsChange() {
+      this._tags.updateLayout();
   }
 }
