@@ -7,7 +7,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AdminMultiAccountMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { KalturaPartner} from "kaltura-ngx-client";
+import {KalturaPartner, KalturaPartnerStatus, KalturaUserRole} from "kaltura-ngx-client";
 import { MultiAccountRefineFiltersService, RefineList } from '../multi-account-store/multi-account-refine-filters.service';
 import {serverConfig} from "config/server";
 
@@ -165,45 +165,6 @@ export class AccountsListComponent implements OnInit, OnDestroy {
               });
   }
 
-  private _deletAccount(partnerID: number): void {
-    this._logger.info(`handle delete account request by user`);
-    this._blockerMessage = null;
-    this._accountsStore.deleteAccount(partnerID)
-      .pipe(cancelOnDestroy(this))
-      .pipe(tag('block-shell'))
-      .subscribe(
-        () => {
-          this._logger.info(`handle successful delete account request by user`);
-          this._blockerMessage = null;
-          this._accountsStore.reload();
-        },
-        error => {
-          this._logger.warn(`handle failed delete account request by user, show confirmation`, { errorMessage: error.message });
-          this._blockerMessage = new AreaBlockerMessage(
-            {
-              message: error.message,
-              buttons: [
-                {
-                  label: this._appLocalization.get('app.common.retry'),
-                  action: () => {
-                    this._logger.info(`user confirmed, retry action`);
-                    this._deletAccount(partnerID);
-                  }
-                },
-                {
-                  label: this._appLocalization.get('app.common.cancel'),
-                  action: () => {
-                    this._logger.info(`user didn't confirm, abort action, dismiss alert`);
-                    this._blockerMessage = null;
-                  }
-                }
-              ]
-            }
-          );
-        }
-      );
-  }
-
   public _reload() {
     this._accountsStore.reload();
   }
@@ -220,13 +181,13 @@ export class AccountsListComponent implements OnInit, OnDestroy {
   public _onActionSelected(event: { action: string, account: KalturaPartner }): void {
     switch (event.action) {
       case 'kmc':
-          alert("Launch kmc");
+          this._openKmc(this._appAuthentication.appUser.partnerInfo.partnerId, event.account.id);
         break;
       case 'block':
-          alert("block account");
+          this._updateAccountStatus(event.account, KalturaPartnerStatus.blocked);
         break;
       case 'unblock':
-          alert("unblock account");
+          this._updateAccountStatus(event.account, KalturaPartnerStatus.active);
         break;
       case 'remove':
         this._logger.info(`handle delete account action by user, show confirmation`, { id: event.account.id });
@@ -236,8 +197,7 @@ export class AccountsListComponent implements OnInit, OnDestroy {
             message: this._appLocalization.get('applications.administration.accounts.confirmDeleteBody', { 0: event.account.name }),
             accept: () => {
               this._logger.info(`user confirmed, proceed action`);
-              alert("Remove account");
-              // this._deletAccount(pid);
+                this._updateAccountStatus(event.account, KalturaPartnerStatus.fullBlock);
             },
             reject: () => {
               this._logger.info(`user didn't confirmed, abort action`);
@@ -249,6 +209,84 @@ export class AccountsListComponent implements OnInit, OnDestroy {
         break;
     }
   }
+
+    private _updateAccountStatus(account: KalturaPartner, status: KalturaPartnerStatus): void {
+        this._logger.info(`handle delete role request by user`);
+        this._blockerMessage = null;
+        this._accountsStore.updateAccountStatus(account.id, status)
+            .pipe(cancelOnDestroy(this))
+            .pipe(tag('block-shell'))
+            .subscribe(
+                () => {
+                    this._logger.info(`handle successful update account status request by user`);
+                    this._blockerMessage = null;
+                    this._accountsStore.reload();
+                },
+                error => {
+                    this._logger.warn(`handle failed update account status request by user, show confirmation`, { errorMessage: error.message });
+                    this._blockerMessage = new AreaBlockerMessage(
+                        {
+                            message: error.message,
+                            buttons: [
+                                {
+                                    label: this._appLocalization.get('app.common.retry'),
+                                    action: () => {
+                                        this._logger.info(`user confirmed, retry action`);
+                                        this._updateAccountStatus(account, status);
+                                    }
+                                },
+                                {
+                                    label: this._appLocalization.get('app.common.cancel'),
+                                    action: () => {
+                                        this._logger.info(`user didn't confirm, abort action, dismiss alert`);
+                                        this._blockerMessage = null;
+                                    }
+                                }
+                            ]
+                        }
+                    );
+                }
+            );
+    }
+
+    private _openKmc(pId: number, userId: number): void {
+        this._logger.info(`handle delete role request by user`);
+        this._blockerMessage = null;
+        this._accountsStore.getAdminSession(pId, userId)
+            .pipe(cancelOnDestroy(this))
+            .pipe(tag('block-shell'))
+            .subscribe(
+                (ks) => {
+                    this._logger.info(`handle successful open KMC request by user`);
+                    this._blockerMessage = null;
+                    debugger;
+                },
+                error => {
+                    this._logger.warn(`handle failed open KMC request by user, show confirmation`, { errorMessage: error.message });
+                    this._blockerMessage = new AreaBlockerMessage(
+                        {
+                            message: error.message,
+                            buttons: [
+                                {
+                                    label: this._appLocalization.get('app.common.retry'),
+                                    action: () => {
+                                        this._logger.info(`user confirmed, retry action`);
+                                        this._openKmc(pId, userId);
+                                    }
+                                },
+                                {
+                                    label: this._appLocalization.get('app.common.cancel'),
+                                    action: () => {
+                                        this._logger.info(`user didn't confirm, abort action, dismiss alert`);
+                                        this._blockerMessage = null;
+                                    }
+                                }
+                            ]
+                        }
+                    );
+                }
+            );
+    }
 
   public _onFreetextChanged(): void {
       // prevent searching for empty strings

@@ -7,10 +7,10 @@ import {
     KalturaPartner,
     KalturaPartnerFilter,
     KalturaPartnerGroupType,
-    KalturaPartnerListResponse,
     KalturaPartnerStatus,
     KalturaResponseProfileType,
-    PartnerListAction
+    PartnerListAction,
+    VarConsoleUpdateStatusAction
 } from 'kaltura-ngx-client';
 import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
@@ -263,28 +263,26 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
 
   }
 
-  public deleteAccount(partnerId: number): Observable<void> {
-      /*
-    if (!role) {
-      return Observable.throw(new Error(this._appLocalization.get('applications.administration.roles.errors.cantDeleteRole')));
-    }
-    if (role.partnerId === 0) {
-      return Observable.throw(new Error(this._appLocalization.get('applications.administration.roles.errors.cantDeleteAdminRole')));
-    }
+  public updateAccountStatus(id: number, status: KalturaPartnerStatus): Observable<void> {
+      return this._kalturaClient.request(new VarConsoleUpdateStatusAction({id, status}))
+          .map(() => {
+              return undefined;
+          })
+          .catch(error => {
+              throw error;
+          });
+  }
 
-    return this._kalturaClient.request(new UserRoleDeleteAction({
-      userRoleId: role.id
-    }))
-      .map(() => {
-        return undefined;
-      })
-      .catch(error => {
-        if (error.code === 'ROLE_IS_BEING_USED') {
-          error.message = this._appLocalization.get('applications.administration.roles.errors.roleInUse');
-        }
-        throw error;
-      });*/
-      alert("delete account for partner "+ partnerId);
+  public getAdminSession(pId: number, userId: number): Observable<string> {
+      /*
+      return this._kalturaClient.request(new SystemPartnerGetAdminSessionAction({pId, userId: userId.toString()}))
+          .map(() => {
+              return undefined;
+          })
+          .catch(error => {
+              throw error;
+          });*/
+      alert("get admin session");
       return Observable.of(null);
   }
 

@@ -1,0 +1,109 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+  <div class="kFloater kOverrideFAIcons">
+    <div class="kHeader">
+      <div class="kTitle">
+        <span>{{'applications.administration.accounts.addAccount' | translate}}</span>
+      </div>
+    </div>
+
+    <div class="kContainer">
+      <form [formGroup]="_accountForm" novalidate>
+        <div class="kCaption">{{'applications.administration.accounts.accountInfo' | translate}}</div>
+
+          <div class="kRow kValign">
+              <span class="kLabel">{{'applications.administration.accounts.administrator' | translate}}</span>
+              <div class="kRequired" [ngClass]="{'kHasError': _adminField.invalid && _adminField.touched}">*</div>
+              <div class="kControl">
+                  <input [formControl]="_adminField" type="text" pInputText/>
+              </div>
+          </div>
+          <div class="kErrorRow" *ngIf="_adminField.invalid && _adminField.touched">
+              <div class="invalid">{{'applications.administration.accounts.errors.required' | translate}}</div>
+          </div>
+
+          <div class="kRow kValign">
+              <span class="kLabel">{{'applications.administration.accounts.name' | translate}}</span>
+              <div class="kRequired" [ngClass]="{'kHasError': _nameField.invalid && _nameField.touched}">*</div>
+              <div class="kControl">
+                  <input [formControl]="_nameField" type="text" pInputText/>
+              </div>
+          </div>
+          <div class="kErrorRow" *ngIf="_nameField.invalid && _nameField.touched">
+              <div class="invalid">{{'applications.administration.accounts.errors.required' | translate}}</div>
+          </div>
+
+          <div class="kRow kValign">
+          <span class="kLabel">{{'applications.administration.accounts.email' | translate}}</span>
+          <div class="kRequired"
+               [ngClass]="{'kHasError':(_emailField.invalid && _emailField.touched) || (_emailServerError && _emailField.pristine)}">
+              *
+          </div>
+          <div class="kControl">
+            <input [formControl]="_emailField"
+                   [ngClass]="{'kHasError': (_emailField.invalid && _emailField.touched) || (_emailServerError && _emailField.pristine)}"
+                   type="text" pInputText/>
+          </div>
+        </div>
+        <div class="kErrorRow" *ngIf="_emailField.invalid && _emailField.touched && !_emailServerError">
+          <div class="invalid" *ngIf="_emailField.value === ''">
+            {{'applications.administration.accounts.errors.required' | translate}}
+          </div>
+          <div class="invalid" *ngIf="_emailField.value !== ''">
+            {{'applications.administration.accounts.errors.emailFormat' | translate}}
+          </div>
+        </div>
+          <div class="kErrorRow" *ngIf="_emailField.invalid && _emailField.touched && _emailServerError">
+              <div class="invalid" *ngIf="_emailField.value !== ''">
+                  {{'applications.administration.accounts.emailExists' | translate}}
+              </div>
+          </div>
+
+          <div class="kRow kValign">
+              <span class="kLabel">{{'applications.administration.accounts.phone' | translate}}</span>
+              <div class="kRequired" [ngClass]="{'kHasError': _phoneField.invalid && _phoneField.touched}">*</div>
+              <div class="kControl">
+                  <input [formControl]="_phoneField" type="text" pInputText/>
+              </div>
+          </div>
+
+          <div class="kErrorRow" *ngIf="_phoneField.invalid && _phoneField.touched">
+              <div class="invalid">{{'applications.administration.accounts.errors.required' | translate}}</div>
+          </div>
+
+          <div class="kRow kValign">
+              <span class="kLabel kExtraWidth">{{'applications.administration.accounts.website' | translate}}</span>
+              <div class="kControl">
+                  <input [formControl]="_websiteField" type="text" pInputText/>
+              </div>
+          </div>
+
+          <div class="kRow kValign">
+              <span class="kLabel kExtraWidth">{{'applications.administration.accounts.template' | translate}}</span>
+              <div class="kControl">
+                  <p-dropdown styleClass="templatesList"
+                              [options]="_templatesList"
+                              [formControl]="_templateField"
+                              [autoWidth]="false"
+                              (onChange)="this._templateSelected($event)"></p-dropdown>
+              </div>
+          </div>
+
+          <div class="kRow kValign">
+              <span class="kLabel kExtraWidth">{{'applications.administration.accounts.refid' | translate}}</span>
+              <div class="kControl">
+                  <input [formControl]="_refidField" type="text" pInputText/>
+              </div>
+          </div>
+
+      </form>
+    </div>
+
+    <div class="kFooter">
+      <button type="button" class="kButtonBranded"
+              [disabled]="!_accountForm.dirty" pButton
+              [label]="'applications.administration.accounts.create' | translate"
+              (click)="createNewAccount()"></button>
+    </div>
+
+  </div>
+</k-area-blocker>

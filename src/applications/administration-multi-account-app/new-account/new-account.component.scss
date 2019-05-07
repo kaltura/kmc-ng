@@ -1,0 +1,174 @@
+@import 'app-theme/_variables.scss';
+
+.kFloater {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+    flex: 0 0 auto;
+
+    .kTitle {
+      color: #333333;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+
+  .kErrorRow {
+    margin-left: 199px;
+  }
+
+  .kContainer {
+    flex: 0 0 auto;
+    margin: 0 28px 20px;
+    min-height: 537px;
+
+    .kLabel {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .kControl {
+      width: 360px;
+    }
+
+    .kCaption {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 20px 0 8px;
+    }
+
+    .kExtraPadding {
+      padding-top: 12px;
+    }
+  }
+
+  /deep/ {
+
+    .kRow {
+      display: flex;
+      padding-top: 22px;
+
+      .kLabel {
+        width: 166px;
+        flex: 0 0 auto;
+        word-wrap: break-word;
+        padding-right: 12px;
+      }
+
+      .kExtraWidth {
+        width: 186px;
+      }
+
+      .kRequired {
+        width: 20px;
+        font-size: 24px;
+        color: $kGrayscale2;
+        margin-top: 7px;
+        font-weight: bold;
+
+        &.kHasError {
+          color: $kDandger;
+        }
+      }
+
+      .kSelectedRole {
+          word-wrap: break-word;
+        font-size: 13px;
+        color: $kGrayscale3;
+        line-height: 16px;
+        margin-top: -4px;
+      }
+
+      input {
+        width: 100%;
+        height: 34px;
+        border: 1px solid $kGrayscale4;
+        color: #333333;
+        box-sizing: border-box;
+        border-radius: 3px;
+        margin: 0;
+        outline: medium none;
+        padding: .25em;
+        font-weight: normal;
+
+        &:focus {
+          background-color: white;
+          border: 1px solid $kGrayscale3;
+          outline: 0 none;
+        }
+
+        &:disabled {
+          background: $kGrayscale6;
+          color: $kGrayscale3;
+          border: 1px solid $kGrayscale4;
+        }
+        &.kHasError {
+          border-color: $kDandger;
+        }
+      }
+
+      .ng-touched.ng-invalid {
+        border-color: $kDandger;
+      }
+
+      textarea {
+        width: 100%;
+        height: 76px;
+      }
+
+      .kControl, k-prime-control {
+        width: 100%;
+      }
+
+      .extraMargin {
+        margin-bottom: 8px;
+      }
+    }
+
+    .templatesList {
+      width: 100% !important;
+    }
+  }
+
+  .kValign {
+    align-items: center;
+  }
+
+  .invalid {
+    color: $kDandger;
+    padding-top: 5px;
+    font-size: 15px;
+  }
+
+  /*********************/
+  /* PrimeNG overrides */
+  /*********************/
+
+  .kFooter {
+    flex: 0 0 auto;
+    height: 66px;
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button {
+      height: 34px;
+      width: 130px;
+      margin: 0;
+      border: none;
+
+      &:disabled {
+        border: 1px solid $kGrayscale4;
+      }
+    }
+  }
+}

@@ -2335,6 +2335,15 @@
                 "moreAccounts": "Need more accounts?",
                 "contact": "Contact Kaltura",
                 "usersUpgrade": "to request an upgrade.",
+                "create": "Create",
+                "accountInfo": "Account Info",
+                "administrator": "Administrator",
+                "name": "Account Name",
+                "email": "Administrator Email",
+                "phone": "Administrator Phone",
+                "website": "Website URL",
+                "template": "Copy Content from Template Account",
+                "refid": "Reference ID",
                 "tableColumns": {
                     "status": "Status",
                     "id": "Partner ID",
@@ -2353,7 +2362,10 @@
                     "remove": "Remove"
                 },
                 "errors": {
-                    "loadError": "Can't load accounts"
+                    "loadError": "Can't load accounts",
+                    "required": "Value is required and can't be empty",
+                    "emailFormat": "Invalid email format",
+                    "emailExists": "Email address already exists in the system"
                 },
                 "statusLabels": {
                     "allStatuses": "All Statuses",

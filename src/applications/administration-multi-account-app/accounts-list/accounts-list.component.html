@@ -84,11 +84,10 @@
         </ng-template>
     </kPopupWidget>
 
-  <kPopupWidget #newAccountPopup data-aid="newAccountPopup" [popupWidth]="995" [slider]="true">
-    <ng-template>
-      <!--kEditRole [role]="_currentEditRole"
-                 [parentPopupWidget]="editPopup"></kEditRole-->
-        <span>New Account</span>
-    </ng-template>
-  </kPopupWidget>
+    <kPopupWidget #newAccountPopup data-aid="newAccountPopup" [popupWidth]="791" [popupHeight]="700" [modal]="true">
+        <ng-template>
+            <kNewAccount [parentPopupWidget]="newAccountPopup">
+            </kNewAccount>
+        </ng-template>
+    </kPopupWidget>
 </k-area-blocker>
