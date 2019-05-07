@@ -2329,6 +2329,12 @@
                 "confirmDeleteHeader": "Confirm Remove",
                 "search": "Search",
                 "confirmDeleteBody": "Are you sure you want to remove the selected account? \n ({{0}})",
+                "currentStatus": "Current status:",
+                "accountsInfo": "{{0}} accounts in use*. {{1}} additional remaining.",
+                "accountsExplain": "* active or blocked accounts which are not used as templates",
+                "moreAccounts": "Need more accounts?",
+                "contact": "Contact Kaltura",
+                "usersUpgrade": "to request an upgrade.",
                 "tableColumns": {
                     "status": "Status",
                     "id": "Partner ID",

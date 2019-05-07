@@ -330,7 +330,8 @@ export class AppAuthentication {
                 partnerPackage: partner.partnerPackage,
                 landingPage: partner.landingPage,
                 adultContent: partner.adultContent,
-                publisherEnvironmentType: partner.publisherEnvironmentType
+                publisherEnvironmentType: partner.publisherEnvironmentType,
+                publishersQuota: partner.publishersQuota
             }
         });
 

@@ -1,11 +1,27 @@
 <k-area-blocker [message]="_blockerMessage" [bodyScroll]="true" [showLoader]="_isBusy">
   <div class="kAccounts kOverrideFAIcons">
     <div class="kAccountsHolder kContent">
-
+        <div class="kUsersHeader">
+            <div class="kUsersNeedMore">
+                <div>
+                <span class="kCurrentStatus">{{'applications.administration.accounts.currentStatus' | translate}}</span>
+                {{'applications.administration.accounts.accountsInfo' | translate:[_usedAccounts, _availableAccounts]}}
+                <span class="kMoreUsers">
+                {{'applications.administration.accounts.moreAccounts' | translate}}
+                <a class="kClickHere" (click)="_upgradeAccount()">{{'applications.administration.accounts.contact' | translate}}</a>
+                {{'applications.administration.accounts.usersUpgrade' | translate}}
+              </span>
+                </div>
+                <div>
+                    {{'applications.administration.accounts.accountsExplain' | translate}}
+                </div>
+            </div>
+        </div>
         <kSticky stickyId="accountsFilters" [sticksTo]="'header'" [scrollOffset]="80">
           <div class="kAccountsTableFilters kContent">
             <button pButton type="button" class="kButtonBranded kAddAccountBtn"
                     [label]="'applications.administration.accounts.addAccount' | translate"
+                    [disabled]="_availableAccounts === 0"
                     (click)="_addAccount()"></button>
             <span class="kSelectedAccountsNum" *ngIf="(_accountsStore.accounts.data$ | async)?.totalCount">
               {{ 'applications.administration.accounts.accountsNum' | translate:[(_accountsStore.accounts.data$ | async)?.totalCount] }}

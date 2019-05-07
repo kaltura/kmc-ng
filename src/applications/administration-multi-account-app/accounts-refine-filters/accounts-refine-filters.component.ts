@@ -252,9 +252,8 @@ export class AccountsRefineFiltersComponent implements OnInit, OnDestroy, OnChan
               newFilterItems.splice(itemIndex, 1);
             }
           });
-        setTimeout(()=>{
-            this._accountsStore.filter({ [newFilterName]: newFilterValue });
-        });
+
+          this._accountsStore.filter({ [newFilterName]: newFilterValue });
 
       }
     }

@@ -2,13 +2,14 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AccountFilters, MultiAccountStoreService, SortDirection } from '../multi-account-store/multi-account-store.service';
 import {PopupWidgetComponent, StickyComponent} from '@kaltura-ng/kaltura-ui';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell';
+import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AdminMultiAccountMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KalturaPartner} from "kaltura-ngx-client";
 import { MultiAccountRefineFiltersService, RefineList } from '../multi-account-store/multi-account-refine-filters.service';
+import {serverConfig} from "config/server";
 
 @Component({
   selector: 'kAccountsList',
@@ -26,6 +27,10 @@ export class AccountsListComponent implements OnInit, OnDestroy {
   public _tableIsBusy = false;
   public _tableBlockerMessage: AreaBlockerMessage = null;
   public _refineFilters: RefineList[];
+  public _templateAccounts: KalturaPartner[] = [];
+  public _usedAccounts = null;
+  public _availableAccounts = null;
+
   public _query = {
     freeText: '',
     sortBy: 'createdAt',
@@ -39,7 +44,7 @@ export class AccountsListComponent implements OnInit, OnDestroy {
               private _browserService: BrowserService,
               private _refineFiltersService: MultiAccountRefineFiltersService,
               private _adminMultiAccountMainViewService: AdminMultiAccountMainViewService,
-              private _appLocalization: AppLocalization) {
+              private _appLocalization: AppLocalization, private _appAuthentication: AppAuthentication) {
   }
 
   ngOnInit() {
@@ -149,6 +154,15 @@ export class AccountsListComponent implements OnInit, OnDestroy {
             this._tableBlockerMessage = null;
           }
         });
+
+      this._accountsStore.accounts.data$
+          .pipe(cancelOnDestroy(this))
+          .subscribe(
+              result => {
+                this._templateAccounts = result.templateAccounts;
+                this._usedAccounts = result.usedAccountsCount - result.templateAccounts.length - 1; // deduct template accounts and current account (admin)
+                this._availableAccounts = this._appAuthentication.appUser.partnerInfo.publishersQuota - this._usedAccounts;
+              });
   }
 
   private _deletAccount(partnerID: number): void {
@@ -261,5 +275,9 @@ export class AccountsListComponent implements OnInit, OnDestroy {
 
   public _onTagsChange() {
       this._tags.updateLayout();
+  }
+
+  public _upgradeAccount(): void {
+      this._browserService.openLink(serverConfig.externalLinks.kaltura.contactUs, {}, '_blank');
   }
 }

@@ -1,23 +1,34 @@
-import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
+import {BrowserService} from 'shared/kmc-shell/providers/browser.service';
 import {
+    KalturaClient,
+    KalturaDetachedResponseProfile,
     KalturaDropFolderFileFilter,
-    KalturaPartner, KalturaPartnerFilter,
-    KalturaPartnerListResponse, KalturaPartnerStatus,
+    KalturaFilterPager, KalturaMultiRequest, KalturaMultiResponse,
+    KalturaPartner,
+    KalturaPartnerFilter,
+    KalturaPartnerGroupType,
+    KalturaPartnerListResponse,
+    KalturaPartnerStatus,
+    KalturaResponseProfileType,
     PartnerListAction
 } from 'kaltura-ngx-client';
-import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs';
-import { ISubscription } from 'rxjs/Subscription';
-import { KalturaFilterPager } from 'kaltura-ngx-client';
-import { KalturaClient } from 'kaltura-ngx-client';
-import {AppLocalization, ListTypeAdapter, StringTypeAdapter} from '@kaltura-ng/mc-shared';
-import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { globalConfig } from 'config/global';
-import { NumberTypeAdapter } from '@kaltura-ng/mc-shared';
-import { AdminMultiAccountMainViewService } from 'app-shared/kmc-shared/kmc-views';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import {Injectable, OnDestroy} from '@angular/core';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs';
+import {ISubscription} from 'rxjs/Subscription';
+import {
+    AppLocalization,
+    FiltersStoreBase,
+    ListTypeAdapter,
+    NumberTypeAdapter,
+    StringTypeAdapter,
+    TypeAdaptersMapping
+} from '@kaltura-ng/mc-shared';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {globalConfig} from 'config/global';
+import {AdminMultiAccountMainViewService} from 'app-shared/kmc-shared/kmc-views';
+import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
+import {ActionTypes} from "../../settings-transcoding-settings-app/transcoding-profile/transcoding-profile-store.service";
 
 export enum SortDirection {
   Desc = -1,
@@ -40,7 +51,7 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
 
 
   private _accounts = {
-    data: new BehaviorSubject<{ items: KalturaPartner[], totalCount: number }>({ items: [], totalCount: 0 }),
+    data: new BehaviorSubject<{ items: KalturaPartner[], totalCount: number, templateAccounts: KalturaPartner[], usedAccountsCount: number }>({ items: [], totalCount: 0, templateAccounts: [], usedAccountsCount: 0 }),
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
   private _isReady = false;
@@ -147,23 +158,27 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
     this._querySubscription = this._buildQueryRequest()
       .pipe(cancelOnDestroy(this))
       .subscribe(
-        response => {
-          this._logger.info(`handle success loading accounts list data`);
-          this._querySubscription = null;
+          (responses: KalturaMultiResponse) => {
+              if (responses.hasErrors()) {
+                  this._querySubscription = null;
+                  const error = responses.getFirstError();
+                  const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+                  this._logger.info(`handle failed loading accounts list data, show alert`, {errorMessage});
+                  this._accounts.state.next({loading: false, errorMessage});
+              } else {
+                  this._logger.info(`handle success loading accounts list data`);
+                  this._querySubscription = null;
 
-          this._accounts.state.next({ loading: false, errorMessage: null });
+                  this._accounts.state.next({loading: false, errorMessage: null});
 
-          this._accounts.data.next({
-            items: response.objects,
-            totalCount: <number>response.totalCount
+                  this._accounts.data.next({
+                      items: responses[0].result.objects,
+                      totalCount: <number>responses[0].result.totalCount,
+                      templateAccounts: responses[1].result.objects,
+                      usedAccountsCount: <number>responses[2].result.totalCount
+                  });
+              }
           });
-        },
-        error => {
-          this._querySubscription = null;
-          const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
-          this._logger.info(`handle failed loading accounts list data, show alert`, { errorMessage });
-          this._accounts.state.next({ loading: false, errorMessage });
-        });
   }
 
   private _isNameExist(name: string): boolean {
@@ -178,7 +193,7 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
         }
     }
 
-  private _buildQueryRequest(): Observable<KalturaPartnerListResponse> {
+  private _buildQueryRequest(): Observable<KalturaMultiResponse> {
     try {
 
       let pager: KalturaFilterPager = null;
@@ -221,10 +236,27 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
             filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
         }
 
+        // create filter for template accounts
+        const templatesFilter = new KalturaPartnerFilter({});
+        templatesFilter.statusIn = this._allStatusesList;
+        templatesFilter.partnerGroupTypeEqual = KalturaPartnerGroupType.template;
+
+        // create filter for used accounts
+        const accountsFilter = new KalturaPartnerFilter({});
+        accountsFilter.statusIn = '1,2'; // active and blocked
+
+        // update desired fields of partners
+        const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
+            type: KalturaResponseProfileType.includeFields,
+            fields: 'id,name,status,adminName,website,createdAt,referenceId,adminEmail,phone,createdAt'
+        });
+
       // build the request
-      return this._kalturaClient.request(
-        new PartnerListAction({ filter, pager })
-      );
+      return this._kalturaClient.multiRequest(new KalturaMultiRequest(
+          new PartnerListAction({ filter, pager }).setRequestOptions({ responseProfile }),
+          new PartnerListAction({ filter: templatesFilter, pager }).setRequestOptions({ responseProfile }),
+          new PartnerListAction({ filter: accountsFilter, pager }).setRequestOptions({ responseProfile })
+      ));
     } catch (err) {
       return Observable.throw(err);
     }
