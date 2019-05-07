@@ -93,7 +93,7 @@
               <td [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
                   <div class="kAccountsTableActions">
                       <button type="button" pButton icon="kIconmore"
-                              [disabled]="account.partnerId === 0" class="kMoreActionsButton"
+                              [disabled]="account.status === 3" class="kMoreActionsButton"
                               (click)="_openActionsMenu($event, account)"></button>
                   </div>
               </td>
