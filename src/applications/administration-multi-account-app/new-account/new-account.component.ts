@@ -6,7 +6,7 @@ import { MultiAccountStoreService } from '../multi-account-store/multi-account-s
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import {KalturaPartner, KalturaUser} from 'kaltura-ngx-client';
+import {KalturaPartner, KalturaPartnerType, KalturaUser} from 'kaltura-ngx-client';
 import { KalturaUserRole } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
@@ -20,6 +20,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 export class NewAccountComponent implements OnInit, OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() parentAccount: KalturaPartner;
+  @Input() templateAccounts: KalturaPartner[];
 
   public _accountForm: FormGroup;
   public _adminField: AbstractControl;
@@ -35,10 +36,13 @@ export class NewAccountComponent implements OnInit, OnDestroy {
   public _emailServerError = false;
   public _templatesList = [];
 
+  private _selectedTemplateId = 0;
+
   constructor(public _accountStore: MultiAccountStoreService,
               private _formBuilder: FormBuilder,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization) {
+
     // build FormControl group
     this._accountForm = _formBuilder.group({
       admin: ['', Validators.required],
@@ -68,7 +72,13 @@ export class NewAccountComponent implements OnInit, OnDestroy {
           template: '',
           refid: ''
       });
-    // init templates dropdown data
+
+      // init templates dropdown data
+      this._templatesList.push({value: 0, label: this._appLocalization.get('applications.administration.accounts.defaultTemplate')}); // default template account
+      // add template accounts to the dropdown
+      this.templateAccounts.forEach( (account: KalturaPartner) => {
+         this._templatesList.push({value: account.id, label: account.name});
+      });
   }
 
   ngOnDestroy() {
@@ -97,50 +107,42 @@ export class NewAccountComponent implements OnInit, OnDestroy {
       if (!this._accountForm.valid) {
           return;
       }
-      alert("create new account");
-/*
-    const { email } = this._accountForm.value;
-    this._isBusy = true;
-    this._usersStore.isUserAlreadyExists(email)
-      .pipe(cancelOnDestroy(this))
-      .subscribe((status) => {
-        this._isBusy = false;
 
-        if (status !== null) {
-            switch (status) {
-                case IsUserExistsStatuses.kmcUser:
-                    this._browserService.alert({
-                        header: this._appLocalization.get('app.common.attention'),
-                        message: this._appLocalization.get('applications.administration.users.alreadyExistError', {0: email})
-                    });
-                    break;
-                case IsUserExistsStatuses.otherKMCUser:
-                    this._browserService.confirm({
-                            header: this._appLocalization.get('applications.administration.users.alreadyExist'),
-                            message: this._appLocalization.get('applications.administration.users.userAlreadyExist', {0: email}),
-                            accept: () => this._createOrAssociateUser()
-                        }
-                    );
-                    break;
-                case IsUserExistsStatuses.unknownUser:
-                    this._createOrAssociateUser();
-                    break;
-            }
-        }else {
-            this._blockerMessage = new AreaBlockerMessage({
-                message: this._appLocalization.get('applications.administration.users.commonError'),
-                buttons: [{
-                    label: this._appLocalization.get('app.common.ok'),
-                    action: () => this._blockerMessage = null
-                }]
-            });
-        }
-      });*/
+      this._isBusy = true;
+
+      const { admin, name, email, phone, template, refid } = this._accountForm.getRawValue();
+      const partner: KalturaPartner = new KalturaPartner({
+          description: 'Multi-publishers console',
+          type: KalturaPartnerType.adminConsole,
+          adminName: admin,
+          adminEmail: email,
+          referenceId: refid,
+          name,
+          phone
+      });
+
+      this._accountStore.addAccount(partner, template)
+          .pipe(cancelOnDestroy(this))
+          .subscribe((newAccount: KalturaPartner) => {
+              this._isBusy = false;
+              this._accountStore.reload();
+              this.parentPopupWidget.close();
+          },
+          error => {
+              this._isBusy = false;
+              this._blockerMessage = new AreaBlockerMessage({
+                  message: error.message.indexOf('already exists in system') !== -1 ? this._appLocalization.get('applications.administration.accounts.errors.emailExists') : error.message,
+                  buttons: [{
+                      label: this._appLocalization.get('app.common.ok'),
+                      action: () => this._blockerMessage = null
+                  }]
+              });
+          });
   }
 
 
   public _templateSelected(event: any): void {
-    alert("template selected");
+      this._selectedTemplateId = event.value;
   }
 
     public createNewAccount(): void {

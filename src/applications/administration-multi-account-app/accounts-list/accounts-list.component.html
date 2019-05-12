@@ -86,7 +86,7 @@
 
     <kPopupWidget #newAccountPopup data-aid="newAccountPopup" [popupWidth]="791" [popupHeight]="700" [modal]="true">
         <ng-template>
-            <kNewAccount [parentPopupWidget]="newAccountPopup">
+            <kNewAccount [parentPopupWidget]="newAccountPopup" [templateAccounts]="_templateAccounts">
             </kNewAccount>
         </ng-template>
     </kPopupWidget>

@@ -1,5 +1,23 @@
 import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
-import { KalturaClient, KalturaDetachedResponseProfile, KalturaDropFolderFileFilter, KalturaFilterPager, KalturaMultiRequest, KalturaMultiResponse, KalturaPartner, KalturaPartnerFilter, KalturaPartnerGroupType, KalturaPartnerStatus, KalturaResponseProfileType, KalturaSessionType, PartnerGetInfoAction, PartnerListAction, SessionImpersonateAction, VarConsoleUpdateStatusAction } from 'kaltura-ngx-client';
+import {
+    KalturaClient,
+    KalturaDetachedResponseProfile,
+    KalturaDropFolderFileFilter,
+    KalturaFilterPager,
+    KalturaMultiRequest,
+    KalturaMultiResponse,
+    KalturaPartner,
+    KalturaPartnerFilter,
+    KalturaPartnerGroupType,
+    KalturaPartnerStatus,
+    KalturaResponseProfileType,
+    KalturaSessionType,
+    PartnerGetInfoAction,
+    PartnerListAction,
+    PartnerRegisterAction,
+    SessionImpersonateAction,
+    VarConsoleUpdateStatusAction
+} from 'kaltura-ngx-client';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs';
@@ -286,20 +304,8 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
       );
   }
 
-  public addAccount(partnerId: number): Observable<void> {
-      /*
-    if (!role) {
-      return Observable.throw(new Error('Unable to add role'));
-    }
-    role.tags = 'kmc';
-
-    return this._kalturaClient.request(new UserRoleAddAction({ userRole: role }))
-      .map(() => {
-        return;
-      });
-      */
-      alert("create account for partner "+ partnerId);
-      return Observable.of(null);
+  public addAccount(partner: KalturaPartner, templatePartnerId: number): Observable<KalturaPartner> {
+      return this._kalturaClient.request(new PartnerRegisterAction({partner, templatePartnerId}));
   }
 
   public reload(): void {
