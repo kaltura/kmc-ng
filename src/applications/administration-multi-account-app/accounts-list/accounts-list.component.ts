@@ -1,15 +1,15 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AccountFilters, MultiAccountStoreService, SortDirection } from '../multi-account-store/multi-account-store.service';
-import {PopupWidgetComponent, StickyComponent} from '@kaltura-ng/kaltura-ui';
+import { PopupWidgetComponent, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AdminMultiAccountMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import {KalturaPartner, KalturaPartnerStatus, KalturaUserRole} from "kaltura-ngx-client";
+import { KalturaPartner, KalturaPartnerStatus } from "kaltura-ngx-client";
 import { MultiAccountRefineFiltersService, RefineList } from '../multi-account-store/multi-account-refine-filters.service';
-import {serverConfig} from "config/server";
+import { serverConfig, buildBaseUri } from "config/server";
 
 @Component({
   selector: 'kAccountsList',
@@ -181,7 +181,7 @@ export class AccountsListComponent implements OnInit, OnDestroy {
   public _onActionSelected(event: { action: string, account: KalturaPartner }): void {
     switch (event.action) {
       case 'kmc':
-          this._openKmc(this._appAuthentication.appUser.partnerInfo.partnerId, event.account.id);
+          this._openKmc(event.account.id, event.account.adminEmail);
         break;
       case 'block':
           this._updateAccountStatus(event.account, KalturaPartnerStatus.blocked);
@@ -249,17 +249,18 @@ export class AccountsListComponent implements OnInit, OnDestroy {
             );
     }
 
-    private _openKmc(pId: number, userId: number): void {
+    private _openKmc(pId: number, userId: string): void {
         this._logger.info(`handle delete role request by user`);
         this._blockerMessage = null;
         this._accountsStore.getAdminSession(pId, userId)
             .pipe(cancelOnDestroy(this))
             .pipe(tag('block-shell'))
             .subscribe(
-                (ks) => {
+                ks => {
                     this._logger.info(`handle successful open KMC request by user`);
                     this._blockerMessage = null;
-                    debugger;
+                    const redirectUrl = buildBaseUri('') + this._browserService.getDocumentBase() + '/actions/persist-login-by-ks/' + ks;
+                    this._browserService.openLink(redirectUrl);
                 },
                 error => {
                     this._logger.warn(`handle failed open KMC request by user, show confirmation`, { errorMessage: error.message });

@@ -502,5 +502,16 @@ export class BrowserService implements IAppStorage {
             ? (format === 'month-day-year' ? 'mm/dd/yy' : 'dd/mm/yy')
             : (format === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY');
     }
+
+    public getDocumentBase(): string {
+        const bases = document.getElementsByTagName('base');
+        let baseHref = '';
+
+        if ( bases.length ) {
+            baseHref = bases[0].getAttribute('href');
+        }
+
+        return baseHref;
+    }
 }
 

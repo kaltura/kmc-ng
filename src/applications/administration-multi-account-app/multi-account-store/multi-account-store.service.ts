@@ -1,34 +1,15 @@
-import {BrowserService} from 'shared/kmc-shell/providers/browser.service';
-import {
-    KalturaClient,
-    KalturaDetachedResponseProfile,
-    KalturaDropFolderFileFilter,
-    KalturaFilterPager, KalturaMultiRequest, KalturaMultiResponse,
-    KalturaPartner,
-    KalturaPartnerFilter,
-    KalturaPartnerGroupType,
-    KalturaPartnerStatus,
-    KalturaResponseProfileType,
-    PartnerListAction,
-    VarConsoleUpdateStatusAction
-} from 'kaltura-ngx-client';
-import {Injectable, OnDestroy} from '@angular/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs';
-import {ISubscription} from 'rxjs/Subscription';
-import {
-    AppLocalization,
-    FiltersStoreBase,
-    ListTypeAdapter,
-    NumberTypeAdapter,
-    StringTypeAdapter,
-    TypeAdaptersMapping
-} from '@kaltura-ng/mc-shared';
-import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-import {globalConfig} from 'config/global';
-import {AdminMultiAccountMainViewService} from 'app-shared/kmc-shared/kmc-views';
-import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
-import {ActionTypes} from "../../settings-transcoding-settings-app/transcoding-profile/transcoding-profile-store.service";
+import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
+import { KalturaClient, KalturaDetachedResponseProfile, KalturaDropFolderFileFilter, KalturaFilterPager, KalturaMultiRequest, KalturaMultiResponse, KalturaPartner, KalturaPartnerFilter, KalturaPartnerGroupType, KalturaPartnerStatus, KalturaResponseProfileType, KalturaSessionType, PartnerGetInfoAction, PartnerListAction, SessionImpersonateAction, VarConsoleUpdateStatusAction } from 'kaltura-ngx-client';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs';
+import { ISubscription } from 'rxjs/Subscription';
+import { AppLocalization, FiltersStoreBase, ListTypeAdapter, NumberTypeAdapter, StringTypeAdapter, TypeAdaptersMapping } from '@kaltura-ng/mc-shared';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { globalConfig } from 'config/global';
+import { AdminMultiAccountMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { AppAuthentication } from "app-shared/kmc-shell";
 
 export enum SortDirection {
   Desc = -1,
@@ -67,6 +48,7 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
   constructor(private _kalturaClient: KalturaClient,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
+              private _appAuthentication: AppAuthentication,
               adminMultiAccountMainViewService: AdminMultiAccountMainViewService,
               _logger: KalturaLogger) {
     super(_logger.subLogger('AccountsStoreService'));
@@ -273,17 +255,35 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
           });
   }
 
-  public getAdminSession(pId: number, userId: number): Observable<string> {
-      /*
-      return this._kalturaClient.request(new SystemPartnerGetAdminSessionAction({pId, userId: userId.toString()}))
-          .map(() => {
-              return undefined;
-          })
-          .catch(error => {
-              throw error;
-          });*/
-      alert("get admin session");
-      return Observable.of(null);
+  public getAdminSession(impersonatedPartnerId: number, userId: string): Observable<string> {
+      const requests = [
+          new PartnerGetInfoAction({})
+              .setRequestOptions({
+                  ks: this._appAuthentication.appUser.ks
+              }),
+          new SessionImpersonateAction({
+              secret: null,
+              userId,
+              impersonatedPartnerId,
+              type: KalturaSessionType.admin,
+              partnerId: this._appAuthentication.appUser.partnerInfo.partnerId,
+              privileges: 'disableentitlement'
+
+          }).setRequestOptions({
+                  ks: this._appAuthentication.appUser.ks
+              }).setDependency(['secret', 0, 'adminSecret'])
+      ]
+
+      return this._kalturaClient.multiRequest(requests).map(
+          response => {
+              if (response.hasErrors()) {
+                  throw new Error(`Error occur during session creation for partner ${impersonatedPartnerId}`);
+              }
+
+              const ks: string = response[1].result;
+              return ks;
+          }
+      );
   }
 
   public addAccount(partnerId: number): Observable<void> {
