@@ -283,29 +283,25 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
           new PartnerGetAction({ id: impersonatedPartnerId })
               .setRequestOptions({
               ks: this._appAuthentication.appUser.ks
-          }),
-          new SessionImpersonateAction({
-              secret: null,
-              impersonatedPartnerId,
-              type: KalturaSessionType.admin,
-              partnerId: this._appAuthentication.appUser.partnerInfo.partnerId,
-              privileges: 'disableentitlement' // if loggedInUserId !== result[1].adminUserId then should be `disableentitlement,enablechangeaccount:${impersonatedPartnerId}`
+          })];
 
-          }).setRequestOptions({
-                  ks: this._appAuthentication.appUser.ks
-              })
-              .setDependency(['secret', 0, 'adminSecret'])
-              .setDependency(['userId', 1, 'adminUserId'])
-      ]
-
-      return this._kalturaClient.multiRequest(requests).map(
-          response => {
-              if (response.hasErrors()) {
+      return this._kalturaClient.multiRequest(requests).switchMap(
+          (responses: KalturaMultiResponse) => {
+              if (responses.hasErrors()) {
                   throw new Error(`Error occur during session creation for partner ${impersonatedPartnerId}`);
               }
+              return this._kalturaClient.request(new SessionImpersonateAction({
+                  secret: responses[0].result.adminSecret,
+                  userId: responses[1].result.adminUserId,
+                  impersonatedPartnerId,
+                  type: KalturaSessionType.admin,
+                  partnerId: this._appAuthentication.appUser.partnerInfo.partnerId,
+                  privileges: loggedInUserId !== responses[1].result.adminUserId ? `disableentitlement,enablechangeaccount:${impersonatedPartnerId}` : 'disableentitlement'
 
-              const ks: string = response[2].result;
-              return ks;
+              })).map(response => {
+                  const ks: string = response;
+                  return ks;
+              })
           }
       );
   }
