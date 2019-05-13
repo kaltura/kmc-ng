@@ -6,10 +6,9 @@
   flex-direction: column;
 
   .kHeader {
-    height: 78px;
+    height: 50px;
     width: 100%;
     text-align: center;
-    padding-top: 24px;
     box-sizing: border-box;
     border-bottom: 1px solid $kGrayscale4;
     flex: 0 0 auto;
@@ -163,12 +162,21 @@
     button {
       height: 34px;
       width: 130px;
-      margin: 0;
       border: none;
-
       &:disabled {
         border: 1px solid $kGrayscale4;
       }
     }
+
+      .kNote{
+          position: absolute;
+          right: 24px;
+          bottom: 26px;
+          font-size: 13px;
+          span{
+              font-weight: bold;
+              margin-right: 4px;
+          }
+      }
   }
 }
