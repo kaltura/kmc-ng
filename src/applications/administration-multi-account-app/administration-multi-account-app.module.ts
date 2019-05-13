@@ -45,6 +45,7 @@ import { StatusPipe } from './pipes/status.pipe';
 import { AccountsTagsComponent } from './accounts-tags/accounts-tags.component';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
+import { FiltersModule } from '@kaltura-ng/mc-shared';
 
 @NgModule({
   imports: [
@@ -85,6 +86,7 @@ import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.
     TableModule,
     InputSwitchModule,
       DateFormatModule,
+      FiltersModule
   ],
   declarations: [
     AdministrationMultiAccountComponent,

@@ -4,7 +4,6 @@
       <div class="kFiltersGroupTitle">
         <span>{{'applications.content.dropFolders.filters.additionalFilters' | translate | uppercase}}</span>
       </div>
-      <span *ngIf="_createdAtFilterError" class="kError">{{_createdAtFilterError}}</span>
         <div *ngFor="let treeInstance of _primeLists">
           <p-tree [value]="treeInstance.items"
                   [selectionMode]="'checkbox'"
