@@ -181,7 +181,7 @@ export class AccountsListComponent implements OnInit, OnDestroy {
   public _onActionSelected(event: { action: string, account: KalturaPartner }): void {
     switch (event.action) {
       case 'kmc':
-          this._openKmc(event.account.id, event.account.adminEmail);
+          this._openKmc(event.account.id);
         break;
       case 'block':
           this._updateAccountStatus(event.account, KalturaPartnerStatus.blocked);
@@ -249,10 +249,10 @@ export class AccountsListComponent implements OnInit, OnDestroy {
             );
     }
 
-    private _openKmc(pId: number, userId: string): void {
+    private _openKmc(pId: number): void {
         this._logger.info(`handle delete role request by user`);
         this._blockerMessage = null;
-        this._accountsStore.getAdminSession(pId, userId)
+        this._accountsStore.getAdminSession(pId)
             .pipe(cancelOnDestroy(this))
             .pipe(tag('block-shell'))
             .subscribe(
@@ -272,7 +272,7 @@ export class AccountsListComponent implements OnInit, OnDestroy {
                                     label: this._appLocalization.get('app.common.retry'),
                                     action: () => {
                                         this._logger.info(`user confirmed, retry action`);
-                                        this._openKmc(pId, userId);
+                                        this._openKmc(pId);
                                     }
                                 },
                                 {

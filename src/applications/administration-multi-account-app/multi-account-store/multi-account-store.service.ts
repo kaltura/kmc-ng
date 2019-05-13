@@ -11,7 +11,7 @@ import {
     KalturaPartnerGroupType,
     KalturaPartnerStatus,
     KalturaResponseProfileType,
-    KalturaSessionType,
+    KalturaSessionType, PartnerGetAction,
     PartnerGetInfoAction,
     PartnerListAction,
     PartnerRegisterAction,
@@ -248,7 +248,7 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
         // update desired fields of partners
         const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'id,name,status,adminName,website,createdAt,referenceId,adminEmail,phone,createdAt'
+            fields: 'id,name,status,adminName,website,createdAt,referenceId,adminEmail,phone,createdAt,adminUserId'
         });
 
       // build the request
@@ -273,23 +273,29 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
           });
   }
 
-  public getAdminSession(impersonatedPartnerId: number, userId: string): Observable<string> {
+  public getAdminSession(impersonatedPartnerId: number): Observable<string> {
+      const loggedInUserId = this._appAuthentication.appUser.id;
       const requests = [
           new PartnerGetInfoAction({})
               .setRequestOptions({
                   ks: this._appAuthentication.appUser.ks
               }),
+          new PartnerGetAction({ id: impersonatedPartnerId })
+              .setRequestOptions({
+              ks: this._appAuthentication.appUser.ks
+          }),
           new SessionImpersonateAction({
               secret: null,
-              userId,
               impersonatedPartnerId,
               type: KalturaSessionType.admin,
               partnerId: this._appAuthentication.appUser.partnerInfo.partnerId,
-              privileges: 'disableentitlement'
+              privileges: 'disableentitlement' // if loggedInUserId !== result[1].adminUserId then should be `disableentitlement,enablechangeaccount:${impersonatedPartnerId}`
 
           }).setRequestOptions({
                   ks: this._appAuthentication.appUser.ks
-              }).setDependency(['secret', 0, 'adminSecret'])
+              })
+              .setDependency(['secret', 0, 'adminSecret'])
+              .setDependency(['userId', 1, 'adminUserId'])
       ]
 
       return this._kalturaClient.multiRequest(requests).map(
@@ -298,7 +304,7 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
                   throw new Error(`Error occur during session creation for partner ${impersonatedPartnerId}`);
               }
 
-              const ks: string = response[1].result;
+              const ks: string = response[2].result;
               return ks;
           }
       );
