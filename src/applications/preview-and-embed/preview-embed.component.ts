@@ -96,7 +96,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       if (this._selectedPlayerVersion === 2) {
           this._generatedCode = this.generateCode(false);
           this._generatedPreviewCode = this.generateCode(true);
-          this.createPreviewLink(false);
+          this.createPreviewLink();
       } else {
           if (this._previewForm.controls['selectedEmbedType'].value === 'thumb'){
               // if coming from a V2 player with thumb embed, change the embed type to dynamic. This will trigger another change that will generate the correct embed code.
@@ -105,7 +105,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           } else {
               this._generatedCode = this.generateV3code(false);
               this._generatedPreviewCode = this.generateV3code(true);
-              this.createPreviewLink(false);
+              this.createPreviewLink();
           }
       }
       this.showPreview();
@@ -355,18 +355,27 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private flashVarsToUrl(flashVarsObject: any): string{
-      let params = '';
+      let
+          params = '',
+          index = 0;
       for( let i in flashVarsObject ){
         var curVal = typeof flashVarsObject[i] == 'object'? JSON.stringify( flashVarsObject[i] ): flashVarsObject[i];
-        params+= '&' + 'flashvars[' + encodeURIComponent( i ) + ']=' + encodeURIComponent(curVal);
+
+        if (index !== 0) {
+            params += '&';
+        }
+
+        params+= 'flashvars[' + encodeURIComponent( i ) + ']=' + encodeURIComponent(curVal);
+
+        index++;
       }
       return params;
   }
 
-  private createPreviewLink(isPreview: boolean):void{
+  private createPreviewLink():void{
       let url = '';
       try {
-        url = this.getProtocol(isPreview) + '://' + serverConfig.kalturaServer.uri + '/index.php/extwidget/preview';
+        url = this.getProtocol(true) + '://' + serverConfig.kalturaServer.uri + '/index.php/extwidget/preview';
         url += '/partner_id/' + this._appAuthentication.appUser.partnerId;
         url += '/uiconf_id/' + this._previewForm.controls['selectedPlayer'].value.uiConf.id;
         if (this.media instanceof KalturaMediaEntry) {
@@ -374,7 +383,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
         }
         url += '/embed/' + this._previewForm.controls['selectedEmbedType'].value;
         if (this._selectedPlayerVersion === 2 ) {
-            url += '?' + this.flashVarsToUrl(this.getEmbedFlashVars(isPreview));
+            url += '?' + this.flashVarsToUrl(this.getEmbedFlashVars(true));
         }
         this._previewLink = url;
       } catch (e){
