@@ -26,5 +26,6 @@ export interface AppUser {
     lastName: string;
     partnerInfo: PartnerInfo;
     createdAt: Date;
+    publishersQuota: number;
 }
 

@@ -3,6 +3,7 @@ import { KmcMainViewsService } from './kmc-main-views.service';
 import {
     AdminRolesMainViewService,
     AdminUsersMainViewService,
+    AdminMultiAccountMainViewService,
     ContentBulkUploadsMainViewService,
     ContentCategoriesMainViewService,
     ContentDropFoldersMainViewService,
@@ -72,6 +73,7 @@ export class KmcViewsModule {
                 LiveAnalyticsMainViewService,
                 AdminUsersMainViewService,
                 AdminRolesMainViewService,
+                AdminMultiAccountMainViewService,
                 SettingsAccountSettingsMainViewService,
                 SettingsIntegrationSettingsMainViewService,
                 SettingsAccessControlMainViewService,

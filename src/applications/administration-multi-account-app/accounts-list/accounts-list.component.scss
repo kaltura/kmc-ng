@@ -1,0 +1,198 @@
+@import 'app-theme/_variables.scss';
+
+.kTagsWrapper {
+  z-index: 500;
+}
+
+.kAccounts {
+  font-size: 15px;
+  background-color: $appBkgColor;
+  padding-top: 24px;
+  width: 100%;
+  min-width: $minAppWidth;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0px;
+  .kAccountsHolder {
+    height: 100%;
+    min-height: $minTableHeight;
+    border: none;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .kFilters {
+      display: flex;
+      margin-left: auto;
+      .kSearchInput {
+          width: 280px;
+          height: 34px;
+          background: $kMagnifyingGlassBkg;
+          margin-right: 8px;
+          padding: 9px 4px 8px 38px;
+
+          &:focus {
+              background-color: white;
+          }
+      }
+      .kStatusesFilter {
+          display: flex;
+          height: 32px;
+          align-items: center;
+          cursor: pointer;
+          color: $kGrayscale1;
+          width: 178px;
+          position: relative;
+          margin-right: 8px;
+
+          i {
+              margin-right: 12px;
+              margin-left: 8px;
+              color: $kGrayscale4;
+              &.dropdown {
+                  font-size: 10px;
+              }
+          }
+
+          .dropdown {
+              position: absolute;
+              right: 4px;
+              top: 12px;
+          }
+      }
+  }
+  .kRefreshBtn {
+    font-size: 24px;
+    border: none;
+    min-width: inherit;
+    margin-right: 8px;
+    width: 40px;
+    outline: 0;
+    color: $kGrayscale3;
+    &:active {
+      box-shadow: none;
+      transform: rotate(45deg);
+    }
+    &:hover {
+      background-color: #ffffff;
+      color: $kPrimary;
+    }
+  }
+  .kAccountsTableFilters {
+    color: $kGrayscale1;
+    z-index: 500;
+    height: 66px;
+    background-color: white;
+    flex: 0 0 auto;
+    align-items: center;
+    margin-left: 0px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    display: flex;
+    .kSelectedAccountsNum {
+      padding-left: 16px;
+    }
+  }
+  .kAccountsTableFooter {
+    bottom: 0px;
+    height: 34px;
+    background-color: white;
+    border-top: 1px solid $kGrayscale6;
+    position: fixed;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    padding: 0 14px 28px;
+    display: block;
+  }
+  .kAccountsTable {
+    border: none;
+    position: relative;
+    background-color: white;
+    flex: 1 1 auto;
+    width: 100%;
+  }
+  .kPaginatorShowRowsLabel {
+    color: $kGrayscale1;
+    position: absolute;
+    top: 7px;
+    right: 80px;
+  }
+  .kAddAccountBtn {
+    margin-left: 14px;
+    height: 36px;
+  }
+
+    .kUsersHeader {
+        color: $kGrayscale1;
+    }
+    .kUsersNeedMore {
+        height: 66px;
+        border-radius: 3px;
+        background-color: #D9D9D9;
+        margin-bottom: 20px;
+        color: #222;
+        padding-top: 12px;
+        box-sizing: border-box;
+        div {
+            display: flex;
+            align-items: center;
+            padding: 0 21px;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+        .kCurrentStatus,
+        .kMoreUsers {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .kMoreUsers {
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .kClickHere {
+            color: #01accd;
+            margin: 0 5px;
+        }
+    }
+}
+
+
+
+:host /deep/ span.ui-button-icon-left.pi-kIcontrash {
+  margin-left: -.5em;
+}
+
+:host /deep/ .ui-tree {
+  width: 380px;
+}
+
+:host /deep/ .ui-button-icon-right.kIcondropdown_arrow_bottom {
+  font-size: 10px;
+  margin-right: 2px;
+  pointer-events: none;
+}
+
+:host /deep/ .ui-tieredmenu.ui-menu {
+  width: 250px;
+  .ui-submenu-icon {
+    font-size: 10px;
+    margin-top: 3px;
+  }
+}
+
+:host /deep/ .ui-button-icon-only .pi {
+  margin-left: -.5em;
+}
+
+:host /deep/ .kStickyClass {
+    border-bottom: 1px solid $kGrayscale5;
+}
+
+:host /deep/ .kAccountsTableFooter {
+  .ui-dropdown-panel {
+    min-width: 70px;
+  }
+}
