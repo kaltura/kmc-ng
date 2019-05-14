@@ -80,7 +80,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
           adminLoginUsersQuota: partnerInfo.adminLoginUsersQuota,
           adminUserId: partnerInfo.adminUserId
         };
-        this._rolesList = this._roles.map(({ name, id }) => ({ label: name, value: id }));
+        this._rolesList = this._roles.map(({ name, id }) => ({ label: name, value: id.toString() }));
 
         const relevantUser = this._users.find(user => this.user && this.user.id === user.id);
         this._isNewUser = !relevantUser;
