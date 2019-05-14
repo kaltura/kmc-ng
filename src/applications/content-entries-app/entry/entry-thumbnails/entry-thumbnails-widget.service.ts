@@ -43,6 +43,7 @@ export interface ThumbnailRow {
   status: KalturaThumbAssetStatus;
   uploadStatus: boolean;
   fileExt: string;
+  tags: string;
 }
 
 @Injectable()
@@ -120,6 +121,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
                     width: thumbnail.width,
                     height: thumbnail.height,
                     size: thumbnail.size,
+                    tags: thumbnail.tags,
                     isDefault: false,
                     distributors: "",
                     url: "",
@@ -157,7 +159,8 @@ export class EntryThumbnailsWidget extends EntryWidget {
                         distributors: profile.name,
                         url: '',
                         uploadStatus: false,
-                        fileExt: ''
+                        fileExt: '',
+                        tags: ''
                     };
                     thumbs.push(missingThumb);
                 }
@@ -214,14 +217,11 @@ export class EntryThumbnailsWidget extends EntryWidget {
             .pipe(tag('block-shell'))
             .subscribe(
                 () => {
-                    thumbs.forEach(thumb => {
-                        thumb.isDefault = false;
-                    });
-                    thumb.isDefault = true;
-
                     if (entryId) {
                         this._appEvents.publish(new PreviewMetadataChangedEvent(entryId));
                     }
+                    this._browserService.scrollToTop();
+                    this.reloadThumbnails();
                 },
                 error => {
                     this._showBlockerMessage(new AreaBlockerMessage(
