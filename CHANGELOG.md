@@ -1,3 +1,19 @@
+<a name="5.9.0"></a>
+# [5.9.0](https://github.com/kaltura/kmc-ng/compare/v5.8.0...v5.9.0) (2019-05-15)
+
+
+### Bug Fixes
+
+* **users/edit:** select the correct user role in the roles drop-down when editing an existing user ([30e532d](https://github.com/kaltura/kmc-ng/commit/30e532d))
+
+
+### Features
+
+* Multi account management ([#832](https://github.com/kaltura/kmc-ng/issues/832)) ([ea325e0](https://github.com/kaltura/kmc-ng/commit/ea325e0))
+* upgrade kea editor to version 2.28.12 which include hotspots ([#822](https://github.com/kaltura/kmc-ng/issues/822)) ([31bae91](https://github.com/kaltura/kmc-ng/commit/31bae91))
+
+
+
 <a name="5.8.0"></a>
 # [5.8.0](https://github.com/kaltura/kmc-ng/compare/v5.7.1...v5.8.0) (2019-04-18)
 
