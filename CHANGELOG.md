@@ -11,6 +11,7 @@
 
 * Multi account management ([#832](https://github.com/kaltura/kmc-ng/issues/832)) ([ea325e0](https://github.com/kaltura/kmc-ng/commit/ea325e0))
 * upgrade kea editor to version 2.28.12 which include hotspots ([#822](https://github.com/kaltura/kmc-ng/issues/822)) ([31bae91](https://github.com/kaltura/kmc-ng/commit/31bae91))
+* Display thumbnail tags in the entry thumbnails table
 
 
 
