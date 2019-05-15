@@ -78,3 +78,14 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+// easy workaround – consider refactoring using pipes
+import 'rxjs/add/observable/timer';
+import 'rxjs/add/observable/empty';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/skip';
+import 'rxjs/add/operator/let';
+import 'rxjs/add/operator/debounce';
+import 'rxjs/add/operator/observeOn';
+import 'rxjs/add/operator/toArray';
