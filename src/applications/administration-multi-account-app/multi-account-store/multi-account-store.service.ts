@@ -254,8 +254,8 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
       // build the request
       return this._kalturaClient.multiRequest(new KalturaMultiRequest(
           new PartnerListAction({ filter, pager }).setRequestOptions({ responseProfile }),
-          new PartnerListAction({ filter: templatesFilter, pager }).setRequestOptions({ responseProfile }),
-          new PartnerListAction({ filter: accountsFilter, pager }).setRequestOptions({ responseProfile })
+          new PartnerListAction({ filter: templatesFilter }).setRequestOptions({ responseProfile }),
+          new PartnerListAction({ filter: accountsFilter }).setRequestOptions({ responseProfile })
       ));
     } catch (err) {
       return Observable.throw(err);
