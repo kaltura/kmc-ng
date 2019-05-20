@@ -40,6 +40,8 @@ import {BulkRemovePublishersService} from './services/bulk-remove-publishers.ser
 import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
 import { ContentPlaylistViewSections, ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { BulkAddViewersService } from './services/bulk-add-viewers.service';
+import { BulkRemoveViewersService } from './services/bulk-remove-viewers.service';
 
 @Component({
   selector: 'kBulkActions',
@@ -59,6 +61,8 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
         BulkRemoveCategoriesService,
         BulkDeleteService,
         BulkDownloadService,
+        BulkAddViewersService,
+        BulkRemoveViewersService,
     ]
 })
 export class BulkActionsComponent implements OnInit, OnDestroy {
@@ -92,6 +96,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     private _bulkRemoveEditorsService: BulkRemoveEditorsService,
     private _bulkAddPublishersService: BulkAddPublishersService,
     private _bulkRemovePublishersService: BulkRemovePublishersService,
+    private _bulkAddViewersService: BulkAddViewersService,
+    private _bulkRemoveViewersService: BulkRemoveViewersService,
     private _bulkRemoveTagsService: BulkRemoveTagsService,
     private _bulkAddCategoriesService: BulkAddCategoriesService,
     private _bulkChangeOwnerService: BulkChangeOwnerService,
@@ -242,6 +248,16 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   // remove publishers changed
   onRemovePublishersChanged(publishers: string[]): void {
     this.executeService(this._bulkRemovePublishersService, publishers);
+  }
+
+    // add publishers changed
+    onAddViewersChanged(viewers: KalturaUser[]): void {
+        this.executeService(this._bulkAddViewersService, viewers.map(viewer => viewer.id));
+    }
+
+  // remove publishers changed
+  onRemoveViewersChanged(viewers: string[]): void {
+    this.executeService(this._bulkRemoveViewersService, viewers);
   }
 
   // add to categories changed
@@ -401,6 +417,24 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
             }
           ]
         },
+          {
+              label: this._appLocalization.get('applications.content.bulkActions.addRemoveViewers'),
+              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ENTRY_USERS),
+              items: [
+                  {
+                      label: this._appLocalization.get('applications.content.bulkActions.addViewers'),
+                      command: (event) => {
+                          this.openBulkActionWindow('addViewers', 500, 500);
+                      }
+                  },
+                  {
+                      label: this._appLocalization.get('applications.content.bulkActions.removeViewers'),
+                      command: (event) => {
+                          this.openBulkActionWindow('removeViewers', 500, 500);
+                      }
+                  }
+              ]
+          },
           {
               label: this._appLocalization.get('applications.content.bulkActions.addToNewCategoryPlaylist'), items: [
               {
