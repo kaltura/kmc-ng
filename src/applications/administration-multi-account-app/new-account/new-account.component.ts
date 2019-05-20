@@ -110,7 +110,7 @@ export class NewAccountComponent implements OnInit, OnDestroy {
 
       this._isBusy = true;
 
-      const { admin, name, email, phone, template, refid } = this._accountForm.getRawValue();
+      const { admin, name, email, phone, website, template, refid } = this._accountForm.getRawValue();
       const partner: KalturaPartner = new KalturaPartner({
           description: 'Multi-publishers console',
           type: KalturaPartnerType.adminConsole,
@@ -118,7 +118,8 @@ export class NewAccountComponent implements OnInit, OnDestroy {
           adminEmail: email,
           referenceId: refid,
           name,
-          phone
+          phone,
+          website
       });
 
       this._accountStore.addAccount(partner, template)
