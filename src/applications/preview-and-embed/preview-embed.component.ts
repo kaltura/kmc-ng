@@ -375,7 +375,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   private createPreviewLink():void{
       let url = '';
       try {
-        url = this.getProtocol(true) + '://' + serverConfig.kalturaServer.uri + '/index.php/extwidget/preview';
+        url = this.getProtocol(false) + '://' + serverConfig.kalturaServer.uri + '/index.php/extwidget/preview';
         url += '/partner_id/' + this._appAuthentication.appUser.partnerId;
         url += '/uiconf_id/' + this._previewForm.controls['selectedPlayer'].value.uiConf.id;
         if (this.media instanceof KalturaMediaEntry) {
@@ -383,7 +383,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
         }
         url += '/embed/' + this._previewForm.controls['selectedEmbedType'].value;
         if (this._selectedPlayerVersion === 2 ) {
-            url += '?' + this.flashVarsToUrl(this.getEmbedFlashVars(true));
+            url += '?' + this.flashVarsToUrl(this.getEmbedFlashVars(false));
         }
         this._previewLink = url;
       } catch (e){
