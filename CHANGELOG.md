@@ -1,3 +1,17 @@
+<a name="5.9.1"></a>
+## [5.9.1](https://github.com/kaltura/kmc-ng/compare/v5.9.0...v5.9.1) (2019-05-21)
+
+
+### Bug Fixes
+
+* prevent passwords auto filling  ([#831](https://github.com/kaltura/kmc-ng/issues/831)) ([d853051](https://github.com/kaltura/kmc-ng/commit/d853051))
+* **administration/multi-account:** disable create button on error state ([462881c](https://github.com/kaltura/kmc-ng/commit/462881c))
+* **administration/multi-account:** fix adding website info when creating new account ([cfbb7d4](https://github.com/kaltura/kmc-ng/commit/cfbb7d4))
+* **administration/multi-account:** fix available accounts calculation ([f270218](https://github.com/kaltura/kmc-ng/commit/f270218))
+* **entry/captions:** support Luxembourgish captions ([9cae1a9](https://github.com/kaltura/kmc-ng/commit/9cae1a9))
+
+
+
 <a name="5.9.0"></a>
 # [5.9.0](https://github.com/kaltura/kmc-ng/compare/v5.8.0...v5.9.0) (2019-05-15)
 
