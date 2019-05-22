@@ -11,7 +11,7 @@ import { ReleaseNotesComponent } from './components/release-notes/release-notes.
 import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
 import { EntryTypePipe } from 'app-shared/kmc-shell/pipes/entry-type.pipe';
 import { PageExitVerificationService, UploadPageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
-import { DatePipe } from 'app-shared/kmc-shared/date-format/date.pipe';
+import { PreventPasswordAutofillDirective } from 'app-shared/kmc-shell/directives/prevent-password-autofill.directive';
 
 @NgModule({
     imports: <any[]>[
@@ -25,12 +25,14 @@ import { DatePipe } from 'app-shared/kmc-shared/date-format/date.pipe';
         ReleaseNotesComponent,
         ScrollToTopComponent,
         EntryTypePipe,
+        PreventPasswordAutofillDirective,
     ],
     exports: <any[]>[
         AppContainerComponent,
         ReleaseNotesComponent,
         ScrollToTopComponent,
         EntryTypePipe,
+        PreventPasswordAutofillDirective,
     ],
     providers: <any[]>[]
 })

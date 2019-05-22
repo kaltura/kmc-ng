@@ -1,0 +1,33 @@
+<k-area-blocker [showLoader]="_showLoader">
+  <div class="kOverrideFAIcons kRefineFilters">
+    <kScrollToTopContainer #refine class="kTreeContainer">
+      <div class="kFiltersGroupTitle">
+        <span>{{'applications.content.dropFolders.filters.additionalFilters' | translate | uppercase}}</span>
+      </div>
+        <div *ngFor="let treeInstance of _primeLists">
+          <p-tree [value]="treeInstance.items"
+                  [selectionMode]="'checkbox'"
+                  kRefinePrimeTree
+                  [(selection)]="treeInstance.selections"
+                  (onNodeSelect)="_onTreeNodeSelect($event, treeInstance)"
+                  (onNodeUnselect)="_onTreeNodeUnselect($event, treeInstance)">
+            <ng-template let-node pTemplate="default">
+              <span class="kTreeNodeLabel" [kTooltip]="node.label" [delay]="1000">
+                {{node.label}}
+              </span>
+            </ng-template>
+          </p-tree>
+        </div>
+    </kScrollToTopContainer>
+
+    <p>
+      <a class="clearAll" (click)="_clearAllComponents()">
+        {{'applications.content.dropFolders.filters.clearAll' | translate}}
+      </a>
+      <a class="kClose" (click)="_close()">
+        {{'applications.content.dropFolders.filters.close' | translate}}
+      </a>
+    </p>
+  </div>
+</k-area-blocker>
+

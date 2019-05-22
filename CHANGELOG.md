@@ -1,3 +1,52 @@
+<a name="5.9.1"></a>
+## [5.9.1](https://github.com/kaltura/kmc-ng/compare/v5.9.0...v5.9.1) (2019-05-21)
+
+
+### Bug Fixes
+
+* prevent passwords auto filling  ([#831](https://github.com/kaltura/kmc-ng/issues/831)) ([d853051](https://github.com/kaltura/kmc-ng/commit/d853051))
+* **administration/multi-account:** disable create button on error state ([462881c](https://github.com/kaltura/kmc-ng/commit/462881c))
+* **administration/multi-account:** fix adding website info when creating new account ([cfbb7d4](https://github.com/kaltura/kmc-ng/commit/cfbb7d4))
+* **administration/multi-account:** fix available accounts calculation ([f270218](https://github.com/kaltura/kmc-ng/commit/f270218))
+* **entry/captions:** support Luxembourgish captions ([9cae1a9](https://github.com/kaltura/kmc-ng/commit/9cae1a9))
+
+
+
+<a name="5.9.0"></a>
+# [5.9.0](https://github.com/kaltura/kmc-ng/compare/v5.8.0...v5.9.0) (2019-05-15)
+
+
+### Bug Fixes
+
+* **users/edit:** select the correct user role in the roles drop-down when editing an existing user ([30e532d](https://github.com/kaltura/kmc-ng/commit/30e532d))
+
+
+### Features
+
+* Multi account management ([#832](https://github.com/kaltura/kmc-ng/issues/832)) ([ea325e0](https://github.com/kaltura/kmc-ng/commit/ea325e0))
+* upgrade kea editor to version 2.28.12 which include hotspots ([#822](https://github.com/kaltura/kmc-ng/issues/822)) ([31bae91](https://github.com/kaltura/kmc-ng/commit/31bae91))
+* Display thumbnail tags in the entry thumbnails table
+
+
+
+<a name="5.8.0"></a>
+# [5.8.0](https://github.com/kaltura/kmc-ng/compare/v5.7.1...v5.8.0) (2019-04-18)
+
+
+### Bug Fixes
+
+* Server poll invalid KS handling ([#827](https://github.com/kaltura/kmc-ng/issues/827)) ([6215876](https://github.com/kaltura/kmc-ng/commit/6215876))
+* **content/category:** Allow editing entitlements of categories which owner was deleted ([72219ae](https://github.com/kaltura/kmc-ng/commit/72219ae))
+* **content/syndication:** Handle Syndication feeds which use a playlist which is not loaded in the first 500 playlists ([#826](https://github.com/kaltura/kmc-ng/issues/826)) ([21a1bcc](https://github.com/kaltura/kmc-ng/commit/21a1bcc))
+
+
+### Features
+
+* **entry/users:** Add co-viewers form field ([#828](https://github.com/kaltura/kmc-ng/issues/828)) ([d4222fd](https://github.com/kaltura/kmc-ng/commit/d4222fd))
+* let user choose date format ([#829](https://github.com/kaltura/kmc-ng/issues/829)) ([a163026](https://github.com/kaltura/kmc-ng/commit/a163026))
+
+
+
 <a name="5.7.1"></a>
 ## [5.7.1](https://github.com/kaltura/kmc-ng/compare/v5.7.0...v5.7.1) (2019-04-04)
 

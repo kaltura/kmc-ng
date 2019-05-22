@@ -111,6 +111,10 @@ const routes: Routes = <Routes>[
                         {
                             path: 'users',
                             loadChildren: '../applications/administration-users-app/administration-users-app.module#AdministrationUsersAppModule'
+                        },
+                        {
+                            path: 'multi-account',
+                            loadChildren: '../applications/administration-multi-account-app/administration-multi-account-app.module#AdministrationMultiAccountAppModule'
                         }
                     ]
                     },

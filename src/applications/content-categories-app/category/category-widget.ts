@@ -1,11 +1,8 @@
 import { KalturaCategory } from 'kaltura-ngx-client';
-import { Injectable } from '@angular/core';
 import { WidgetBase } from '@kaltura-ng/kaltura-ui';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { CategoryWidgetsManager } from './category-widgets-manager';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
-import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 
@@ -51,7 +48,7 @@ export abstract class CategoryWidget extends WidgetBase<CategoryWidgetsManager, 
         if (this.form instanceof CategoryWidgetsManager)
         {
             return [{
-                label: 'Back To Categories',
+                label: 'Back to Categories',
                 action: () => {
                     (<CategoryWidgetsManager>this.form).returnToCategories();
                 }
@@ -66,7 +63,7 @@ export abstract class CategoryWidget extends WidgetBase<CategoryWidgetsManager, 
     protected _showActivationError(message?: string) {
         this._showBlockerMessage(new AreaBlockerMessage(
             {
-                message: message || 'An error occurred while loading data',
+                message: message || 'An error occurred while loading data.',
                 buttons: [
                     {
                         label: 'Retry',
@@ -77,5 +74,22 @@ export abstract class CategoryWidget extends WidgetBase<CategoryWidgetsManager, 
                 ]
             }
         ), true);
+    }
+
+    protected _showUserError(message?: string) {
+        this._showBlockerMessage(new AreaBlockerMessage(
+            {
+                message: message || 'Category owner cannot be found (deleted?)',
+                buttons: [
+                    {
+                        label: 'OK',
+                        action: () => {
+                            this.sectionBlockerMessage = null;
+                            this._hideLoader();
+                        }
+                    }
+                ]
+            }
+        ), false);
     }
 }

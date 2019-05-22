@@ -1,0 +1,93 @@
+<k-area-blocker [message]="_blockerMessage" [bodyScroll]="true" [showLoader]="_isBusy">
+  <div class="kAccounts kOverrideFAIcons">
+    <div class="kAccountsHolder kContent">
+        <div class="kUsersHeader">
+            <div class="kUsersNeedMore">
+                <div>
+                <span class="kCurrentStatus">{{'applications.administration.accounts.currentStatus' | translate}}</span>
+                {{'applications.administration.accounts.accountsInfo' | translate:[_usedAccounts, _availableAccounts]}}
+                <span class="kMoreUsers">
+                {{'applications.administration.accounts.moreAccounts' | translate}}
+                <a class="kClickHere" (click)="_upgradeAccount()">{{'applications.administration.accounts.contact' | translate}}</a>
+                {{'applications.administration.accounts.usersUpgrade' | translate}}
+              </span>
+                </div>
+                <div>
+                    {{'applications.administration.accounts.accountsExplain' | translate}}
+                </div>
+            </div>
+        </div>
+        <kSticky stickyId="accountsFilters" [sticksTo]="'header'" [scrollOffset]="80">
+          <div class="kAccountsTableFilters kContent">
+            <button pButton type="button" class="kButtonBranded kAddAccountBtn"
+                    [label]="'applications.administration.accounts.addAccount' | translate"
+                    [disabled]="_availableAccounts === 0 || _tableBlockerMessage"
+                    (click)="_addAccount()"></button>
+            <span class="kSelectedAccountsNum" *ngIf="(_accountsStore.accounts.data$ | async)?.totalCount">
+              {{ 'applications.administration.accounts.accountsNum' | translate:[(_accountsStore.accounts.data$ | async)?.totalCount] }}
+            </span>
+
+              <div class="kFilters">
+                  <input type="text" pInputText class="kSearchInput"
+                         [(ngModel)]="_query.freeText"
+                         (keyup.enter)="_onFreetextChanged()"
+                         [placeholder]="'applications.administration.accounts.search' | translate">
+                  <div #statusesFilterBtn class="kStatusesFilter kDropdown">
+                      <i class="kIconfilter"></i>
+                      <span>{{'applications.content.dropFolders.allStatuses' | translate}}</span>
+                      <i class="kIcondropdown_arrow_bottom dropdown"></i>
+                  </div>
+              </div>
+
+            <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh"
+                    [kTooltip]="'applications.administration.accounts.refresh' | translate"></button>
+          </div>
+        </kSticky>
+        <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="accountsTags" [sticksTo]="'accountsFilters'">
+            <div class="kContent">
+                <k-accounts-tags [refineFilters]="_refineFilters" (onTagsChange)="_onTagsChange()"></k-accounts-tags>
+            </div>
+        </kSticky>
+
+      <k-area-blocker [showLoader]="_tableIsBusy"
+                      [message]="_tableBlockerMessage"
+                      [bodyScroll]="true">
+        <kAccountsTable class="kAccountsTable"
+                     [accounts]="(_accountsStore.accounts.data$ | async)?.items"
+                     (sortChanged)="_onSortChanged($event)"
+                     (actionSelected)="_onActionSelected($event)">
+        </kAccountsTable>
+      </k-area-blocker>
+      <div class="kAccountsTableFooter kContent" #footer *ngIf="(_accountsStore.accounts.data$ | async)?.totalCount">
+        <p-paginator [rows]="_query.pageSize" (onPageChange)="_onPaginationChanged($event)"
+                     [first]="_query.pageIndex * _query.pageSize"
+                     [totalRecords]="(_accountsStore.accounts.data$ | async)?.totalCount"
+                     [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
+        <span class="kPaginatorShowRowsLabel">{{'applications.administration.paginator.showRows' | translate}}</span>
+      </div>
+    </div>
+  </div>
+
+    <!-- popup widgets section -->
+    <kPopupWidget #refinePopup
+                  data-aid="accountsRefinePopup"
+                  placement="top"
+                  [popupWidth]="400"
+                  [popupHeight]="400"
+                  [closeBtn]="false"
+                  [targetRef]="statusesFilterBtn"
+                  [targetOffset]="{'x':-215, 'y': -15}"
+                  kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'statusesFilterPopup'"
+                  [scrollOffset]="80">
+        <ng-template>
+            <k-accounts-refine-filters [refineFilters]="_refineFilters" [parentPopupWidget]="refinePopup"></k-accounts-refine-filters>
+        </ng-template>
+    </kPopupWidget>
+
+    <kPopupWidget #newAccountPopup data-aid="newAccountPopup" [popupWidth]="791" [popupHeight]="700" [modal]="true" [closeBtnInside]="true">
+        <ng-template>
+            <kNewAccount [parentPopupWidget]="newAccountPopup" [templateAccounts]="_templateAccounts">
+            </kNewAccount>
+        </ng-template>
+    </kPopupWidget>
+</k-area-blocker>

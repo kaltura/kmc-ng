@@ -1,0 +1,49 @@
+@import 'app-theme/_variables.scss';
+
+.kAccountsTable {
+    background-color: white;
+    height: auto;
+    padding: 0px;
+    width: 100%;
+
+    .kAccountsTableActions {
+        width: 100%;
+        text-align: center;
+    }
+
+    .emptymessage {
+        display: table-row;
+        border: 0;
+        height: 200px;
+
+        .kEmptyMessage {
+            position: absolute;
+            width: 100%;
+            height: 200px;
+            border-bottom: 1px solid $kGrayscale4;
+        }
+    }
+}
+
+:host {
+    display: flex;
+    flex-flow: row wrap;
+    margin: 0;
+    flex-direction: column;
+
+    /deep/ p-table {
+        width: 100%;
+        .ui-table .ui-table-thead > tr > th {
+            border-left: 1px solid $kGrayscale6;
+        }
+
+        .ui-table-scrollable-body {
+            margin-bottom: 34px;
+        }
+
+        .stickyHeader {
+            z-index: 10;
+            display: table;
+        }
+    }
+}

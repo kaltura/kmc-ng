@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output} from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginScreens } from '../login.component';
 import { BrowserService } from 'app-shared/kmc-shell';
@@ -93,4 +93,5 @@ export class LoginFormComponent {
   public _contactSupport(): void {
       this._browserService.openSupport();
   }
+
 }

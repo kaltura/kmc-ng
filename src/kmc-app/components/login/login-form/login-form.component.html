@@ -17,7 +17,7 @@
 
   <div>
     <input type="password"
-           pInputText
+           appPreventPasswordAutofill pInputText
            [placeholder]="'app.login.login.placeholder.password' | translate"
            [formControl]="_passwordField"
            [class.has-error]="errorMessage || _showError(_passwordField)">
