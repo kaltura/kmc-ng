@@ -1,0 +1,68 @@
+@import "app-theme/_variables.scss";
+
+.kTitle {
+    color: $kGrayscale1;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    border-bottom: 1px solid $kGrayscale4;
+    height: 78px;
+    line-height: 78px;
+}
+
+.kContent {
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+
+    .kLabel {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .kViewers {
+        padding: 12px;
+        height: 330px;
+        width: 470px;
+    }
+}
+
+.kFooter {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    width: 100%;
+    height: 66px;
+    border-top: 1px solid $kGrayscale4;
+    align-items: center;
+    justify-content: center;
+}
+
+:host /deep/ kautocomplete {
+    li.userAdded {
+        background-color: transparentize($kPrimary, 0.5) !important;
+    }
+
+    .ui-autocomplete {
+        width: 475px;
+    }
+
+    .ui-autocomplete-multiple-container {
+        max-height: 310px;
+        overflow-y: auto;
+
+        .ui-inputtext {
+            padding: 4px 6px;
+
+            .ui-autocomplete-input-token {
+                padding: 0;
+
+                input {
+                    height: 34px;
+                    padding-left: 8px;
+                    width: 472px;
+                }
+            }
+        }
+    }
+}
