@@ -238,7 +238,7 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
 
         // create filter for template accounts
         const templatesFilter = new KalturaPartnerFilter({});
-        templatesFilter.statusIn = this._allStatusesList;
+        templatesFilter.statusIn = '1,2'; // active and blocked
         templatesFilter.partnerGroupTypeEqual = KalturaPartnerGroupType.template;
 
         // create filter for used accounts
