@@ -1,42 +1,22 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {MenuItem} from 'primeng/primeng';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
-import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {
-  CategoriesStatus,
-  CategoriesStatusMonitorService
-} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
-
-import {
-  BulkAccessControlService,
-  BulkAddCategoriesService,
-  BulkAddTagsService,
-  BulkChangeOwnerService,
-  BulkDeleteService,
-  BulkDownloadService,
-  BulkRemoveCategoriesService,
-  BulkRemoveTagsService,
-  BulkSchedulingService,
-  SchedulingParams
-} from './services';
-import { KalturaExternalMediaEntry, KalturaMediaEntry } from 'kaltura-ngx-client';
-import {BulkActionBaseService} from './services/bulk-action-base.service';
-import {subApplicationsConfig} from 'config/sub-applications';
-import {KalturaUser} from 'kaltura-ngx-client';
-import {KalturaMediaType} from 'kaltura-ngx-client';
-import {KalturaAccessControl} from 'kaltura-ngx-client';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { CategoriesStatus, CategoriesStatusMonitorService } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+import { BulkAccessControlService, BulkAddCategoriesService, BulkAddTagsService, BulkChangeOwnerService, BulkDeleteService, BulkDownloadService, BulkRemoveCategoriesService, BulkRemoveTagsService, BulkSchedulingService, SchedulingParams } from './services';
+import { KalturaMediaEntry, KalturaMediaType, KalturaAccessControl, KalturaUser, KalturaPlaylistType, KalturaEntryStatus } from 'kaltura-ngx-client';
+import { BulkActionBaseService } from './services/bulk-action-base.service';
+import { subApplicationsConfig } from 'config/sub-applications';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import {CreateNewPlaylistEvent} from 'app-shared/kmc-shared/events/playlist-creation';
-import {KalturaPlaylistType} from 'kaltura-ngx-client';
-import {KalturaEntryStatus} from 'kaltura-ngx-client';
-import {CategoryData} from 'app-shared/content-shared/categories/categories-search.service';
-import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
-import {BulkAddPublishersService} from './services/bulk-add-publishers.service';
-import {BulkAddEditorsService} from './services/bulk-add-editors.service';
-import {BulkRemoveEditorsService} from './services/bulk-remove-editors.service';
-import {BulkRemovePublishersService} from './services/bulk-remove-publishers.service';
+import {CreateNewPlaylistEvent } from 'app-shared/kmc-shared/events/playlist-creation';
+import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { BulkAddPublishersService } from './services/bulk-add-publishers.service';
+import { BulkAddEditorsService } from './services/bulk-add-editors.service';
+import { BulkRemoveEditorsService } from './services/bulk-remove-editors.service';
+import { BulkRemovePublishersService } from './services/bulk-remove-publishers.service';
 import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
 import { ContentPlaylistViewSections, ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -81,10 +61,10 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   private _categoriesLocked = false;
 
   @Input() selectedEntries: KalturaMediaEntry[];
-    @Input() blockerMessage: AreaBlockerMessage;
+  @Input() blockerMessage: AreaBlockerMessage;
 
   @Output() onBulkChange = new EventEmitter<{ reload: boolean }>();
-    @Output() blockerMessageChange = new EventEmitter<AreaBlockerMessage>();
+  @Output() blockerMessageChange = new EventEmitter<AreaBlockerMessage>();
 
   @ViewChild('bulkActionsPopup') public bulkActionsPopup: PopupWidgetComponent;
 
