@@ -31,7 +31,7 @@
 
             <div class="kPreview">
                 <div class="kPreviewContainer">
-                    <iframe #previewIframe frameborder="0" marginheight="0" marginwidth="0" allowFullScreen webkitallowfullscreen mozallowfullscreen></iframe>
+                    <kmc-player-preview *ngIf="previewIframe" [content]="previewIframe"></kmc-player-preview>
                 </div>
                 <div class="kPreviewParams" [style.maxWidth]="_showEmbedParams ? '450px' : '0px'">
                     <div class="kParamsContainer">

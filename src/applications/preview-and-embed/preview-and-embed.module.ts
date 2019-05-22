@@ -8,7 +8,7 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 import { PreviewEmbedComponent } from './preview-and-embed.component';
 import { PreviewEmbedDetailsComponent } from './preview-embed.component';
 import { QRCodeModule } from 'angularx-qrcode';
-
+import {PlayerPreviewComponent} from './player-preview/player-preview.component';
 
 @NgModule({
   imports: [
@@ -27,7 +27,8 @@ import { QRCodeModule } from 'angularx-qrcode';
   ],
   declarations: [
     PreviewEmbedComponent,
-    PreviewEmbedDetailsComponent
+    PreviewEmbedDetailsComponent,
+    PlayerPreviewComponent
   ],
   providers: [
   ],

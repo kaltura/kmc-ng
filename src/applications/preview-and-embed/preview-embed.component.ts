@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, Input, Output, ViewChild, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
 
 import { AppLocalization } from '@kaltura-ng/mc-shared';
@@ -17,6 +17,7 @@ import { KalturaSourceType } from 'kaltura-ngx-client';
 import { serverConfig, buildCDNUrl } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import {of} from 'rxjs';
 
 export type PlayerUIConf = {
     version: number,
@@ -35,8 +36,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   @Input() media: KalturaPlaylist | KalturaMediaEntry;
 
-  @ViewChild('previewIframe') previewIframe: ElementRef;
-
+  public previewIframe: string = '';
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
 
@@ -401,13 +401,15 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       );
   }
 
-  private showPreview(){
-    const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {margin: 0 auto; padding-top: 20px; text-align: center; } object, div { margin: 0 auto; }</style>';
-    let newDoc = this.previewIframe.nativeElement.contentDocument;
-    newDoc.open();
-    newDoc.write('<!doctype html><html><head>' + style + '</head><body><div id="framePlayerContainer">' + this._generatedPreviewCode + '</div></body></html>');
-    newDoc.close();
-  }
+    private showPreview() {
+        this.previewIframe = null;
+
+        of(null)
+            .delay(1)
+            .subscribe(() => {
+                this.previewIframe = this._generatedPreviewCode;
+            });
+    }
 
   public copyEmbedCode(el):void{
     this._browserService.copyElementToClipboard(el);
