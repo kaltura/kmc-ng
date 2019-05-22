@@ -62,7 +62,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
 
     private sendMessageToAnalyticsApp(message: any): void{
         if (this.analyticsFrame && this.analyticsFrame.nativeElement.contentWindow && this.analyticsFrame.nativeElement.contentWindow.postMessage){
-            this.analyticsFrame.nativeElement.contentWindow.postMessage(message, '*');
+            this.analyticsFrame.nativeElement.contentWindow.postMessage(message, window.location.origin);
         }
     }
 
