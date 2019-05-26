@@ -1,0 +1,27 @@
+<k-area-blocker [message]="_sectionBlockerMessage" [showLoader]="_loading">
+    <div class="kContent kOverrideFAIcons">
+        <span class="kTitle">{{'applications.content.bulkActions.addViewers' | translate}}</span>
+        <div class="kViewers">
+            <span class="kLabel">{{'applications.content.bulkActions.addViewersLabel' | translate}}</span>
+            <kAutoComplete field="screenName"
+                           suggestionItemField="item"
+                           suggestionLabelField="name"
+                           suggestionSelectableField="isSelectable"
+                           [classField]="'__class'"
+                           [limitToSuggestions]="false"
+                           [minLength]="3"
+                           [multiple]="true"
+                           [onItemAdding]="_convertUserInputToValidValue"
+                           [suggestionsProvider]="_usersProvider"
+                           [tooltipResolver]="'__tooltip'"
+                           (completeMethod)="_searchUsers($event)"
+                           [(ngModel)]="users">
+            </kAutoComplete>
+        </div>
+        <div class="kFooter">
+            <button class="kButtonBranded" pButton type="button"
+                    [label]="'applications.content.bulkActions.apply' | translate"
+                    (click)="_apply()"></button>
+        </div>
+    </div>
+</k-area-blocker>

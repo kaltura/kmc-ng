@@ -1,15 +1,11 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SelectItem } from 'primeng/primeng';
-import { MultiAccountStoreService } from '../multi-account-store/multi-account-store.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import {KalturaPartner, KalturaPartnerType, KalturaUser} from 'kaltura-ngx-client';
-import { KalturaUserRole } from 'kaltura-ngx-client';
-import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {AreaBlockerMessage, PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MultiAccountStoreService} from '../multi-account-store/multi-account-store.service';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import {KalturaPartner, KalturaPartnerStatus, KalturaPartnerType} from 'kaltura-ngx-client';
+import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kNewAccount',
@@ -75,9 +71,11 @@ export class NewAccountComponent implements OnInit, OnDestroy {
 
       // init templates dropdown data
       this._templatesList.push({value: 0, label: this._appLocalization.get('applications.administration.accounts.defaultTemplate')}); // default template account
-      // add template accounts to the dropdown
+      // add active template accounts to the dropdown
       this.templateAccounts.forEach( (account: KalturaPartner) => {
-         this._templatesList.push({value: account.id, label: account.name});
+          if (account.status === KalturaPartnerStatus.active) {
+              this._templatesList.push({value: account.id, label: account.name});
+          }
       });
   }
 
