@@ -162,6 +162,9 @@ export class AccountsListComponent implements OnInit, OnDestroy {
                 this._templateAccounts = result.templateAccounts;
                 this._usedAccounts = result.usedAccountsCount - result.templateAccounts.length - 1; // deduct template accounts and current account (admin)
                 this._availableAccounts = this._appAuthentication.appUser.partnerInfo.publishersQuota - this._usedAccounts;
+                if (this._availableAccounts < 0) {
+                    this._availableAccounts = 0;
+                }
               });
   }
 
