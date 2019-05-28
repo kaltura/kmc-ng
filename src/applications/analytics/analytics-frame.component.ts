@@ -90,6 +90,11 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             ks: this.appAuthentication.appUser.ks,
             pid: this.appAuthentication.appUser.partnerId,
             locale: 'en',
+            live: {
+                "previewLiveUIConf": serverConfig.externalApps.kmcAnalytics.previewLiveUIConf,
+                "pollInterval": 30,
+                "healthNotificationsCount": 50
+            },
             permissions: {
                 lazyLoadCategories: this._permissions.hasPermission(KMCPermissions.DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD)
             }
