@@ -1,3 +1,20 @@
+<a name="5.10.0"></a>
+# [5.10.0](https://github.com/kaltura/kmc-ng/compare/v5.9.1...v5.10.0) (2019-05-29)
+
+
+### Bug Fixes
+
+* **administration/multi-account:** allow only active accounts to be used as templates ([3107050](https://github.com/kaltura/kmc-ng/commit/3107050))
+* **administration/multi-account:** disable "Create" button until data loads ([24e9d2e](https://github.com/kaltura/kmc-ng/commit/24e9d2e))
+* **administration/multi-account:** disregard removed templates for new account creation ([542a01c](https://github.com/kaltura/kmc-ng/commit/542a01c))
+
+
+### Features
+
+* **content/entries:** bulk add/remove of co-viewers ([4e24b9b](https://github.com/kaltura/kmc-ng/commit/4e24b9b))
+
+
+
 <a name="5.9.1"></a>
 ## [5.9.1](https://github.com/kaltura/kmc-ng/compare/v5.9.0...v5.9.1) (2019-05-21)
 
