@@ -343,6 +343,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           "position": "after",              // required to prevent v1 players from getting stuck
           "loadingPolicy": "onDemand"       // prevent v1 players from trying to load this plugin
         };
+        flashVars['kAnalony'] = {
+            "plugin": "false",                // prevent loading the kAnalony plugin in v2 players
+        };
       }
       if (this.media instanceof KalturaPlaylist) {
         flashVars['playlistAPI.kpl0Id'] = this.media.id;
