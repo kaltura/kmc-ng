@@ -14,6 +14,7 @@ import {TrackedFileStatuses} from '@kaltura-ng/kaltura-common';
 import {UpdateEntriesListEvent} from 'app-shared/kmc-shared/events/update-entries-list-event';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { EntriesListService } from './entries-list.service';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {
     ContentEntryViewSections,
     ContentEntryViewService,
@@ -36,6 +37,7 @@ import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shar
 })
 export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
+  @ViewChild('liveDashboard') _liveDashboard: PopupWidgetComponent;
 
   public _entryId: string = null;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -67,6 +69,12 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       commandName: 'liveDashboard',
       styleClass: '',
       disabled: !this._liveDashboardAppViewService.isAvailable()
+    },
+      {
+      label: this._appLocalization.get('applications.content.table.realTimeAnalytics'),
+      commandName: 'realTimeAnalytics',
+      styleClass: '',
+      disabled: !this._analyticsNewMainViewService.isAvailable()
     },
       {
           label: this._appLocalization.get('applications.content.table.captionRequest'),
@@ -155,6 +163,13 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         );
         break;
       case 'liveDashboard':
+        if (entry && entry.id) {
+            this._entriesList.clearSelection();
+            this._entryId = entry.id;
+            this._liveDashboard.open();
+        }
+        break;
+      case 'realTimeAnalytics':
         if (entry && entry.id) {
           this._entriesList.clearSelection();
           this._entryId = entry.id;
