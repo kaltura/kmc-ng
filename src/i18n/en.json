@@ -149,7 +149,8 @@
                 "authHelp": "What’s an authenticator code?",
                 "authHelpTooltip": "Authenticator code is a key provided by an authenticator app to protect your account. You can download an authenticator app on your mobile device.",
                 "browserVer1": "Browser version not supported",
-                "browserVer2": "Please use Internet Explorer version 11 or above"
+                "browserVer2": "Please use Internet Explorer version 11 or above",
+                "qrCode": "Scan this QR code with your authentication app. You can download an authentication app for both platforms:"
             },
             "invalidLoginHash": {
                 "title": "Invalid Login Link",

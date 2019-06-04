@@ -13,7 +13,8 @@ export enum LoginScreens {
   PasswordExpired,
   InvalidLoginHash,
   RestorePassword,
-  RestorePasswordInvalidHash
+  RestorePasswordInvalidHash,
+  Authenticator
 }
 
 @Component({
@@ -29,11 +30,13 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _showLogin = false;
   public _showIEMessage = false;
   public _loginScreens = LoginScreens;
-  public _currentScreen = LoginScreens.Login;
+  public _currentScreen = LoginScreens.Authenticator;
   public _passwordReset = false;
   public _signUpLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.signUp;
   public _restorePasswordHash: string;
   public _passwordRestored = false;
+  public _showAuthenticator = false;
+  public _authenticationHash = 'NDAxfDE1NTk3MjE4MTd8MjU5NTUwYzczNWRjZDFmNzA3ODZlNGI4MWE2OGQ3ZDBkNTk3NzczOQ==';
 
   // Caution: this is extremely dirty hack, don't do something similar to that
   @HostListener('window:resize')
@@ -251,5 +254,10 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           this._inProgress = false;
         }
       );
+  }
+
+  public _onAuthContinue(): void {
+      this._showAuthenticator = true;
+      this._currentScreen = this._loginScreens.Login;
   }
 }

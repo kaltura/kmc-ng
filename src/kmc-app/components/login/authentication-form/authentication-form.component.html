@@ -1,0 +1,18 @@
+<div class="kLoginForm">
+  <div class="qrCode">
+        QR Code
+  </div>
+
+  <span class="qrCodeLabel">{{'app.login.login.qrCode' | translate}}</span>
+
+  <div class="kApps">
+     <div style="width: 135px; height: 40px; background-color: lightgrey; margin: 16px; cursor: pointer" (click)="openLink('apple')">Apple</div>
+     <div style="width: 135px; height: 40px; background-color: lightgrey; margin: 16px; cursor: pointer" (click)="openLink('google')">Google</div>
+  </div>
+  <div>
+      <button class="kButtonDefault"
+                pButton (click)="_continue($event)"
+                [label]="'app.common.continue' | translate"></button>
+  </div>
+
+</div>
