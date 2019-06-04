@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _restorePasswordHash: string;
   public _passwordRestored = false;
   public _showAuthenticator = false;
-  public _authenticationHash = 'NDAxfDE1NTk3MjE4MTd8MjU5NTUwYzczNWRjZDFmNzA3ODZlNGI4MWE2OGQ3ZDBkNTk3NzczOQ==';
+  public _authenticationHash = '';
 
   // Caution: this is extremely dirty hack, don't do something similar to that
   @HostListener('window:resize')
