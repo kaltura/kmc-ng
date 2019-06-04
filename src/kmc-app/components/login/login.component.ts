@@ -97,8 +97,8 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
             );
     }
 
-  private _makeLoginRequest(username: string, password: string): Observable<LoginResponse> {
-    return this._appAuthentication.login(username, password).pipe(cancelOnDestroy(this));
+  private _makeLoginRequest(username: string, password: string, otp?: string): Observable<LoginResponse> {
+    return this._appAuthentication.login(username, password, otp).pipe(cancelOnDestroy(this));
   }
 
   private _handleLoginResponse(success: boolean, error: LoginError, username: string): void {
@@ -148,11 +148,11 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     // for cancelOnDestroy
   }
 
-  public _login({ username, password }: { username: string, password: string }): void {
+  public _login({ username, password, otp }: { username: string, password: string, otp: string }): void {
     this._errorMessage = '';
     this._inProgress = true;
 
-    this._makeLoginRequest(username, password).subscribe(
+    this._makeLoginRequest(username, password, otp).subscribe(
       ({ success, error }) => {
         this._handleLoginResponse(success, error, username);
       },
@@ -203,12 +203,13 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       );
   }
 
-  public _resetPassword({ password, newPassword }: { password: string, newPassword: string }): void {
+  public _resetPassword({ password, newPassword, otp }: { password: string, newPassword: string, otp: string }): void {
     const payload = {
       password,
       newPassword,
       email: this._username,
-      newEmail: ''
+      newEmail: '',
+      otp
     };
 
     this._inProgress = true;

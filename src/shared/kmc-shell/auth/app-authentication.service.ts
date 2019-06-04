@@ -120,7 +120,9 @@ export class AppAuthentication {
             'ADMIN_KUSER_WRONG_OLD_PASSWORD': 'app.login.error.wrongOldPassword',
             'WRONG_OLD_PASSWORD': 'app.login.error.wrongOldPassword',
             'INVALID_FIELD_VALUE': 'app.login.error.invalidField',
-            'USER_FORBIDDEN_FOR_BETA': 'app.login.error.userForbiddenForBeta'
+            'USER_FORBIDDEN_FOR_BETA': 'app.login.error.userForbiddenForBeta',
+            'MISSING_OTP': 'app.login.error.missingOtp',
+            'INVALID_OTP': 'app.login.error.invalidOtp'
         };
 
         if (code === 'PASSWORD_EXPIRED') {
@@ -183,7 +185,7 @@ export class AppAuthentication {
             .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
     }
 
-    login(loginId: string, password: string): Observable<LoginResponse> {
+    login(loginId: string, password: string, otp: string): Observable<LoginResponse> {
 
         const expiry = kmcAppConfig.kalturaServer.expiry;
         let privileges = kmcAppConfig.kalturaServer.privileges || '';
@@ -200,7 +202,7 @@ export class AppAuthentication {
                 {
                     loginId,
                     password,
-
+                    otp,
                     expiry: expiry,
                     privileges: privileges
                 }),

@@ -143,8 +143,11 @@
                 "forgotPassword": "Forgot Password?",
                 "placeholder": {
                     "username": "Enter Email",
-                    "password": "Enter Password"
+                    "password": "Enter Password",
+                    "auth": "Enter Authenticator Code"
                 },
+                "authHelp": "What’s an authenticator code?",
+                "authHelpTooltip": "Authenticator code is a key provided by an authenticator app to protect your account. You can download an authenticator app on your mobile device.",
                 "browserVer1": "Browser version not supported",
                 "browserVer2": "Please use Internet Explorer version 11 or above"
             },
@@ -193,7 +196,7 @@
         "error": {
           "equal": "Passwords do not match",
           "required": "Field is required",
-            "failedValidateHash": "{{0}}\nDo you want to retry?"
+          "failedValidateHash": "{{0}}\nDo you want to retry?"
         },
         "placeholder": {
           "new": "Enter new password",
@@ -218,7 +221,9 @@
                 "newPasswordHashKeyExpired": "This link is older than 24 hours and is no longer valid.",
                 "wrongOldPassword": "Old password is incorret.",
                 "invalidField": "Value in field {{value}} is not valid.",
-                "userForbiddenForBeta": "This is a closed beta of the new Kaltura Management Console. Stay tuned for the general availability soon."
+                "userForbiddenForBeta": "This is a closed beta of the new Kaltura Management Console. Stay tuned for the general availability soon.",
+                "missingOtp": "Authenticator code is required",
+                "invalidOtp": "Invalid authenticator code"
             },
             "send": "Send",
             "wait": "Wait…",

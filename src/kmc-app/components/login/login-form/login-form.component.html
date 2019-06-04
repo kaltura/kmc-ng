@@ -1,4 +1,4 @@
-<form class="kLoginForm"
+<form class="kLoginForm" [class.kResize]="showAuthenticationCode" [class.kError]="errorMessage && !showAuthenticationCode"
       [formGroup]="_loginForm"
       (submit)="_login($event)">
   <h1>{{ 'app.login.login.title' | translate}}</h1>
@@ -8,7 +8,7 @@
            [placeholder]="'app.login.login.placeholder.username' | translate"
            [formControl]="_usernameField"
            [ngClass]="{
-             'has-error': errorMessage || _showError(_usernameField),
+             'has-error': _showError(_usernameField),
              'has-success': _showSuccess(_usernameField)
            }"
            [kTooltip]="_loginValidationMessage | translate"
@@ -20,17 +20,28 @@
            appPreventPasswordAutofill pInputText
            [placeholder]="'app.login.login.placeholder.password' | translate"
            [formControl]="_passwordField"
-           [class.has-error]="errorMessage || _showError(_passwordField)">
+           [class.has-error]="_showError(_passwordField)">
   </div>
 
-  <p *ngIf="errorMessage && errorCode !== 'LOGIN_BLOCKED' && errorCode !== 'LOGIN_RETRIES_EXCEEDED'"
+    <div [class.kHidden]="!showAuthenticationCode">
+        <input pInputText class="kAuth" #auth
+               [placeholder]="'app.login.login.placeholder.auth' | translate"
+               [formControl]="_authenticationField"
+               [ngClass]="{
+             'has-error': _showError(_authenticationField),
+             'has-success': _showSuccess(_authenticationField)
+           }">
+        <span class="kAuthHelp" [kTooltip]="'app.login.login.authHelpTooltip' | translate">{{'app.login.login.authHelp' | translate}}</span>
+    </div>
+
+  <p *ngIf="errorMessage && _errorCode !== 'LOGIN_BLOCKED' && _errorCode !== 'LOGIN_RETRIES_EXCEEDED' && _errorCode !== 'MISSING_OTP'"
      class="kErrorMessage" [innerHTML]="errorMessage"></p>
-  <p *ngIf="errorCode === 'LOGIN_BLOCKED'" class="kErrorMessage">
+  <p *ngIf="_errorCode === 'LOGIN_BLOCKED'" class="kErrorMessage">
       {{'app.login.error.loginBlocked.loginDenied' | translate}}
       <a (click)="_contactSupport()">{{_supportAddress}}</a>
       {{'app.login.error.loginBlocked.toUnblockYourAccount' | translate}}
   </p>
-  <p *ngIf="errorCode === 'LOGIN_RETRIES_EXCEEDED'" class="kErrorMessage">
+  <p *ngIf="_errorCode === 'LOGIN_RETRIES_EXCEEDED'" class="kErrorMessage">
       {{'app.login.error.retriesExceeded.yourAccountHasBeenLocked' | translate}}
       <a *ngIf="_supportAddress" (click)="_contactSupport()">{{_supportAddress}}</a>
       {{'app.login.error.retriesExceeded.toUnblockYourAccount' | translate}}
