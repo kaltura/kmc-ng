@@ -70,7 +70,7 @@ export class LoginFormComponent {
         Validators.minLength(1),
         Validators.maxLength(200)
       ])],
-      authentication: [],
+      authentication: ['', Validators.required],
       rememberMe: false
     });
 
@@ -91,7 +91,7 @@ export class LoginFormComponent {
   _login(event: Event): void {
     event.preventDefault();
 
-    if (this._loginForm.valid) {
+    if (this._usernameField.valid && this._passwordField.valid) {
       const rememberMePayload = this._rememberMeField.value ? this._usernameField.value : '';
       const loginPayload = {
         username: this._usernameField.value,
