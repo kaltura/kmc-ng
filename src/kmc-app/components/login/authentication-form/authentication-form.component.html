@@ -1,13 +1,11 @@
 <div class="kLoginForm">
-  <div class="qrCode">
-        QR Code
-  </div>
+  <div class="qrCode" [style.background-image]="qrCodeBase64"></div>
 
   <span class="qrCodeLabel">{{'app.login.login.qrCode' | translate}}</span>
 
   <div class="kApps">
-     <div style="width: 135px; height: 40px; background-color: lightgrey; margin: 16px; cursor: pointer" (click)="openLink('apple')">Apple</div>
-     <div style="width: 135px; height: 40px; background-color: lightgrey; margin: 16px; cursor: pointer" (click)="openLink('google')">Google</div>
+     <div class="kDownloadBtn kApple" (click)="openLink('apple')"></div>
+     <div class="kDownloadBtn kGoogle" (click)="openLink('google')"></div>
   </div>
   <div>
       <button class="kButtonDefault"

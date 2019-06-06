@@ -43,6 +43,7 @@ import { AdminUserSetInitialPasswordAction } from 'kaltura-ngx-client';
 import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
 import { switchMap, map } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
+import {AuthenticatorViewService} from "app-shared/kmc-shared/kmc-views/details-views";
 
 export interface UpdatePasswordPayload {
     email: string;
@@ -101,7 +102,8 @@ export class AppAuthentication {
                 private _appEvents: AppEventsService,
                 private _location: Location,
                 private _kmcViewsManager: KmcMainViewsService,
-                private _restorePasswordView: RestorePasswordViewService) {
+                private _restorePasswordView: RestorePasswordViewService,
+                private _authenticatorView: AuthenticatorViewService) {
         this._logger = logger.subLogger('AppAuthentication');
     }
 
@@ -451,6 +453,20 @@ export class AppAuthentication {
 
             this._logger.warn(`restore password view is not available, redirect to default view`, {
                 restorePasswordHash: hash
+            });
+            this._browserService.navigateToDefault();
+        }
+    }
+
+    public authenticatorCode(hash: string): void {
+        this._clearSessionCredentials();
+
+        if (this._authenticatorView.isAvailable({hash})) {
+            this._authenticatorView.open({hash});
+        } else {
+
+            this._logger.warn(`Authentication view is not available, redirect to default view`, {
+                authenticatorHash: hash
             });
             this._browserService.navigateToDefault();
         }

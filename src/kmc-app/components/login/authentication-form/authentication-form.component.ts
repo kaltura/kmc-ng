@@ -2,6 +2,8 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {BrowserService} from "app-shared/kmc-shell";
 import {KalturaClient, UserGenerateQrCodeAction} from "kaltura-ngx-client";
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
+import {AppLocalization} from "@kaltura-ng/mc-shared";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'kKMCAuthentication',
@@ -10,11 +12,15 @@ import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
 })
 export class AuthenticationFormComponent implements OnInit, OnDestroy{
 
-  @Input() hash: string;
+  @Input() hash: string = '';
   @Output() onAuthContinue = new EventEmitter();
 
+  public qrCodeBase64 = null;
+
   constructor(private _browserService: BrowserService,
-              private _kalturaServerClient: KalturaClient) {
+              private _kalturaServerClient: KalturaClient,
+              private _appLocalization: AppLocalization,
+              private sanitizer: DomSanitizer) {
   }
 
   ngOnInit(): void {
@@ -22,10 +28,13 @@ export class AuthenticationFormComponent implements OnInit, OnDestroy{
           this._kalturaServerClient.request(new UserGenerateQrCodeAction({hashKey: this.hash}))
               .pipe(cancelOnDestroy(this))
               .subscribe((qrCode) => {
-                  debugger;
+                  this.qrCodeBase64 = this.sanitizer.bypassSecurityTrustStyle(`url("data:image/png;base64,${qrCode}")`);
               },
               error => {
-                  console.warn(`KMC:Authenticator: Failed to load QR Code. Error: ${error.message}`);
+                  this._browserService.alert({
+                      header: this._appLocalization.get('app.common.error'),
+                      message: error.message
+                  });
               });
       }
   }

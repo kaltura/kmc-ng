@@ -6,6 +6,7 @@ import { serverConfig } from 'config/server';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import {AuthenticatorViewService} from "app-shared/kmc-shared/kmc-views/details-views";
 
 export enum LoginScreens {
   Login,
@@ -30,7 +31,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _showLogin = false;
   public _showIEMessage = false;
   public _loginScreens = LoginScreens;
-  public _currentScreen = LoginScreens.Authenticator;
+  public _currentScreen = LoginScreens.Login;
   public _passwordReset = false;
   public _signUpLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.signUp;
   public _restorePasswordHash: string;
@@ -58,7 +59,8 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
               private _renderer: Renderer2,
               private _route: ActivatedRoute,
               private _router: Router,
-              private _restorePasswordView: RestorePasswordViewService) {
+              private _restorePasswordView: RestorePasswordViewService,
+              private _authenticatorView: AuthenticatorViewService) {
       this._prepare();
   }
 
@@ -68,8 +70,12 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private _prepare(): void {
         const restorePasswordArgs = this._restorePasswordView.popOpenArgs();
+        const authenticatorArgs = this._authenticatorView.popOpenArgs();
         if (restorePasswordArgs && restorePasswordArgs.hash) {
             this._validateRestorePasswordHash(restorePasswordArgs.hash);
+        } else if (authenticatorArgs && authenticatorArgs.hash) {
+            this._authenticationHash = authenticatorArgs.hash;
+            this._currentScreen = LoginScreens.Authenticator;
         }
     }
 

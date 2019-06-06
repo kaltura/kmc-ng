@@ -50,6 +50,7 @@
             "usageDashboardPageTitle": "Usage Dashboard",
             "usageDashboardMenuTitle": "Usage Dashboard",
             "restorePasswordPageTitle": "Reset Password",
+            "authenticatorPageTitle": "Authentication",
             "uploadMonitor": "Upload Monitor",
             "create": "Create",
             "content": "Content",
