@@ -16,6 +16,7 @@ export class AuthenticationFormComponent implements OnInit, OnDestroy{
   @Output() onAuthContinue = new EventEmitter();
 
   public qrCodeBase64 = null;
+  public qrError = false;
 
   constructor(private _browserService: BrowserService,
               private _kalturaServerClient: KalturaClient,
@@ -31,6 +32,7 @@ export class AuthenticationFormComponent implements OnInit, OnDestroy{
                   this.qrCodeBase64 = this.sanitizer.bypassSecurityTrustStyle(`url("data:image/png;base64,${qrCode}")`);
               },
               error => {
+                  this.qrError = true;
                   this._browserService.alert({
                       header: this._appLocalization.get('app.common.error'),
                       message: error.message

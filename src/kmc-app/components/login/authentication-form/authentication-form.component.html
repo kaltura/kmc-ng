@@ -1,6 +1,9 @@
 <div class="kLoginForm">
   <div class="qrCode" [style.background-image]="qrCodeBase64"></div>
 
+    <div class="kSpinnerBkg" *ngIf="!qrCodeBase64 && !qrError">
+        <div class="k-spinner-animation kSpinnerAnim"></div>
+    </div>
   <span class="qrCodeLabel">{{'app.login.login.qrCode' | translate}}</span>
 
   <div class="kApps">
