@@ -2,7 +2,7 @@ import {Injectable, Optional, Inject} from '@angular/core';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-import {KalturaClient, KalturaMultiRequest, KalturaRequestOptions} from 'kaltura-ngx-client';
+import {KalturaAuthentication, KalturaClient, KalturaMultiRequest, KalturaRequestOptions} from 'kaltura-ngx-client';
 import {UserLoginByLoginIdAction} from 'kaltura-ngx-client';
 import {UserGetByLoginIdAction} from 'kaltura-ngx-client';
 import {UserGetAction} from 'kaltura-ngx-client';
@@ -182,7 +182,7 @@ export class AppAuthentication {
             .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
     }
 
-    setInitalPassword(payload: { newPassword: string, hashKey: string }): Observable<void> {
+    setInitalPassword(payload: { newPassword: string, hashKey: string }): Observable<KalturaAuthentication> {
         return this.kalturaServerClient.request(new AdminUserSetInitialPasswordAction(payload))
             .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
     }

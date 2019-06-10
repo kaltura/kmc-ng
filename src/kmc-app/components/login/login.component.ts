@@ -6,7 +6,8 @@ import { serverConfig } from 'config/server';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import {AuthenticatorViewService} from "app-shared/kmc-shared/kmc-views/details-views";
+import { AuthenticatorViewService } from "app-shared/kmc-shared/kmc-views/details-views";
+import { KalturaAuthentication } from "kaltura-ngx-client";
 
 export enum LoginScreens {
   Login,
@@ -38,6 +39,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _passwordRestored = false;
   public _showAuthenticator = false;
   public _authenticationHash = '';
+  public _qrCodeBase64 = null;
 
   // Caution: this is extremely dirty hack, don't do something similar to that
   @HostListener('window:resize')
@@ -96,11 +98,12 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                 },
                 error => {
+                    this._restorePasswordHash = hash;
                     this._browserService.confirm({
-                        header: this._appLocalization.get('app.error'),
+                        header: this._appLocalization.get('app.common.error'),
                         message: this._appLocalization.get('app.login.restorePassword.error.failedValidateHash', [error.message]),
                         accept: () => this._validateRestorePasswordHash(hash),
-                        reject: () => this._setScreen(LoginScreens.Login)
+                        reject: () => this._setScreen(LoginScreens.RestorePassword)
                     });
                 }
             );
@@ -250,9 +253,12 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     this._inProgress = true;
     this._appAuthentication.setInitalPassword(payload)
       .subscribe(
-        () => {
+          (response: KalturaAuthentication) => {
           this._inProgress = false;
           this._passwordRestored = true;
+          if (response.qrCode) {
+              this._qrCodeBase64 = response.qrCode;
+          }
         },
         err => {
           this._errorMessage = err.message;
@@ -260,6 +266,14 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           this._inProgress = false;
         }
       );
+  }
+
+  public _returnToLogin(): void {
+      if (this._qrCodeBase64 && this._qrCodeBase64.length) {
+          this._currentScreen = this._loginScreens.Authenticator;
+      } else {
+          this._currentScreen = this._loginScreens.Login;
+      }
   }
 
   public _onAuthContinue(): void {

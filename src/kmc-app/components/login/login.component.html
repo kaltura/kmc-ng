@@ -45,7 +45,7 @@
                              [errorMessage]="_errorMessage"
                              [errorCode]="_errorCode"
                              [passwordRestored]="_passwordRestored"
-                             (returnToLogin)="_setScreen(_loginScreens.Login)"
+                             (returnToLogin)="_returnToLogin()"
                              (onRestorePassword)="_restorePassword($event)"></kKMCRestorePassword>
           <kInvalidRetorePasswordHash *ngSwitchCase="_loginScreens.RestorePasswordInvalidHash"
                              [inProgress]="_inProgress"
@@ -56,6 +56,7 @@
                              (resendRestorePassword)="_forgotPassword($event)"></kInvalidRetorePasswordHash>
           <kKMCAuthentication *ngSwitchCase="_loginScreens.Authenticator"
                               [hash]="_authenticationHash"
+                              [qrCode]="_qrCodeBase64"
                               (onAuthContinue)="_onAuthContinue()"></kKMCAuthentication>
       </ng-container>
     </div>
@@ -67,7 +68,7 @@
       </ng-container>
 
       <ng-container *ngIf="_currentScreen !== _loginScreens.Login && _currentScreen !== _loginScreens.Authenticator">
-        <button class="kSignUpBtn"
+        <button class="kSignUpBtn" *ngIf="!_qrCodeBase64"
                 pButton
                 [label]="'app.login.login.title' | translate"
                 (click)="_setScreen(_loginScreens.Login)"></button>

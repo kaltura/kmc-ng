@@ -13,6 +13,11 @@ import {DomSanitizer} from "@angular/platform-browser";
 export class AuthenticationFormComponent implements OnInit, OnDestroy{
 
   @Input() hash: string = '';
+  @Input() set qrCode(code: string) {
+      if (code && code.length) {
+          this.qrCodeBase64 = this.sanitizer.bypassSecurityTrustStyle(`url("data:image/png;base64,${code}")`);
+      }
+  }
   @Output() onAuthContinue = new EventEmitter();
 
   public qrCodeBase64 = null;
