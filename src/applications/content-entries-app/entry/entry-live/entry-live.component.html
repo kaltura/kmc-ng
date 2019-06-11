@@ -2,7 +2,13 @@
   <div class="kLive">
     <p class="kTitle">{{'applications.content.entryDetails.live.live' | translate}}</p>
     <div class="kButtons">
-      <button pButton icon="kIconstatistic" [disabled]="!_widgetService._liveDashboardEnabled" class="kButtonDefault" (click)="liveDashboard.open()" label="{{'applications.content.entryDetails.live.liveDashboard' | translate}}"></button>
+      <button pButton icon="kIconstatistic" class="kButtonDefault"
+              [label]="'applications.content.entryDetails.live.liveDashboard' | translate"
+              [disabled]="!_widgetService._liveDashboardEnabled"
+              (click)="liveDashboard.open()"></button>
+
+        <k-toggle-live-btn *ngIf="_widgetService.data?.explicitLive"
+                           [entry]="_widgetService.data"></k-toggle-live-btn>
     </div>
     <div class="kLiveDetails">
 
