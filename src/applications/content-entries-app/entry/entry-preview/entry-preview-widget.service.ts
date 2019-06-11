@@ -62,7 +62,7 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy {
 
             let flashVars = `flashvars[kAnalony.plugin]=false&flashvars[closedCaptions.plugin]=true&flashvars[closedCaptions.hideWhenEmpty]=true&flashvars[ks]=${ks}`;
             if (isLive) {
-                flashVars += '&flashvars[disableEntryRedirect]=true';
+                flashVars += '&flashvars[disableEntryRedirect]=true&flashvars[SkipKSOnIsLiveRequest]=false';
             }
             const shouldDisableAlerts = this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_KMC_KDP_ALERTS);
             if (shouldDisableAlerts) {
