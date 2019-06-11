@@ -103,7 +103,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
                         header: this._appLocalization.get('app.common.error'),
                         message: this._appLocalization.get('app.login.restorePassword.error.failedValidateHash', [error.message]),
                         accept: () => this._validateRestorePasswordHash(hash),
-                        reject: () => this._setScreen(LoginScreens.RestorePassword)
+                        reject: () => this._setScreen(LoginScreens.Login)
                     });
                 }
             );
