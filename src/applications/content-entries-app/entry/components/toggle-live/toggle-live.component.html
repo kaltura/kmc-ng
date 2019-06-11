@@ -1,5 +1,5 @@
 <button *ngIf="entry" pButton
         [ngClass]="{'kButtonBranded': _isPreview, 'kButtonDanger': !_isPreview}"
-        [disabled]="!(_toggleLiveService.canToggle$ | async)"
+        [disabled]="!(_canToggle$ | async)"
         [label]="(_isPreview ? 'applications.content.entryDetails.live.goLive' : 'applications.content.entryDetails.live.endLive') | translate"
         (click)="_toggleViewMode()"></button>

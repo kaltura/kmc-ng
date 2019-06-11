@@ -36,7 +36,7 @@ export enum KalturaStreamStatus {
 export class ToggleLiveService implements OnDestroy {
     private _isPolling = false;
     private _entry: KalturaExtendedLiveEntry;
-    private _canToggle = new BehaviorSubject<boolean>(true);
+    private _canToggle = new BehaviorSubject<boolean>(false);
     private _isPreview = new BehaviorSubject<boolean>(false);
 
     public readonly canToggle$ = this._canToggle.asObservable();

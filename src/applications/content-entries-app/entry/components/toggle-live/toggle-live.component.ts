@@ -13,8 +13,9 @@ export class ToggleLiveComponent implements OnInit, OnDestroy {
     @Input() entry: KalturaLiveStreamEntry;
 
     public _isPreview = false;
+    public _canToggle$ = this._toggleLiveService.canToggle$;
 
-    constructor(public _toggleLiveService: ToggleLiveService) {
+    constructor(private _toggleLiveService: ToggleLiveService) {
     }
 
     ngOnInit() {
