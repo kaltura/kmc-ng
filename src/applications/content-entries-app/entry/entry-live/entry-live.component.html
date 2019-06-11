@@ -1,8 +1,11 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [bodyScroll]="true">
   <div class="kLive">
     <p class="kTitle">{{'applications.content.entryDetails.live.live' | translate}}</p>
-    <div class="kButtons">
-      <button pButton icon="kIconstatistic" [disabled]="!_widgetService._liveDashboardEnabled" class="kButtonDefault" (click)="liveDashboard.open()" label="{{'applications.content.entryDetails.live.liveDashboard' | translate}}"></button>
+    <div class="kButtons" *ngIf="!(_kmcPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD | kNgIfPermitted)">
+      <button pButton icon="kIconstatistic" class="kButtonDefault"
+              [disabled]="!_widgetService._liveDashboardEnabled"
+              [label]="'applications.content.entryDetails.live.liveDashboard' | translate"
+              (click)="liveDashboard.open()"></button>
     </div>
     <div class="kLiveDetails">
 
