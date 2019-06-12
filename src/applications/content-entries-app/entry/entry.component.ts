@@ -158,8 +158,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 			widget8, widget9, widget10, widget11, widget12, widget13, widget14,
 			widget15
 		]);
-
-        this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable();
 	}
 
 	ngOnDestroy() {
@@ -319,6 +317,14 @@ export class EntryComponent implements OnInit, OnDestroy {
 								this._entryName = entry.name;
 								this._entryType = entry.mediaType;
 								this._sourceType = entry.sourceType;
+
+                                this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable() // new analytics app is available
+                                    && (
+                                        this._sourceType !== KalturaSourceType.liveStream // and not a live stream
+                                        || (this._sourceType === KalturaSourceType.liveStream // or it's a live stream and has permission
+                                            && this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD)
+                                        )
+                                    );
 
                                 this._buildMenu(entry);
 								break;
