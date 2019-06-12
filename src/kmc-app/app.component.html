@@ -7,14 +7,13 @@
     header="Confirmation"
     [key]="'confirm'"
     [closeOnEscape]="false"
-    width="440"
-    [responsive]="true"
+    width="500"
     [class.kAlignToLeft]="_confirmDialogAlignLeft"
     [acceptLabel]="_confirmationLabels.yes"
     [rejectLabel]="_confirmationLabels.no"
     >
 </p-confirmDialog>
-<p-confirmDialog #alert header="Alert" [key]="'alert'" [closeOnEscape]="true" width="440" [responsive]="true"
+<p-confirmDialog #alert header="Alert" [key]="'alert'" [closeOnEscape]="true" width="440"
                  [class.kAlignToLeft]="_confirmDialogAlignLeft">
     <p-footer>
         <button type="button" pButton icon="fa-check" label="{{_confirmationLabels.ok}}" (click)="alert.accept()"></button>

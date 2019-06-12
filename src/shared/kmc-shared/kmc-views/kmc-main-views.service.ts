@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { ContentCategoriesMainViewService,
+import {
+    ContentCategoriesMainViewService,
     ContentEntriesMainViewService,
     ContentModerationMainViewService,
     ContentPlaylistsMainViewService,
@@ -15,13 +16,17 @@ import { ContentCategoriesMainViewService,
     LiveAnalyticsMainViewService,
     AdminUsersMainViewService,
     AdminRolesMainViewService,
+    AdminMultiAccountMainViewService,
+    AnalyticsMainViewService,
     SettingsAccountSettingsMainViewService,
     SettingsIntegrationSettingsMainViewService,
     SettingsAccessControlMainViewService,
     SettingsTranscodingMainViewService,
     SettingsMetadataMainViewService,
     SettingsMyUserSettingsMainViewService,
-    SettingsAccountInformationMainViewService
+    SettingsAccountInformationMainViewService,
+    ServicesDashboardMainViewService,
+    AnalyticsNewMainViewService,
 } from './main-views';
 import { Observable } from 'rxjs';
 
@@ -56,9 +61,13 @@ export class KmcMainViewsService {
         private _studioV2Main: StudioV2MainViewService,
         private _studioV3Main: StudioV3MainViewService,
         private _usageDashboardMain: UsageDashboardMainViewService,
+        private _servicesDashboardMain: ServicesDashboardMainViewService,
+        private _analyticsMainViewService: AnalyticsMainViewService,
+        private _analyticsNewMainViewService: AnalyticsNewMainViewService,
         private _liveAnalyticsMain: LiveAnalyticsMainViewService,
         private _adminUsersMain: AdminUsersMainViewService,
         private _adminRolesMain: AdminRolesMainViewService,
+        private _adminMultiAccountMain: AdminMultiAccountMainViewService,
         private _settingsAccountSettingsMain: SettingsAccountSettingsMainViewService,
         private _settingsIntegrationSettingsMain: SettingsIntegrationSettingsMainViewService,
         private _settingsAccessControlMain: SettingsAccessControlMainViewService,
@@ -189,23 +198,32 @@ export class KmcMainViewsService {
             {
                 isActiveView: (activePath: string) => activePath.indexOf(`/analytics`) !== -1,
                 position: 'left',
-                isAvailable: true,
-                menuTitle: this._appLocalization.get('app.titles.analytics'),
-                children: [
-                    {
-                        isAvailable: this._liveAnalyticsMain.isAvailable(),
-                        isActiveView:  (path) => this._liveAnalyticsMain.isActiveView(path),
-                        open: () => {
-                            this._liveAnalyticsMain.open();
-                        },
-                        menuTitle: this._liveAnalyticsMain.getViewMetadata().menu
-                    },
-                    {
-                        isAvailable: false,
-                        isActiveView: (path) => false,
-                        menuTitle: 'analyticsKavaMenuTitle'
-                    }
-                ]
+                isAvailable: this._analyticsMainViewService.isAvailable(),
+                menuTitle: this._analyticsMainViewService.getViewMetadata().menu,
+                open: () => {
+                    this._analyticsMainViewService.open();
+                },
+                children: !this._analyticsNewMainViewService.isAvailable()
+                    ? [
+                        {
+                            isAvailable: this._liveAnalyticsMain.isAvailable(),
+                            isActiveView: (path) => this._liveAnalyticsMain.isActiveView(path),
+                            open: () => {
+                                this._liveAnalyticsMain.open();
+                            },
+                            menuTitle: this._liveAnalyticsMain.getViewMetadata().menu
+                        }
+                    ]
+                    : []
+            },
+            {
+                isAvailable: this._servicesDashboardMain.isAvailable(),
+                isActiveView:  (path) => this._servicesDashboardMain.isActiveView(path),
+                open: () => {
+                    this._servicesDashboardMain.open();
+                },
+                position: 'left',
+                menuTitle: this._servicesDashboardMain.getViewMetadata().menu,
             },
             {
                 isActiveView: (activePath: string) => activePath.indexOf(`/settings`) !== -1,
@@ -301,6 +319,15 @@ export class KmcMainViewsService {
                             this._adminRolesMain.open();
                         },
                         menuTitle: this._adminRolesMain.getViewMetadata().menu,
+                        'position': 'left'
+                    },
+                    {
+                        isAvailable: this._adminMultiAccountMain.isAvailable(),
+                        isActiveView:  (path) => this._adminMultiAccountMain.isActiveView(path),
+                        open: () => {
+                            this._adminMultiAccountMain.open();
+                        },
+                        menuTitle: this._adminMultiAccountMain.getViewMetadata().menu,
                         'position': 'left'
                     }
                 ]

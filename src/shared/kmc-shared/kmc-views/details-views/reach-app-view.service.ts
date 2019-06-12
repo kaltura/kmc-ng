@@ -16,7 +16,8 @@ import { Observable, of as ObservableOf } from 'rxjs';
 export enum ReachPages {
     entry = 'entry',
     entries = 'entries',
-    category = 'category'
+    category = 'category',
+    dashboard = 'dashboard'
 }
 
 export interface ReachAppViewArgs {
@@ -41,8 +42,14 @@ export class ReachAppViewService extends KmcDetailsViewBaseService<ReachAppViewA
             _titleService, _contextualHelpService);
     }
 
-    private _availableByPermission(): boolean {
-        return this._appPermissions.hasPermission(KMCPermissions.REACH_PLUGIN_PERMISSION);
+    private _availableByPermission(args: ReachAppViewArgs): boolean {
+        let _available: boolean = this._appPermissions.hasPermission(KMCPermissions.REACH_PLUGIN_PERMISSION);
+        if (args.page === ReachPages.category) {
+            _available = _available && this._appPermissions.hasPermission(KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES);
+        } else if (args.page === ReachPages.entry || args.page === ReachPages.entries){
+            _available = _available && this._appPermissions.hasPermission(KMCPermissions.CAPTION_MODIFY);
+        }
+        return _available;
     }
 
     private _availableByData(args: ReachAppViewArgs): boolean {
@@ -50,6 +57,7 @@ export class ReachAppViewService extends KmcDetailsViewBaseService<ReachAppViewA
             case ReachPages.entry:
                 return this.isRelevantEntry(args.entry);
             case ReachPages.entries:
+            case ReachPages.dashboard:
                 return true; // since we build bulk actions menu before entries are selected, always allow by data
             case ReachPages.category:
                 return args.category instanceof KalturaCategory;
@@ -62,8 +70,7 @@ export class ReachAppViewService extends KmcDetailsViewBaseService<ReachAppViewA
         if (entry) {
             const isVideoAudio = entry.mediaType === KalturaMediaType.video || entry.mediaType === KalturaMediaType.audio;
             const isReady = entry.status === KalturaEntryStatus.ready;
-            const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
-            return isReady && isVideoAudio && !isExternalMedia;
+            return isReady && isVideoAudio;
         }
         return false;
     }
@@ -78,7 +85,7 @@ export class ReachAppViewService extends KmcDetailsViewBaseService<ReachAppViewA
 
     public isAvailable(args: ReachAppViewArgs): boolean {
         const isAvailableByConfig = !!serverConfig.externalApps.reach;
-        const isAvailableByPermission = this._availableByPermission();
+        const isAvailableByPermission = this._availableByPermission(args);
         const isAvailableByData = this._availableByData(args);
 
         return isAvailableByConfig && isAvailableByData && isAvailableByPermission;

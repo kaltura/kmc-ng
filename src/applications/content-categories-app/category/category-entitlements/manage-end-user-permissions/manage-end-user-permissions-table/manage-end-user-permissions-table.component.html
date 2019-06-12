@@ -56,7 +56,7 @@
                                 (onChange)="_onActionSelected({action: 'updateMethod', users: user, payload: { method: user.updateMethod} })"></p-dropdown>
                 </td>
                 <td class="updatedAtColumn">
-                    {{user.updatedAt | kDate:'dateOnly'}}
+                    {{user.updatedAt | kmcDate:'dateOnly'}}
                 </td>
                 <td class="statusColumn">
                     <p-inputSwitch

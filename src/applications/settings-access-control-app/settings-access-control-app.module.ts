@@ -28,6 +28,7 @@ import { TimeSpinnerModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { TableModule } from 'primeng/table';
 import { KPTableModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
 
 @NgModule({
   imports: [
@@ -61,7 +62,8 @@ import { KPTableModule } from '@kaltura-ng/kaltura-primeng-ui';
     KMCPermissionsModule,
     TimeSpinnerModule,
       TableModule,
-      KPTableModule
+      KPTableModule,
+      DateFormatModule,
   ],
   declarations: [
     SettingsAccessControlComponent,

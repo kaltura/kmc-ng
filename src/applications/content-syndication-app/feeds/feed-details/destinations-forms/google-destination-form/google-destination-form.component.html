@@ -69,6 +69,19 @@
           <div class="kSelectPlayerLabel">{{'applications.content.syndication.details.destinationsForms.google.playback.player' | translate}}</div>
           <p-dropdown class="kSelectPlayerControl" [options]="_availablePlayers" formControlName="selectedPlayer"
                       [autoWidth]="false" [filter]="true">
+              <ng-template let-item pTemplate="selectedItem">
+                  <div class="playerItem selectedPlayer">
+                      <div [class]="'playerIcon v'+item.version"></div>
+                      <span>{{item.label}}</span>
+                  </div>
+              </ng-template>
+              <ng-template let-item pTemplate="item">
+                  <div class="playerItem">
+                      <div [class]="'playerIcon v'+item.version"></div>
+                      <span>{{item.label}}</span>
+                      <i class="check kIconcheck_small"></i>
+                  </div>
+              </ng-template>
           </p-dropdown>
         </div>
         <div class="kSelectPlayerInfo">

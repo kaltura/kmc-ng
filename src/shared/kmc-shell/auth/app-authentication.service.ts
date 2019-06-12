@@ -174,12 +174,8 @@ export class AppAuthentication {
     }
 
     updatePassword(payload: UpdatePasswordPayload): Observable<{ email: string, password: string }> {
-        if (this.isLogged()) {
-            return this.kalturaServerClient.request(new AdminUserUpdatePasswordAction(payload))
-                .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
-        } else {
-            return Observable.throw(new Error('cannot update password, user is not logged'));
-        }
+        return this.kalturaServerClient.request(new AdminUserUpdatePasswordAction(payload))
+            .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
     }
 
     setInitalPassword(payload: { newPassword: string, hashKey: string }): Observable<void> {
@@ -330,7 +326,8 @@ export class AppAuthentication {
                 partnerPackage: partner.partnerPackage,
                 landingPage: partner.landingPage,
                 adultContent: partner.adultContent,
-                publisherEnvironmentType: partner.publisherEnvironmentType
+                publisherEnvironmentType: partner.publisherEnvironmentType,
+                publishersQuota: partner.publishersQuota
             }
         });
 

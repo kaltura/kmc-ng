@@ -30,6 +30,9 @@ export class DistributedProfileErrorsComponent {
 
   private _mapErrors(errors: KalturaDistributionValidationError[]): DistributedProfileErrorsGroup {
     const updateErrorType = (acc, val, type) => {
+      if (typeof acc === "undefined"){
+          acc = {};
+      }
       if (!acc[type]) {
         return Object.assign(acc, { [type]: [val] });
       }

@@ -32,7 +32,7 @@
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.myUserSettings.password' | translate}}</span>
           <div>
-            <input type="password" pInputText class="kControl"
+            <input type="password" appPreventPasswordAutofill pInputText class="kControl"
                    [formControl]="_passwordField"
                    [ngClass]="{'kHasError': _passwordField.invalid && (_passwordField.touched || _showPasswordError)}">
             <div class="error"

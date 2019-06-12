@@ -15,7 +15,9 @@
       <kBulkAccessControl *ngSwitchCase="'setAccessControl'" [parentPopupWidget]="bulkActionsPopup" (accessControlChangedChanged)="onAccessControlChanged($event)"></kBulkAccessControl>
       <kBulkAddTags *ngSwitchCase="'addTags'" [parentPopupWidget]="bulkActionsPopup" (addTagsChanged)="onAddTagsChanged($event)"></kBulkAddTags>
       <kBulkAddPublishers *ngSwitchCase="'addPublishers'" [parentPopupWidget]="bulkActionsPopup" (addPublishersChanged)="onAddPublishersChanged($event)"></kBulkAddPublishers>
+      <kBulkAddViewers *ngSwitchCase="'addViewers'" [parentPopupWidget]="bulkActionsPopup" (addViewersChanged)="onAddViewersChanged($event)"></kBulkAddViewers>
       <kBulkRemovePublishers *ngSwitchCase="'removePublishers'" [selectedEntries]="selectedEntries"  [parentPopupWidget]="bulkActionsPopup" (removePublishersChanged)="onRemovePublishersChanged($event)"></kBulkRemovePublishers>
+      <kBulkRemoveViewers *ngSwitchCase="'removeViewers'" [selectedEntries]="selectedEntries" [parentPopupWidget]="bulkActionsPopup" (removeViewersChanged)="onRemoveViewersChanged($event)"></kBulkRemoveViewers>
       <kBulkAddEditors *ngSwitchCase="'addEditors'" [parentPopupWidget]="bulkActionsPopup" (addEditorsChanged)="onAddEditorsChanged($event)"></kBulkAddEditors>
       <kBulkRemoveEditors *ngSwitchCase="'removeEditors'" [selectedEntries]="selectedEntries"  [parentPopupWidget]="bulkActionsPopup" (removeEditorsChanged)="onRemoveEditorsChanged($event)"></kBulkRemoveEditors>
       <kBulkRemoveTags *ngSwitchCase="'removeTags'" [selectedEntries]="selectedEntries" [parentPopupWidget]="bulkActionsPopup" (removeTagsChanged)="onRemoveTagsChanged($event)"></kBulkRemoveTags>

@@ -60,7 +60,6 @@ export class CategorySubcategoriesTableComponent implements OnInit, OnDestroy, A
     if (this.actionsMenu) {
       this._buildMenu(rowIndex, category);
       this.actionsMenu.toggle(event);
-      this.actionsMenu.show(event);
     }
   }
 

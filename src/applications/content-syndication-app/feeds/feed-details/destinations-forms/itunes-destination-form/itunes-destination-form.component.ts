@@ -197,7 +197,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
     this._availableCategories = this._categories.map(category => {
         const value = this._appLocalization
             .get(`applications.content.syndication.details.destinationsForms.itunes.categories.availableCategories.${category}`);
-        return { value, label: value };
+        return { value: value.replace(' & ', ' &amp; '), label: value };
     });
   }
 
@@ -283,7 +283,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
         enforceFeedAuthor: formData.enforceFeedAuthor,
       feedLandingPage: formData.website,
       feedDescription: formData.feedDescription,
-      categories: formData.categories.join(','),
+      categories: formData.categories.join(',').replace(' & ', ' &amp; '),
       feedImageUrl: formData.feedImageUrl,
       ownerName: formData.feedOwnerName,
       ownerEmail: formData.feedOwnerEmail,

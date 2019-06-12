@@ -11,12 +11,12 @@
     </div>
     <div class="kRow">
       <span class="kLabel">{{'applications.content.entryDetails.flavours.drm.start' | translate}}</span>
-      <span *ngIf="currentFlavor && currentFlavor.drm.startTime">{{currentFlavor?.drm.startTime | kDate }}</span>
+      <span *ngIf="currentFlavor && currentFlavor.drm.startTime">{{currentFlavor?.drm.startTime | kmcDate }}</span>
       <span *ngIf="currentFlavor && !currentFlavor.drm.startTime">{{'applications.content.entryDetails.flavours.drm.na' | translate}}</span>
     </div>
     <div class="kRow">
       <span class="kLabel">{{'applications.content.entryDetails.flavours.drm.end' | translate}}</span>
-      <span *ngIf="currentFlavor && currentFlavor.drm.endTime">{{currentFlavor?.drm.endTime  | kDate}}</span>
+      <span *ngIf="currentFlavor && currentFlavor.drm.endTime">{{currentFlavor?.drm.endTime  | kmcDate}}</span>
       <span *ngIf="currentFlavor && !currentFlavor.drm.endTime">{{'applications.content.entryDetails.flavours.drm.na' | translate}}</span>
     </div>
     <span>{{'applications.content.entryDetails.flavours.drm.mbr' | translate}}</span>

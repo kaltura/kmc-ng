@@ -52,7 +52,9 @@
             "studio": "スタジオ",
             "analytics": "分析",
             "settings": "設定",
-            "administration": "管理"
+            "administration": "管理",
+            "reachDashboardMenuTitle": "サービスダッシュボード",
+            "reachDashboardPageTitle": "サービスダッシュボード"
         },
         "userSettings": {
             "changeAccount": "アカウントを変更",
@@ -73,6 +75,7 @@
             "productTour": "製品ツアーを観覧",
             "support": "ヘルプとサポート",
             "userManual": "ユーザーマニュアルをダウンロード",
+            "legacy": "レガシーKMC",
             "contact": "サポートに問い合わせる",
             "currentPage": "現在のページ",
             "changelog": "変更ログ"
@@ -89,6 +92,7 @@
             "off": "オフ",
             "ok": "OK",
             "cancel": "キャンセル",
+            "continue": "続行",
             "retry": "再試行",
             "dismiss": "却下",
             "reload": "リロード",
@@ -113,7 +117,9 @@
         "openMail":{
             "supportMailTitle": "Kalturaサポートに問い合わせる",
             "supportMailMsg": "次の電子メールアドレスに電子メールを送信してください:",
-            "supportMailMsgNoMail": "Kalturaサポートチームに電子メールを送信してください。"
+            "supportMailMsgNoMail": "Kalturaサポートチームに電子メールを送信してください。",
+            "customerCare": "Kalturaカスタマーケアは24時間365日、カスタマーポータルからご利用いただけます:",
+            "customerPortal": "新しいケースの送信、カスタマーケアとのコミュニケーション、サポートチケットのステータスの追跡をするための最も簡単で速い方法は、Kalturaカスタマーポータルです:"
         },
         "login": {
             "login": {
@@ -165,20 +171,20 @@
                 }
             },
             "restorePassword": {
-            "welcome": "Kalturaへようこそ。",
-            "selectPassword": "パスワードを選択してください。",
-        "restored": "新しいパスワードが設定されました。Kaltura管理コンソールにログインしてください。",
-        "error": {
-          "equal": "パスワードが一致しません",
-          "required": "フィールドは必須です",
-            "failedValidateHash": "{{0}} もう一度試しますか?"
-        },
-        "placeholder": {
-          "new": "新しいパスワードを入力してください",
-          "confirm": "新しいパスワードをもう一度入力してください"
-        }
-      },
-      "error": {
+                "welcome": "Kalturaへようこそ。",
+                "selectPassword": "パスワードを選択してください。",
+                "restored": "新しいパスワードが設定されました。Kaltura管理コンソールにログインしてください。",
+                "error": {
+                    "equal": "パスワードが一致しません",
+                    "required": "フィールドは必須です",
+                    "failedValidateHash": "{{0}} もう一度試しますか?"
+                },
+                "placeholder": {
+                    "new": "新しいパスワードを入力してください",
+                    "confirm": "新しいパスワードをもう一度入力してください"
+                }
+            },
+            "error": {
                 "email": "電子メールの形式が不正です",
                 "badCredentials": "入力されたユーザー名またはパスワードが正しくありません。",
                 "retriesExceeded": {
@@ -235,6 +241,7 @@
             "advanced": "高度な設定",
             "settings": "リスト配置設定",
             "name": "名前",
+            "version": "バージョン",
             "added": "追加日",
             "updated": "更新日",
             "helpTip1": "自動埋め込みはデフォルトの埋め込みコードタイプであり、ランタイムカスタマイズが不要で、ページ上ですぐにプレーヤーを開く場合に最適です。",
@@ -287,6 +294,8 @@
                 "invalidUrl": "URLが無効です"
             },
             "uploadMenu": {
+                "createFromUrl": "URLからアップロード",
+                "createFromYoutube": "YouTubeからアップロード",
                 "uploadFromDesktop": "デスクトップからアップロード",
                 "needHighSpeed": "高速アップロードが必要ですか?",
                 "highSpeed": "高速アップロード",
@@ -307,11 +316,52 @@
                     "prepareEntry": "エントリの準備中にエラーが発生しました。"
                 }
             },
+            "createFromUrl": {
+                "uploadFromUrl": "URLからアップロード",
+                "transcodingProfile": "トランスコーディングプロファイル",
+                "profilePlaceholder": "デフォルト",
+                "addFile": "ファイルを追加",
+                "fileUrl": "ファイルURL",
+                "fileUrlPlaceholder": "http://",
+                "transcodingFlavor": "トランスコーディングフレーバー",
+                "selectFlavor": "フレーバーを選択",
+                "remove": "ファイルを削除",
+                "link": "リンク",
+                "cancel": "キャンセル",
+                "noFlavors": "フレーバーなし",
+                "missingFlavor": "必要なトランスコーディングフレーバーの一部が見つかりません。続行しますか?",
+                "continue": "続行",
+                "emptyMessage": {
+                    "title": "アップロードするファイルがありません",
+                    "getStarted": "始めるにはファイルをいくつか追加します。",
+                    "browse": "追加"
+                }
+            },
+            "uploadFromYoutube": {
+                "uploadFromYoutube": "YouTubeからアップロード",
+                "linkLabel": "ビデオページのリンクまたはコンテンツ IDを追加",
+                "inputPlaceholder": "http://",
+                "cancel": "キャンセル",
+                "upload": "アップロード",
+                "note": "注意:公開されたYouTube動画のみがサポートされています",
+                "invalidUrl": "このURLまたはIDはサポートされていません",
+                "success": "成功",
+                "successMessage": "YouTubeエントリの作成に成功しました。エントリ詳細を表示しますか?",
+                "notSupported": "YouTubeからのアップロードはご利用いただけません。"
+            },
             "uploadSettings": {
-                "title": "設定をアップロード",
+                "uploadSettings": "設定をアップロード",
+                "uploadFromUrl": "URLからアップロード",
+                "cancel": "キャンセル",
                 "profile": "トランスコーディングプロファイル",
                 "addFileBtn": "ファイルを追加",
                 "profilePlaceholder": "デフォルト",
+                "fileUrl": "ファイルURL",
+                "fileUrlPlaceholder": "http://",
+                "createFromUrlError": {
+                    "all": "エントリの作成に失敗しました。もう一度お試しください。",
+                    "some": "エントリの作成に失敗しました。エントリリストを確認してください。"
+                },
                 "mediaTypes": {
                     "video": "ビデオ",
                     "audio": "オーディオ",
@@ -328,10 +378,12 @@
                     "emptyMessage": {
                         "title": "アップロードするファイルがありません",
                         "getStarted": "始めるにはファイルをいくつか追加します。",
-                        "browse": "参照"
+                        "browse": "参照",
+                        "add": "追加"
                     }
                 },
-                "uploadBtn": "アップロード"
+                "upload": "アップロード",
+                "link": "リンク"
             },
             "uploadMonitor": {
                 "uploadFromDesktop": "デスクトップからアップロード",
@@ -353,7 +405,7 @@
             "transcodingProfilesSelect": {
                 "titleVideo": "ビデオエントリを準備",
                 "titleAudio": "オーディオエントリを準備",
-                "selectTranscodingProfile": "トランスコーディングプロファイルを選択",
+                "selectTranscodingProfile": "トランスコーディングプロファイルの選択",
                 "defaultOption": "デフォルト",
                 "apply": "適用",
                 "errors": {
@@ -527,6 +579,7 @@
                 "viewEntries": "エントリを表示",
                 "moveCategory": "カテゴリを移動",
                 "cancel": "キャンセル",
+                "addServiceRule": "サービスルールの追加",
                 "bActions": {
                     "addRemoveTags": "タグを追加/削除",
                     "addTags": "タグを追加",
@@ -534,7 +587,7 @@
                     "removeTags": "タグを削除",
                     "removeTagsLabel": "選択したカテゴリから削除するタグを選択します。",
                     "noTagsToRemove": "削除するタグがありません",
-          "moveCategories": "カテゴリを移動",
+                    "moveCategories": "カテゴリを移動",
                     "changeContentPrivacy": "コンテンツプライバシーを変更",
                     "changeContentPrivacyLabel": "選択したすべてのカテゴリについて、コンテンツプライバシー設定を変更します。",
                     "changeCategoryListing": "カテゴリの一覧表示を変更",
@@ -719,7 +772,7 @@
                         "fromPlaylist": "プレーリストから"
                     },
                     "search": "検索",
-          "playerName": "プレーヤー（{{0}}）",
+                    "playerName": "プレーヤー（{{0}}）",
                     "entriesCountData": {
                         "count": "エントリ数",
                         "numOfEntries": "{{0}}件のエントリ",
@@ -735,7 +788,7 @@
                         "yahoo": "Yahoo",
                         "itunes": "iTunes",
                         "roku": "Roku Direct Publisher",
-                        "opera": "Opera Snap TV",
+                        "opera": "Vewd TV Snap",
                         "flexibleFormat": "フレキシブルフォーマット"
                     },
                     "destinationsForms": {
@@ -750,6 +803,7 @@
                                 "explanation": "このフィードの各ビデオについて、iTunes Store Podcastに表示したいURLテンプレートを入力します。システムによって、各エントリに特定のエントリIDが追加されます。例: \"http://mysite.com?videoid=\""
                             },
                             "feedAuthor": "フィードの作成者",
+                            "enforceFeedAuthor": "すべてのエピソードのエピソード作成者としてこの名前を使用する",
                             "website": "Webサイト",
                             "description": "フィードの説明",
                             "categories": {
@@ -1113,7 +1167,11 @@
                 "ruleName": "ルール名",
                 "entriesCount": "エントリ番号",
                 "limit": "制限",
-                "orderBy": "並び替え"
+                "orderBy": "並び替え",
+                "nameTooltip": "{{0}} タグ: {{1}}",
+                "download": "ダウンロード",
+                "editor": "エディタを起動",
+                "captionRequest": "キャプションリクエスト"
             },
             "paginator": {
                 "showRows": "行を表示:"
@@ -1264,6 +1322,7 @@
                 "dismiss": "却下"
             },
             "bulkActions": {
+                "captionRequest": "キャプションリクエスト",
                 "setScheduling": "スケジュールを設定",
                 "setAccessControl": "アクセス制御を設定",
                 "addRemovePublishers": "共同公開者を追加/削除",
@@ -1295,7 +1354,7 @@
                 "changeOwner": "所有者を変更",
                 "changeOwnerLabel": "選択したエントリの新しい所有者を設定します。",
                 "download": "ダウンロード",
-                "downloadEntries": "選択されたエントリをダウンロードします。",
+                "downloadEntries": "選択されたエントリをダウンロード",
                 "download1Label": "1件のエントリがダウンロード用に選択されています。",
                 "downloadManyLabel": "{{0}}件のエントリがダウンロード用に選択されています。",
                 "downloadFlavor": "ビデオをダウンロードする場合は、目的の形式を選択してください。",
@@ -1321,19 +1380,25 @@
                 "removeFromPlaylist": "プレーリストから削除",
                 "moveUp": "上に移動",
                 "moveDown": "下に移動",
+                "moveTop": "1番上に移動",
+                "moveBottom": "1番下に移動",
                 "duplicate": "複製",
                 "removeCategoriesNone": "削除するカテゴリがありません",
                 "approve": "承認",
                 "reject": "拒否",
                 "newPlaylist": "新規プレーリスト",
                 "createPlaylistWarning": "新規プレーリスト",
-                "createPlaylistWarningMsg": "選択されたエントリの一部のステータスが無効です。続行できますが、無効なエントリ{{0}}は無視されます",
+                "createPlaylistWarningMsg": "選択されたエントリの一部のステータスが無効です。続行できますが、無効なエントリは無視されます: {{0}}",
+                "createPlaylistWarningMsgShort": "選択されたエントリのうち{{0}}件のステータスが無効です。続行できますが、無効なエントリは無視されます。",
                 "createPlaylistErrorMsg": "選択されたすべてのエントリのステータスが無効です。これらのエントリを含む新規プレーリストを作成できません",
                 "viewRule": "ルールを表示/編集",
                 "deleteRule": "ルールを削除",
                 "noCategoriesOrEntries": "カテゴリまたはエントリが選択されませんでした。",
                 "entryAlreadyAssignedToCategory": "エントリ{{0}}はすでにカテゴリ{{1}}に割り当てられています。",
-                "downloadFailed": "ダウンロードリクエストが失敗しました。"
+                "downloadFailed": "ダウンロードリクエストが失敗しました。",
+                "captionRequestAllInvalid": "選択した項目はキャプションの並び替えをサポートしていません。再生の準備ができているビデオ/オーディオエントリのみを選択してください",
+                "captionRequestSomeInvalid": "いくつかのエントリはキャプションの並び替えをサポートしていないため、無視されます。続行しますか?"
+
             },
             "entryDetails": {
                 "entryEditor": {
@@ -1341,7 +1406,13 @@
                     "cancelEdit": "編集をキャンセル",
                     "discard": "すべての変更を破棄しますか?"
                 },
+                "downloadEntry": {
+                    "title": "ダウンロード",
+                    "downloadFlavor": "ビデオをダウンロードする場合は、目的の形式を選択してください。",
+                    "downloadEntry": "エントリをダウンロード"
+                },
                 "save": "保存",
+                "newDraftEntryWarning": "エントリは自動的に保存されました。このエントリを維持しますか？",
                 "sections": {
                     "metadata": "メタデータ",
                     "thumbnails": "サムネイル",
@@ -1363,6 +1434,7 @@
                     "details": "詳細詳細",
                     "entryID": "ID:",
                     "creator": "作成者:",
+                    "owner": "所有者:",
                     "creationDate": "作成日:",
                     "updateDate": "最終更新:",
                     "landingPage": "ランディングページ:",
@@ -1510,7 +1582,8 @@
                         "preview": "プレビュー",
                         "reconvert": "再変換",
                         "drm": "DRM詳細を表示",
-                        "link": "リンク"
+                        "link": "リンク",
+                        "match": "ドロップフォルダー"
                     },
                     "drm": {
                         "header": "DRM詳細",
@@ -1556,13 +1629,15 @@
                     "deleteFailure": "フレーバーアセットの削除に失敗しました。",
                     "convertFailure": "フレーバーの変換に失敗しました。",
                     "missingOriginalFlavor": "元のフレーバーアセットが見つかりません",
-          "uploadFailure": "フレーバーのアップロードに失敗しました。",
+                    "uploadFailure": "フレーバーのアップロードに失敗しました。",
                     "downloadFailure": "フレーバーのダウンロードに失敗しました。",
                     "importFailure": "フレーバーのインポートに失敗しました。",
                     "replaceVideo": {
+                        "replaceVideo": "ビデオを交換する",
                         "noFlavors": "フレーバーなし",
                         "addVideo": "ビデオを追加",
                         "addAudio": "オーディオを追加",
+                        "replaceAudio": "オーディオを置換",
                         "uploadFile": "ファイルをアップロード",
                         "uploadFiles": "ファイルをアップロード",
                         "importFile": "ファイルをインポート",
@@ -1596,6 +1671,20 @@
                         "approveReplacementTooltip": "現在のすべてのフレーバーは置換の承認時に置換されます。時間ベースのすべてのメタデータは同様に影響を受ける可能性があります。",
                         "currentFlavors": "現在のフレーバー",
                         "replacementFlavors": "置換フレーバー",
+                        "setReferenceId": "参照IDの設定",
+                        "addFilesBtn": "ファイルの追加",
+                        "referenceId": "参照ID:",
+                        "selectDropFolder": "ドロップフォルダーの選択",
+                        "searchFolder": "フォルダーの検索",
+                        "mediaPackageName": "メディアパッケージ名",
+                        "mediaName": "メディア名",
+                        "createdOn": "作成日",
+                        "waiting": "待機中",
+                        "error": "* エラー *",
+                        "setReferenceIdWarning": "自動取り込み処理が進行中です。数分後にもう一度ご確認ください。",
+                        "addFilesWarning": "このファイルを手動で追加すると自動取り込みプロセスが中断され、フォールバックオプションとしてのみ実行する必要があります。続行しますか?",
+                        "noDropFolders": "ドロップフォルダーは利用できません",
+                        "noDropFoldersWarning": "お客様のアカウント設定では、ドロップフォルダーからのメディアパッケージの自動マッチングはサポートされていません。",
                         "storageProfile": {
                             "name": "名前:",
                             "id": "ID:",
@@ -1623,6 +1712,7 @@
                 "captions": {
                     "captions": "キャプション",
                     "add": "キャプションを追加",
+                    "request": "キャプションをリクエスト",
                     "label": "ラベル",
                     "type": "ファイルタイプ",
                     "language": "言語",
@@ -2264,8 +2354,8 @@
                 "personalDetails": "個人の詳細",
                 "accountSpecificDetails": "アカウント固有の詳細",
                 "required": "このフィールドは必須です。",
-                "emailFormat": "この電子メール形式は有効ではありません",
-                "publisherIdFormat": "このパブリッシャーID形式は有効ではありません",
+                "emailFormat": "電子メールのフォーマットが無効です",
+                "publisherIdFormat": "パブリッシャーIDのフォーマットが無効です",
                 "userAlreadyExist": "{{0}}はすでにシステムに存在しており、別のKMCアカウントに関連付けられています。このユーザーもこのアカウントに関連付けますか?",
                 "alreadyExist": "ユーザーはすでに存在しています",
                 "alreadyExistError": "ログイン電子メール{{0}}は、アカウントの認証済みユーザーとしてすでにシステム内に存在しています。",
@@ -2288,9 +2378,10 @@
                 "contactUs": "お問い合わせ",
                 "contactUsText": " （アカウントに以下の無効なアイテムを追加する方法について）",
                 "roleUpdated": "ロールが更新されました",
-        "roleUpdatedMessage": "変更はすぐに反映されます。このロールに関連付けられている既存のユーザーは、ブラウザページを更新することをお勧めします。",
-        "errors": {
+                "roleUpdatedMessage": "変更はすぐに反映されます。このロールに関連付けられている既存のユーザーは、ブラウザページを更新することをお勧めします。",
+                "errors": {
                     "required": "このフィールドは必須です。",
+                    "unsafeValue": "安全でない可能性のあるHTMLタグ",
                     "validationError": "フォームに無効な情報がいくつか含まれています。無効としてマークされた選択を確認してください。"
                 },
                 "permissionsTable": {
@@ -2353,7 +2444,7 @@
                     "header": "アカウントのアップグレードに興味を持っていただきありがとうございます。",
                     "trial": "無料トライアルの期限は{{0}}に切れます。",
                     "gb": " GB",
-          "bandwidth": "今月の帯域幅消費は{{0}}です",
+                    "bandwidth": "今月の帯域幅消費は{{0}}です",
                     "storage": "今月のストレージ使用量は{{0}}です",
                     "contactUs": "他のパッケージと付加価値サービスの詳細については、弊社にお問い合わせください。"
                 }
@@ -2792,7 +2883,11 @@
         },
         "analytics": {
             "comingSoon": "間もなく登場すべてのメディアタイプについて分析します。",
-            "releaseSupports": "このリリースでは、「ライブ」エントリの分析のみがサポートされます。他のすべてのメディアについては、レガシーKMCにログインして、分析およびレポートを表示および作成してください。すべてのメディアの分析については、間もなく利用できるようになるはずです"
+            "releaseSupports": "このリリースでは、「ライブ」エントリの分析のみがサポートされます。他のすべてのメディアについては、<a href=\"{{0}}\" target=\"_blank\">レガシーKMCにログイン</a>して、分析およびレポートを表示および作成してください。すべてのメディアの分析については、間もなく利用できるようになるはずです"
+        },
+        "reach": {
+            "captionRequests": "キャプションリクエスト",
+            "addServiceRule": "サービスルールの追加"
         }
     },
     "entriesShared": {
@@ -3132,7 +3227,7 @@
         "MS": "マレー語",
         "MT": "マルタ語",
         "MY": "ビルマ語",
-        "NA": "ナウル語",
+        "NA": "ナウル",
         "NE": "ネパール語",
         "NL": "オランダ語",
         "NO": "ノルウェー語",
@@ -3157,6 +3252,10 @@
         "SK": "スロバキア語",
         "SL": "スロベニア語",
         "SM": "サモア語",
+        "SMA": "Southern Sami",
+        "SMJ": "Lule Sami",
+        "SMN": "Inari Sami",
+        "SMS": "Skolt Sami",
         "SN": "ショナ語",
         "SO": "ソマリ語",
         "SQ": "アルバニア語",
@@ -3174,7 +3273,7 @@
         "TK": "トルクメン語",
         "TL": "タガログ語",
         "TN": "セツワナ語",
-        "TO": "トンガ語",
+        "TO": "トンガ",
         "TR": "トルコ語",
         "TS": "ツォンガ語",
         "TT": "タタール語",

@@ -91,7 +91,7 @@
                             <td *ngIf="creationType === _creationTypes.upload"
                                 [ngStyle]="{ 'width': '100px' }">{{ file.size | kFileSize }}
                             </td>
-                            <td [ngStyle]="{'width': '40px', 'text-align': 'center', 'position': 'relative'}">
+                            <td [ngStyle]="{'width': '40px', 'text-align': 'center'}">
                                 <i *ngIf="file.hasError"
                                    class="kIconerror kIconError"
                                    [kTooltip]="file.errorToken | translate"

@@ -129,10 +129,11 @@
                     <div class="kThumbnailHolder" #holder
                          [class.disable]="!_allowDrilldown('view', entry.mediaType,entry.status)"
                          (click)="_onActionSelected('view',entry)">
-                        <img *ngIf="entry.thumbnailUrl" src="{{entry.thumbnailUrl}}/quality/80/width/80/height/46/nearest_aspect_ratio/1" onError="this.onerror=null;this.style.display='none'" (error)="holder.classList.add('error')">
+                        <img *ngIf="entry.thumbnailUrl" [src]="entry.thumbnailUrl" onError="this.onerror=null;this.style.display='none'" (error)="holder.classList.add('error')">
                         <i class="kIconwarning"></i>
                         <i class="kIconyoutube kThumbnailTypeIcon" *ngIf="entry.externalSourceType === _youtubeExternalSourceType"></i>
                         <div class="kYoutubeIconFix" *ngIf="entry.externalSourceType === _youtubeExternalSourceType"></div>
+                        <i class="kIconquiz kThumbnailTypeIcon" *ngIf="entry.isQuizEntry"></i>
                     </div>
                 </td>
 
@@ -158,8 +159,8 @@
                 </td>
 
                 <td class="ui-resizable-column" *ngIf="_columnsMetadata.createdAt">
-                    <span class="kTableColumn" [kTooltip]="entry.createdAt | kDate" [showOnEllipsis]="true">
-                        {{entry.createdAt | kDate}}
+                    <span class="kTableColumn" [kTooltip]="entry.createdAt | kmcDate" [showOnEllipsis]="true">
+                        {{entry.createdAt | kmcDate}}
                     </span>
                 </td>
 
@@ -208,6 +209,5 @@
             </div>
         </ng-template>
     </p-table>
-
-    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 </div>
+

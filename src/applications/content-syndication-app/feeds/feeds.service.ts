@@ -4,7 +4,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
-import {KalturaFilterPager} from 'kaltura-ngx-client';
+import {KalturaFilterPager, PlaylistGetAction} from 'kaltura-ngx-client';
 import {KalturaClient, KalturaMultiRequest, KalturaMultiResponse, KalturaRequest} from 'kaltura-ngx-client';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {
@@ -225,8 +225,8 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
 
   }
 
-  public getPlaylists(): Observable<KalturaPlaylist[]> {
-    const filter = new KalturaPlaylistFilter({orderBy: KalturaPlaylistOrderBy.createdAtDesc.toString()});
+  public getPlaylists(freeText = ''): Observable<KalturaPlaylist[]> {
+    const filter = new KalturaPlaylistFilter({orderBy: KalturaPlaylistOrderBy.createdAtDesc.toString(), freeText: freeText || ''});
     const pager = new KalturaFilterPager({pageSize: 500});
 
     return this._kalturaClient.request(
@@ -236,6 +236,11 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
         return response.objects;
       });
 
+  }
+  public getPlaylist(id: string): Observable<KalturaPlaylist> {
+    return this._kalturaClient.request(
+      new PlaylistGetAction({id})
+    );
   }
 
   // bulk delete

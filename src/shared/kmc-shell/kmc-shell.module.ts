@@ -11,6 +11,7 @@ import { ReleaseNotesComponent } from './components/release-notes/release-notes.
 import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
 import { EntryTypePipe } from 'app-shared/kmc-shell/pipes/entry-type.pipe';
 import { PageExitVerificationService, UploadPageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import { PreventPasswordAutofillDirective } from 'app-shared/kmc-shell/directives/prevent-password-autofill.directive';
 
 @NgModule({
     imports: <any[]>[
@@ -23,20 +24,27 @@ import { PageExitVerificationService, UploadPageExitVerificationService } from '
         AppContainerComponent,
         ReleaseNotesComponent,
         ScrollToTopComponent,
-        EntryTypePipe
+        EntryTypePipe,
+        PreventPasswordAutofillDirective,
     ],
     exports: <any[]>[
         AppContainerComponent,
         ReleaseNotesComponent,
         ScrollToTopComponent,
-        EntryTypePipe
+        EntryTypePipe,
+        PreventPasswordAutofillDirective,
     ],
     providers: <any[]>[]
 })
 export class KMCShellModule {
-    constructor(@Optional() @Self()  _uploadPageExitVerificationService: UploadPageExitVerificationService) {
+    constructor(@Optional() @Self()  _uploadPageExitVerificationService: UploadPageExitVerificationService,
+                @Optional() @Self()  _browserService: BrowserService) {
         if (_uploadPageExitVerificationService) {
             _uploadPageExitVerificationService.init();
+        }
+
+        if (_browserService) {
+            _browserService.initLocationListener();
         }
     }
 

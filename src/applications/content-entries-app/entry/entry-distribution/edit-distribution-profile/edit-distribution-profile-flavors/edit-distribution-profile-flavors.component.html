@@ -24,7 +24,7 @@
           <span class="kFlavorMetadataDelimiter"></span>
         </span>
         <span *ngIf="flavor.size">
-          {{flavor.size | kFileSize}}
+          {{flavor.size * 1024 | kFileSize}}
           <span class="kFlavorMetadataDelimiter"></span>
         </span>
         <span *ngIf="flavor.dimensions">

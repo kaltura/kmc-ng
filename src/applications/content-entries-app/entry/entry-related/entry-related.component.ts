@@ -29,6 +29,7 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
 		{"label": this._appLocalization.get('applications.content.entryDetails.related.document'), "value": KalturaAttachmentType.document},
 		{"label": this._appLocalization.get('applications.content.entryDetails.related.media'), "value": KalturaAttachmentType.media},
 		{"label": this._appLocalization.get('applications.content.entryDetails.related.text'), "value": KalturaAttachmentType.text},
+		{"label": this._appLocalization.get('applications.content.entryDetails.related.json'), "value": KalturaAttachmentType.json},
 	];
 
 	public _actions: MenuItem[] = [];

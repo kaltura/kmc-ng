@@ -5,13 +5,14 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {Subject} from 'rxjs/Subject';
 import { Observable } from 'rxjs';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { Router, ActivatedRoute, NavigationExtras, NavigationEnd } from '@angular/router';
+import { Router, ActivatedRoute, NavigationExtras, NavigationEnd, RoutesRecognized } from '@angular/router';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 import { AppEventsService } from 'app-shared/kmc-shared/app-events/app-events.service';
 import { OpenEmailEvent } from 'app-shared/kmc-shared/events';
 import { EmailConfig } from '../../../kmc-app/components/open-email/open-email.component';
 import { serverConfig } from 'config/server';
 import { PageExitVerificationService } from '../page-exit-verification';
+import { filter, map, pairwise } from 'rxjs/operators';
 
 export enum HeaderTypes {
     error = 1,
@@ -30,6 +31,8 @@ export interface Confirmation {
 	reject?: Function;
 	acceptVisible?: boolean;
 	rejectVisible?: boolean;
+	acceptLabel?: string;
+	rejectLabel?: string;
 	acceptEvent?: EventEmitter<any>;
 	rejectEvent?: EventEmitter<any>;
 	alignMessage?: 'left' | 'center' | 'byContent';
@@ -58,11 +61,10 @@ export class BrowserService implements IAppStorage {
     private _growlMessage = new Subject<GrowlMessage>();
     private _sessionStartedAt: Date = new Date();
     public growlMessage$ = this._growlMessage.asObservable();
-    private _currentUrl: string;
-    private _previousUrl: string;
+    private _previousRoute: RoutesRecognized;
 
-    public get previousUrl(): string {
-        return this._previousUrl;
+    public get previousRoute(): RoutesRecognized {
+        return this._previousRoute;
     }
 
     private _onConfirmationFn: OnShowConfirmationFn = (confirmation: Confirmation) => {
@@ -98,18 +100,8 @@ export class BrowserService implements IAppStorage {
                 private _appLocalization: AppLocalization,
                 private _pageExitVerificationService: PageExitVerificationService) {
         this._recordInitialQueryParams();
-        this._recordRoutingActions();
     }
 
-    private _recordRoutingActions(): void {
-        this._currentUrl = this._router.url;
-        this._router.events
-            .filter(event => event instanceof NavigationEnd)
-            .subscribe((event: NavigationEnd) => {
-                this._previousUrl = this._currentUrl;
-                this._currentUrl = event.url;
-            });
-    }
     private _downloadContent(url: string): void {
         return Observable.create(observer => {
             const xhr = new XMLHttpRequest();
@@ -441,6 +433,85 @@ export class BrowserService implements IAppStorage {
 
     public navigate(path: string): void {
         this._router.navigateByUrl(path);
+    }
+
+    public scrollTo(to: number, duration = 500): void {
+        const start = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+        const change = to - start;
+        const increment = 10;
+        let currentTime = 0;
+
+        const animateScroll = () => {
+            currentTime += increment;
+
+            document.documentElement.scrollTop = document.body.scrollTop = this._easeInOutCubic(currentTime, start, change, duration);
+
+            if (currentTime < duration) {
+                setTimeout(animateScroll, increment);
+            }
+        };
+
+        animateScroll();
+    }
+
+    /**
+     * @link http://easings.net/#easeInOutCubic
+     * @link https://github.com/ai/easings.net/blob/master/vendor/jquery.easing.js#L64
+     */
+    private _easeInOutCubic(t, b, c, d) {
+        if ((t /= d / 2) < 1) {
+            return c / 2 * t * t * t + b;
+        }
+
+        return c / 2 * ((t -= 2) * t * t + 2) + b;
+    }
+
+    public initLocationListener(): void {
+        this._router.events
+            .pipe(
+                filter(e => e instanceof RoutesRecognized),
+                pairwise(),
+                filter((routes: any[]) => {
+                    const [previousRoute, currentRoute] = routes;
+                    const { url: prevUrl } = this.getUrlWithoutParams(previousRoute.url);
+                    const { url: currentUrl } = this.getUrlWithoutParams(currentRoute.url);
+                    return currentUrl !== prevUrl;
+                }),
+                map((routes: RoutesRecognized[]) => routes[0])
+            )
+            .subscribe((route: RoutesRecognized) => {
+                this._previousRoute = route;
+            });
+    }
+
+    public getUrlWithoutParams(pathString: string): { url: string, queryParams: { [key: string]: string }[] } {
+        const urlTree = this._router.parseUrl(pathString);
+        let url = '/';
+        let queryParams = null;
+        if (urlTree.root.children['primary']) {
+            url = `/${urlTree.root.children['primary'].segments.map(({ path }) => path).join('/')}`;
+            queryParams = urlTree.queryParams;
+        }
+
+        return { url, queryParams };
+    }
+
+    public getCurrentDateFormat(forCalendarComponent = false): string {
+        const format = this.getFromLocalStorage('kmc_date_format') || 'month-day-year';
+        return forCalendarComponent
+            ? (format === 'month-day-year' ? 'mm/dd/yy' : 'dd/mm/yy')
+            : (format === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY');
+    }
+
+    public getDocumentBase(): string {
+        const bases = document.getElementsByTagName('base');
+        let baseHref = '';
+
+        if ( bases.length ) {
+            baseHref = bases[0].getAttribute('href');
+        }
+
+        return baseHref;
     }
 }
 

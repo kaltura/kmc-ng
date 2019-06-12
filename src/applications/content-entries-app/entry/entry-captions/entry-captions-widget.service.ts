@@ -188,6 +188,15 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
           caption.uploadFailure = !!relevantFile.failureReason;
           caption.serverUploadToken = (<NewEntryCaptionFile>relevantFile.data).serverUploadToken;
         }
+
+      // update missing labels created in legacy system
+      if (typeof caption.label === "undefined") {
+          caption.label = "";
+      }
+      // update missing isDefault created in legacy system
+      if (typeof caption.isDefault === "undefined") {
+          caption.isDefault = 0; // set as not default
+      }
     });
   }
 

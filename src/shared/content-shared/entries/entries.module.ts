@@ -43,6 +43,7 @@ import { LinkedEntriesTableComponent } from './link-entries-selector/linked-entr
 import { LinkedEntriesAddEntriesComponent } from './link-entries-selector/linked-entries-add-entries/linked-entries-add-entries.component';
 import {LinkedEntriesComponent} from './link-entries-selector/linked-entries/linked-entries.component';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
+import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
 
 @NgModule({
   imports: [
@@ -72,7 +73,8 @@ import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
     StickyModule,
     FiltersModule,
     CategoriesModule,
-    KMCPermissionsModule
+    KMCPermissionsModule,
+      DateFormatModule
   ],
   declarations: [
     EntryStatusPipe,

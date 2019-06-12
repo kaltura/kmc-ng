@@ -80,7 +80,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
           adminLoginUsersQuota: partnerInfo.adminLoginUsersQuota,
           adminUserId: partnerInfo.adminUserId
         };
-        this._rolesList = this._roles.map(({ name, id }) => ({ label: name, value: id }));
+        this._rolesList = this._roles.map(({ name, id }) => ({ label: name, value: id.toString() }));
 
         const relevantUser = this._users.find(user => this.user && this.user.id === user.id);
         this._isNewUser = !relevantUser;
@@ -239,7 +239,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   private _createOrAssociateUser(): void {
     const userProvidedEmail = (this._userForm.value.email || '').trim();
     this._isBusy = true;
-    this._usersStore.getUserById(userProvidedEmail)
+    this._usersStore.getUserById(this._userForm.value.id && this._userForm.value.id.length ? this._userForm.value.id : userProvidedEmail)
       .pipe(cancelOnDestroy(this))
       .subscribe(
         user => {
@@ -250,6 +250,9 @@ export class EditUserComponent implements OnInit, OnDestroy {
             accept: () => {
                 this._blockerMessage = null;
                 this._associateUserToAccount(userProvidedEmail, user);
+            },
+            reject: () => {
+                this._userForm.markAsDirty();
             }
           });
         },

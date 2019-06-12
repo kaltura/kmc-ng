@@ -98,7 +98,6 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
     if (this.actionsMenu) {
       this._buildMenu(rowIndex, rule);
       this.actionsMenu.toggle(event);
-      this.actionsMenu.show(event);
     }
   }
 

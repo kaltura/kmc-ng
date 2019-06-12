@@ -11,7 +11,9 @@ import {
   BulkRemoveEditorsComponent,
   BulkRemovePublishersComponent,
   BulkRemoveTags,
-  BulkScheduling
+  BulkScheduling,
+  BulkAddViewersComponent,
+  BulkRemoveViewersComponent,
 } from './bulk-actions/components';
 
 export const EntriesComponentsList = [
@@ -27,5 +29,7 @@ export const EntriesComponentsList = [
   BulkRemoveTags,
   BulkChangeOwner,
   BulkRemoveCategories,
-  BulkDownload
+  BulkDownload,
+  BulkAddViewersComponent,
+  BulkRemoveViewersComponent,
 ];

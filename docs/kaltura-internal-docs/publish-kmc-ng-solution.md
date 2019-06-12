@@ -117,7 +117,7 @@ ws --spa index.html
    * Update KMCng version in deploy/config.ini to the current KMCng version: vX.X.X
    * commit your changes with commit message 'chore: update version of deployed assets'
 
-2. Update  `changelog.md` with new features (provided by product)
+2. Update  `changelog.md` and `changelog-content.component.html` with new features (provided by product) and bug fixes
    * commit your changes with commit message 'chore: update changelog'
 
 3. publish the release
@@ -143,7 +143,7 @@ kmc-ng-vX.X.X.zip
 
 **Note**: 
 - replace `vX.X.X` with the actual version number
-- make sure you don't zip `__MACOSX` folder. you can use the following command `zip -r vX.X.X.zip . -x "*.DS_Store" -x "__MACOSX"`
+- make sure you don't zip `__MACOSX` folder. you can use the following command `zip -r kmc-ng-vX.X.X.zip . -x "*.DS_Store" -x "__MACOSX"`
 
 6.in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases), edit the version release notes:
 
@@ -167,8 +167,6 @@ git merge <branchName>
 ```
 npm run standalone:update
 ```
-
-3. Add zip to the release tag in [kmc-ng repository > releases](https://github.com/kaltura/kmc-ng/releases).
 
 ## Step 3: deploy kaltura to the dev server
 

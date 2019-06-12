@@ -78,7 +78,7 @@
             </td>
 
             <td>
-              <span [kTooltip]="_dateTooltip(folder)">{{ folder.createdAt | kDate }}</span>
+              <span [kTooltip]="_dateTooltip(folder)">{{ folder.createdAt | kmcDate }}</span>
             </td>
 
             <td class="ui-resizable-column">
@@ -120,7 +120,7 @@
         </ng-template>
       </p-table>
 
-      <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" styleClass="kActionsMenu"
+      <p-menu #actionsmenu [popup]="true" [model]="_items" [appendTo]="'body'" styleClass="kActionsMenu"
               kMenuCloseOnScroll></p-menu>
     </div>
   </div>

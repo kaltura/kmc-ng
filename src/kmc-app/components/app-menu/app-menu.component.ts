@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { AppAuthentication, AppUser} from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
@@ -10,6 +10,8 @@ import { KMCAppMenuItem, KmcMainViewsService } from 'app-shared/kmc-shared/kmc-v
 import { ContextualHelpLink, ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 import { globalConfig } from 'config/global';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { UpdateMenuEvent, ResetMenuEvent } from 'app-shared/kmc-shared/events';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -23,6 +25,8 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 export class AppMenuComponent implements OnInit, OnDestroy{
 
     @ViewChild('helpmenu') private _helpmenu: PopupWidgetComponent;
+    @ViewChild('supportPopup') private _supportPopup: PopupWidgetComponent;
+    @ViewChild('leftMenu') private leftMenu: ElementRef;
     private _appCachedVersionToken = 'kmc-cached-app-version';
 
     public _showChangelog = false;
@@ -31,9 +35,10 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     public _userManualLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.userManual;
     public _kmcOverviewLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.kmcOverview;
     public _mediaManagementLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.mediaManagement;
-    public _supportLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.support;
+    public _supportLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.customerCare && !!serverConfig.externalLinks.kaltura.customerPortal;
     public _supportLegacyExists = true;
     public _contextualHelp: ContextualHelpLink[] = [];
+    public menuID = 'kmc'; // used when switching menus to Analytics menu or future application menus
 
     menuConfig: KMCAppMenuItem[];
     leftMenuConfig: KMCAppMenuItem[];
@@ -41,11 +46,16 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     selectedMenuItem: KMCAppMenuItem;
     showSubMenu = true;
 
+    public _customerCareLink = this._supportLinkExists ? serverConfig.externalLinks.kaltura.customerCare : "";
+    public _customerPortalLink = this._supportLinkExists ? serverConfig.externalLinks.kaltura.customerPortal : "";
+
     constructor(public _kmcLogs: KmcLoggerConfigurator,
                 private _contextualHelpService: ContextualHelpService,
                 public _userAuthentication: AppAuthentication,
                 private _kmcMainViews: KmcMainViewsService,
                 private router: Router,
+                private renderer: Renderer2,
+                private _appEvents: AppEventsService,
                 private _browserService: BrowserService) {
 
         _contextualHelpService.contextualHelpData$
@@ -75,14 +85,46 @@ export class AppMenuComponent implements OnInit, OnDestroy{
         this._powerUser = this._browserService.getInitialQueryParam('mode') === 'poweruser';
     }
 
-    ngOnInit() {
+    ngOnInit(){
         const cachedVersion = this._browserService.getFromLocalStorage(this._appCachedVersionToken);
         this._showChangelog = cachedVersion !== globalConfig.client.appVersion;
+        this._appEvents.event(UpdateMenuEvent)
+            .pipe(cancelOnDestroy(this))
+            .subscribe((event) => {
+                if (event.position === 'left') {
+                    this.replaceMenu(event.menuID, event.menu);
+                }
+            });
+
+        this._appEvents.event(ResetMenuEvent)
+            .pipe(cancelOnDestroy(this))
+            .subscribe((event) => {
+                const menu = this.menuConfig.filter((item: KMCAppMenuItem) => {
+                    return item.position === 'left';
+                });
+                this.replaceMenu('kmc', menu);
+            });
+
+    }
+
+    private replaceMenu(menuID: string,  menu: KMCAppMenuItem[]): void{
+        this.renderer.setStyle(this.leftMenu.nativeElement, 'opacity', 0);
+        this.renderer.setStyle(this.leftMenu.nativeElement, 'marginLeft', '100px');
+        setTimeout( ()=> {
+            this.leftMenuConfig = menu;
+            this.renderer.setStyle(this.leftMenu.nativeElement, 'opacity', 1);
+            this.renderer.setStyle(this.leftMenu.nativeElement, 'marginLeft', '0px');
+            this.setSelectedRoute(this.router.routerState.snapshot.url);
+            this.menuID = menuID;
+        },300);
     }
 
     setSelectedRoute(path) {
         if (this.menuConfig) {
-            this.selectedMenuItem = this.menuConfig.find(item => item.isActiveView(path));
+            this.selectedMenuItem = this.leftMenuConfig.find(item => item.isActiveView(path));
+            if (!this.selectedMenuItem){
+                this.selectedMenuItem = this.rightMenuConfig.find(item => item.isActiveView(path));
+            }
             this.showSubMenu = this.selectedMenuItem && this.selectedMenuItem.children && this.selectedMenuItem.children.length > 0;
         } else {
             this.selectedMenuItem = null;
@@ -113,8 +155,12 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     }
 
     openSupport() {
-        this._browserService.openSupport();
+        this._supportPopup.open();
         this._helpmenu.close();
+    }
+
+    navigateToDefault() {
+        this.router.navigateByUrl('/content/entries');
     }
 
 

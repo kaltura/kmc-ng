@@ -25,7 +25,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
   @Output() onSave = new EventEmitter<MetadataItem>();
 
   private _field: MetadataItem;
-  private _isNew = true;
+  public _isNew = true;
   private _systemNames: string[] = [];
 
   private get _requiredFieldsIsDirty(): boolean {
@@ -45,6 +45,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
   // optional fields
   public _includeTimeField: AbstractControl;
   public _listValuesFiled: AbstractControl;
+  public _systemName: string;
 
   public _metadataItemTypes = MetadataItemTypes;
   public _fieldTypes = [
@@ -118,6 +119,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
           ? this._field.optionalValues.map(({ value }) => value).join('\n')
           : ''
       });
+      this._systemName = this.field.name;
 
       this._typeField.disable();
       this._allowMultipleField.disable();

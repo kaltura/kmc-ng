@@ -2,17 +2,19 @@ import {
     KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaRequest, KalturaRequestBase
 } from 'kaltura-ngx-client';
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError as ObservableThrowError} from 'rxjs';
 import { ServerPolls } from '@kaltura-ng/kaltura-common';
 import { Subject } from 'rxjs/Subject';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AppEventsService } from 'app-shared/kmc-shared/app-events';
 import { UserLoginStatusEvent } from 'app-shared/kmc-shared/events';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class KmcServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIException> implements OnDestroy {
   private _onDestory = new Subject<void>();
   private _isLogged = false;
+  private _isKSValid = true;
   protected _getOnDestroy$(): Observable<void> {
       return this._onDestory.asObservable();
   }
@@ -23,16 +25,19 @@ export class KmcServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIEx
       _appEvents.event(UserLoginStatusEvent).subscribe(
           event => {
               this._isLogged = event.isLogged;
+              if (this._isLogged) {
+                  this._isKSValid = true;
+              }
           }
-      )
+      );
   }
 
   protected _createGlobalError(error?: Error): KalturaAPIException {
-      return new KalturaAPIException( error ? error.message : '','kmc-server_polls_global_error', null);
+      return new KalturaAPIException( error ? error.message : '', 'kmc-server_polls_global_error', null);
   }
 
   protected _canExecute(): boolean {
-    return this._isLogged;
+    return this._isLogged && this._isKSValid;
   }
 
   /*
@@ -58,14 +63,26 @@ export class KmcServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIEx
         throw new Error(`unsupported type of request provided '${typeof request}'`);
       }
     });
-    return this._kalturaClient.multiRequest(multiRequest.setNetworkTag('pr'))
-      .map(responses => {
-        return requestsMapping.reduce((aggregatedResponses, requestSize) => {
-          const response = responses.splice(0, requestSize);
-          const unwrappedResponse = response.length  === 1 ? response[0] : response;
-          return [...aggregatedResponses, unwrappedResponse];
-        }, []);
-      });
+      return this._kalturaClient.multiRequest(multiRequest.setNetworkTag('pr'))
+          .pipe(
+              map(responses => {
+                  if (responses.hasErrors()) {
+                      throw responses.getFirstError();
+                  }
+
+                  return requestsMapping.reduce((aggregatedResponses, requestSize) => {
+                      const response = responses.splice(0, requestSize);
+                      const unwrappedResponse = response.length === 1 ? response[0] : response;
+                      return [...aggregatedResponses, unwrappedResponse];
+                  }, []);
+              }),
+              catchError(error => {
+                  if (error.code === 'INVALID_KS') {
+                      this._isKSValid = false;
+                  }
+                  return ObservableThrowError(error);
+              }),
+          );
   }
 
   ngOnDestroy(): void {

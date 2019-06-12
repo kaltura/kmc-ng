@@ -5,6 +5,8 @@
             "administrationRolesMenuTitle": "Roles",
             "administrationUsersPageTitle": "Administration > Users",
             "administrationUsersMenuTitle": "Users",
+            "administrationMultiAccountPageTitle": "Administration > Multi Account",
+            "administrationMultiAccountMenuTitle": "Multi Account",
             "contentBulkUploadPageTitle": "Content > Bulk Upload",
             "contentBulkUploadMenuTitle": "Bulk Upload",
             "contentCategoriesPageTitle": "Content > Categories",
@@ -24,6 +26,8 @@
             "analyticsLivePageTitle": "Analytics > Live Real-Time Dashboard",
             "analyticsLiveMenuTitle": "Live Real-Time Dashboard",
             "analyticsKavaPageTitle": "Analytics > KAVA",
+            "analyticsMenuTitle": "Analytics",
+            "analyticsPageTitle": "Analytics",
             "analyticsKavaMenuTitle": "KAVA",
             "settingsAccessControlPageTitle": "Settings > Access Control",
             "settingsAccessControlMenuTitle": "Access Control",
@@ -51,8 +55,22 @@
             "content": "Content",
             "studio": "Studio",
             "analytics": "Analytics",
+            "analyticsDashboard": "Dashboard",
+            "analyticsBW": "Usage",
+            "analyticsPublisher": "Publishers Bandwidth & Storage",
+            "analyticsEndUser": "End Users Storage",
+            "analyticsTopContributors": "Top Contributors",
+            "analyticsTechnology": "Technology",
+            "analyticsGeo": "Geo Location",
+            "analyticsInteractions": "Content Interactions",
+            "analyticsEngagement": "Engagement",
+            "audience": "Audience",
+            "contributors": "Contributors",
+            "live": "live",
             "settings": "Settings",
-            "administration": "Administration"
+            "administration": "Administration",
+            "reachDashboardMenuTitle": "Services Dashboard",
+            "reachDashboardPageTitle": "Services Dashboard"
         },
         "userSettings": {
             "changeAccount": "Change Account",
@@ -115,7 +133,9 @@
         "openMail":{
             "supportMailTitle": "Contact Kaltura Support",
             "supportMailMsg": "Please send an email to the following email address:",
-            "supportMailMsgNoMail": "Please send an email to the Kaltura support team."
+            "supportMailMsgNoMail": "Please send an email to the Kaltura support team.",
+            "customerCare": "Kaltura Customer Care is available 24/7, 365 days a year via the customer portal:",
+            "customerPortal": "The easiest and fastest way to submit a new case, communicate with customer care and track the status of your support tickets is through the Kaltura Customer Portal:"
         },
         "login": {
             "login": {
@@ -155,7 +175,7 @@
                 }
             },
             "passwordExpired": {
-                "title": "Your password is older than 90 days. To continue using the system you need to change your password now.",
+                "title": "Your password has expired. To continue using the system you need to change your password now.",
                 "error": {
                     "equal": "Passwords do not match",
                     "required": "Field is required"
@@ -237,6 +257,7 @@
             "advanced": "Advanced Settings",
             "settings": "List Arrangement Settings",
             "name": "Name",
+            "version": "Version",
             "added": "Date added",
             "updated": "Date updated",
             "helpTip1": "Auto embed is the default embed code type and is best to get a player quickly on a page without any runtime customizations.",
@@ -694,7 +715,8 @@
                 "orderBy": "Order by: {{0}}",
                 "totalDuration": "Total duration {{0}}",
                 "resultsLimitRange": "1 - 200 Entries",
-                "noEntries": "No entries"
+                "noEntries": "No entries",
+                "viewAnalytics": "View Analytics"
             },
             "playlists": {
                 "playlists": "{{0}} Playlists",
@@ -783,7 +805,7 @@
                         "yahoo": "Yahoo",
                         "itunes": "iTunes",
                         "roku": "Roku Direct Publisher",
-                        "opera": "Opera Snap TV",
+                        "opera": "Vewd TV Snap",
                         "flexibleFormat": "Flexible Format"
                     },
                     "destinationsForms": {
@@ -1011,6 +1033,7 @@
                     },
                     "errors": {
                         "loadFailed":  "An error occurred during Feed data loading.",
+                        "deletedPlaylist":  "The playlist used to create this feed could not be found (deleted?)\nMissing playlist ID: {{0}}\n\nPlease create a new feed.",
                         "enterName": "You must enter a Name to save the feed.",
                         "chooseDestination": "You must choose a destination to save the  feed.",
                         "fieldRequired": "This field is required."
@@ -1301,7 +1324,8 @@
             "userStatus": {
                 "active": "Active",
                 "blocked": "Blocked",
-                "deleted": "Deleted"
+                "deleted": "Deleted",
+                "removed": "Removed"
             },
             "addNewPlaylist": {
                 "addNewPlaylist": "Add New Playlist",
@@ -1327,6 +1351,12 @@
                 "removePublishers": "Remove Co-Publishers",
                 "removePublishersLabel": "Co-Publishers removed from this list will be removed from all selected entries",
                 "noPublishersToRemove": "No Co-Publishers to remove",
+                "addRemoveViewers": "Add / Remove Co-Viewers",
+                "addViewers": "Add Co-Viewers",
+                "addViewersLabel": "Enter Co-Viewers to be appended to all selected entries",
+                "removeViewers": "Remove Co-Viewers",
+                "removeViewersLabel": "Co-Viewers removed from this list will be removed from all selected entries",
+                "noViewersToRemove": "No Co-Viewers to remove",
                 "userTooltip": "User is not yet listed in Kaltura. {{0}} will be considered as user's identifier",
                 "addRemoveEditors": "Add / Remove Co-Editors",
                 "addEditors": "Add Co-Editors",
@@ -1376,6 +1406,8 @@
                 "removeFromPlaylist": "Remove from Playlist",
                 "moveUp": "Move Up",
                 "moveDown": "Move Down",
+                "moveTop": "Move to Top",
+                "moveBottom": "Move to Bottom",
                 "duplicate": "Duplicate",
                 "removeCategoriesNone": "No categories to remove",
                 "approve": "Approve",
@@ -1786,6 +1818,7 @@
                     "size": "File Size",
                     "assetId": "Asset ID",
                     "document": "Document",
+                    "json": "JSON",
                     "media": "Media",
                     "text": "Text",
                     "select": "Select Type",
@@ -1831,6 +1864,7 @@
                     "save": "Save",
                     "co-editors": "Co-Editors",
                     "co-publishers": "Co-Publishers",
+                    "co-viewers": "Co-Viewers",
                     "tooltip": "User is not listed in Kaltura. {{0}} will be considered as user's identifier.",
                     "noScreenName": "Cannot apply user, screen name is empty"
 
@@ -2047,7 +2081,7 @@
                         "requiresAuthentication": "Requires Authentication",
                         "requiresAuthentication_explanation": "Visible only to authenticated end users,",
                         "private": "Private",
-                        "private_explanation": "Visible only to users with specific permissions to access this category content."
+                        "private_explanation": "Category is visible only to users with specific permissions to access this category content."
                     },
                     "categoryListing": {
                         "label": "Category Listing",
@@ -2055,7 +2089,7 @@
                         "noRestrictions": "No Restrictions",
                         "noRestrictions_explanation": "Visible to everyone with access to the application page.",
                         "private": "Private",
-                        "private_explanation": "Visible only to users with specific permissions to access this category content."
+                        "private_explanation": "Category is visible only to users with specific permissions to access this category content."
                     },
                     "contentPublishPermissions": {
                         "label": "Content Publish Permissions",
@@ -2294,6 +2328,62 @@
             }
         },
         "administration": {
+            "accounts":{
+                "addAccount": "Add Account",
+                "refresh": "Refresh",
+                "accountsNum": "{{0}} Publishers",
+                "currentUser": "(Parent Account)",
+                "confirmDeleteHeader": "Confirm Remove",
+                "search": "Search",
+                "confirmDeleteBody": "Are you sure you want to remove the selected account? \n ({{0}})",
+                "currentStatus": "Current status:",
+                "accountsInfo": "{{0}} accounts in use*, {{1}} additional remaining.",
+                "accountsExplain": "* active or blocked accounts which are not used as templates",
+                "moreAccounts": "Need more accounts?",
+                "contact": "Contact Kaltura",
+                "usersUpgrade": "to request an upgrade.",
+                "create": "Create",
+                "note": "Account creation might take up to a minute",
+                "accountInfo": "Account Info",
+                "administrator": "Administrator",
+                "name": "Account Name",
+                "email": "Administrator Email",
+                "phone": "Administrator Phone",
+                "website": "Website URL",
+                "template": "Copy Content from Template Account",
+                "defaultTemplate": "Default Template Account",
+                "refid": "Reference ID",
+                "tableColumns": {
+                    "status": "Status",
+                    "id": "Partner ID",
+                    "name": "Account Name",
+                    "refid": "Reference ID",
+                    "website": "Website URL",
+                    "administrator": "Administrator",
+                    "email": "Admin Email",
+                    "phone": "Admin Phone",
+                    "created": "Creation Date"
+                },
+                "actions": {
+                    "kmc": "KMC Login",
+                    "block": "Block",
+                    "unblock": "Unblock",
+                    "remove": "Remove"
+                },
+                "errors": {
+                    "loadError": "Can't load accounts",
+                    "required": "Value is required and can't be empty",
+                    "emailFormat": "Invalid email format",
+                    "emailExists": "Email address already exists in the system"
+                },
+                "statusLabels": {
+                    "allStatuses": "All Statuses",
+                    "active": "Active",
+                    "deleted": "Deleted",
+                    "blocked": "Blocked",
+                    "removed": "Removed"
+                }
+            },
             "roles": {
                 "addRole": "Add Role",
                 "rolesNum": "{{0}} Roles",
@@ -2313,7 +2403,7 @@
                     "delete": "Delete"
                 },
                 "errors": {
-                    "loadError": "Can't load entries",
+                    "loadError": "Can't load roles",
                     "roleInUse": "The role you selected cannot be deleted since it is currently assigned to existing users.",
                     "cantDeleteRole": "Cannot delete role",
                     "cantDeleteAdminRole": "Cannot delete Administrator role",
@@ -2590,7 +2680,7 @@
                             "privacyContextLabelRequired": "Please enter a Privacy Context Label",
                             "privacyContextLabelExists": "Category is already set with a Privacy Context Label.",
                             "privacyContextLabelTooShort": "Privacy Context Labels must include at least 4 characters.",
-                            "privacyContextLabelRegex": "Privacy Context Labels must include only alphanumeric characters."
+                            "privacyContextLabelRegex": "Privacy Context Labels must include only English alphanumeric characters."
                         }
                     },
                     "deleteEntitlement": {
@@ -2876,6 +2966,7 @@
             }
         },
         "analytics": {
+            "analytics": "Analytics",
             "comingSoon": "Coming soon! Analytics for all media types.",
            "releaseSupports": "This release supports analytics for “Live” entries only. For all other media, please <a href=\"{{0}}\" target=\"_blank\">login to the legacy KMC</a> to view and create analytics and reports. Analytics for all media should be available soon"
         },
@@ -3206,6 +3297,7 @@
         "KY": "Kirghiz",
         "LA": "Latin",
         "LI": "Limburgish (Limburger)",
+        "LB": "Luxembourgish (Letzeburgesch)",
         "LN": "Lingala",
         "LO": "Laothian",
         "LT": "Lithuanian",
@@ -3246,6 +3338,10 @@
         "SK": "Slovak",
         "SL": "Slovenian",
         "SM": "Samoan",
+        "SMA": "Southern Sami",
+        "SMJ": "Lule Sami",
+        "SMN": "Inari Sami",
+        "SMS": "Skolt Sami",
         "SN": "Shona",
         "SO": "Somali",
         "SQ": "Albanian",

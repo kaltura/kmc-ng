@@ -13,7 +13,12 @@ import { Router } from '@angular/router';
 export class UserSettingsComponent {
   @Input() parentPopup: PopupWidgetComponent;
   public _languages = [];
+  public _dateFormats = [
+      { value: 'month-day-year', label: 'MM/DD/YYYY' },
+      { value: 'day-month-year', label: 'DD/MM/YYYY' },
+  ];
   public _selectedLanguage = 'en';
+  public _selectedDateFormat = this.browserService.getFromLocalStorage('kmc_date_format') || 'month-day-year';
 
   constructor(public _userAuthentication: AppAuthentication, private browserService: BrowserService, private _router: Router) {
       kmcAppConfig.locales.forEach(locale => {
@@ -38,6 +43,11 @@ export class UserSettingsComponent {
   onLangSelected(event) {
     this.browserService.setInLocalStorage('kmc_lang', event.value);
     this._userAuthentication.reload();
+  }
+
+  onDateFormatSelected(event: { value: string }): void {
+      this.browserService.setInLocalStorage('kmc_date_format', event.value);
+      this._userAuthentication.reload();
   }
 
     egg(){

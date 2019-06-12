@@ -3,6 +3,7 @@ import { KmcMainViewsService } from './kmc-main-views.service';
 import {
     AdminRolesMainViewService,
     AdminUsersMainViewService,
+    AdminMultiAccountMainViewService,
     ContentBulkUploadsMainViewService,
     ContentCategoriesMainViewService,
     ContentDropFoldersMainViewService,
@@ -22,7 +23,10 @@ import {
     StudioV2MainViewService,
     StudioV3MainViewService,
     UsageDashboardMainViewService,
-    KavaAppMainViewService
+    KavaAppMainViewService,
+    AnalyticsNewMainViewService,
+    AnalyticsMainViewService,
+    ServicesDashboardMainViewService
 } from './main-views';
 import {
     ContentCategoryViewService,
@@ -39,6 +43,7 @@ import {
     LiveDashboardAppViewService,
 } from './component-views';
 import { QuizAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { HotspotsAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views/hotspots-app-view.service';
 
 @NgModule({
     imports: <any[]>[],
@@ -63,10 +68,12 @@ export class KmcViewsModule {
                 ContentCategoryViewService,
                 StudioV2MainViewService,
                 StudioV3MainViewService,
+                AnalyticsMainViewService,
                 UsageDashboardMainViewService,
                 LiveAnalyticsMainViewService,
                 AdminUsersMainViewService,
                 AdminRolesMainViewService,
+                AdminMultiAccountMainViewService,
                 SettingsAccountSettingsMainViewService,
                 SettingsIntegrationSettingsMainViewService,
                 SettingsAccessControlMainViewService,
@@ -83,8 +90,11 @@ export class KmcViewsModule {
                 ClipAndTrimAppViewService,
                 AdvertisementsAppViewService,
                 QuizAppViewService,
+                HotspotsAppViewService,
                 RestorePasswordViewService,
                 ReachAppViewService,
+                ServicesDashboardMainViewService,
+                AnalyticsNewMainViewService,
                 KmcMainViewsService // NOTICE: this one should be the last since it depends on the others
             ]
         };

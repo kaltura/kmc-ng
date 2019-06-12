@@ -1,15 +1,22 @@
 @import 'app-theme/_variables.scss';
 
 :host {
-  line-height: 1.5em;
+    line-height: 1.5em;
 
-  h1{
-    color: $kPrimary;
-    font-style:italic;
-  }
+    .kTitle {
+        font-size: 32px;
+        color: $kPrimary;
+        font-style: italic;
+        font-weight: 700;
+    }
 
-  h3{
-    padding-bottom:10px;
-    border-bottom: 1px solid gray;
-  }
+    h3 {
+        padding-bottom: 10px;
+        border-bottom: 1px solid gray;
+    }
+    .kDate {
+        font-size: 14px;
+        margin-left: 14px;
+        color: $kGrayscale1;
+    }
 }

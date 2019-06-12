@@ -58,7 +58,7 @@
                             <span class="kTableColumn" [kTooltip]="entry.name">{{entry.name}}</span>
                         </td>
                         <td [ngStyle]="{'width':'80px'}">{{entry.plays}}</td>
-                        <td [ngStyle]="{'width':'110px'}">{{entry.createdAt | kDate}}</td>
+                        <td [ngStyle]="{'width':'110px'}">{{entry.createdAt | kmcDate}}</td>
                         <td [ngStyle]="{'width':'80px'}">{{entry.offset}}</td>
                         <td [ngStyle]="{'width':'80px'}">{{entry.duration}}</td>
                         <td [ngStyle]="{'width':'70px'}">{{entry | entryStatus}}</td>

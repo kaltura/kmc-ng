@@ -8,9 +8,9 @@
         <div class="kDateRange">
 
           <p-calendar class="kDateRangeFirst" [(ngModel)]="_createdAfter" [readonlyInput]="true" [showIcon]="true"
-                      [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
+                      [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange" [dateFormat]="_calendarFormat"
                       icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
-          <p-calendar class="kDateRangeLast kPullLeft100" [(ngModel)]="_createdBefore" [readonlyInput]="true"
+          <p-calendar class="kDateRangeLast kPullLeft100" [(ngModel)]="_createdBefore" [readonlyInput]="true" [dateFormat]="_calendarFormat"
                       [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
                       icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
         </div>
@@ -41,12 +41,13 @@
                     <p-calendar class="kDateRangeFirst" #scheduledfrom [(ngModel)]="_scheduledAfter" [showIcon]="true"
                                 icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true"
                                 [yearNavigator]="true" [yearRange]="_createdAtDateRange" [readonlyInput]="true"
+                                [dateFormat]="_calendarFormat"
                                 (onBlur)="_fixCalendarBlurPropagation($event, scheduledfrom)"
                                 (onSelect)="_onSchedulingChanged(scheduledfrom)"></p-calendar>
                     <p-calendar class="kDateRangeLast kPullLeft120" #scheduledto [(ngModel)]="_scheduledBefore"
                                 [showIcon]="true" icon="kIconcalendar" [disabled]="!_scheduledSelected"
                                 [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
-                                [readonlyInput]="true"
+                                [readonlyInput]="true" [dateFormat]="_calendarFormat"
                                 (onBlur)="_fixCalendarBlurPropagation($event, scheduledto)"
                                 (onSelect)="_onSchedulingChanged(scheduledto)"></p-calendar>
                   </div>

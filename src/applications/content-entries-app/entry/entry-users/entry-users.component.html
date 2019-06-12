@@ -51,10 +51,27 @@
 								   (completeMethod)="_searchUsers($event, 'publishers')">
 					</kAutoComplete>
 				</div>
+                <div class="kRow">
+                    <span class="kLabels">{{'applications.content.entryDetails.users.co-viewers' | translate}}</span>
+                    <kAutoComplete formControlName="viewers"
+                                   suggestionItemField="item"
+                                   suggestionLabelField="name"
+                                   field="id"
+                                   [multiple]="true"
+                                   [tooltipResolver]="'__tooltip'"
+                                   [classField]="'__class'"
+                                   [onItemAdding]="_convertUserInputToValidValue"
+                                   [limitToSuggestions]="false"
+                                   [minLength]="3"
+                                   suggestionSelectableField="isSelectable"
+                                   [suggestionsProvider]="_usersProvider"
+                                   (completeMethod)="_searchUsers($event, 'viewers')">
+                    </kAutoComplete>
+                </div>
 			</div>
 		</div>
 
-		<kPopupWidget #ownerPopup data-aid="ownerPopup" [popupWidth]="500" [popupHeight]="264" [modal]="true">
+		<kPopupWidget #ownerPopup data-aid="ownerPopup" [popupWidth]="550" [popupHeight]="264" [modal]="true">
         <div class="kFloater kOverrideFAIcons">
           <div class="kHeader">
             <span class="kTitle">{{'applications.content.entryDetails.users.changeOwner' | translate}}</span>

@@ -4,15 +4,24 @@ import { CategoriesStatusMonitorService, CategoriesStatus } from '../../categori
 import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaEntryStatus, KalturaMediaEntry, KalturaMediaType, KalturaSourceType } from 'kaltura-ngx-client';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { Menu, MenuItem } from 'primeng/primeng';
 import { EntriesRefineFiltersService,
     RefineGroup } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 
 
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ViewCategoryEntriesService } from 'app-shared/kmc-shared/events/view-category-entries';
+import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+
+export interface CustomMenuItem extends MenuItem {
+    metadata?: any;
+    commandName: string;
+    command?: (args?: any) => void;
+}
 
 @Component({
   selector: 'kEntriesList',
@@ -30,6 +39,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     @Input() showEnforcedFilters = false;
 
     @ViewChild('tags') private tags: StickyComponent;
+    @ViewChild('actionsmenu') private actionsMenu: Menu;
 
 
   @Output() onActionsSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
@@ -40,6 +50,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     public _tableBlockerMessage: AreaBlockerMessage = null;
     public _refineFilters: RefineGroup[];
     public _entriesDuration = 0;
+    public _items: CustomMenuItem[];
 
     public _categoriesUpdating = false;
     public _isTagsBarVisible = false;
@@ -60,6 +71,8 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
                 private _entriesRefineFilters: EntriesRefineFiltersService,
                 private _appLocalization: AppLocalization,
                 private _browserService: BrowserService,
+                private _permissionsService: KMCPermissionsService,
+                private _reachAppViewService: ReachAppViewService,
                 private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
                 private _viewCategoryEntries: ViewCategoryEntriesService) {
   }
@@ -92,6 +105,57 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         {
             this._entriesStore.filter(changes.defaultFilters.currentValue);
         }
+    }
+
+    private _hideMenuItems(entry: KalturaMediaEntry, { commandName }: { commandName: string }): boolean {
+        const { sourceType, status, mediaType } = entry;
+        const isReadyStatus = status === KalturaEntryStatus.ready;
+        const isLiveStreamFlash = mediaType && mediaType === KalturaMediaType.liveStreamFlash;
+        const isPreviewCommand = commandName === 'preview';
+        const isViewCommand = commandName === 'view';
+        const isKalturaLive = sourceType === KalturaSourceType.liveStream;
+        const isLiveDashboardCommand = commandName === 'liveDashboard';
+        const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
+        const isCaptionRequestCommand = commandName === 'captionRequest';
+        return !(
+            (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
+            (!isReadyStatus && isLiveStreamFlash && isViewCommand) || // hide if trying to view live that isn't ready
+            (isLiveDashboardCommand && !isKalturaLive) || // hide live-dashboard menu item for entry that isn't kaltura live
+            cannotDeleteEntry ||
+            (isCaptionRequestCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry })) // hide caption request if not audio/video or if it is then if not ready or it's forbidden by permission
+        );
+    }
+
+    private _buildMenu(entry: KalturaMediaEntry): void {
+        this._items = this.rowActions
+            .filter(item => this._hideMenuItems(entry, item))
+            .map(action =>
+                Object.assign({} as CustomMenuItem, action, {
+                    command: ({ item }) => {
+                        const actionAllowed = this._allowDrilldown(action.commandName, entry.mediaType, entry.status);
+                        if (actionAllowed) {
+                            this.onActionsSelected.emit({ action: action.commandName, entry });
+                        }
+                    }
+                })
+            );
+    }
+
+    public _openActionsMenu(evt: { event: any, entry: KalturaMediaEntry }): void {
+        if (this.actionsMenu) {
+            this._buildMenu(evt.entry);
+            this.actionsMenu.toggle(evt.event);
+        }
+    }
+
+    private _allowDrilldown(action: string, mediaType: KalturaMediaType, status: KalturaEntryStatus): boolean {
+        if (action !== 'view') {
+            return true;
+        }
+
+        const isLiveStream = mediaType && mediaType === KalturaMediaType.liveStreamFlash;
+        const isReady = status !== KalturaEntryStatus.ready;
+        return !(isLiveStream && isReady);
     }
 
     private _prepare(): void {
@@ -317,6 +381,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy() {
+      this.actionsMenu.hide();
   }
 
   public _reload() {

@@ -86,9 +86,8 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 
   openActionsMenu(event: any, playlist: KalturaPlaylist) {
     if (this.actionsMenu) {
-      this.actionsMenu.toggle(event);
       this.buildMenu(playlist);
-      this.actionsMenu.show(event);
+      this.actionsMenu.toggle(event);
     }
   }
 

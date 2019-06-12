@@ -6,17 +6,22 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { subApplicationsConfig } from 'config/sub-applications';
-import { PreviewEmbedService } from './preview-and-embed.service';
+import { PreviewEmbedService, EmbedConfig } from './preview-and-embed.service';
 
-import { KalturaPlaylist } from 'kaltura-ngx-client';
+import { KalturaPlaylist, UiConfListAction } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaUiConfListResponse } from 'kaltura-ngx-client';
 import { KalturaUiConf } from 'kaltura-ngx-client';
 import { KalturaShortLink } from 'kaltura-ngx-client';
 import { KalturaSourceType } from 'kaltura-ngx-client';
-import { serverConfig } from 'config/server';
+import { serverConfig, buildCDNUrl } from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+
+export type PlayerUIConf = {
+    version: number,
+    uiConf: KalturaUiConf
+}
 
 @Component({
   selector: 'kPreviewEmbedDetails',
@@ -35,8 +40,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
 
-  public _players: { label: string, value: KalturaUiConf }[] = [];
-  public _playersSortBy: 'name' | 'createdAt' | 'updatedAt' = 'updatedAt';
+  public _players: { label: string, value: PlayerUIConf }[] = [];
+  public _playersSortBy: 'name' | 'version' | 'createdAt' | 'updatedAt' = 'updatedAt';
   public _embedTypes: { label: string, value: string }[] = [];
 
   public _generatedCode = "";
@@ -49,6 +54,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   public _deliveryProtocolsHelpExists = !!serverConfig.externalLinks.previewAndEmbed && !!serverConfig.externalLinks.previewAndEmbed.deliveryProtocols;
 
   public _previewForm: FormGroup;
+  public _selectedPlayerVersion = 2;
 
   private generator: any;
   private _previewLink = null;
@@ -71,7 +77,6 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   ngOnInit(){
     this._playersSortBy = this._browserService.getFromLocalStorage('previewEmbed.sortBy') || 'updatedAt';
     this.listPlayers();
-    this.setEmbedTypes();
     this.createForm();
     this.generator = this.getGenerator();
     this._title = this._showEmberCode
@@ -80,13 +85,29 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   ngAfterViewInit(){
-    this._previewForm.valueChanges.pipe(cancelOnDestroy(this)).subscribe(() => {
+    this._previewForm.valueChanges.pipe(cancelOnDestroy(this)).subscribe((form) => {
       this._browserService.setInLocalStorage('previewEmbed.embedType', this._previewForm.controls['selectedEmbedType'].value);
       this._browserService.setInLocalStorage('previewEmbed.seo', this._previewForm.controls['seo'].value);
       this._browserService.setInLocalStorage('previewEmbed.secured', this._previewForm.controls['secured'].value);
-      this._generatedCode = this.generateCode(false);
-      this._generatedPreviewCode = this.generateCode(true);
-      this.createPreviewLink(false);
+      if (form && form.selectedPlayer){
+          this._selectedPlayerVersion = form.selectedPlayer.version;
+      }
+      this.setEmbedTypes();
+      if (this._selectedPlayerVersion === 2) {
+          this._generatedCode = this.generateCode(false);
+          this._generatedPreviewCode = this.generateCode(true);
+          this.createPreviewLink();
+      } else {
+          if (this._previewForm.controls['selectedEmbedType'].value === 'thumb'){
+              // if coming from a V2 player with thumb embed, change the embed type to dynamic. This will trigger another change that will generate the correct embed code.
+              this._previewForm.controls['selectedEmbedType'].setValue('dynamic');
+              this._browserService.setInLocalStorage('previewEmbed.embedType', 'dynamic');
+          } else {
+              this._generatedCode = this.generateV3code(false);
+              this._generatedPreviewCode = this.generateV3code(true);
+              this.createPreviewLink();
+          }
+      }
       this.showPreview();
     });
   }
@@ -99,9 +120,26 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
     this._previewEmbedService.listPlayers(isPlaylist).pipe(cancelOnDestroy(this)).subscribe(
         (res: KalturaUiConfListResponse) => {
-          // create players array from returned UICong list
-          res.objects.forEach(uiConf => {
-            this._players.push({label: uiConf.name, value: uiConf});
+          // create players array from returned UICong list. Remove V1 players. Include V3 players (no html5Url, special tag)
+          res.objects.filter( (uiConf) => {
+              let showPlayer = true;
+              if (uiConf.html5Url){
+                  showPlayer = uiConf.html5Url.indexOf('html5lib/v1') === -1; // filter out V1 players
+              } else {
+                  showPlayer = uiConf.tags.indexOf('kalturaPlayerJs') > -1 && this._permissionsService.hasPermission(KMCPermissions.FEATURE_V3_STUDIO_PERMISSION); // show V3 players if user has permissions
+              }
+              // filter out by tags
+              if (uiConf.tags && uiConf.tags.length){
+                  const tags = uiConf.tags.split(',');
+                  if (tags.indexOf('ott') > -1) {
+                      showPlayer = false;
+                  }
+              }
+              return showPlayer;
+          }).forEach(uiConf => {
+              const version = uiConf.tags.indexOf('kalturaPlayerJs') > -1 ? 3 : 2;
+              const playerUIConf: PlayerUIConf = { uiConf, version }
+            this._players.push({label: uiConf.name, value: playerUIConf});
           });
 
           this.sortPlayers(this._playersSortBy);
@@ -157,8 +195,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   private sortPlayers(sortBy){
     this._players.sort((a,b)=>{
-      let val1 = a.value[sortBy];
-      let val2 = b.value[sortBy];
+      let val1 = sortBy === 'version' ? a.value.version : a.value.uiConf[sortBy];
+      let val2 = sortBy === 'version' ? b.value.version : b.value.uiConf[sortBy];
       if (sortBy === "name" && typeof val1 === "string" && typeof val2 === "string"){
         val1 = val1.toLowerCase();
         val2 = val2.toLowerCase();
@@ -185,13 +223,51 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private setEmbedTypes():void{
+    this._embedTypes = [];
     this._embedTypes.push({"label": this._appLocalization.get("applications.embed.embedDynamic"), "value": "dynamic"});
     this._embedTypes.push({"label": this._appLocalization.get("applications.embed.embedIframe"), "value": "iframe"});
     this._embedTypes.push({"label": this._appLocalization.get("applications.embed.embedAuto"), "value": "auto"});
-    if (this.media instanceof KalturaMediaEntry) {
-      this._embedTypes.push({"label": this._appLocalization.get("applications.embed.embedThumb"), "value": "thumb"}); // no thumb embed for playlists
+    if (this.media instanceof KalturaMediaEntry && this._selectedPlayerVersion === 2) {
+      this._embedTypes.push({"label": this._appLocalization.get("applications.embed.embedThumb"), "value": "thumb"}); // no thumb embed for playlists and v3 players
     }
   }
+
+  /* V3 specific code starts here */
+
+  private generateV3code(isPreview: boolean): string {
+      const uiConf = this._previewForm.controls['selectedPlayer'].value.uiConf;
+      const embedType = this._previewForm.get('selectedEmbedType').value;
+      const ks = this._appAuthentication.appUser.ks;
+      let embedConfig: EmbedConfig = {
+          embedType,
+          ks,
+          entryId: this.media.id,
+          uiConfId: uiConf.id,
+          width: uiConf.width,
+          height: uiConf.height,
+          pid: this._appAuthentication.appUser.partnerId,
+          serverUri: '',
+          playerConfig: ''
+      }
+      let config = '';
+      let serverUri = this._previewForm.controls['secured'].value ?  serverConfig.cdnServers.securedServerUri : serverConfig.cdnServers.serverUri;
+      if (isPreview){
+          // build CDN URL according to current protocol
+          serverUri = buildCDNUrl('');
+          // pass ks to player for preview only
+          if (embedType === 'dynamic'){
+              config = `ks: '${ks}',`;
+          } else {
+              config = `&config[provider]={"ks":"${ks}"}`;
+          }
+      }
+      embedConfig.serverUri = serverUri;
+      embedConfig.playerConfig = config;
+
+      return this._previewEmbedService.generateV3EmbedCode(embedConfig);
+  }
+
+  /* V3 specific code ends here */
 
   private getGenerator():any{
     const baseCdnUrl = serverConfig.cdnServers.serverUri.replace("http://","");
@@ -212,9 +288,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     const params = {
       protocol: this.getProtocol(isPreview),
       embedType: this._previewForm.controls['selectedEmbedType'].value,
-      uiConfId: this._previewForm.controls['selectedPlayer'].value.id,
-      width: this._previewForm.controls['selectedPlayer'].value.width,
-      height: this._previewForm.controls['selectedPlayer'].value.height,
+      uiConfId: this._previewForm.controls['selectedPlayer'].value.uiConf.id,
+      width: this._previewForm.controls['selectedPlayer'].value.uiConf.width,
+      height: this._previewForm.controls['selectedPlayer'].value.uiConf.height,
       entryMeta: this.getMediaMetadata(),
       includeSeoMetadata: this._previewForm.controls['seo'].value,
       playerId: 'kaltura_player_' + cacheStr,
@@ -267,6 +343,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           "position": "after",              // required to prevent v1 players from getting stuck
           "loadingPolicy": "onDemand"       // prevent v1 players from trying to load this plugin
         };
+        flashVars['kAnalony'] = {
+            "plugin": "false",                // prevent loading the kAnalony plugin in v2 players
+        };
       }
       if (this.media instanceof KalturaPlaylist) {
         flashVars['playlistAPI.kpl0Id'] = this.media.id;
@@ -279,25 +358,36 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private flashVarsToUrl(flashVarsObject: any): string{
-      let params = '';
+      let
+          params = '',
+          index = 0;
       for( let i in flashVarsObject ){
         var curVal = typeof flashVarsObject[i] == 'object'? JSON.stringify( flashVarsObject[i] ): flashVarsObject[i];
-        params+= '&' + 'flashvars[' + encodeURIComponent( i ) + ']=' + encodeURIComponent(curVal);
+
+        if (index !== 0) {
+            params += '&';
+        }
+
+        params+= 'flashvars[' + encodeURIComponent( i ) + ']=' + encodeURIComponent(curVal);
+
+        index++;
       }
       return params;
   }
 
-  private createPreviewLink(isPreview: boolean):void{
+  private createPreviewLink():void{
       let url = '';
       try {
-        url = this.getProtocol(isPreview) + '://' + serverConfig.kalturaServer.uri + '/index.php/extwidget/preview';
+        url = this.getProtocol(false) + '://' + serverConfig.kalturaServer.uri + '/index.php/extwidget/preview';
         url += '/partner_id/' + this._appAuthentication.appUser.partnerId;
-        url += '/uiconf_id/' + this._previewForm.controls['selectedPlayer'].value.id;
+        url += '/uiconf_id/' + this._previewForm.controls['selectedPlayer'].value.uiConf.id;
         if (this.media instanceof KalturaMediaEntry) {
           url += '/entry_id/' + this.media.id;
         }
         url += '/embed/' + this._previewForm.controls['selectedEmbedType'].value;
-        url += '?' + this.flashVarsToUrl(this.getEmbedFlashVars(isPreview));
+        if (this._selectedPlayerVersion === 2 ) {
+            url += '?' + this.flashVarsToUrl(this.getEmbedFlashVars(false));
+        }
         this._previewLink = url;
       } catch (e){
         console.log("could not generate valid URL for short link generation");

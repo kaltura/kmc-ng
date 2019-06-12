@@ -36,7 +36,7 @@
               color: $kDandger;
               font-size: 30px;
               top: 15px;
-              right: 1px;
+              left: 1px;
               z-index: 2;
           }
       }
@@ -46,9 +46,20 @@
           width: 15px;
           height: 15px;
           top: 22px;
-          right: 10px;
+          left: 10px;
           background-color: #FFFFFF;
           z-index: 1;
+      }
+
+      .kThumbnailTypeIcon {
+          position: absolute;
+          color: #FFFFFF;
+
+          &.kIconquiz {
+              font-size: 30px;
+              top: 15px;
+              right: 1px;
+          }
       }
   }
 

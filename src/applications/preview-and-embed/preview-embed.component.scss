@@ -222,14 +222,36 @@
     background-color: $kBlack;
     color: $kGrayscale3;
   }
+  .ui-dropdown-panel .ui-dropdown-filter-container{
+      padding-left: 12px;
+  }
   .ui-dropdown-filter.ui-inputtext{
-    width: 360px;
+    width: 350px;
   }
   .pi-pi-search:before{
     color: $kGrayscale3;
     font-size: 20px;
     content: "\e911";
   }
+
+  .ui-dropdown label{
+      padding-left: 2px;
+  }
+  .ui-dropdown-item.ui-corner-all{
+      padding-left: 8px;
+      padding-right: 8px;
+      width: 340px;
+  }
+    .ui-dropdown-item.ui-corner-all.ui-state-highlight:after{
+        content: none;
+    }
+    .check{
+        margin-left: auto;
+        display: none;
+    }
+    .ui-dropdown-item.ui-corner-all.ui-state-highlight .check{
+        display: block;
+    }
 }
 
 :host /deep/ .kPreview p-dropdown{
@@ -265,3 +287,4 @@
     cursor: pointer;
   }
 }
+
