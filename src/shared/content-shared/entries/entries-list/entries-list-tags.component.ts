@@ -11,7 +11,6 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { Unsubscribable } from 'rxjs';
 import { DatePipe } from 'app-shared/kmc-shared/date-format/date.pipe';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaNullableBoolean } from 'kaltura-ngx-client';
 
 export interface TagItem {
     type: string;
@@ -104,7 +103,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                     this._entriesStore.filter({createdAt: {fromDate: null, toDate: null}});
                     break;
                 case 'videoQuiz':
-                    this._entriesStore.filter({ videoQuiz: KalturaNullableBoolean.nullValue });
+                    this._entriesStore.filter({ videoQuiz: null });
                     break;
                 default:
                     break;
@@ -258,7 +257,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
         const currentVideoQuizValue = this._entriesStore.cloneFilter('videoQuiz', null);
 
-        if (currentVideoQuizValue === KalturaNullableBoolean.trueValue) {
+        if (currentVideoQuizValue) {
             this._tags.push({
                 type: 'videoQuiz',
                 value: currentVideoQuizValue,
@@ -358,7 +357,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
         if (this._refineFiltersMap.size > 0) {
             const list = this._refineFiltersMap.get(listName);
             if (list) {
-                const item = list.items.length > 0
+                const item = list.items && list.items.length > 0
                     ? list.items.find(listItem => String(listItem.value) === String(value))
                     : list;
 

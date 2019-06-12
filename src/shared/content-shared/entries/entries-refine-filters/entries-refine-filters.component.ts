@@ -9,7 +9,6 @@ import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/
 import { subApplicationsConfig } from 'config/sub-applications';
 import { Calendar } from 'primeng/primeng';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaNullableBoolean } from 'kaltura-ngx-client';
 
 const listOfFilterNames: (keyof EntriesFilters)[] = [
     'createdAt',
@@ -145,8 +144,9 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
               listFilter = updates[listName] ;
           }
 
-          if (typeof listFilter !== 'undefined' && typeof listFilter !== 'number') {
+          if (typeof listFilter !== 'undefined' && typeof listFilter !== 'boolean') {
               // important: the above condition doesn't filter out 'null' because 'null' is valid value.
+              // important: the above condition filter out 'boolean' value because it is not valid for 'single' item types
 
               const listSelectionsMap = this._entriesStore.filtersUtils.toMap(listData.selections, 'value');
               const listFilterMap = this._entriesStore.filtersUtils.toMap(listFilter, null);
@@ -215,8 +215,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
     }
 
     private _syncVideoQuizMode(listData: PrimeList): void {
-        const videoQuiz = this._entriesStore.cloneFilter('videoQuiz', KalturaNullableBoolean.nullValue);
-        listData.selections = videoQuiz === KalturaNullableBoolean.trueValue ? [listData.items[0]] : [];
+        const videoQuiz = this._entriesStore.cloneFilter('videoQuiz', false);
+        listData.selections = videoQuiz ? [listData.items[0]] : [];
     }
 
     private _syncScheduleDatesMode() {
@@ -275,6 +275,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                     filtersGroup.lists.push(primeList);
                     const listRootNode: PrimeListItem = {
                         label: list.label,
+                        // single item filter (eg quiz, youtube) doesn't have value in children
+                        // set single item filter value here or set null for all other filters
                         value: list.value || null,
                         listName: list.name,
                         parent: null,
@@ -396,7 +398,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                   newFilterName = 'customMetadata';
               } else {
                   if (node.listName === 'videoQuiz') {
-                      newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, KalturaNullableBoolean.nullValue);
+                      newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, false);
                   } else {
                       newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, []);
                   }
@@ -473,7 +475,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                           }
                       } else {
                           if (node.listName === 'videoQuiz') {
-                              newFilterValue = KalturaNullableBoolean.nullValue;
+                              newFilterValue = false;
                           } else {
                               newFilterValue = null;
                           }

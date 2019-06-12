@@ -5,7 +5,7 @@ import {
   SortDirection
 } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
-import { KalturaNullableBoolean, KalturaPlayableEntryOrderBy, KalturaEntryModerationStatus, KalturaEntryStatus } from 'kaltura-ngx-client';
+import { KalturaPlayableEntryOrderBy, KalturaEntryModerationStatus, KalturaEntryStatus } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { PlaylistRuleParserService } from './playlist-rule-parser.service';
@@ -50,7 +50,7 @@ export class PlaylistRuleComponent implements OnInit {
     ],
     'accessControlProfiles': [],
     'timeScheduling': [],
-      'videoQuiz': KalturaNullableBoolean.nullValue
+    'videoQuiz': null,
   };
 
   public _columns: EntriesTableColumns = {

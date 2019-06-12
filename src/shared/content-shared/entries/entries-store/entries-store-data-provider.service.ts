@@ -98,7 +98,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
             if (data.videoQuiz) {
                 advancedSearch.items.push(new KalturaSearchOperator({
                     type: KalturaSearchOperatorType.searchOr,
-                    items: [new KalturaQuizAdvancedFilter({ isQuiz: data.videoQuiz })]
+                    items: [new KalturaQuizAdvancedFilter({ isQuiz: KalturaNullableBoolean.trueValue })]
                 }));
             }
 
@@ -337,7 +337,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
       categoriesMode,
       customMetadata: {},
       limits: 200,
-        videoQuiz: KalturaNullableBoolean.nullValue
+      videoQuiz: null,
     };
   }
 }

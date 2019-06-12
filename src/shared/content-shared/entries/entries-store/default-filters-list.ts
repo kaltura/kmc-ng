@@ -1,4 +1,4 @@
-import {KalturaEntryStatus, KalturaNullableBoolean} from "kaltura-ngx-client";
+import {KalturaEntryStatus } from 'kaltura-ngx-client';
 
 export interface DefaultFilterList {
     label: string;
@@ -20,7 +20,7 @@ export const DefaultFiltersList: DefaultFilterList[] = [
     {
         name: 'videoQuiz',
         label: 'Video with Quiz',
-        value: KalturaNullableBoolean.trueValue,
+        value: true,
         items: []
     },
     {
