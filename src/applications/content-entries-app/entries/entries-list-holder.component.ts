@@ -61,6 +61,12 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       commandName: 'view',
       styleClass: ''
     },
+      {
+          label: this._appLocalization.get('applications.content.table.liveDashboard'),
+          commandName: 'liveDashboard',
+          styleClass: '',
+          disabled: !this._liveDashboardAppViewService.isAvailable()
+      },
       this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD)
           ? {
               label: this._appLocalization.get('applications.content.table.realTimeAnalytics'),
@@ -68,12 +74,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               styleClass: '',
               disabled: !this._analyticsNewMainViewService.isAvailable()
           }
-          : {
-              label: this._appLocalization.get('applications.content.table.liveDashboard'),
-              commandName: 'liveDashboard',
-              styleClass: '',
-              disabled: !this._liveDashboardAppViewService.isAvailable()
-          },
+          : null,
       {
           label: this._appLocalization.get('applications.content.table.captionRequest'),
           commandName: 'captionRequest'
@@ -83,7 +84,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       commandName: 'delete',
       styleClass: 'kDanger'
     }
-  ];
+  ].filter(Boolean); // stip null values
 
   constructor(private _router: Router,
               private _activatedRoute: ActivatedRoute,
