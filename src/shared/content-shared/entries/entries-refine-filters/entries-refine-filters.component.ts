@@ -144,9 +144,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
               listFilter = updates[listName] ;
           }
 
-          if (typeof listFilter !== 'undefined' && typeof listFilter !== 'boolean') {
+          if (Array.isArray(listFilter) || listFilter === null) {
               // important: the above condition doesn't filter out 'null' because 'null' is valid value.
-              // important: the above condition filter out 'boolean' value because it is not valid for 'single' item types
 
               const listSelectionsMap = this._entriesStore.filtersUtils.toMap(listData.selections, 'value');
               const listFilterMap = this._entriesStore.filtersUtils.toMap(listFilter, null);
