@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginScreens } from '../login.component';
 import { BrowserService } from 'app-shared/kmc-shell';
@@ -12,7 +12,18 @@ import { serverConfig } from 'config/server';
 export class LoginFormComponent {
   @Input() inProgress = false;
   @Input() errorMessage: string;
-  @Input() errorCode: string;
+  @Input() showAuthenticationCode = false;
+
+  @Input()
+  set errorCode(value: string) {
+    this._errorCode = value;
+    if (value === 'MISSING_OTP') {
+        this.showAuthenticationCode = true;
+        setTimeout(() => {
+            this.authField.nativeElement.focus();
+        },100)
+    }
+  };
 
   @Input()
   set username(value: string) {
@@ -24,11 +35,15 @@ export class LoginFormComponent {
   @Output() onRememberMe = new EventEmitter<string>();
   @Output() onSetScreen = new EventEmitter<LoginScreens>();
 
+  @ViewChild('auth') authField;
+
   _loginForm: FormGroup;
   _usernameField: AbstractControl;
+  _authenticationField: AbstractControl;
   _passwordField: AbstractControl;
   _rememberMeField: AbstractControl;
   _supportAddress: string;
+  _errorCode: string;
 
   public get _loginValidationMessage(): string {
     return this._showError(this._usernameField) ? 'app.login.error.email' : '';
@@ -55,11 +70,13 @@ export class LoginFormComponent {
         Validators.minLength(1),
         Validators.maxLength(200)
       ])],
+      authentication: ['', Validators.required],
       rememberMe: false
     });
 
     this._usernameField = this._loginForm.controls['username'];
     this._passwordField = this._loginForm.controls['password'];
+    this._authenticationField = this._loginForm.controls['authentication'];
     this._rememberMeField = this._loginForm.controls['rememberMe']
   }
 
@@ -74,11 +91,12 @@ export class LoginFormComponent {
   _login(event: Event): void {
     event.preventDefault();
 
-    if (this._loginForm.valid) {
+    if (this._usernameField.valid && this._passwordField.valid) {
       const rememberMePayload = this._rememberMeField.value ? this._usernameField.value : '';
       const loginPayload = {
         username: this._usernameField.value,
-        password: this._passwordField.value
+        password: this._passwordField.value,
+        otp: this._authenticationField.value || ''
       };
 
       this.onLogin.emit(loginPayload);

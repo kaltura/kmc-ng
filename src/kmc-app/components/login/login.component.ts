@@ -6,6 +6,8 @@ import { serverConfig } from 'config/server';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { AuthenticatorViewService } from "app-shared/kmc-shared/kmc-views/details-views";
+import { KalturaAuthentication } from "kaltura-ngx-client";
 
 export enum LoginScreens {
   Login,
@@ -13,7 +15,8 @@ export enum LoginScreens {
   PasswordExpired,
   InvalidLoginHash,
   RestorePassword,
-  RestorePasswordInvalidHash
+  RestorePasswordInvalidHash,
+  Authenticator
 }
 
 @Component({
@@ -34,6 +37,9 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _signUpLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.signUp;
   public _restorePasswordHash: string;
   public _passwordRestored = false;
+  public _showAuthenticator = false;
+  public _authenticationHash = '';
+  public _qrCodeBase64 = null;
 
   // Caution: this is extremely dirty hack, don't do something similar to that
   @HostListener('window:resize')
@@ -55,7 +61,8 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
               private _renderer: Renderer2,
               private _route: ActivatedRoute,
               private _router: Router,
-              private _restorePasswordView: RestorePasswordViewService) {
+              private _restorePasswordView: RestorePasswordViewService,
+              private _authenticatorView: AuthenticatorViewService) {
       this._prepare();
   }
 
@@ -65,8 +72,12 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private _prepare(): void {
         const restorePasswordArgs = this._restorePasswordView.popOpenArgs();
+        const authenticatorArgs = this._authenticatorView.popOpenArgs();
         if (restorePasswordArgs && restorePasswordArgs.hash) {
             this._validateRestorePasswordHash(restorePasswordArgs.hash);
+        } else if (authenticatorArgs && authenticatorArgs.hash) {
+            this._authenticationHash = authenticatorArgs.hash;
+            this._currentScreen = LoginScreens.Authenticator;
         }
     }
 
@@ -87,8 +98,9 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                 },
                 error => {
+                    this._restorePasswordHash = hash;
                     this._browserService.confirm({
-                        header: this._appLocalization.get('app.error'),
+                        header: this._appLocalization.get('app.common.error'),
                         message: this._appLocalization.get('app.login.restorePassword.error.failedValidateHash', [error.message]),
                         accept: () => this._validateRestorePasswordHash(hash),
                         reject: () => this._setScreen(LoginScreens.Login)
@@ -97,8 +109,8 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
             );
     }
 
-  private _makeLoginRequest(username: string, password: string): Observable<LoginResponse> {
-    return this._appAuthentication.login(username, password).pipe(cancelOnDestroy(this));
+  private _makeLoginRequest(username: string, password: string, otp?: string): Observable<LoginResponse> {
+    return this._appAuthentication.login(username, password, otp).pipe(cancelOnDestroy(this));
   }
 
   private _handleLoginResponse(success: boolean, error: LoginError, username: string): void {
@@ -148,11 +160,11 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     // for cancelOnDestroy
   }
 
-  public _login({ username, password }: { username: string, password: string }): void {
+  public _login({ username, password, otp }: { username: string, password: string, otp: string }): void {
     this._errorMessage = '';
     this._inProgress = true;
 
-    this._makeLoginRequest(username, password).subscribe(
+    this._makeLoginRequest(username, password, otp).subscribe(
       ({ success, error }) => {
         this._handleLoginResponse(success, error, username);
       },
@@ -203,12 +215,13 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       );
   }
 
-  public _resetPassword({ password, newPassword }: { password: string, newPassword: string }): void {
+  public _resetPassword({ password, newPassword, otp }: { password: string, newPassword: string, otp: string }): void {
     const payload = {
       password,
       newPassword,
       email: this._username,
-      newEmail: ''
+      newEmail: '',
+      otp
     };
 
     this._inProgress = true;
@@ -240,9 +253,12 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     this._inProgress = true;
     this._appAuthentication.setInitalPassword(payload)
       .subscribe(
-        () => {
+          (response: KalturaAuthentication) => {
           this._inProgress = false;
           this._passwordRestored = true;
+          if (response.qrCode) {
+              this._qrCodeBase64 = response.qrCode;
+          }
         },
         err => {
           this._errorMessage = err.message;
@@ -250,5 +266,18 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           this._inProgress = false;
         }
       );
+  }
+
+  public _returnToLogin(): void {
+      if (this._qrCodeBase64 && this._qrCodeBase64.length) {
+          this._currentScreen = this._loginScreens.Authenticator;
+      } else {
+          this._currentScreen = this._loginScreens.Login;
+      }
+  }
+
+  public _onAuthContinue(): void {
+      this._showAuthenticator = true;
+      this._currentScreen = this._loginScreens.Login;
   }
 }

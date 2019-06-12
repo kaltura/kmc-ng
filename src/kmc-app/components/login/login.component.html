@@ -14,6 +14,7 @@
                        [errorMessage]="_errorMessage"
                        [errorCode]="_errorCode"
                        [inProgress]="_inProgress"
+                       [showAuthenticationCode]="_showAuthenticator"
                        (onSetScreen)="_setScreen($event)"
                        (onRememberMe)="_rememberMe($event)"
                        (onLogin)="_login($event)"></kKMCLoginForm>
@@ -44,7 +45,7 @@
                              [errorMessage]="_errorMessage"
                              [errorCode]="_errorCode"
                              [passwordRestored]="_passwordRestored"
-                             (returnToLogin)="_setScreen(_loginScreens.Login)"
+                             (returnToLogin)="_returnToLogin()"
                              (onRestorePassword)="_restorePassword($event)"></kKMCRestorePassword>
           <kInvalidRetorePasswordHash *ngSwitchCase="_loginScreens.RestorePasswordInvalidHash"
                              [inProgress]="_inProgress"
@@ -53,6 +54,10 @@
                              [errorCode]="_errorCode"
                              (returnToLogin)="_setScreen(_loginScreens.Login)"
                              (resendRestorePassword)="_forgotPassword($event)"></kInvalidRetorePasswordHash>
+          <kKMCAuthentication *ngSwitchCase="_loginScreens.Authenticator"
+                              [hash]="_authenticationHash"
+                              [qrCode]="_qrCodeBase64"
+                              (onAuthContinue)="_onAuthContinue()"></kKMCAuthentication>
       </ng-container>
     </div>
     <div class="kLoginControls">
@@ -62,8 +67,8 @@
         <button class="kSignUpBtn" pButton [label]="'app.login.signUp' | translate" (click)="_signUp()"></button>
       </ng-container>
 
-      <ng-container *ngIf="_currentScreen !== _loginScreens.Login">
-        <button class="kSignUpBtn"
+      <ng-container *ngIf="_currentScreen !== _loginScreens.Login && _currentScreen !== _loginScreens.Authenticator">
+        <button class="kSignUpBtn" *ngIf="!_qrCodeBase64"
                 pButton
                 [label]="'app.login.login.title' | translate"
                 (click)="_setScreen(_loginScreens.Login)"></button>

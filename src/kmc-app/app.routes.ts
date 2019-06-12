@@ -7,6 +7,7 @@ import { ErrorComponent } from './components/error/error.component';
 import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
 import { RestorePasswordComponent } from './components/app-actions/restore-password.component';
+import { AuthenticatorComponent } from './components/app-actions/authenticator.component';
 import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
 import { PersistLoginByKsComponent } from './components/app-actions/persist-login-by-ks.component';
 
@@ -22,7 +23,8 @@ const routes: Routes = <Routes>[
                 children: [
                     { path: 'login-by-ks/:ks', component: LoginByKSComponent, pathMatch: 'full' },
                     { path: 'persist-login-by-ks/:ks', component: PersistLoginByKsComponent, pathMatch: 'full' },
-                    { path: 'restore-password/:hash', component: RestorePasswordComponent, pathMatch: 'full'  }
+                    { path: 'restore-password/:hash', component: RestorePasswordComponent, pathMatch: 'full'  },
+                    { path: 'auth-info/:hash', component: AuthenticatorComponent, pathMatch: 'full'  }
                 ]
             },
             {

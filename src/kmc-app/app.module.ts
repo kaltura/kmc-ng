@@ -70,6 +70,7 @@ import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { LoginComponent } from './components/login/login.component';
 import { ForgotPasswordFormComponent } from './components/login/forgot-password-form/forgot-password-form.component';
 import { LoginFormComponent } from './components/login/login-form/login-form.component';
+import { AuthenticationFormComponent } from './components/login/authentication-form/authentication-form.component';
 import { PasswordExpiredFormComponent } from './components/login/password-expired-form/password-expired-form.component';
 import { InvalidLoginHashFormComponent } from './components/login/invalid-login-hash-form/invalid-login-hash-form.component';
 import { AppMenuContentComponent } from './components/app-menu/app-menu-content.component';
@@ -95,6 +96,7 @@ import { KalturaLoggerModule } from '@kaltura-ng/kaltura-logger';
 import { KmcViewsModule } from 'app-shared/kmc-shared/kmc-views/kmc-views.module';
 import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
+import { AuthenticatorComponent } from './components/app-actions/authenticator.component';
 import { NewReplaceVideoUploadModule } from 'app-shared/kmc-shell/new-replace-video-upload/new-replace-video-upload.module';
 import { RestorePasswordComponent } from './components/app-actions/restore-password.component';
 import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
@@ -190,6 +192,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     AppMenuComponent,
     AppMenuContentComponent,
     LoginComponent,
+    AuthenticationFormComponent,
     ErrorComponent,
     UserSettingsComponent,
     LoginFormComponent,
@@ -201,6 +204,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ChangelogComponent,
     ChangelogContentComponent,
     LoginByKSComponent,
+      AuthenticatorComponent,
       RestorePasswordComponent,
       NotFoundPageComponent,
       RestorePasswordFormComponent,
