@@ -103,7 +103,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                     this._entriesStore.filter({createdAt: {fromDate: null, toDate: null}});
                     break;
                 case 'videoQuiz':
-                    this._entriesStore.filter({ videoQuiz: null });
+                    this._entriesStore.filter({ videoQuiz: false });
                     break;
                 default:
                     break;

@@ -337,7 +337,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
       categoriesMode,
       customMetadata: {},
       limits: 200,
-      videoQuiz: null,
+      videoQuiz: false,
     };
   }
 }

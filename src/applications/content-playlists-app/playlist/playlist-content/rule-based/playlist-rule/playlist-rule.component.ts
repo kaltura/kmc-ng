@@ -50,7 +50,7 @@ export class PlaylistRuleComponent implements OnInit {
     ],
     'accessControlProfiles': [],
     'timeScheduling': [],
-    'videoQuiz': null,
+    'videoQuiz': false,
   };
 
   public _columns: EntriesTableColumns = {
