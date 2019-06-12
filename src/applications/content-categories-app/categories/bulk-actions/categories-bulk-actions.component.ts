@@ -339,7 +339,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
           message: this._appLocalization.get('applications.content.moveCategory.errors.onlySiblingsMoveAllowed')
         });
       } else {
-        this.openBulkActionWindow('moveCategories', 586, 580);
+        this.openBulkActionWindow('moveCategories', 586, 600);
       }
     } else {
       this._logger.info('no categories were selected, abort action');

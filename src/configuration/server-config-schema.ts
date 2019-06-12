@@ -94,6 +94,13 @@ export const ServerConfigSchema = {
                     required: ['uri'],
                     additionalProperties: true
                 },
+                kmcAnalytics: {
+                    properties: {
+                        uri: {type: 'string'}
+                    },
+                    required: ['uri'],
+                    additionalProperties: true
+                },
                 liveAnalytics: {
                     properties: {
                         uri: {type: 'string'},
@@ -149,7 +156,9 @@ export const ServerConfigSchema = {
                         contactUs: {type: 'string'},
                         upgradeAccount: {type: 'string'},
                         contactSalesforce: {type: 'string'},
-                        dropFoldersManual: {type: 'string'}
+                        dropFoldersManual: {type: 'string'},
+                        customerCare: {type: 'string'},
+                        customerPortal: {type: 'string'}
                     },
                     required: [],
                     additionalProperties: true

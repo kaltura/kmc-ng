@@ -383,6 +383,9 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
       case 'txt':
         format = KalturaAttachmentType.text;
         break;
+      case 'json':
+        format = KalturaAttachmentType.json;
+        break;
       default:
         break;
     }

@@ -3,8 +3,8 @@
                [tooltip]="_currentProfile?.type | kTranscodingProfileType:false"></kDetailInfo>
   <kDetailInfo *ngIf="!_isNew" [label]="'applications.settings.transcoding.details.id' | translate" [valueField]="'id'"></kDetailInfo>
   <kDetailInfo *ngIf="!_isNew" [label]="'applications.settings.transcoding.details.creationDate' | translate"
-               [value]="_currentProfile?.createdAt | kDate:'dateOnly'"
-               [tooltip]="_currentProfile?.createdAt | kDate"></kDetailInfo>
+               [value]="_currentProfile?.createdAt | kmcDate:'dateOnly'"
+               [tooltip]="_currentProfile?.createdAt | kmcDate"></kDetailInfo>
   <kDetailInfo *ngIf="!_isNew" [label]="'applications.settings.transcoding.details.flavors' | translate"
                [valueField]="'flavors'"></kDetailInfo>
 </k-details-bar>

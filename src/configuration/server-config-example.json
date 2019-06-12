@@ -23,7 +23,9 @@
             "contactUs": "https://corp.kaltura.com/company/contact-us",
             "upgradeAccount":"https://site.kaltura.com/Request-Users.html",
             "contactSalesforce": "https://www.kaltura.com/index.php/partnerservices2/contactsalesforce",
-            "dropFoldersManual": "http://knowledge.kaltura.com/kaltura-drop-folders-service-content-ingestion-0"
+            "dropFoldersManual": "http://knowledge.kaltura.com/kaltura-drop-folders-service-content-ingestion-0",
+            "customerCare": "https://corp.kaltura.com/company/customer-care",
+            "customerPortal": "https://support.kaltura.com/login"
         },
         "entitlements":{
             "manage": "https://knowledge.kaltura.com/node/629#managing"

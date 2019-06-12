@@ -92,6 +92,7 @@
                      [columns]="columns"
                      [rowActions]="rowActions"
                      (actionSelected)="onActionsSelected.emit($event)"
+                     (openActionsMenu)="_openActionsMenu($event)"
                      (sortChanged)="onSortChanged($event)"
                      [(selectedEntries)]="selectedEntries"
       ></kEntriesTable>
@@ -111,6 +112,8 @@
     </div>
   </div>
 </k-area-blocker>
+
+<p-menu #actionsmenu [popup]="true" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 
 <!-- popup widgets section -->
 <kPopupWidget #categoriesFilterPopup

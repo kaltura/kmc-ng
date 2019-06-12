@@ -7,7 +7,7 @@
   <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.subCategories' | translate" [valueField]="'directSubCategoriesCount'"></kDetailInfo>
   <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.entries' | translate" [valueField]="'entriesCount'"></kDetailInfo>
   <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.creationDate' | translate" [valueField]="'createdAt'"
-               [value]="_currentCategory?.createdAt | kDate:'dateOnly'" [tooltip]="_currentCategory?.createdAt | kDate"></kDetailInfo>
+               [value]="_currentCategory?.createdAt | kmcDate:'dateOnly'" [tooltip]="_currentCategory?.createdAt | kmcDate"></kDetailInfo>
   <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.lastUpdate' | translate"
-               [value]="_currentCategory?.updatedAt | kDate:'dateOnly'" [tooltip]="_currentCategory?.updatedAt | kDate"></kDetailInfo>
+               [value]="_currentCategory?.updatedAt | kmcDate:'dateOnly'" [tooltip]="_currentCategory?.updatedAt | kmcDate"></kDetailInfo>
 </k-details-bar>

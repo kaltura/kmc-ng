@@ -9,7 +9,21 @@
                 </div>
                 <div class="kSelectPlayer">
                     <span>{{'applications.embed.selectPlayer' | translate}}</span>
-                    <p-dropdown #playersDropdown [options]="_players" formControlName="selectedPlayer" [filter]="true" filterBy="label,value.id"></p-dropdown>
+                    <p-dropdown #playersDropdown [options]="_players" formControlName="selectedPlayer" [filter]="true" filterBy="label,value.uiConf.id">
+                        <ng-template let-item pTemplate="selectedItem">
+                            <div class="playerItem selectedPlayer">
+                                <div [class]="'playerIcon v'+item.value.version"></div>
+                                <span>{{item.label}}</span>
+                            </div>
+                        </ng-template>
+                        <ng-template let-item pTemplate="item">
+                            <div class="playerItem">
+                                <div [class]="'playerIcon v'+item.value.version"></div>
+                                <span>{{item.label}}</span>
+                                <i class="check kIconcheck_small"></i>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
                     <i #settingsBtn class="kIcongear kPlayerSettings"></i>
                 </div>
                 <i class="kIconShare kToggleParamsIcon" [class.kHighlight]="!_showEmbedParams" (click)="toggleEmbedParams()"></i>
@@ -54,7 +68,7 @@
                                 </div>
                                 <p-dropdown [options]="_embedTypes" formControlName="selectedEmbedType"></p-dropdown>
                             </div>
-                            <div class="kSection kRow kAlignTop">
+                            <div class="kSection kRow kAlignTop" [class.kHidden]="_selectedPlayerVersion === 3">
                                 <span class="kCol">{{'applications.embed.seo' | translate}}</span>
                                 <p-inputSwitch formControlName="seo"></p-inputSwitch>
                             </div>
@@ -71,10 +85,11 @@
     </div>
 </k-area-blocker>
 
-<kPopupWidget data-aid="sortSettings" [closeOnResize]="true" [popupWidth]="360" [popupHeight]="220" [targetRef]="settingsBtn" [appendTo]="preview" [targetOffset]="{'x':-330, 'y': 30}" [closeBtnInside]="true">
+<kPopupWidget data-aid="sortSettings" [closeOnResize]="true" [popupWidth]="360" [popupHeight]="254" [targetRef]="settingsBtn" [appendTo]="preview" [targetOffset]="{'x':-330, 'y': 30}" [closeBtnInside]="true">
     <div class="kSettings">
         <span>{{'applications.embed.settings' | translate | uppercase}}</span>
         <p-radioButton name="layersSortBy" value="name" label="{{'applications.embed.name' | translate}}" [(ngModel)]="_playersSortBy" (onClick)="updatePlayersSort('name')"></p-radioButton>
+        <p-radioButton name="layersSortBy" value="version" label="{{'applications.embed.version' | translate}}" [(ngModel)]="_playersSortBy" (onClick)="updatePlayersSort('version')"></p-radioButton>
         <p-radioButton name="layersSortBy" value="createdAt" label="{{'applications.embed.added' | translate}}" [(ngModel)]="_playersSortBy" (onClick)="updatePlayersSort('createdAt')"></p-radioButton>
         <p-radioButton name="layersSortBy" value="updatedAt" label="{{'applications.embed.updated' | translate}}" [(ngModel)]="_playersSortBy" (onClick)="updatePlayersSort('updatedAt')"></p-radioButton>
     </div>

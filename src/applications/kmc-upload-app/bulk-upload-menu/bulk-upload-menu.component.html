@@ -15,7 +15,7 @@
               (click)="_invokeFileSelection(_bulkUploadTypes.categories)">
       </button>
       <button pButton class="kButtonDefault"
-              *ngIf="_kmcPermissions.ADMIN_USER_BULK | kNgIfPermitted"
+              *ngIf="(_kmcPermissions.ADMIN_USER_BULK | kNgIfPermitted) && (_kmcPermissions.CONTENT_MANAGE_CATEGORY_USERS | kNgIfPermitted)"
               [label]="'applications.content.bulkUpload.menu.types.endUsers' | translate"
               (click)="_invokeFileSelection(_bulkUploadTypes.endUsers)">
       </button>

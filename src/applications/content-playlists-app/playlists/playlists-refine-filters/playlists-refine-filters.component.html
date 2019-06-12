@@ -4,9 +4,9 @@
     <div class="kDateRange">
 
       <p-calendar class="kDateRangeFirst" [(ngModel)]="_createdAfter" [readonlyInput]="true" [showIcon]="true"
-                  [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
+                  [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange" [dateFormat]="_calendarFormat"
                   icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
-      <p-calendar class="kDateRangeLast kPullLeft30" [(ngModel)]="_createdBefore" [readonlyInput]="true"
+      <p-calendar class="kDateRangeLast kPullLeft30" [(ngModel)]="_createdBefore" [readonlyInput]="true" [dateFormat]="_calendarFormat"
                   [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
                   icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
     </div>

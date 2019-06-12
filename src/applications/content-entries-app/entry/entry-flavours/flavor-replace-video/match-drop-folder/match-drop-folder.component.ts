@@ -354,7 +354,6 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
         const selectedFolder = this._dropFoldersList.find(({ id }) => id === this._selectedDropFolder);
         const mediaResource = new KalturaAssetsParamsResourceContainers({
             resources: this._selectedFile.files.map(file => {
-                console.warn(file);
                 return new KalturaAssetParamsResourceContainer({
                     resource: new KalturaDropFolderFileResource({ dropFolderFileId: file.id }),
                     assetParamsId: this._getAssetParamsId(selectedFolder.conversionProfileId, file.parsedFlavor)

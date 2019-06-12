@@ -60,7 +60,7 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
         const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
         const isEntryRelevant = [KalturaMediaType.video, KalturaMediaType.audio].indexOf(entry.mediaType) !== -1 && !isExternalMedia;
 
-        const result = hasSource && entryReady && !isEntryReplacing && isEntryRelevant && !isLiveEntry;
+        const result = entryReady && !isEntryReplacing && isEntryRelevant && !isLiveEntry;
 
         this._logger.debug(`conditions used to check availability status by data`, () => (
             {

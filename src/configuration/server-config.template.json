@@ -59,7 +59,9 @@
       "contactUs": "@externalLinks.kaltura.contactUs@",
       "upgradeAccount":"@externalLinks.kaltura.upgradeAccount@",
       "contactSalesforce": "@externalLinks.kaltura.contactSalesforce@",
-      "dropFoldersManual": "@externalLinks.kaltura.dropFoldersManual@"
+      "dropFoldersManual": "@externalLinks.kaltura.dropFoldersManual@",
+      "customerCare": "@externalLinks.kaltura.customerCare@",
+      "customerPortal": "@externalLinks.kaltura.customerPortal@"
     },
     "uploads": {
       "highSpeedUpload": "@externalLinks.uploads.highSpeedUpload@",

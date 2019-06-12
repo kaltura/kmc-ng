@@ -236,7 +236,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
     // update desired fields of entries
     const responseProfile = new KalturaDetachedResponseProfile({
       type: KalturaResponseProfileType.includeFields,
-      fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,tags,categoriesIds,downloadUrl,sourceType,externalSourceType'
+      fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,tags,categoriesIds,downloadUrl,sourceType,externalSourceType,capabilities'
     });
 
     // update pagination args

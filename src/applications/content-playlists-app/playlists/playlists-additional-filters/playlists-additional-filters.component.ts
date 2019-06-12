@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { subApplicationsConfig } from 'config/sub-applications';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kPlaylistsAdditionalFilter',
@@ -16,8 +17,9 @@ export class PlaylistsAdditionalFiltersComponent {
   public _blockerMessage: AreaBlockerMessage = null;
   @Output() createdChanged = new EventEmitter<any>();
   public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
+    public _calendarFormat = this._browserService.getCurrentDateFormat(true);
 
-  constructor() {
+  constructor(private _browserService: BrowserService) {
   }
 
   public _onCreatedChanged(): void {

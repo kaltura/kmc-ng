@@ -48,6 +48,9 @@ a {
       opacity: 1;
     }
   }
+    a {
+        display: block;
+    }
 }
 
 @media screen and (max-width: 1310px) {

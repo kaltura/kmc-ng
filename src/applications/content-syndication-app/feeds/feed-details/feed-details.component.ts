@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {KalturaPlaylist} from 'kaltura-ngx-client';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {KalturaBaseSyndicationFeed} from 'kaltura-ngx-client';
@@ -38,6 +38,8 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   @Input()
   feed: KalturaBaseSyndicationFeed = null;
 
+    @Input() loadingPlaylists = false;
+
     @Input()
     set playlists(data: KalturaPlaylist[]) {
         if (data && data.length) {
@@ -46,8 +48,17 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
                 this._idToPlaylistMap.set(playlist.id, playlist);
             });
             this._playlists = data;
+        } else {
+            this._playlists = [];
         }
+
+        this._availablePlaylists = this._playlists.map(playlist => ({
+            value: playlist.id,
+            label: playlist.name || playlist.id
+        }));
     }
+
+    @Output() searchPlaylists = new EventEmitter<string>();
 
   @ViewChild(DestinationComponentBase) destinationComponent: DestinationComponentBase;
 
@@ -94,7 +105,6 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._newFeedText = this._appLocalization.get('applications.content.syndication.details.header.newFeed');
     this._fillAvailableDestinations();
-    this._fillAvailablePlaylists();
     this._mode = this.feed ? 'edit' : 'new';
     this._restartFormData();
     this._prepare();
@@ -103,16 +113,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  private _fillAvailablePlaylists(): void {
-    if (this._playlists && this._playlists.length) {
-      this._availablePlaylists = this._playlists.map(playlist => ({
-        value: playlist.id,
-        label: playlist.name || playlist.id
-      }));
-    }
-  }
-
-  private _fillAvailableDestinations(): void {
+    private _fillAvailableDestinations(): void {
     this._availableDestinations = [
       {
         value: KalturaSyndicationFeedType.googleVideo,
@@ -158,63 +159,98 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
     this._queryData()
       .pipe(cancelOnDestroy(this))
       .subscribe(response => {
-          this._logger.debug(`handle successful data loading`);
+        this._logger.debug(`handle successful data loading`);
         this._isBusy = false;
         this._isReady = true;
         this._players = response.players;
         this._flavors = response.flavors;
-          this._missingPlaylist = this._isPlaylistMissing;
         if (this._isPlaylistMissing) {
-            this._form.patchValue({ playlistId: null });
-        }
-
-        if (response.entriesCount) {
-          const showEntriesCountWarning: boolean =
-            [KalturaSyndicationFeedType.googleVideo, KalturaSyndicationFeedType.itunes, KalturaSyndicationFeedType.yahoo].indexOf(this.feed.type) >= 0;
-
-          const getFlavorName = () => {
-            if (!showEntriesCountWarning) {
-              return null;
-            }
-            const flavor = this._flavors.find(flvr => flvr.id === this.feed.flavorParamId);
-            // return flavor ID if couldn't get flavor name
-            return ((flavor && flavor.name) ||
-              (this.feed.flavorParamId &&
-                this._appLocalization.get('applications.content.syndication.details.entriesCountData.flavorId',
-                  {0: this.feed.flavorParamId.toString()})));
-          };
-
-          this._entriesCountData = {
-            count: response.entriesCount.actualEntryCount,
-            showWarning: showEntriesCountWarning && response.entriesCount.totalEntryCount > response.entriesCount.actualEntryCount,
-            warningCount: showEntriesCountWarning ? response.entriesCount.requireTranscodingCount : null,
-            flavorName: getFlavorName()
-          };
+            this._feedsService.getPlaylist(this.feed.playlistId)
+                .pipe(cancelOnDestroy(this))
+                .subscribe((playlist: KalturaPlaylist) => {
+                    this._idToPlaylistMap.set(playlist.id, playlist);
+                    this._playlists.push(playlist);
+                    this._availablePlaylists.push({
+                        value: playlist.id,
+                        label: playlist.name || playlist.id
+                    });
+                    this._form.patchValue({ selectedPlaylist: playlist.id });
+                    this._missingPlaylist = this._isPlaylistMissing;
+                    this.setEntriesCount(response);
+                },
+                err => {
+                    this._form.patchValue({ playlistId: null });
+                });
+        } else {
+            this._missingPlaylist = this._isPlaylistMissing;
+            this.setEntriesCount(response);
         }
       }, error => {
           this._logger.warn(`handle failed data loading, show confirmation`, { errorMessage: error.message });
-        this._isBusy = false;
-        this._blockerMessage = new AreaBlockerMessage({
-          message: this._appLocalization.get('applications.content.syndication.details.errors.loadFailed'),
-          buttons: [
-            {
-              label: this._appLocalization.get('app.common.retry'),
-              action: () => {
-                  this._logger.info(`user confirmed, retry action`);
-                this._blockerMessage = null;
-                this._prepare();
-              }
-            }, {
-              label: this._appLocalization.get('app.common.close'),
-              action: () => {
-                  this._logger.info(`user didn't confirm, abort action`);
-                this._blockerMessage = null;
-                this._close();
-              }
-            }
-          ]
-        });
+          this._isBusy = false;
+          if (error.code === "INVALID_ENTRY_ID"){
+              this._blockerMessage = new AreaBlockerMessage({
+                  message: this._appLocalization.get('applications.content.syndication.details.errors.deletedPlaylist', {0: this.feed.playlistId}),
+                  buttons: [
+                      {
+                          label: this._appLocalization.get('app.common.close'),
+                          action: () => {
+                              this._logger.info(`The playlist used to create this feed could not be found (deleted?). Closing the panel.`);
+                              this._blockerMessage = null;
+                              this._close();
+                          }
+                      }
+                  ]
+              });
+          } else {
+              this._blockerMessage = new AreaBlockerMessage({
+                  message: this._appLocalization.get('applications.content.syndication.details.errors.loadFailed'),
+                  buttons: [
+                      {
+                          label: this._appLocalization.get('app.common.retry'),
+                          action: () => {
+                              this._logger.info(`user confirmed, retry action`);
+                              this._blockerMessage = null;
+                              this._prepare();
+                          }
+                      }, {
+                          label: this._appLocalization.get('app.common.close'),
+                          action: () => {
+                              this._logger.info(`user didn't confirm, abort action`);
+                              this._blockerMessage = null;
+                              this._close();
+                          }
+                      }
+                  ]
+              });
+          }
       });
+  }
+
+  private setEntriesCount(response): void{
+      if (response.entriesCount) {
+          const showEntriesCountWarning: boolean =
+              [KalturaSyndicationFeedType.googleVideo, KalturaSyndicationFeedType.itunes, KalturaSyndicationFeedType.yahoo].indexOf(this.feed.type) >= 0;
+
+          const getFlavorName = () => {
+              if (!showEntriesCountWarning) {
+                  return null;
+              }
+              const flavor = this._flavors.find(flvr => flvr.id === this.feed.flavorParamId);
+              // return flavor ID if couldn't get flavor name
+              return ((flavor && flavor.name) ||
+                  (this.feed.flavorParamId &&
+                      this._appLocalization.get('applications.content.syndication.details.entriesCountData.flavorId',
+                          {0: this.feed.flavorParamId.toString()})));
+          };
+
+          this._entriesCountData = {
+              count: response.entriesCount.actualEntryCount,
+              showWarning: showEntriesCountWarning && response.entriesCount.totalEntryCount > response.entriesCount.actualEntryCount,
+              warningCount: showEntriesCountWarning ? response.entriesCount.requireTranscodingCount : null,
+              flavorName: getFlavorName()
+          };
+      }
   }
 
   private _queryData(): Observable<{ players: KalturaUiConf[], flavors: KalturaFlavorParams[], entriesCount?: KalturaSyndicationFeedEntryCount }> {
@@ -228,7 +264,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
     const getFlavours$ = this._flavorsStore.get().pipe(cancelOnDestroy(this));
     const requests: Observable<any>[] = [getPlayers$, getFlavours$];
 
-    if (this._mode === 'edit' && !this._isPlaylistMissing) {
+    if (this._mode === 'edit') {
         this._logger.debug(`get entries for edit mode`);
       const getEntriesCount$ = this._feedsService.getFeedEntryCount(this.feed.id).pipe(cancelOnDestroy(this));
       requests.push(getEntriesCount$);
@@ -238,6 +274,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
       .map(response => {
         const players = response[0].items.map(player => ({
           id: player.id,
+          version: player.tags.indexOf('kalturaPlayerJs') > -1 ? '3' : '2',
           name: player.name || this._appLocalization.get('applications.content.syndication.details.playerName', {0: player.id})
         }));
 

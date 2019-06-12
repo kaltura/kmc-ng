@@ -34,6 +34,7 @@ import { UploadProgressComponent } from './upload-list/upload-progress/upload-pr
 import { KMCShellModule } from 'app-shared/kmc-shell';
 import { UploadStatusPipe } from './upload-list/pipes/upload-status.pipe';
 import { TableModule } from 'primeng/table';
+import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
 
 @NgModule({
   imports: [
@@ -60,7 +61,8 @@ import { TableModule } from 'primeng/table';
     KMCShellModule,
     StickyModule,
     RouterModule.forChild(routing),
-      TableModule
+      TableModule,
+      DateFormatModule,
   ],
   declarations: [
     ContentUploadControlComponent,

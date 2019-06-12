@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { PlaylistStore } from '../../playlist-store.service';
 import { ManualContentWidget } from './manual-content-widget.service';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';

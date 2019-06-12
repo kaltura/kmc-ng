@@ -81,9 +81,10 @@
                     <div class="emptymessage">{{'applications.content.table.noResults' | translate}}</div>
                 </ng-template>
             </p-table>
-            <p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
         </div>
     </div>
+
+    <p-menu #actionsmenu [popup]="true" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 
     <kPopupWidget #editPopup data-aid="editCaptionPopup" [popupWidth]="380" [popupHeight]="472" [modal]="true">
         <ng-template>

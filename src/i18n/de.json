@@ -52,7 +52,9 @@
             "studio": "Studio",
             "analytics": "Analytics",
             "settings": "Einstellungen",
-            "administration": "Administration"
+            "administration": "Administration",
+            "reachDashboardMenuTitle": "Dienstleistungs-Dashboard",
+            "reachDashboardPageTitle": "Dienstleistungs-Dashboard"
         },
         "userSettings": {
             "changeAccount": "Konto wechseln",
@@ -69,10 +71,11 @@
         "helpMenu": {
             "gettingStarted": "Erste Schritte",
             "kmcOverview": "KMC-Übersicht",
-            "mediaManagement": "Medienverwaltung &amp; Abläufe",
+            "mediaManagement": "Medienverwaltung & Abläufe",
             "productTour": "Die Produkttour ansehen",
             "support": "Hilfe und Kundendienst",
             "userManual": "Benutzerhandbuch herunterladen",
+            "legacy": "Legacy KMC",
             "contact": "Kundendienst kontaktieren",
             "currentPage": "Aktuelle Seite",
             "changelog": "Änderungsprotokoll"
@@ -89,6 +92,7 @@
             "off": "Aus",
             "ok": "OK",
             "cancel": "Abbrechen",
+            "continue": "Weiter",
             "retry": "Erneut versuchen",
             "dismiss": "Verwerfen",
             "reload": "Neu laden",
@@ -113,7 +117,9 @@
         "openMail":{
             "supportMailTitle": "Kontaktieren Sie den Kaltura-Kundendienst",
             "supportMailMsg": "Schicken Sie bitte eine E-Mail an folgende E-Mail-Adresse:",
-            "supportMailMsgNoMail": "Schicken Sie bitte eine E-Mail an das Kaltura-Kundendienstteam."
+            "supportMailMsgNoMail": "Schicken Sie bitte eine E-Mail an das Kaltura-Kundendienstteam.",
+            "customerCare": "Der Kaltura Kundendienst ist 24/7, 365 Tage lang im Jahr über das Kundenportal verfügbar:",
+            "customerPortal": "Die einfachste und schnellste Weise einen neuen Fall einzureichen, mit dem Kundendienst zu kommunizieren und den Status Ihrer Supportanfragen nachzuverfolgen ist über das Kaltura Kundenportal:"
         },
         "login": {
             "login": {
@@ -165,20 +171,20 @@
                 }
             },
             "restorePassword": {
-            "welcome": "Willkommen bei Kaltura.",
-            "selectPassword": "Bitte wählen Sie Ihr Passwort.",
-        "restored": "Ihr neues Passwort wurde eingerichtet. Loggen Sie sich bitte in die Managementkonsole von Kaltura ein.",
-        "error": {
-          "equal": "Passwörter stimmen nicht überein",
-          "required": "Dieses Feld ist ein Pflichtfeld",
-            "failedValidateHash": ". Möchten Sie es erneut versuchen?"
-        },
-        "placeholder": {
-          "new": "Neues Passwort eingeben",
-          "confirm": "Neues Passwort bestätigen"
-        }
-      },
-      "error": {
+                "welcome": "Willkommen bei Kaltura.",
+                "selectPassword": "Bitte wählen Sie Ihr Passwort.",
+                "restored": "Ihr neues Passwort wurde eingerichtet. Loggen Sie sich bitte in die Managementkonsole von Kaltura ein.",
+                "error": {
+                    "equal": "Passwörter stimmen nicht überein",
+                    "required": "Dieses Feld ist ein Pflichtfeld",
+                    "failedValidateHash": "{{0}} Möchten Sie es erneut versuchen?"
+                },
+                "placeholder": {
+                    "new": "Neues Passwort eingeben",
+                    "confirm": "Neues Passwort bestätigen"
+                }
+            },
+            "error": {
                 "email": "Ungültiges E-Mail-Format",
                 "badCredentials": "Der von Ihnen eingegebene Benutzername oder das Passwort ist falsch.",
                 "retriesExceeded": {
@@ -218,7 +224,7 @@
     },
     "applications": {
         "embed":{
-            "previewShare": "Teilen &amp; Einbetten",
+            "previewShare": "Teilen & Einbetten",
             "previewInPlayer": "Vorschau im Player",
             "embedType": "Einbettungsart",
             "selectPlayer": "Player auswählen",
@@ -235,6 +241,7 @@
             "advanced": "Erweiterte Einstellungen",
             "settings": "Einstellungen für Listenanordnungen",
             "name": "Name",
+            "version": "Version",
             "added": "Hinzugefügt am",
             "updated": "Aktualisiert am",
             "helpTip1": "Die automatische Einbettung ist die standardmäßige Code-Einbettungsart und eignet sich am besten dazu, einen Player schnell und ohne Laufzeitanpassungen auf eine Seite zu bringen.",
@@ -287,6 +294,8 @@
                 "invalidUrl": "URL ungültig"
             },
             "uploadMenu": {
+                "createFromUrl": "Hochladen von URL",
+                "createFromYoutube": "Hochladen von YouTube",
                 "uploadFromDesktop": "Vom Desktop hochladen",
                 "needHighSpeed": "Hochgeschwindigkeits-Upload benötigt?",
                 "highSpeed": "Hochgeschwindigkeits-Upload",
@@ -307,11 +316,52 @@
                     "prepareEntry": "Bei der Vorbereitung eines Eintrags ist ein Fehler aufgetreten"
                 }
             },
+            "createFromUrl": {
+                "uploadFromUrl": "Hochladen von URL",
+                "transcodingProfile": "Transkodierungsprofil",
+                "profilePlaceholder": "Standard",
+                "addFile": "Datei hinzufügen",
+                "fileUrl": "Datei-URL",
+                "fileUrlPlaceholder": "http://",
+                "transcodingFlavor": "Transkodierungsvariante",
+                "selectFlavor": "Variante auswählen",
+                "remove": "Datei entfernen",
+                "link": "Link",
+                "cancel": "Abbrechen",
+                "noFlavors": "Keine Varianten",
+                "missingFlavor": "Einige erforderlichen Transkodierungsvarianten fehlen. Fortfahren?",
+                "continue": "Weiter",
+                "emptyMessage": {
+                    "title": "Keine Dateien zum Hochladen",
+                    "getStarted": "Fügen Sie ein paar Dateien hinzu, um zu beginnen. ",
+                    "browse": "Hinzufügen"
+                }
+            },
+            "uploadFromYoutube": {
+                "uploadFromYoutube": "Hochladen von YouTube",
+                "linkLabel": "Link zur Videoseite oder Inhalts-ID hinzufügen",
+                "inputPlaceholder": "http://",
+                "cancel": "Abbrechen",
+                "upload": "Hochladen",
+                "note": "Hinweis: Es werden nur öffentliche YouTube-Videos unterstützt",
+                "invalidUrl": "Nicht unterstützte URL oder ID angegeben",
+                "success": "Erfolg",
+                "successMessage": "YouTube-Eintrag wurde erfolgreich erstellt. Wollen Sie die Details des Eintrags ansehen?",
+                "notSupported": "Upload von YouTube ist nicht verfügbar!"
+            },
             "uploadSettings": {
-                "title": "Upload-Einstellungen",
+                "uploadSettings": "Upload-Einstellungen",
+                "uploadFromUrl": "Hochladen von URL",
+                "cancel": "Abbrechen",
                 "profile": "Transkodierungsprofil",
                 "addFileBtn": "Dateien hinzufügen",
                 "profilePlaceholder": "Standard",
+                "fileUrl": "Datei-URL",
+                "fileUrlPlaceholder": "http://",
+                "createFromUrlError": {
+                    "all": "Eintragerstellung fehlgeschlagen. Versuchen Sie es erneut",
+                    "some": "Erstellung einiger Einträge fehlgeschlagen, bitte Eintragsliste überprüfen"
+                },
                 "mediaTypes": {
                     "video": "Video",
                     "audio": "Audio",
@@ -328,10 +378,12 @@
                     "emptyMessage": {
                         "title": "Keine Dateien zum Hochladen",
                         "getStarted": "Fügen Sie ein paar Dateien hinzu, um zu beginnen. ",
-                        "browse": "Durchsuchen"
+                        "browse": "Durchsuchen",
+                        "add": "Hinzufügen"
                     }
                 },
-                "uploadBtn": "Hochladen"
+                "upload": "Hochladen",
+                "link": "Link"
             },
             "uploadMonitor": {
                 "uploadFromDesktop": "Vom Desktop hochladen",
@@ -527,6 +579,7 @@
                 "viewEntries": "Einträge ansehen",
                 "moveCategory": "Kategorie verschieben",
                 "cancel": "Abbrechen",
+                "addServiceRule": "Service-Regel hinzufügen",
                 "bActions": {
                     "addRemoveTags": "Tags hinzufügen / entfernen",
                     "addTags": "Tags hinzufügen",
@@ -534,7 +587,7 @@
                     "removeTags": "Tags entfernen",
                     "removeTagsLabel": "Tags auswählen, die Sie von den ausgewählten Kategorien entfernen möchten.",
                     "noTagsToRemove": "Keine Tags zu entfernen",
-          "moveCategories": "Kategorien verschieben",
+                    "moveCategories": "Kategorien verschieben",
                     "changeContentPrivacy": "Inhalt-Datenschutz ändern",
                     "changeContentPrivacyLabel": "Einstellungen für den Inhalt-Datenschutz für alle ausgewählten Kategorien ändern.",
                     "changeCategoryListing": "Kategorienliste ändern",
@@ -719,7 +772,7 @@
                         "fromPlaylist": "Von Wiedergabeliste"
                     },
                     "search": "Suchen",
-          "playerName": "Player({{0}})",
+                    "playerName": "Player({{0}})",
                     "entriesCountData": {
                         "count": "Anzahl Einträge",
                         "numOfEntries": "{{0}} Einträge",
@@ -735,7 +788,7 @@
                         "yahoo": "Yahoo",
                         "itunes": "iTunes",
                         "roku": "Roku Direct Publisher",
-                        "opera": "Opera Snap TV",
+                        "opera": "Vewd TV Snap",
                         "flexibleFormat": "Flexibles Format"
                     },
                     "destinationsForms": {
@@ -750,16 +803,17 @@
                                 "explanation": "Geben Sie die URL-Vorlage ein, die Sie als iTunes Store Podcast für jedes Video in diesem Feed angezeigt haben möchten. Das System wird die spezifische Eintrags-ID für jeden Eintrag hinzufügen. Beispielsweise:\"http://mysite.com?videoid=\""
                             },
                             "feedAuthor": "Feed-Verfasser",
+                            "enforceFeedAuthor": "Diesen Namen als Episoden-Verfasser für alle Episoden verwenden",
                             "website": "Webseite",
                             "description": "Feed-Beschreibung",
                             "categories": {
-                                "label": "Kategorie",
+                                "label": "Kategorie ",
                                 "promptText": "Kategorie auswählen",
                                 "itemsSelected":"{0} ausgewählte Kategorien",
                                 "availableCategories": {
                                     "Arts": "Kunst",
                                     "Arts/Design": "Kunst/Design",
-                                    "Arts/Fashion &amp; Beauty": "Kunst/Mode &amp; Beauty",
+                                    "Arts/Fashion &amp; Beauty": "Kunst/Mode & Beauty",
                                     "Arts/Food": "Kunst/Essen",
                                     "Arts/Literature": "Kunst/Literatur",
                                     "Arts/Performing Arts": "Kunst/Darstellende Kunst",
@@ -768,7 +822,7 @@
                                     "Business/Business News": "Business/Business-News",
                                     "Business/Careers": "Business/Karriere",
                                     "Business/Investing": "Business/Investitionen",
-                                    "Business/Management &amp; Marketing": "Business/Management &amp; Marketing",
+                                    "Business/Management &amp; Marketing": "Business/Management & Marketing",
                                     "Business/Shopping": "Business/Shopping",
                                     "Comedy": "Comedy",
                                     "Education": "Lernen",
@@ -777,58 +831,58 @@
                                     "Education/K-12": "Lernen/K-12",
                                     "Education/Language Courses": "Lernen/Sprachkurse",
                                     "Education/Training": "Lernen/Schulungen",
-                                    "Games &amp; Hobbies": "Spiele &amp; Hobbys",
-                                    "Games &amp; Hobbies/Automotive": "Spiele &amp; Hobbys/Fahrzeuge",
-                                    "Games &amp; Hobbies/Aviation": "Spiele &amp; Hobbys/Flugzeuge",
-                                    "Games &amp; Hobbies/Hobbies": "Spiele &amp; Hobbys/Hobbys",
-                                    "Games &amp; Hobbies/Other Games": "Spiele &amp; Hobbys/Sonstige Spiele",
-                                    "Games &amp; Hobbies/Video Games": "Spiele &amp; Hobbys/Videospiele",
-                                    "Government &amp; Organizations": "Regierung &amp; Organisationen",
-                                    "Government &amp; Organizations/Local": "Regierung &amp; Organisationen/Kommunal",
-                                    "Government &amp; Organizations/National": "Regierung &amp; Organisationen/National",
-                                    "Government &amp; Organizations/Non-Profit": "Regierung &amp; Organisationen/Wohltätigkeit",
-                                    "Government &amp; Organizations/Regional": "Regierung &amp; Organisationen/Regional",
+                                    "Games &amp; Hobbies": "Spiele & Hobbys",
+                                    "Games &amp; Hobbies/Automotive": "Spiele & Hobbys/Fahrzeuge",
+                                    "Games &amp; Hobbies/Aviation": "Spiele & Hobbys/Flugzeuge",
+                                    "Games &amp; Hobbies/Hobbies": "Spiele & Hobbys/Hobbys",
+                                    "Games &amp; Hobbies/Other Games": "Spiele & Hobbys/Sonstige Spiele",
+                                    "Games &amp; Hobbies/Video Games": "Spiele & Hobbys/Videospiele",
+                                    "Government &amp; Organizations": "Regierung & Organisationen",
+                                    "Government &amp; Organizations/Local": "Regierung & Organisationen/Kommunal",
+                                    "Government &amp; Organizations/National": "Regierung & Organisationen/National",
+                                    "Government &amp; Organizations/Non-Profit": "Regierung & Organisationen/Wohltätigkeit",
+                                    "Government &amp; Organizations/Regional": "Regierung & Organisationen/Regional",
                                     "Health": "Gesundheit",
                                     "Health/Alternative Health": "Gesundheit/Alternative Gesundheit",
-                                    "Health/Fitness &amp; Nutrition": "Gesundheit/Fitness &amp; Ernährung",
+                                    "Health/Fitness &amp; Nutrition": "Gesundheit/Fitness & Ernährung",
                                     "Health/Self-Help": "Gesundheit/Eigenbehandlung",
                                     "Health/Sexuality": "Gesundheit/Sexualität",
-                                    "Kids &amp; Family": "Kinder &amp; Familie",
+                                    "Kids &amp;Family": "Kinder & Familie",
                                     "Music": "Musik",
-                                    "News &amp; Politics": "Nachrichten &amp; Politik",
-                                    "Religion &amp; Spirituality": "Religion &amp; Spiritualität",
-                                    "Religion &amp; Spirituality/Buddhism": "Religion &amp; Spiritualität/Buddhismus",
-                                    "Religion &amp; Spirituality/Christianity": "Religion &amp; Spiritualität/Christentum",
-                                    "Religion &amp; Spirituality/Hinduism": "Religion &amp; Spiritualität/Hinduismus",
-                                    "Religion &amp; Spirituality/Islam": "Religion &amp; Spiritualität/Islam",
-                                    "Religion &amp; Spirituality/Judaism": "Religion &amp; Spiritualität/Judentum",
-                                    "Religion &amp; Spirituality/Other": "Religion &amp; Spiritualität/Sonstiges",
-                                    "Religion &amp; Spirituality/Spirituality": "Religion &amp; Spiritualität/Spiritualität",
-                                    "Science &amp; Medicine": "Wissenschaft &amp; Medizin",
-                                    "Science &amp; Medicine/Medicine": "Wissenschaft &amp; Medizin/Medizin",
-                                    "Science &amp; Medicine/Natural Sciences": "Wissenschaft &amp; Medizin/Naturwissenschaften",
-                                    "Science &amp; Medicine/Social Sciences": "Wissenschaft &amp; Medizin/Sozialwissenschaften",
-                                    "Society &amp; Culture": "Gesellschaft &amp; Kultur",
-                                    "Society &amp; Culture/History": "Gesellschaft &amp; Kultur/Geschichte",
-                                    "Society &amp; Culture/Personal Journals": "Gesellschaft &amp; Kultur/Tagebücher",
-                                    "Society &amp; Culture/Philosophy": "Gesellschaft &amp; Kultur/Philosophie",
-                                    "Society &amp; Culture/Places &amp; Travel": "Gesellschaft &amp; Kultur/Orte &amp; Reisen",
-                                    "Sports &amp; Recreation": "Sport &amp; Freizeit",
-                                    "Sports &amp; Recreation/Amateur": "Sport &amp; Freizeit/Amateure",
-                                    "Sports &amp; Recreation/College &amp; High School": "Sport &amp; Freizeit/Realschule &amp; Gymnasium",
-                                    "Sports &amp; Recreation/Outdoor": "Sport &amp; Freizeit/Im Freien",
-                                    "Sports &amp; Recreation/Professional": "Sport &amp; Freizeit/Profis",
+                                    "News &amp; Politics": "Nachrichten & Politik",
+                                    "Religion &amp; Spirituality": "Religion & Spiritualität",
+                                    "Religion &amp; Spirituality/Buddhism": "Religion & Spiritualität/Buddhismus",
+                                    "Religion &amp; Spirituality/Christianity": "Religion & Spiritualität/Christentum",
+                                    "Religion &amp; Spirituality/Hinduism": "Religion & Spiritualität/Hinduismus",
+                                    "Religion &amp; Spirituality/Islam": "Religion & Spiritualität/Islam",
+                                    "Religion &amp; Spirituality/Judaism": "Religion & Spiritualität/Judentum",
+                                    "Religion &amp; Spirituality/Other": "Religion & Spiritualität/Sonstiges",
+                                    "Religion &amp; Spirituality/Spirituality": "Religion & Spiritualität/Spiritualität",
+                                    "Science &amp; Medicine": "Wissenschaft & Medizin",
+                                    "Science &amp; Medicine/Medicine": "Wissenschaft & Medizin/Medizin",
+                                    "Science &amp; Medicine/Natural Sciences": "Wissenschaft & Medizin/Naturwissenschaften",
+                                    "Science &amp; Medicine/Social Sciences": "Wissenschaft & Medizin/Sozialwissenschaften",
+                                    "Society &amp; Culture": "Gesellschaft & Kultur",
+                                    "Society &amp; Culture/History": "Gesellschaft & Kultur/Geschichte",
+                                    "Society &amp; Culture/Personal Journals": "Gesellschaft & Kultur/Tagebücher",
+                                    "Society &amp; Culture/Philosophy": "Gesellschaft & Kultur/Philosophie",
+                                    "Society &amp; Culture/Places &amp; Travel": "Gesellschaft & Kultur/Orte & Reisen",
+                                    "Sports &amp; Recreation": "Sport & Freizeit",
+                                    "Sports &amp; Recreation/Amateur": "Sport & Freizeit/Amateure",
+                                    "Sports &amp; Recreation/College &amp; High School": "Sport & Freizeit/Realschule & Gymnasium",
+                                    "Sports &amp; Recreation/Outdoor": "Sport & Freizeit/Im Freien",
+                                    "Sports &amp; Recreation/Professional": "Sport & Freizeit/Profis",
                                     "Technology": "Technologie",
                                     "Technology/Gadgets": "Technologie/Gadgets",
                                     "Technology/Tech News": "Technologie/Technologie-News",
                                     "Technology/Podcasting": "Technologie/Podcasting",
                                     "Technology/Software How-To": "Technologie/Angewandte Software",
-                                    "TV &amp; Film": "TV &amp; Film"
+                                    "TV &amp; Film": "TV & Film"
                                 }
                             },
                             "adultContent": {
                                 "label": "Nicht jugendfreier Inhalt",
-                                "hint": "Falls Sie bei diesem Tag „Ja“ eingeben, erscheint für Erziehungsberechtigte neben Ihrer Podcastabbildung im iTunes Store und in der Namensspalte in iTunes eine „Explicit“ („Ausdrücklich“)-Hinweisgraphik. Der Wert „Clean“ („Sauber“) gilt als Hinweistyp für Erziehungsberechtigte, dass in den Episoden weder Kraftausdrücke noch nicht-jugendfreier Inhalt enthalten sind. Es wird eine „Clean“-Graphik angezeigt. Liegt der „Explicit“-Tag vor, enthält er aber einen anderen Wert (z.&#160;B. „Nein“), sehen Sie keine Angaben - der Standard-Hinweistyp ist „Blank“ („Leer“).",
+                                "hint": "Falls Sie bei diesem Tag „Ja“ eingeben, erscheint für Erziehungsberechtigte neben Ihrer Podcastabbildung im iTunes Store und in der Namensspalte in iTunes eine „Explicit“ („Ausdrücklich“)-Hinweisgraphik. Der Wert „Clean“ („Sauber“) gilt als Hinweistyp für Erziehungsberechtigte, dass in den Episoden weder Kraftausdrücke noch nicht-jugendfreier Inhalt enthalten sind. Es wird eine „Clean“-Graphik angezeigt. Liegt der „Explicit“-Tag vor, enthält er aber einen anderen Wert (z. B. „Nein“), sehen Sie keine Angaben - der Standard-Hinweistyp ist „Blank“ („Leer“).",
                                 "options": {
                                     "yes": "Ja",
                                     "no": "Nein",
@@ -916,23 +970,23 @@
                                 "itemsSelected":"{0} ausgewählte Kategorien",
                                 "availableCategories": {
                                     "Action": "Aktion",
-                                    "Art &amp; Animation": "Kunst &amp; Animation",
-                                    "Entertainment &amp; TV": "Unterhaltung &amp; Fernsehen",
+                                    "Art &amp; Animation": "Kunst & Animation",
+                                    "Entertainment &amp; TV": "Unterhaltung & Fernsehen",
                                     "Food": "Ernährung",
                                     "Games": "Spiele",
                                     "How-To": "Anleitungen",
                                     "Music": "Musik",
-                                    "People &amp; Vlogs": "Leute &amp; Vlogs",
-                                    "Science &amp; Environment": "Wissenschaft &amp; Umwelt",
+                                    "People &amp; Vlogs": "Leute & Vlogs",
+                                    "Science &amp; Environment": "Wissenschaft & Umwelt",
                                     "Transportation": "Transport",
                                     "Animals": "Tiere",
                                     "Commercials": "Werbung",
                                     "Family": "Familie",
                                     "Funny Videos": "Lustige Videos",
-                                    "Health &amp; Beauty": "Gesundheit &amp; Schönheit",
-                                    "Movies &amp; Shorts": "Filme &amp; Kurzfilme",
-                                    "News &amp; Politics": "Nachrichten &amp; Politik",
-                                    "Products &amp; Tech.": "Produkte &amp; Technik",
+                                    "Health &amp; Beauty": "Gesundheit & Schönheit",
+                                    "Movies &amp; Shorts": "Filme & Kurzfilme",
+                                    "News &amp; Politics": "Nachrichten & Politik",
+                                    "Products &amp; Tech.": "Produkte & Technik",
                                     "Sports": "Sport",
                                     "Travel": "Reisen"
                                 }
@@ -969,8 +1023,8 @@
                 },
                 "deleteConfirmation": {
                     "title": "Löschen bestätigen",
-                    "singleFeed": "Wollen Sie den folgenden Feed wirklich löschen?&#160;{{0}}",
-                    "upTo5Feed": "Wollen Sie die folgenden Feeds wirklich löschen?&#160;{{0}}",
+                    "singleFeed": "Wollen Sie den folgenden Feed wirklich löschen? {{0}}",
+                    "upTo5Feed": "Wollen Sie die folgenden Feeds wirklich löschen? {{0}}",
                     "moreThan5": "Wollen Sie die ausgewählten Feeds wirklich löschen?"
                 },
                 "errors": {
@@ -1053,7 +1107,7 @@
                 "durations": "Dauer: {{0}}",
                 "replacementStatuses": "Austausch-Status: {{0}}",
                 "moderationStatuses": "Moderation: {{0}}",
-                "originalClippedEntries": "Original &amp; Zugeschnitten: {{0}}",
+                "originalClippedEntries": "Original & Zugeschnitten: {{0}}",
                 "timeScheduling": "Planung: {{0}}",
                 "accessControlProfiles": "Zugriffskontrolle: {{0}}",
                 "flavors": "Variante: {{0}}",
@@ -1089,7 +1143,7 @@
                 "createdOn": "Erstellt am",
                 "duration": "Dauer",
                 "status": "Status",
-                "previewAndEmbed": "Teilen &amp; Einbetten",
+                "previewAndEmbed": "Teilen & Einbetten",
                 "previewInPlayer": "Vorschau im Player",
                 "liveDashboard": "Live-Dashboard",
                 "delete": "Löschen",
@@ -1100,7 +1154,7 @@
                 "noResults": "Keine Ergebnisse",
                 "flags": "Markierungen",
                 "moderationStatus": "Moderationsstatus",
-                "reportsAndDetails": "Berichte &amp; Details",
+                "reportsAndDetails": "Berichte & Details",
                 "approve": "Freigeben",
                 "reject": "Ablehnen",
                 "userName": "Benutzername",
@@ -1113,7 +1167,11 @@
                 "ruleName": "Regelname",
                 "entriesCount": "Anzahl Einträge",
                 "limit": "Begrenzung",
-                "orderBy": "Sortieren nach"
+                "orderBy": "Sortieren nach",
+                "nameTooltip": "{{0}} Tags: {{1}}",
+                "download": "Herunterladen",
+                "editor": "Editor starten",
+                "captionRequest": "Untertitelanforderung"
             },
             "paginator": {
                 "showRows": "Zeilen anzeigen:"
@@ -1264,6 +1322,7 @@
                 "dismiss": "Verwerfen"
             },
             "bulkActions": {
+                "captionRequest": "Untertitelanforderung",
                 "setScheduling": "Planung festlegen",
                 "setAccessControl": "Zugriffskontrolle festlegen",
                 "addRemovePublishers": "Mitverleger hinzufügen/entfernen",
@@ -1295,7 +1354,7 @@
                 "changeOwner": "Inhaber ändern",
                 "changeOwnerLabel": "Einen neuen Inhaber für die ausgewählten Einträge festlegen.",
                 "download": "Herunterladen",
-                "downloadEntries": "Ausgewählte Einträge herunterladen.",
+                "downloadEntries": "Ausgewählte Einträge herunterladen",
                 "download1Label": "Sie haben 1 Eintrag zum Herunterladen ausgewählt.",
                 "downloadManyLabel": "Sie haben {{0}} Einträge zum Herunterladen ausgewählt.",
                 "downloadFlavor": "Falls Sie das Herunterladen eines Videos ausgewählt haben, wählen Sie bitte das benötigte Format:",
@@ -1321,19 +1380,25 @@
                 "removeFromPlaylist": "Aus Wiedergabeliste entfernen",
                 "moveUp": "Nach oben",
                 "moveDown": "Nach unten",
+                "moveTop": "Nach oben verschieben",
+                "moveBottom": "Nach unten verschieben",
                 "duplicate": "Duplizieren",
                 "removeCategoriesNone": "Keine Kategorien zum Entfernen",
                 "approve": "Freigeben",
                 "reject": "Ablehnen",
                 "newPlaylist": "Neue Wiedergabeliste",
                 "createPlaylistWarning": "Neue Wiedergabeliste",
-                "createPlaylistWarningMsg": "Einige der ausgewählten Einträge haben ungültige Statusangaben. Sie können fortfahren, ungültige Einträge werden jedoch ignoriert {{0}}.",
+                "createPlaylistWarningMsg": "Einige der ausgewählten Einträge haben ungültige Statusangaben. Sie können fortfahren, ungültige Einträge werden jedoch ignoriert: {{0}}.",
+                "createPlaylistWarningMsgShort": "{{0}} der ausgewählten Einträge haben ungültige Statusangaben. Sie können fortfahren, ungültige Einträge werden jedoch ignoriert.",
                 "createPlaylistErrorMsg": "Alle ausgewählten Einträge haben ungültige Statusangaben. Sie können keine neue Wiedergabeliste erstellen, welche diese Einträge enthält",
                 "viewRule": "Regel ansehen/bearbeiten",
                 "deleteRule": "Regel löschen",
                 "noCategoriesOrEntries": "Keine Kategorien oder Einträge ausgewählt.",
                 "entryAlreadyAssignedToCategory": "Eintrag {{0}} ist bereits Kategorie {{1}} zugewiesen.",
-                "downloadFailed": "Die Anfrage zum Herunterladen ist fehlgeschlagen."
+                "downloadFailed": "Die Anfrage zum Herunterladen ist fehlgeschlagen.",
+                "captionRequestAllInvalid": "Die ausgewählten Einträge unterstützen Untertitelanfragen nicht. Bitte wählen Sie nur Video-/Audioeinträge aus, die Playback-bereit sind",
+                "captionRequestSomeInvalid": "Bitte beachten Sie, dass einige Einträge Untertitelanfragen nicht unterstützen und daher ignoriert werden. Fortfahren?"
+
             },
             "entryDetails": {
                 "entryEditor": {
@@ -1341,7 +1406,13 @@
                     "cancelEdit": "Bearbeitung abbrechen",
                     "discard": "Alle Änderungen verwerfen?"
                 },
+                "downloadEntry": {
+                    "title": "Herunterladen",
+                    "downloadFlavor": "Falls Sie das Herunterladen eines Videos ausgewählt haben, wählen Sie bitte das benötigte Format:",
+                    "downloadEntry": "Download-Eintrag"
+                },
                 "save": "Speichern",
+                "newDraftEntryWarning": "Eintrag wurde automatisch gespeichert. Möchten Sie diese Eintrag beibehalten?",
                 "sections": {
                     "metadata": "Metadaten",
                     "thumbnails": "Vorschaubilder",
@@ -1358,11 +1429,12 @@
                 },
                 "preview": {
                     "clipAndTrim": "Editor",
-                    "pande": "Teilen &amp; Einbetten",
+                    "pande": "Teilen & Einbetten",
                     "previewInPlayer": "Vorschau im Player",
                     "details": "Details",
                     "entryID": "ID:",
                     "creator": "Erstellt von:",
+                    "owner": "Inhaber",
                     "creationDate": "Erstellungsdatum:",
                     "updateDate": "Letzte Aktualisierung:",
                     "landingPage": "Zielseite:",
@@ -1510,7 +1582,8 @@
                         "preview": "Vorschau",
                         "reconvert": "Rekonvertieren",
                         "drm": "DRM-Details ansehen",
-                        "link": "Link"
+                        "link": "Link",
+                        "match": "Ablageordner"
                     },
                     "drm": {
                         "header": "DRM-Details",
@@ -1556,13 +1629,15 @@
                     "deleteFailure": "Löschen von Varianten-Objekt fehlgeschlagen.",
                     "convertFailure": "Varianten-Konvertierung fehlgeschlagen.",
                     "missingOriginalFlavor": "Das ursprüngliche Varianten-Objekt fehlt",
-          "uploadFailure": "Varianten-Hochladen fehlgeschlagen.",
+                    "uploadFailure": "Varianten-Hochladen fehlgeschlagen.",
                     "downloadFailure": "Varianten-Herunterladen fehlgeschlagen.",
                     "importFailure": "Varianten-Import fehlgeschlagen.",
                     "replaceVideo": {
+                        "replaceVideo": "Video ersetzen",
                         "noFlavors": "Keine Varianten",
                         "addVideo": "Video hinzufügen",
                         "addAudio": "Audio hinzufügen",
+                        "replaceAudio": "Audio ersetzen",
                         "uploadFile": "Datei hochladen",
                         "uploadFiles": "Dateien hochladen",
                         "importFile": "Datei importieren",
@@ -1596,6 +1671,20 @@
                         "approveReplacementTooltip": "Alle aktuellen Varianten werden nach Austauschgenehmigung ausgetauscht. Zeitbasierte Metadaten können ebenfalls betroffen sein.",
                         "currentFlavors": "Aktuelle Varianten",
                         "replacementFlavors": "Austausch-Varianten",
+                        "setReferenceId": "Referenz-ID festlegen",
+                        "addFilesBtn": "Datei/en hinzufügen",
+                        "referenceId": "Referenz-ID:",
+                        "selectDropFolder": "Ablageordner wählen",
+                        "searchFolder": "Ordner durchsuchen",
+                        "mediaPackageName": "Medienpaket-Name",
+                        "mediaName": "Medienname",
+                        "createdOn": "Erstellt am",
+                        "waiting": "Warten auf Konvertierung",
+                        "error": "* Fehler *",
+                        "setReferenceIdWarning": "Die automatische Aufnahme ist jetzt in Gang, bitte schauen Sie in einigen Minuten noch einmal nach.",
+                        "addFilesWarning": "Das Hinzufügen dieser Datei unterbricht den automatischen Aufnahmeprozess und sollte nur als Ausweichmethode durchgeführt werden. Möchten Sie fortfahren?",
+                        "noDropFolders": "Keine Ablageordner verfügbar",
+                        "noDropFoldersWarning": "Ihre Kontokonfiguration unterstützt automatisches Angleichen der Medienpaketen aus Ablageordnern nicht. ",
                         "storageProfile": {
                             "name": "Name:",
                             "id": "ID:",
@@ -1606,8 +1695,8 @@
                         },
                         "replacementStatus": {
                             "replacementInProcess": "Video-Austausch in Bearbeitung",
-                            "readyForReplacement": "Video bereit zum Austausch",
-                            "replacementFailed": "Video-Austausch fehlgeschlagen"
+                            "readyForReplacement": "Video ist bereit für den Austausch",
+                            "replacementFailed": "Videoersatz ist fehlgeschlagen"
                         },
                         "errors": {
                             "uniqueFlavors": "Mehr als eine Datei wird mit denselben Transkodierungsvarianten-Einstellungen assoziiert.",
@@ -1623,6 +1712,7 @@
                 "captions": {
                     "captions": "Untertitel",
                     "add": "Untertitel hinzufügen",
+                    "request": "Untertitel anfordern",
                     "label": "Beschriftung",
                     "type": "Dateityp",
                     "language": "Sprache",
@@ -1728,7 +1818,7 @@
                     "duration": "Dauer",
                     "status": "Status",
                     "n_a": "k. A.",
-                    "clipTrim": "üemdomZuschneiden &amp; Anpassen"
+                    "clipTrim": "üemdomZuschneiden & Anpassen"
                 },
                 "advertisements": {
                     "title":"Werbeanzeigen",
@@ -2264,8 +2354,8 @@
                 "personalDetails": "Persönliche Details",
                 "accountSpecificDetails": "Kontospezifische Details",
                 "required": "Dieses Feld ist ein Pflichtfeld.",
-                "emailFormat": "Dieses E-Mail-Format ist ungültig",
-                "publisherIdFormat": "Das Format dieser Herausgeber-ID ist nicht gültig",
+                "emailFormat": "Ungültiges E-Mail-Format",
+                "publisherIdFormat": "Ungültiges Herausgeber-ID-Format",
                 "userAlreadyExist": "{{0}} ist bereits im System aufgeführt und mit einem anderen KMC-Konto verbunden. Wollen Sie diesen Benutzer ebenfalls mit diesem Konto verbinden?",
                 "alreadyExist": "Der Benutzer existiert bereits",
                 "alreadyExistError": "Die E-Mail-Adresse für die Anmeldung {{0}} ist im System bereits als autorisierter Benutzer für Ihr Konto aufgelistet.",
@@ -2288,9 +2378,10 @@
                 "contactUs": "Kontaktieren Sie uns,",
                 "contactUsText": " um mehr darüber zu erfahren, wie Sie deaktivierte Objekte unten zu Ihrem Konto hinzufügen.",
                 "roleUpdated": "Rolle aktualisiert",
-        "roleUpdatedMessage": "Änderungen treten sofort in Kraft. Das Aktualisieren des Browserfensters sollte bestehenden Benutzern empfohlen werden, die mit dieser Rolle assoziiert werden",
-        "errors": {
+                "roleUpdatedMessage": "Änderungen treten sofort in Kraft. Das Aktualisieren des Browserfensters sollte bestehenden Benutzern empfohlen werden, die mit dieser Rolle assoziiert werden",
+                "errors": {
                     "required": "Dieses Feld ist ein Pflichtfeld.",
+                    "unsafeValue": "Potenziell unsichere HTML-Tags",
                     "validationError": "Das Formular enthält ungültige Informationen. Bitte überprüfen Sie die Bereiche, die als ungültig markiert wurden."
                 },
                 "permissionsTable": {
@@ -2353,7 +2444,7 @@
                     "header": "Wir freuen uns, dass Sie weitere Informationen zur Aktualisierung Ihres Kontos erhalten möchten!",
                     "trial": "Ihre kostenlose Testversion läuft am {{0}} ab.",
                     "gb": " GB",
-          "bandwidth": "Monatlicher Bandbreitenverbrauch bis jetzt: {{0}}",
+                    "bandwidth": "Monatlicher Bandbreitenverbrauch bis jetzt: {{0}}",
                     "storage": "Bisherige monatliche Speichernutzung: {{0}}",
                     "contactUs": "Kontaktieren Sie uns, um mehr über unterschiedliche Pakete und Mehrwertdienste zu erfahren."
                 }
@@ -2447,9 +2538,9 @@
                         "invalidSystemName": "Das Feld „Systemname“ muss einen einmaligen Namen haben. Bitte geben Sie einen anderen Namen ein.",
                         "emptyLabel": "Bitte geben Sie eine Feldbeschriftung ein",
                         "invalidLabelPrefix": "Der Feldname muss mit einem Buchstaben beginnen.",
-                        "invalidChars": "Ungültige Eingabe. Die Sonderzeichen &lt; > &amp; \" und ' sind nicht erlaubt.",
+                        "invalidChars": "Ungültige Eingabe. Die Sonderzeichen &lt; > & \" und ' sind nicht erlaubt.",
                         "emptyListValues": "Ungültige Eingabe bei „Werte auflisten“: Es muss mindestens eine Option aufgelistet werden.",
-                        "invalidListOptions": "Ungültige Eingabe bei „Werte auflisten“: Erlaubt sind nur Buchstaben, Zahlen und die folgenden Sonderzeichen: ()|-@~&amp;/^$=_%.':",
+                        "invalidListOptions": "Ungültige Eingabe bei „Werte auflisten“: Erlaubt sind nur Buchstaben, Zahlen und die folgenden Sonderzeichen: ()|-@~&/^$=_%.':",
                         "invalidListOptionsPrefix": "Ungültige Eingabe bei „Werte auflisten“: - ist ein ungültiges Präfix."
                     }
                 },
@@ -2505,7 +2596,7 @@
                             "privacyContextLabelRequired": "Bitte geben Sie eine Datenschutzkontext-Beschriftung ein",
                             "privacyContextLabelExists": "Für die Kategorie wurde bereits eine Datenschutzkontext-Beschriftung festgelegt.",
                             "privacyContextLabelTooShort": "Datenschutzkontext-Beschriftungen müssen aus mindestens 4 Zeichen bestehen.",
-                            "privacyContextLabelRegex": "Datenschutzkontext-Beschriftungen dürfen nur alphanumerische Zeichen beinhalten."
+                            "privacyContextLabelRegex": "Datenschutzkontext-Beschriftungen dürfen nur englische alphanumerische Zeichen beinhalten."
                         }
                     },
                     "deleteEntitlement": {
@@ -2548,7 +2639,7 @@
                 "strongPassword": "Benutzen Sie ein starkes Passwort, das Sie nirgends sonst verwenden.",
                 "currentPassword": "Aktuelles Passwort",
                 "newPassword": "Neues Passwort",
-                "reTypeNewPassword": "Geben Sie das neue Passwort erneut ein.",
+                "reTypeNewPassword": "Geben Sie das neue Passwort erneut ein",
                 "errors": {
                     "required": "Dieses Feld ist ein Pflichtfeld.",
                     "doNotMuchPasswords": "Die Passwörter stimmen nicht überein.",
@@ -2792,7 +2883,11 @@
         },
         "analytics": {
             "comingSoon": "In Kürze! Analytics für alle Medientypen.",
-            "releaseSupports": "Diese Version unterstützt nur Analytics für „Live“-Einträge. Loggen Sie sich für alle anderen Medien bitte in der Legacy-KMC ein, um Analytics und Berichte anzuzeigen und zu erstellen. Analytics für alle Medien sollte in Kürze verfügbar sein"
+            "releaseSupports": "Diese Version unterstützt nur Analytics für „Live“-Einträge. Für alle anderen Medien <a href=\"{{0}}\" target=\"_blank\">loggen Sie sich bitte in der Legacy-KMC</a> ein, um Analytics und Berichte anzuzeigen und zu erstellen. Analytics für alle Medien sollte in Kürze verfügbar sein"
+        },
+        "reach": {
+            "captionRequests": "Untertitelanforderungen",
+            "addServiceRule": "Service-Regel hinzufügen"
         }
     },
     "entriesShared": {
@@ -3157,6 +3252,10 @@
         "SK": "Slowakisch",
         "SL": "Slowenisch",
         "SM": "Samoanisch",
+        "SMA": "Southern Sami",
+        "SMJ": "Lule Sami",
+        "SMN": "Inari Sami",
+        "SMS": "Skolt Sami",
         "SN": "Shona",
         "SO": "Somali",
         "SQ": "Albanisch",

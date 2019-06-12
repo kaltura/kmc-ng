@@ -15,10 +15,6 @@
       display: flex;
       align-items: center;
 
-      &:hover {
-        background-color: $kGrayscale6;
-      }
-
         .kThumbnailHolder {
             flex: 1 0 auto;
             margin-right: 8px;
@@ -49,25 +45,32 @@
                 position: absolute;
                 color: #FFFFFF;
 
-                &.kIconyoutube {
+                &.kIconquiz {
                     font-size: 20px;
                     top: 15px;
                     right: 1px;
-                    z-index: 2;
-                    color: $kDandger;
+                }
+                &.kIconyoutube {
+                  font-size: 20px;
+                  top: 15px;
+                  right: 1px;
+                  z-index: 2;
+                  color: $kDandger;
                 }
             }
-
-            .kYoutubeIconFix {
-                position: absolute;
-                width: 10px;
-                height: 10px;
-                top: 20px;
-                right: 6px;
-                background-color: #FFFFFF;
-                z-index: 1;
-            }
         }
+
+      &:hover {
+        background-color: $kGrayscale6;
+      }
+
+      img {
+        width: 64px;
+        height: 36px;
+        object-fit: cover;
+        margin-right: 8px;
+        border-radius: 3px;
+      }
 
       span {
         font-size: 15px;

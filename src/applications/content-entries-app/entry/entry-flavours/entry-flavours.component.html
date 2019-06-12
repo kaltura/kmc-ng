@@ -131,9 +131,10 @@
                     </tr>
                 </ng-template>
             </p-table>
-            <p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
         </div>
     </div>
+
+    <p-menu #actionsmenu [popup]="true" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 
     <kPopupWidget #drmPopup data-aid="drmPopup" [popupWidth]="550" [popupHeight]="440" [modal]="true">
         <kDRMDetails [currentFlavor]="_selectedFlavor"></kDRMDetails>

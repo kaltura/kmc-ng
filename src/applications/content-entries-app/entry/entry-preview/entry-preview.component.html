@@ -1,6 +1,6 @@
 <div class="kEntryPreview">
   <iframe *ngIf="_widgetService._iframeSrc" [src]="_widgetService._iframeSrc | safe" width="280" height="158"
-          allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
+          allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0" allow="autoplay *; fullscreen *; encrypted-media *"></iframe>
   <div class="kPreviewAndEmbedContainer">
     <div class="kLink" (click)="!_previewDisabled && openPreviewAndEmbed()">
       <i [class.disabled]="_previewDisabled" class="kIconShare"></i>

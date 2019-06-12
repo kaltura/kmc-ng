@@ -99,6 +99,48 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
         });
   }
 
+  public _updateEmail(email: string, popup: UserSettingsPopup): void {
+      this._logger.info(`handle update user email request by user`);
+      if (!this._isAllowedPopup(popup)) {
+          throw Error(`Popup name "${popup}" is not allowed, the name have to be 'UserSettingsPopup' type`);
+      }
+
+      this._updateBlockerMessage = null;
+      this._myUserSettingsStore
+          .updateEmail(new KalturaUser({ id: this._user.id, email }))
+          .pipe(cancelOnDestroy(this))
+          .pipe(tag('block-shell'))
+          .subscribe(
+              () => {
+                  this._logger.info(`handle successful update action`);
+                  this._updateBlockerMessage = null;
+                  this[popup].close();
+                  this._getUserData();
+              },
+              error => {
+                  this._logger.warn(`handle failed update email action, show confirmation`);
+                  const buttons = [{
+                      label: this._appLocalization.get('app.common.cancel'),
+                      action: () => {
+                          this._logger.info(`user canceled, dismiss dialog`);
+                          this._updateBlockerMessage = null;
+                      }
+                  }];
+                  if (error.message === this._appLocalization.get('applications.settings.myUserSettings.errors.connection')) {
+                      buttons.push({
+                          label: this._appLocalization.get('app.common.retry'),
+                          action: () => {
+                              this._logger.info(`user selected retry, retry update email action`);
+                              this._updateEmail(email, popup);
+                          }
+                      });
+                  }
+
+                  this._updateBlockerMessage = new AreaBlockerMessage({ message: error.message, buttons });
+              }
+          );
+  }
+
   public _updateLoginData(userData: UserUpdateLoginDataActionArgs, popup: UserSettingsPopup): void {
     this._logger.info(`handle update user data request by user`);
     if (!this._isAllowedPopup(popup)) {

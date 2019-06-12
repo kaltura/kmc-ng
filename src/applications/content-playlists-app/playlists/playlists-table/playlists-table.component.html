@@ -82,8 +82,8 @@
           </td>
 
           <td class="ui-resizable-column">
-              <span class="kTableColumn" [kTooltip]="playlist.createdAt | kDate" [showOnEllipsis]="true">
-                  {{playlist.createdAt | kDate}}
+              <span class="kTableColumn" [kTooltip]="playlist.createdAt | kmcDate" [showOnEllipsis]="true">
+                  {{playlist.createdAt | kmcDate}}
               </span>
           </td>
 
@@ -103,5 +103,7 @@
       </ng-template>
     </p-table>
 
-    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
   </div>
+
+  <p-menu #actionsmenu [popup]="true" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+

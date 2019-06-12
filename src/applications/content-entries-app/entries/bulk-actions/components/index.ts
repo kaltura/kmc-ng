@@ -9,3 +9,5 @@ export { BulkRemoveTags } from './bulk-remove-tags/bulk-remove-tags.component';
 export { BulkChangeOwner } from './bulk-change-owner/bulk-change-owner.component';
 export { BulkRemoveCategories } from './bulk-remove-categories/bulk-remove-categories.component';
 export { BulkDownload } from './bulk-download/bulk-download.component';
+export { BulkAddViewersComponent } from './bulk-add-viewers/bulk-add-viewers.component';
+export { BulkRemoveViewersComponent } from './bulk-remove-viewers/bulk-remove-viewers.component';

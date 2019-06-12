@@ -92,7 +92,17 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
               .map(
                   data => {
                       if (data.hasErrors()) {
-                          throw new Error('error occurred in action \'_fetchAdditionalData\'');
+                          // check for missing user error, in which case we can continue
+                          let missingUserError = false;
+                          data.forEach(response => {
+                              if (response.error && response.error.code === "INVALID_USER_ID") {
+                                  missingUserError = true;
+                                  super._showUserError();
+                              }
+                          });
+                          if (!missingUserError) {
+                              throw new Error('error occurred in action \'_fetchAdditionalData\'');
+                          }
                       }
 
                       let owner: KalturaUser = null;

@@ -89,7 +89,10 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit(): void {
-      this._addFile();
+      setTimeout(()=>{
+          this._addFile();
+      },0);
+
 
     this._tableScrollableWrapper = document.querySelector('.kUploadSettings .ui-table-scrollable-body');
   }
@@ -100,9 +103,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngOnInit() {
     this._loadTranscodingProfiles();
-      this._uploadBtnLabel = this.creationType === KMCFileCreationType.import
-          ? this._appLocalization.get('applications.upload.uploadSettings.link')
-          : this._appLocalization.get('applications.upload.uploadSettings.upload');
+      this._uploadBtnLabel = this._appLocalization.get('applications.upload.uploadSettings.upload');
       this._title = this.creationType === KMCFileCreationType.import
           ? this._appLocalization.get('applications.upload.uploadSettings.uploadFromUrl')
           : this._appLocalization.get('applications.upload.uploadSettings.uploadSettings');

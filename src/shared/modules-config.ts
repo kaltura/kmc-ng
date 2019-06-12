@@ -13,7 +13,7 @@ export const modulesConfig: ModulesConfig = {
     'contentShared': {
         'categories': {
             'categoriesStatusSampleInterval': 30,
-            'subCategoriesLimit': 50,
+            'subCategoriesLimit': 100,
             'maxTreeItemChildrenToShow': 500
         }
     }

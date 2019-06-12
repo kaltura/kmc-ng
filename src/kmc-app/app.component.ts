@@ -75,12 +75,23 @@ export class AppComponent implements OnInit {
             this._confirmDialogAlignLeft = confirmationMessage.alignMessage === 'left';
         }
 
+        if (!formattedMessage.acceptLabel) {
+            formattedMessage.acceptLabel = this._appLocalization.get('app.common.yes');
+        }
+        if (!formattedMessage.rejectLabel) {
+            formattedMessage.rejectLabel = this._appLocalization.get('app.common.no');
+        }
       this._confirmationService.confirm(formattedMessage);
       // fix for PrimeNG no being able to calculate the correct content height
-      setTimeout(() => {
-          const dialog: ConfirmDialog = (confirmationMessage.key && confirmationMessage.key === 'confirm') ? this._confirmDialog : this._alertDialog;
-          dialog.center();
-      },0);
+
+      // UPDATE: they claim they've fixed it already by
+      // https://github.com/primefaces/primeng/commit/e510d430120d0cdc399b06a0332eb13258771d32#diff-f490f0e0b3c83cf3465419219de415b6
+      // Need QA verification
+
+      // setTimeout(() => {
+      //     const dialog: ConfirmDialog = (confirmationMessage.key && confirmationMessage.key === 'confirm') ? this._confirmDialog : this._alertDialog;
+      //     dialog.center();
+      // },0);
     });
 
     // scroll window to top upon navigation change

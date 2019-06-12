@@ -74,7 +74,7 @@
                                 </a>
                             </td>
                             <td class="kFileName">{{file?.displayName}}</td>
-                            <td class="kCreatedAt" style="width: 200px">{{file?.createdAt | kDate:'dateOnly'}}</td>
+                            <td class="kCreatedAt" style="width: 200px">{{file?.createdAt | kmcDate:'dateOnly'}}</td>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="rowexpansion" let-file let-columns="columns">
@@ -87,7 +87,7 @@
                                         <span class="kTableColumn" [kTooltip]="dff?.fileName">{{dff?.fileName}}</span>
                                     </td>
                                     <td style="width: 200px; padding-left: 8px">
-                                        {{dff?.createdAt | kDate:'dateOnly'}}
+                                        {{dff?.createdAt | kmcDate:'dateOnly'}}
                                     </td>
                                 </tr>
                             </table>

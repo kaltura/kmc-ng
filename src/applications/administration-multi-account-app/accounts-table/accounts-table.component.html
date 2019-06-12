@@ -1,0 +1,126 @@
+<div class="kAccountsTable" [class.noResults]="!_accounts?.length">
+  <p-table kStickyHeader [scrollable]="true" stickyClass="stickyHeader" scrollHeight="100%" dataKey="id"
+               [rowTrackBy]="_rowTrackBy"
+               [resizableColumns]="true"
+               [sticksTo]="'accountsFilters'"
+               [value]="_accounts"
+               [sortField]="'createdAt'"
+               [sortOrder]="-1"
+               [defaultSortOrder]="_defaultSortOrder"
+               (sortFunction)="_onSortChanged($event)" [customSort]="true"
+               [stickyId]="'accountsTable'">
+
+      <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+              <col data-cid="name" [ngStyle]="{'width': '100%', 'padding-left': '1em'}">
+              <col data-cid="id" [ngStyle]="{'width': '80px'}">
+              <col data-cid="status" [ngStyle]="{'width': '80px'}">
+              <col data-cid="administrator" [ngStyle]="{'width': '100%'}">
+              <col data-cid="email" [ngStyle]="{'width': '100%'}">
+              <col data-cid="phone" [ngStyle]="{'width': '100%'}">
+              <col data-cid="refid" [ngStyle]="{'width': '100px'}">
+              <col data-cid="website" [ngStyle]="{'width': '100%'}">
+              <col data-cid="created" [ngStyle]="{'width': '100%'}">
+              <col [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
+          </colgroup>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+          <tr>
+              <th data-cid="name" pResizableColumn [ngStyle]="{'width': '100%', 'padding-left': '1em'}">
+                  {{'applications.administration.accounts.tableColumns.name' | translate}}
+              </th>
+              <th data-cid="id" pResizableColumn [ngStyle]="{'width': '80px'}">
+                  {{'applications.administration.accounts.tableColumns.id' | translate}}
+              </th>
+              <th data-cid="status" pResizableColumn [ngStyle]="{'width': '80px'}">
+                  {{'applications.administration.accounts.tableColumns.status' | translate}}
+              </th>
+              <th data-cid="administrator" pResizableColumn [ngStyle]="{'width': '100%'}">
+                  {{'applications.administration.accounts.tableColumns.administrator' | translate}}
+              </th>
+              <th data-cid="email" pResizableColumn [ngStyle]="{'width': '100%'}">
+                  {{'applications.administration.accounts.tableColumns.email' | translate}}
+              </th>
+              <th data-cid="phone" pResizableColumn [ngStyle]="{'width': '100%'}">
+                  {{'applications.administration.accounts.tableColumns.phone' | translate}}
+              </th>
+              <th data-cid="refid" pResizableColumn [ngStyle]="{'width': '100px'}">
+                  {{'applications.administration.accounts.tableColumns.refid' | translate}}
+              </th>
+              <th data-cid="website" pResizableColumn [ngStyle]="{'width': '100%'}">
+                  {{'applications.administration.accounts.tableColumns.website' | translate}}
+              </th>
+              <th data-cid="created" pResizableColumn [ngStyle]="{'width': '100%'}" [pSortableColumn]="'createdAt'">
+                  {{'applications.administration.accounts.tableColumns.created' | translate}}
+                  <p-sortIcon [field]="'createdAt'"></p-sortIcon>
+              </th>
+              <th [ngStyle]="{'overflow': 'hidden', 'width': '80px'}"></th>
+          </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-account>
+          <tr>
+              <td class="ui-resizable-column" [ngStyle]="{'width': '100%', 'padding-left': '1em'}">
+                  <span class="kTableColumn" kTooltip="{{account.name}} {{account.id.toString() === currentPartnerId ? ('applications.administration.accounts.currentUser' | translate) : ''}}" [showOnEllipsis]="true">
+                      {{account.name}} {{account.id.toString() === currentPartnerId ? ('applications.administration.accounts.currentUser' | translate) : ''}}
+                  </span>
+              </td>
+              <td class="ui-resizable-column" [ngStyle]="{'width': '80px'}">
+                  <span class="kTableColumn">
+                      {{account.id}}
+                  </span>
+              </td>
+              <td class="ui-resizable-column" [ngStyle]="{'width': '80px'}">
+                  <span class="kTableColumn">
+                      {{account.status | status}}
+                  </span>
+              </td>
+              <td class="ui-resizable-column" [ngStyle]="{'width': '100%'}">
+                  <span class="kTableColumn" [kTooltip]="account.adminName" [showOnEllipsis]="true">
+                      {{account.adminName || 'app.common.n_a' | translate}}
+                  </span>
+              </td>
+              <td class="ui-resizable-column" [ngStyle]="{'width': '100%'}">
+                  <span class="kTableColumn" [kTooltip]="account.adminEmail" [showOnEllipsis]="true">
+                      {{account.adminEmail || 'app.common.n_a' | translate}}
+                  </span>
+              </td>
+              <td class="ui-resizable-column" [ngStyle]="{'width': '100%'}">
+                  <span class="kTableColumn" [kTooltip]="account.phone" [showOnEllipsis]="true">
+                      {{account.phone || 'app.common.n_a' | translate}}
+                  </span>
+              </td>
+              <td class="ui-resizable-column" [ngStyle]="{'width': '100px'}">
+                  <span class="kTableColumn">
+                      {{account.referenceId || 'app.common.n_a' | translate}}
+                  </span>
+              </td>
+              <td class="ui-resizable-column" [ngStyle]="{'width': '100%'}">
+                  <span class="kTableColumn" [kTooltip]="account.website" [showOnEllipsis]="true">
+                      {{account.website || 'app.common.n_a' | translate}}
+                  </span>
+              </td>
+              <td class="ui-resizable-column" [ngStyle]="{'width': '100%'}">
+                  <span class="kTableColumn" [kTooltip]="account.createdAt | kmcDate" [showOnEllipsis]="true">
+                      {{account.createdAt | kmcDate}}
+                  </span>
+              </td>
+              <td [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
+                  <div class="kAccountsTableActions">
+                      <button type="button" pButton icon="kIconmore"
+                              [disabled]="account.status === 3" class="kMoreActionsButton"
+                              (click)="_openActionsMenu($event, account)"></button>
+                  </div>
+              </td>
+          </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+          <div class="emptymessage">
+              <div class="kEmptyMessage">{{_emptyMessage}}</div>
+          </div>
+      </ng-template>
+  </p-table>
+  <p-menu #actionsmenu [popup]="true" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+</div>

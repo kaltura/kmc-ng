@@ -4,8 +4,8 @@
   <kDetailInfo *ngIf="!_isNew" [label]="'applications.content.playlistDetails.details.id' | translate" [valueField]="'id'"></kDetailInfo>
   <kDetailInfo [label]="'applications.content.playlistDetails.details.creator' | translate" [valueField]="'creatorId'" [tooltip]="_currentPlaylist?.creatorId"></kDetailInfo>
 
-  <kDetailInfo *ngIf="!_isNew" [label]="'applications.content.playlistDetails.details.creationDate' | translate" [value]="_currentPlaylist?.createdAt | kDate:'dateOnly'" [tooltip]="_currentPlaylist?.createdAt | kDate"></kDetailInfo>
-  <kDetailInfo *ngIf="!_isNew" [label]="'applications.content.playlistDetails.details.updatedAt' | translate" [value]="_currentPlaylist?.updatedAt | kDate:'dateOnly'" [tooltip]="_currentPlaylist?.updatedAt | kDate"></kDetailInfo>
+  <kDetailInfo *ngIf="!_isNew" [label]="'applications.content.playlistDetails.details.creationDate' | translate" [value]="_currentPlaylist?.createdAt | kmcDate:'dateOnly'" [tooltip]="_currentPlaylist?.createdAt | kmcDate"></kDetailInfo>
+  <kDetailInfo *ngIf="!_isNew" [label]="'applications.content.playlistDetails.details.updatedAt' | translate" [value]="_currentPlaylist?.updatedAt | kmcDate:'dateOnly'" [tooltip]="_currentPlaylist?.updatedAt | kmcDate"></kDetailInfo>
   <kDetailInfo *ngIf="!_isNew" [label]="'applications.content.playlistDetails.details.moderation' | translate" [value]="_currentPlaylist?.moderationStatus | kModerationStatus"></kDetailInfo>
-  <kDetailInfo *ngIf="!_isNew" [label]="'applications.content.playlistDetails.details.plays' | translate" valueField="plays"></kDetailInfo>
+  <!--kDetailInfo *ngIf="!_isNew" [label]="'applications.content.playlistDetails.details.plays' | translate" valueField="plays"></kDetailInfo-->
 </k-details-bar>

@@ -6,7 +6,9 @@ import {UpdateClipsEvent} from 'app-shared/kmc-shared/events/update-clips-event'
 import {AppEventsService} from 'app-shared/kmc-shared/app-events';
 import {
     AdvertisementsAppViewService,
-    ClipAndTrimAppViewService, QuizAppViewService
+    ClipAndTrimAppViewService,
+    QuizAppViewService,
+    HotspotsAppViewService
 } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
@@ -29,7 +31,7 @@ import { KalturaMediaType } from 'kaltura-ngx-client';
 export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() entry: KalturaMediaEntry | KalturaLiveEntry = null;
-  @Input() tab: 'quiz' | 'editor' | 'advertisements' = null;
+  @Input() tab: 'quiz' | 'editor' | 'advertisements' | 'hotspots' = null;
     @Input() entryHasSource = false;
 
   @Output() enteredDraftMode = new EventEmitter<void>();
@@ -46,6 +48,7 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
               private _advertisementsAppViewService: AdvertisementsAppViewService,
               private _clipAndTrimAppViewService: ClipAndTrimAppViewService,
               private _quizAppViewService: QuizAppViewService,
+              private _hotspotsAppViewService: HotspotsAppViewService,
               private _permissionService: KMCPermissionsService,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
@@ -183,11 +186,18 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
               entry: this.entry,
               hasSource: this.entryHasSource
           });
+          const hotspotsAvailable = this._hotspotsAppViewService.isAvailable({
+              entry: this.entry,
+              hasSource: this.entryHasSource
+          });
 
           if (clipAndTrimAvailable) {
               this._logger.debug('clip&trim views are available, add configuration for tabs: edit, quiz');
               const clipAndTrimPermissions = [];
-              if (this._permissionService.hasPermission(KMCPermissions.CONTENT_INGEST_INTO_READY)) {
+              if (this._permissionService.hasAnyPermissions([
+                  KMCPermissions.CONTENT_INGEST_INTO_READY,
+                  KMCPermissions.CONTENT_INGEST_REPLACE])
+              ) {
                   clipAndTrimPermissions.push('trim');
               }
 
@@ -223,6 +233,12 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
               };
           }
 
+          if (hotspotsAvailable) {
+              this._logger.debug('hotspots view is available, add configuration for tabs: hotspots');
+              tabs['hotspots'] = {
+                  name: 'hotspots',
+              };
+          }
 
           let requestedTabIsNotAvailable = false;
           let keditUrl = null;
@@ -243,6 +259,13 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
                   break;
               case 'advertisements':
                   if (advertismentsAvailable) {
+                      keditUrl = serverConfig.externalApps.editor.uri;
+                  } else {
+                      requestedTabIsNotAvailable = true;
+                  }
+                  break;
+              case 'hotspots':
+                  if (hotspotsAvailable) {
                       keditUrl = serverConfig.externalApps.editor.uri;
                   } else {
                       requestedTabIsNotAvailable = true;

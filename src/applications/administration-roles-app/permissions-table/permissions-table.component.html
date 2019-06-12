@@ -17,7 +17,7 @@
           <span class="kPermissionGroup">{{permission.label}}</span>
         </td>
 
-        <td>
+        <td [ngStyle]="{'overflow': 'visible'}">
           <kMultiSelect *ngIf="permission.items"
                         class="kPermissionsList"
                         [class.kHasError]="permission.hasError"

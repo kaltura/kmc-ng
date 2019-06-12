@@ -55,6 +55,7 @@ import { InputHelperModule } from '@kaltura-ng/kaltura-ui';
 import { AnalyticsLiveModule } from 'app-shared/kmc-shared/analytics-live/analytics-live.module';
 import { KPTableModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { ClearableInputModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
 
 @NgModule({
   imports: [
@@ -104,7 +105,8 @@ import { ClearableInputModule } from '@kaltura-ng/kaltura-primeng-ui';
     InputHelperModule,
     AnalyticsLiveModule,
     KPTableModule,
-      ClearableInputModule
+      ClearableInputModule,
+      DateFormatModule,
   ],
   declarations: [
     ContentEntriesComponent,

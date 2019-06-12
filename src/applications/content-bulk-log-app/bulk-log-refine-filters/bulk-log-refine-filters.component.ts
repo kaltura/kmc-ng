@@ -9,6 +9,7 @@ import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
 import { RefineList } from '../bulk-log-store/bulk-log-refine-filters.service';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 
 const listOfFilterNames: (keyof BulkLogFilters)[] = [
@@ -46,6 +47,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChang
 
   // properties that are exposed to the template
   public _primeLists: PrimeList[];
+    public _calendarFormat = this._browserService.getCurrentDateFormat(true);
 
   public _showLoader = true;
   public _uploadedAfter: Date;
@@ -53,7 +55,8 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChang
   public _createdAtFilterError: string = null;
   public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
 
-  constructor(private _bulkLogStore: BulkLogStoreService,
+  constructor(private _browserService: BrowserService,
+              private _bulkLogStore: BulkLogStoreService,
               private _appLocalization: AppLocalization) {
   }
 

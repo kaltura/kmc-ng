@@ -4,7 +4,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import {CommonModule} from '@angular/common';
-import {Ng2Webstorage} from 'ngx-webstorage';
+import {NgxWebstorageModule} from 'ngx-webstorage';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {KalturaLogger, KalturaLoggerName} from '@kaltura-ng/kaltura-logger';
@@ -145,7 +145,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
   }),
       EntriesModule.forRoot(),
       CategoriesModule.forRoot(),
-    Ng2Webstorage,
+      NgxWebstorageModule.forRoot(),
     PopupWidgetModule,
     routing,
     PreviewAndEmbedModule,
@@ -176,7 +176,6 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     KalturaClientModule.forRoot(kalturaClientOptionsFactory),
       KmcLogsModule.forRoot(),
       KalturaLoggerModule.forRoot('kmc'),
-    KalturaClientModule.forRoot(kalturaClientOptionsFactory),
       ContextualHelpModule.forRoot(),
       KmcViewsModule.forRoot(),
       LocalizationModule.forRoot(),
@@ -207,7 +206,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       RestorePasswordFormComponent,
       InvalidRestorePasswordHashFormComponent,
       ProgressBarComponent,
-      PersistLoginByKsComponent
+      PersistLoginByKsComponent,
   ],
   bootstrap: <any>[
     AppComponent

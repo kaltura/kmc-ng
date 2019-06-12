@@ -68,6 +68,7 @@ import {CategoriesRefineFiltersService} from './categories/categories-refine-fil
 import { FiltersModule } from '@kaltura-ng/mc-shared';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
+import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
 
 @NgModule({
     imports: [
@@ -112,6 +113,7 @@ import { EntriesModule } from 'app-shared/content-shared/entries/entries.module'
         TableModule,
         KMCPermissionsModule,
 	    EntriesModule,
+        DateFormatModule,
     ],
     declarations: [
         ContentCategoriesComponent,

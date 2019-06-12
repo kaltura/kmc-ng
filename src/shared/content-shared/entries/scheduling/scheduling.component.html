@@ -17,7 +17,7 @@
           <div>
             <p-calendar class="startDate" formControlName="startDate" icon="kIconcalendar" [showIcon]="true"
                         [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
-                        showTime="true" readonlyInput="true"></p-calendar>
+                        [dateFormat]="_calendarFormat" showTime="true" readonlyInput="true" ></p-calendar>
             <div class="error" *ngIf="_schedulingForm.errors?.noStartDate">
               {{'applications.content.entryDetails.scheduling.noStartDate' | translate}}
             </div>
@@ -33,7 +33,7 @@
           <div>
             <p-calendar class="endDate" formControlName="endDate" icon="kIconcalendar" [showIcon]="true"
                         [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
-                        showTime="true" readonlyInput="true"></p-calendar>
+                        [dateFormat]="_calendarFormat" showTime="true" readonlyInput="true"></p-calendar>
             <div class="error" *ngIf="_schedulingForm.errors?.endDateBeforeStartDate">
               {{'applications.content.entryDetails.scheduling.endDateBefore' | translate}}
             </div>

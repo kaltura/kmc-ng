@@ -195,6 +195,12 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
           this._entries.state.next({ loading: false, errorMessage: null });
 
+            response.entries.forEach(entry => {
+                if ((entry.capabilities || '').indexOf('quiz.quiz') !== -1) {
+                    entry['isQuizEntry'] = true;
+                }
+            });
+
           this._entries.data.next({
             items: <any[]>response.entries,
             totalCount: <number>response.totalCount

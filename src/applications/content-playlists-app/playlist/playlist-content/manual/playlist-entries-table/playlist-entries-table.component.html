@@ -5,9 +5,9 @@
             scrollHeight="100%"
             [scrollable]="true"
             [value]="_entries"
-            [sortField]="filter.sortBy"
+            [sortField]="_sortBy"
             [defaultSortOrder]="_defaultSortOrder"
-            [sortOrder]="filter.sortDirection"
+            [sortOrder]="_sortDirection"
             (selectionChange)="_onSelectionChange($event)"
             (onSort)="_onSortChanged($event)"
             [(selection)]="selectedEntries">
@@ -53,6 +53,7 @@
                             <img [src]="entry.thumbnailUrl" onError="this.onerror=null;this.style.display='none'">
                             <i class="kIconyoutube kThumbnailTypeIcon" *ngIf="entry.externalSourceType === _youtubeExternalSourceType"></i>
                             <div class="kYoutubeIconFix" *ngIf="entry.externalSourceType === _youtubeExternalSourceType"></div>
+                            <i class="kIconquiz kThumbnailTypeIcon" *ngIf="entry.isQuizEntry"></i>
                         </div>
                     </td>
                     <td>
@@ -65,7 +66,7 @@
                         <div [kTooltip]="entry.mediaType | entryType: true"
                              [ngClass]="entry.mediaType | entryType: false"></div>
                     </td>
-                    <td class="createdAtColumn">{{entry.createdAt | kDate}}</td>
+                    <td class="createdAtColumn">{{entry.createdAt | kmcDate}}</td>
                     <td class="durationColumn">{{entry.duration | kTime | entryDuration:entry}}</td>
                     <td class="actionsColumn">
                         <div class="kPlaylistEntriesTableActions">
@@ -80,6 +81,6 @@
                 <div class="emptymessage">{{_emptyMessage}}</div>
             </ng-template>
         </p-table>
-        <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+        <p-menu #actionsmenu [popup]="true" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
     </div>
 </k-area-blocker>

@@ -111,6 +111,10 @@ const routes: Routes = <Routes>[
                         {
                             path: 'users',
                             loadChildren: '../applications/administration-users-app/administration-users-app.module#AdministrationUsersAppModule'
+                        },
+                        {
+                            path: 'multi-account',
+                            loadChildren: '../applications/administration-multi-account-app/administration-multi-account-app.module#AdministrationMultiAccountAppModule'
                         }
                     ]
                     },
@@ -120,16 +124,12 @@ const routes: Routes = <Routes>[
                         loadChildren: '../applications/usage-dashboard-app/usage-dashboard-app.module#UsageDashboardAppModule'
                     },
                     {
-                        path: 'analytics', children: [
-                        {
-                            path: 'kava',
-                            loadChildren: '../applications/analytics-kava-app/analytics-kava-app.module#AnalyticsKavaAppModule'
-                        },
-                        {
-                            path: 'liveAnalytics',
-                            loadChildren: '../applications/analytics-live-app/analytics-live-app.module#AnalyticsLiveAppModule'
-                        },
-                    ]
+                        path: 'servicesDashboard',
+                        loadChildren: '../applications/services-dashboard-app/services-dashboard-app.module#ServicesDashboardAppModule'
+                    },
+                    {
+                        path: 'analytics',
+                        loadChildren: '../applications/analytics/analytics.module#AnalyticsModule'
                     },
                     {
                         path: '**', component: NotFoundPageComponent
