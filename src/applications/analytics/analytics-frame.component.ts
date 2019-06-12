@@ -98,7 +98,6 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             pid: this.appAuthentication.appUser.partnerId,
             locale: 'en',
             live: {
-                "previewLiveUIConf": serverConfig.externalApps.kmcAnalytics.previewLiveUIConf,
                 "pollInterval": 30,
                 "healthNotificationsCount": 50
             },
