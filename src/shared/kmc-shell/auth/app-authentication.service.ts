@@ -199,6 +199,8 @@ export class AppAuthentication {
         this._automaticLoginErrorReason = null;
         this._browserService.removeFromSessionStorage(ksSessionStorageKey);  // clear session storage
 
+        const requestedPartnerId = this._browserService.getFromLocalStorage('loginPartnerId');
+
         const request = new KalturaMultiRequest(
             new UserLoginByLoginIdAction(
                 {
@@ -206,7 +208,8 @@ export class AppAuthentication {
                     password,
                     otp,
                     expiry: expiry,
-                    privileges: privileges
+                    privileges: privileges,
+                    partnerId: requestedPartnerId ? requestedPartnerId : null
                 }),
             new UserGetByLoginIdAction({loginId})
                 .setRequestOptions(
@@ -310,6 +313,8 @@ export class AppAuthentication {
         if (storeCredentialsInSessionStorage) {
             this._browserService.setInSessionStorage(ksSessionStorageKey, ks);  // save ks in session storage
         }
+
+        this._browserService.removeFromLocalStorage('loginPartnerId');
 
         const partnerPermissionList = permissionList.objects.map(item => item.name);
         const userRolePermissionList = userRole.permissionNames.split(',');
