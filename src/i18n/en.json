@@ -82,7 +82,8 @@
             "choose": "Choose a different partner:",
             "continue": "Continue",
             "errors": {
-                "loadPartners": "An error occurred while loading accounts."
+                "loadPartners": "An error occurred while loading accounts.",
+                "authenticationRequired": "Requested account requires authentication code on login."
             }
         },
         "helpMenu": {

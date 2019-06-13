@@ -76,7 +76,8 @@ export class ChangeAccountComponent implements OnInit {
         },
         error => {
           this._blockerMessage = new AreaBlockerMessage({
-            message: error.message,
+            title: this._appLocalization.get('app.common.attention'),
+            message: error.code === 'NEW_LOGIN_REQUIRED' ? this._appLocalization.get('app.changeAccount.errors.authenticationRequired') : error.message,
             buttons: error.code === 'NEW_LOGIN_REQUIRED' ? [
                     {
                         label: this._appLocalization.get('app.userSettings.logout'),
