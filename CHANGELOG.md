@@ -1,3 +1,19 @@
+<a name="5.11.0"></a>
+# [5.11.0](https://github.com/kaltura/kmc-ng/compare/v5.10.0...v5.11.0) (2019-06-13)
+
+
+### Bug Fixes
+
+* **login:** fix update password to work when the user is not logged in ([03bc2ee](https://github.com/kaltura/kmc-ng/commit/03bc2ee))
+
+
+### Features
+
+* Real-time analytics ([#845](https://github.com/kaltura/kmc-ng/issues/845)) ([e9708e4](https://github.com/kaltura/kmc-ng/commit/e9708e4)), closes [#843](https://github.com/kaltura/kmc-ng/issues/843) [#842](https://github.com/kaltura/kmc-ng/issues/842)
+* Two factor authentication support ([#844](https://github.com/kaltura/kmc-ng/issues/844)) ([4b809f4](https://github.com/kaltura/kmc-ng/commit/4b809f4))
+
+
+
 <a name="5.10.0"></a>
 # [5.10.0](https://github.com/kaltura/kmc-ng/compare/v5.9.1...v5.10.0) (2019-05-29)
 
