@@ -35,6 +35,7 @@ import {
     ContentPlaylistViewService,
     SettingsTranscodingProfileViewService,
     RestorePasswordViewService,
+    AuthenticatorViewService,
     ReachAppViewService
 } from './details-views';
 import {
@@ -65,6 +66,7 @@ export class KmcViewsModule {
                 ContentUploadsMainViewService,
                 ContentBulkUploadsMainViewService,
                 ContentDropFoldersMainViewService,
+                AuthenticatorViewService,
                 ContentCategoryViewService,
                 StudioV2MainViewService,
                 StudioV3MainViewService,

@@ -2,7 +2,7 @@ import {Injectable, Optional, Inject} from '@angular/core';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-import {KalturaClient, KalturaMultiRequest, KalturaRequestOptions} from 'kaltura-ngx-client';
+import {KalturaAuthentication, KalturaClient, KalturaMultiRequest, KalturaRequestOptions} from 'kaltura-ngx-client';
 import {UserLoginByLoginIdAction} from 'kaltura-ngx-client';
 import {UserGetByLoginIdAction} from 'kaltura-ngx-client';
 import {UserGetAction} from 'kaltura-ngx-client';
@@ -43,6 +43,7 @@ import { AdminUserSetInitialPasswordAction } from 'kaltura-ngx-client';
 import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
 import { switchMap, map } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
+import {AuthenticatorViewService} from "app-shared/kmc-shared/kmc-views/details-views";
 
 export interface UpdatePasswordPayload {
     email: string;
@@ -101,7 +102,8 @@ export class AppAuthentication {
                 private _appEvents: AppEventsService,
                 private _location: Location,
                 private _kmcViewsManager: KmcMainViewsService,
-                private _restorePasswordView: RestorePasswordViewService) {
+                private _restorePasswordView: RestorePasswordViewService,
+                private _authenticatorView: AuthenticatorViewService) {
         this._logger = logger.subLogger('AppAuthentication');
     }
 
@@ -120,7 +122,9 @@ export class AppAuthentication {
             'ADMIN_KUSER_WRONG_OLD_PASSWORD': 'app.login.error.wrongOldPassword',
             'WRONG_OLD_PASSWORD': 'app.login.error.wrongOldPassword',
             'INVALID_FIELD_VALUE': 'app.login.error.invalidField',
-            'USER_FORBIDDEN_FOR_BETA': 'app.login.error.userForbiddenForBeta'
+            'USER_FORBIDDEN_FOR_BETA': 'app.login.error.userForbiddenForBeta',
+            'MISSING_OTP': 'app.login.error.missingOtp',
+            'INVALID_OTP': 'app.login.error.invalidOtp'
         };
 
         if (code === 'PASSWORD_EXPIRED') {
@@ -178,12 +182,12 @@ export class AppAuthentication {
             .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
     }
 
-    setInitalPassword(payload: { newPassword: string, hashKey: string }): Observable<void> {
+    setInitalPassword(payload: { newPassword: string, hashKey: string }): Observable<KalturaAuthentication> {
         return this.kalturaServerClient.request(new AdminUserSetInitialPasswordAction(payload))
             .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
     }
 
-    login(loginId: string, password: string): Observable<LoginResponse> {
+    login(loginId: string, password: string, otp: string): Observable<LoginResponse> {
 
         const expiry = kmcAppConfig.kalturaServer.expiry;
         let privileges = kmcAppConfig.kalturaServer.privileges || '';
@@ -195,14 +199,17 @@ export class AppAuthentication {
         this._automaticLoginErrorReason = null;
         this._browserService.removeFromSessionStorage(ksSessionStorageKey);  // clear session storage
 
+        const requestedPartnerId = this._browserService.getFromLocalStorage('loginPartnerId');
+
         const request = new KalturaMultiRequest(
             new UserLoginByLoginIdAction(
                 {
                     loginId,
                     password,
-
+                    otp,
                     expiry: expiry,
-                    privileges: privileges
+                    privileges: privileges,
+                    partnerId: requestedPartnerId ? requestedPartnerId : null
                 }),
             new UserGetByLoginIdAction({loginId})
                 .setRequestOptions(
@@ -306,6 +313,8 @@ export class AppAuthentication {
         if (storeCredentialsInSessionStorage) {
             this._browserService.setInSessionStorage(ksSessionStorageKey, ks);  // save ks in session storage
         }
+
+        this._browserService.removeFromLocalStorage('loginPartnerId');
 
         const partnerPermissionList = permissionList.objects.map(item => item.name);
         const userRolePermissionList = userRole.permissionNames.split(',');
@@ -449,6 +458,20 @@ export class AppAuthentication {
 
             this._logger.warn(`restore password view is not available, redirect to default view`, {
                 restorePasswordHash: hash
+            });
+            this._browserService.navigateToDefault();
+        }
+    }
+
+    public authenticatorCode(hash: string): void {
+        this._clearSessionCredentials();
+
+        if (this._authenticatorView.isAvailable({hash})) {
+            this._authenticatorView.open({hash});
+        } else {
+
+            this._logger.warn(`Authentication view is not available, redirect to default view`, {
+                authenticatorHash: hash
             });
             this._browserService.navigateToDefault();
         }

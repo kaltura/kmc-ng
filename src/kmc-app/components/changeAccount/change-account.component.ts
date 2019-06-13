@@ -1,9 +1,8 @@
-import {Component, Input, OnInit, AfterViewInit, OnDestroy, ViewChild} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup, FormBuilder} from '@angular/forms';
-import {ISubscription} from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
-import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {KalturaClient} from 'kaltura-ngx-client';
 import {PartnerListPartnersForUserAction} from 'kaltura-ngx-client';
 import {KalturaPartnerFilter} from 'kaltura-ngx-client';
@@ -29,6 +28,8 @@ export class ChangeAccountComponent implements OnInit {
 
   constructor(private _fb: FormBuilder,
               private _appLocalization: AppLocalization,
+              private _browserService: BrowserService,
+              private _appAuthentication: AppAuthentication,
               private _kalturaServerClient: KalturaClient,
               private _userAuthentication: AppAuthentication) {
   }
@@ -76,13 +77,29 @@ export class ChangeAccountComponent implements OnInit {
         error => {
           this._blockerMessage = new AreaBlockerMessage({
             message: error.message,
-            buttons: [{
-              label: this._appLocalization.get('app.common.ok'),
-              action: () => {
-                this._isBusy = false;
-                this._blockerMessage = null;
-              }
-            }]
+            buttons: error.code === 'NEW_LOGIN_REQUIRED' ? [
+                    {
+                        label: this._appLocalization.get('app.userSettings.logout'),
+                        action: () => {
+                            this._browserService.setInLocalStorage('loginPartnerId', account);
+                            this._appAuthentication.logout();
+                        }
+                    },
+                    {
+                        label: this._appLocalization.get('app.common.cancel'),
+                        action: () => {
+                            this._isBusy = false;
+                            this._blockerMessage = null;
+                        }
+                    }
+                ] :
+                [{
+                  label: this._appLocalization.get('app.common.ok'),
+                  action: () => {
+                    this._isBusy = false;
+                    this._blockerMessage = null;
+                  }
+                }]
           });
         });
   }
