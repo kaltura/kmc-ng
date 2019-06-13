@@ -6,7 +6,6 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { EntryLiveWidget } from './entry-live-widget.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
-import { serverConfig } from 'config/server';
 import { LiveAnalyticsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({

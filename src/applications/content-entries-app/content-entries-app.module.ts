@@ -56,6 +56,7 @@ import { AnalyticsLiveModule } from 'app-shared/kmc-shared/analytics-live/analyt
 import { KPTableModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { ClearableInputModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
+import { ToggleLiveComponent } from './entry/components/toggle-live/toggle-live.component';
 
 @NgModule({
   imports: [
@@ -112,6 +113,7 @@ import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.
     ContentEntriesComponent,
     EntryComponentsList,
     EntriesComponentsList,
+    ToggleLiveComponent,
   ],
   exports: [],
   providers: [

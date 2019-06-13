@@ -1171,6 +1171,7 @@
                 "previewAndEmbed": "Share & Embed",
                 "previewInPlayer": "Preview in Player",
                 "liveDashboard": "Live Dashboard",
+                "realTimeAnalytics": "Real-time Analytics",
                 "delete": "Delete",
                 "view": "View Details",
                 "entries": "Entries",
@@ -1774,6 +1775,10 @@
                     "pending": "Pending"
                 },
                 "live": {
+                    "goLive": "Go Live",
+                    "endLive": "End Live",
+                    "endLiveHeader": "Hold your horses!",
+                    "endLiveMessage": "Are you sure you want to end the live broadcast?<br>This action can not be undone",
                     "live": "Live Stream",
                     "liveDashboard": "Live Dashboard",
                     "urls": "Broadcasting URLs",

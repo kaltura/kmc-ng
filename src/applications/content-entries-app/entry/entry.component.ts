@@ -65,6 +65,7 @@ export class EntryComponent implements OnInit, OnDestroy {
     @ViewChild('bulkActionsPopup') _bulkActionsPopup: PopupWidgetComponent;
 	public _entryName: string;
 	public _entryType: KalturaMediaType;
+	public _sourceType: KalturaSourceType;
 
 	public _showLoader = false;
 	public _areaBlockerMessage: AreaBlockerMessage;
@@ -157,8 +158,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 			widget8, widget9, widget10, widget11, widget12, widget13, widget14,
 			widget15
 		]);
-
-        this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable();
 	}
 
 	ngOnDestroy() {
@@ -317,6 +316,15 @@ export class EntryComponent implements OnInit, OnDestroy {
 							    const { entry } = this._entryStore;
 								this._entryName = entry.name;
 								this._entryType = entry.mediaType;
+								this._sourceType = entry.sourceType;
+
+                                this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable() // new analytics app is available
+                                    && (
+                                        this._sourceType !== KalturaSourceType.liveStream // and not a live stream
+                                        || (this._sourceType === KalturaSourceType.liveStream // or it's a live stream and has permission
+                                            && this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD)
+                                        )
+                                    );
 
                                 this._buildMenu(entry);
 								break;
@@ -454,7 +462,8 @@ export class EntryComponent implements OnInit, OnDestroy {
 
     public _openEntryAnalytics(): void {
         if (this._analyticsAllowed) {
-            this._router.navigate(['analytics/entry'], { queryParams: { id: this._currentEntryId }});
+            const route = this._sourceType === KalturaSourceType.liveStream ? 'analytics/entry-live' : 'analytics/entry';
+            this._router.navigate([route], { queryParams: { id: this._currentEntryId } });
         }
     }
 }

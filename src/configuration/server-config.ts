@@ -38,7 +38,7 @@ export interface ExternalApplications {
         uri: string,
     };
     kmcAnalytics?: {
-        uri: string,
+        uri: string
     };
     liveAnalytics?: {
         uri: string,

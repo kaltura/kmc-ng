@@ -43,6 +43,13 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             .subscribe((event) => {
                 if (event instanceof NavigationEnd)  {
                     const { url, queryParams } = this._browserService.getUrlWithoutParams(event.urlAfterRedirects);
+
+                    // if it's a live entry and no permissions show warning
+                    if (url.indexOf('entry-live') !== -1 && !this._permissions.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD)) {
+                        this._browserService.handleUnpermittedAction(true);
+                        return;
+                    }
+
                     if (this._currentAppUrl !== url) {
                         this.updateLayout(window.innerHeight - 54);
                         this._currentAppUrl = url;
@@ -90,8 +97,13 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             ks: this.appAuthentication.appUser.ks,
             pid: this.appAuthentication.appUser.partnerId,
             locale: 'en',
+            live: {
+                "pollInterval": 30,
+                "healthNotificationsCount": 50
+            },
             permissions: {
-                lazyLoadCategories: this._permissions.hasPermission(KMCPermissions.DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD)
+                lazyLoadCategories: this._permissions.hasPermission(KMCPermissions.DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD),
+                enableLiveViews: this._permissions.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD),
             }
         };
 
