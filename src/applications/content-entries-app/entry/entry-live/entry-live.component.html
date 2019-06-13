@@ -8,7 +8,7 @@
               [disabled]="!_widgetService._liveDashboardEnabled"
               (click)="liveDashboard.open()"></button>
 
-        <k-toggle-live-btn *ngIf="_widgetService.data?.explicitLive && (_kmcPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD | kNgIfPermitted)
+        <k-toggle-live-btn *ngIf="_widgetService.data?.explicitLive && (_kmcPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD | kNgIfPermitted)"
                            [entry]="_widgetService.data"></k-toggle-live-btn>
     </div>
     <div class="kLiveDetails">
