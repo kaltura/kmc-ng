@@ -102,7 +102,8 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                 "healthNotificationsCount": 50
             },
             permissions: {
-                lazyLoadCategories: this._permissions.hasPermission(KMCPermissions.DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD)
+                lazyLoadCategories: this._permissions.hasPermission(KMCPermissions.DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD),
+                enableLiveViews: this._permissions.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD),
             }
         };
 
