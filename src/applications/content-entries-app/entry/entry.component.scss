@@ -13,6 +13,10 @@
     display: flex;
     align-items: center;
 
+    k-toggle-live-btn {
+        margin-right: 24px;
+    }
+
     .kAnalytics {
         margin-right: 24px;
         /deep/ .kIconstatistic {

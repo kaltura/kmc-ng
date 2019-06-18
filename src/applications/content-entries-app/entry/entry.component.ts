@@ -66,7 +66,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _entryName: string;
 	public _entryType: KalturaMediaType;
 	public _sourceType: KalturaSourceType;
-
+    public _entry: KalturaMediaEntry;
 	public _showLoader = false;
 	public _areaBlockerMessage: AreaBlockerMessage;
 	public _currentEntryId: string;
@@ -317,6 +317,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 								this._entryName = entry.name;
 								this._entryType = entry.mediaType;
 								this._sourceType = entry.sourceType;
+                                this._entry = entry;
 
                                 this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable() // new analytics app is available
                                     && (
