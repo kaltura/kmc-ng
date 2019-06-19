@@ -21,7 +21,7 @@ export interface ReachData {
 
 @Component({
     selector: 'kReachFrame',
-    template: '<iframe frameborder="0" [src]="_url | safe"></iframe>',
+    template: '<iframe *ngIf="_url" frameborder="0" [src]="_url | safe"></iframe>',
     styles: [
         ':host { display: block; width: 100%; height: 100%; }',
         'iframe { width: 100%; height: 100% }'
