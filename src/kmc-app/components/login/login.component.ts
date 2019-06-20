@@ -26,7 +26,7 @@ export enum LoginScreens {
 })
 export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _username: string;
-  public _errorMessage: string;
+  public _errorMessage: string = '';
   public _errorCode: string;
   public _inProgress = false;
   public _showLogin = false;
@@ -251,6 +251,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public _restorePassword(payload: {newPassword: string, hashKey: string}): void {
     this._inProgress = true;
+    this._errorMessage = '';
     this._appAuthentication.setInitalPassword(payload)
       .subscribe(
           (response: KalturaAuthentication) => {
