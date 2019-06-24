@@ -173,10 +173,12 @@ export class EntryComponent implements OnInit, OnDestroy {
         const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
         const isDownloadCommand = commandName === 'download';
         const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
+        const canAccessNewLiveAnalytics = this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD);
         const isNotVideoAudioImage = [KalturaMediaType.video, KalturaMediaType.audio, KalturaMediaType.image].indexOf(mediaType) === -1;
         return !(
             (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
-            (isLiveDashboardCommand && !isKalturaLiveStream) || // hide live-dashboard menu item for entry that isn't kaltura live
+            // hide live-dashboard menu item for entry that isn't kaltura live or has permission to access new analytics
+            (isLiveDashboardCommand && (!isKalturaLiveStream || canAccessNewLiveAnalytics)) ||
             (isDownloadCommand && (isNotVideoAudioImage || isExternalMedia)) ||
             cannotDeleteEntry
         );
