@@ -1171,7 +1171,7 @@
                 "status": "Status",
                 "previewAndEmbed": "Share & Embed",
                 "previewInPlayer": "Preview in Player",
-                "liveDashboard": "Live Dashboard",
+                "liveDashboard": "Real-Time Dashboard",
                 "realTimeAnalytics": "Real-time Analytics",
                 "delete": "Delete",
                 "view": "View Details",
@@ -1781,7 +1781,7 @@
                     "endLiveHeader": "Hold your horses!",
                     "endLiveMessage": "Are you sure you want to end the live broadcast?<br>This action can not be undone",
                     "live": "Live Stream",
-                    "liveDashboard": "Live Dashboard",
+                    "liveDashboard": "Real-Time Dashboard",
                     "urls": "Broadcasting URLs",
                     "primary": "Primary URL:",
                     "backup": "Backup URL:",
@@ -2284,7 +2284,7 @@
                 }
             },
             "liveDashboard": {
-                "title": "Live Dashboard"
+                "title": "Real-Time Dashboard"
             },
             "playlistDetails": {
                 "sections": {
