@@ -115,13 +115,16 @@ export class ToggleLiveService implements OnDestroy {
         liveEntry.serverType = result.serverType;
     }
 
-    private _extendEntry(entry: KalturaExtendedLiveEntry, nodes: KalturaEntryServerNode[]): void {
+    private _extendEntry(entry: KalturaExtendedLiveEntry, updatedEntry: KalturaLiveStreamEntry, nodes: KalturaEntryServerNode[]): void {
         const liveEntry = Object.assign(entry, {
             redundancy: this._getRedundancyStatus(nodes),
             streamStatus: entry.streamStatus || KalturaStreamStatus.offline,
             serverType: entry.serverType || null,
         });
         this._setStreamStatus(liveEntry, nodes);
+
+        entry.recordStatus = updatedEntry.hasOwnProperty('recordStatus') ? updatedEntry.recordStatus : entry.recordStatus;
+        entry.viewMode = updatedEntry.hasOwnProperty('viewMode') ? updatedEntry.viewMode : entry.viewMode;
     }
 
     private _updateIsPreview(entry: KalturaLiveStreamEntry): void {
@@ -153,20 +156,32 @@ export class ToggleLiveService implements OnDestroy {
                 });
     }
 
-    public startPolling(entry: KalturaLiveStreamEntry): void {
-        if (entry && !this._isPolling) {
+    public startPolling(liveEntry: KalturaLiveStreamEntry): void {
+        if (liveEntry && !this._isPolling) {
             this._isPolling = true;
-            this._entry = entry as KalturaExtendedLiveEntry;
+            this._entry = liveEntry as KalturaExtendedLiveEntry;
 
-            this._updateIsPreview(entry);
+            this._updateIsPreview(liveEntry);
 
-            this._kmcServerPolls.register<KalturaEntryServerNodeListResponse>(10, new LiveDataRequestFactory(entry.id))
+            this._kmcServerPolls.register<KalturaEntryServerNodeListResponse>(10, new LiveDataRequestFactory(liveEntry.id))
                 .pipe(
                     cancelOnDestroy(this),
-                    map(response => response.result ? response.result.objects : [])
+                    map(responses => {
+                        if (responses.error) {
+                            return { entry: {}, nodes: [] };
+                        }
+                        const entryResponse = responses.result[0];
+                        const nodesResponse = responses.result[1];
+
+                        return {
+                            entry: entryResponse.result || {},
+                            nodes: nodesResponse.result ? nodesResponse.result.objects : [],
+                        };
+                    })
                 )
-                .subscribe(nodes => {
-                    this._extendEntry(this._entry, nodes);
+                .subscribe(({ entry, nodes }) => {
+                    this._extendEntry(this._entry, entry, nodes);
+                    this._updateIsPreview(this._entry);
 
                     const isBroadcasting = [KalturaStreamStatus.live, KalturaStreamStatus.preview].indexOf(this._entry.streamStatus) !== -1;
                     this._canToggle.next(isBroadcasting);
