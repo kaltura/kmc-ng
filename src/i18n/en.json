@@ -222,11 +222,12 @@
                 },
                 "newPasswordHashKeyInvalid": "This link is not valid.",
                 "newPasswordHashKeyExpired": "This link is older than 24 hours and is no longer valid.",
-                "wrongOldPassword": "Old password is incorret.",
+                "wrongOldPassword": "Old password is incorrect.",
                 "invalidField": "Value in field {{value}} is not valid.",
                 "userForbiddenForBeta": "This is a closed beta of the new Kaltura Management Console. Stay tuned for the general availability soon.",
                 "missingOtp": "Authenticator code is required",
-                "invalidOtp": "Invalid authenticator code"
+                "invalidOtp": "Invalid authenticator code",
+                "updatePasswordMissingOtp": "You password was updated successfully.\nPlease login again with your new password."
             },
             "send": "Send",
             "wait": "Wait…",
