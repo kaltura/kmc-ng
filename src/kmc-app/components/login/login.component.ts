@@ -231,7 +231,16 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(
         ({ success, error }) => {
           this._inProgress = false;
-          this._handleLoginResponse(success, error, this._username);
+          if (error && error.code === "MISSING_OTP") {
+              this._showAuthenticator = true;
+              this._browserService.alert({
+                  header: this._appLocalization.get('app.common.attention'),
+                  message: this._appLocalization.get('app.login.error.updatePasswordMissingOtp'),
+                  accept: () => this._setScreen(LoginScreens.Login)
+              });
+          } else {
+              this._handleLoginResponse(success, error, this._username);
+          }
         },
         (error: LoginError) => {
           this._inProgress = false;
