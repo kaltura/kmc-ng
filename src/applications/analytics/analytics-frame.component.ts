@@ -11,7 +11,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 
 @Component({
     selector: 'kAnalyticsFrame',
-    template: '<span *ngIf="!_initialized" class="kLoading">Loading...</span><iframe #analyticsFrame frameborder="0px" [src]="_url | safe"></iframe>',
+    template: '<span *ngIf="!_initialized" class="kLoading">Loading...</span><iframe #analyticsFrame allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0px" [src]="_url | safe"></iframe>',
     styles: [
         ':host { display: block; width: 100%; height: 100%; }',
         'iframe { width: 100%; height: 100%; border: 0px; transition: height 0.3s; }',
