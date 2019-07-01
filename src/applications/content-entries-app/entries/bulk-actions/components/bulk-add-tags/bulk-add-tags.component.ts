@@ -106,7 +106,7 @@ export class BulkAddTags implements OnInit, OnDestroy, AfterViewInit {
           const suggestions = [];
           const tags = result.objects.map(item => item.tag);
           (tags || []).forEach(suggestedTag => {
-            const isSelectable = this.tags.indexOf(suggestedTag) === -1;
+            const isSelectable = (this.tags || []).indexOf(suggestedTag) === -1;
             suggestions.push({ item: suggestedTag, isSelectable: isSelectable});
           });
           this._tagsProvider.next({suggestions: suggestions, isLoading: false});
