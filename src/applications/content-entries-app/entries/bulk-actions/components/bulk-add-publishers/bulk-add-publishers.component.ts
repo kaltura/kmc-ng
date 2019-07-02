@@ -102,9 +102,7 @@ export class BulkAddPublishersComponent implements OnInit, OnDestroy, AfterViewI
           const users: KalturaUser[] = result.objects;
           (users || []).forEach(suggestedUser => {
               suggestedUser['__tooltip'] = suggestedUser.id;
-            const isSelectable = !this.users.find(user => {
-              return user.id === suggestedUser.id;
-            });
+            const isSelectable = !(this.users || []).find(user => user.id === suggestedUser.id);
             suggestions.push({
               name: `${suggestedUser.screenName} (${suggestedUser.id})`,
               item: suggestedUser,
