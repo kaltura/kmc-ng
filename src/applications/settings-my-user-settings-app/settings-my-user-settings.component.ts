@@ -24,7 +24,7 @@ export type UserSettingsPopup = 'editUserNamePopup' | 'editEmailAddressPopup' | 
 })
 export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
   @ViewChild('editUserNamePopup') public editUserNamePopup: PopupWidgetComponent;
-  @ViewChild('editEmailAddressPopup') public editEmailAddressPopup: PopupWidgetComponent;
+  // @ViewChild('editEmailAddressPopup') public editEmailAddressPopup: PopupWidgetComponent;
   @ViewChild('changePasswordPopup') public changePasswordPopup: PopupWidgetComponent;
 
   private _updateUserName = false;
@@ -99,6 +99,7 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
         });
   }
 
+  /*
   public _updateEmail(email: string, popup: UserSettingsPopup): void {
       this._logger.info(`handle update user email request by user`);
       if (!this._isAllowedPopup(popup)) {
@@ -140,6 +141,7 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
               }
           );
   }
+  */
 
   public _updateLoginData(userData: UserUpdateLoginDataActionArgs, popup: UserSettingsPopup): void {
     this._logger.info(`handle update user data request by user`);
@@ -190,11 +192,12 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
     this.editUserNamePopup.open();
   }
 
+  /*
   public _editEmailAddress(): void {
     this._logger.info(`handle edit user email action by user`);
     this._updateBlockerMessage = null;
     this.editEmailAddressPopup.open();
-  }
+  }*/
 
   public _changePassword(): void {
     this._logger.info(`handle edit user password action by user`);
