@@ -12,6 +12,7 @@ import { globalConfig } from 'config/global';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { UpdateMenuEvent, ResetMenuEvent } from 'app-shared/kmc-shared/events';
+import { AdminMultiAccountMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -39,6 +40,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     public _supportLegacyExists = true;
     public _contextualHelp: ContextualHelpLink[] = [];
     public menuID = 'kmc'; // used when switching menus to Analytics menu or future application menus
+    public _isMultiAccount = false;
 
     menuConfig: KMCAppMenuItem[];
     leftMenuConfig: KMCAppMenuItem[];
@@ -56,7 +58,8 @@ export class AppMenuComponent implements OnInit, OnDestroy{
                 private router: Router,
                 private renderer: Renderer2,
                 private _appEvents: AppEventsService,
-                private _browserService: BrowserService) {
+                private _browserService: BrowserService,
+                _adminMultiAccountMainViewService: AdminMultiAccountMainViewService) {
 
         _contextualHelpService.contextualHelpData$
             .pipe(cancelOnDestroy(this))
@@ -72,6 +75,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
                 }
             });
         this.menuConfig = this._kmcMainViews.getMenu();
+        this._isMultiAccount = _adminMultiAccountMainViewService.isAvailable();
         this.leftMenuConfig = this.menuConfig.filter((item: KMCAppMenuItem) => {
             return item.position === 'left';
         });
