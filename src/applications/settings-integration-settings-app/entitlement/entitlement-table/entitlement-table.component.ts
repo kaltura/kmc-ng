@@ -43,7 +43,7 @@ export class EntitlementTableComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   @Output() onActionSelected = new EventEmitter<{ action: string, entitlement: KalturaCategory }>();
-  @ViewChild('actionsmenu', { static: false }) private actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
 
 
   constructor(private cdRef: ChangeDetectorRef,

@@ -30,8 +30,8 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
     @Output() selectedCategoryChange = new EventEmitter<number>();
     @Output() selectedCategoriesChange = new EventEmitter<number[]>();
 
-    @ViewChild(CategoriesTreePropagationDirective, { static: false }) public _categoriesTreePropagation: CategoriesTreePropagationDirective;
-    @ViewChild(CategoriesTreePropagationDirective, { static: false }) _CategoriesTreeNodesState: CategoriesTreePropagationDirective;
+    @ViewChild(CategoriesTreePropagationDirective, { static: true }) public _categoriesTreePropagation: CategoriesTreePropagationDirective;
+    @ViewChild(CategoriesTreePropagationDirective, { static: true }) _CategoriesTreeNodesState: CategoriesTreePropagationDirective;
 
     public _selectedTreeNodes: CategoriesTreeNode[] = [];
     public _selectedTreeNode: CategoriesTreeNode = null;

@@ -28,13 +28,13 @@ import { MenuItem } from 'primeng/api';
     ]
 })
 export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
-    @ViewChild('drmPopup', { static: false }) drmPopup: PopupWidgetComponent;
-	@ViewChild('previewPopup', { static: false }) previewPopup: PopupWidgetComponent;
-	@ViewChild('importPopup', { static: false }) importPopup: PopupWidgetComponent;
-	@ViewChild('matchDropFolder', { static: false }) matchDropFolder: PopupWidgetComponent;
-    @ViewChild('linkPopup', { static: false }) linkPopup: FileDialogComponent;
-    @ViewChild('actionsmenu', { static: false }) private actionsMenu: Menu;
-    @ViewChild('fileDialog', { static: false }) private fileDialog: FileDialogComponent;
+    @ViewChild('drmPopup', { static: true }) drmPopup: PopupWidgetComponent;
+	@ViewChild('previewPopup', { static: true }) previewPopup: PopupWidgetComponent;
+	@ViewChild('importPopup', { static: true }) importPopup: PopupWidgetComponent;
+	@ViewChild('matchDropFolder', { static: true }) matchDropFolder: PopupWidgetComponent;
+    @ViewChild('linkPopup', { static: true }) linkPopup: FileDialogComponent;
+    @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
+    @ViewChild('fileDialog', { static: true }) private fileDialog: FileDialogComponent;
 	public _actions: MenuItem[] = [];
 	public _kmcPermissions = KMCPermissions;
 

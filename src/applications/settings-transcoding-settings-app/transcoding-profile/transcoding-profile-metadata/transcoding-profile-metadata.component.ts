@@ -8,7 +8,7 @@ import { TranscodingProfileMetadataWidget } from './transcoding-profile-metadata
 })
 
 export class TranscodingProfileMetadataComponent implements AfterViewInit, OnInit, OnDestroy {
-  @ViewChild('metadataNameInput', { static: false }) public metadataNameInput;
+  @ViewChild('metadataNameInput', { static: true }) public metadataNameInput;
 
   constructor(public _widgetService: TranscodingProfileMetadataWidget) {
   }

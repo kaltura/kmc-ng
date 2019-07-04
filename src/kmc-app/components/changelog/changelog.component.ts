@@ -9,7 +9,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 export class ChangelogComponent {
     @Input() changelogIsShown = false;
   @Output() showChangelog = new EventEmitter<void>();
-  @ViewChild('changelog', { static: false }) changelogPopup: PopupWidgetComponent;
+  @ViewChild('changelog', { static: true }) changelogPopup: PopupWidgetComponent;
 
   public _openChangelog(): void {
     this.showChangelog.emit();

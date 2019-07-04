@@ -14,7 +14,7 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
   private _searchTagsSubscription: ISubscription;
   public _tagsProvider = new Subject<SuggestionsProviderData>();
 
-  @ViewChild('metadataNameInput', { static: false }) public metadataNameInput;
+  @ViewChild('metadataNameInput', { static: true }) public metadataNameInput;
 
   constructor(public _widgetService: PlaylistMetadataWidget) {
   }

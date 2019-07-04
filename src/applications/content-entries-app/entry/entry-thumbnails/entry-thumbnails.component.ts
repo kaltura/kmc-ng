@@ -20,8 +20,8 @@ import { MenuItem } from 'primeng/api';
 export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 
     public _loadingError = null;
-	@ViewChild('capturePopup', { static: false }) public capturePopup: PopupWidgetComponent;
-	@ViewChild('actionsmenu', { static: false }) private actionsMenu: Menu;
+	@ViewChild('capturePopup', { static: true }) public capturePopup: PopupWidgetComponent;
+	@ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
 	public _actions: MenuItem[] = [];
 	public _kmcPermissions = KMCPermissions;
   public _documentWidth: number;

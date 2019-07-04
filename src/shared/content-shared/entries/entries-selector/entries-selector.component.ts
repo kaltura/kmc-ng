@@ -43,7 +43,7 @@ export class EntriesSelectorComponent {
   };
 
   @Output() selectedEntriesChange = new EventEmitter<KalturaMediaEntry[]>();
-  @ViewChild(EntriesListComponent, { static: false }) public _entriesList: EntriesListComponent;
+  @ViewChild(EntriesListComponent, { static: true }) public _entriesList: EntriesListComponent;
 
   constructor(public _entriesStore: EntriesStore) {
   }

@@ -11,7 +11,7 @@ import * as $ from 'jquery';
 export class AppContainerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private _hostedAppPath: string;
-  @ViewChild('iframe', { static: false }) private _iframeRef : ElementRef;
+  @ViewChild('iframe', { static: true }) private _iframeRef : ElementRef;
   private _contentAreaHeightSubscriber : Subscription;
 
   constructor(private appShellService : AppShellService) {}

@@ -53,7 +53,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   @Output()
   selectedCategoriesChange = new EventEmitter<any>();
 
-  @ViewChild('actionsmenu', { static: false }) private _actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: true }) private _actionsMenu: Menu;
 
   private _deferredCategories: KalturaCategory[];
 

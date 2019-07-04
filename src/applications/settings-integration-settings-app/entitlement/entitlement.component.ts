@@ -30,8 +30,8 @@ export class EntitlementComponent implements OnInit, OnDestroy {
   public _kmcPermissions = KMCPermissions;
   public _manageHelpLinkExists = !!serverConfig.externalLinks.entitlements && !!serverConfig.externalLinks.entitlements.manage;
 
-  @ViewChild('editEntitlementPopup', { static: false }) editEntitlementPopup: PopupWidgetComponent;
-  @ViewChild('addNewEntitlement', { static: false }) addEntitlementPopup: PopupWidgetComponent;
+  @ViewChild('editEntitlementPopup', { static: true }) editEntitlementPopup: PopupWidgetComponent;
+  @ViewChild('addNewEntitlement', { static: true }) addEntitlementPopup: PopupWidgetComponent;
 
 
   constructor(private _entitlementService: EntitlementService,

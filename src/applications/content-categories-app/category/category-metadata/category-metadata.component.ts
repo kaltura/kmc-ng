@@ -23,7 +23,7 @@ export class CategoryMetadataComponent implements OnInit {
 
   @ViewChildren(JumpToSection) private _jumpToSectionQuery: QueryList<JumpToSection> = null;
 
-  @ViewChild('metadataContainer', { static: false })
+  @ViewChild('metadataContainer', { static: true })
   public _container: ElementRef;
 
   constructor(public _widgetService: CategoryMetadataWidget,

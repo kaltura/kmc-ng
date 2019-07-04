@@ -12,7 +12,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 })
 export class CategorySectionsListComponent implements OnInit, OnDestroy {
 
-  @ViewChild('categorySections', { static: false }) private categorySections: StickyComponent;
+  @ViewChild('categorySections', { static: true }) private categorySections: StickyComponent;
 
   public _loading = false;
   public _showList = false;

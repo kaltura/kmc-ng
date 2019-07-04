@@ -61,9 +61,9 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   public _blockerMessage: AreaBlockerMessage;
   public _manualStreamOnly = false;
 
-  @ViewChild('kalturaLiveStreamComponent', { static: false }) kalturaLiveStreamComponent;
-  @ViewChild('manualLiveComponent', { static: false }) manualLiveComponent;
-  @ViewChild('universalLiveComponent', { static: false }) universalLiveComponent;
+  @ViewChild('kalturaLiveStreamComponent', { static: true }) kalturaLiveStreamComponent;
+  @ViewChild('manualLiveComponent', { static: true }) manualLiveComponent;
+  @ViewChild('universalLiveComponent', { static: true }) universalLiveComponent;
   @Input() parentPopupWidget: PopupWidgetComponent;
 
   constructor(private createLiveService: CreateLiveService,

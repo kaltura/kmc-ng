@@ -45,7 +45,7 @@ export class AccountsTableComponent implements AfterViewInit, OnInit, OnDestroy 
   @Output() actionSelected = new EventEmitter<{action: string, account: KalturaPartner}>();
   @Output() sortChanged = new EventEmitter<any>();
 
-  @ViewChild('actionsmenu', { static: false }) private _actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: true }) private _actionsMenu: Menu;
 
   private _deferredAccounts: KalturaPartner[];
 

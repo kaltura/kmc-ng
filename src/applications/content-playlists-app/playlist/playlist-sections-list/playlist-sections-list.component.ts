@@ -15,7 +15,7 @@ export class PlaylistSectionsList implements OnInit, OnDestroy {
   public _showList = false;
   public _sections: SectionWidgetItem[] = [];
 
-  @ViewChild('playlistSections', { static: false }) private playlistSections: StickyComponent;
+  @ViewChild('playlistSections', { static: true }) private playlistSections: StickyComponent;
 
   constructor(public _appLocalization: AppLocalization,
               public _playlistStore: PlaylistStore,

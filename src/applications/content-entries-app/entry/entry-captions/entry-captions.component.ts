@@ -30,8 +30,8 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
     public _captionStatusReady = KalturaCaptionAssetStatus.ready;
     public _requestCaptionsAvailable = false;
 
-	@ViewChild('actionsmenu', { static: false }) private actionsMenu: Menu;
-	@ViewChild('editPopup', { static: false }) public editPopup: PopupWidgetComponent;
+	@ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
+	@ViewChild('editPopup', { static: true }) public editPopup: PopupWidgetComponent;
 
 
 	private _popupStateChangeSubscribe: ISubscription;

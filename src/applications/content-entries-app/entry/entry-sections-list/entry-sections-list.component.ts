@@ -14,7 +14,7 @@ import { EntrySectionsListWidget, SectionWidgetItem } from './entry-sections-lis
 })
 export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
 
-	@ViewChild('entrySections', { static: false }) private entrySections: StickyComponent;
+	@ViewChild('entrySections', { static: true }) private entrySections: StickyComponent;
 
     public _loading = false;
     public _showList = false;

@@ -25,9 +25,9 @@ import { ConfirmationService } from 'primeng/api';
 })
 export class AppComponent implements OnInit {
 
-  @ViewChild('confirm', { static: false }) private _confirmDialog: ConfirmDialog;
-  @ViewChild('alert', { static: false }) private _alertDialog: ConfirmDialog;
-  @ViewChild('openEmailPopup', { static: false }) private _emailDialog: PopupWidgetComponent;
+  @ViewChild('confirm', { static: true }) private _confirmDialog: ConfirmDialog;
+  @ViewChild('alert', { static: true }) private _alertDialog: ConfirmDialog;
+  @ViewChild('openEmailPopup', { static: true }) private _emailDialog: PopupWidgetComponent;
 
   public _isBusy: boolean = false;
   public _growlMessages: GrowlMessage[] = [];

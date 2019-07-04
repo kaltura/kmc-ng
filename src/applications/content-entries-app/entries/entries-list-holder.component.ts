@@ -33,8 +33,8 @@ import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shar
     ]
 })
 export class EntriesListHolderComponent implements OnInit, OnDestroy {
-  @ViewChild(EntriesListComponent, { static: false }) public _entriesList: EntriesListComponent;
-  @ViewChild('liveDashboard', { static: false }) _liveDashboard: PopupWidgetComponent;
+  @ViewChild(EntriesListComponent, { static: true }) public _entriesList: EntriesListComponent;
+  @ViewChild('liveDashboard', { static: true }) _liveDashboard: PopupWidgetComponent;
 
   public _entryId: string = null;
   public _blockerMessage: AreaBlockerMessage = null;

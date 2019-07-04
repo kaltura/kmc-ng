@@ -17,7 +17,7 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
 })
 export class PrepareEntryComponent implements OnDestroy {
   public _selectedMediaType: KalturaMediaType;
-  @ViewChild('transcodingProfileSelectMenu', { static: false }) transcodingProfileSelectMenu: PopupWidgetComponent;
+  @ViewChild('transcodingProfileSelectMenu', { static: true }) transcodingProfileSelectMenu: PopupWidgetComponent;
 
   constructor(private _prepareEntryService: PrepareEntryService,
               private _permissionsService: KMCPermissionsService,

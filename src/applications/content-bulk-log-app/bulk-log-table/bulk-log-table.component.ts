@@ -50,7 +50,7 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Output()
   selectedBulkLogItemsChange = new EventEmitter<any>();
 
-  @ViewChild('actionsmenu', { static: false }) private actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
 
   private _deferredEntries: any[];
 

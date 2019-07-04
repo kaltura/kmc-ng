@@ -19,7 +19,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
   ]
 })
 export class RuleBasedContentComponent implements OnInit, OnDestroy {
-  @ViewChild('playlistRule', { static: false }) private _rulePopup: PopupWidgetComponent;
+  @ViewChild('playlistRule', { static: true }) private _rulePopup: PopupWidgetComponent;
 
   public _selectedRules: PlaylistRule[] = [];
   public _selectedRule: PlaylistRule = null;

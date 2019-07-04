@@ -11,7 +11,7 @@ import { MenuItem } from 'primeng/api';
   styleUrls: ['./playlist-rules-table.component.scss']
 })
 export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDestroy {
-  @ViewChild('actionsmenu', { static: false }) private actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
 
   @Input()
   set isNewPlaylist(value) {

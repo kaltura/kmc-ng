@@ -24,7 +24,7 @@ export class CustomSchemaComponent implements OnInit {
   @Output() onClosePopupWidget = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<SettingsMetadataProfile>();
 
-  @ViewChild('customSchemaField', { static: false }) _customSchemaFieldPopup: PopupWidgetComponent;
+  @ViewChild('customSchemaField', { static: true }) _customSchemaFieldPopup: PopupWidgetComponent;
 
   private _isFieldsOrderChanged = false;
 

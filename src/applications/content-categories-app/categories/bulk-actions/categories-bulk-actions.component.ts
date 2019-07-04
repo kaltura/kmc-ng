@@ -44,7 +44,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   @Output() onBulkChange = new EventEmitter<{ reload: boolean}>();
 
-  @ViewChild('bulkActionsPopup', { static: false }) public bulkActionsPopup: PopupWidgetComponent;
+  @ViewChild('bulkActionsPopup', { static: true }) public bulkActionsPopup: PopupWidgetComponent;
 
 
   constructor(private _appLocalization: AppLocalization,

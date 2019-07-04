@@ -36,7 +36,7 @@ export interface PrimeList {
 })
 export class DropFoldersRefineFiltersComponent implements OnInit, OnDestroy, OnChanges {
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @ViewChild(ScrollToTopContainerComponent, { static: false }) _treeContainer: ScrollToTopContainerComponent;
+  @ViewChild(ScrollToTopContainerComponent, { static: true }) _treeContainer: ScrollToTopContainerComponent;
   @ViewChildren(RefinePrimeTree) public _primeTreesActions: RefinePrimeTree[];
     @Input() refineFilters: RefineList[];
   private _primeListsMap: { [key: string]: PrimeList } = {};

@@ -28,9 +28,9 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     @Output() onCategorySelected: EventEmitter<number> = new EventEmitter();
     @Output() onCategoriesUnselected: EventEmitter<number[]> = new EventEmitter();
 
-    @ViewChild(ScrollToTopContainerComponent, { static: false }) _treeContainer: ScrollToTopContainerComponent;
-    @ViewChild('categoriesTree', { static: false }) _categoriesTree: CategoriesTreeComponent;
-    @ViewChild('searchCategory', { static: false }) private _autoComplete: AutoComplete = null;
+    @ViewChild(ScrollToTopContainerComponent, { static: true }) _treeContainer: ScrollToTopContainerComponent;
+    @ViewChild('categoriesTree', { static: true }) _categoriesTree: CategoriesTreeComponent;
+    @ViewChild('searchCategory', { static: true }) private _autoComplete: AutoComplete = null;
     private _searchCategoriesRequest$: ISubscription;
     private filterUpdateSubscription: ISubscription;
     private parentPopupStateChangeSubscription: ISubscription;
