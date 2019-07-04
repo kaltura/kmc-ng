@@ -21,7 +21,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 })
 export class AnalyticsFrameComponent implements OnInit, OnDestroy {
 
-    @ViewChild('analyticsFrame', { static: true }) analyticsFrame: ElementRef;
+    @ViewChild('analyticsFrame', { static: false }) analyticsFrame: ElementRef;
     public _windowEventListener = null;
     public _url = null;
     public _initialized = false;

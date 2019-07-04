@@ -24,9 +24,9 @@ import { UpdateMenuEvent, ResetMenuEvent } from 'app-shared/kmc-shared/events';
 })
 export class AppMenuComponent implements OnInit, OnDestroy{
 
-    @ViewChild('helpmenu', { static: true }) private _helpmenu: PopupWidgetComponent;
-    @ViewChild('supportPopup', { static: true }) private _supportPopup: PopupWidgetComponent;
-    @ViewChild('leftMenu', { static: true }) private leftMenu: ElementRef;
+    @ViewChild('helpmenu', { static: false }) private _helpmenu: PopupWidgetComponent;
+    @ViewChild('supportPopup', { static: false }) private _supportPopup: PopupWidgetComponent;
+    @ViewChild('leftMenu', { static: false }) private leftMenu: ElementRef;
     private _appCachedVersionToken = 'kmc-cached-app-version';
 
     public _showChangelog = false;

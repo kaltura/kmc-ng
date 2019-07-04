@@ -35,7 +35,7 @@ export interface PartnerInfo {
     ]
 })
 export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('actionsmenu', { static: true }) private _actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: false }) private _actionsMenu: Menu;
 
   @Output() editUser = new EventEmitter<KalturaUser>();
   @Output() toggleUserStatus = new EventEmitter<KalturaUser>();

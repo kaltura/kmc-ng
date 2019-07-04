@@ -49,7 +49,7 @@ export class CategorySubcategoriesTableComponent implements OnInit, OnDestroy, A
   }
 
   @Output() onActionSelected = new EventEmitter<{ action: string, subcategory: KalturaCategory }>();
-  @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: false }) private actionsMenu: Menu;
 
 
   constructor(private cdRef: ChangeDetectorRef, private _appLocalization: AppLocalization) {

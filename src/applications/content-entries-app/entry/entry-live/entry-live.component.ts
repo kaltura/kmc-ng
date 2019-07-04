@@ -15,7 +15,7 @@ import { LiveAnalyticsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 })
 export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
-	@ViewChild('liveAnalytics', { static: true }) _liveAnalytics: PopupWidgetComponent;
+	@ViewChild('liveAnalytics', { static: false }) _liveAnalytics: PopupWidgetComponent;
 
   public _kmcPermissions = KMCPermissions;
 	public _copyToClipboardTooltips: { success: string, failure: string, idle: string, notSupported: string } = null;

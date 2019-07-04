@@ -40,7 +40,7 @@ export interface UploadSettingsFile {
 export class UploadSettingsComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() creationType = KMCFileCreationType.upload;
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @ViewChild('fileDialog', { static: true }) _fileDialog: FileDialogComponent;
+  @ViewChild('fileDialog', { static: false }) _fileDialog: FileDialogComponent;
 
     public _creationTypes = KMCFileCreationType;
     public _uploadBtnLabel: string;

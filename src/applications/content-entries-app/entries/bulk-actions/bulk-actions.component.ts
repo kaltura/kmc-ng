@@ -66,7 +66,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   @Output() onBulkChange = new EventEmitter<{ reload: boolean }>();
   @Output() blockerMessageChange = new EventEmitter<AreaBlockerMessage>();
 
-  @ViewChild('bulkActionsPopup', { static: true }) public bulkActionsPopup: PopupWidgetComponent;
+  @ViewChild('bulkActionsPopup', { static: false }) public bulkActionsPopup: PopupWidgetComponent;
 
   constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService,
     private _bulkSchedulingService: BulkSchedulingService,

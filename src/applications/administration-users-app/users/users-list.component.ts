@@ -24,7 +24,7 @@ export interface PartnerInfo {
 })
 
 export class UsersListComponent implements OnInit, OnDestroy {
-  @ViewChild('editUserPopup', { static: true }) editUserPopup: PopupWidgetComponent;
+  @ViewChild('editUserPopup', { static: false }) editUserPopup: PopupWidgetComponent;
 
   public _kmcPermissions = KMCPermissions;
   public _usersAmount: string;

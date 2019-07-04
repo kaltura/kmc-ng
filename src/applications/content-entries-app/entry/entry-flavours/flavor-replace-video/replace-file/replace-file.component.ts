@@ -63,7 +63,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() flavors: Flavor[] = [];
     @Input() replaceType: UploadMenuType;
 
-    @ViewChild('fileDialog', { static: true }) _fileDialog: FileDialogComponent;
+    @ViewChild('fileDialog', { static: false }) _fileDialog: FileDialogComponent;
 
     private _storageProfiles: KalturaStorageProfile[] = [];
     private _transcodingProfiles: KalturaTranscodingProfileWithAsset[] = [];

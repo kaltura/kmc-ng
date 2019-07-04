@@ -14,7 +14,7 @@ import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
   providers: [KalturaLogger.createLogger('TranscodingProfilesListsHolderComponent')]
 })
 export class TranscodingProfilesListsHolderComponent {
-  @ViewChild('addNewProfile', { static: true }) _addNewProfilePopup: PopupWidgetComponent;
+  @ViewChild('addNewProfile', { static: false }) _addNewProfilePopup: PopupWidgetComponent;
 
   public _kalturaConversionProfileType = KalturaConversionProfileType;
   public _blockerMessage: AreaBlockerMessage;

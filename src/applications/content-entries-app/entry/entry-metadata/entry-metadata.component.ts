@@ -40,14 +40,14 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     public _tagsProvider = new Subject<SuggestionsProviderData>();
     public _kmcPermissions = KMCPermissions;
 	public _jumpToMenu: MenuItem[] = [];
-	@ViewChild('categoriesPopup', { static: true }) public categoriesPopup: PopupWidgetComponent;
+	@ViewChild('categoriesPopup', { static: false }) public categoriesPopup: PopupWidgetComponent;
 	private _popupStateChangeSubscribe: ISubscription;
     @ViewChildren(JumpToSection) private _jumpToSectionQuery : QueryList<JumpToSection> = null;
 
-	@ViewChild('metadataContainer', { static: true })
+	@ViewChild('metadataContainer', { static: false })
 	public _container: ElementRef;
 
-    @ViewChild('nameField', { static: true }) private nameField: ElementRef;
+    @ViewChild('nameField', { static: false }) private nameField: ElementRef;
 
     private _categoriesTooltipPipe: CategoryTooltipPipe;
     public _categoriesTooltipResolver = (value: any) => {

@@ -60,9 +60,9 @@ import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
 	]
 })
 export class EntryComponent implements OnInit, OnDestroy {
-    @ViewChild('liveDashboard', { static: true }) _liveDashboard: PopupWidgetComponent;
-    @ViewChild('clipAndTrim', { static: true }) _clipAndTrim: PopupWidgetComponent;
-    @ViewChild('bulkActionsPopup', { static: true }) _bulkActionsPopup: PopupWidgetComponent;
+    @ViewChild('liveDashboard', { static: false }) _liveDashboard: PopupWidgetComponent;
+    @ViewChild('clipAndTrim', { static: false }) _clipAndTrim: PopupWidgetComponent;
+    @ViewChild('bulkActionsPopup', { static: false }) _bulkActionsPopup: PopupWidgetComponent;
 	public _entryName: string;
 	public _entryType: KalturaMediaType;
 	public _sourceType: KalturaSourceType;

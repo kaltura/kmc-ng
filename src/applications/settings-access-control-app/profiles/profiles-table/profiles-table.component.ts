@@ -51,7 +51,7 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
   @Output() selectedProfilesChange = new EventEmitter<KalturaAccessControl[]>();
   @Output() sortChanged = new EventEmitter<{ field: string, order: number }>();
 
-  @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: false }) private actionsMenu: Menu;
 
   public _deferredLoading = true;
   public _emptyMessage = '';

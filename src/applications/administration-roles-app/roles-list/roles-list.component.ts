@@ -18,7 +18,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 })
 
 export class RolesListComponent implements OnInit, OnDestroy {
-  @ViewChild('editPopup', { static: true }) public editPopup: PopupWidgetComponent;
+  @ViewChild('editPopup', { static: false }) public editPopup: PopupWidgetComponent;
 
   public _kmcPermissions = KMCPermissions;
   public _blockerMessage: AreaBlockerMessage = null;

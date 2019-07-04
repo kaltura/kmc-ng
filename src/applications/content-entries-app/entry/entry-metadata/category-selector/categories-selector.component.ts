@@ -31,9 +31,9 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
 
   @Output() valueChange = new EventEmitter<CategoryData[]>();
 
-  @ViewChild('categoriesTree', { static: true }) _categoriesTree: CategoriesTreeComponent;
-  @ViewChild('tags', { static: true }) _tags: TagsComponent;
-  @ViewChild('autoComplete', { static: true }) private _autoComplete: AutoComplete;
+  @ViewChild('categoriesTree', { static: false }) _categoriesTree: CategoriesTreeComponent;
+  @ViewChild('tags', { static: false }) _tags: TagsComponent;
+  @ViewChild('autoComplete', { static: false }) private _autoComplete: AutoComplete;
 
   private _confirmClose = true;
   private _searchCategoriesSubscription: ISubscription;

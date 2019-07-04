@@ -29,8 +29,8 @@ import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shar
   ]
 })
 export class EntriesListHolderComponent implements OnInit, OnDestroy {
-  @ViewChild(EntriesListComponent, { static: true }) private _entriesList: EntriesListComponent;
-  @ViewChild('moderationDetails', { static: true }) private _moderationDetails: PopupWidgetComponent;
+  @ViewChild(EntriesListComponent, { static: false }) private _entriesList: EntriesListComponent;
+  @ViewChild('moderationDetails', { static: false }) private _moderationDetails: PopupWidgetComponent;
 
   public _kmcPermissions = KMCPermissions;
     public _enforcedFilters: Partial<EntriesFilters> = {

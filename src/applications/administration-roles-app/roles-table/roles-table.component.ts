@@ -42,7 +42,7 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   @Output() actionSelected = new EventEmitter<any>();
 
-  @ViewChild('actionsmenu', { static: true }) private _actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: false }) private _actionsMenu: Menu;
 
   private _deferredRoles: KalturaUserRole[];
 

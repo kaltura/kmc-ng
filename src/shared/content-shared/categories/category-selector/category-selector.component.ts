@@ -26,8 +26,8 @@ export class CategorySelectorComponent implements OnDestroy, OnInit, OnChanges {
 
   @Output() onCategorySelected = new EventEmitter<number>();
 
-  @ViewChild('categoriesTree', { static: true }) _categoriesTree: CategoriesTreeComponent;
-  @ViewChild('autoComplete', { static: true }) private _autoComplete: AutoComplete = null;
+  @ViewChild('categoriesTree', { static: false }) _categoriesTree: CategoriesTreeComponent;
+  @ViewChild('autoComplete', { static: false }) private _autoComplete: AutoComplete = null;
     @Input() enableNoParentSelection: boolean = true;
 
   public _categoriesLoaded = false;

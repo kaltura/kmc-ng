@@ -70,7 +70,7 @@ export class FeedsTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Output()
   selectedFeedsChange = new EventEmitter<any>();
 
-  @ViewChild('actionsmenu', { static: true }) private _actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: false }) private _actionsMenu: Menu;
 
   public _emptyMessage = '';
 

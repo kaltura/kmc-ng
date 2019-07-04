@@ -34,7 +34,7 @@ export abstract class TranscodingProfilesTableComponent implements OnInit, After
   @Output() selectedProfilesChange = new EventEmitter<KalturaConversionProfileWithAsset[]>();
   @Output() actionSelected = new EventEmitter<{ action: string, profile: KalturaConversionProfileWithAsset }>();
 
-  @ViewChild('actionsmenu', { static: true }) private _actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: false }) private _actionsMenu: Menu;
 
   public _profiles = [];
   public _emptyMessage = '';

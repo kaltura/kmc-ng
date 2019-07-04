@@ -20,7 +20,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 })
 
 export class DropFoldersListComponent implements OnInit, OnDestroy {
-  @ViewChild('tags', { static: true }) private _tags: StickyComponent;
+  @ViewChild('tags', { static: false }) private _tags: StickyComponent;
 
     public _isBusy = false;
     public _blockerMessage: AreaBlockerMessage = null;

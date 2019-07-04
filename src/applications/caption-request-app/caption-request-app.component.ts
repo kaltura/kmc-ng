@@ -14,7 +14,7 @@ import { ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
     providers: [KalturaLogger.createLogger('CaptionRequestAppComponent')]
 })
 export class CaptionRequestAppComponent implements OnDestroy {
-    @ViewChild('captionRequest', { static: true }) captionRequest: PopupWidgetComponent;
+    @ViewChild('captionRequest', { static: false }) captionRequest: PopupWidgetComponent;
 
     public _data: ReachData;
     public _page: ReachPages;

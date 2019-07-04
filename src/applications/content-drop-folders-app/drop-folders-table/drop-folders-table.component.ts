@@ -48,7 +48,7 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
   @Output() deleteDropFolderFiles = new EventEmitter<any>();
   @Output() sortChanged = new EventEmitter<any>();
 
-  @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: false }) private actionsMenu: Menu;
 
   private _deferredDropFolders: KalturaDropFolderFile[];
 

@@ -13,7 +13,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 })
 export class PreviewEmbedComponent implements OnDestroy {
 
-  @ViewChild('previewEmbed', { static: true }) previewEmbedPopup: PopupWidgetComponent;
+  @ViewChild('previewEmbed', { static: false }) previewEmbedPopup: PopupWidgetComponent;
 
   public _media: KalturaPlaylist | KalturaMediaEntry;
 

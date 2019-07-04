@@ -22,8 +22,8 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
     public _loading = false;
     public _loadingError = null;
 
-	@ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
-	@ViewChild('editPopup', { static: true }) public editPopup: PopupWidgetComponent;
+	@ViewChild('actionsmenu', { static: false }) private actionsMenu: Menu;
+	@ViewChild('editPopup', { static: false }) public editPopup: PopupWidgetComponent;
 	public _currentFile: KalturaAttachmentAsset;
 
 	public _fileTypes: SelectItem[] = [

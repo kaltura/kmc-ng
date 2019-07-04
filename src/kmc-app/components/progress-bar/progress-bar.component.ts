@@ -9,7 +9,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 })
 export class ProgressBarComponent implements OnDestroy {
     private _timeout: any;
-    @ViewChild('bar', { static: true }) _bar: ElementRef;
+    @ViewChild('bar', { static: false }) _bar: ElementRef;
 
     constructor(router: Router, renderer: Renderer2) {
         router.events

@@ -45,7 +45,7 @@ export interface PrimeListsGroup {
 })
 export class CategoriesRefineFiltersComponent implements OnInit, OnDestroy, OnChanges {
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @ViewChild(ScrollToTopContainerComponent, { static: true }) _treeContainer: ScrollToTopContainerComponent;
+  @ViewChild(ScrollToTopContainerComponent, { static: false }) _treeContainer: ScrollToTopContainerComponent;
   @Input() refineFilters: RefineGroup[];
 
   @ViewChildren(RefinePrimeTree)

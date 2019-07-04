@@ -53,7 +53,7 @@ export interface PrimeListsGroup {
 })
 export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChanges {
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @ViewChild(ScrollToTopContainerComponent, { static: true }) _treeContainer: ScrollToTopContainerComponent;
+  @ViewChild(ScrollToTopContainerComponent, { static: false }) _treeContainer: ScrollToTopContainerComponent;
     @Input() refineFilters: RefineGroup[];
     @Input() showEnforcedFilters = false;
 
@@ -62,8 +62,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
   @ViewChildren(RefinePrimeTree)
   public _primeTreesActions: RefinePrimeTree[];
 
-    @ViewChild('scheduledfrom', { static: true }) scheduledFrom: Calendar;
-    @ViewChild('scheduledto', { static: true }) scheduledTo: Calendar;
+    @ViewChild('scheduledfrom', { static: false }) scheduledFrom: Calendar;
+    @ViewChild('scheduledto', { static: false }) scheduledTo: Calendar;
 
   private _primeListsMap: { [key: string]: PrimeList } = {};
 

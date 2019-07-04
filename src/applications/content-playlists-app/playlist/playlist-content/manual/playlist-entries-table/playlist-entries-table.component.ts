@@ -14,7 +14,7 @@ import { MenuItem } from 'primeng/api';
   styleUrls: ['./playlist-entries-table.component.scss']
 })
 export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
-  @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: false }) private actionsMenu: Menu;
 
   @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Input() sortBy: string;

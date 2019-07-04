@@ -39,8 +39,8 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     @Input() defaultFilters: Partial<EntriesFilters>;
     @Input() showEnforcedFilters = false;
 
-    @ViewChild('tags', { static: true }) private tags: StickyComponent;
-    @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
+    @ViewChild('tags', { static: false }) private tags: StickyComponent;
+    @ViewChild('actionsmenu', { static: false }) private actionsMenu: Menu;
 
 
   @Output() onActionsSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();

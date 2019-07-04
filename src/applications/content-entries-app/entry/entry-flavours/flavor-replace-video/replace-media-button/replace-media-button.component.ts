@@ -19,7 +19,7 @@ export class ReplaceMediaButtonComponent {
     @Input() flavors: Flavor[] = [];
     @Input() replaceButtonsLabel: string;
 
-    @ViewChild('uploadMenu', { static: true }) _uploadMenu: PopupWidgetComponent;
+    @ViewChild('uploadMenu', { static: false }) _uploadMenu: PopupWidgetComponent;
 
     public _replaceType: UploadMenuType;
     public _uploadEnabled = false;

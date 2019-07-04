@@ -10,8 +10,8 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('appMenu', { static: true }) private _appMenuRef : any;
-  @ViewChild('whatsNew', { static: true }) private _whatsNewWin : PopupWidgetComponent;
+  @ViewChild('appMenu', { static: false }) private _appMenuRef : any;
+  @ViewChild('whatsNew', { static: false }) private _whatsNewWin : PopupWidgetComponent;
   private onResize : () => void;
 
 
