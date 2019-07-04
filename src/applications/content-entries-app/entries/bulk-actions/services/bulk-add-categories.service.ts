@@ -9,7 +9,7 @@ import { CategoryEntryAddAction } from 'kaltura-ngx-client';
 import { CategoryEntryListAction } from 'kaltura-ngx-client';
 import { KalturaCategoryEntryFilter } from 'kaltura-ngx-client';
 import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 @Injectable()

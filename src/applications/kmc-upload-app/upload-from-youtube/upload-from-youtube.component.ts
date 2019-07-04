@@ -14,7 +14,7 @@ import {
     ThumbAssetSetAsDefaultAction,
     ThumbAssetSetContentAction
 } from 'kaltura-ngx-client';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';

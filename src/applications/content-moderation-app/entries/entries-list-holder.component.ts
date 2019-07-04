@@ -4,7 +4,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {
     EntriesListComponent
 } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import {
     EntriesFilters, EntriesStore,
     SortDirection

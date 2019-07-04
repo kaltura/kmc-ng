@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { AppAuthentication, AppUser} from 'app-shared/kmc-shell';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { serverConfig, buildBaseUri } from 'config/server';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';

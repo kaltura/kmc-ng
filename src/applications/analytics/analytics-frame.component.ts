@@ -4,7 +4,7 @@ import { AppAuthentication } from 'shared/kmc-shell/index';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { Location } from '@angular/common';
 import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';

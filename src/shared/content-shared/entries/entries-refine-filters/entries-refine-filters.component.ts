@@ -8,7 +8,7 @@ import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { Calendar } from 'primeng/calendar';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 
 const listOfFilterNames: (keyof EntriesFilters)[] = [
     'createdAt',

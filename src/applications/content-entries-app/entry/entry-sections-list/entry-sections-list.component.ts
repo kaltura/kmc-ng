@@ -1,7 +1,7 @@
 import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { EntryStore } from '../entry-store.service';
 import { StickyComponent } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { EntrySectionsListWidget, SectionWidgetItem } from './entry-sections-list-widget.service';
 

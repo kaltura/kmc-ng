@@ -3,7 +3,7 @@ import {PlaylistsFilters, PlaylistsStore} from '../playlists-store/playlists-sto
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { DatePipe } from 'app-shared/kmc-shared/date-format/date.pipe';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 export interface TagItem {
   type: string,
   value: any,

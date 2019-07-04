@@ -30,7 +30,7 @@ import { CustomMenuItem } from 'app-shared/content-shared/entries/entries-list/e
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ContentEntriesAppService } from '../content-entries-app.service';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
 

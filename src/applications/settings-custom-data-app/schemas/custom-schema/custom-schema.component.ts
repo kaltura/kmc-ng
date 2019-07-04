@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
 import { KalturaMetadataProfile } from 'kaltura-ngx-client';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { MetadataItem } from 'app-shared/kmc-shared/custom-metadata/metadata-profile';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { KalturaAPIException, KalturaObjectBaseFactory } from 'kaltura-ngx-client';

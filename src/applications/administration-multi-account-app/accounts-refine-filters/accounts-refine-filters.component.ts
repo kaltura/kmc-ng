@@ -7,7 +7,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
 import { AccountFilters, MultiAccountStoreService } from '../multi-account-store/multi-account-store.service';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 
 
 const listOfFilterNames: (keyof AccountFilters)[] = [

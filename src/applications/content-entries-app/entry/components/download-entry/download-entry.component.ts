@@ -11,7 +11,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage, PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { SelectItem } from 'primeng/api';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 
 @Component({
     selector: 'kDownloadEntry',

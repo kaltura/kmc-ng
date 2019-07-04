@@ -3,7 +3,7 @@ import { DropFoldersFilters, DropFoldersStoreService, SortDirection } from '../d
 import { Router } from '@angular/router';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';

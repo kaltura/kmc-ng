@@ -7,7 +7,7 @@ import { KalturaCaptionAsset } from 'kaltura-ngx-client';
 import { KalturaCaptionType } from 'kaltura-ngx-client';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { NewEntryCaptionFile } from './new-entry-caption-file';

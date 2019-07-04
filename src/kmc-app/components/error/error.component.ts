@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 
 @Component({
     selector: 'kKMCError',

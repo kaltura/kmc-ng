@@ -8,7 +8,7 @@ import {
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ResetMenuEvent, UpdateMenuEvent } from 'app-shared/kmc-shared/events';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import {KMCPermissions, KMCPermissionsService} from "app-shared/kmc-shared/kmc-permissions";
 
 @Component({

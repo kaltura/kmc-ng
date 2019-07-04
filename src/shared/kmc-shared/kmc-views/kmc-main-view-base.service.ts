@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { Router } from '@angular/router';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { Title } from '@angular/platform-browser';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';

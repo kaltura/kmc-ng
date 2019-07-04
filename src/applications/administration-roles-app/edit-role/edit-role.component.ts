@@ -10,7 +10,7 @@ import { RolesStoreService } from '../roles-store/roles-store.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
