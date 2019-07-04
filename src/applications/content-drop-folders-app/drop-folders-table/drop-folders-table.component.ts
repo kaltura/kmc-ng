@@ -9,7 +9,7 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
-import {Menu, MenuItem} from 'primeng/primeng';
+import {Menu} from 'primeng/menu';
 import {KalturaDropFolderFile} from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import { globalConfig } from 'config/global';
@@ -17,6 +17,7 @@ import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 import { DatePipe } from 'app-shared/kmc-shared/date-format/date.pipe';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'kDropFoldersListTable',
@@ -47,7 +48,7 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
   @Output() deleteDropFolderFiles = new EventEmitter<any>();
   @Output() sortChanged = new EventEmitter<any>();
 
-  @ViewChild('actionsmenu') private actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
 
   private _deferredDropFolders: KalturaDropFolderFile[];
 

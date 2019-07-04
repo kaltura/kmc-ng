@@ -28,8 +28,8 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 	public _kmcPermissions = KMCPermissions;
 
-	@ViewChild('addNewPlaylist') public addNewPlaylist: PopupWidgetComponent;
-  @ViewChild('tags') private tags: StickyComponent;
+	@ViewChild('addNewPlaylist', { static: true }) public addNewPlaylist: PopupWidgetComponent;
+  @ViewChild('tags', { static: true }) private tags: StickyComponent;
 
     public _isBusy = false;
     public _blockerMessage: AreaBlockerMessage = null;

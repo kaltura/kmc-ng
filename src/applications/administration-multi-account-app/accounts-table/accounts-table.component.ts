@@ -10,12 +10,13 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
-import {Menu, MenuItem} from 'primeng/primeng';
+import { Menu } from 'primeng/menu';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {KalturaPartner, KalturaPartnerStatus} from 'kaltura-ngx-client';
 import {ColumnsResizeManagerService, ResizableColumnsTableName} from 'app-shared/kmc-shared/columns-resize-manager';
 import {AppAuthentication} from "app-shared/kmc-shell";
 import {globalConfig} from "config/global";
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'kAccountsTable',
@@ -44,7 +45,7 @@ export class AccountsTableComponent implements AfterViewInit, OnInit, OnDestroy 
   @Output() actionSelected = new EventEmitter<{action: string, account: KalturaPartner}>();
   @Output() sortChanged = new EventEmitter<any>();
 
-  @ViewChild('actionsmenu') private _actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: true }) private _actionsMenu: Menu;
 
   private _deferredAccounts: KalturaPartner[];
 

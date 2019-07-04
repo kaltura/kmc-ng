@@ -35,7 +35,7 @@ export class LoginFormComponent {
   @Output() onRememberMe = new EventEmitter<string>();
   @Output() onSetScreen = new EventEmitter<LoginScreens>();
 
-  @ViewChild('auth') authField;
+  @ViewChild('auth', { static: true }) authField;
 
   _loginForm: FormGroup;
   _usernameField: AbstractControl;

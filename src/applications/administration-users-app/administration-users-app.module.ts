@@ -8,12 +8,15 @@ import { EditUserComponent } from './users/edit-user/edit-user.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { ButtonModule, DropdownModule, MenuModule, PaginatorModule } from 'primeng/primeng';
 import {LocalizationModule} from '@kaltura-ng/mc-shared';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { TableModule } from 'primeng/table';
 import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
+import { PaginatorModule } from 'primeng/paginator';
+import { MenuModule } from 'primeng/menu';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   imports: [

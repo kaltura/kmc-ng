@@ -32,16 +32,16 @@
 	}
 }
 
-:host /deep/ .ui-dropdown.ui-widget{
+:host ::ng-deep .ui-dropdown.ui-widget{
 	width: 120px;
 }
 
 
-:host /deep/ .ui-table-scrollable-body{
+:host ::ng-deep .ui-table-scrollable-body{
 	overflow: visible;
 }
 
-:host /deep/ .kFileName {
+:host ::ng-deep .kFileName {
   text-overflow: ellipsis;
   overflow: hidden;
   width: 100%;

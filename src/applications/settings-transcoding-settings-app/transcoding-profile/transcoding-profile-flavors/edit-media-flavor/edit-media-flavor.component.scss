@@ -84,7 +84,7 @@
   }
 }
 
-:host /deep/ .kEditMediaProfileFlavor {
+:host ::ng-deep .kEditMediaProfileFlavor {
   .ui-dropdown.ui-widget {
     width: 400px;
   }

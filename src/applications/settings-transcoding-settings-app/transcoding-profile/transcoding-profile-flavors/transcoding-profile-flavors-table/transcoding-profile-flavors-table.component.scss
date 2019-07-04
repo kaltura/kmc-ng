@@ -33,7 +33,7 @@
   flex-direction: column;
 }
 
-:host /deep/ p-table {
+:host ::ng-deep p-table {
   tr.ui-state-highlight .kEditFlavorIcon {
     display: block !important;
   }
@@ -56,7 +56,7 @@
   }
 }
 
-:host /deep/ {
+:host ::ng-deep {
     .kDisabled {
         .ui-chkbox {
             cursor: default;

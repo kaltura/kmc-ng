@@ -3,7 +3,7 @@ import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '
 import {KalturaPartner} from 'kaltura-ngx-client';
 import {SettingsAccountSettingsService} from './settings-account-settings.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import {SelectItem} from 'primeng/primeng';
+import { SelectItem } from 'primeng/api';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';

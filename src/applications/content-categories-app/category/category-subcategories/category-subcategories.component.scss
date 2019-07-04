@@ -16,7 +16,7 @@
   }
 }
 
-:host /deep/ .kIcondropdown_arrow_top,
-:host /deep/ .kIcondropdown_arrow_bottom {
+:host ::ng-deep .kIcondropdown_arrow_top,
+:host ::ng-deep .kIcondropdown_arrow_bottom {
   font-size: 12px;
 }

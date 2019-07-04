@@ -2,15 +2,6 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AreaBlockerModule, KalturaUIModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
-import {
-  ButtonModule,
-  CheckboxModule,
-  DropdownModule,
-  InputSwitchModule,
-  InputTextModule,
-  MenuModule,
-  SharedModule
-} from 'primeng/primeng';
 import {LocalizationModule} from '@kaltura-ng/mc-shared';
 import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui';
@@ -34,6 +25,13 @@ import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { TableModule } from 'primeng/table';
 import { UploadFromYoutubeComponent } from './upload-from-youtube/upload-from-youtube.component';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { MenuModule } from 'primeng/menu';
+import { SharedModule } from 'primeng/shared';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   imports: [

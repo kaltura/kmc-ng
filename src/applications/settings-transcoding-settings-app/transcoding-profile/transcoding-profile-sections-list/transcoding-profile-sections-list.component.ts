@@ -11,7 +11,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
   styleUrls: ['./transcoding-profile-sections-list.component.scss']
 })
 export class TranscodingProfileSectionsListComponent implements OnInit, OnDestroy {
-  @ViewChild('profileSections') private _profileSections: StickyComponent;
+  @ViewChild('profileSections', { static: true }) private _profileSections: StickyComponent;
 
   public _loading = false;
   public _showList = false;

@@ -52,13 +52,13 @@
         width: 258px;
 
         &.kHasError{
-          /deep/ .ui-widget.ui-dropdown {
+          ::ng-deep .ui-widget.ui-dropdown {
             border: none;
             padding-top: 1px;
           }
         }
 
-        /deep/ .ui-dropdown-items-wrapper {
+        ::ng-deep .ui-dropdown-items-wrapper {
           max-height:250px !important;
         }
       }
@@ -98,7 +98,7 @@
   }
 }
 
-:host /deep/ {
+:host ::ng-deep {
   .kWarningMoreInfoTooltip {
     font-size: 15px;
     font-weight: normal;
@@ -109,7 +109,7 @@
 }
 
 // Form styling
-:host /deep/ {
+:host ::ng-deep {
   .kRow {
     display: flex;
     padding-bottom: 20px;
@@ -186,7 +186,7 @@
   }
 }
 
-:host /deep/ {
+:host ::ng-deep {
   .kPlaylist {
     display: flex;
     align-items: center;

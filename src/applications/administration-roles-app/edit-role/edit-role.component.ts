@@ -25,7 +25,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
   @Input() role: KalturaUserRole;
   @Input() parentPopupWidget: PopupWidgetComponent;
 
-  @ViewChild(PermissionsTableComponent) _permissionsTable: PermissionsTableComponent;
+  @ViewChild(PermissionsTableComponent, { static: true }) _permissionsTable: PermissionsTableComponent;
 
   private _defaultPermissionNames = ['KMC_ACCESS', 'KMC_READ_ONLY', 'BASE_USER_SESSION_PERMISSION', 'WIDGET_SESSION_PERMISSION'];
 

@@ -17,7 +17,7 @@ import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 })
 export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 
-	@ViewChild('ownerPopup') ownerPopup: PopupWidgetComponent;
+	@ViewChild('ownerPopup', { static: true }) ownerPopup: PopupWidgetComponent;
 
 	private _searchUsersSubscription : ISubscription;
 	public _usersProvider = new Subject<SuggestionsProviderData>();

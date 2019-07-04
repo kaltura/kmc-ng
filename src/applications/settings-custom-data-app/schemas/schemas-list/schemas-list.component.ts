@@ -19,7 +19,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
   providers: [KalturaLogger.createLogger('SchemasListComponent')]
 })
 export class SchemasListComponent implements OnInit, OnDestroy {
-  @ViewChild('customSchema') _customSchemaPopup: PopupWidgetComponent;
+  @ViewChild('customSchema', { static: true }) _customSchemaPopup: PopupWidgetComponent;
 
   public _selectedSchemas: SettingsMetadataProfile[] = [];
   public _selectedSchema: SettingsMetadataProfile = null;

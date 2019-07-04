@@ -30,7 +30,7 @@ import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shar
 export class PlaylistRuleComponent implements OnInit {
   @Input() rule: PlaylistRule;
 
-  @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
+  @ViewChild(EntriesListComponent, { static: true }) public _entriesList: EntriesListComponent;
 
   @Output() onClosePopupWidget = new EventEmitter<void>();
   @Output() onSaveRule = new EventEmitter<PlaylistRule>();

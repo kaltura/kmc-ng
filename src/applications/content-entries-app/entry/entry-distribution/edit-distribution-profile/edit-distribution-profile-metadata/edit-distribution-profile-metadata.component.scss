@@ -61,7 +61,7 @@
   }
 }
 
-:host /deep/ .kEditDistributionProfileMetadata {
+:host ::ng-deep .kEditDistributionProfileMetadata {
   .ui-inputtext:disabled {
     border-color: $kGrayscale2;
     color: $kGrayscale2;

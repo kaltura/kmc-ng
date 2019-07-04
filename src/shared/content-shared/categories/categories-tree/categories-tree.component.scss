@@ -1,6 +1,6 @@
 @import "app-theme/_variables.scss";
 
-:host /deep/ {
+:host ::ng-deep {
   .ui-treenode-content {
     .ui-treenode-label {
       width: 100%;
@@ -60,21 +60,21 @@
 }
 
 /* Make sure toggler and checkbox remain aligned even if the node height changes */
-:host /deep/ .ui-treenode .ui-tree-toggler {
+:host ::ng-deep .ui-treenode .ui-tree-toggler {
   vertical-align: top;
   margin-top: 13px;
 }
 
-:host /deep/ .ui-tree .ui-chkbox {
+:host ::ng-deep .ui-tree .ui-chkbox {
   vertical-align: top;
   margin-top: 14px;
 }
 
-:host /deep/ .ui-tree .ui-tree-toggler {
+:host ::ng-deep .ui-tree .ui-tree-toggler {
   margin-top: 15px;
 }
 
-:host /deep/ .ui-tree.ui-widget.ui-widget-content {
+:host ::ng-deep .ui-tree.ui-widget.ui-widget-content {
   width: 100%;
   border: none;
 }

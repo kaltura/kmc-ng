@@ -35,7 +35,7 @@
 }
 
 
-/deep/ .ui-autocomplete.ui-widget{
+::ng-deep .ui-autocomplete.ui-widget{
   width: 100%;
   input{
     width: 100%;

@@ -10,7 +10,7 @@ import { KalturaDistributionProfile } from 'kaltura-ngx-client';
   styleUrls: ['./entry-distribution.component.scss']
 })
 export class EntryDistributionComponent implements OnInit, OnDestroy {
-  @ViewChild('editProfile') _editProfilePopup: PopupWidgetComponent;
+  @ViewChild('editProfile', { static: true }) _editProfilePopup: PopupWidgetComponent;
 
   public _loading = false;
   public _loadingError = null;

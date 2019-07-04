@@ -30,7 +30,7 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
   @Input() form: FormGroup;
   @Input() profileName: string;
 
-  @ViewChild('addEntries') entriesSelector: PopupWidgetComponent;
+  @ViewChild('addEntries', { static: true }) entriesSelector: PopupWidgetComponent;
 
   private _innerValue: string[] = [];
   private _selectionIdGenerator = new FriendlyHashId();

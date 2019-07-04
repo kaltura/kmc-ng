@@ -1,7 +1,7 @@
 @import 'app-theme/_variables.scss';
 
 .kTable {
-  /deep/ {
+  ::ng-deep {
     .kApplicationRootCategory {
       .kApplicationRootCategoryLabel {
         color: $kGrayscale1;

@@ -45,13 +45,13 @@
   justify-content: center;  
 }
 
-/deep/ .ui-autocomplete.ui-widget {
+::ng-deep .ui-autocomplete.ui-widget {
   width: 100%;
   input {
     width: 100%;
   }
 }
 
-:host /deep/ label {
+:host ::ng-deep label {
   font-weight: 400;
 }

@@ -6,7 +6,7 @@ import { KalturaFlavorAssetStatus } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaMediaType } from 'kaltura-ngx-client';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
-import { Menu, MenuItem } from 'primeng/primeng';
+import { Menu } from 'primeng/menu';
 import { EntryFlavoursWidget, ReplacementData } from './entry-flavours-widget.service';
 import { Flavor } from './flavor';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
@@ -16,6 +16,7 @@ import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
+import { MenuItem } from 'primeng/api';
 
 @Component({
     selector: 'kEntryFlavours',
@@ -27,13 +28,13 @@ import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shar
     ]
 })
 export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
-    @ViewChild('drmPopup') drmPopup: PopupWidgetComponent;
-	@ViewChild('previewPopup') previewPopup: PopupWidgetComponent;
-	@ViewChild('importPopup') importPopup: PopupWidgetComponent;
-	@ViewChild('matchDropFolder') matchDropFolder: PopupWidgetComponent;
-    @ViewChild('linkPopup') linkPopup: FileDialogComponent;
-    @ViewChild('actionsmenu') private actionsMenu: Menu;
-    @ViewChild('fileDialog') private fileDialog: FileDialogComponent;
+    @ViewChild('drmPopup', { static: true }) drmPopup: PopupWidgetComponent;
+	@ViewChild('previewPopup', { static: true }) previewPopup: PopupWidgetComponent;
+	@ViewChild('importPopup', { static: true }) importPopup: PopupWidgetComponent;
+	@ViewChild('matchDropFolder', { static: true }) matchDropFolder: PopupWidgetComponent;
+    @ViewChild('linkPopup', { static: true }) linkPopup: FileDialogComponent;
+    @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
+    @ViewChild('fileDialog', { static: true }) private fileDialog: FileDialogComponent;
 	public _actions: MenuItem[] = [];
 	public _kmcPermissions = KMCPermissions;
 

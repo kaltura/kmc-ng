@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 
-import { MenuItem } from 'primeng/primeng';
+import { MenuItem } from 'primeng/api';
 import { ISubscription } from 'rxjs/Subscription';
 import { EntryMetadataWidget } from './entry-metadata-widget.service';
 import { PageScrollService, PageScrollInstance } from 'ngx-page-scroll';
@@ -40,14 +40,14 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     public _tagsProvider = new Subject<SuggestionsProviderData>();
     public _kmcPermissions = KMCPermissions;
 	public _jumpToMenu: MenuItem[] = [];
-	@ViewChild('categoriesPopup') public categoriesPopup: PopupWidgetComponent;
+	@ViewChild('categoriesPopup', { static: true }) public categoriesPopup: PopupWidgetComponent;
 	private _popupStateChangeSubscribe: ISubscription;
     @ViewChildren(JumpToSection) private _jumpToSectionQuery : QueryList<JumpToSection> = null;
 
-	@ViewChild('metadataContainer')
+	@ViewChild('metadataContainer', { static: true })
 	public _container: ElementRef;
 
-    @ViewChild('nameField') private nameField: ElementRef;
+    @ViewChild('nameField', { static: true }) private nameField: ElementRef;
 
     private _categoriesTooltipPipe: CategoryTooltipPipe;
     public _categoriesTooltipResolver = (value: any) => {

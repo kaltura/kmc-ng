@@ -46,7 +46,7 @@
   }
 }
 
-:host /deep/ .kTranscodingProfilesTable {
+:host ::ng-deep .kTranscodingProfilesTable {
     &:not(.kSingleTableMode) {
         .ui-table-scrollable-body {
             max-height: 280px !important;
@@ -63,7 +63,7 @@
     }
 }
 
-:host /deep/ p-table {
+:host ::ng-deep p-table {
     .ui-table .ui-table-thead > tr > th {
         border-left: 1px solid $kGrayscale6;
     }

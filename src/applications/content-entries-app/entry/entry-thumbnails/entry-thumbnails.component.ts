@@ -7,8 +7,9 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 
 import { EntryThumbnailsWidget, ThumbnailRow } from './entry-thumbnails-widget.service';
-import { Menu, MenuItem } from 'primeng/primeng';
+import { Menu } from 'primeng/menu';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { MenuItem } from 'primeng/api';
 
 
 @Component({
@@ -19,8 +20,8 @@ import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 
     public _loadingError = null;
-	@ViewChild('capturePopup') public capturePopup: PopupWidgetComponent;
-	@ViewChild('actionsmenu') private actionsMenu: Menu;
+	@ViewChild('capturePopup', { static: true }) public capturePopup: PopupWidgetComponent;
+	@ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
 	public _actions: MenuItem[] = [];
 	public _kmcPermissions = KMCPermissions;
   public _documentWidth: number;

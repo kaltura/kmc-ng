@@ -99,7 +99,7 @@
   }
 }
 
-:host /deep/ .kAddNewProfile {
+:host ::ng-deep .kAddNewProfile {
   .ui-dropdown.ui-widget {
     width: 300px;
   }

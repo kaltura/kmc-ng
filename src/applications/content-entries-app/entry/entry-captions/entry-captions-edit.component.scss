@@ -76,6 +76,6 @@
 	}
 }
 
-:host /deep/ .ui-dropdown.ui-widget{
+:host ::ng-deep .ui-dropdown.ui-widget{
 	width: 212px;
 }

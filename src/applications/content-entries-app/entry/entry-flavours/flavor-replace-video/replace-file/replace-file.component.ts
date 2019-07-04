@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
-import { SelectItem } from 'primeng/primeng';
+import { SelectItem } from 'primeng/api';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaType } from 'kaltura-ngx-client';
 import { NewEntryUploadFile } from 'app-shared/kmc-shell';
@@ -63,7 +63,7 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() flavors: Flavor[] = [];
     @Input() replaceType: UploadMenuType;
 
-    @ViewChild('fileDialog') _fileDialog: FileDialogComponent;
+    @ViewChild('fileDialog', { static: true }) _fileDialog: FileDialogComponent;
 
     private _storageProfiles: KalturaStorageProfile[] = [];
     private _transcodingProfiles: KalturaTranscodingProfileWithAsset[] = [];

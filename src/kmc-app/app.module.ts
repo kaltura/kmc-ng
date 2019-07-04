@@ -47,24 +47,10 @@ import {
 import {AppComponent} from './app.component';
 import {routing} from './app.routes';
 
-import {DashboardComponent} from './components/dashboard/dashboard.component';
-import {AppMenuComponent} from './components/app-menu/app-menu.component';
-import {ErrorComponent} from './components/error/error.component';
+import {DashboardComponent} from './components/dashboard';
+import {AppMenuComponent} from './components/app-menu';
+import {ErrorComponent} from './components/error';
 import {UserSettingsComponent} from './components/user-settings/user-settings.component';
-
-import {
-  ButtonModule,
-  CheckboxModule,
-  ConfirmationService,
-  ConfirmDialogModule,
-  DropdownModule,
-  GrowlModule,
-  InputTextModule,
-  RadioButtonModule,
-  TieredMenuModule
-} from 'primeng/primeng';
-
-
 import { UploadManagementModule } from '@kaltura-ng/kaltura-common';
 import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { LoginComponent } from './components/login/login.component';
@@ -110,6 +96,15 @@ import { PersistLoginByKsComponent } from './components/app-actions/persist-logi
 import { ColumnsResizeManagerModule } from 'app-shared/kmc-shared/columns-resize-manager';
 import { CaptionRequestAppModule } from '../applications/caption-request-app/caption-request-app.module';
 import { NewEntryCreateFromUrlModule } from 'app-shared/kmc-shell/new-entry-create-from-url/new-entry-create-from-url.module';
+import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { ConfirmationService } from 'primeng/api';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { CheckboxModule } from 'primeng/checkbox';
+import { GrowlModule } from 'primeng/growl';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 

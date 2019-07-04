@@ -6,17 +6,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { routing } from './content-bulk-log-app.routes';
 
 import { AreaBlockerModule, KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
-import {
-  ButtonModule,
-  CalendarModule,
-  CheckboxModule,
-  InputTextModule,
-  MenuModule,
-  PaginatorModule,
-  SharedModule,
-  TieredMenuModule,
-  TreeModule
-} from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 import {LocalizationModule} from '@kaltura-ng/mc-shared';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
@@ -34,6 +23,15 @@ import { BulkLogTagsComponent } from './bulk-log-tags/bulk-log-tags.component';
 import { FiltersModule } from '@kaltura-ng/mc-shared';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
+import { PaginatorModule } from 'primeng/paginator';
+import { ButtonModule } from 'primeng/button';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { CheckboxModule } from 'primeng/checkbox';
+import { InputTextModule } from 'primeng/inputtext';
+import { CalendarModule } from 'primeng/calendar';
+import { MenuModule } from 'primeng/menu';
+import { SharedModule } from 'primeng/shared';
+import { TreeModule } from 'primeng/tree';
 
 @NgModule({
   imports: [

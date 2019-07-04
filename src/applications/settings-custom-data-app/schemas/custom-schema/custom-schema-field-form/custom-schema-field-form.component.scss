@@ -125,7 +125,7 @@
   }
 }
 
-:host /deep/ .kCustomSchemaFieldForm {
+:host ::ng-deep .kCustomSchemaFieldForm {
   .ui-dropdown.ui-widget {
     width: 335px;
   }
@@ -146,7 +146,7 @@
   }
 }
 
-:host /deep/ .kAllowMultiple .ui-radiobutton-label {
+:host ::ng-deep .kAllowMultiple .ui-radiobutton-label {
   font-weight: normal;
   font-size: 15px;
   margin-left: 5px;

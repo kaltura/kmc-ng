@@ -7,10 +7,6 @@ import { DetailsBarModule } from '@kaltura-ng/kaltura-ui';
 import { routing } from './content-playlists-app.routes';
 
 import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
-import {
-  ButtonModule, CalendarModule, CheckboxModule, DropdownModule, InputTextModule, MenuModule, PaginatorModule,
-  RadioButtonModule, InputTextareaModule, SharedModule, TieredMenuModule
-} from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 import {LocalizationModule} from '@kaltura-ng/mc-shared';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
@@ -28,6 +24,17 @@ import { SliderModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { KPTableModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
+import { PaginatorModule } from 'primeng/paginator';
+import { ButtonModule } from 'primeng/button';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { CheckboxModule } from 'primeng/checkbox';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { CalendarModule } from 'primeng/calendar';
+import { MenuModule } from 'primeng/menu';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { SharedModule } from 'primeng/shared';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
     imports: [

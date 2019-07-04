@@ -38,7 +38,7 @@ export class FeedsListComponent implements OnInit, OnDestroy {
   public _playlists: KalturaPlaylist[] = null;
   public _originalPlaylists: KalturaPlaylist[] = null;
   public _currentEditFeed: KalturaBaseSyndicationFeed = null;
-  @ViewChild('feedDetails') feedDetailsPopup: PopupWidgetComponent;
+  @ViewChild('feedDetails', { static: true }) feedDetailsPopup: PopupWidgetComponent;
 
   public _query = {
     pageIndex: 0,

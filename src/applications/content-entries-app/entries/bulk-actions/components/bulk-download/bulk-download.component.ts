@@ -11,7 +11,7 @@ import { KalturaFlavorParams } from 'kaltura-ngx-client';
 import { FlavorParamsListAction } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 
-import {SelectItem} from 'primeng/primeng';
+import {SelectItem} from 'primeng/api';
 
 @Component({
 	selector: 'kBulkDownload',

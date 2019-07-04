@@ -21,7 +21,7 @@
     .kButtonLiveDashboard {
       height:34px;
       width: 160px;
-      /deep/ .kIconstatistic{
+      ::ng-deep .kIconstatistic{
         line-height: 18px;
 
         &:before {
@@ -134,20 +134,20 @@
 
 }
 
-:host /deep/ .ui-dropdown{
+:host ::ng-deep .ui-dropdown{
 	width: 200px !important;
 }
-:host /deep/ .kLiveBitrate .ui-dropdown{
+:host ::ng-deep .kLiveBitrate .ui-dropdown{
 	width: 120px !important;
 }
-:host /deep/ .ui-dropdown-label.ui-inputtext{
+:host ::ng-deep .ui-dropdown-label.ui-inputtext{
 	background-color: #ffffff;
 }
 
-:host /deep/ .ui-spinner .pi{
+:host ::ng-deep .ui-spinner .pi{
 	margin-top: -.8em;
 }
 
-:host /deep/ span.ui-button-icon-left.kIconcalendar{
+:host ::ng-deep span.ui-button-icon-left.kIconcalendar{
 	padding-top: 2px !important;
 }

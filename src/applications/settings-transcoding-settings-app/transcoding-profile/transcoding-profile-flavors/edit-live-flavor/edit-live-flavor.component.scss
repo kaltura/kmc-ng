@@ -84,7 +84,7 @@
   }
 }
 
-:host /deep/ .kEditMediaProfileFlavor {
+:host ::ng-deep .kEditMediaProfileFlavor {
 
   .ui-inputtext:disabled {
     opacity: 1;

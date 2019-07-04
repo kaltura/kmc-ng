@@ -58,7 +58,7 @@
                 }
             }
 
-            .kDropFolderSearch /deep/ {
+            .kDropFolderSearch ::ng-deep {
                 .k-clearable-input-input {
                     width: 284px;
                     height: 34px;
@@ -189,7 +189,7 @@
     }
 }
 
-:host /deep/ .kDropFoldersList {
+:host ::ng-deep .kDropFoldersList {
     .ui-dropdown-panel {
         width: 238px;
     }
@@ -206,7 +206,7 @@
     }
 }
 
-:host /deep/ .kMatchDropFolderTable {
+:host ::ng-deep .kMatchDropFolderTable {
     .ui-table .ui-table-scrollable-body {
         max-height: 208px !important;
         height: 208px !important;

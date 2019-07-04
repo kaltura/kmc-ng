@@ -7,11 +7,11 @@
   flex: 0 0 auto;
   z-index: 0;
 }
-:host /deep/ span.ui-button-icon-left.pi-kIconarrow_forward, :host /deep/ span.ui-button-icon-left.pi-kIconarrow_backward{
+:host ::ng-deep span.ui-button-icon-left.pi-kIconarrow_forward, :host ::ng-deep span.ui-button-icon-left.pi-kIconarrow_backward{
   margin-left: -.5em;
 }
 
-:host /deep/ .stickyHeader{
+:host ::ng-deep .stickyHeader{
   background-color: white;
   height: auto;
   z-index: 500;

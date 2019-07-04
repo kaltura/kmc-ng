@@ -8,24 +8,6 @@ import { EntriesComponentsList } from './entries-components-list';
 import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 
 import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
-import {
-  AccordionModule,
-  ButtonModule,
-  CalendarModule,
-  CheckboxModule,
-  ConfirmDialogModule,
-  DropdownModule,
-  InputTextareaModule,
-  InputTextModule,
-  MenuModule,
-  MultiSelectModule,
-  PaginatorModule,
-  RadioButtonModule,
-  SharedModule,
-  SpinnerModule,
-  TieredMenuModule,
-  TreeModule
-} from 'primeng/primeng';
 import {LocalizationModule} from '@kaltura-ng/mc-shared';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
@@ -38,6 +20,22 @@ import { TagsModule } from '@kaltura-ng/kaltura-ui';
 import { DynamicMetadataFormModule } from 'app-shared/kmc-shared';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
+import { PaginatorModule } from 'primeng/paginator';
+import { ButtonModule } from 'primeng/button';
+import { MenuModule } from 'primeng/menu';
+import { SharedModule } from 'primeng/shared';
+import { AccordionModule } from 'primeng/accordion';
+import { CalendarModule } from 'primeng/calendar';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { SpinnerModule } from 'primeng/spinner';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { TreeModule } from 'primeng/tree';
 
 @NgModule({
   imports: [

@@ -25,17 +25,17 @@
         font-weight: 700;
     }
 
-    &.kTagsVisible /deep/ .ui-table-scrollable-body {
+    &.kTagsVisible ::ng-deep .ui-table-scrollable-body {
         height: calc(100vh - 320px) !important;
     }
 
-    /deep/ .ui-table-scrollable-body {
+    ::ng-deep .ui-table-scrollable-body {
         height: calc(100vh - 280px) !important;
         overflow: auto;
     }
 }
 
-:host /deep/ {
+:host ::ng-deep {
 
     .kDisabled {
         .selectionColumn, .ui-chkbox-box {
@@ -53,12 +53,12 @@
 
 }
 
-:host /deep/ .ui-table .nameColumn {
+:host ::ng-deep .ui-table .nameColumn {
     font-weight: normal;
     width: 200px;
 }
 
-:host /deep/ .ui-table .permissionLevelColumn {
+:host ::ng-deep .ui-table .permissionLevelColumn {
     font-weight: normal;
     width: 140px;
     text-align: left;
@@ -68,7 +68,7 @@
     }
 }
 
-:host /deep/ .ui-table .updateMethodColumn {
+:host ::ng-deep .ui-table .updateMethodColumn {
     font-weight: normal;
     width: 140px;
     text-align: left;
@@ -79,13 +79,13 @@
     }
 }
 
-:host /deep/ .ui-table .updatedAtColumn {
+:host ::ng-deep .ui-table .updatedAtColumn {
     font-weight: normal;
     width: 81px;
     text-align: left;
 }
 
-:host /deep/ .ui-table {
+:host ::ng-deep .ui-table {
     .statusColumn {
         font-weight: normal;
         width: 170px;
@@ -97,11 +97,11 @@
     }
 }
 
-:host /deep/ tr:hover .removeColumn .kIconremove.kEnabled {
+:host ::ng-deep tr:hover .removeColumn .kIconremove.kEnabled {
     visibility: visible;
 }
 
-:host /deep/ .ui-table .removeColumn {
+:host ::ng-deep .ui-table .removeColumn {
     overflow: visible;
     width: 55px;
     text-align: center;
@@ -122,7 +122,7 @@
     flex-direction: column;
 }
 
-:host /deep/ p-table .stickyHeader {
+:host ::ng-deep p-table .stickyHeader {
     z-index: 10;
     display: table;
 }

@@ -7,7 +7,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaEntryStatus, KalturaMediaEntry, KalturaMediaType, KalturaSourceType } from 'kaltura-ngx-client';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { Menu, MenuItem } from 'primeng/primeng';
+import { Menu } from 'primeng/menu';
 import { EntriesRefineFiltersService,
     RefineGroup } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 
@@ -16,6 +16,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ViewCategoryEntriesService } from 'app-shared/kmc-shared/events/view-category-entries';
 import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { MenuItem } from 'primeng/api';
 
 export interface CustomMenuItem extends MenuItem {
     metadata?: any;
@@ -38,8 +39,8 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     @Input() defaultFilters: Partial<EntriesFilters>;
     @Input() showEnforcedFilters = false;
 
-    @ViewChild('tags') private tags: StickyComponent;
-    @ViewChild('actionsmenu') private actionsMenu: Menu;
+    @ViewChild('tags', { static: true }) private tags: StickyComponent;
+    @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
 
 
   @Output() onActionsSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();

@@ -1,6 +1,6 @@
 @import "app-theme/_variables.scss";
 
-:host /deep/ kscheduling {
+:host ::ng-deep kscheduling {
   .kScheduling {
     padding-left: 24px;
     .kTitle{

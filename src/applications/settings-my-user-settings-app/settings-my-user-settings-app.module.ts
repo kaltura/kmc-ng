@@ -10,7 +10,8 @@ import { EditUserNameComponent } from './edit-user-name/edit-user-name.component
 import { EditEmailAddressComponent } from './edit-email-address/edit-email-address.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ButtonModule, InputTextModule, } from 'primeng/primeng';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   imports: [
