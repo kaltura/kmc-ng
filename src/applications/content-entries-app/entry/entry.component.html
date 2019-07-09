@@ -7,8 +7,8 @@
 						<button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
 						<div class="kTitle">{{ _entryName }}</div>
                         <div class="kEntryActionsWrapper">
-                            <k-toggle-live-btn *ngIf="$any(_entry)?.explicitLive && (_kmcPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD | kNgIfPermitted)"
-                                               [entry]="_entry"></k-toggle-live-btn>
+<!--                            <k-toggle-live-btn *ngIf="$any(_entry)?.explicitLive && (_kmcPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD | kNgIfPermitted)"-->
+<!--                                               [entry]="_entry"></k-toggle-live-btn>-->
                             <button pButton icon="kIconstatistic" class="kButtonDefault kAnalytics"
                                     *ngIf="_analyticsAllowed"
                                     [label]="'applications.content.entries.viewAnalytics' | translate"
