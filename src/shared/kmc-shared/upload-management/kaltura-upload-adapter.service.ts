@@ -31,7 +31,7 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
         return this._serverClient.request(
             new UploadTokenAddAction({
                 uploadToken: new KalturaUploadToken({
-                    minimumChunkSize: 5000000
+                    minimumChunkSize: 5 * 1024 * 1024
                 })
             })
         )
@@ -56,7 +56,7 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
             multiRequest.push(
                 new UploadTokenAddAction({
                     uploadToken: new KalturaUploadToken({
-                        minimumChunkSize: 5000000
+                        minimumChunkSize: 5 * 1024 * 1024
                     })
                 })
             );

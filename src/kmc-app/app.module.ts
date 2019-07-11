@@ -117,7 +117,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
 
     return  {
         endpointUrl: getKalturaServerUri(),
-        clientTag: 'kmcng'
+        clientTag: 'kmcng',
+        chunkFileSize: 5 * 1024 * 1024
     };
 }
 
