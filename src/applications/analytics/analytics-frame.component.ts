@@ -124,10 +124,10 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                 return;
             }
 
-            if (postMessageData.messageType === 'analytics-init') {
+            if (postMessageData.messageType === 'analyticsInit') {
                 this.sendMessageToAnalyticsApp({'messageType': 'init', 'payload': config });
             };
-            if (postMessageData.messageType === 'analytics-init-complete') {
+            if (postMessageData.messageType === 'analyticsInitComplete') {
                 this._initialized = true;
                 this.sendMessageToAnalyticsApp({'messageType': 'navigate', 'payload': { 'url': this._lastNav }});
                 this.sendMessageToAnalyticsApp({'messageType': 'updateFilters', 'payload': { 'queryParams': this._lastQueryParams }});
