@@ -26,7 +26,10 @@ export class EntryThumbnailCapture implements AfterContentInit{
 			pid: this._appAuthentication.appUser.partnerId,
 			entryid: this.entryId,
             flashvars: {
-			    ks: this._appAuthentication.appUser.ks
+			    ks: this._appAuthentication.appUser.ks,
+                dash: {
+			        plugin: true
+                }
             }
 		};
 
