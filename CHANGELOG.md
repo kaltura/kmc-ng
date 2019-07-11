@@ -1,3 +1,28 @@
+<a name="5.12.0"></a>
+# [5.12.0](https://github.com/kaltura/kmc-ng/compare/v5.11.0...v5.12.0) (2019-07-11)
+
+
+### Bug Fixes
+
+* **analytics:** allow real-time analytics player to toggle full screen ([fc2483e](https://github.com/kaltura/kmc-ng/commit/fc2483e))
+* Fix caption request not working on Mac Safari ([b4c4461](https://github.com/kaltura/kmc-ng/commit/b4c4461))
+* **entries/bulk-actions:** prevent app crash on bulk edit ([#852](https://github.com/kaltura/kmc-ng/issues/852)) ([67c3172](https://github.com/kaltura/kmc-ng/commit/67c3172))
+* **entry/details:** hide old analytics link if not available ([#849](https://github.com/kaltura/kmc-ng/issues/849)) ([b4d77bb](https://github.com/kaltura/kmc-ng/commit/b4d77bb))
+* **entry/live:** update go live button status upon polling ([#850](https://github.com/kaltura/kmc-ng/issues/850)) ([2ce5741](https://github.com/kaltura/kmc-ng/commit/2ce5741))
+* **login:** Clear error message after restoring password fails ([bfee611](https://github.com/kaltura/kmc-ng/commit/bfee611))
+* **preview:** support DRM playback in all KMC preview players ([e3d1dcc](https://github.com/kaltura/kmc-ng/commit/e3d1dcc))
+* **settings/my-user-settings:** remove email edit option ([a7bd6a1](https://github.com/kaltura/kmc-ng/commit/a7bd6a1))
+* **settings/transcoding-settings:** prevent removal of default flavorParamId when saving profile flavors list ([27ac9b8](https://github.com/kaltura/kmc-ng/commit/27ac9b8))
+* **share & embed:** Refresh player when switching embed types to properly render thumbnail embed ([#847](https://github.com/kaltura/kmc-ng/issues/847)) ([e0a0a0c](https://github.com/kaltura/kmc-ng/commit/e0a0a0c))
+* **upload:** update client lib to support minimumChunkSize specification when creating a new uploadToken ([537526e](https://github.com/kaltura/kmc-ng/commit/537526e))
+
+
+### Features
+
+* **analytics:** provide date format in analytics config ([#854](https://github.com/kaltura/kmc-ng/issues/854)) ([82d31f4](https://github.com/kaltura/kmc-ng/commit/82d31f4))
+
+
+
 <a name="5.11.0"></a>
 # [5.11.0](https://github.com/kaltura/kmc-ng/compare/v5.10.0...v5.11.0) (2019-06-13)
 
