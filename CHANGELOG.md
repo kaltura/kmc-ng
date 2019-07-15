@@ -20,6 +20,7 @@
 ### Features
 
 * **analytics:** provide date format in analytics config ([#854](https://github.com/kaltura/kmc-ng/issues/854)) ([82d31f4](https://github.com/kaltura/kmc-ng/commit/82d31f4))
+* **entry(captions):** Support SCC caption type
 
 
 
