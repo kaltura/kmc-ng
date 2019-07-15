@@ -13,6 +13,7 @@ import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class SettingsMyUserSettingsService {
+
   constructor(private _kalturaServerClient: KalturaClient,
               private _appAuth: AppAuthentication,
               private _appLocalization: AppLocalization) {
@@ -57,11 +58,17 @@ export class SettingsMyUserSettingsService {
     return this._kalturaServerClient
       .request(new UserUpdateLoginDataAction(userData))
       .catch(error => {
-        const message = error && error.message
+        let message = error && error.message
           ? error.code === 'PASSWORD_STRUCTURE_INVALID'
             ? this._appLocalization.get('applications.settings.myUserSettings.errors.passwordStructure')
             : this._appLocalization.get('applications.settings.myUserSettings.errors.passwordErr')
           : this._appLocalization.get('applications.settings.myUserSettings.errors.updateUser');
+        if (error && error.code && error.code === "INVALID_OTP"){
+            message = this._appLocalization.get('app.login.error.invalidOtp');
+        }
+        if (error && error.code && error.code === "MISSING_OTP"){
+            message = this._appLocalization.get('app.login.error.missingOtp');
+        }
         return Observable.throw(new Error(message));
       });
   }
