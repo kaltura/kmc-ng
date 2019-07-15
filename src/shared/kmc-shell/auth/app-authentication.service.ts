@@ -2,7 +2,13 @@ import {Injectable, Optional, Inject} from '@angular/core';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-import {KalturaAuthentication, KalturaClient, KalturaMultiRequest, KalturaRequestOptions} from 'kaltura-ngx-client';
+import {
+    KalturaAuthentication,
+    KalturaClient,
+    KalturaMultiRequest,
+    KalturaPartnerAuthenticationType,
+    KalturaRequestOptions
+} from 'kaltura-ngx-client';
 import {UserLoginByLoginIdAction} from 'kaltura-ngx-client';
 import {UserGetByLoginIdAction} from 'kaltura-ngx-client';
 import {UserGetAction} from 'kaltura-ngx-client';
@@ -336,7 +342,8 @@ export class AppAuthentication {
                 landingPage: partner.landingPage,
                 adultContent: partner.adultContent,
                 publisherEnvironmentType: partner.publisherEnvironmentType,
-                publishersQuota: partner.publishersQuota
+                publishersQuota: partner.publishersQuota,
+                authenticationType: partner.authenticationType
             }
         });
 
