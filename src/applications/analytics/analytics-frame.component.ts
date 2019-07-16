@@ -105,6 +105,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             ks: this.appAuthentication.appUser.ks,
             pid: this.appAuthentication.appUser.partnerId,
             locale: 'en',
+            dateFormat: this._browserService.getFromLocalStorage('kmc_date_format') || 'month-day-year',
             live: {
                 "pollInterval": 30,
                 "healthNotificationsCount": 50
