@@ -94,7 +94,10 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         // set analytics config
-        // TODO add default multi account flag to config
+        const multiAccountAnalytics = this._browserService.getFromLocalStorage('multiAccountAnalytics');
+        const multiAccountAnalyticsFlag = multiAccountAnalytics && multiAccountAnalytics === 'allAccounts' ? 'allAccounts' : 'parentOnly';
+        // TODO add multiAccountAnalyticsFlag to config
+
         const config = {
             kalturaServer: {
                 uri : serverConfig.kalturaServer.uri,
