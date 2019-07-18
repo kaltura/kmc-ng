@@ -16,7 +16,8 @@ export enum LoginScreens {
   InvalidLoginHash,
   RestorePassword,
   RestorePasswordInvalidHash,
-  Authenticator
+  Authenticator,
+  Sso
 }
 
 @Component({
@@ -289,5 +290,11 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _onAuthContinue(): void {
       this._showAuthenticator = true;
       this._currentScreen = this._loginScreens.Login;
+  }
+
+  public _ssoLogin(email: string): void{
+      this._inProgress = true;
+      this._errorMessage = '';
+      // TODO: call SSO server
   }
 }
