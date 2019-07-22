@@ -63,6 +63,10 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
             {
                 label: 'VTT',
                 value: KalturaCaptionType.webvtt
+            },
+            {
+                label: 'SCC',
+                value: KalturaCaptionType.scc
             }
         ];
 	    this._newCaption = this.currentCaption.id === null;

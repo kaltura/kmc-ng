@@ -60,10 +60,11 @@
     </ng-template>
   </kPopupWidget-->
 
-  <kPopupWidget #changePasswordPopup data-aid="changePasswordPopup" [popupWidth]="600" [popupHeight]="440" [modal]="true" [preventPageScroll]="true">
+  <kPopupWidget #changePasswordPopup data-aid="changePasswordPopup" [popupWidth]="600" [popupHeight]="520" [modal]="true" [preventPageScroll]="true">
     <ng-template>
       <kChangePassword [parentPopupWidget]="changePasswordPopup"
                        [user]="_user"
+                       [showAuthenticator]="_showAuthenticator"
                        [blockerMessage]="_updateBlockerMessage"
                        (updateLoginData)="_updateLoginData($event, 'changePasswordPopup')"></kChangePassword>
     </ng-template>

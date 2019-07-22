@@ -222,6 +222,9 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
             case KalturaCaptionType.webvtt.toString():
                 type = "WEBVTT";
                 break;
+            case KalturaCaptionType.scc.toString():
+                type = "SCC";
+                break;
         }
         return type;
     }
