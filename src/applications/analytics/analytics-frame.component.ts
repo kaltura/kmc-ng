@@ -63,8 +63,6 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                     }
                 }
             });
-
-        this.sendMessageToAnalyticsApp({'messageType': 'setLogsLevel', payload: { level: this._loggerConfigurator.currentLogLevel }});
     }
 
     private sendMessageToAnalyticsApp(message: any): void{
@@ -125,6 +123,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             }
 
             if (postMessageData.messageType === 'analyticsInit') {
+                this.sendMessageToAnalyticsApp({'messageType': 'setLogsLevel', payload: { level: this._loggerConfigurator.currentLogLevel }});
                 this.sendMessageToAnalyticsApp({'messageType': 'init', 'payload': config });
             };
             if (postMessageData.messageType === 'analyticsInitComplete') {
