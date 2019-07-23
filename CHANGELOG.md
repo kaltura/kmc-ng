@@ -1,3 +1,14 @@
+<a name="5.12.1"></a>
+## [5.12.1](https://github.com/kaltura/kmc-ng/compare/v5.12.0...v5.12.1) (2019-07-23)
+
+
+### Bug Fixes
+
+* **entry/preview:** pass admin ks to player ([0cc2566](https://github.com/kaltura/kmc-ng/commit/0cc2566))
+* **settings/transcoding-profiles:** allow saving new profiles ([b813909](https://github.com/kaltura/kmc-ng/commit/b813909))
+
+
+
 <a name="5.12.0"></a>
 # [5.12.0](https://github.com/kaltura/kmc-ng/compare/v5.11.0...v5.12.0) (2019-07-11)
 
