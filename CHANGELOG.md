@@ -1,3 +1,13 @@
+<a name="5.13.0"></a>
+# [5.13.0](https://github.com/kaltura/kmc-ng/compare/v5.12.1...v5.13.0) (2019-07-28)
+
+
+### Features
+
+* **entry-live:** add SIP user support for entry drill-down live tab ([#857](https://github.com/kaltura/kmc-ng/issues/857)) ([a2ff592](https://github.com/kaltura/kmc-ng/commit/a2ff592))
+
+
+
 <a name="5.12.1"></a>
 ## [5.12.1](https://github.com/kaltura/kmc-ng/compare/v5.12.0...v5.12.1) (2019-07-23)
 
