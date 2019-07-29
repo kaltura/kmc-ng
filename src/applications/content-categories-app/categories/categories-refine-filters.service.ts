@@ -18,6 +18,7 @@ import {EntitlementsFiltersList} from './default-filters-list';
 import * as R from 'ramda';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { enhanceMetadataGuid } from 'app-shared/kmc-shared/utils/enhance-metadata-guid';
 
 export interface RefineGroupListItem {
   value: string,
@@ -99,7 +100,7 @@ export class CategoriesRefineFiltersService {
   }
 
   private _buildMetadataFiltersGroups(metadataProfiles: MetadataProfile[]): { metadataProfiles: number[], groups: RefineGroup[] } {
-
+    enhanceMetadataGuid(metadataProfiles);
     const result: { metadataProfiles: number[], groups: RefineGroup[] } = {metadataProfiles: [], groups: []};
 
     metadataProfiles.forEach(metadataProfile => {
