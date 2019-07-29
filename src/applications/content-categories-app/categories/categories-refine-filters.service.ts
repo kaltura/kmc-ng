@@ -100,7 +100,7 @@ export class CategoriesRefineFiltersService {
   }
 
   private _buildMetadataFiltersGroups(metadataProfiles: MetadataProfile[]): { metadataProfiles: number[], groups: RefineGroup[] } {
-    enhanceMetadataGuid(metadataProfiles);
+    metadataProfiles = enhanceMetadataGuid(metadataProfiles);
     const result: { metadataProfiles: number[], groups: RefineGroup[] } = {metadataProfiles: [], groups: []};
 
     metadataProfiles.forEach(metadataProfile => {
