@@ -1,3 +1,13 @@
+<a name="5.13.1"></a>
+## [5.13.1](https://github.com/kaltura/kmc-ng/compare/v5.13.0...v5.13.1) (2019-08-01)
+
+
+### Bug Fixes
+
+* **entries/metadata:** Fix custom metadata search in refine filter ([#858](https://github.com/kaltura/kmc-ng/issues/858)) ([8f16be3](https://github.com/kaltura/kmc-ng/commit/8f16be3))
+
+
+
 <a name="5.13.0"></a>
 # [5.13.0](https://github.com/kaltura/kmc-ng/compare/v5.12.1...v5.13.0) (2019-07-28)
 
