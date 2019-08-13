@@ -1824,7 +1824,10 @@
                     "hours": "Hours",
                     "selectBitrate": "Select BitRate",
                     "bitrateError": "Bit Rate selection is mandatory.",
-                    "dimensionsError": "Width and height are mandatory for all Bitrates"
+                    "dimensionsError": "Width and height are mandatory for all Bitrates",
+                    "videoConferenceIntegration": "Video Conference Integration",
+                    "sipUser": "SIP user",
+                    "noSipUser": "SIP user hasn't been generated for this entry"
                 },
                 "related": {
                     "related": "Related files",

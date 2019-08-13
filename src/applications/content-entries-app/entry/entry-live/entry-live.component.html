@@ -58,6 +58,18 @@
           </div>
         </div>
 
+          <div *ngIf="_kmcPermissions.FEATURE_SIP | kNgIfPermitted">
+              <span class="kSubTitle">{{'applications.content.entryDetails.live.videoConferenceIntegration' | translate}}</span>
+              <div class="kRow">
+                  <span class="kLabels">{{'applications.content.entryDetails.live.sipUser' | translate}}</span>
+                  <ng-container *ngIf="_widgetService.data?.sipToken">
+                      <span>{{_widgetService.data?.sipToken.replace('%i','1')}}</span>
+                      <kCopyToClipboard class="kIcon" [text]="_widgetService.data?.sipToken.replace('%i','1')" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
+                  </ng-container>
+                  <span *ngIf="!_widgetService.data?.sipToken">{{'applications.content.entryDetails.live.noSipUser' | translate}}</span>
+              </div>
+          </div>
+
         <div>
           <span class="kSubTitle">{{'applications.content.entryDetails.live.config' | translate}}</span>
           <div class="kRow">

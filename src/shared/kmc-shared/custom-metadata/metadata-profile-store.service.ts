@@ -14,7 +14,7 @@ import { KalturaMetadataProfileListResponse } from 'kaltura-ngx-client';
 import { AppEventsService } from 'app-shared/kmc-shared/app-events';
 import { MetadataProfileUpdatedEvent } from 'app-shared/kmc-shared/events/metadata-profile-updated.event';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 export enum MetadataProfileCreateModes {
     Api,
@@ -79,7 +79,7 @@ export class MetadataProfileStore extends PartnerProfileStore implements OnDestr
                     {
                     	sub = null;
                         const parser = new MetadataProfileParser();
-                        const parsedProfiles = [];
+                        let parsedProfiles = [];
                         let parseFirstError: Error = null;
 
                         response.objects.forEach(kalturaProfile =>
@@ -97,8 +97,8 @@ export class MetadataProfileStore extends PartnerProfileStore implements OnDestr
 
                         if (parseFirstError) {
                             observer.error(parseFirstError);
-                        }else
-                        {
+                        } else {
+                            parsedProfiles = this._enhanceMetadataProfileItemsGuid(parsedProfiles);
                             this._cachedProfiles[cacheKey] = parsedProfiles;
                             observer.next({items: parsedProfiles});
                             observer.complete();
@@ -118,6 +118,20 @@ export class MetadataProfileStore extends PartnerProfileStore implements OnDestr
             }
         });
 
+    }
+
+    // metadata items GUID might not be unique
+    // use profile id to enhance profile item guid
+    private _enhanceMetadataProfileItemsGuid(metadataProfiles: MetadataProfile[]): MetadataProfile[] {
+        if (Array.isArray(metadataProfiles)) {
+            return metadataProfiles.map(item =>
+                Array.isArray(item.items)
+                    ? { ...item, items: item.items.map(subItem => ({ ...subItem, id: `${item.id}_${subItem.id}` })) }
+                    : item
+            );
+        }
+
+        return metadataProfiles;
     }
 
     private _createCacheKey(filters : GetFilters)

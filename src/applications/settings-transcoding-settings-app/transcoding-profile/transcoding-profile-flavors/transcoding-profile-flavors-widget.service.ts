@@ -56,7 +56,7 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
           changes.forEachRemovedItem((record: IterableChangeRecord<string>) => {
             const relevantIndex = this._flavorParamsIds.indexOf(record.item);
             // need to verify that the removed flavor exists in the profile flavorParamsIds and also part of the profile flavors (could come from partner 0 KMCNG-2157)
-            const itemExists = relevantIndex !== -1 && this.flavors.filter(flavor => {return flavor.id.toString() === record.item}).length > 0;
+            const itemExists = relevantIndex !== -1 && record.item.length ? this.flavors.filter(flavor => {return flavor.id.toString() === record.item}).length > 0 : true;
             if (itemExists) {
               this._flavorParamsIds.splice(relevantIndex, 1);
             }
