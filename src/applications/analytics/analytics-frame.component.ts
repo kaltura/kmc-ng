@@ -96,7 +96,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
         // set analytics config
         const multiAccountAnalytics = this._browserService.getFromLocalStorage('multiAccountAnalytics');
         const multiAccountAnalyticsFlag = multiAccountAnalytics && multiAccountAnalytics === 'allAccounts' ? 'allAccounts' : 'parentOnly';
-        // TODO add multiAccountAnalyticsFlag to config
+        // TODO add permission logic to multiAccountAnalyticsFlag
 
         const config = {
             kalturaServer: {
@@ -113,6 +113,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                 "pollInterval": 30,
                 "healthNotificationsCount": 50
             },
+            multiAccount: multiAccountAnalyticsFlag === 'allAccounts',
             permissions: {
                 lazyLoadCategories: this._permissions.hasPermission(KMCPermissions.DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD),
                 enableLiveViews: this._permissions.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD),
