@@ -161,7 +161,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             if (postMessageData.messageType === 'scrollTo') {
                 this._scrollTo(postMessageData.payload);
             }
-            if (postMessageData.messageType === 'entryNavigateBack') {
+            if (postMessageData.messageType === 'navigateBack') {
                 this._navigateBack();
             }
             if (postMessageData.messageType === 'modalOpened') {
