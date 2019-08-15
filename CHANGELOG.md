@@ -1,3 +1,34 @@
+<a name="5.13.1"></a>
+## [5.13.1](https://github.com/kaltura/kmc-ng/compare/v5.13.0...v5.13.1) (2019-08-01)
+
+
+### Bug Fixes
+
+* **entries/metadata:** Fix custom metadata search in refine filter ([#858](https://github.com/kaltura/kmc-ng/issues/858)) ([8f16be3](https://github.com/kaltura/kmc-ng/commit/8f16be3))
+
+
+
+<a name="5.13.0"></a>
+# [5.13.0](https://github.com/kaltura/kmc-ng/compare/v5.12.1...v5.13.0) (2019-07-28)
+
+
+### Features
+
+* **entry-live:** add SIP user support for entry drill-down live tab ([#857](https://github.com/kaltura/kmc-ng/issues/857)) ([a2ff592](https://github.com/kaltura/kmc-ng/commit/a2ff592))
+
+
+
+<a name="5.12.1"></a>
+## [5.12.1](https://github.com/kaltura/kmc-ng/compare/v5.12.0...v5.12.1) (2019-07-23)
+
+
+### Bug Fixes
+
+* **entry/preview:** pass admin ks to player ([0cc2566](https://github.com/kaltura/kmc-ng/commit/0cc2566))
+* **settings/transcoding-profiles:** allow saving new profiles ([b813909](https://github.com/kaltura/kmc-ng/commit/b813909))
+
+
+
 <a name="5.12.0"></a>
 # [5.12.0](https://github.com/kaltura/kmc-ng/compare/v5.11.0...v5.12.0) (2019-07-11)
 
