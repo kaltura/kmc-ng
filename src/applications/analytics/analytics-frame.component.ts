@@ -25,7 +25,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     @Input() set multiAccount(val: string) {
         if (val && val !== this._multiAccount) {
             this._multiAccount = val;
-            // TODO: send message to analytics to update multi account flag in config
+            this.sendMessageToAnalyticsApp({'messageType': 'updateMultiAccount', payload: { multiAccount:  this._multiAccount === 'allAccounts' }});
         }
     }
     public _windowEventListener = null;
@@ -95,8 +95,11 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     ngOnInit() {
         // set analytics config
         const multiAccountAnalytics = this._browserService.getFromLocalStorage('multiAccountAnalytics');
-        const multiAccountAnalyticsFlag = multiAccountAnalytics && multiAccountAnalytics === 'allAccounts' ? 'allAccounts' : 'parentOnly';
-        // TODO add permission logic to multiAccountAnalyticsFlag
+        let multiAccountAnalyticsFlag = multiAccountAnalytics && multiAccountAnalytics === 'allAccounts' ? 'allAccounts' : 'parentOnly';
+        // TODO: update to the relevant permission once developed by backend
+        if (!this._permissions.hasPermission(KMCPermissions.FEATURE_VAR_CONSOLE_LOGIN)){
+            multiAccountAnalyticsFlag = 'parentOnly';
+        }
 
         const config = {
             kalturaServer: {
