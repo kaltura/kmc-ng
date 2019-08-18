@@ -129,7 +129,8 @@
                     <div class="kThumbnailHolder" #holder
                          [class.disable]="!_allowDrilldown('view', entry.mediaType,entry.status)"
                          (click)="_onActionSelected('view',entry)">
-                        <img *ngIf="entry.thumbnailUrl" [src]="entry.thumbnailUrl" onError="this.onerror=null;this.style.display='none'" (error)="holder.classList.add('error')">
+                        <img *ngIf="entry.thumbnailUrl" [src]="entry.thumbnailUrl" onError="this.onerror=null;this.style.display='none'" (error)="thumbks.src=entry.thumbnailUrl+'/ks/'+_ks">
+                        <img #thumbks onError="this.onerror=null;this.style.display='none'" (error)="holder.classList.add('error')">
                         <i class="kIconwarning"></i>
                         <i class="kIconyoutube kThumbnailTypeIcon" *ngIf="entry.externalSourceType === _youtubeExternalSourceType"></i>
                         <div class="kYoutubeIconFix" *ngIf="entry.externalSourceType === _youtubeExternalSourceType"></div>
