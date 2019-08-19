@@ -24,7 +24,6 @@ export class AdminMultiAccountMainViewService extends KmcMainViewBaseService {
     }
 
     isAvailable(): boolean {
-        // TODO: update to the relevant permission once developed by backend
         return this._appPermissions.hasPermission(KMCPermissions.ADMIN_BASE) && this._appPermissions.hasPermission(KMCPermissions.FEATURE_VAR_CONSOLE_LOGIN);
     }
 

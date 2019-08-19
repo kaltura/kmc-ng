@@ -30,6 +30,10 @@ export class AnalyticsNewMainViewService extends KmcMainViewBaseService {
             && !this._appPermissions.hasPermission(KMCPermissions.FEATURE_NEW_ANALYTICS_TAB_DISABLE);
     }
 
+    isMultiAccount(): boolean {
+        return this.isAvailable() && this._appPermissions.hasPermission(KMCPermissions.FEATURE_MULTI_ACCOUNT_ANALYTICS);
+    }
+
     getRoutePath(): string {
         return 'analytics';
     }

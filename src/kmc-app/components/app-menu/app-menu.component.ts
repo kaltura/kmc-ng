@@ -1,18 +1,16 @@
-import { Component, OnInit, OnDestroy, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { AppAuthentication, AppUser} from 'app-shared/kmc-shell';
-import { BrowserService } from 'app-shared/kmc-shell';
-import { serverConfig, buildBaseUri } from 'config/server';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { KMCAppMenuItem, KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views';
-import { ContextualHelpLink, ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
-import { globalConfig } from 'config/global';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { AppEventsService } from 'app-shared/kmc-shared';
-import { UpdateMenuEvent, ResetMenuEvent } from 'app-shared/kmc-shared/events';
-import { AdminMultiAccountMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import {Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {NavigationEnd, Router} from '@angular/router';
+import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
+import {buildBaseUri, serverConfig} from 'config/server';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {KmcLoggerConfigurator} from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {AnalyticsNewMainViewService, KMCAppMenuItem, KmcMainViewsService} from 'app-shared/kmc-shared/kmc-views';
+import {ContextualHelpLink, ContextualHelpService} from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
+import {globalConfig} from 'config/global';
+import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
+import {AppEventsService} from 'app-shared/kmc-shared';
+import {ResetMenuEvent, UpdateMenuEvent} from 'app-shared/kmc-shared/events';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -59,7 +57,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
                 private renderer: Renderer2,
                 private _appEvents: AppEventsService,
                 private _browserService: BrowserService,
-                _adminMultiAccountMainViewService: AdminMultiAccountMainViewService) {
+                private _analyticsNewMainViewService: AnalyticsNewMainViewService) {
 
         _contextualHelpService.contextualHelpData$
             .pipe(cancelOnDestroy(this))
@@ -75,7 +73,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
                 }
             });
         this.menuConfig = this._kmcMainViews.getMenu();
-        this._isMultiAccount = _adminMultiAccountMainViewService.isAvailable();
+        this._isMultiAccount = this._analyticsNewMainViewService.isMultiAccount();
         this.leftMenuConfig = this.menuConfig.filter((item: KMCAppMenuItem) => {
             return item.position === 'left';
         });
