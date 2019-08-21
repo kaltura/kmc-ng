@@ -96,8 +96,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
         // set analytics config
         const multiAccountAnalytics = this._browserService.getFromLocalStorage('multiAccountAnalytics');
         let multiAccountAnalyticsFlag = multiAccountAnalytics && multiAccountAnalytics === 'allAccounts' ? 'allAccounts' : 'parentOnly';
-        // TODO: update to the relevant permission once developed by backend
-        if (!this._permissions.hasPermission(KMCPermissions.FEATURE_VAR_CONSOLE_LOGIN)){
+        if (!this._permissions.hasPermission(KMCPermissions.FEATURE_MULTI_ACCOUNT_ANALYTICS)){
             multiAccountAnalyticsFlag = 'parentOnly';
         }
 
