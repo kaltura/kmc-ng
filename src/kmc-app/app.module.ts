@@ -49,6 +49,7 @@ import {routing} from './app.routes';
 
 import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {AppMenuComponent} from './components/app-menu/app-menu.component';
+import {MultiAccountComponent} from './components/multiAccount/multi-account.component';
 import {ErrorComponent} from './components/error/error.component';
 import {UserSettingsComponent} from './components/user-settings/user-settings.component';
 
@@ -61,7 +62,8 @@ import {
   GrowlModule,
   InputTextModule,
   RadioButtonModule,
-  TieredMenuModule
+  TieredMenuModule,
+  MenuModule
 } from 'primeng/primeng';
 
 
@@ -129,6 +131,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     BrowserModule,
     BrowserAnimationsModule,
     ButtonModule,
+    MenuModule,
     CommonModule,
     ConfirmDialogModule,
     DropdownModule,
@@ -191,6 +194,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       AppDefaultViewComponent,
     DashboardComponent,
     AppMenuComponent,
+    MultiAccountComponent,
     AppMenuContentComponent,
     LoginComponent,
     AuthenticationFormComponent,

@@ -72,7 +72,9 @@
             "settings": "Settings",
             "administration": "Administration",
             "reachDashboardMenuTitle": "Services Dashboard",
-            "reachDashboardPageTitle": "Services Dashboard"
+            "reachDashboardPageTitle": "Services Dashboard",
+            "allAccounts": "All Accounts",
+            "parentOnly": "Parent Only"
         },
         "userSettings": {
             "changeAccount": "Change Account",

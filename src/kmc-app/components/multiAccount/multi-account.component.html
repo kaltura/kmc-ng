@@ -1,0 +1,5 @@
+<div class="kMultiAccount" (click)="actionsmenu.toggle($event)">
+    <span>{{_defaultMenuSelection}}</span>
+    <i class="kIcondropdown_arrow_bottom"></i>
+</div>
+<p-menu #actionsmenu [popup]="true" [model]="_menuItems" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
