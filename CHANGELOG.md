@@ -6,6 +6,7 @@
 
 * **content/entry:** In scheduling tab: display entry end date even if entry start date is not specified ([45985ea](https://github.com/kaltura/kmc-ng/commit/45985ea))
 * **entries/filters:** fix refine filter custom scheduling date picker behavior ([d231b8e](https://github.com/kaltura/kmc-ng/commit/d231b8e))
+* **content/entries:** Load thumbnails restricted by KS
 
 
 ### Features
