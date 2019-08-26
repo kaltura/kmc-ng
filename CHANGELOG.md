@@ -1,3 +1,20 @@
+<a name="5.14.0"></a>
+# [5.14.0](https://github.com/kaltura/kmc-ng/compare/v5.13.1...v5.14.0) (2019-08-25)
+
+
+### Bug Fixes
+
+* **content/entry:** In scheduling tab: display entry end date even if entry start date is not specified ([45985ea](https://github.com/kaltura/kmc-ng/commit/45985ea))
+* **entries/filters:** fix refine filter custom scheduling date picker behavior ([d231b8e](https://github.com/kaltura/kmc-ng/commit/d231b8e))
+* **content/entries:** Load thumbnails restricted by KS
+
+
+### Features
+
+* **analytics:** Add multi-account analytics ([#860](https://github.com/kaltura/kmc-ng/issues/860)) ([5def1a0](https://github.com/kaltura/kmc-ng/commit/5def1a0))
+
+
+
 <a name="5.13.1"></a>
 ## [5.13.1](https://github.com/kaltura/kmc-ng/compare/v5.13.0...v5.13.1) (2019-08-01)
 
