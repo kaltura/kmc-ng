@@ -3,11 +3,12 @@ import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import {
+    KalturaApplicationType,
     KalturaAuthentication,
     KalturaClient,
     KalturaMultiRequest,
     KalturaPartnerAuthenticationType,
-    KalturaRequestOptions
+    KalturaRequestOptions, SsoLoginAction
 } from 'kaltura-ngx-client';
 import {UserLoginByLoginIdAction} from 'kaltura-ngx-client';
 import {UserGetByLoginIdAction} from 'kaltura-ngx-client';
@@ -130,7 +131,8 @@ export class AppAuthentication {
             'INVALID_FIELD_VALUE': 'app.login.error.invalidField',
             'USER_FORBIDDEN_FOR_BETA': 'app.login.error.userForbiddenForBeta',
             'MISSING_OTP': 'app.login.error.missingOtp',
-            'INVALID_OTP': 'app.login.error.invalidOtp'
+            'INVALID_OTP': 'app.login.error.invalidOtp',
+            'FEATURE_FORBIDDEN': 'app.login.error.ssoForbidden'
         };
 
         if (code === 'PASSWORD_EXPIRED') {
@@ -576,5 +578,12 @@ export class AppAuthentication {
                     fullName: fullName
                 });
         }
+    }
+
+    public _ssoLogin(userId: string): Observable<{}>{
+        const applicationType = KalturaApplicationType.ssoApplicationKmc;
+        return this.kalturaServerClient.request(new SsoLoginAction({userId, applicationType}))
+            .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
+
     }
 }

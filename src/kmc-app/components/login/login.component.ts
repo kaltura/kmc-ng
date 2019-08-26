@@ -295,6 +295,19 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _ssoLogin(email: string): void{
       this._inProgress = true;
       this._errorMessage = '';
-      // TODO: call SSO server
+      this._appAuthentication._ssoLogin(email).subscribe(
+          redirectUrl => {
+              this._browserService.openLink(redirectUrl.toString(), {}, '_self');
+          },
+          error => {
+              this._inProgress = false;
+              this._errorCode = error.code;
+              if (!error.custom) {
+                  this._errorMessage = this._appLocalization.get(error.message);
+              } else {
+                  this._errorMessage = error.message;
+              }
+          }
+      );
   }
 }

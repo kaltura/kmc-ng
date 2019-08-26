@@ -232,7 +232,8 @@
                 "userForbiddenForBeta": "This is a closed beta of the new Kaltura Management Console. Stay tuned for the general availability soon.",
                 "missingOtp": "Authenticator code is required",
                 "invalidOtp": "Invalid authenticator code",
-                "updatePasswordMissingOtp": "You password was updated successfully.\nPlease login again with your new password."
+                "updatePasswordMissingOtp": "You password was updated successfully.\nPlease login again with your new password.",
+                "ssoForbidden": "SSO Feature not available"
             },
             "send": "Send",
             "wait": "Wait…",
