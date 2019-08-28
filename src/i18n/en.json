@@ -1202,7 +1202,8 @@
                 "nameTooltip": "{{0}}\nTags:\n{{1}}",
                 "download": "Download",
                 "editor": "Launch Editor",
-                "captionRequest": "Caption Request"
+                "captionRequest": "Caption Request",
+                "analytics": "View Analytics"
             },
             "paginator": {
                 "showRows": "Show rows:"
