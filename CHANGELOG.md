@@ -1,3 +1,18 @@
+<a name="5.15.0"></a>
+# [5.15.0](https://github.com/kaltura/kmc-ng/compare/v5.14.0...v5.15.0) (2019-09-01)
+
+
+### Bug Fixes
+
+* Multi account menu style fixes ([#861](https://github.com/kaltura/kmc-ng/issues/861)) ([d6b823b](https://github.com/kaltura/kmc-ng/commit/d6b823b))
+
+
+### Features
+
+* **content/drop-folders:** Add drop folders filter by folder name ([#863](https://github.com/kaltura/kmc-ng/issues/863)) ([fffa4c4](https://github.com/kaltura/kmc-ng/commit/fffa4c4))
+
+
+
 <a name="5.14.0"></a>
 # [5.14.0](https://github.com/kaltura/kmc-ng/compare/v5.13.1...v5.14.0) (2019-08-25)
 
