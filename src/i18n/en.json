@@ -554,7 +554,8 @@
                     "createdBetween": "Created Between",
                     "clearDates": "Clear Dates",
                     "clearAll": "Clear All",
-                    "close": "Close"
+                    "close": "Close",
+                    "dropFolders": "Drop Folders"
                 },
                 "dropFolderStatusLabels": {
                     "allStatuses": "All Statuses",
