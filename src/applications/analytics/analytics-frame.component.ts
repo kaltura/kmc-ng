@@ -61,7 +61,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                         this.updateLayout(window.innerHeight - 54);
                         this._currentAppUrl = url;
                         if (this._initialized) {
-                            this.sendMessageToAnalyticsApp({'messageType': 'navigate', payload: { url }});
+                            this.sendMessageToAnalyticsApp({'messageType': 'navigate', payload: { url, queryParams }});
                             this.sendMessageToAnalyticsApp({'messageType': 'updateFilters', payload: { queryParams }});
                         } else {
                             this._lastQueryParams = queryParams;
@@ -143,7 +143,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             };
             if (postMessageData.messageType === 'analytics-init-complete') {
                 this._initialized = true;
-                this.sendMessageToAnalyticsApp({'messageType': 'navigate', 'payload': { 'url': this._lastNav }});
+                this.sendMessageToAnalyticsApp({'messageType': 'navigate', 'payload': { 'url': this._lastNav, 'queryParams': this._lastQueryParams }});
                 this.sendMessageToAnalyticsApp({'messageType': 'updateFilters', 'payload': { 'queryParams': this._lastQueryParams }});
                 this._lastNav = '';
                 this._lastQueryParams = null;
