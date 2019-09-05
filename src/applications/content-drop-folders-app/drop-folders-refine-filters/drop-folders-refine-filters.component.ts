@@ -1,31 +1,32 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { AppLocalization, RefinePrimeTree } from '@kaltura-ng/mc-shared';
 import { subApplicationsConfig } from 'config/sub-applications';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import { RefineList } from '../drop-folders-store/drop-folders-refine-filters.service';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
-import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
+import { PopupWidgetComponent, ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { DropFoldersFilters, DropFoldersStoreService } from '../drop-folders-store/drop-folders-store.service';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { RefineGroup } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
+import { PrimeListsGroup } from 'app-shared/content-shared/entries/entries-refine-filters/entries-refine-filters.component';
 
 
 const listOfFilterNames: (keyof DropFoldersFilters)[] = [
-  'createdAt',
-  'status'
+    'createdAt',
+    'status',
+    'dropFoldersNames'
 ];
 
 export interface PrimeListItem {
-  label: string,
-  value: string,
-  parent: PrimeListItem,
-  listName: string,
-  children: PrimeListItem[]
+    label: string;
+    value: string;
+    parent: PrimeListItem;
+    listName: string;
+    children: PrimeListItem[];
 }
 
 export interface PrimeList {
-  items: PrimeListItem[];
-  selections: PrimeListItem[];
+    group?: string;
+    items: PrimeListItem[];
+    selections: PrimeListItem[];
 }
 
 
@@ -38,11 +39,11 @@ export class DropFoldersRefineFiltersComponent implements OnInit, OnDestroy, OnC
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
   @ViewChildren(RefinePrimeTree) public _primeTreesActions: RefinePrimeTree[];
-    @Input() refineFilters: RefineList[];
+  @Input() refineFilters: RefineGroup[];
   private _primeListsMap: { [key: string]: PrimeList } = {};
 
-  // properties that are exposed to the template
-  public _primeLists: PrimeList[];
+    // properties that are exposed to the template
+    public _primeListsGroups: PrimeListsGroup[] = [];
 
     public _calendarFormat = this._browserService.getCurrentDateFormat(true);
   public _showLoader = true;
@@ -87,10 +88,22 @@ export class DropFoldersRefineFiltersComponent implements OnInit, OnDestroy, OnC
       this._createdAtFilterError = null;
     }
 
-    let updatedPrimeTreeSelections = false;
+      const dropFoldersNamesFilter = updates['dropFoldersNames'];
+      const shouldClearDropFoldersNamesMetadata = dropFoldersNamesFilter ? Object.keys(dropFoldersNamesFilter).length === 0 : false;
+      let updatedPrimeTreeSelections = false;
+
     Object.keys(this._primeListsMap).forEach(listName => {
       const listData = this._primeListsMap[listName];
-      const listFilter: any[] = updates[listName];
+        let listFilter: any[];
+
+        if (listData.group === 'dropFoldersNames') {
+            // important: must set 'undefined' and not null because null is valid value
+            listFilter = shouldClearDropFoldersNamesMetadata ?
+                []
+                : dropFoldersNamesFilter ? dropFoldersNamesFilter[listName] : undefined;
+        } else {
+            listFilter = updates[listName] ;
+        }
 
       if (typeof listFilter !== 'undefined') {
           // important: the above condition doesn't filter out 'null' because 'null' is valid value.
@@ -154,43 +167,46 @@ export class DropFoldersRefineFiltersComponent implements OnInit, OnDestroy, OnC
     });
   }
 
-  private _buildComponentLists(): void {
-    this._primeListsMap = {};
-    this._primeLists = [];
+    private _buildComponentLists(): void {
+        this._primeListsMap = {};
+        this._primeListsGroups = [];
 
-    // create root nodes
+        // create root nodes
+        (this.refineFilters || []).forEach(group => {
+            const filtersGroup = { label: group.label, lists: [] };
+            this._primeListsGroups.push(filtersGroup);
 
-      (this.refineFilters || []).forEach(list => {
-      if (list.items.length > 0) {
-        const primeList = { items: [], selections: [] };
-        this._primeListsMap[list.name] = primeList;
-        this._primeLists.push(primeList);
-        const listRootNode: PrimeListItem = {
-          label: list.label,
-          value: null,
-          listName: list.name,
-          parent: null,
-          children: []
-        };
+            group.lists.forEach(list => {
 
-        list.items.forEach(item => {
-          listRootNode.children.push({
-            label: item.label,
-            value: item.value,
-            children: [],
-            listName: <any>list.name,
-            parent: listRootNode
-          })
+                if (list.items.length > 0) {
+                    const primeList = { items: [], selections: [], group: list.group };
+                    if (list.items.length) {
+                        this._primeListsMap[list.name] = primeList;
+                        filtersGroup.lists.push(primeList);
+                        const listRootNode: PrimeListItem = {
+                            label: list.label,
+                            value: null,
+                            listName: list.name,
+                            parent: null,
+                            children: []
+                        };
+                        list.items.forEach(item => {
+                            listRootNode.children.push({
+                                label: item.label,
+                                value: item.value,
+                                children: [],
+                                listName: <any>list.name,
+                                parent: listRootNode
+                            });
+                        });
+                        primeList.items.push(listRootNode);
+                    }
+                }
+            });
         });
-
-        primeList.items.push(listRootNode);
-      }
-    });
-  }
-
-
-  /**
-   * Clear content of created components and sync filters accordingly.
+    }
+    /**
+     * Clear content of created components and sync filters accordingly.
    *
    * Not part of the API, don't use it from outside this component
    */
@@ -241,11 +257,19 @@ export class DropFoldersRefineFiltersComponent implements OnInit, OnDestroy, OnC
       const listData = this._primeListsMap[node.listName];
       if (listData) {
 
-        let newFilterItems: string[];
-        let newFilterValue;
-        const newFilterName = node.listName;
+          // DEVELOPER NOTICE: there is a complexity caused since 'dropFoldersNames' holds dynamic lists
+          let newFilterItems: string[];
+          let newFilterValue;
+          let newFilterName: string;
 
-        newFilterValue = newFilterItems = this._dropFoldersStore.cloneFilter(<any>node.listName, []);
+          if (listData.group === 'dropFoldersNames') {
+              newFilterValue = this._dropFoldersStore.cloneFilter('dropFoldersNames', {});
+              newFilterItems = newFilterValue[node.listName] = newFilterValue[node.listName] || [];
+              newFilterName = 'dropFoldersNames';
+          } else {
+              newFilterValue = newFilterItems = this._dropFoldersStore.cloneFilter(<any>node.listName, []);
+              newFilterName = node.listName;
+          }
 
         const selectedNodes = node.children && node.children.length ? [node, ...node.children] : [node];
 
@@ -271,11 +295,20 @@ export class DropFoldersRefineFiltersComponent implements OnInit, OnDestroy, OnC
       const listData = this._primeListsMap[node.listName];
       if (listData) {
 
-        let newFilterItems: string[];
-        let newFilterValue;
-        const newFilterName = node.listName;
+          // DEVELOPER NOTICE: there is a complexity caused since 'customMetadata' holds dynamic lists
+          let newFilterItems: any[];
+          let newFilterValue;
+          let newFilterName: string;
 
-        newFilterValue = newFilterItems = this._dropFoldersStore.cloneFilter(<any>node.listName, []);
+          // get existing filters by filter name
+          if (listData.group === 'dropFoldersNames') {
+              newFilterValue = this._dropFoldersStore.cloneFilter('dropFoldersNames', {});
+              newFilterItems = newFilterValue[node.listName] = newFilterValue[node.listName] || [];
+              newFilterName = 'dropFoldersNames';
+          } else {
+              newFilterValue = newFilterItems = this._dropFoldersStore.cloneFilter(<any>node.listName, []);
+              newFilterName = node.listName;
+          }
 
         const selectedNodes = node.children && node.children.length ? [node, ...node.children] : [node];
 

@@ -372,6 +372,20 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
         }
     }
 }
+.ui-menu{
+    li.kSelected{
+        font-weight: bold;
+        a:after{
+            font-family: kmcng-icon-pack;
+            content: "\e91c";
+            font-size: 12px;
+        }
+        span{
+            display: inline-block;
+            width: 162px
+        }
+    }
+}
 body {
     kpopupwidget[data-aid="categoriesFilterPopup"],
     kpopupwidget[data-aid="entriesRefinePopup"],

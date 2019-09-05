@@ -20,14 +20,18 @@ export class MultiAccountComponent implements OnInit {
 
   ngOnInit() {
       this._menuItems = [
-          {label: this._appLocalization.get('app.titles.parentOnly'),command: (event) => {
+          {label: this._appLocalization.get('app.titles.parentOnly'),styleClass: 'kSelected', command: (event) => {
                   this._defaultMenuSelection = this._appLocalization.get('app.titles.parentOnly');
                   this._browserService.setInLocalStorage('multiAccountAnalytics', 'parentOnly');
+                  this._menuItems[0].styleClass = 'kSelected';
+                  this._menuItems[1].styleClass = '';
                   this.menuChange.emit('parentOnly');
               }},
           {label: this._appLocalization.get('app.titles.allAccounts'),command: (event) => {
                   this._defaultMenuSelection = this._appLocalization.get('app.titles.allAccounts');
                   this._browserService.setInLocalStorage('multiAccountAnalytics', 'allAccounts');
+                  this._menuItems[0].styleClass = '';
+                  this._menuItems[1].styleClass = 'kSelected';
                   this.menuChange.emit('allAccounts');
               }}
       ];

@@ -17,20 +17,25 @@
       <a class="kClearAll" (click)="_clearCreatedComponents()" [class.kDisabledLink]="!_createdAfter && !_createdBefore">
         {{'applications.content.dropFolders.filters.clearDates' | translate}}
       </a>
-      <span *ngIf="_createdAtFilterError" class="kError">{{_createdAtFilterError}}</span>
-        <div *ngFor="let treeInstance of _primeLists">
-          <p-tree [value]="treeInstance.items"
-                  [selectionMode]="'checkbox'"
-                  kRefinePrimeTree
-                  [(selection)]="treeInstance.selections"
-                  (onNodeSelect)="_onTreeNodeSelect($event, treeInstance)"
-                  (onNodeUnselect)="_onTreeNodeUnselect($event, treeInstance)">
-            <ng-template let-node pTemplate="default">
+        <span *ngIf="_createdAtFilterError" class="kError">{{_createdAtFilterError}}</span>
+        <div *ngFor="let group of _primeListsGroups">
+            <div *ngIf="group.label" class="kFiltersGroupTitle">
+                <span>{{group.label | uppercase}}</span>
+            </div>
+            <div *ngFor="let treeInstance of group.lists">
+                <p-tree [value]="treeInstance.items"
+                        [selectionMode]="'checkbox'"
+                        kRefinePrimeTree
+                        [(selection)]="treeInstance.selections"
+                        (onNodeSelect)="_onTreeNodeSelect($event, treeInstance)"
+                        (onNodeUnselect)="_onTreeNodeUnselect($event, treeInstance)">
+                    <ng-template let-node pTemplate="default">
               <span class="kTreeNodeLabel" [kTooltip]="node.label" [delay]="1000">
                 {{node.label}}
               </span>
-            </ng-template>
-          </p-tree>
+                    </ng-template>
+                </p-tree>
+            </div>
         </div>
     </kScrollToTopContainer>
 
