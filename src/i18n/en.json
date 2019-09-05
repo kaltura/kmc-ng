@@ -233,7 +233,8 @@
                 "missingOtp": "Authenticator code is required",
                 "invalidOtp": "Invalid authenticator code",
                 "updatePasswordMissingOtp": "You password was updated successfully.\nPlease login again with your new password.",
-                "ssoForbidden": "SSO Feature not available"
+                "ssoForbidden": "SSO Feature not available",
+                "ssoNotFound": "SSO Login failed"
             },
             "send": "Send",
             "wait": "Wait…",
