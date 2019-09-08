@@ -1,3 +1,18 @@
+<a name="5.16.0"></a>
+# [5.16.0](https://github.com/kaltura/kmc-ng/compare/v5.15.0...v5.16.0) (2019-09-08)
+
+
+### Bug Fixes
+
+* analytics navigation approach ([#864](https://github.com/kaltura/kmc-ng/issues/864)) ([d2baea7](https://github.com/kaltura/kmc-ng/commit/d2baea7))
+
+
+### Features
+
+* Support SSO login ([#866](https://github.com/kaltura/kmc-ng/issues/866)) ([51156ee](https://github.com/kaltura/kmc-ng/commit/51156ee))
+
+
+
 <a name="5.15.0"></a>
 # [5.15.0](https://github.com/kaltura/kmc-ng/compare/v5.14.0...v5.15.0) (2019-09-01)
 
