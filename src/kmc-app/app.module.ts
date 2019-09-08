@@ -72,6 +72,7 @@ import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { LoginComponent } from './components/login/login.component';
 import { ForgotPasswordFormComponent } from './components/login/forgot-password-form/forgot-password-form.component';
 import { LoginFormComponent } from './components/login/login-form/login-form.component';
+import { SsoFormComponent } from './components/login/sso-form/sso-form.component';
 import { AuthenticationFormComponent } from './components/login/authentication-form/authentication-form.component';
 import { PasswordExpiredFormComponent } from './components/login/password-expired-form/password-expired-form.component';
 import { InvalidLoginHashFormComponent } from './components/login/invalid-login-hash-form/invalid-login-hash-form.component';
@@ -201,6 +202,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ErrorComponent,
     UserSettingsComponent,
     LoginFormComponent,
+    SsoFormComponent,
     PasswordExpiredFormComponent,
     ForgotPasswordFormComponent,
     InvalidLoginHashFormComponent,
