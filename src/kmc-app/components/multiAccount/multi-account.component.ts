@@ -20,14 +20,14 @@ export class MultiAccountComponent implements OnInit {
 
   ngOnInit() {
       this._menuItems = [
-          {label: this._appLocalization.get('app.titles.parentOnly'),styleClass: 'kSelected', command: (event) => {
+          {label: this._appLocalization.get('app.titles.parentOnly'), command: (event) => {
                   this._defaultMenuSelection = this._appLocalization.get('app.titles.parentOnly');
                   this._browserService.setInLocalStorage('multiAccountAnalytics', 'parentOnly');
                   this._menuItems[0].styleClass = 'kSelected';
                   this._menuItems[1].styleClass = '';
                   this.menuChange.emit('parentOnly');
               }},
-          {label: this._appLocalization.get('app.titles.allAccounts'),command: (event) => {
+          {label: this._appLocalization.get('app.titles.allAccounts'), command: (event) => {
                   this._defaultMenuSelection = this._appLocalization.get('app.titles.allAccounts');
                   this._browserService.setInLocalStorage('multiAccountAnalytics', 'allAccounts');
                   this._menuItems[0].styleClass = '';
@@ -36,7 +36,13 @@ export class MultiAccountComponent implements OnInit {
               }}
       ];
       const multiAccountAnalytics = this._browserService.getFromLocalStorage('multiAccountAnalytics');
-      this._defaultMenuSelection = multiAccountAnalytics && multiAccountAnalytics === 'allAccounts' ? this._menuItems[1].label : this._menuItems[0].label;
+      if (multiAccountAnalytics && multiAccountAnalytics === 'allAccounts') {
+          this._defaultMenuSelection = this._menuItems[1].label;
+          this._menuItems[1].styleClass = 'kSelected';
+      } else {
+          this._defaultMenuSelection = this._menuItems[0].label;
+          this._menuItems[0].styleClass = 'kSelected';
+      }
   }
 
 }
