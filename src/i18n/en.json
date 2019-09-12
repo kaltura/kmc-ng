@@ -86,7 +86,7 @@
             "continue": "Continue",
             "errors": {
                 "loadPartners": "An error occurred while loading accounts.",
-                "authenticationRequired": "Requested account requires authentication code on login."
+                "authenticationRequired": "Requested account requires new login."
             }
         },
         "helpMenu": {
