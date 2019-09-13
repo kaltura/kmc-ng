@@ -49,6 +49,7 @@ import {routing} from './app.routes';
 
 import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {AppMenuComponent} from './components/app-menu/app-menu.component';
+import {MultiAccountComponent} from './components/multiAccount/multi-account.component';
 import {ErrorComponent} from './components/error/error.component';
 import {UserSettingsComponent} from './components/user-settings/user-settings.component';
 
@@ -61,7 +62,8 @@ import {
   GrowlModule,
   InputTextModule,
   RadioButtonModule,
-  TieredMenuModule
+  TieredMenuModule,
+  MenuModule
 } from 'primeng/primeng';
 
 
@@ -70,6 +72,7 @@ import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { LoginComponent } from './components/login/login.component';
 import { ForgotPasswordFormComponent } from './components/login/forgot-password-form/forgot-password-form.component';
 import { LoginFormComponent } from './components/login/login-form/login-form.component';
+import { SsoFormComponent } from './components/login/sso-form/sso-form.component';
 import { AuthenticationFormComponent } from './components/login/authentication-form/authentication-form.component';
 import { PasswordExpiredFormComponent } from './components/login/password-expired-form/password-expired-form.component';
 import { InvalidLoginHashFormComponent } from './components/login/invalid-login-hash-form/invalid-login-hash-form.component';
@@ -129,6 +132,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     BrowserModule,
     BrowserAnimationsModule,
     ButtonModule,
+    MenuModule,
     CommonModule,
     ConfirmDialogModule,
     DropdownModule,
@@ -191,12 +195,14 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       AppDefaultViewComponent,
     DashboardComponent,
     AppMenuComponent,
+    MultiAccountComponent,
     AppMenuContentComponent,
     LoginComponent,
     AuthenticationFormComponent,
     ErrorComponent,
     UserSettingsComponent,
     LoginFormComponent,
+    SsoFormComponent,
     PasswordExpiredFormComponent,
     ForgotPasswordFormComponent,
     InvalidLoginHashFormComponent,

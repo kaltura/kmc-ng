@@ -54,11 +54,12 @@
     <a (click)="_forgotPassword()">{{ 'app.login.login.forgotPassword' | translate }}</a>
   </div>
 
-  <div>
+  <div class="kLoginButton">
     <button class="kButtonDefault"
             pButton
             [label]="_loginBtnText | translate"
             [disabled]="inProgress"></button>
+      <a (click)="_ssoLogin()">{{'app.login.login.sso' | translate}}</a>
   </div>
 </form>
 

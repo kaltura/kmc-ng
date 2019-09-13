@@ -1,3 +1,81 @@
+<a name="5.16.0"></a>
+# [5.16.0](https://github.com/kaltura/kmc-ng/compare/v5.15.0...v5.16.0) (2019-09-08)
+
+
+### Bug Fixes
+
+* analytics navigation approach ([#864](https://github.com/kaltura/kmc-ng/issues/864)) ([d2baea7](https://github.com/kaltura/kmc-ng/commit/d2baea7))
+
+
+### Features
+
+* Support SSO login ([#866](https://github.com/kaltura/kmc-ng/issues/866)) ([51156ee](https://github.com/kaltura/kmc-ng/commit/51156ee))
+
+
+
+<a name="5.15.0"></a>
+# [5.15.0](https://github.com/kaltura/kmc-ng/compare/v5.14.0...v5.15.0) (2019-09-01)
+
+
+### Bug Fixes
+
+* Multi account menu style fixes ([#861](https://github.com/kaltura/kmc-ng/issues/861)) ([d6b823b](https://github.com/kaltura/kmc-ng/commit/d6b823b))
+
+
+### Features
+
+* **content/drop-folders:** Add drop folders filter by folder name ([#863](https://github.com/kaltura/kmc-ng/issues/863)) ([fffa4c4](https://github.com/kaltura/kmc-ng/commit/fffa4c4))
+
+
+
+<a name="5.14.0"></a>
+# [5.14.0](https://github.com/kaltura/kmc-ng/compare/v5.13.1...v5.14.0) (2019-08-25)
+
+
+### Bug Fixes
+
+* **content/entry:** In scheduling tab: display entry end date even if entry start date is not specified ([45985ea](https://github.com/kaltura/kmc-ng/commit/45985ea))
+* **entries/filters:** fix refine filter custom scheduling date picker behavior ([d231b8e](https://github.com/kaltura/kmc-ng/commit/d231b8e))
+* **content/entries:** Load thumbnails restricted by KS
+
+
+### Features
+
+* **analytics:** Add multi-account analytics ([#860](https://github.com/kaltura/kmc-ng/issues/860)) ([5def1a0](https://github.com/kaltura/kmc-ng/commit/5def1a0))
+
+
+
+<a name="5.13.1"></a>
+## [5.13.1](https://github.com/kaltura/kmc-ng/compare/v5.13.0...v5.13.1) (2019-08-01)
+
+
+### Bug Fixes
+
+* **entries/metadata:** Fix custom metadata search in refine filter ([#858](https://github.com/kaltura/kmc-ng/issues/858)) ([8f16be3](https://github.com/kaltura/kmc-ng/commit/8f16be3))
+
+
+
+<a name="5.13.0"></a>
+# [5.13.0](https://github.com/kaltura/kmc-ng/compare/v5.12.1...v5.13.0) (2019-07-28)
+
+
+### Features
+
+* **entry-live:** add SIP user support for entry drill-down live tab ([#857](https://github.com/kaltura/kmc-ng/issues/857)) ([a2ff592](https://github.com/kaltura/kmc-ng/commit/a2ff592))
+
+
+
+<a name="5.12.1"></a>
+## [5.12.1](https://github.com/kaltura/kmc-ng/compare/v5.12.0...v5.12.1) (2019-07-23)
+
+
+### Bug Fixes
+
+* **entry/preview:** pass admin ks to player ([0cc2566](https://github.com/kaltura/kmc-ng/commit/0cc2566))
+* **settings/transcoding-profiles:** allow saving new profiles ([b813909](https://github.com/kaltura/kmc-ng/commit/b813909))
+
+
+
 <a name="5.12.0"></a>
 # [5.12.0](https://github.com/kaltura/kmc-ng/compare/v5.11.0...v5.12.0) (2019-07-11)
 

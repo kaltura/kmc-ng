@@ -16,7 +16,8 @@ export enum LoginScreens {
   InvalidLoginHash,
   RestorePassword,
   RestorePasswordInvalidHash,
-  Authenticator
+  Authenticator,
+  Sso
 }
 
 @Component({
@@ -289,5 +290,24 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _onAuthContinue(): void {
       this._showAuthenticator = true;
       this._currentScreen = this._loginScreens.Login;
+  }
+
+  public _ssoLogin(email: string): void{
+      this._inProgress = true;
+      this._errorMessage = '';
+      this._appAuthentication._ssoLogin(email).subscribe(
+          redirectUrl => {
+              this._browserService.openLink(redirectUrl.toString(), {}, '_self');
+          },
+          error => {
+              this._inProgress = false;
+              this._errorCode = error.code;
+              if (!error.custom) {
+                  this._errorMessage = this._appLocalization.get(error.message);
+              } else {
+                  this._errorMessage = error.message;
+              }
+          }
+      );
   }
 }
