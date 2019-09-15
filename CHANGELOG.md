@@ -1,3 +1,14 @@
+<a name="5.16.1"></a>
+## [5.16.1](https://github.com/kaltura/kmc-ng/compare/v5.16.0...v5.16.1) (2019-09-15)
+
+
+### Bug Fixes
+
+* **content/syndication:** select default English language for iTunes syndication feeds ([b9b36a7](https://github.com/kaltura/kmc-ng/commit/b9b36a7))
+* **settings/transcoding:** make flavors checkboxes selectable ([#867](https://github.com/kaltura/kmc-ng/issues/867)) ([bf08b6e](https://github.com/kaltura/kmc-ng/commit/bf08b6e))
+
+
+
 <a name="5.16.0"></a>
 # [5.16.0](https://github.com/kaltura/kmc-ng/compare/v5.15.0...v5.16.0) (2019-09-08)
 
