@@ -2,7 +2,7 @@
   <div class="kContent kOverrideFAIcons">
     <span class="kTitle">{{'applications.content.bulkActions.addTags' | translate}}</span>
     <div class="kTags">
-      <span class="kLabel">{{'applications.content.bulkActions.addTagsLabel' | translate}}</span>
+      <div class="kLabel">{{'applications.content.bulkActions.addTagsLabel' | translate}}</div>
       <kAutoComplete [(ngModel)]="tags"
                      suggestionItemField="item"
                      suggestionSelectableField="isSelectable"
@@ -14,7 +14,13 @@
       </kAutoComplete>
     </div>
     <div class="kFooter">
-      <button type="button" class="kButtonBranded" pButton label="{{'applications.content.bulkActions.apply' | translate}}" (click)="_apply()"></button>
+        <button type="button" class="kButtonDefault" pButton
+                [label]="'applications.content.bulkActions.cancel' | translate"
+                (click)="parentPopupWidget?.close()"></button>
+      <button type="button" class="kButtonBranded" pButton
+              [disabled]="!tags.length"
+              [label]="'applications.content.bulkActions.addTagsBtn' | translate:[tags.length || '']"
+              (click)="_apply()"></button>
     </div>
   </div>
 </k-area-blocker>

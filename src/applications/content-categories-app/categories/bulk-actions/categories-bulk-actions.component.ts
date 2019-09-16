@@ -100,9 +100,9 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
         id: 'addRemoveTags',
         label: this._appLocalization.get('applications.content.categories.bActions.addRemoveTags'), items: [
         { label: this._appLocalization.get('applications.content.categories.bActions.addTags'),
-          command: () => { this.openBulkActionWindow('addTags', 500, 500) } },
+          command: () => { this.openBulkActionWindow('addTags', 586, 369) } },
         { label: this._appLocalization.get('applications.content.categories.bActions.removeTags'),
-          command: () => { this.openBulkActionWindow('removeTags', 500, 500) } }]
+          command: () => { this.openBulkActionWindow('removeTags', 586, 369) } }]
       }
     ];
 

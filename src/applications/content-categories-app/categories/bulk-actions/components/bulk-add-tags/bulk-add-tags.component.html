@@ -1,20 +1,26 @@
 <k-area-blocker [showLoader]="_loading" [message]="_sectionBlockerMessage">
-  <div class="kContent kOverrideFAIcons">
-    <span class="kTitle">{{'applications.content.categories.bActions.addTags' | translate}}</span>
-    <div class="kTags">
-      <span class="kLabel">{{'applications.content.categories.bActions.addTagsLabel' | translate}}</span>
-      <kAutoComplete [(ngModel)]="tags"
-                     suggestionItemField="item"
-                     suggestionSelectableField="isSelectable"
-                     [multiple]="true"
-                     [limitToSuggestions]="false"
-                     [minLength]="3"
-                     [suggestionsProvider]="_tagsProvider"
-                     (completeMethod)="_searchTags($event)">
-      </kAutoComplete>
+    <div class="kContent kOverrideFAIcons">
+        <span class="kTitle">{{'applications.content.categories.bActions.addTags' | translate}}</span>
+        <div class="kTags">
+            <div class="kLabel">{{'applications.content.categories.bActions.addTagsLabel' | translate}}</div>
+            <kAutoComplete [(ngModel)]="tags"
+                           suggestionItemField="item"
+                           suggestionSelectableField="isSelectable"
+                           [multiple]="true"
+                           [limitToSuggestions]="false"
+                           [minLength]="3"
+                           [suggestionsProvider]="_tagsProvider"
+                           (completeMethod)="_searchTags($event)">
+            </kAutoComplete>
+        </div>
+        <div class="kFooter">
+            <button type="button" class="kButtonDefault" pButton
+                    [label]="'applications.content.bulkActions.cancel' | translate"
+                    (click)="parentPopupWidget?.close()"></button>
+            <button type="button" class="kButtonBranded" pButton
+                    [disabled]="!tags.length"
+                    [label]="'applications.content.bulkActions.addTagsBtn' | translate:[tags.length || '']"
+                    (click)="_apply()"></button>
+        </div>
     </div>
-    <div class="kFooter">
-      <button type="button" class="kButtonBranded" pButton label="{{'applications.content.categories.bActions.save' | translate}}" (click)="_apply()"></button>
-    </div>
-  </div>
 </k-area-blocker>
