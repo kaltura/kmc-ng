@@ -74,11 +74,15 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     private _prepare(): void {
         const restorePasswordArgs = this._restorePasswordView.popOpenArgs();
         const authenticatorArgs = this._authenticatorView.popOpenArgs();
+        const queryParams = this._route.snapshot.queryParams;
         if (restorePasswordArgs && restorePasswordArgs.hash) {
             this._validateRestorePasswordHash(restorePasswordArgs.hash);
         } else if (authenticatorArgs && authenticatorArgs.hash) {
             this._authenticationHash = authenticatorArgs.hash;
             this._currentScreen = LoginScreens.Authenticator;
+        } else if (queryParams.method && queryParams.method === 'sso') {
+            window.history.replaceState(null, null, window.location.pathname);
+            this._currentScreen = LoginScreens.Sso;
         }
     }
 
