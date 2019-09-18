@@ -52,21 +52,6 @@ import {AppMenuComponent} from './components/app-menu/app-menu.component';
 import {MultiAccountComponent} from './components/multiAccount/multi-account.component';
 import {ErrorComponent} from './components/error/error.component';
 import {UserSettingsComponent} from './components/user-settings/user-settings.component';
-
-import {
-  ButtonModule,
-  CheckboxModule,
-  ConfirmationService,
-  ConfirmDialogModule,
-  DropdownModule,
-  GrowlModule,
-  InputTextModule,
-  RadioButtonModule,
-  TieredMenuModule,
-  MenuModule
-} from 'primeng/primeng';
-
-
 import { UploadManagementModule } from '@kaltura-ng/kaltura-common';
 import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { LoginComponent } from './components/login/login.component';
@@ -122,6 +107,7 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 import { CheckboxModule } from 'primeng/checkbox';
 import { GrowlModule } from 'primeng/growl';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { MenuModule } from 'primeng/menu';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
