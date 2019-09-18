@@ -239,10 +239,10 @@ export class DropFoldersMonitorService implements OnDestroy {
   private _startPolling(): void {
     if (this._poolingState !== 'running') {
       this._poolingState = 'running';
-      this._logger.info(`start server polling every 10 seconds to sync drop folders upload status`);
+      this._logger.info(`start server polling every 30 seconds to sync drop folders upload status`);
 
 
-      this._kmcServerPolls.register<KalturaDropFolderFileListResponse>(10, this._dropFolderChangesFactory)
+      this._kmcServerPolls.register<KalturaDropFolderFileListResponse>(30, this._dropFolderChangesFactory)
         .pipe(cancelOnDestroy(this))
         .subscribe((response) => {
           if (response.error) {

@@ -11,6 +11,7 @@ import { DropFoldersRefineFiltersService, RefineList } from '../drop-folders-sto
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentDropFoldersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { RefineGroup } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 
 @Component({
   selector: 'kDropFoldersList',
@@ -26,7 +27,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
     public _blockerMessage: AreaBlockerMessage = null;
     public _tableIsBusy = false;
     public _tableBlockerMessage: AreaBlockerMessage = null;
-    public _refineFilters: RefineList[];
+    public _refineFilters: RefineGroup[];
   public _selectedDropFolders: KalturaDropFolderFile[] = [];
   public _query = {
     freeText: '',
@@ -65,9 +66,9 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
             .pipe(cancelOnDestroy(this))
             .first() // only handle it once, no need to handle changes over time
             .subscribe(
-                lists => {
+                filters => {
                     this._isBusy = false;
-                    this._refineFilters = lists;
+                    this._refineFilters = filters;
                     this._restoreFiltersState();
                     this._registerToFilterStoreDataChanges();
                     this._registerToDataChanges();

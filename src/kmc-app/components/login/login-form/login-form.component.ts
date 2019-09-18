@@ -108,6 +108,10 @@ export class LoginFormComponent {
     this.onSetScreen.emit(LoginScreens.ForgotPassword);
   }
 
+  _ssoLogin(): void {
+    this.onSetScreen.emit(LoginScreens.Sso);
+  }
+
   public _contactSupport(): void {
       this._browserService.openSupport();
   }

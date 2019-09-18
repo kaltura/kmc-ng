@@ -34,6 +34,7 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
   public _user: KalturaUser = null;
   public _role: KalturaUserRole = null;
   public _isBusy = false;
+  public _showAuthenticator = false;
 
   constructor(private _myUserSettingsStore: SettingsMyUserSettingsService,
               private _logger: KalturaLogger,
@@ -179,6 +180,9 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
                 this._updateLoginData(userData, popup);
               }
             });
+          }
+          if (error.message === this._appLocalization.get('app.login.error.missingOtp')){
+            this._showAuthenticator = true;
           }
 
           this._updateBlockerMessage = new AreaBlockerMessage({ message: error.message, buttons });

@@ -1,7 +1,8 @@
 import {
     AfterViewInit,
     ChangeDetectorRef,
-    Component, ElementRef,
+    Component,
+    ElementRef,
     EventEmitter,
     Input,
     OnDestroy,
@@ -14,10 +15,12 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { UsersStore } from './users.service';
 import { Menu } from 'primeng/menu';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaUser } from 'kaltura-ngx-client';
+import { KalturaSourceType, KalturaUser } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
+import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 
 export interface PartnerInfo {
@@ -48,6 +51,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   public _items: MenuItem[];
   public _deferredLoading = true;
   public _blockerMessage: AreaBlockerMessage = null;
+  public _analyticsAllowed = this._analyticsNewMainViewService.isAvailable();
   public _rowTrackBy: Function = (index: number, item: any) => item.id;
 
   @Input() set users(data: any[]) {
@@ -77,7 +81,9 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
               private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
               private _el: ElementRef<HTMLElement>,
-              private _cdRef: ChangeDetectorRef) {
+              private _cdRef: ChangeDetectorRef,
+              private _router: Router,
+              private _analyticsNewMainViewService: AnalyticsNewMainViewService) {
   }
 
   ngOnInit() {
@@ -134,6 +140,17 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
           id: 'edit', label: this._appLocalization.get('applications.content.table.edit'),
           command: () => this.editUser.emit(user)
       }];
+
+      if (this._analyticsAllowed) {
+          this._items.push({
+              id: 'analytics',
+              label: this._appLocalization.get('applications.content.table.analytics'),
+              command: () => {
+                  this._router.navigate(['analytics/user'], { queryParams: { id: user.id } });
+              },
+          });
+      }
+
       const isCurrentUser = this._appAuthentication.appUser.id === user.id;
       const isAdminUser = this._partnerInfo.adminUserId === user.id;
       if (!isCurrentUser && !isAdminUser) {

@@ -210,10 +210,10 @@ export class BulkUploadMonitorService implements OnDestroy {
 
         if (this._poolingState !== 'running') {
             this._poolingState = 'running';
-            this._logger.info(`start server polling every 10 seconds to sync bulk upload status`);
+            this._logger.info(`start server polling every 30 seconds to sync bulk upload status`);
 
 
-            this._kmcServerPolls.register<KalturaBulkUploadListResponse>(10, this._bulkUploadChangesFactory)
+            this._kmcServerPolls.register<KalturaBulkUploadListResponse>(30, this._bulkUploadChangesFactory)
                 .pipe(cancelOnDestroy(this))
                 .subscribe((response) => {
                     if (response.error) {

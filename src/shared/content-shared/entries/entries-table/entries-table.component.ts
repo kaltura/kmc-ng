@@ -15,6 +15,7 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { ColumnsResizeManagerService } from 'app-shared/kmc-shared/columns-resize-manager';
+import { AppAuthentication } from "app-shared/kmc-shell";
 
 export interface EntriesTableColumns {
   [key: string]: {
@@ -85,15 +86,18 @@ export class EntriesTableComponent implements AfterViewInit, OnInit {
   private _deferredLoading = true;
   public _emptyMessage = '';
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
+  public _ks = '';
 
   constructor(public _columnsResizeManager: ColumnsResizeManagerService,
               private _appLocalization: AppLocalization,
+              private _appAuthentication: AppAuthentication,
               private _cdRef: ChangeDetectorRef,
               private _el: ElementRef<HTMLElement>) {
   }
 
   ngOnInit() {
     this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
+    this._ks = this._appAuthentication.appUser.ks;
 
     Object.keys(this._columns).forEach(columnName => {
       this._columnsMetadata[columnName] = {

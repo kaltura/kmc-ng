@@ -16,7 +16,8 @@ export enum LoginScreens {
   InvalidLoginHash,
   RestorePassword,
   RestorePasswordInvalidHash,
-  Authenticator
+  Authenticator,
+  Sso
 }
 
 @Component({
@@ -73,11 +74,15 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     private _prepare(): void {
         const restorePasswordArgs = this._restorePasswordView.popOpenArgs();
         const authenticatorArgs = this._authenticatorView.popOpenArgs();
+        const queryParams = this._route.snapshot.queryParams;
         if (restorePasswordArgs && restorePasswordArgs.hash) {
             this._validateRestorePasswordHash(restorePasswordArgs.hash);
         } else if (authenticatorArgs && authenticatorArgs.hash) {
             this._authenticationHash = authenticatorArgs.hash;
             this._currentScreen = LoginScreens.Authenticator;
+        } else if (queryParams.method && queryParams.method === 'sso') {
+            window.history.replaceState(null, null, window.location.pathname);
+            this._currentScreen = LoginScreens.Sso;
         }
     }
 
@@ -289,5 +294,24 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _onAuthContinue(): void {
       this._showAuthenticator = true;
       this._currentScreen = this._loginScreens.Login;
+  }
+
+  public _ssoLogin(email: string): void{
+      this._inProgress = true;
+      this._errorMessage = '';
+      this._appAuthentication._ssoLogin(email).subscribe(
+          redirectUrl => {
+              this._browserService.openLink(redirectUrl.toString(), {}, '_self');
+          },
+          error => {
+              this._inProgress = false;
+              this._errorCode = error.code;
+              if (!error.custom) {
+                  this._errorMessage = this._appLocalization.get(error.message);
+              } else {
+                  this._errorMessage = error.message;
+              }
+          }
+      );
   }
 }

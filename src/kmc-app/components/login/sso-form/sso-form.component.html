@@ -1,0 +1,36 @@
+<form class="kLoginForm"
+      [formGroup]="_ssoForm"
+      (submit)="_ssoLogin($event)">
+  <h1>{{ 'app.login.login.title' | translate}}</h1>
+
+  <ng-container *ngIf="_displayEmailField">
+
+    <div>
+      <input pInputText
+             [placeholder]="'app.login.forgotPassword.placeholder' | translate"
+             [formControl]="_emailField"
+             [ngClass]="{
+               'has-error': errorMessage || _emailValidationMessage,
+               'has-success': _emailField.valid && _emailField.touched
+             }"
+             [kTooltip]="_emailValidationMessage | translate"
+             placement="right">
+    </div>
+
+    <p *ngIf="errorMessage" class="kErrorMessage" [innerHTML]="errorMessage"></p>
+
+      <div class="kControlLinks">
+          <p-checkbox [formControl]="_rememberMeField"
+                      [binary]="true"
+                      [label]="'app.login.rememberMe' | translate"></p-checkbox>
+      </div>
+
+    <div>
+      <button class="kButtonDefault"
+              pButton
+              [label]="_resetBtnText | translate"
+              [disabled]="inProgress"></button>
+    </div>
+  </ng-container>
+
+</form>

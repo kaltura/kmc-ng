@@ -72,7 +72,9 @@
             "settings": "Settings",
             "administration": "Administration",
             "reachDashboardMenuTitle": "Services Dashboard",
-            "reachDashboardPageTitle": "Services Dashboard"
+            "reachDashboardPageTitle": "Services Dashboard",
+            "allAccounts": "All Accounts",
+            "parentOnly": "Parent Only"
         },
         "userSettings": {
             "changeAccount": "Change Account",
@@ -84,7 +86,7 @@
             "continue": "Continue",
             "errors": {
                 "loadPartners": "An error occurred while loading accounts.",
-                "authenticationRequired": "Requested account requires authentication code on login."
+                "authenticationRequired": "Requested account requires new login."
             }
         },
         "helpMenu": {
@@ -153,7 +155,9 @@
                 "authHelpTooltip": "Authenticator code is a key provided by an authenticator app to protect your account. You can download an authenticator app on your mobile device.",
                 "browserVer1": "Browser version not supported",
                 "browserVer2": "Please use Internet Explorer version 11 or above",
-                "qrCode": "Scan this QR code with your authentication app. You can download an authentication app for both platforms:"
+                "qrCode": "Scan this QR code with your authentication app. You can download an authentication app for both platforms:",
+                "sso": "Login with SSO",
+                "loginWithPassword": "Login with Email and Password"
             },
             "invalidLoginHash": {
                 "title": "Invalid Login Link",
@@ -228,7 +232,9 @@
                 "userForbiddenForBeta": "This is a closed beta of the new Kaltura Management Console. Stay tuned for the general availability soon.",
                 "missingOtp": "Authenticator code is required",
                 "invalidOtp": "Invalid authenticator code",
-                "updatePasswordMissingOtp": "You password was updated successfully.\nPlease login again with your new password."
+                "updatePasswordMissingOtp": "You password was updated successfully.\nPlease login again with your new password.",
+                "ssoForbidden": "SSO Feature not available",
+                "ssoNotFound": "SSO Login failed"
             },
             "send": "Send",
             "wait": "Wait…",
@@ -552,7 +558,8 @@
                     "createdBetween": "Created Between",
                     "clearDates": "Clear Dates",
                     "clearAll": "Clear All",
-                    "close": "Close"
+                    "close": "Close",
+                    "dropFolders": "Drop Folders"
                 },
                 "dropFolderStatusLabels": {
                     "allStatuses": "All Statuses",
@@ -1200,7 +1207,8 @@
                 "nameTooltip": "{{0}}\nTags:\n{{1}}",
                 "download": "Download",
                 "editor": "Launch Editor",
-                "captionRequest": "Caption Request"
+                "captionRequest": "Caption Request",
+                "analytics": "View Analytics"
             },
             "paginator": {
                 "showRows": "Show rows:"
@@ -1822,7 +1830,10 @@
                     "hours": "Hours",
                     "selectBitrate": "Select BitRate",
                     "bitrateError": "Bit Rate selection is mandatory.",
-                    "dimensionsError": "Width and height are mandatory for all Bitrates"
+                    "dimensionsError": "Width and height are mandatory for all Bitrates",
+                    "videoConferenceIntegration": "Video Conference Integration",
+                    "sipUser": "SIP user",
+                    "noSipUser": "SIP user hasn't been generated for this entry"
                 },
                 "related": {
                     "related": "Related files",

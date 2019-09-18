@@ -1,0 +1,25 @@
+@import 'app-theme/_variables.scss';
+
+.kMultiAccount {
+    display: flex;
+    align-items: center;
+    height: 54px;
+    border-left: 1px solid #4D75B6;
+    border-right: 1px solid #4D75B6;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    padding-left: 18px;
+    padding-right: 18px;
+    margin-right: 24px;
+    cursor: pointer;
+    &:hover{
+        background-color: #4E75B6;
+    }
+    i{
+        margin-left: 12px;
+        font-size: 12px;
+        font-weight: normal;
+    }
+}
+

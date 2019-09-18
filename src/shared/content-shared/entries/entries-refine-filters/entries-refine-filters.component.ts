@@ -500,7 +500,9 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
         };
         const shouldCloseCalendar = event.relatedTarget === null ? false : !findByClassName(event.relatedTarget, 'ui-datepicker');
         if (shouldCloseCalendar) {
-            this._closeCalendar(calendar);
+            setTimeout(() => {
+                this._closeCalendar(calendar);
+            }, 300);
         }
     }
 }

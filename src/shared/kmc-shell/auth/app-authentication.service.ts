@@ -1,25 +1,25 @@
-import {Injectable, Optional, Inject} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-import {KalturaAuthentication, KalturaClient, KalturaMultiRequest, KalturaRequestOptions} from 'kaltura-ngx-client';
-import {UserLoginByLoginIdAction} from 'kaltura-ngx-client';
-import {UserGetByLoginIdAction} from 'kaltura-ngx-client';
-import {UserGetAction} from 'kaltura-ngx-client';
-import {PartnerGetInfoAction} from 'kaltura-ngx-client';
-import {PermissionListAction} from 'kaltura-ngx-client';
-import {KalturaResponseProfileType} from 'kaltura-ngx-client';
-import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
-import {KalturaPermissionFilter} from 'kaltura-ngx-client';
-import {KalturaPermissionListResponse} from 'kaltura-ngx-client';
-import {KalturaUserRole} from 'kaltura-ngx-client';
-import {KalturaFilterPager} from 'kaltura-ngx-client';
-import {KalturaPermissionStatus} from 'kaltura-ngx-client';
-import {UserRoleGetAction} from 'kaltura-ngx-client';
+import { KalturaAuthentication, KalturaClient, KalturaMultiRequest, KalturaRequestOptions, SsoLoginAction } from 'kaltura-ngx-client';
+import { UserLoginByLoginIdAction } from 'kaltura-ngx-client';
+import { UserGetByLoginIdAction } from 'kaltura-ngx-client';
+import { UserGetAction } from 'kaltura-ngx-client';
+import { PartnerGetInfoAction } from 'kaltura-ngx-client';
+import { PermissionListAction } from 'kaltura-ngx-client';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
+import { KalturaPermissionFilter } from 'kaltura-ngx-client';
+import { KalturaPermissionListResponse } from 'kaltura-ngx-client';
+import { KalturaUserRole } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaPermissionStatus } from 'kaltura-ngx-client';
+import { UserRoleGetAction } from 'kaltura-ngx-client';
 import * as Immutable from 'seamless-immutable';
-import {AppUser} from './app-user';
-import {UserResetPasswordAction} from 'kaltura-ngx-client';
-import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client';
+import { AppUser } from './app-user';
+import { UserResetPasswordAction } from 'kaltura-ngx-client';
+import { AdminUserUpdatePasswordAction } from 'kaltura-ngx-client';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification/page-exit-verification.service';
 import { UserLoginStatusEvent } from 'app-shared/kmc-shared/events';
 import { KalturaPartner } from 'kaltura-ngx-client';
@@ -124,7 +124,9 @@ export class AppAuthentication {
             'INVALID_FIELD_VALUE': 'app.login.error.invalidField',
             'USER_FORBIDDEN_FOR_BETA': 'app.login.error.userForbiddenForBeta',
             'MISSING_OTP': 'app.login.error.missingOtp',
-            'INVALID_OTP': 'app.login.error.invalidOtp'
+            'INVALID_OTP': 'app.login.error.invalidOtp',
+            'FEATURE_FORBIDDEN': 'app.login.error.ssoForbidden',
+            'SSO_NOT_FOUND': 'app.login.error.ssoNotFound'
         };
 
         if (code === 'PASSWORD_EXPIRED') {
@@ -336,7 +338,8 @@ export class AppAuthentication {
                 landingPage: partner.landingPage,
                 adultContent: partner.adultContent,
                 publisherEnvironmentType: partner.publisherEnvironmentType,
-                publishersQuota: partner.publishersQuota
+                publishersQuota: partner.publishersQuota,
+                authenticationType: partner.authenticationType
             }
         });
 
@@ -569,5 +572,17 @@ export class AppAuthentication {
                     fullName: fullName
                 });
         }
+    }
+
+    public _ssoLogin(userId: string): Observable<{}>{
+        const applicationType = 'kmc';
+        const requestedPartnerId = this._browserService.getFromLocalStorage('loginPartnerId');
+        return this.kalturaServerClient.request(new SsoLoginAction({
+            userId,
+            applicationType,
+            partnerId: requestedPartnerId ? requestedPartnerId : null
+        }))
+        .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
+
     }
 }
