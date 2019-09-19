@@ -1,3 +1,17 @@
+<a name="5.17.0"></a>
+# [5.17.0](https://github.com/kaltura/kmc-ng/compare/v5.16.1...v5.17.0) (2019-09-19)
+
+
+### Bug Fixes
+
+* **login:** direct users to login with SSO page ([22e9505](https://github.com/kaltura/kmc-ng/commit/22e9505))
+
+
+### Features
+
+* **administration/users:** add user analytics drill-down action ([#862](https://github.com/kaltura/kmc-ng/issues/862)) ([035e7e1](https://github.com/kaltura/kmc-ng/commit/035e7e1))
+
+
 <a name="5.16.1"></a>
 ## [5.16.1](https://github.com/kaltura/kmc-ng/compare/v5.16.0...v5.16.1) (2019-09-15)
 
