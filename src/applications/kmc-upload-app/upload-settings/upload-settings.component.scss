@@ -180,6 +180,7 @@
 }
 
 :host ::ng-deep .kFileType .ui-dropdown.ui-widget {
+  min-width: 127px;
   width: 127px;
 }
 
