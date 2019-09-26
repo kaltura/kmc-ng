@@ -33,6 +33,7 @@
 }
 
 :host ::ng-deep .ui-dropdown.ui-widget{
+    min-width: 120px;
 	width: 120px;
 }
 

@@ -35,6 +35,7 @@
 	}
 }
 :host ::ng-deep .ui-dropdown.ui-widget{
+    min-width: 180px;
 	width: 180px !important;
 }
 
@@ -58,6 +59,7 @@
     }
 
     .ui-dropdown.ui-widget {
+        min-width: 184px;
         width: 184px;
     }
 }

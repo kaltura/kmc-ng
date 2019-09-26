@@ -77,5 +77,6 @@
 }
 
 :host ::ng-deep .ui-dropdown.ui-widget{
+    min-width: 212px;
 	width: 212px;
 }
