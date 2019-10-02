@@ -55,4 +55,9 @@ export class SearchableDropdownComponent extends Dropdown {
             this.optionsChanged = true;
         }
     }
+
+    public _onItemClick(event, option): void {
+        event.option = option;
+        super.onItemClick(event);
+    }
 }
