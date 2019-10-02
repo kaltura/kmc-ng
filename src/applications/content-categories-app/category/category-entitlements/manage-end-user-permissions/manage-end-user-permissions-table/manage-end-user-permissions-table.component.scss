@@ -51,6 +51,10 @@
         padding-left: 28px !important;
     }
 
+    .ui-dropdown {
+        min-width: 127px !important;
+    }
+
 }
 
 :host ::ng-deep .ui-table .nameColumn {
