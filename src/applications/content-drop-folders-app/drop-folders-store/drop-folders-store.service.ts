@@ -39,6 +39,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { serverConfig } from 'config/server';
 import { ContentDropFoldersMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { globalConfig } from 'config/global';
 
 const localStoragePageSizeKey = 'dropFolders.list.pageSize';
 
@@ -279,6 +280,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
 
     this._dropFoldersList$ = this._kalturaServerClient
       .request(new DropFolderListAction({
+        pager: new KalturaFilterPager({ pageSize: globalConfig.client.views.dropFolders.maxItems }),
         filter: new KalturaDropFolderFilter({
           orderBy: KalturaDropFolderOrderBy.createdAtDesc.toString(),
           statusEqual: KalturaDropFolderStatus.enabled
