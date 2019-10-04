@@ -30,6 +30,9 @@
                             {{'applications.content.entryDetails.captions.status' | translate}}
                         </th>
                         <th>
+                            {{'applications.content.entryDetails.captions.displayOnPlayer' | translate}}
+                        </th>
+                        <th>
                             {{'applications.content.entryDetails.captions.defaultTitle' | translate}}
                         </th>
                         <th [ngStyle]="{'width':'80px'}"></th>
@@ -46,6 +49,14 @@
                             <div *ngIf="caption.uploadFailure" class="kError">
                                 <span>{{'applications.content.entryDetails.captions.uploadError' | translate}}</span>
                             </div>
+                        </td>
+                        <td>
+                            <p-inputSwitch class="kInputSwitch"
+                                            (ngModelChange)="_widgetService.setDirty()"
+                                            [(ngModel)]="caption.displayOnPlayer"></p-inputSwitch>
+                            <span class="kInputSwitchLabel">
+                                {{caption.displayOnPlayer ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}
+                            </span>
                         </td>
                         <td>
                             <span *ngIf="caption.isDefault">
