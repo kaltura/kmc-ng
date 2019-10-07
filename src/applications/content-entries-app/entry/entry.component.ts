@@ -168,7 +168,7 @@ export class EntryComponent implements OnInit, OnDestroy {
         const { sourceType, status, mediaType } = entry;
         const isReadyStatus = status === KalturaEntryStatus.ready;
         const isPreviewCommand = commandName === 'preview';
-        const isKalturaLiveStream = sourceType === KalturaSourceType.liveStream;
+        const isKalturaLiveStream = (sourceType === KalturaSourceType.liveStream || sourceType === KalturaSourceType.manualLiveStream);
         const isLiveDashboardCommand = commandName === 'liveDashboard';
         const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
         const isDownloadCommand = commandName === 'download';
@@ -324,7 +324,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                                 this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable() // new analytics app is available
                                     && (
                                         this._sourceType !== KalturaSourceType.liveStream // and not a live stream
-                                        || (this._sourceType === KalturaSourceType.liveStream // or it's a live stream and has permission
+                                        || ((this._sourceType === KalturaSourceType.liveStream || this._sourceType === KalturaSourceType.manualLiveStream) // or it's a live stream and has permission
                                             && this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD)
                                         )
                                     );
@@ -465,7 +465,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 
     public _openEntryAnalytics(): void {
         if (this._analyticsAllowed) {
-            const route = this._sourceType === KalturaSourceType.liveStream ? 'analytics/entry-live' : 'analytics/entry';
+            const route = (this._sourceType === KalturaSourceType.liveStream || this._sourceType === KalturaSourceType.manualLiveStream) ? 'analytics/entry-live' : 'analytics/entry';
             this._router.navigate([route], { queryParams: { id: this._currentEntryId } });
         }
     }
