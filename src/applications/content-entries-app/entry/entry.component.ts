@@ -30,7 +30,7 @@ import { CustomMenuItem } from 'app-shared/content-shared/entries/entries-list/e
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ContentEntriesAppService } from '../content-entries-app.service';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
@@ -60,9 +60,9 @@ import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
 	]
 })
 export class EntryComponent implements OnInit, OnDestroy {
-    @ViewChild('liveDashboard') _liveDashboard: PopupWidgetComponent;
-    @ViewChild('clipAndTrim') _clipAndTrim: PopupWidgetComponent;
-    @ViewChild('bulkActionsPopup') _bulkActionsPopup: PopupWidgetComponent;
+    @ViewChild('liveDashboard', { static: true }) _liveDashboard: PopupWidgetComponent;
+    @ViewChild('clipAndTrim', { static: true }) _clipAndTrim: PopupWidgetComponent;
+    @ViewChild('bulkActionsPopup', { static: true }) _bulkActionsPopup: PopupWidgetComponent;
 	public _entryName: string;
 	public _entryType: KalturaMediaType;
 	public _sourceType: KalturaSourceType;

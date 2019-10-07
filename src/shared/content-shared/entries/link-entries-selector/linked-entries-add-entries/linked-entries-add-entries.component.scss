@@ -44,7 +44,7 @@
   }
 }
 
-:host /deep/ .kLinkedEntrySelector {
+:host ::ng-deep .kLinkedEntrySelector {
   .kContent {
     width: 100%;
     margin: 0 !important;

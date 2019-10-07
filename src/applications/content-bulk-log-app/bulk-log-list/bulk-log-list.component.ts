@@ -25,7 +25,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 })
 export class BulkLogListComponent implements OnInit, OnDestroy {
   @Input() selectedBulkLogItems: Array<any> = [];
-  @ViewChild('tags') private tags: StickyComponent;
+  @ViewChild('tags', { static: true }) private tags: StickyComponent;
 
     public _isBusy = false;
     public _blockerMessage: AreaBlockerMessage = null;

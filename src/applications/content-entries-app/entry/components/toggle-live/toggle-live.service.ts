@@ -15,7 +15,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { map } from 'rxjs/operators';
 import { KmcServerPolls } from 'app-shared/kmc-shared';
 import { BehaviorSubject } from 'rxjs';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 

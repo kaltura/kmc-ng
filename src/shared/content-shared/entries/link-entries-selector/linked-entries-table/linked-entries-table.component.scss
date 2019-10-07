@@ -62,7 +62,7 @@
   }
 }
 
-:host /deep/ .kLinkedEntriesTable {
+:host ::ng-deep .kLinkedEntriesTable {
   .ui-table .ui-table-scrollable-body {
     max-height: 284px !important;
   }

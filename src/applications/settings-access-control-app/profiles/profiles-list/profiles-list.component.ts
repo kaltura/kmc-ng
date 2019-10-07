@@ -20,7 +20,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
   providers: [KalturaLogger.createLogger('ProfilesListComponent')]
 })
 export class ProfilesListComponent implements OnInit, OnDestroy {
-  @ViewChild('editProfile') _editProfilePopup: PopupWidgetComponent;
+  @ViewChild('editProfile', { static: true }) _editProfilePopup: PopupWidgetComponent;
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedProfiles: KalturaAccessControl[] = [];
   public _selectedProfile: KalturaAccessControl;

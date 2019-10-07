@@ -18,7 +18,7 @@
     font-weight: bold;
   }
 
-  /deep/ {
+  ::ng-deep {
 
     .kRow {
       display: flex;
@@ -80,7 +80,7 @@
 
 }
 
-:host /deep/ .kMetadataDetails {
+:host ::ng-deep .kMetadataDetails {
   .ui-dropdown.ui-widget {
     width: 100%;
   }

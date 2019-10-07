@@ -7,8 +7,8 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { subApplicationsConfig } from 'config/sub-applications';
-import { Calendar } from 'primeng/primeng';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { Calendar } from 'primeng/calendar';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 
 const listOfFilterNames: (keyof EntriesFilters)[] = [
     'createdAt',
@@ -53,7 +53,7 @@ export interface PrimeListsGroup {
 })
 export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChanges {
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
+  @ViewChild(ScrollToTopContainerComponent, { static: true }) _treeContainer: ScrollToTopContainerComponent;
     @Input() refineFilters: RefineGroup[];
     @Input() showEnforcedFilters = false;
 
@@ -62,8 +62,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
   @ViewChildren(RefinePrimeTree)
   public _primeTreesActions: RefinePrimeTree[];
 
-    @ViewChild('scheduledfrom') scheduledFrom: Calendar;
-    @ViewChild('scheduledto') scheduledTo: Calendar;
+    @ViewChild('scheduledfrom', { static: true }) scheduledFrom: Calendar;
+    @ViewChild('scheduledto', { static: true }) scheduledTo: Calendar;
 
   private _primeListsMap: { [key: string]: PrimeList } = {};
 

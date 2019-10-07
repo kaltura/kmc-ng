@@ -8,11 +8,12 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
-import { Menu, MenuItem } from 'primeng/primeng';
+import { Menu } from 'primeng/menu';
 import { KalturaConversionProfileWithAsset } from '../transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client';
+import { MenuItem } from 'primeng/api';
 
 export abstract class TranscodingProfilesTableComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() set profiles(data: KalturaConversionProfileWithAsset[]) {
@@ -33,7 +34,7 @@ export abstract class TranscodingProfilesTableComponent implements OnInit, After
   @Output() selectedProfilesChange = new EventEmitter<KalturaConversionProfileWithAsset[]>();
   @Output() actionSelected = new EventEmitter<{ action: string, profile: KalturaConversionProfileWithAsset }>();
 
-  @ViewChild('actionsmenu') private _actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: true }) private _actionsMenu: Menu;
 
   public _profiles = [];
   public _emptyMessage = '';

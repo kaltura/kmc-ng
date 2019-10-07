@@ -60,7 +60,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
 
     @Output() searchPlaylists = new EventEmitter<string>();
 
-  @ViewChild(DestinationComponentBase) destinationComponent: DestinationComponentBase;
+  @ViewChild(DestinationComponentBase, { static: false }) destinationComponent: DestinationComponentBase;
 
     public _playlists: KalturaPlaylist[] = [];
     public _idToPlaylistMap: Map<string, KalturaPlaylist> = null; // map between KalturaPlaylist id to KalturaPlaylist.name object

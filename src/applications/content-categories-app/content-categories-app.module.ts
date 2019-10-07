@@ -16,25 +16,6 @@ import {RouterModule} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {TagsModule} from '@kaltura-ng/kaltura-ui';
-import {
-  AccordionModule,
-  ButtonModule,
-  CalendarModule,
-  CheckboxModule,
-  ConfirmDialogModule,
-  DropdownModule,
-  InputSwitchModule,
-  InputTextareaModule,
-  InputTextModule,
-  MenuModule,
-  MultiSelectModule,
-  PaginatorModule,
-  RadioButtonModule,
-  SharedModule,
-  SpinnerModule,
-  TieredMenuModule,
-  TreeModule,
-} from 'primeng/primeng';
 import {TableModule} from 'primeng/table';
 import {KMCShellModule} from 'app-shared/kmc-shell';
 
@@ -69,6 +50,23 @@ import { FiltersModule } from '@kaltura-ng/mc-shared';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
+import { AccordionModule } from 'primeng/accordion';
+import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { InputTextModule } from 'primeng/inputtext';
+import { MenuModule } from 'primeng/menu';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { PaginatorModule } from 'primeng/paginator';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { SharedModule } from 'primeng/shared';
+import { SpinnerModule } from 'primeng/spinner';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { TreeModule } from 'primeng/tree';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 @NgModule({
     imports: [

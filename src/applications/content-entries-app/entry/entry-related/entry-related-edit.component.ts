@@ -4,7 +4,7 @@ import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaAttachmentAsset } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 
 @Component({

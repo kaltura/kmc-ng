@@ -9,6 +9,6 @@
   border-radius: 3px;
 }
 
-:host /deep/ .kStickySections{
+:host ::ng-deep .kStickySections{
   border-top: 2px solid $kGrayscale6;
 }

@@ -65,6 +65,7 @@ hr{
     margin-bottom: 12px;
 }
 
-:host /deep/ .ui-dropdown.ui-widget {
+:host ::ng-deep .ui-dropdown.ui-widget {
+    min-width: 208px;
     width: 208px !important;
 }

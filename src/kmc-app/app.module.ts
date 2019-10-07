@@ -52,21 +52,6 @@ import {AppMenuComponent} from './components/app-menu/app-menu.component';
 import {MultiAccountComponent} from './components/multiAccount/multi-account.component';
 import {ErrorComponent} from './components/error/error.component';
 import {UserSettingsComponent} from './components/user-settings/user-settings.component';
-
-import {
-  ButtonModule,
-  CheckboxModule,
-  ConfirmationService,
-  ConfirmDialogModule,
-  DropdownModule,
-  GrowlModule,
-  InputTextModule,
-  RadioButtonModule,
-  TieredMenuModule,
-  MenuModule
-} from 'primeng/primeng';
-
-
 import { UploadManagementModule } from '@kaltura-ng/kaltura-common';
 import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { LoginComponent } from './components/login/login.component';
@@ -113,6 +98,16 @@ import { PersistLoginByKsComponent } from './components/app-actions/persist-logi
 import { ColumnsResizeManagerModule } from 'app-shared/kmc-shared/columns-resize-manager';
 import { CaptionRequestAppModule } from '../applications/caption-request-app/caption-request-app.module';
 import { NewEntryCreateFromUrlModule } from 'app-shared/kmc-shell/new-entry-create-from-url/new-entry-create-from-url.module';
+import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { ConfirmationService } from 'primeng/api';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { CheckboxModule } from 'primeng/checkbox';
+import { GrowlModule } from 'primeng/growl';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { MenuModule } from 'primeng/menu';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 

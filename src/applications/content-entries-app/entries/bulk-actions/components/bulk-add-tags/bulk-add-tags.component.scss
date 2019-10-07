@@ -33,7 +33,7 @@
   align-items: center;
   justify-content: center;
 }
-:host /deep/ kautocomplete {
+:host ::ng-deep kautocomplete {
   .ui-autocomplete {
     width: 475px;
   }

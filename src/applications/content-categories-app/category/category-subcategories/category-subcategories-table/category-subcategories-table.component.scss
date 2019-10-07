@@ -17,26 +17,26 @@
   }
 }
 
-:host /deep/ .selectionColumn {
+:host ::ng-deep .selectionColumn {
   width: 24px;
   padding-left: 14px!important;
 }
 
-:host /deep/ .ui-table .nameColumn {
+:host ::ng-deep .ui-table .nameColumn {
   width: 100px;
 }
 
-:host /deep/ .ui-table .createdAtColumn {
+:host ::ng-deep .ui-table .createdAtColumn {
   width: 40px;
   text-align: center;
 }
 
-:host /deep/ .ui-table .entriesCountColumn {
+:host ::ng-deep .ui-table .entriesCountColumn {
   width: 50px;
   text-align: center;
 }
 
-:host /deep/ .ui-table .actionsColumn {
+:host ::ng-deep .ui-table .actionsColumn {
   overflow: visible;
   width: 30px;
 }
@@ -49,12 +49,12 @@
   flex-direction: column;
 }
 
-:host /deep/ p-table{
+:host ::ng-deep p-table{
   width: 100%;
 }
 
 
-:host /deep/ p-table .stickyHeader{
+:host ::ng-deep p-table .stickyHeader{
   z-index: 10;
   display: table;
 }

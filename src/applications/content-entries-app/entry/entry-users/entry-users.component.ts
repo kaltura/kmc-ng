@@ -6,7 +6,7 @@ import { KalturaUser } from 'kaltura-ngx-client';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { EntryUsersWidget } from './entry-users-widget.service';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 
@@ -17,7 +17,7 @@ import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 })
 export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 
-	@ViewChild('ownerPopup') ownerPopup: PopupWidgetComponent;
+	@ViewChild('ownerPopup', { static: true }) ownerPopup: PopupWidgetComponent;
 
 	private _searchUsersSubscription : ISubscription;
 	public _usersProvider = new Subject<SuggestionsProviderData>();

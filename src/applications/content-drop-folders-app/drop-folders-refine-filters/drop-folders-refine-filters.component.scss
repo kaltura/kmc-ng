@@ -74,40 +74,40 @@ a.disabled {
 }
 
 /* prevent calendars from being cut by the popup widget borders */
-:host /deep/ .kPullLeft30 .ui-datepicker.ui-widget {
+:host ::ng-deep .kPullLeft30 .ui-datepicker.ui-widget {
   margin-left: -30px;
   left: 0px !important;
 }
 
-:host /deep/ .kPullLeft90 .ui-datepicker.ui-widget {
+:host ::ng-deep .kPullLeft90 .ui-datepicker.ui-widget {
   margin-left: -90px;
   left: 0px !important;
 }
 
-:host /deep/ .kDateRange .kDateRangeFirst .ui-calendar.ui-calendar-w-btn {
+:host ::ng-deep .kDateRange .kDateRangeFirst .ui-calendar.ui-calendar-w-btn {
   border-bottom-left-radius: 3px;
   border-top-left-radius: 3px;
 }
 
-:host /deep/ .ui-calendar.ui-calendar-w-btn {
+:host ::ng-deep .ui-calendar.ui-calendar-w-btn {
   border-radius: 0px;
 }
 
-:host /deep/ .ui-calendar .ui-inputtext {
+:host ::ng-deep .ui-calendar .ui-inputtext {
   width: 120px;
 }
 
-:host /deep/ .kDateRange .kDateRangeLast .ui-calendar.ui-calendar-w-btn {
+:host ::ng-deep .kDateRange .kDateRangeLast .ui-calendar.ui-calendar-w-btn {
   border-left: 0px solid $kGrayscale4;
   border-bottom-right-radius: 3px;
   border-top-right-radius: 3px;
 }
 
-:host /deep/ .ui-tree .ui-tree-container {
+:host ::ng-deep .ui-tree .ui-tree-container {
   overflow: visible;
 }
 
-:host /deep/ .ui-tree .ui-chkbox {
+:host ::ng-deep .ui-tree .ui-chkbox {
   vertical-align: top;
   margin-top: 14px;
 }

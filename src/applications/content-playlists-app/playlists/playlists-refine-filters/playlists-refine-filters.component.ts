@@ -4,7 +4,7 @@ import { subApplicationsConfig } from 'config/sub-applications';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { PlaylistsFilters, PlaylistsStore } from '../playlists-store/playlists-store.service';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 
 const listOfFilterNames: (keyof PlaylistsFilters)[] = ['createdAt'];
 

@@ -29,7 +29,7 @@
 		color: $kDandger;
 	}
 }
-:host /deep/ .ui-table .ui-table-data tr.uoloading{
+:host ::ng-deep .ui-table .ui-table-data tr.uoloading{
 	background: repeating-linear-gradient(
 			-75deg,
 			#ffffff,

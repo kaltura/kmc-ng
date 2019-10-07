@@ -4,7 +4,6 @@ import { SettingsTranscodingSettingsComponent } from './settings-transcoding-set
 import { routing } from './settings-transcoding-settings-app.routes';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ButtonModule, DropdownModule, InputTextModule, InputTextareaModule, PaginatorModule } from 'primeng/primeng';
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranscodingProfilesComponentsList } from './transcoding-profiles/components-list';
@@ -18,6 +17,11 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { TableModule } from 'primeng/table';
 import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ButtonModule } from 'primeng/button';
+import { PaginatorModule } from 'primeng/paginator';
 
 @NgModule({
   imports: [
