@@ -28,6 +28,10 @@
 	.kError{
 		color: $kDandger;
 	}
+
+    .kInputSwitchLabel {
+        margin-left: 8px;
+    }
 }
 :host ::ng-deep .ui-table .ui-table-data tr.uoloading{
 	background: repeating-linear-gradient(
