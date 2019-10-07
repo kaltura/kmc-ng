@@ -52,6 +52,7 @@
                         </td>
                         <td>
                             <p-inputSwitch class="kInputSwitch"
+                                            [disabled]="caption.isDefault"
                                             (ngModelChange)="_widgetService.setDirty()"
                                             [(ngModel)]="caption.displayOnPlayer"></p-inputSwitch>
                             <span class="kInputSwitchLabel">
@@ -63,7 +64,7 @@
                                 {{'applications.content.entryDetails.captions.default' | translate}}
                             </span>
                             <a (click)="_widgetService._setAsDefault(caption)"
-                               *ngIf="!caption.isDefault && caption.status?.toString() === '2'">
+                               *ngIf="!caption.isDefault && caption.status?.toString() === '2' && caption.displayOnPlayer">
                                 {{'applications.content.entryDetails.captions.setDefault' | translate}}
                             </a>
                         </td>
