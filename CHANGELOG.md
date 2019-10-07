@@ -10,7 +10,7 @@
 ### Features
 
 * Upgrade to Angular 8 ([#853](https://github.com/kaltura/kmc-ng/issues/853)) ([82e506c](https://github.com/kaltura/kmc-ng/commit/82e506c))
-* Add ability to turn off captions ([#869](https://github.com/kaltura/kmc-ng/issues/869)) ([6319b3d](https://github.com/kaltura/kmc-ng/commit/6319b3d))
+* Add the ability to toggle captions ([#869](https://github.com/kaltura/kmc-ng/issues/869)) ([6319b3d](https://github.com/kaltura/kmc-ng/commit/6319b3d))
 
 
 
