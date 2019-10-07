@@ -1,3 +1,19 @@
+<a name="5.18.0"></a>
+# [5.18.0](https://github.com/kaltura/kmc-ng/compare/v5.17.0...v5.18.0) (2019-10-07)
+
+
+### Bug Fixes
+
+* **content/entry:** open live analytics for manual live entries ([614c63e](https://github.com/kaltura/kmc-ng/commit/614c63e))
+
+
+### Features
+
+* Upgrade to Angular 8 ([#853](https://github.com/kaltura/kmc-ng/issues/853)) ([82e506c](https://github.com/kaltura/kmc-ng/commit/82e506c))
+* Add ability to turn off captions ([#869](https://github.com/kaltura/kmc-ng/issues/869)) ([6319b3d](https://github.com/kaltura/kmc-ng/commit/6319b3d))
+
+
+
 <a name="5.17.0"></a>
 # [5.17.0](https://github.com/kaltura/kmc-ng/compare/v5.16.1...v5.17.0) (2019-09-19)
 
