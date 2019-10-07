@@ -146,11 +146,11 @@
     }
   }
 }
-:host /deep/ .ui-button-icon-only .pi {
+:host ::ng-deep .ui-button-icon-only .pi {
   margin-left: -.5em;
 }
 
-:host /deep/ .kUsersTableFooter {
+:host ::ng-deep .kUsersTableFooter {
   .ui-dropdown-panel {
     min-width: 70px;
   }

@@ -80,31 +80,31 @@ a.disabled {
 }
 
 /* Make sure toggler and checkbox remain aligned even if the node height changes */
-:host /deep/ .ui-treenode .ui-tree-toggler {
+:host ::ng-deep .ui-treenode .ui-tree-toggler {
   vertical-align: top;
   margin-top: 13px;
 }
 
-:host /deep/ .ui-tree .ui-chkbox {
+:host ::ng-deep .ui-tree .ui-chkbox {
   vertical-align: top;
   margin-top: 16px;
 }
 
-:host /deep/ .ui-tree .ui-tree-toggler {
+:host ::ng-deep .ui-tree .ui-tree-toggler {
   margin-top: 15px;
 }
 
-:host /deep/ .kSearchCategory {
+:host ::ng-deep .kSearchCategory {
   width: 338px;
   height: 34px;
 }
 
-:host /deep/ .kHighlightedText {
+:host ::ng-deep .kHighlightedText {
   font-weight: 700;
   text-decoration: underline;
 }
 
-:host /deep/ kautocomplete ul.ui-autocomplete-multiple-container.ui-inputtext {
+:host ::ng-deep kautocomplete ul.ui-autocomplete-multiple-container.ui-inputtext {
   padding: 0px;
   .ui-autocomplete-input-token {
     padding: 0px;

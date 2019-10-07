@@ -40,28 +40,28 @@
   text-decoration: none;
 }
 
-:host /deep/ .kDateRange .ui-calendar.ui-calendar-w-btn {
+:host ::ng-deep .kDateRange .ui-calendar.ui-calendar-w-btn {
 	width: 158px;
 }
 
-:host /deep/ .kDateRange .ui-calendar .ui-inputtext {
+:host ::ng-deep .kDateRange .ui-calendar .ui-inputtext {
 	margin: 0;
 	padding-left: 33px;
 	width: 100%;
 }
 
-:host /deep/ .kDateRange .kDateRangeFirst .ui-calendar.ui-calendar-w-btn {
+:host ::ng-deep .kDateRange .kDateRangeFirst .ui-calendar.ui-calendar-w-btn {
 	border-bottom-left-radius: 3px;
 	border-top-left-radius: 3px;
 }
 
-:host /deep/ .kDateRange .kDateRangeLast .ui-calendar.ui-calendar-w-btn {
+:host ::ng-deep .kDateRange .kDateRangeLast .ui-calendar.ui-calendar-w-btn {
 	border-left: 0 solid $kGrayscale4;
 	border-bottom-right-radius: 3px;
 	border-top-right-radius: 3px;
 	margin-left: -3px;
 }
 
-/deep/ kPopupWidget .kPopupWidget {
+::ng-deep kPopupWidget .kPopupWidget {
 	overflow: visible !important;
 }

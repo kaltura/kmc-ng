@@ -14,7 +14,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaUrlResource } from 'kaltura-ngx-client';
 import { Subject } from 'rxjs/Subject';
 import { MediaCancelReplaceAction } from 'kaltura-ngx-client';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaRemoteStorageResource } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';

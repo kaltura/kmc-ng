@@ -35,7 +35,7 @@
     margin: 0;
     flex-direction: column;
 
-    /deep/ p-table {
+    ::ng-deep p-table {
         .ui-table .ui-table-thead > tr > th {
             border-left: 1px solid $kGrayscale6;
         }

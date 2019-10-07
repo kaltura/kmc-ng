@@ -76,7 +76,7 @@ form{
       margin-left: 8px;
     }
   }
-  /deep/ .ui-autocomplete.ui-widget{
+  ::ng-deep .ui-autocomplete.ui-widget{
     width: 100%;
     font-size: 15px;
 
@@ -92,7 +92,7 @@ form{
       height: auto;
     }
   }
-  /deep/ kAutoComplete{
+  ::ng-deep kAutoComplete{
     margin-top: 4px;
     width: 100%;
     .ui-autocomplete-input-token{
@@ -101,14 +101,14 @@ form{
   }
 }
 
-:host /deep/ .ui-autocomplete.ui-widget{
+:host ::ng-deep .ui-autocomplete.ui-widget{
 	width: 100%;
 	input{
 		width: 100%;
 	}
 }
 
-:host /deep/ kAutoComplete{
+:host ::ng-deep kAutoComplete{
 	width: 100%;
 
   li.userAdded{
@@ -120,7 +120,7 @@ form{
   }
 }
 
-/deep/ kPopupWidget .kPopupWidget {
+::ng-deep kPopupWidget .kPopupWidget {
 	overflow: visible !important;
 }
 

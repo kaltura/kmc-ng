@@ -6,17 +6,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { routing } from './content-upload-control-app.routes';
 
 import { AreaBlockerModule, StickyModule } from '@kaltura-ng/kaltura-ui';
-import {
-  PaginatorModule,
-  ButtonModule,
-  TieredMenuModule,
-  CheckboxModule,
-  InputTextModule,
-  CalendarModule,
-  MenuModule,
-  SharedModule,
-  ProgressBarModule,
-} from 'primeng/primeng';
 import {LocalizationModule} from '@kaltura-ng/mc-shared';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import {
@@ -35,6 +24,15 @@ import { KMCShellModule } from 'app-shared/kmc-shell';
 import { UploadStatusPipe } from './upload-list/pipes/upload-status.pipe';
 import { TableModule } from 'primeng/table';
 import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
+import { PaginatorModule } from 'primeng/paginator';
+import { ButtonModule } from 'primeng/button';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { CheckboxModule } from 'primeng/checkbox';
+import { InputTextModule } from 'primeng/inputtext';
+import { CalendarModule } from 'primeng/calendar';
+import { MenuModule } from 'primeng/menu';
+import { SharedModule } from 'primeng/shared';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 @NgModule({
   imports: [

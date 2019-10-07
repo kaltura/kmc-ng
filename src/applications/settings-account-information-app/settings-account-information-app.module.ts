@@ -4,10 +4,12 @@ import {SettingsAccountInformationComponent} from './settings-account-informatio
 import {routing} from './settings-account-information-app.routes';
 import {RouterModule} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
-import {ButtonModule, InputTextareaModule, InputTextModule} from 'primeng/primeng';
 import {AreaBlockerModule, KalturaUIModule} from '@kaltura-ng/kaltura-ui';
 import {TranslateModule} from '@ngx-translate/core';
 import {AccountInfoComponent} from './account-info/account-info.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
   imports: [

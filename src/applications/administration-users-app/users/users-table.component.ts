@@ -13,7 +13,7 @@ import {
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { UsersStore } from './users.service';
-import { Menu, MenuItem } from 'primeng/primeng';
+import { Menu } from 'primeng/menu';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaSourceType, KalturaUser } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
@@ -21,6 +21,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { Router } from '@angular/router';
+import { MenuItem } from 'primeng/api';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -37,7 +38,7 @@ export interface PartnerInfo {
     ]
 })
 export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('actionsmenu') private _actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: true }) private _actionsMenu: Menu;
 
   @Output() editUser = new EventEmitter<KalturaUser>();
   @Output() toggleUserStatus = new EventEmitter<KalturaUser>();

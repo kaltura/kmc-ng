@@ -8,7 +8,7 @@ import {
   CategoriesBulkRemoveTagsService
 } from './services';
 import {CategoriesBulkActionBaseService} from './services/categories-bulk-action-base.service';
-import {MenuItem} from 'primeng/primeng';
+import { MenuItem } from 'primeng/api';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {KalturaCategory} from 'kaltura-ngx-client';
@@ -44,7 +44,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   @Output() onBulkChange = new EventEmitter<{ reload: boolean}>();
 
-  @ViewChild('bulkActionsPopup') public bulkActionsPopup: PopupWidgetComponent;
+  @ViewChild('bulkActionsPopup', { static: true }) public bulkActionsPopup: PopupWidgetComponent;
 
 
   constructor(private _appLocalization: AppLocalization,

@@ -10,7 +10,7 @@ hr{
 	button{
 		font-weight: 400;
 		height: 34px;
-    /deep/
+    ::ng-deep
     .ui-button-icon-right.kIcondropdown_arrow_bottom{
       font-size: 10px;
       color: $kGrayscale3;
@@ -36,7 +36,7 @@ hr{
 		padding-bottom: 12px;
 	}
 
-	/deep/ {
+	::ng-deep {
     k-dynamic-form-item {
       padding-left: 24px;
       padding-right: 38px;
@@ -280,6 +280,6 @@ hr{
 		color: $kBlack;
 	}
 }
-:host /deep/ kautocomplete input{
+:host ::ng-deep kautocomplete input{
 	height: auto !important;
 }

@@ -7,7 +7,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
 import { AccountFilters, MultiAccountStoreService } from '../multi-account-store/multi-account-store.service';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 
 
 const listOfFilterNames: (keyof AccountFilters)[] = [
@@ -37,7 +37,7 @@ export interface PrimeList {
 export class AccountsRefineFiltersComponent implements OnInit, OnDestroy, OnChanges {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() refineFilters: RefineList[];
-  @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
+  @ViewChild(ScrollToTopContainerComponent, { static: true }) _treeContainer: ScrollToTopContainerComponent;
   @ViewChildren(RefinePrimeTree) public _primeTreesActions: RefinePrimeTree[];
   
   private _primeListsMap: { [key: string]: PrimeList } = {};

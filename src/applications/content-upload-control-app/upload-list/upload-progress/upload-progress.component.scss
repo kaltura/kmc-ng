@@ -33,7 +33,7 @@
   }
 }
 
-:host /deep/ .kProgressBar {
+:host ::ng-deep .kProgressBar {
   &.uploading .ui-progressbar-value {
     background-color: $kSecondary;
   }

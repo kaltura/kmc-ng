@@ -160,7 +160,7 @@ $kmc-flags-path: '../../styles/flags/';
   }
 }
 
-:host /deep/ .kEditAccessControlProfile {
+:host ::ng-deep .kEditAccessControlProfile {
   .ui-multiselect-panel {
     width: 320px;
     height: 262px;

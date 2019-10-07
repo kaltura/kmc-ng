@@ -76,12 +76,12 @@
 		text-align: center;
 	}
 }
-:host /deep/ .ui-button-icon-right.ui-c.pi-pi-fw.kIcondropdown_arrow_bottom{
+:host ::ng-deep .ui-button-icon-right.ui-c.pi-pi-fw.kIcondropdown_arrow_bottom{
 	font-size: 11px;
 	padding-right: 4px;
 }
 
-:host /deep/ p-table {
+:host ::ng-deep p-table {
     .ui-table .ui-table-thead > tr > th {
         border-left: 1px solid $kGrayscale6;
     }

@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
 import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { UploadMonitorStatuses } from './upload-monitor.component';
 import { KalturaDropFolder } from 'kaltura-ngx-client';

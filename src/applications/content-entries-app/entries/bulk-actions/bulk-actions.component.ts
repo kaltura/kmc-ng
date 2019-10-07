@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { MenuItem } from 'primeng/primeng';
+import { MenuItem } from 'primeng/api';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
@@ -66,7 +66,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   @Output() onBulkChange = new EventEmitter<{ reload: boolean }>();
   @Output() blockerMessageChange = new EventEmitter<AreaBlockerMessage>();
 
-  @ViewChild('bulkActionsPopup') public bulkActionsPopup: PopupWidgetComponent;
+  @ViewChild('bulkActionsPopup', { static: true }) public bulkActionsPopup: PopupWidgetComponent;
 
   constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService,
     private _bulkSchedulingService: BulkSchedulingService,

@@ -45,6 +45,12 @@ export class ChangeAccountComponent implements OnInit {
     this.getAvailablePartners()
       .subscribe(partners => {
           this.partners = partners;
+          setTimeout(() => { // bypass radiobutton issue in angular 8 version
+              this.changeAccountForm.setValue(
+                  { account: this._userAuthentication.appUser.partnerId },
+                  { emitEvent: false, onlySelf: true }
+              );
+          });
           this._isBusy = false;
           this._blockerMessage = null;
         },
@@ -108,7 +114,7 @@ export class ChangeAccountComponent implements OnInit {
 
   private _createForm(): void {
     this.changeAccountForm = this._fb.group({
-      account: this._userAuthentication.appUser.partnerId,
+      account: '',
     });
   }
 

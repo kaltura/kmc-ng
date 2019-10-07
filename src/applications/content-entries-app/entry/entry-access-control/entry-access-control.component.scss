@@ -34,18 +34,19 @@
 		}
 	}
 }
-:host /deep/ .ui-dropdown.ui-widget{
+:host ::ng-deep .ui-dropdown.ui-widget{
+    min-width: 180px;
 	width: 180px !important;
 }
 
-:host /deep/ .ui-dropdown-label.ui-inputtext{
+:host ::ng-deep .ui-dropdown-label.ui-inputtext{
 	background-color: #ffffff;
 }
 
-:host /deep/ .ui-dropdown-label {
+:host ::ng-deep .ui-dropdown-label {
   text-overflow: ellipsis;
 }
-:host /deep/ .kAccessControlProfiles {
+:host ::ng-deep .kAccessControlProfiles {
     .ui-dropdown-panel {
         width: 250px;
     }
@@ -58,6 +59,7 @@
     }
 
     .ui-dropdown.ui-widget {
+        min-width: 184px;
         width: 184px;
     }
 }

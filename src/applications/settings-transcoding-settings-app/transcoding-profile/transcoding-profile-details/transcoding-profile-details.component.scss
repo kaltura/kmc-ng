@@ -22,7 +22,7 @@
 
 }
 
-:host /deep/ .kDetails {
+:host ::ng-deep .kDetails {
   .kIcontranscoding {
     margin-left: 1px;
   }

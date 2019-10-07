@@ -11,7 +11,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui'
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories/categories-tree/categories-tree.component';
 import { TagsComponent } from '@kaltura-ng/kaltura-ui';
 import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
@@ -31,9 +31,9 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit {
 
   @Output() valueChange = new EventEmitter<CategoryData[]>();
 
-  @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
-  @ViewChild('tags') _tags: TagsComponent;
-  @ViewChild('autoComplete') private _autoComplete: AutoComplete;
+  @ViewChild('categoriesTree', { static: true }) _categoriesTree: CategoriesTreeComponent;
+  @ViewChild('tags', { static: true }) _tags: TagsComponent;
+  @ViewChild('autoComplete', { static: true }) private _autoComplete: AutoComplete;
 
   private _confirmClose = true;
   private _searchCategoriesSubscription: ISubscription;

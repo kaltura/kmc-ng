@@ -19,7 +19,7 @@
         position: relative;
 		display: flex;
 		flex-direction: column;
-        /deep/ kpopupwidget .kPopupWidget {
+        ::ng-deep kpopupwidget .kPopupWidget {
             box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .24);
         }
     }
@@ -167,22 +167,22 @@
 	width: 100%;
 }
 
-:host /deep/ k-area-blocker>.kAreaBlockerContainer {
+:host ::ng-deep k-area-blocker>.kAreaBlockerContainer {
   z-index: 203;
 }
 
-:host /deep/ span.ui-button-icon-left.pi-kIcontrash{
+:host ::ng-deep span.ui-button-icon-left.pi-kIcontrash{
 	margin-left: -.5em;
 }
 
-:host /deep/ .ui-button-icon-only .pi{
+:host ::ng-deep .ui-button-icon-only .pi{
 	margin-left: -.5em;
 }
-:host /deep/ .kStickyClass{
+:host ::ng-deep .kStickyClass{
 	border-bottom: 1px solid $kGrayscale5;
 }
 
-:host /deep/ .kPlaylistsTableFooter {
+:host ::ng-deep .kPlaylistsTableFooter {
   .ui-dropdown-panel {
     min-width: 70px;
   }

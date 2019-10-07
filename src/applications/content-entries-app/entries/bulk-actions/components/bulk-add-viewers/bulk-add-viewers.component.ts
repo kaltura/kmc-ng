@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { KalturaClient, KalturaFilterPager, KalturaUser, KalturaUserFilter, UserListAction } from 'kaltura-ngx-client';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { AreaBlockerMessage, PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 

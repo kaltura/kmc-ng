@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { EntryLiveWidget } from './entry-live-widget.service';
@@ -15,7 +15,7 @@ import { LiveAnalyticsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 })
 export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
-	@ViewChild('liveAnalytics') _liveAnalytics: PopupWidgetComponent;
+	@ViewChild('liveAnalytics', { static: true }) _liveAnalytics: PopupWidgetComponent;
 
   public _kmcPermissions = KMCPermissions;
 	public _copyToClipboardTooltips: { success: string, failure: string, idle: string, notSupported: string } = null;

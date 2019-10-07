@@ -76,10 +76,10 @@
   }
 }
 
-:host /deep/ kSticky{
+:host ::ng-deep kSticky{
   width: 100%;
 }
-:host /deep/ .kStickyHeader{
+:host ::ng-deep .kStickyHeader{
   background-color: white;
   border-top: 2px solid $kGrayscale6;
   box-shadow: $kGrayscale5 0px 1px 0px;

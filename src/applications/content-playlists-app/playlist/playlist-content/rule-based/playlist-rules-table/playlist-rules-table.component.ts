@@ -1,8 +1,9 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { Menu, MenuItem } from 'primeng/primeng';
+import { Menu } from 'primeng/menu';
 import { PlaylistRule } from '../playlist-rule/playlist-rule.interface';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'kPlaylistRulesTable',
@@ -10,7 +11,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
   styleUrls: ['./playlist-rules-table.component.scss']
 })
 export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDestroy {
-  @ViewChild('actionsmenu') private actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
 
   @Input()
   set isNewPlaylist(value) {

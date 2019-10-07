@@ -40,35 +40,35 @@ const routes: Routes = <Routes>[
                         path: 'content', children: [
                         {
                             path: 'entries',
-                            loadChildren: '../applications/content-entries-app/content-entries-app.module#ContentEntriesAppModule'
+                            loadChildren: () => import('../applications/content-entries-app/content-entries-app.module').then(m => m.ContentEntriesAppModule)
                         },
                         {
                             path: 'playlists',
-                            loadChildren: '../applications/content-playlists-app/content-playlists-app.module#ContentPlaylistsAppModule'
+                            loadChildren: () => import('../applications/content-playlists-app/content-playlists-app.module').then(m => m.ContentPlaylistsAppModule)
                         },
                         {
                             path: 'categories',
-                            loadChildren: '../applications/content-categories-app/content-categories-app.module#ContentCategoriesAppModule'
+                            loadChildren: () => import('../applications/content-categories-app/content-categories-app.module').then(m => m.ContentCategoriesAppModule)
                         },
                         {
                             path: 'syndication',
-                            loadChildren: '../applications/content-syndication-app/content-syndication-app.module#ContentSyndicationAppModule'
+                            loadChildren: () => import('../applications/content-syndication-app/content-syndication-app.module').then(m => m.ContentSyndicationAppModule)
                         },
                         {
                             path: 'upload-control',
-                            loadChildren: '../applications/content-upload-control-app/content-upload-control-app.module#ContentUploadControlAppModule'
+                            loadChildren: () => import('../applications/content-upload-control-app/content-upload-control-app.module').then(m => m.ContentUploadControlAppModule)
                         },
                         {
                             path: 'drop-folders',
-                            loadChildren: '../applications/content-drop-folders-app/content-drop-folders-app.module#ContentDropFoldersAppModule'
+                            loadChildren: () => import('../applications/content-drop-folders-app/content-drop-folders-app.module').then(m => m.ContentDropFoldersAppModule)
                         },
                         {
                             path: 'bulk',
-                            loadChildren: '../applications/content-bulk-log-app/content-bulk-log-app.module#ContentBulkLogAppModule'
+                            loadChildren: () => import('../applications/content-bulk-log-app/content-bulk-log-app.module').then(m => m.ContentBulkLogAppModule)
                         },
                         {
                             path: 'moderation',
-                            loadChildren: '../applications/content-moderation-app/content-moderation-app.module#ContentModerationAppModule'
+                            loadChildren: () => import('../applications/content-moderation-app/content-moderation-app.module').then(m => m.ContentModerationAppModule)
                         }
                     ]
                     },
@@ -76,31 +76,31 @@ const routes: Routes = <Routes>[
                         path: 'settings', children: [
                         {
                             path: 'accountSettings',
-                            loadChildren: '../applications/settings-account-settings-app/settings-account-settings-app.module#SettingsAccountSettingsAppModule'
+                            loadChildren: () => import('../applications/settings-account-settings-app/settings-account-settings-app.module').then(m => m.SettingsAccountSettingsAppModule)
                         },
                         {
                             path: 'integrationSettings',
-                            loadChildren: '../applications/settings-integration-settings-app/settings-integration-settings-app.module#SettingsIntegrationSettingsAppModule'
+                            loadChildren: () => import('../applications/settings-integration-settings-app/settings-integration-settings-app.module').then(m => m.SettingsIntegrationSettingsAppModule)
                         },
                         {
                             path: 'accountInformation',
-                            loadChildren: '../applications/settings-account-information-app/settings-account-information-app.module#SettingsAccountInformationAppModule'
+                            loadChildren: () => import('../applications/settings-account-information-app/settings-account-information-app.module').then(m => m.SettingsAccountInformationAppModule)
                         },
                         {
                             path: 'accessControl',
-                            loadChildren: '../applications/settings-access-control-app/settings-access-control-app.module#SettingsAccessControlAppModule'
+                            loadChildren: () => import('../applications/settings-access-control-app/settings-access-control-app.module').then(m => m.SettingsAccessControlAppModule)
                         },
                         {
                             path: 'metadata',
-                            loadChildren: '../applications/settings-custom-data-app/settings-custom-data-app.module#SettingsCustomDataAppModule'
+                            loadChildren: () => import('../applications/settings-custom-data-app/settings-custom-data-app.module').then(m => m.SettingsCustomDataAppModule)
                         },
                         {
                             path: 'myUserSettings',
-                            loadChildren: '../applications/settings-my-user-settings-app/settings-my-user-settings-app.module#SettingsMyUserSettingsAppModule'
+                            loadChildren: () => import('../applications/settings-my-user-settings-app/settings-my-user-settings-app.module').then(m => m.SettingsMyUserSettingsAppModule)
                         },
                         {
                             path: 'transcoding',
-                            loadChildren: '../applications/settings-transcoding-settings-app/settings-transcoding-settings-app.module#SettingsTranscodingSettingsAppModule'
+                            loadChildren: () => import('../applications/settings-transcoding-settings-app/settings-transcoding-settings-app.module').then(m => m.SettingsTranscodingSettingsAppModule)
                         }
                     ]
                     },
@@ -108,30 +108,30 @@ const routes: Routes = <Routes>[
                         path: 'administration', children: [
                         {
                             path: 'roles',
-                            loadChildren: '../applications/administration-roles-app/administration-roles-app.module#AdministrationRolesAppModule'
+                            loadChildren: () => import('../applications/administration-roles-app/administration-roles-app.module').then(m => m.AdministrationRolesAppModule)
                         },
                         {
                             path: 'users',
-                            loadChildren: '../applications/administration-users-app/administration-users-app.module#AdministrationUsersAppModule'
+                            loadChildren: () => import('../applications/administration-users-app/administration-users-app.module').then(m => m.AdministrationUsersAppModule)
                         },
                         {
                             path: 'multi-account',
-                            loadChildren: '../applications/administration-multi-account-app/administration-multi-account-app.module#AdministrationMultiAccountAppModule'
+                            loadChildren: () => import('../applications/administration-multi-account-app/administration-multi-account-app.module').then(m => m.AdministrationMultiAccountAppModule)
                         }
                     ]
                     },
-                    { path: 'studio', loadChildren: '../applications/studio-app/studio-app.module#StudioAppModule' },
+                    { path: 'studio', loadChildren: () => import('../applications/studio-app/studio-app.module').then(m => m.StudioAppModule) },
                     {
                         path: 'usageDashboard',
-                        loadChildren: '../applications/usage-dashboard-app/usage-dashboard-app.module#UsageDashboardAppModule'
+                        loadChildren: () => import('../applications/usage-dashboard-app/usage-dashboard-app.module').then(m => m.UsageDashboardAppModule)
                     },
                     {
                         path: 'servicesDashboard',
-                        loadChildren: '../applications/services-dashboard-app/services-dashboard-app.module#ServicesDashboardAppModule'
+                        loadChildren: () => import('../applications/services-dashboard-app/services-dashboard-app.module').then(m => m.ServicesDashboardAppModule)
                     },
                     {
                         path: 'analytics',
-                        loadChildren: '../applications/analytics/analytics.module#AnalyticsModule'
+                        loadChildren: () => import('../applications/analytics/analytics.module').then(m => m.AnalyticsModule)
                     },
                     {
                         path: '**', component: NotFoundPageComponent
