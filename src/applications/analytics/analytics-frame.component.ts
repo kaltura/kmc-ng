@@ -112,6 +112,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             ks: this.appAuthentication.appUser.ks,
             pid: this.appAuthentication.appUser.partnerId,
             locale: 'en',
+            liveEntryUsersReports: this._browserService.getFromLocalStorage('kmc_analytics_live_entry_users_reports') || 'all',
             dateFormat: this._browserService.getFromLocalStorage('kmc_date_format') || 'month-day-year',
             live: {
                 "pollInterval": 30,
@@ -175,6 +176,9 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             if (postMessageData.messageType === 'modalClosed') {
                 this._modalToggle(false);
             }
+            if (postMessageData.messageType === 'updateAuthLiveUsersReports') {
+                this._updateLiveEntryUsersReports(postMessageData.payload);
+            }
         };
         this._addPostMessagesListener();
     }
@@ -234,4 +238,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
         window.removeEventListener('message', this._windowEventListener);
     }
 
+    private _updateLiveEntryUsersReports(value: string): void {
+        this._browserService.setInLocalStorage('kmc_analytics_live_entry_users_reports', value);
+    }
 }
