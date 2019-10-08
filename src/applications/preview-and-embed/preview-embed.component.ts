@@ -401,7 +401,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       // create short link
       this._previewEmbedService.generateShortLink(url).pipe(cancelOnDestroy(this)).subscribe(
           (res: KalturaShortLink) => {
-            this._shortLink = 'http://' + serverConfig.kalturaServer.uri + '/tiny/' + res.id;
+            this._shortLink = this.getProtocol(false) + '://' + serverConfig.kalturaServer.uri + '/tiny/' + res.id;
           },
           error => {
             console.log("could not generate short link for preview");
