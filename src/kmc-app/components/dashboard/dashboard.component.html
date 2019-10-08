@@ -7,20 +7,19 @@
   <kScrollToTop [scrollOffset]="50"></kScrollToTop>
 </div>
 
-<kPopupWidget #whatsNew data-aid="whatsNew" [popupWidth]="644" [popupHeight]="617" [modal]="true" [closeBtn]="false">
+<kPopupWidget #whatsNew data-aid="whatsNew" [popupWidth]="644" [popupHeight]="617" [modal]="true" [closeBtn]="true">
     <div class="whatsNew">
-        <div class="kIcon"></div>
+        <img width="644" height="284" [src]="_bannerUri"/>
         <div class="kHeader">
-            <span class="kTitle">Special Promotion for Kaltura Connect!</span>
+            <span class="kTitle">Welcome to Connect</span>
         </div>
         <div class="kWelcomeContent">
-            <span>Join us for Kaltura Connect, The Video Experience Conference, where you will have the unique opportunity to connect with your peers, meet the industry's leading video experts, and get inspired!</span>
-            <br><br><span class="enjoy">Register now with this code <b>KMCAdmin50</b> by October 31st and get 50% off!</span>
+            <span>Join us for our user conference, for speakers from across the video ecosystem, roadmap sessions for Kaltura products, exhibitors, opportunities to speak to the Kaltura product team, and an optional training day.</span>
         </div>
 
         <div class="kFooter">
             <button class="kButtonBranded" type="button" pButton label="Register Now" (click)="register()"></button>
-            <a (click)="closeWin()">Close</a>
+            <!--a (click)="closeWin()">Close</a-->
         </div>
     </div>
 </kPopupWidget>

@@ -4,7 +4,7 @@
     position: relative;
     text-align: center;
     height: 644px;
-    width: 617px;
+    width: 644px;
     border-radius: 4px;
     .kIcon{
         width: 550px;
@@ -17,7 +17,7 @@
     }
     .kHeader{
         position: absolute;
-        margin-top: 204px;
+        margin-top: 38px;
         width: 100%;
         .kTitle{
             color: $kGrayscale2;
@@ -29,14 +29,14 @@
     }
     .kWelcomeContent{
         width: 100%;
-        font-size: 19px;
-        line-height: 24px;
+        font-size: 18px;
+        line-height: 1.56;
         text-align: center;
         position: absolute;
-        margin-top: 260px;
+        margin-top: 86px;
         color: $kGrayscale3;
         span{
-            width: 530px;
+            width: 500px;
             display: inline-block;
         }
         .enjoy{
@@ -45,7 +45,7 @@
     }
     .kFooter{
         position: absolute;
-        margin-top: 508px;
+        margin-top: 236px;
         width: 100%;
         a {
             font-size: 16px;
@@ -55,7 +55,7 @@
             margin-left: 12px;
         }
         button{
-            width: 140px;
+            width: 148px;
             height: 48px;
             font-size: 16px;
             margin-right: 12px;

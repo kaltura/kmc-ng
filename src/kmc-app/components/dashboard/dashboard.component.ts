@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
 import { AppAuthentication, AppShellService, BrowserService, PartnerPackageTypes } from "app-shared/kmc-shell";
-
+import { buildDeployUrl } from 'config/server';
 import * as $ from 'jquery';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 
@@ -12,6 +12,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('appMenu') private _appMenuRef : any;
   @ViewChild('whatsNew') private _whatsNewWin : PopupWidgetComponent;
+  public _bannerUri = buildDeployUrl('./assets/kaltura_connect_banner2x.png');
   private onResize : () => void;
 
 
@@ -32,10 +33,10 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private _showWhatsNew(): void {
       const isRegisteredUser = this.appAuthentication.appUser.partnerInfo.partnerPackage !== PartnerPackageTypes.PartnerPackageFree;
-      const whatsNewShown = this._browserService.getFromLocalStorage('connectShown') || false;
+      const whatsNewShown = this._browserService.getFromLocalStorage('connectPromoShown') || false;
       if (isRegisteredUser && !whatsNewShown){
           setTimeout(()=>{
-              this._browserService.setInLocalStorage('connectShown',true);
+              this._browserService.setInLocalStorage('connectPromoShown',true);
               this._whatsNewWin.open();
           },200);
       }
