@@ -13,6 +13,9 @@ export interface GlobalConfig {
             maxItems: number,
             defaultPageSize: number,
             defaultSortOrder: number
+          },
+          dropFolders: {
+              maxItems: number,
           }
         }
     };
@@ -34,6 +37,9 @@ export const globalConfig: GlobalConfig = {
             'maxItems': 10000,
             'defaultPageSize': 50,
             'defaultSortOrder': -1
+          },
+          dropFolders: {
+              maxItems: 500,
           }
         }
     },
