@@ -13,7 +13,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('appMenu', { static: true }) private _appMenuRef : any;
   @ViewChild('whatsNew', { static: true }) private _whatsNewWin : PopupWidgetComponent;
 
-  public _bannerUri = buildDeployUrl('./assets/kaltura_connect_banner2x.png');
+  public _bannerUri = buildDeployUrl('./assets/kaltura_connect_banner2x.jpg');
   private onResize : () => void;
 
 
