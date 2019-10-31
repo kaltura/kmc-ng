@@ -10,8 +10,6 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { PlaylistRuleParserService } from './playlist-rule-parser.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
-import { KalturaEntryModerationStatus } from 'kaltura-ngx-client';
-import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { PlaylistRule } from './playlist-rule.interface';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
