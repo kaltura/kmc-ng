@@ -23,15 +23,16 @@ const listOfFilterNames: (keyof EntriesFilters)[] = [
     'accessControlProfiles',
     'flavors',
     'distributions',
-    'customMetadata'
+    'customMetadata',
+    'youtubeVideo'
 ];
 
 export interface PrimeListItem {
     label: string;
-    value: string;
     parent: PrimeListItem;
     listName: string;
     children: PrimeListItem[];
+    value: any;
 }
 
 export interface PrimeList {
@@ -143,7 +144,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
               listFilter = updates[listName] ;
           }
 
-          if (typeof listFilter !== 'undefined') {
+          if (Array.isArray(listFilter) || listFilter === null) {
               // important: the above condition doesn't filter out 'null' because 'null' is valid value.
 
               const listSelectionsMap = this._entriesStore.filtersUtils.toMap(listData.selections, 'value');
@@ -172,6 +173,10 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                       updatedPrimeTreeSelections = true;
                   }
               });
+          }
+
+          if (listName === 'youtubeVideo') {
+              this._syncYoutubeVideoMode(listData);
           }
 
           if (listName === 'timeScheduling') {
@@ -206,6 +211,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                     this._updateComponentState(changes);
                 }
             );
+    }
+
+    private _syncYoutubeVideoMode(listData: PrimeList): void {
+        const youtubeVideo = this._entriesStore.cloneFilter('youtubeVideo', false);
+        listData.selections = youtubeVideo ? [listData.items[0]] : [];
     }
 
     private _syncScheduleDatesMode() {
@@ -253,41 +263,30 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
             this._primeListsGroups.push(filtersGroup);
 
             group.lists.forEach(list => {
-
-                if (list.items.length > 0) {
-                    const primeList = {items: [], selections: [], group: list.group};
-                    const relevantEnforceFilter = this.enforcedFilters ? this.enforcedFilters[list.name] : null;
-
-                    if (!relevantEnforceFilter || this.showEnforcedFilters) {
-                        const listItems = list.items
-                            .filter(item => relevantEnforceFilter ? relevantEnforceFilter.indexOf(item.value) === -1 : true);
-
-                        if (listItems.length) {
-                            this._primeListsMap[list.name] = primeList;
-                            filtersGroup.lists.push(primeList);
-                            const listRootNode: PrimeListItem = {
-                                label: list.label,
-                                value: null,
-                                listName: list.name,
-                                parent: null,
-                                children: []
-                            };
-
-                            listItems.forEach(item => {
-                                listRootNode.children.push({
-                                    label: item.label,
-                                    value: item.value,
-                                    children: [],
-                                    listName: <any>list.name,
-                                    parent: listRootNode
-                                });
-                            });
-                            primeList.items.push(listRootNode);
-                        }
-                    }
+                const primeList = { items: [], selections: [], group: list.group };
+                const shouldAllowFilter = (!this.enforcedFilters || !this.enforcedFilters[list.name]);
+                if (shouldAllowFilter) {
+                    this._primeListsMap[list.name] = primeList;
+                    filtersGroup.lists.push(primeList);
+                    const listRootNode: PrimeListItem = {
+                        label: list.label,
+                        value: list.value,
+                        listName: list.name,
+                        parent: null,
+                        children: []
+                    };
+                    list.items.forEach(item => {
+                        listRootNode.children.push({
+                            label: item.label,
+                            value: item.value,
+                            children: [],
+                            listName: <any>list.name,
+                            parent: listRootNode
+                        });
+                    });
+                    primeList.items.push(listRootNode);
                 }
             });
-
         });
     }
 
@@ -403,8 +402,12 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                       return selectedNode.value !== null && typeof selectedNode.value !== 'undefined';
                   })
                   .forEach(selectedNode => {
-                      if (!newFilterItems.find(item => item === selectedNode.value)) {
-                          newFilterItems.push(selectedNode.value);
+                      if (Array.isArray(newFilterItems)) {
+                          if (!newFilterItems.find(item => item === selectedNode.value)) {
+                              newFilterItems.push(selectedNode.value);
+                          }
+                      } else {
+                          newFilterValue = selectedNode.value;
                       }
                   });
               this._entriesStore.filter({[newFilterName]: newFilterValue});
@@ -442,20 +445,22 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                       return selectedNode.value !== null && typeof selectedNode.value !== 'undefined';
                   })
                   .forEach(selectedNode => {
-                      const itemIndex = newFilterItems.findIndex(item => item === selectedNode.value);
-                      if (itemIndex > -1) {
-                          newFilterItems.splice(itemIndex, 1);
+                      if (Array.isArray(newFilterItems)) {
+                          const itemIndex = newFilterItems.findIndex(item => item === selectedNode.value);
+                          if (itemIndex > -1) {
+                              newFilterItems.splice(itemIndex, 1);
 
-                          if (node.listName === 'timeScheduling' && selectedNode.value === 'scheduled') {
-                              this._closeCalendar(this.scheduledFrom);
-                              this._closeCalendar(this.scheduledTo);
-                              this._entriesStore.filter({
-                                  scheduledAt: {
-                                      fromDate: null,
-                                      toDate: null
-                                  }
-                              });
+                              if (node.listName === 'timeScheduling' && selectedNode.value === 'scheduled') {
+                                  this._entriesStore.filter({
+                                      scheduledAt: {
+                                          fromDate: null,
+                                          toDate: null
+                                      }
+                                  });
+                              }
                           }
+                      } else {
+                          newFilterValue = null;
                       }
                   });
 

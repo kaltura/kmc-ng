@@ -1,6 +1,12 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {EntriesDataProvider, EntriesFilters, MetadataProfileData, SortDirection} from './entries-store.service';
-import {KalturaBaseEntry} from 'kaltura-ngx-client';
+import {
+    KalturaBaseEntry,
+    KalturaEntryType,
+    KalturaExternalMediaEntryFilter,
+    KalturaExternalMediaSourceType,
+    KalturaQuizAdvancedFilter
+} from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
 import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
 import {KalturaMetadataSearchItem} from 'kaltura-ngx-client';
@@ -65,7 +71,10 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
       return this._getMetadataProfiles()
         .map(metadataProfiles => {
           // create request items
-          const filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter({});
+            const filter = data.youtubeVideo
+                ? new KalturaExternalMediaEntryFilter({ externalSourceTypeEqual: KalturaExternalMediaSourceType.youtube })
+                : new KalturaMediaEntryFilter({});
+
           const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
           advancedSearch.type = KalturaSearchOperatorType.searchAnd;
 
@@ -270,7 +279,6 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
     }
   }
 
-
   public executeQuery(data: EntriesFilters): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }> {
     const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
       type: KalturaResponseProfileType.includeFields,
@@ -329,6 +337,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
       categoriesMode,
       customMetadata: {},
       limits: 200,
+        youtubeVideo: false
     };
   }
 }

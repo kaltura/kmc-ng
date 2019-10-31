@@ -51,7 +51,8 @@ export class PlaylistRuleComponent implements OnInit {
       KalturaEntryStatus.ready.toString()
     ],
     'accessControlProfiles': [],
-    'timeScheduling': []
+    'timeScheduling': [],
+      'youtubeVideo': false
   };
 
   public _columns: EntriesTableColumns = {
