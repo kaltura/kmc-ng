@@ -103,7 +103,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                     this._entriesStore.filter({createdAt: {fromDate: null, toDate: null}});
                     break;
                 case 'youtubeVideo':
-                    this._entriesStore.filter({ youtubeVideo: true });
+                    this._entriesStore.filter({ youtubeVideo: false });
                     break;
                 default:
                     break;
