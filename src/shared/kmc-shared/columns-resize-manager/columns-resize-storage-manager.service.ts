@@ -1,6 +1,6 @@
 import { Inject, Injectable, InjectionToken, Renderer2 } from '@angular/core';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 
 export interface ResizableColumns {
     [columnName: string]: string | number;

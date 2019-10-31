@@ -5,7 +5,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {EntitlementService} from '../entitlement.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 function privacyContextLabelValidator(): ValidatorFn {

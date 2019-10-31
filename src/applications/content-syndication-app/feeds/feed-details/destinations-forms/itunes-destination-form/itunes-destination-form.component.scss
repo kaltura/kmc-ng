@@ -12,7 +12,7 @@
 .kAddToDefaultTranscodingProfile,
 .kEnforceFeedAuthor {
   padding-top: 11px;
-  /deep/ {
+  ::ng-deep {
     .ui-chkbox-label {
       font-weight: normal;
     }
@@ -37,7 +37,7 @@
 }
 
 .kHasError {
-  /deep/ .ui-multiselect {
+  ::ng-deep .ui-multiselect {
     border: 1px solid $kDandger;
   }
 }
@@ -74,7 +74,7 @@
   }
 }
 
-:host /deep/ .kCategories {
+:host ::ng-deep .kCategories {
   .ui-multiselect {
     padding-left: 0;
   }
@@ -89,7 +89,7 @@
   }
 }
 
-:host /deep/ {
+:host ::ng-deep {
   .ui-dropdown .ui-dropdown-label {
     text-overflow: ellipsis;
   }

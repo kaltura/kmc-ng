@@ -8,7 +8,8 @@ import {
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ResetMenuEvent, UpdateMenuEvent } from 'app-shared/kmc-shared/events';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
+import {KMCPermissions, KMCPermissionsService} from "app-shared/kmc-shared/kmc-permissions";
 
 @Component({
     selector: 'kAnalytics',
@@ -16,12 +17,15 @@ import { BrowserService } from 'app-shared/kmc-shell';
     styleUrls: ['./analytics.component.scss']
 })
 export class AnalyticsComponent implements OnInit, OnDestroy {
+
+    public _multiAccountFlag: string = null;
     private menuConfig: KMCAppMenuItem[] = [];
 
     constructor(private _appLocalization: AppLocalization,
                 private _appEvents: AppEventsService,
                 private _router: Router,
                 private _browserService: BrowserService,
+                private _permissions: KMCPermissionsService,
                 private _analyticsNewView: AnalyticsNewMainViewService,
                 private _liveAnalyticsView: LiveAnalyticsMainViewService) {
         if (!this._analyticsNewView.isAvailable()) {
@@ -34,6 +38,13 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
         }
 
         this.menuConfig = [
+            {
+                isAvailable: true,
+                isActiveView: () => { return false },
+                menuTitle: '',
+                customMenuItemId: 'analyticsMultiAccount',
+                customMenuItemCallback: (event) => this.onMultiAccountSelected(event)
+            },
             {
                 isAvailable: true,
                 isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/technology`) !== -1 ||
@@ -122,9 +133,13 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                 open: () => {
                     this._router.navigateByUrl('/analytics/live');
                 },
-                menuTitle: this._appLocalization.get('app.titles.live'),
+                menuTitle: this._permissions.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD) ? this._appLocalization.get('app.titles.realtime') : this._appLocalization.get('app.titles.live'),
             });
         }
+    }
+
+    private onMultiAccountSelected(event: string): void {
+        this._multiAccountFlag = event;
     }
 
     ngOnInit() {

@@ -73,7 +73,7 @@
   flex-direction: column;
 }
 
-:host /deep/ .kFieldsTable {
+:host ::ng-deep .kFieldsTable {
   tr.kProfileDisabled .ui-cell-data {
     color: $kGrayscale4;
   }

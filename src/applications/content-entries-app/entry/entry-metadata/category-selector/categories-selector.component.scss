@@ -67,17 +67,17 @@
 }
 
 
-:host /deep/ kautocomplete .kKalturaPrimeUIComponent.ui-autocomplete-multiple{
+:host ::ng-deep kautocomplete .kKalturaPrimeUIComponent.ui-autocomplete-multiple{
 	width: 100%;
 }
 
-:host /deep/ kautocomplete ul.ui-autocomplete-multiple-container{
+:host ::ng-deep kautocomplete ul.ui-autocomplete-multiple-container{
 	max-height: 60px;
 	overflow-y: auto;
 }
 
 
-:host /deep/ k-categories-tree .kTreeContainer{
+:host ::ng-deep k-categories-tree .kTreeContainer{
 	margin: 0px;
 	padding: 0px;
 	width: 100%;
@@ -87,12 +87,12 @@
 }
 
 
-:host /deep/ k-area-blocker{
+:host ::ng-deep k-area-blocker{
 	height: 265px;
 	overflow-y: hidden;
 }
 
-:host /deep/ ktags{
+:host ::ng-deep ktags{
 	margin-left: 12px;
 	.kTags{
 		border-top: 0px solid white;
@@ -112,7 +112,7 @@
 		cursor: default;
 	}
 }
-:host /deep/ kautocomplete ul.ui-autocomplete-multiple-container.ui-inputtext{
+:host ::ng-deep kautocomplete ul.ui-autocomplete-multiple-container.ui-inputtext{
 	padding: 0px;
 	.ui-autocomplete-input-token{
 		padding: 0px;
@@ -124,7 +124,7 @@
 	}
 }
 
-:host /deep/ .kAddCategory {
+:host ::ng-deep .kAddCategory {
   .ui-autocomplete-input-token input {
     width: 492px !important;
   }

@@ -7,7 +7,7 @@ import { KalturaCaptionAsset } from 'kaltura-ngx-client';
 import { KalturaCaptionType } from 'kaltura-ngx-client';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { NewEntryCaptionFile } from './new-entry-caption-file';
@@ -26,7 +26,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 	@Input() currentCaption: KalturaCaptionAsset;
 	@Input() parentPopupWidget: PopupWidgetComponent;
 
-	@ViewChild('fileDialog') private fileDialog: FileDialogComponent;
+	@ViewChild('fileDialog', { static: true }) private fileDialog: FileDialogComponent;
 
 	public captionsEditForm: FormGroup;
 	public _languages = [];
@@ -63,6 +63,10 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
             {
                 label: 'VTT',
                 value: KalturaCaptionType.webvtt
+            },
+            {
+                label: 'SCC',
+                value: KalturaCaptionType.scc
             }
         ];
 	    this._newCaption = this.currentCaption.id === null;

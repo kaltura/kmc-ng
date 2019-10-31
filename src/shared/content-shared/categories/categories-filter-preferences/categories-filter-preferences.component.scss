@@ -25,7 +25,7 @@
   margin-bottom: 14px;
 }
 
-:host /deep/ p-radiobutton {
+:host ::ng-deep p-radiobutton {
 
   display: flex;
   margin-bottom: 18px;

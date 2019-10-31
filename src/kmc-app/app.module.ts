@@ -49,27 +49,16 @@ import {routing} from './app.routes';
 
 import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {AppMenuComponent} from './components/app-menu/app-menu.component';
+import {MultiAccountComponent} from './components/multiAccount/multi-account.component';
 import {ErrorComponent} from './components/error/error.component';
 import {UserSettingsComponent} from './components/user-settings/user-settings.component';
-
-import {
-  ButtonModule,
-  CheckboxModule,
-  ConfirmationService,
-  ConfirmDialogModule,
-  DropdownModule,
-  GrowlModule,
-  InputTextModule,
-  RadioButtonModule,
-  TieredMenuModule
-} from 'primeng/primeng';
-
-
 import { UploadManagementModule } from '@kaltura-ng/kaltura-common';
 import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { LoginComponent } from './components/login/login.component';
 import { ForgotPasswordFormComponent } from './components/login/forgot-password-form/forgot-password-form.component';
 import { LoginFormComponent } from './components/login/login-form/login-form.component';
+import { SsoFormComponent } from './components/login/sso-form/sso-form.component';
+import { AuthenticationFormComponent } from './components/login/authentication-form/authentication-form.component';
 import { PasswordExpiredFormComponent } from './components/login/password-expired-form/password-expired-form.component';
 import { InvalidLoginHashFormComponent } from './components/login/invalid-login-hash-form/invalid-login-hash-form.component';
 import { AppMenuContentComponent } from './components/app-menu/app-menu-content.component';
@@ -95,6 +84,7 @@ import { KalturaLoggerModule } from '@kaltura-ng/kaltura-logger';
 import { KmcViewsModule } from 'app-shared/kmc-shared/kmc-views/kmc-views.module';
 import { AppDefaultViewComponent } from './components/app-default-view/app-default-view.component';
 import { LoginByKSComponent } from './components/app-actions/login-by-ks.component';
+import { AuthenticatorComponent } from './components/app-actions/authenticator.component';
 import { NewReplaceVideoUploadModule } from 'app-shared/kmc-shell/new-replace-video-upload/new-replace-video-upload.module';
 import { RestorePasswordComponent } from './components/app-actions/restore-password.component';
 import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
@@ -108,6 +98,16 @@ import { PersistLoginByKsComponent } from './components/app-actions/persist-logi
 import { ColumnsResizeManagerModule } from 'app-shared/kmc-shared/columns-resize-manager';
 import { CaptionRequestAppModule } from '../applications/caption-request-app/caption-request-app.module';
 import { NewEntryCreateFromUrlModule } from 'app-shared/kmc-shell/new-entry-create-from-url/new-entry-create-from-url.module';
+import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { ConfirmationService } from 'primeng/api';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { CheckboxModule } from 'primeng/checkbox';
+import { GrowlModule } from 'primeng/growl';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { MenuModule } from 'primeng/menu';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -115,7 +115,8 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
 
     return  {
         endpointUrl: getKalturaServerUri(),
-        clientTag: 'kmcng'
+        clientTag: 'kmcng',
+        chunkFileSize: 5 * 1024 * 1024
     };
 }
 
@@ -126,6 +127,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     BrowserModule,
     BrowserAnimationsModule,
     ButtonModule,
+    MenuModule,
     CommonModule,
     ConfirmDialogModule,
     DropdownModule,
@@ -188,11 +190,14 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       AppDefaultViewComponent,
     DashboardComponent,
     AppMenuComponent,
+    MultiAccountComponent,
     AppMenuContentComponent,
     LoginComponent,
+    AuthenticationFormComponent,
     ErrorComponent,
     UserSettingsComponent,
     LoginFormComponent,
+    SsoFormComponent,
     PasswordExpiredFormComponent,
     ForgotPasswordFormComponent,
     InvalidLoginHashFormComponent,
@@ -201,6 +206,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     ChangelogComponent,
     ChangelogContentComponent,
     LoginByKSComponent,
+      AuthenticatorComponent,
       RestorePasswordComponent,
       NotFoundPageComponent,
       RestorePasswordFormComponent,

@@ -10,7 +10,7 @@ import {CategoriesSearchService} from 'app-shared/content-shared/categories/cate
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { Unsubscribable } from 'rxjs';
 import { DatePipe } from 'app-shared/kmc-shared/date-format/date.pipe';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 
 export interface TagItem {
     type: string;

@@ -1,18 +1,16 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import {EntriesListComponent} from 'app-shared/content-shared/entries/entries-list/entries-list.component';
-import {BrowserService, NewEntryUploadFile} from 'app-shared/kmc-shell';
-import {EntriesStore} from 'app-shared/content-shared/entries/entries-store/entries-store.service';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {EntriesTableColumns} from 'app-shared/content-shared/entries/entries-table/entries-table.component';
-import {ContentEntriesAppService} from '../content-entries-app.service';
+import { EntriesListComponent } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
+import { BrowserService, NewEntryUploadFile } from 'app-shared/kmc-shell';
+import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
+import { AreaBlockerMessage, PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
+import { ContentEntriesAppService } from '../content-entries-app.service';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
-import {UploadManagement} from '@kaltura-ng/kaltura-common';
-import {TrackedFileStatuses} from '@kaltura-ng/kaltura-common';
-import {UpdateEntriesListEvent} from 'app-shared/kmc-shared/events/update-entries-list-event';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import { cancelOnDestroy, tag, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entries-list-event';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { EntriesListService } from './entries-list.service';
 import {
@@ -22,8 +20,7 @@ import {
     ReachPages
 } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
-import { ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { AnalyticsNewMainViewService, ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { ClearEntriesSelectionEvent } from 'app-shared/kmc-shared/events/clear-entries-selection-event';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 
@@ -36,8 +33,8 @@ import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shar
     ]
 })
 export class EntriesListHolderComponent implements OnInit, OnDestroy {
-  @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
-  @ViewChild('liveDashboard') _liveDashboard: PopupWidgetComponent;
+  @ViewChild(EntriesListComponent, { static: true }) public _entriesList: EntriesListComponent;
+  @ViewChild('liveDashboard', { static: true }) _liveDashboard: PopupWidgetComponent;
 
   public _entryId: string = null;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -64,12 +61,19 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       commandName: 'view',
       styleClass: ''
     },
-    {
-      label: this._appLocalization.get('applications.content.table.liveDashboard'),
-      commandName: 'liveDashboard',
-      styleClass: '',
-      disabled: !this._liveDashboardAppViewService.isAvailable()
-    },
+      this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD)
+          ? {
+              label: this._appLocalization.get('applications.content.table.realTimeAnalytics'),
+              commandName: 'realTimeAnalytics',
+              styleClass: '',
+              disabled: !this._analyticsNewMainViewService.isAvailable()
+          }
+          : {
+              label: this._appLocalization.get('applications.content.table.liveDashboard'),
+              commandName: 'liveDashboard',
+              styleClass: '',
+              disabled: !this._liveDashboardAppViewService.isAvailable()
+          },
       {
           label: this._appLocalization.get('applications.content.table.captionRequest'),
           commandName: 'captionRequest'
@@ -94,6 +98,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               private _contentEntriesAppService: ContentEntriesAppService,
               private _contentEntriesMainViewService: ContentEntriesMainViewService,
               private _reachAppViewService: ReachAppViewService,
+              private _analyticsNewMainViewService: AnalyticsNewMainViewService,
               private _liveDashboardAppViewService: LiveDashboardAppViewService) {
       _appEvents.event(ClearEntriesSelectionEvent)
           .pipe(cancelOnDestroy(this))
@@ -158,8 +163,17 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       case 'liveDashboard':
         if (entry && entry.id) {
             this._entriesList.clearSelection();
+            this._entryId = entry.id;
+            this._liveDashboard.open();
+        }
+        break;
+      case 'realTimeAnalytics':
+        if (entry && entry.id) {
+          this._entriesList.clearSelection();
           this._entryId = entry.id;
-          this._liveDashboard.open();
+            if (this._analyticsNewMainViewService.isAvailable()) {
+                this._router.navigate(['analytics/entry-live'], { queryParams: { id: this._entryId }});
+            }
         }
         break;
 

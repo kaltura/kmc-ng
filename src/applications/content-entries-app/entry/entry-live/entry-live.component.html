@@ -2,7 +2,11 @@
   <div class="kLive">
     <p class="kTitle">{{'applications.content.entryDetails.live.live' | translate}}</p>
     <div class="kButtons">
-      <button pButton icon="kIconstatistic" [disabled]="!_widgetService._liveDashboardEnabled" class="kButtonDefault" (click)="liveDashboard.open()" label="{{'applications.content.entryDetails.live.liveDashboard' | translate}}"></button>
+      <button pButton icon="kIconstatistic" class="kButtonDefault"
+              *ngIf="!(_kmcPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD | kNgIfPermitted)"
+              [label]="'applications.content.entryDetails.live.liveDashboard' | translate"
+              [disabled]="!_widgetService._liveDashboardEnabled"
+              (click)="liveDashboard.open()"></button>
     </div>
     <div class="kLiveDetails">
 
@@ -53,6 +57,18 @@
             <kCopyToClipboard class="kIcon" [text]="_widgetService.data?.secondaryRtspBroadcastingUrl.replace('%i','1')" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
           </div>
         </div>
+
+          <div *ngIf="_kmcPermissions.FEATURE_SIP | kNgIfPermitted">
+              <span class="kSubTitle">{{'applications.content.entryDetails.live.videoConferenceIntegration' | translate}}</span>
+              <div class="kRow">
+                  <span class="kLabels">{{'applications.content.entryDetails.live.sipUser' | translate}}</span>
+                  <ng-container *ngIf="_widgetService.data?.sipToken">
+                      <span>{{_widgetService.data?.sipToken.replace('%i','1')}}</span>
+                      <kCopyToClipboard class="kIcon" [text]="_widgetService.data?.sipToken.replace('%i','1')" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
+                  </ng-container>
+                  <span *ngIf="!_widgetService.data?.sipToken">{{'applications.content.entryDetails.live.noSipUser' | translate}}</span>
+              </div>
+          </div>
 
         <div>
           <span class="kSubTitle">{{'applications.content.entryDetails.live.config' | translate}}</span>

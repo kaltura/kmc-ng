@@ -35,7 +35,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   @Input() media: KalturaPlaylist | KalturaMediaEntry;
 
-  @ViewChild('previewIframe') previewIframe: ElementRef;
+  @ViewChild('previewIframe', { static: false }) previewIframe: ElementRef;
 
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -55,6 +55,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   public _previewForm: FormGroup;
   public _selectedPlayerVersion = 2;
+  public _showPlayer = true;
 
   private generator: any;
   private _previewLink = null;
@@ -108,7 +109,11 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
               this.createPreviewLink();
           }
       }
-      this.showPreview();
+      this._showPlayer = false; // remove iframe from DOM to invoke refresh
+      setTimeout(() => {        // use a timeout to ivoke iframe content refresh
+          this._showPlayer = true;
+          this.showPreview();
+      }, 0);
     });
   }
 
@@ -405,11 +410,13 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private showPreview(){
-    const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {margin: 0 auto; padding-top: 20px; text-align: center; } object, div { margin: 0 auto; }</style>';
-    let newDoc = this.previewIframe.nativeElement.contentDocument;
-    newDoc.open();
-    newDoc.write('<!doctype html><html><head>' + style + '</head><body><div id="framePlayerContainer">' + this._generatedPreviewCode + '</div></body></html>');
-    newDoc.close();
+      setTimeout(() => { // use a timeout to allow the iframe to render before accessing its native element
+          const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {margin: 0 auto; padding-top: 20px; text-align: center; } object, div { margin: 0 auto; }</style>';
+          let newDoc = this.previewIframe.nativeElement.contentDocument;
+          newDoc.open();
+          newDoc.write('<!doctype html><html><head>' + style + '</head><body><div id="framePlayerContainer">' + this._generatedPreviewCode + '</div></body></html>');
+          newDoc.close();
+      }, 0);
   }
 
   public copyEmbedCode(el):void{

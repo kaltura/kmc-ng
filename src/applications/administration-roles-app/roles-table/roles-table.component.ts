@@ -9,11 +9,12 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
-import {Menu, MenuItem} from 'primeng/primeng';
+import { Menu } from 'primeng/menu';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {KalturaUserRole} from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'kRolesTable',
@@ -41,7 +42,7 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   @Output() actionSelected = new EventEmitter<any>();
 
-  @ViewChild('actionsmenu') private _actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: true }) private _actionsMenu: Menu;
 
   private _deferredRoles: KalturaUserRole[];
 

@@ -18,7 +18,7 @@
     font-weight: bold;
   }
 
-  /deep/ {
+  ::ng-deep {
 
     .kRow {
       display: flex;
@@ -65,7 +65,7 @@
 
 }
 
-:host /deep/ {
+:host ::ng-deep {
   .kControl, k-prime-control {
     width:100%;
     max-width: 500px;
@@ -76,7 +76,7 @@
   }
 }
 
-:host /deep/ kautocomplete {
+:host ::ng-deep kautocomplete {
   .ui-state-disabled {
     background-color: $kGrayscale5;
   }
@@ -87,6 +87,6 @@
   }
 }
 
-:host /deep/ .ui-autocomplete {
+:host ::ng-deep .ui-autocomplete {
   width: 100%;
 }

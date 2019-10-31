@@ -9,7 +9,7 @@ export const routing: Route[] = [
     },
     {
         path: 'liveAnalytics',
-        loadChildren: '../../applications/analytics-live-app/analytics-live-app.module#AnalyticsLiveAppModule'
+        loadChildren: () => import('../../applications/analytics-live-app/analytics-live-app.module').then(m => m.AnalyticsLiveAppModule)
     },
     {
         path: ':group',

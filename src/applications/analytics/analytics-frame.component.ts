@@ -1,17 +1,17 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, Renderer2 } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, Renderer2, Input } from '@angular/core';
 import { Router, NavigationEnd, Params } from '@angular/router';
 import { AppAuthentication } from 'shared/kmc-shell/index';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { Location } from '@angular/common';
 import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
     selector: 'kAnalyticsFrame',
-    template: '<span *ngIf="!_initialized" class="kLoading">Loading...</span><iframe #analyticsFrame frameborder="0px" [src]="_url | safe"></iframe>',
+    template: '<span *ngIf="!_initialized" class="kLoading">Loading...</span><iframe #analyticsFrame allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0px" [src]="_url | safe"></iframe>',
     styles: [
         ':host { display: block; width: 100%; height: 100%; }',
         'iframe { width: 100%; height: 100%; border: 0px; transition: height 0.3s; }',
@@ -21,7 +21,14 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 })
 export class AnalyticsFrameComponent implements OnInit, OnDestroy {
 
-    @ViewChild('analyticsFrame') analyticsFrame: ElementRef;
+    @ViewChild('analyticsFrame', { static: true}) analyticsFrame: ElementRef;
+
+    @Input() set multiAccount(val: string) {
+        if (val && val !== this._multiAccount) {
+            this._multiAccount = val;
+            this.sendMessageToAnalyticsApp({'messageType': 'updateMultiAccount', payload: { multiAccount:  this._multiAccount === 'allAccounts' }});
+        }
+    }
     public _windowEventListener = null;
     public _url = null;
     public _initialized = false;
@@ -29,6 +36,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     private _currentAppUrl: string;
     private _lastQueryParams: { [key: string]: string }[] = null;
     private _analyticsDefaultPage = '/analytics/engagement';
+    private _multiAccount: string = null;
 
     constructor(private appAuthentication: AppAuthentication,
                 private logger: KalturaLogger,
@@ -43,11 +51,19 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             .subscribe((event) => {
                 if (event instanceof NavigationEnd)  {
                     const { url, queryParams } = this._browserService.getUrlWithoutParams(event.urlAfterRedirects);
+
+                    // if it's a live entry and no permissions show warning
+                    if (url.indexOf('entry-live') !== -1 && !this._permissions.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD)) {
+                        this._browserService.handleUnpermittedAction(true);
+                        return;
+                    }
+
                     if (this._currentAppUrl !== url) {
                         this.updateLayout(window.innerHeight - 54);
                         this._currentAppUrl = url;
                         if (this._initialized) {
-                            this.sendMessageToAnalyticsApp({'messageType': 'navigate', payload: { url }});
+                            const prevRoute = this._browserService.previousRoute ? this._browserService.previousRoute.url : null;
+                            this.sendMessageToAnalyticsApp({'messageType': 'navigate', payload: { url, queryParams, prevRoute }});
                             this.sendMessageToAnalyticsApp({'messageType': 'updateFilters', payload: { queryParams }});
                         } else {
                             this._lastQueryParams = queryParams;
@@ -80,6 +96,12 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         // set analytics config
+        const multiAccountAnalytics = this._browserService.getFromLocalStorage('multiAccountAnalytics');
+        let multiAccountAnalyticsFlag = multiAccountAnalytics && multiAccountAnalytics === 'allAccounts' ? 'allAccounts' : 'parentOnly';
+        if (!this._permissions.hasPermission(KMCPermissions.FEATURE_MULTI_ACCOUNT_ANALYTICS)){
+            multiAccountAnalyticsFlag = 'parentOnly';
+        }
+
         const config = {
             kalturaServer: {
                 uri : serverConfig.kalturaServer.uri,
@@ -90,8 +112,16 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             ks: this.appAuthentication.appUser.ks,
             pid: this.appAuthentication.appUser.partnerId,
             locale: 'en',
+            liveEntryUsersReports: this._browserService.getFromLocalStorage('kmc_analytics_live_entry_users_reports') || 'all',
+            dateFormat: this._browserService.getFromLocalStorage('kmc_date_format') || 'month-day-year',
+            live: {
+                "pollInterval": 30,
+                "healthNotificationsCount": 50
+            },
+            multiAccount: multiAccountAnalyticsFlag === 'allAccounts',
             permissions: {
-                lazyLoadCategories: this._permissions.hasPermission(KMCPermissions.DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD)
+                lazyLoadCategories: this._permissions.hasPermission(KMCPermissions.DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD),
+                enableLiveViews: this._permissions.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD),
             }
         };
 
@@ -115,8 +145,9 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                 this.sendMessageToAnalyticsApp({'messageType': 'init', 'payload': config });
             };
             if (postMessageData.messageType === 'analytics-init-complete') {
+                const prevRoute = this._browserService.previousRoute ? this._browserService.previousRoute.url : null;
                 this._initialized = true;
-                this.sendMessageToAnalyticsApp({'messageType': 'navigate', 'payload': { 'url': this._lastNav }});
+                this.sendMessageToAnalyticsApp({'messageType': 'navigate', 'payload': { 'url': this._lastNav, 'queryParams': this._lastQueryParams, 'prevRoute': prevRoute }});
                 this.sendMessageToAnalyticsApp({'messageType': 'updateFilters', 'payload': { 'queryParams': this._lastQueryParams }});
                 this._lastNav = '';
                 this._lastQueryParams = null;
@@ -136,7 +167,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             if (postMessageData.messageType === 'scrollTo') {
                 this._scrollTo(postMessageData.payload);
             }
-            if (postMessageData.messageType === 'entryNavigateBack') {
+            if (postMessageData.messageType === 'navigateBack') {
                 this._navigateBack();
             }
             if (postMessageData.messageType === 'modalOpened') {
@@ -144,6 +175,9 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             }
             if (postMessageData.messageType === 'modalClosed') {
                 this._modalToggle(false);
+            }
+            if (postMessageData.messageType === 'updateAuthLiveUsersReports') {
+                this._updateLiveEntryUsersReports(postMessageData.payload);
             }
         };
         this._addPostMessagesListener();
@@ -204,4 +238,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
         window.removeEventListener('message', this._windowEventListener);
     }
 
+    private _updateLiveEntryUsersReports(value: string): void {
+        this._browserService.setInLocalStorage('kmc_analytics_live_entry_users_reports', value);
+    }
 }

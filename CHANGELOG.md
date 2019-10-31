@@ -1,3 +1,164 @@
+<a name="5.18.0"></a>
+# [5.18.0](https://github.com/kaltura/kmc-ng/compare/v5.17.0...v5.18.0) (2019-10-07)
+
+
+### Bug Fixes
+
+* **content/entry:** open live analytics for manual live entries ([614c63e](https://github.com/kaltura/kmc-ng/commit/614c63e))
+
+
+### Features
+
+* Upgrade to Angular 8 ([#853](https://github.com/kaltura/kmc-ng/issues/853)) ([82e506c](https://github.com/kaltura/kmc-ng/commit/82e506c))
+* Add the ability to toggle captions ([#869](https://github.com/kaltura/kmc-ng/issues/869)) ([6319b3d](https://github.com/kaltura/kmc-ng/commit/6319b3d))
+
+
+
+<a name="5.17.0"></a>
+# [5.17.0](https://github.com/kaltura/kmc-ng/compare/v5.16.1...v5.17.0) (2019-09-19)
+
+
+### Bug Fixes
+
+* **login:** direct users to login with SSO page ([22e9505](https://github.com/kaltura/kmc-ng/commit/22e9505))
+
+
+### Features
+
+* **administration/users:** add user analytics drill-down action ([#862](https://github.com/kaltura/kmc-ng/issues/862)) ([035e7e1](https://github.com/kaltura/kmc-ng/commit/035e7e1))
+
+
+<a name="5.16.1"></a>
+## [5.16.1](https://github.com/kaltura/kmc-ng/compare/v5.16.0...v5.16.1) (2019-09-15)
+
+
+### Bug Fixes
+
+* **content/syndication:** select default English language for iTunes syndication feeds ([b9b36a7](https://github.com/kaltura/kmc-ng/commit/b9b36a7))
+* **settings/transcoding:** make flavors checkboxes selectable ([#867](https://github.com/kaltura/kmc-ng/issues/867)) ([bf08b6e](https://github.com/kaltura/kmc-ng/commit/bf08b6e))
+
+
+
+<a name="5.16.0"></a>
+# [5.16.0](https://github.com/kaltura/kmc-ng/compare/v5.15.0...v5.16.0) (2019-09-08)
+
+
+### Bug Fixes
+
+* analytics navigation approach ([#864](https://github.com/kaltura/kmc-ng/issues/864)) ([d2baea7](https://github.com/kaltura/kmc-ng/commit/d2baea7))
+
+
+### Features
+
+* Support SSO login ([#866](https://github.com/kaltura/kmc-ng/issues/866)) ([51156ee](https://github.com/kaltura/kmc-ng/commit/51156ee))
+
+
+
+<a name="5.15.0"></a>
+# [5.15.0](https://github.com/kaltura/kmc-ng/compare/v5.14.0...v5.15.0) (2019-09-01)
+
+
+### Bug Fixes
+
+* Multi account menu style fixes ([#861](https://github.com/kaltura/kmc-ng/issues/861)) ([d6b823b](https://github.com/kaltura/kmc-ng/commit/d6b823b))
+
+
+### Features
+
+* **content/drop-folders:** Add drop folders filter by folder name ([#863](https://github.com/kaltura/kmc-ng/issues/863)) ([fffa4c4](https://github.com/kaltura/kmc-ng/commit/fffa4c4))
+
+
+
+<a name="5.14.0"></a>
+# [5.14.0](https://github.com/kaltura/kmc-ng/compare/v5.13.1...v5.14.0) (2019-08-25)
+
+
+### Bug Fixes
+
+* **content/entry:** In scheduling tab: display entry end date even if entry start date is not specified ([45985ea](https://github.com/kaltura/kmc-ng/commit/45985ea))
+* **entries/filters:** fix refine filter custom scheduling date picker behavior ([d231b8e](https://github.com/kaltura/kmc-ng/commit/d231b8e))
+* **content/entries:** Load thumbnails restricted by KS
+
+
+### Features
+
+* **analytics:** Add multi-account analytics ([#860](https://github.com/kaltura/kmc-ng/issues/860)) ([5def1a0](https://github.com/kaltura/kmc-ng/commit/5def1a0))
+
+
+
+<a name="5.13.1"></a>
+## [5.13.1](https://github.com/kaltura/kmc-ng/compare/v5.13.0...v5.13.1) (2019-08-01)
+
+
+### Bug Fixes
+
+* **entries/metadata:** Fix custom metadata search in refine filter ([#858](https://github.com/kaltura/kmc-ng/issues/858)) ([8f16be3](https://github.com/kaltura/kmc-ng/commit/8f16be3))
+
+
+
+<a name="5.13.0"></a>
+# [5.13.0](https://github.com/kaltura/kmc-ng/compare/v5.12.1...v5.13.0) (2019-07-28)
+
+
+### Features
+
+* **entry-live:** add SIP user support for entry drill-down live tab ([#857](https://github.com/kaltura/kmc-ng/issues/857)) ([a2ff592](https://github.com/kaltura/kmc-ng/commit/a2ff592))
+
+
+
+<a name="5.12.1"></a>
+## [5.12.1](https://github.com/kaltura/kmc-ng/compare/v5.12.0...v5.12.1) (2019-07-23)
+
+
+### Bug Fixes
+
+* **entry/preview:** pass admin ks to player ([0cc2566](https://github.com/kaltura/kmc-ng/commit/0cc2566))
+* **settings/transcoding-profiles:** allow saving new profiles ([b813909](https://github.com/kaltura/kmc-ng/commit/b813909))
+
+
+
+<a name="5.12.0"></a>
+# [5.12.0](https://github.com/kaltura/kmc-ng/compare/v5.11.0...v5.12.0) (2019-07-11)
+
+
+### Bug Fixes
+
+* **analytics:** allow real-time analytics player to toggle full screen ([fc2483e](https://github.com/kaltura/kmc-ng/commit/fc2483e))
+* Fix caption request not working on Mac Safari ([b4c4461](https://github.com/kaltura/kmc-ng/commit/b4c4461))
+* **entries/bulk-actions:** prevent app crash on bulk edit ([#852](https://github.com/kaltura/kmc-ng/issues/852)) ([67c3172](https://github.com/kaltura/kmc-ng/commit/67c3172))
+* **entry/details:** hide old analytics link if not available ([#849](https://github.com/kaltura/kmc-ng/issues/849)) ([b4d77bb](https://github.com/kaltura/kmc-ng/commit/b4d77bb))
+* **entry/live:** update go live button status upon polling ([#850](https://github.com/kaltura/kmc-ng/issues/850)) ([2ce5741](https://github.com/kaltura/kmc-ng/commit/2ce5741))
+* **login:** Clear error message after restoring password fails ([bfee611](https://github.com/kaltura/kmc-ng/commit/bfee611))
+* **preview:** support DRM playback in all KMC preview players ([e3d1dcc](https://github.com/kaltura/kmc-ng/commit/e3d1dcc))
+* **settings/my-user-settings:** remove email edit option ([a7bd6a1](https://github.com/kaltura/kmc-ng/commit/a7bd6a1))
+* **settings/transcoding-settings:** prevent removal of default flavorParamId when saving profile flavors list ([27ac9b8](https://github.com/kaltura/kmc-ng/commit/27ac9b8))
+* **share & embed:** Refresh player when switching embed types to properly render thumbnail embed ([#847](https://github.com/kaltura/kmc-ng/issues/847)) ([e0a0a0c](https://github.com/kaltura/kmc-ng/commit/e0a0a0c))
+* **upload:** update client lib to support minimumChunkSize specification when creating a new uploadToken ([537526e](https://github.com/kaltura/kmc-ng/commit/537526e))
+
+
+### Features
+
+* **analytics:** provide date format in analytics config ([#854](https://github.com/kaltura/kmc-ng/issues/854)) ([82d31f4](https://github.com/kaltura/kmc-ng/commit/82d31f4))
+* **entry(captions):** Support SCC caption type
+
+
+
+<a name="5.11.0"></a>
+# [5.11.0](https://github.com/kaltura/kmc-ng/compare/v5.10.0...v5.11.0) (2019-06-13)
+
+
+### Bug Fixes
+
+* **login:** fix update password to work when the user is not logged in ([03bc2ee](https://github.com/kaltura/kmc-ng/commit/03bc2ee))
+
+
+### Features
+
+* Real-time analytics ([#845](https://github.com/kaltura/kmc-ng/issues/845)) ([e9708e4](https://github.com/kaltura/kmc-ng/commit/e9708e4)), closes [#843](https://github.com/kaltura/kmc-ng/issues/843) [#842](https://github.com/kaltura/kmc-ng/issues/842)
+* Two factor authentication support ([#844](https://github.com/kaltura/kmc-ng/issues/844)) ([4b809f4](https://github.com/kaltura/kmc-ng/commit/4b809f4))
+
+
+
 <a name="5.10.0"></a>
 # [5.10.0](https://github.com/kaltura/kmc-ng/compare/v5.9.1...v5.10.0) (2019-05-29)
 

@@ -135,7 +135,7 @@
   }
 }
 
-:host /deep/ .kPlaylistRuleWrap {
+:host ::ng-deep .kPlaylistRuleWrap {
   .kEntries {
     min-width: auto;
     padding-top: 0;
@@ -155,7 +155,7 @@
   }
 }
 
-:host /deep/ .kOrderBy .ui-dropdown {
+:host ::ng-deep .kOrderBy .ui-dropdown {
   width: 100%;
 
   label {

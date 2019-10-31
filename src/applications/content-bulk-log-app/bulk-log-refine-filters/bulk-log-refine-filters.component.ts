@@ -9,7 +9,7 @@ import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
 import { RefineList } from '../bulk-log-store/bulk-log-refine-filters.service';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 
 
 const listOfFilterNames: (keyof BulkLogFilters)[] = [
@@ -40,7 +40,7 @@ export interface PrimeList {
 })
 export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChanges {
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
+  @ViewChild(ScrollToTopContainerComponent, { static: true }) _treeContainer: ScrollToTopContainerComponent;
   @ViewChildren(RefinePrimeTree) public _primeTreesActions: RefinePrimeTree[];
     @Input() refineFilters: RefineList[];
   private _primeListsMap: { [key: string]: PrimeList } = {};

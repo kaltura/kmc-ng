@@ -4,27 +4,6 @@ import {RouterModule} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {DetailsBarModule} from '@kaltura-ng/kaltura-ui';
 import {TagsModule} from '@kaltura-ng/kaltura-ui';
-import {
-    AccordionModule,
-    ButtonModule,
-    CalendarModule,
-    CheckboxModule,
-    ConfirmationService,
-    ConfirmDialogModule,
-    DropdownModule,
-    InputSwitchModule,
-    InputTextareaModule,
-    InputTextModule,
-    MenuModule,
-    MultiSelectModule,
-    OverlayPanelModule,
-    PaginatorModule,
-    RadioButtonModule,
-    SharedModule,
-    SpinnerModule,
-    TieredMenuModule,
-    TreeModule
-} from 'primeng/primeng';
 import {KMCShellModule} from 'app-shared/kmc-shell';
 
 import {routing} from './content-entries-app.routes';
@@ -56,6 +35,26 @@ import { AnalyticsLiveModule } from 'app-shared/kmc-shared/analytics-live/analyt
 import { KPTableModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { ClearableInputModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
+import { ToggleLiveComponent } from './entry/components/toggle-live/toggle-live.component';
+import { AccordionModule } from 'primeng/accordion';
+import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DropdownModule } from 'primeng/dropdown';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { InputTextModule } from 'primeng/inputtext';
+import { MenuModule } from 'primeng/menu';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { PaginatorModule } from 'primeng/paginator';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { SharedModule } from 'primeng/shared';
+import { SpinnerModule } from 'primeng/spinner';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { TreeModule } from 'primeng/tree';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ConfirmationService } from 'primeng/api';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 @NgModule({
   imports: [
@@ -112,6 +111,7 @@ import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.
     ContentEntriesComponent,
     EntryComponentsList,
     EntriesComponentsList,
+    ToggleLiveComponent,
   ],
   exports: [],
   providers: [

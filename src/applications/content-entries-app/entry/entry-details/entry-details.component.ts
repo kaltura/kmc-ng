@@ -4,7 +4,7 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { KalturaSourceType } from 'kaltura-ngx-client';
 import { KalturaMediaType } from 'kaltura-ngx-client';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { EntryDetailsWidget } from './entry-details-widget.service';
 
 export interface EntryDetailsKalturaMediaEntry extends KalturaMediaEntry {

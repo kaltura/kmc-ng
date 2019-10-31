@@ -86,12 +86,14 @@ export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
 			scheduleSettings = "scheduled";
 			this.schedulingForm.get('startDate').enable();
 			startDate = this.data.startDate;
-			if (this.data.endDate){
-				this.schedulingForm.get('endDate').enable();
-				enableEndDate = true;
-				endDate = this.data.endDate;
-			}
 		}
+		if (this.data && this.data.endDate){
+            scheduleSettings = "scheduled";
+            endDate = this.data.endDate;
+            enableEndDate = true;
+            this.schedulingForm.get('endDate').enable();
+        }
+
 		this.schedulingForm.reset({
 			scheduling: scheduleSettings,
 			startDate: startDate,

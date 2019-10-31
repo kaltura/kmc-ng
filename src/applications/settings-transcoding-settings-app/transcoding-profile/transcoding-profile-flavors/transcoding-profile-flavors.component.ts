@@ -12,8 +12,8 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
   providers: [KalturaLogger.createLogger('TranscodingProfileFlavorsComponent')]
 })
 export class TranscodingProfileFlavorsComponent implements OnInit, OnDestroy {
-  @ViewChild('editMediaProfileFlavor') _editMediaProfileFlavorPopup: PopupWidgetComponent;
-  @ViewChild('editLiveProfileFlavor') _editLiveProfileFlavorPopup: PopupWidgetComponent;
+  @ViewChild('editMediaProfileFlavor', { static: true }) _editMediaProfileFlavorPopup: PopupWidgetComponent;
+  @ViewChild('editLiveProfileFlavor', { static: true }) _editLiveProfileFlavorPopup: PopupWidgetComponent;
 
   public _selectedFlavor: KalturaFlavorParams;
 

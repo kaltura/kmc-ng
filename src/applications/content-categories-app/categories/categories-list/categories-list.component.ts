@@ -44,14 +44,14 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     public _selectedCategoryToMove: KalturaCategory;
     public _categoriesTotalCount: number = null;
     public _linkedEntries: { entryId: string }[] = [];
-    @ViewChild('moveCategory') moveCategoryPopup: PopupWidgetComponent;
-    @ViewChild('addNewCategory') addNewCategory: PopupWidgetComponent;
+    @ViewChild('moveCategory', { static: true }) moveCategoryPopup: PopupWidgetComponent;
+    @ViewChild('addNewCategory', { static: true }) addNewCategory: PopupWidgetComponent;
     public _categoriesLocked = false;
     public _categoriesUpdating = false;
     public _kmcPermissions = KMCPermissions;
 
 
-  @ViewChild('tags') private tags: StickyComponent;
+  @ViewChild('tags', { static: true }) private tags: StickyComponent;
 
     public _isBusy = false;
     public _blockerMessage: AreaBlockerMessage = null;

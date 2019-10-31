@@ -2,35 +2,44 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { BrowserService } from 'shared/kmc-shell';
 import { Observable } from 'rxjs';
-import { KalturaDropFolderFile } from 'kaltura-ngx-client';
-import { KalturaDropFolderFileStatus } from 'kaltura-ngx-client';
-import { KalturaClient } from 'kaltura-ngx-client';
-import { DropFolderListAction } from 'kaltura-ngx-client';
-import { KalturaDropFolderFilter } from 'kaltura-ngx-client';
-import { KalturaDropFolderOrderBy } from 'kaltura-ngx-client';
-import { KalturaDropFolderStatus } from 'kaltura-ngx-client';
-import { KalturaDropFolder } from 'kaltura-ngx-client';
-import { KalturaDropFolderContentFileHandlerConfig } from 'kaltura-ngx-client';
-import { KalturaDropFolderFileHandlerType } from 'kaltura-ngx-client';
-import { KalturaDropFolderContentFileHandlerMatchPolicy } from 'kaltura-ngx-client';
-import { KalturaDropFolderFileFilter } from 'kaltura-ngx-client';
-import { KalturaUtils } from '@kaltura-ng/kaltura-common';
-import { DropFolderFileListAction } from 'kaltura-ngx-client';
-import { KalturaFilterPager } from 'kaltura-ngx-client';
-import { BaseEntryGetAction } from 'kaltura-ngx-client';
-import { DatesRangeAdapter, DatesRangeType, ListTypeAdapter } from '@kaltura-ng/mc-shared';
-import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared';
+import {
+    BaseEntryGetAction,
+    DropFolderFileDeleteAction,
+    DropFolderFileListAction,
+    DropFolderListAction,
+    KalturaClient,
+    KalturaDropFolder,
+    KalturaDropFolderContentFileHandlerConfig,
+    KalturaDropFolderContentFileHandlerMatchPolicy,
+    KalturaDropFolderFile,
+    KalturaDropFolderFileFilter,
+    KalturaDropFolderFileHandlerType,
+    KalturaDropFolderFileListResponse,
+    KalturaDropFolderFileStatus,
+    KalturaDropFolderFilter,
+    KalturaDropFolderOrderBy,
+    KalturaDropFolderStatus,
+    KalturaFilterPager
+} from 'kaltura-ngx-client';
+import { cancelOnDestroy, KalturaUtils } from '@kaltura-ng/kaltura-common';
+import {
+    AppLocalization,
+    DatesRangeAdapter,
+    DatesRangeType,
+    FiltersStoreBase,
+    GroupedListAdapter,
+    GroupedListType,
+    ListTypeAdapter,
+    NumberTypeAdapter,
+    StringTypeAdapter,
+    TypeAdaptersMapping
+} from '@kaltura-ng/mc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ISubscription } from 'rxjs/Subscription';
-import { NumberTypeAdapter } from '@kaltura-ng/mc-shared';
-import { StringTypeAdapter } from '@kaltura-ng/mc-shared';
-import { KalturaDropFolderFileListResponse } from 'kaltura-ngx-client';
-import { DropFolderFileDeleteAction } from 'kaltura-ngx-client';
 import { subApplicationsConfig } from 'config/sub-applications';
-import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { serverConfig } from 'config/server';
 import { ContentDropFoldersMainViewService } from 'app-shared/kmc-shared/kmc-views';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { globalConfig } from 'config/global';
 
 const localStoragePageSizeKey = 'dropFolders.list.pageSize';
 
@@ -40,13 +49,14 @@ export enum SortDirection {
 }
 
 export interface DropFoldersFilters {
-  pageSize: number,
-  pageIndex: number,
-  freeText: string,
-  createdAt: DatesRangeType,
-  status: string[],
-  sortBy: string,
-  sortDirection: number
+    pageSize: number;
+    pageIndex: number;
+    freeText: string;
+    createdAt: DatesRangeType;
+    status: string[];
+    sortBy: string;
+    sortDirection: number;
+    dropFoldersNames: GroupedListType<string>;
 }
 
 @Injectable()
@@ -166,7 +176,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
   }
 
   private _buildQueryRequest(reloadFolders: boolean): Observable<KalturaDropFolderFileListResponse> {
-    return this._loadDropFoldersList(reloadFolders)
+    return this.loadDropFoldersList(reloadFolders)
       .switchMap(({ dropFoldersList, error }) => {
         if (!dropFoldersList.length || error) {
           this._browserService.alert({
@@ -231,6 +241,10 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
           );
         }
 
+        if (data.dropFoldersNames && data.dropFoldersNames['dropFolders'] && data.dropFoldersNames['dropFolders'].length) {
+            filter.dropFolderIdIn = data.dropFoldersNames['dropFolders'].join(',');
+        }
+
         // build the request
         return <any>this._kalturaServerClient
           .request(new DropFolderFileListAction({ filter, pager }))
@@ -240,7 +254,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
                 if (object.dropFolderId === folder.id) {
                   object.dropFolderId = <any>folder.name;
                 }
-              })
+              });
             });
 
             return response;
@@ -257,7 +271,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
     }
   }
 
-  private _loadDropFoldersList(reloadFolders: boolean): Observable<{ dropFoldersList: KalturaDropFolder[], error?: string }> {
+  public loadDropFoldersList(reloadFolders: boolean): Observable<{ dropFoldersList: KalturaDropFolder[], error?: string }> {
     if (!reloadFolders && this._dropFoldersList$) {
       return this._dropFoldersList$;
     }
@@ -266,6 +280,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
 
     this._dropFoldersList$ = this._kalturaServerClient
       .request(new DropFolderListAction({
+        pager: new KalturaFilterPager({ pageSize: globalConfig.client.views.dropFolders.maxItems }),
         filter: new KalturaDropFolderFilter({
           orderBy: KalturaDropFolderOrderBy.createdAtDesc.toString(),
           statusEqual: KalturaDropFolderStatus.enabled
@@ -299,7 +314,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
             }
           });
 
-          return { dropFoldersList, error: null }
+          return { dropFoldersList, error: null };
         } else {
           return {
               dropFoldersList: [],
@@ -330,6 +345,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
       status: [],
       sortBy: 'createdAt',
       sortDirection: SortDirection.Desc,
+      dropFoldersNames: {},
     };
   }
 
@@ -342,6 +358,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
       status: new ListTypeAdapter<string>(),
       sortBy: new StringTypeAdapter(),
       sortDirection: new NumberTypeAdapter(),
+      dropFoldersNames: new GroupedListAdapter<string>(),
     };
   }
 

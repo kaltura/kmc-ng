@@ -3,11 +3,11 @@ import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { CategoriesStatusMonitorService, CategoriesStatus } from '../../categories-status/categories-status-monitor.service';
 import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaEntryStatus, KalturaMediaEntry, KalturaMediaType, KalturaSourceType } from 'kaltura-ngx-client';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { Menu, MenuItem } from 'primeng/primeng';
+import { Menu } from 'primeng/menu';
 import { EntriesRefineFiltersService,
     RefineGroup } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 
@@ -16,6 +16,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ViewCategoryEntriesService } from 'app-shared/kmc-shared/events/view-category-entries';
 import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { MenuItem } from 'primeng/api';
 
 export interface CustomMenuItem extends MenuItem {
     metadata?: any;
@@ -38,8 +39,8 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     @Input() defaultFilters: Partial<EntriesFilters>;
     @Input() showEnforcedFilters = false;
 
-    @ViewChild('tags') private tags: StickyComponent;
-    @ViewChild('actionsmenu') private actionsMenu: Menu;
+    @ViewChild('tags', { static: true }) private tags: StickyComponent;
+    @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
 
 
   @Output() onActionsSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
@@ -115,12 +116,14 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         const isViewCommand = commandName === 'view';
         const isKalturaLive = sourceType === KalturaSourceType.liveStream;
         const isLiveDashboardCommand = commandName === 'liveDashboard';
+        const isRealTimeAnalyticsCommand = commandName === 'realTimeAnalytics';
         const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
         const isCaptionRequestCommand = commandName === 'captionRequest';
         return !(
             (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
             (!isReadyStatus && isLiveStreamFlash && isViewCommand) || // hide if trying to view live that isn't ready
             (isLiveDashboardCommand && !isKalturaLive) || // hide live-dashboard menu item for entry that isn't kaltura live
+            (isRealTimeAnalyticsCommand && !isKalturaLive) || // hide real time analytics menu item for entry that isn't kaltura live
             cannotDeleteEntry ||
             (isCaptionRequestCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry })) // hide caption request if not audio/video or if it is then if not ready or it's forbidden by permission
         );

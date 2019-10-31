@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { KalturaClient, KalturaFilterPager, KalturaUser, KalturaUserFilter, UserListAction } from 'kaltura-ngx-client';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { AreaBlockerMessage, PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
@@ -89,9 +89,7 @@ export class BulkAddViewersComponent implements OnInit, OnDestroy, AfterViewInit
                     const suggestions = [];
                     (result.objects || []).forEach(suggestedUser => {
                         suggestedUser['__tooltip'] = suggestedUser.id;
-                        const isSelectable = !this.users.find(user => {
-                            return user.id === suggestedUser.id;
-                        });
+                        const isSelectable = !(this.users || []).find(user => user.id === suggestedUser.id);
                         suggestions.push({
                             name: `${suggestedUser.screenName} (${suggestedUser.id})`,
                             item: suggestedUser,

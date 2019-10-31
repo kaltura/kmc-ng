@@ -11,12 +11,12 @@ import { KMCFileCreationType } from '../upload-settings/upload-settings.componen
   styleUrls: ['./upload-button.component.scss'],
 })
 export class UploadButtonComponent {
-  @ViewChild('uploadmenu') uploadMenuPopup: PopupWidgetComponent;
-  @ViewChild('uploadsettings') uploadSettingsPopup: PopupWidgetComponent;
-  @ViewChild('createLive') createLivePopup: PopupWidgetComponent;
-  @ViewChild('prepareEntry') prepareEntryComponent: PrepareEntryComponent;
-  @ViewChild('bulkuploadmenu') bulkUploadMenu: PopupWidgetComponent;
-  @ViewChild('createFromYoutube') createFromYoutube: PopupWidgetComponent;
+  @ViewChild('uploadmenu', { static: true }) uploadMenuPopup: PopupWidgetComponent;
+  @ViewChild('uploadsettings', { static: true }) uploadSettingsPopup: PopupWidgetComponent;
+  @ViewChild('createLive', { static: true }) createLivePopup: PopupWidgetComponent;
+  @ViewChild('prepareEntry', { static: true }) prepareEntryComponent: PrepareEntryComponent;
+  @ViewChild('bulkuploadmenu', { static: true }) bulkUploadMenu: PopupWidgetComponent;
+  @ViewChild('createFromYoutube', { static: true }) createFromYoutube: PopupWidgetComponent;
 
     public _disabled = true;
     public _creationTypes = KMCFileCreationType;

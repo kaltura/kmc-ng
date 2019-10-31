@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
 import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { UploadMonitorStatuses } from './upload-monitor.component';
 import { KalturaDropFolder } from 'kaltura-ngx-client';
@@ -239,10 +239,10 @@ export class DropFoldersMonitorService implements OnDestroy {
   private _startPolling(): void {
     if (this._poolingState !== 'running') {
       this._poolingState = 'running';
-      this._logger.info(`start server polling every 10 seconds to sync drop folders upload status`);
+      this._logger.info(`start server polling every 30 seconds to sync drop folders upload status`);
 
 
-      this._kmcServerPolls.register<KalturaDropFolderFileListResponse>(10, this._dropFolderChangesFactory)
+      this._kmcServerPolls.register<KalturaDropFolderFileListResponse>(30, this._dropFolderChangesFactory)
         .pipe(cancelOnDestroy(this))
         .subscribe((response) => {
           if (response.error) {

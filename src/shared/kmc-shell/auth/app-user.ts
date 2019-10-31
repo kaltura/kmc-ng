@@ -1,5 +1,4 @@
-
-import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaPartnerAuthenticationType } from "kaltura-ngx-client";
 
 export interface PartnerInfo {
     partnerId: number;
@@ -8,6 +7,7 @@ export interface PartnerInfo {
     landingPage: string;
     adultContent: boolean;
     publisherEnvironmentType: number;
+    authenticationType: KalturaPartnerAuthenticationType;
 }
 
 export enum PartnerPackageTypes {

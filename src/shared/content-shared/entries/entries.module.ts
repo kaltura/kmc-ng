@@ -1,19 +1,6 @@
 import {ModuleWithProviders, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
-
-import {
-  ButtonModule,
-  CalendarModule,
-  CheckboxModule,
-  DropdownModule,
-  InputTextModule,
-  MenuModule,
-  PaginatorModule,
-  RadioButtonModule,
-  TieredMenuModule,
-  TreeModule
-} from 'primeng/primeng';
 import {TableModule} from 'primeng/table';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {LocalizationModule} from '@kaltura-ng/mc-shared';
@@ -44,6 +31,16 @@ import { LinkedEntriesAddEntriesComponent } from './link-entries-selector/linked
 import {LinkedEntriesComponent} from './link-entries-selector/linked-entries/linked-entries.component';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.module';
+import { TreeModule } from 'primeng/tree';
+import { DropdownModule } from 'primeng/dropdown';
+import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { CheckboxModule } from 'primeng/checkbox';
+import { MenuModule } from 'primeng/menu';
+import { PaginatorModule } from 'primeng/paginator';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { InputTextModule } from 'primeng/inputtext';
 
 @NgModule({
   imports: [

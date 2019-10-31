@@ -1,9 +1,9 @@
-import { Observable, of as ObservableOf, throwError as ObservableThrowError } from 'rxjs';
+import { Observable, of as ObservableOf } from 'rxjs';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { Title } from '@angular/platform-browser';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
-import { catchError, map, tap } from 'rxjs/internal/operators';
+import { catchError, map } from 'rxjs/internal/operators';
 
 
 export interface DetailsViewMetadata {

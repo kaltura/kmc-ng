@@ -36,7 +36,7 @@ export interface PrimeList {
 })
 export class ManageEndUserPermissionsRefineFiltersComponent implements OnInit, OnDestroy, OnChanges {
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
+  @ViewChild(ScrollToTopContainerComponent, { static: true }) _treeContainer: ScrollToTopContainerComponent;
     @Input() refineFilters: RefineList[];
   @ViewChildren(RefinePrimeTree)
   public _primeTreesActions: RefinePrimeTree[];

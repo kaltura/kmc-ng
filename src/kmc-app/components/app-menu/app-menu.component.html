@@ -12,7 +12,9 @@
                     </div>
                     <i class="k-analytics-logo" (click)="leftMenuConfig[0]?.open()"></i>
                 </div>
+
                 <div *ngFor="let item of leftMenuConfig">
+                    <kMultiAccountMenu *ngIf="menuID==='analytics' && _isMultiAccount && item.customMenuItemId==='analyticsMultiAccount'" style="width: 120px; height: 40px" (menuChange)="item.customMenuItemCallback($event)">account</kMultiAccountMenu>
                     <a class="kMenuLink" *ngIf="item.menuTitle.length && !item.icon"
                        [class.activeLink]="item === selectedMenuItem"
                        (click)="item.open()">

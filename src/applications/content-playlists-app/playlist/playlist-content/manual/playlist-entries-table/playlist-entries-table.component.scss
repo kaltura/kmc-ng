@@ -87,31 +87,31 @@
   }
 }
 
-:host /deep/ .selectionColumn {
+:host ::ng-deep .selectionColumn {
   width: 44px;
   padding-left: 14px!important;
 }
 
-:host /deep/ .ui-table .thumbnailColumn {
+:host ::ng-deep .ui-table .thumbnailColumn {
   width: 100px;
 }
 
-:host /deep/ .ui-table .mediaTypeColumn {
+:host ::ng-deep .ui-table .mediaTypeColumn {
   width: 80px;
   text-align: center;
 }
 
-:host /deep/ .ui-table .createdAtColumn {
+:host ::ng-deep .ui-table .createdAtColumn {
   width: 140px;
   text-align: center;
 }
 
-:host /deep/ .ui-table .durationColumn {
+:host ::ng-deep .ui-table .durationColumn {
   width: 100px;
   text-align: center;
 }
 
-:host /deep/ .ui-table .actionsColumn {
+:host ::ng-deep .ui-table .actionsColumn {
   overflow: visible;
   width: 80px;
 }
@@ -123,7 +123,7 @@
   flex-direction: column;
 }
 
-:host /deep/ p-table .stickyHeader{
+:host ::ng-deep p-table .stickyHeader{
   z-index: 10;
   display: table;
 }

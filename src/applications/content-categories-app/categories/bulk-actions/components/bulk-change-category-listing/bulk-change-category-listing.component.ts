@@ -6,7 +6,7 @@ import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { KalturaUser } from 'kaltura-ngx-client';

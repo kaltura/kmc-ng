@@ -1,0 +1,19 @@
+<div class="kLoginForm">
+  <div class="qrCode" [style.background-image]="qrCodeBase64"></div>
+
+    <div class="kSpinnerBkg" *ngIf="!qrCodeBase64 && !qrError">
+        <div class="k-spinner-animation kSpinnerAnim"></div>
+    </div>
+  <span class="qrCodeLabel">{{'app.login.login.qrCode' | translate}}</span>
+
+  <div class="kApps">
+     <div class="kDownloadBtn kApple" (click)="openLink('apple')"></div>
+     <div class="kDownloadBtn kGoogle" (click)="openLink('google')"></div>
+  </div>
+  <div>
+      <button class="kButtonDefault"
+                pButton (click)="_continue($event)"
+                [label]="'app.common.continue' | translate"></button>
+  </div>
+
+</div>

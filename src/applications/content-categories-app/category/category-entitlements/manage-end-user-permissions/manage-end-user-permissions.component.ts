@@ -55,7 +55,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
     public _tableBlockerMessage: AreaBlockerMessage = null;
     public _refineFilters: RefineList[];
 
-  @ViewChild('refinePopup') refinePopup: PopupWidgetComponent;
+  @ViewChild('refinePopup', { static: true }) refinePopup: PopupWidgetComponent;
 
   public _query = {
     freetext: '',

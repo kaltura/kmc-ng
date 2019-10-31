@@ -55,20 +55,20 @@
   flex-direction: column;
 }
 
-:host /deep/ p-table .ui-table-scrollable-body {
+:host ::ng-deep p-table .ui-table-scrollable-body {
   margin-bottom: 34px;
 }
 
-:host /deep/ p-table .stickyHeader {
+:host ::ng-deep p-table .stickyHeader {
   z-index: 10;
   display: table;
 }
 
-:host /deep/ .kSchemasTable tr.kProfileDisabled .ui-cell-data {
+:host ::ng-deep .kSchemasTable tr.kProfileDisabled .ui-cell-data {
   color: $kGrayscale4;
 }
 
-:host /deep/ p-table {
+:host ::ng-deep p-table {
     .ui-table .ui-table-thead > tr > th {
         border-left: 1px solid $kGrayscale6;
     }
