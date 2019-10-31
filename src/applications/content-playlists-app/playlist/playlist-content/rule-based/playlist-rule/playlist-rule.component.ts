@@ -50,6 +50,7 @@ export class PlaylistRuleComponent implements OnInit {
     ],
     'accessControlProfiles': [],
     'timeScheduling': [],
+    'youtubeVideo': false,
     'videoQuiz': false,
   };
 

@@ -214,6 +214,10 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
             filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
           }
 
+          if (data.youtubeVideo) {
+              // not supported by rulebased playlists, ignore it
+          }
+
           filter.limit = data.limits && data.limits > 0 && data.limits <= subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults
             ? data.limits
             : subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults;
@@ -290,6 +294,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
       categoriesMode,
       customMetadata: {},
       limits: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults,
+      youtubeVideo: false,
       videoQuiz: false,
     };
   }

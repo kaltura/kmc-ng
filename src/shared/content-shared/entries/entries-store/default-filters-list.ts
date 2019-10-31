@@ -18,6 +18,12 @@ export const DefaultFiltersList: DefaultFilterList[] = [
     ]
   },
     {
+        name: 'youtubeVideo',
+        label: 'Youtube Video',
+        value: true,
+        items: []
+    },
+    {
         name: 'videoQuiz',
         label: 'Video with Quiz',
         value: true,

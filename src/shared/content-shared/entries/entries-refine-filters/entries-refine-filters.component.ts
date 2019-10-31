@@ -24,15 +24,16 @@ const listOfFilterNames: (keyof EntriesFilters)[] = [
     'flavors',
     'distributions',
     'customMetadata',
-    'videoQuiz'
+    'youtubeVideo',
+    'videoQuiz',
 ];
 
 export interface PrimeListItem {
     label: string;
-    value: string;
     parent: PrimeListItem;
     listName: string;
     children: PrimeListItem[];
+    value: any;
 }
 
 export interface PrimeList {
@@ -175,6 +176,10 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
               });
           }
 
+          if (listName === 'youtubeVideo') {
+              this._syncYoutubeVideoMode(listData);
+          }
+
           if (listName === 'videoQuiz') {
               this._syncVideoQuizMode(listData);
           }
@@ -211,6 +216,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                     this._updateComponentState(changes);
                 }
             );
+    }
+
+    private _syncYoutubeVideoMode(listData: PrimeList): void {
+        const youtubeVideo = this._entriesStore.cloneFilter('youtubeVideo', false);
+        listData.selections = youtubeVideo ? [listData.items[0]] : [];
     }
 
     private _syncVideoQuizMode(listData: PrimeList): void {

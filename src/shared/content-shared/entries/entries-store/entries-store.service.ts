@@ -26,7 +26,7 @@ import { Subject } from 'rxjs/Subject';
 import { KalturaBaseEntry } from 'kaltura-ngx-client';
 import { KalturaMediaEntryFilter } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 export enum SortDirection {
   Desc = -1,
@@ -69,6 +69,7 @@ export interface EntriesFilters {
   categoriesMode: CategoriesModeType;
   customMetadata: GroupedListType<string>;
   limits: number;
+  youtubeVideo: boolean;
   videoQuiz: boolean;
 }
 
@@ -258,6 +259,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
       categoriesMode: new CategoriesModeAdapter(),
       customMetadata: new GroupedListAdapter<string>(),
       limits: new NumberTypeAdapter(),
+      youtubeVideo: new BooleanTypeAdapter(),
       videoQuiz: new BooleanTypeAdapter(),
     };
   }
