@@ -7,7 +7,7 @@ import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { LinkedEntriesControl } from 'app-shared/kmc-shared/dynamic-metadata-form/linked-entries-control';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common';
 
@@ -30,7 +30,7 @@ export class LinkedEntriesComponent implements OnInit, OnDestroy, ControlValueAc
   @Input() form: FormGroup;
   @Input() profileName: string;
 
-  @ViewChild('addEntries') entriesSelector: PopupWidgetComponent;
+  @ViewChild('addEntries', { static: true }) entriesSelector: PopupWidgetComponent;
 
   private _innerValue: string[] = [];
   private _selectionIdGenerator = new FriendlyHashId();

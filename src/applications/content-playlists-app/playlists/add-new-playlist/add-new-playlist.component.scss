@@ -86,13 +86,13 @@
   }
 }
 
-:host /deep/ .ui-radiobutton,
-:host /deep/.ui-chkbox {
+:host ::ng-deep .ui-radiobutton,
+:host ::ng-deep.ui-chkbox {
   margin-right: 14px;
 }
 
-:host /deep/ .ui-radiobutton-label,
-:host /deep/ .ui-chkbox-label {
+:host ::ng-deep .ui-radiobutton-label,
+:host ::ng-deep .ui-chkbox-label {
   font-size: 15px;
   font-weight: normal;
 }

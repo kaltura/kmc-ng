@@ -39,6 +39,8 @@ export interface KMCAppMenuItem {
     open?: () => void;
     openWithState?: Observable<{ opened: boolean }>;
     children?: KMCAppMenuItem[];
+    customMenuItemId?: string;
+    customMenuItemCallback?: (event) => void;
 }
 
 @Injectable()

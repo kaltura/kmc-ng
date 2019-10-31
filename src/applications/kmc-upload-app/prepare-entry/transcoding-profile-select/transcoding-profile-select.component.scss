@@ -46,7 +46,7 @@
   }
 }
 
-:host /deep/ {
+:host ::ng-deep {
   .ui-widget.ui-dropdown {
     width: 265px;
     font-size: 14px;

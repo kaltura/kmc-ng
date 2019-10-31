@@ -11,10 +11,11 @@ import {
 } from '@angular/core';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {KalturaCategory} from 'kaltura-ngx-client';
-import {Menu, MenuItem} from 'primeng/primeng';
+import { Menu } from 'primeng/menu';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { globalConfig } from 'config/global';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'kCategorySubcategoriesTable',
@@ -48,7 +49,7 @@ export class CategorySubcategoriesTableComponent implements OnInit, OnDestroy, A
   }
 
   @Output() onActionSelected = new EventEmitter<{ action: string, subcategory: KalturaCategory }>();
-  @ViewChild('actionsmenu') private actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
 
 
   constructor(private cdRef: ChangeDetectorRef, private _appLocalization: AppLocalization) {

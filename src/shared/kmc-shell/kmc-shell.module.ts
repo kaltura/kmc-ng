@@ -1,17 +1,16 @@
 import { ModuleWithProviders, NgModule, Optional, Self } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
-import { CheckboxModule, SharedModule } from 'primeng/primeng';
-
 import { AppShellService } from './providers/app-shell.service';
 import { BrowserService } from './providers/browser.service';
-import { AppContainerComponent } from './components/app-container/app-container.component';
-import { ReleaseNotesComponent } from './components/release-notes/release-notes.component';
-import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
+import { AppContainerComponent } from 'app-shared/kmc-shell/components';
+import { ReleaseNotesComponent } from 'app-shared/kmc-shell/components';
+import { ScrollToTopComponent } from 'app-shared/kmc-shell/components';
 import { EntryTypePipe } from 'app-shared/kmc-shell/pipes/entry-type.pipe';
 import { PageExitVerificationService, UploadPageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { PreventPasswordAutofillDirective } from 'app-shared/kmc-shell/directives/prevent-password-autofill.directive';
+import { CheckboxModule } from 'primeng/checkbox';
+import { SharedModule } from 'primeng/shared';
 
 @NgModule({
     imports: <any[]>[

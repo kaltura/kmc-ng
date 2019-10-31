@@ -26,7 +26,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntryDistributionSubmitDeleteAction } from 'kaltura-ngx-client';
 import { EntryDistributionDeleteAction } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaRequest } from 'kaltura-ngx-client';
 import { KalturaDistributionProfileActionStatus } from 'kaltura-ngx-client';
 import { FlavorParamsGetAction } from 'kaltura-ngx-client';

@@ -9,7 +9,7 @@
   form{
     height: 100%;
   }
-  /deep/ .kPopupWidget{
+  ::ng-deep .kPopupWidget{
       box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .24);
   }
   .kHeader{
@@ -145,7 +145,7 @@
           margin-top: 10px;
         }
 
-        /deep/ .kQRCodeCanvas img {
+        ::ng-deep .kQRCodeCanvas img {
           margin-left: -10px;
           width: 80px;
         }
@@ -212,7 +212,7 @@
 
 }
 
-:host /deep/ .kHeader p-dropdown{
+:host ::ng-deep .kHeader p-dropdown{
   .ui-dropdown{
     background: $kGrayscale1 !important;
     width: 380px !important;
@@ -254,7 +254,7 @@
     }
 }
 
-:host /deep/ .kPreview p-dropdown{
+:host ::ng-deep .kPreview p-dropdown{
   .ui-dropdown{
     width: 260px !important;
   }
@@ -263,7 +263,7 @@
   }
 }
 
-:host /deep/ p-radiobutton {
+:host ::ng-deep p-radiobutton {
 
   display: flex;
   margin-bottom: 18px;

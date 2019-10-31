@@ -133,7 +133,7 @@
         display: flex;
         align-items: center;
         padding-bottom: 2px;
-        width: 160px;
+        width: 140px;
         div{
             cursor: pointer;
             display: flex;
@@ -248,12 +248,12 @@
 }
 
 // prioritize sticky elements of header above other sticky elements in the page
-:host /deep/ .kStickyClass{
+:host ::ng-deep .kStickyClass{
     z-index: 550 !important;
 }
-:host /deep/ .uploadMonitorPopup .tooltipUp{
+:host ::ng-deep .uploadMonitorPopup .tooltipUp{
     margin-left: 234px !important;
 }
-:host /deep/ .kPopupWidget {
+:host ::ng-deep .kPopupWidget {
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .24);
 }

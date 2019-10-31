@@ -20,7 +20,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 })
 export class CategoryEntitlementsComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @ViewChild('manageUsersPopup') manageUsersPopup: PopupWidgetComponent;
+  @ViewChild('manageUsersPopup', { static: true }) manageUsersPopup: PopupWidgetComponent;
   public _defaultPermissionLevelOptions: { value: number, label: string }[] = [];
   public _kmcPermissions = KMCPermissions;
 

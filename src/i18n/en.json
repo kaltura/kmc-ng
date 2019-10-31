@@ -50,6 +50,7 @@
             "usageDashboardPageTitle": "Usage Dashboard",
             "usageDashboardMenuTitle": "Usage Dashboard",
             "restorePasswordPageTitle": "Reset Password",
+            "authenticatorPageTitle": "Authentication",
             "uploadMonitor": "Upload Monitor",
             "create": "Create",
             "content": "Content",
@@ -66,11 +67,14 @@
             "analyticsEngagement": "Engagement",
             "audience": "Audience",
             "contributors": "Contributors",
-            "live": "live",
+            "live": "Live",
+            "realtime": "Real-Time",
             "settings": "Settings",
             "administration": "Administration",
             "reachDashboardMenuTitle": "Services Dashboard",
-            "reachDashboardPageTitle": "Services Dashboard"
+            "reachDashboardPageTitle": "Services Dashboard",
+            "allAccounts": "All Accounts",
+            "parentOnly": "Parent Only"
         },
         "userSettings": {
             "changeAccount": "Change Account",
@@ -81,7 +85,8 @@
             "choose": "Choose a different partner:",
             "continue": "Continue",
             "errors": {
-                "loadPartners": "An error occurred while loading accounts."
+                "loadPartners": "An error occurred while loading accounts.",
+                "authenticationRequired": "Requested account requires new login."
             }
         },
         "helpMenu": {
@@ -143,10 +148,16 @@
                 "forgotPassword": "Forgot Password?",
                 "placeholder": {
                     "username": "Enter Email",
-                    "password": "Enter Password"
+                    "password": "Enter Password",
+                    "auth": "Enter Authenticator Code"
                 },
+                "authHelp": "What’s an authenticator code?",
+                "authHelpTooltip": "Authenticator code is a key provided by an authenticator app to protect your account. You can download an authenticator app on your mobile device.",
                 "browserVer1": "Browser version not supported",
-                "browserVer2": "Please use Internet Explorer version 11 or above"
+                "browserVer2": "Please use Internet Explorer version 11 or above",
+                "qrCode": "Scan this QR code with your authentication app. You can download an authentication app for both platforms:",
+                "sso": "Login with SSO",
+                "loginWithPassword": "Login with Email and Password"
             },
             "invalidLoginHash": {
                 "title": "Invalid Login Link",
@@ -193,7 +204,7 @@
         "error": {
           "equal": "Passwords do not match",
           "required": "Field is required",
-            "failedValidateHash": "{{0}}\nDo you want to retry?"
+          "failedValidateHash": "{{0}}\nDo you want to retry?"
         },
         "placeholder": {
           "new": "Enter new password",
@@ -216,9 +227,14 @@
                 },
                 "newPasswordHashKeyInvalid": "This link is not valid.",
                 "newPasswordHashKeyExpired": "This link is older than 24 hours and is no longer valid.",
-                "wrongOldPassword": "Old password is incorret.",
+                "wrongOldPassword": "Old password is incorrect.",
                 "invalidField": "Value in field {{value}} is not valid.",
-                "userForbiddenForBeta": "This is a closed beta of the new Kaltura Management Console. Stay tuned for the general availability soon."
+                "userForbiddenForBeta": "This is a closed beta of the new Kaltura Management Console. Stay tuned for the general availability soon.",
+                "missingOtp": "Authenticator code is required",
+                "invalidOtp": "Invalid authenticator code",
+                "updatePasswordMissingOtp": "You password was updated successfully.\nPlease login again with your new password.",
+                "ssoForbidden": "SSO Feature not available",
+                "ssoNotFound": "SSO Login failed"
             },
             "send": "Send",
             "wait": "Wait…",
@@ -542,7 +558,8 @@
                     "createdBetween": "Created Between",
                     "clearDates": "Clear Dates",
                     "clearAll": "Clear All",
-                    "close": "Close"
+                    "close": "Close",
+                    "dropFolders": "Drop Folders"
                 },
                 "dropFolderStatusLabels": {
                     "allStatuses": "All Statuses",
@@ -1164,7 +1181,8 @@
                 "status": "Status",
                 "previewAndEmbed": "Share & Embed",
                 "previewInPlayer": "Preview in Player",
-                "liveDashboard": "Live Dashboard",
+                "liveDashboard": "Real-Time Dashboard",
+                "realTimeAnalytics": "Real-time Analytics",
                 "delete": "Delete",
                 "view": "View Details",
                 "entries": "Entries",
@@ -1190,7 +1208,8 @@
                 "nameTooltip": "{{0}}\nTags:\n{{1}}",
                 "download": "Download",
                 "editor": "Launch Editor",
-                "captionRequest": "Caption Request"
+                "captionRequest": "Caption Request",
+                "analytics": "View Analytics"
             },
             "paginator": {
                 "showRows": "Show rows:"
@@ -1765,11 +1784,16 @@
                     "uploadError": "Upload Error",
                     "remove": "Remove",
                     "noLabel": "Since no label was provided, the caption language will be used in the Player Captions menu",
-                    "pending": "Pending"
+                    "pending": "Pending",
+                    "displayOnPlayer": "Display on Player"
                 },
                 "live": {
+                    "goLive": "Go Live",
+                    "endLive": "End Live",
+                    "endLiveHeader": "Hold your horses!",
+                    "endLiveMessage": "Are you sure you want to end the live broadcast?<br>This action can not be undone",
                     "live": "Live Stream",
-                    "liveDashboard": "Live Dashboard",
+                    "liveDashboard": "Real-Time Dashboard",
                     "urls": "Broadcasting URLs",
                     "primary": "Primary URL:",
                     "backup": "Backup URL:",
@@ -1808,7 +1832,10 @@
                     "hours": "Hours",
                     "selectBitrate": "Select BitRate",
                     "bitrateError": "Bit Rate selection is mandatory.",
-                    "dimensionsError": "Width and height are mandatory for all Bitrates"
+                    "dimensionsError": "Width and height are mandatory for all Bitrates",
+                    "videoConferenceIntegration": "Video Conference Integration",
+                    "sipUser": "SIP user",
+                    "noSipUser": "SIP user hasn't been generated for this entry"
                 },
                 "related": {
                     "related": "Related files",
@@ -2272,7 +2299,7 @@
                 }
             },
             "liveDashboard": {
-                "title": "Live Dashboard"
+                "title": "Real-Time Dashboard"
             },
             "playlistDetails": {
                 "sections": {

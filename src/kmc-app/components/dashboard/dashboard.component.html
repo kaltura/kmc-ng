@@ -7,19 +7,18 @@
   <kScrollToTop [scrollOffset]="50"></kScrollToTop>
 </div>
 
-<kPopupWidget #whatsNew data-aid="whatsNew" [popupWidth]="644" [popupHeight]="617" [modal]="true" [closeBtn]="false">
+<kPopupWidget #whatsNew data-aid="whatsNew" [popupWidth]="644" [popupHeight]="617" [modal]="true" [closeBtn]="true">
     <div class="whatsNew">
-        <div class="kIcon"></div>
+        <img width="644" height="284" [src]="_bannerUri"/>
         <div class="kHeader">
-            <span class="kTitle">Welcome to the New KMC!</span>
+            <span class="kTitle">Welcome to Connect</span>
         </div>
         <div class="kWelcomeContent">
-            <span>We are happy to introduce you to the new version of the Kaltura Management Console. The KMC has undergone a full facelift and is now Flash-free, with a fresh design, enhanced usability and faster performance.</span>
-            <span class="enjoy">Enjoy!</span>
+            <span>Join us for our user conference, for speakers from across the video ecosystem, roadmap sessions for Kaltura products, exhibitors, opportunities to speak to the Kaltura product team, and an optional training day.</span>
         </div>
 
         <div class="kFooter">
-            <button class="kButtonBranded" type="button" pButton label="Lets Go!" (click)="closeWin()"></button>
+            <button class="kButtonBranded" type="button" pButton label="Register Now" (click)="register()"></button>
         </div>
     </div>
 </kPopupWidget>

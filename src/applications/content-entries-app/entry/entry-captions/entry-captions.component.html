@@ -30,6 +30,9 @@
                             {{'applications.content.entryDetails.captions.status' | translate}}
                         </th>
                         <th>
+                            {{'applications.content.entryDetails.captions.displayOnPlayer' | translate}}
+                        </th>
+                        <th>
                             {{'applications.content.entryDetails.captions.defaultTitle' | translate}}
                         </th>
                         <th [ngStyle]="{'width':'80px'}"></th>
@@ -48,11 +51,20 @@
                             </div>
                         </td>
                         <td>
+                            <p-inputSwitch class="kInputSwitch"
+                                            [disabled]="caption.isDefault"
+                                            (ngModelChange)="_widgetService.setDirty()"
+                                            [(ngModel)]="caption.displayOnPlayer"></p-inputSwitch>
+                            <span class="kInputSwitchLabel">
+                                {{caption.displayOnPlayer ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}
+                            </span>
+                        </td>
+                        <td>
                             <span *ngIf="caption.isDefault">
                                 {{'applications.content.entryDetails.captions.default' | translate}}
                             </span>
                             <a (click)="_widgetService._setAsDefault(caption)"
-                               *ngIf="!caption.isDefault && caption.status?.toString() === '2'">
+                               *ngIf="!caption.isDefault && caption.status?.toString() === '2' && caption.displayOnPlayer">
                                 {{'applications.content.entryDetails.captions.setDefault' | translate}}
                             </a>
                         </td>

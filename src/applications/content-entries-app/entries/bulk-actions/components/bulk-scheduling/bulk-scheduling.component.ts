@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { SchedulingParams } from '../../services';

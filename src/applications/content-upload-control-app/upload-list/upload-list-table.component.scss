@@ -52,20 +52,20 @@
   flex-direction: column;
 }
 
-:host /deep/ .kUploadsTable tr:hover .kIconRemoveFile { // show remove icon when hovering a row
+:host ::ng-deep .kUploadsTable tr:hover .kIconRemoveFile { // show remove icon when hovering a row
   display: block !important;
 }
 
-:host /deep/ .kUploadsTable tr.has-error {
+:host ::ng-deep .kUploadsTable tr.has-error {
   background-color: lighten($kDandger, 45%);
 }
 
-:host /deep/ .kUploadsTable tr.removing {
+:host ::ng-deep .kUploadsTable tr.removing {
   background-color: $kGrayscale6;
   opacity: 0.3;
 }
 
-:host /deep/ .kUploadsTable td:last-child .ui-cell-data {
+:host ::ng-deep .kUploadsTable td:last-child .ui-cell-data {
   display: flex;
   justify-content: center;
 
@@ -74,12 +74,12 @@
   }
 }
 
-:host /deep/ p-table .stickyHeader{
+:host ::ng-deep p-table .stickyHeader{
   z-index: 10;
   display: table;
 }
 
-:host /deep/ p-table {
+:host ::ng-deep p-table {
     .ui-table .ui-table-thead > tr > th {
         border-left: 1px solid $kGrayscale6;
     }

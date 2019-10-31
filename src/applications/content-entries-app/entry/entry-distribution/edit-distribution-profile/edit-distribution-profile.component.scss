@@ -173,7 +173,7 @@ $app-styles-path: '../../../styles';
   }
 }
 
-:host /deep/ .kEditDistributionProfileWrap {
+:host ::ng-deep .kEditDistributionProfileWrap {
   p-checkbox {
     padding: 6px 0;
     .ui-chkbox-label {

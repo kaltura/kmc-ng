@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { ConfirmationService, ConfirmDialog } from 'primeng/primeng';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 import { BrowserService, GrowlMessage } from 'app-shared/kmc-shell/providers/browser.service';
 import { OperationTagManagerService} from '@kaltura-ng/kaltura-common';
 import { NavigationEnd, Router } from '@angular/router';
@@ -12,6 +12,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { EmailConfig } from './components/open-email/open-email.component';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BoostrappingStatus, AppBootstrap } from 'app-shared/kmc-shell';
+import { ConfirmationService } from 'primeng/api';
 /*
  * App Component
  * Top Level Component
@@ -24,9 +25,9 @@ import { BoostrappingStatus, AppBootstrap } from 'app-shared/kmc-shell';
 })
 export class AppComponent implements OnInit {
 
-  @ViewChild('confirm') private _confirmDialog: ConfirmDialog;
-  @ViewChild('alert') private _alertDialog: ConfirmDialog;
-  @ViewChild('openEmailPopup') private _emailDialog: PopupWidgetComponent;
+  @ViewChild('confirm', { static: true }) private _confirmDialog: ConfirmDialog;
+  @ViewChild('alert', { static: true }) private _alertDialog: ConfirmDialog;
+  @ViewChild('openEmailPopup', { static: true }) private _emailDialog: PopupWidgetComponent;
 
   public _isBusy: boolean = false;
   public _growlMessages: GrowlMessage[] = [];

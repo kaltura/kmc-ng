@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Input, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
-import { SelectItem } from 'primeng/primeng';
+import { SelectItem } from 'primeng/api';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaMediaType } from 'kaltura-ngx-client';
@@ -40,7 +40,7 @@ export interface UploadSettingsFile {
 export class UploadSettingsComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() creationType = KMCFileCreationType.upload;
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @ViewChild('fileDialog') _fileDialog: FileDialogComponent;
+  @ViewChild('fileDialog', { static: true }) _fileDialog: FileDialogComponent;
 
     public _creationTypes = KMCFileCreationType;
     public _uploadBtnLabel: string;

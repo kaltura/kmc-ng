@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DropdownModule as PrimeDropdownModule } from 'primeng/primeng';
+import { DropdownModule as PrimeDropdownModule } from 'primeng/dropdown';
 import { SearchableDropdownComponent } from './searchable-dropdown.component';
 
 @NgModule({

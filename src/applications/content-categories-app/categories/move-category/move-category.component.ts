@@ -3,7 +3,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { CategoriesService } from '../categories.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaCategory } from 'kaltura-ngx-client';
 import {
   CategoriesStatus,

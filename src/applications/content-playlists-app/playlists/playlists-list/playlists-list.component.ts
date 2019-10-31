@@ -8,7 +8,7 @@ import { StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
@@ -28,8 +28,8 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 	public _kmcPermissions = KMCPermissions;
 
-	@ViewChild('addNewPlaylist') public addNewPlaylist: PopupWidgetComponent;
-  @ViewChild('tags') private tags: StickyComponent;
+	@ViewChild('addNewPlaylist', { static: true }) public addNewPlaylist: PopupWidgetComponent;
+  @ViewChild('tags', { static: true }) private tags: StickyComponent;
 
     public _isBusy = false;
     public _blockerMessage: AreaBlockerMessage = null;

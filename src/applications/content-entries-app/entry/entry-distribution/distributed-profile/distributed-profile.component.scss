@@ -141,7 +141,7 @@ $app-styles-path: '../../../styles';
   }
 }
 
-:host /deep/ .kDistributedProfile {
+:host ::ng-deep .kDistributedProfile {
   .kDeleteBtn {
     .kIcontrash {
       margin-left: -.5em;

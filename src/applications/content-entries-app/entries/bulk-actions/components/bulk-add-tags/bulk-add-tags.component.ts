@@ -9,7 +9,7 @@ import { KalturaTagFilter } from 'kaltura-ngx-client';
 import { KalturaTaggedObjectType } from 'kaltura-ngx-client';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
@@ -105,10 +105,8 @@ export class BulkAddTags implements OnInit, OnDestroy, AfterViewInit {
         {
           const suggestions = [];
           const tags = result.objects.map(item => item.tag);
-          (tags|| []).forEach(suggestedTag => {
-            const isSelectable = !this.tags.find(tag => {
-              return tag === suggestedTag;
-            });
+          (tags || []).forEach(suggestedTag => {
+            const isSelectable = (this.tags || []).indexOf(suggestedTag) === -1;
             suggestions.push({ item: suggestedTag, isSelectable: isSelectable});
           });
           this._tagsProvider.next({suggestions: suggestions, isLoading: false});

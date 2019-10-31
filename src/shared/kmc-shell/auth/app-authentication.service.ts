@@ -1,25 +1,25 @@
-import {Injectable, Optional, Inject} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-import {KalturaClient, KalturaMultiRequest, KalturaRequestOptions} from 'kaltura-ngx-client';
-import {UserLoginByLoginIdAction} from 'kaltura-ngx-client';
-import {UserGetByLoginIdAction} from 'kaltura-ngx-client';
-import {UserGetAction} from 'kaltura-ngx-client';
-import {PartnerGetInfoAction} from 'kaltura-ngx-client';
-import {PermissionListAction} from 'kaltura-ngx-client';
-import {KalturaResponseProfileType} from 'kaltura-ngx-client';
-import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
-import {KalturaPermissionFilter} from 'kaltura-ngx-client';
-import {KalturaPermissionListResponse} from 'kaltura-ngx-client';
-import {KalturaUserRole} from 'kaltura-ngx-client';
-import {KalturaFilterPager} from 'kaltura-ngx-client';
-import {KalturaPermissionStatus} from 'kaltura-ngx-client';
-import {UserRoleGetAction} from 'kaltura-ngx-client';
+import { KalturaAuthentication, KalturaClient, KalturaMultiRequest, KalturaRequestOptions, SsoLoginAction } from 'kaltura-ngx-client';
+import { UserLoginByLoginIdAction } from 'kaltura-ngx-client';
+import { UserGetByLoginIdAction } from 'kaltura-ngx-client';
+import { UserGetAction } from 'kaltura-ngx-client';
+import { PartnerGetInfoAction } from 'kaltura-ngx-client';
+import { PermissionListAction } from 'kaltura-ngx-client';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
+import { KalturaPermissionFilter } from 'kaltura-ngx-client';
+import { KalturaPermissionListResponse } from 'kaltura-ngx-client';
+import { KalturaUserRole } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client';
+import { KalturaPermissionStatus } from 'kaltura-ngx-client';
+import { UserRoleGetAction } from 'kaltura-ngx-client';
 import * as Immutable from 'seamless-immutable';
-import {AppUser} from './app-user';
-import {UserResetPasswordAction} from 'kaltura-ngx-client';
-import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client';
+import { AppUser } from './app-user';
+import { UserResetPasswordAction } from 'kaltura-ngx-client';
+import { AdminUserUpdatePasswordAction } from 'kaltura-ngx-client';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification/page-exit-verification.service';
 import { UserLoginStatusEvent } from 'app-shared/kmc-shared/events';
 import { KalturaPartner } from 'kaltura-ngx-client';
@@ -30,7 +30,7 @@ import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { serverConfig } from 'config/server';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { UserLoginByKsAction } from 'kaltura-ngx-client';
-import { KmcServerPolls } from '../../kmc-shared/server-polls';
+import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
 import { HttpClient } from '@angular/common/http';
 import { buildBaseUri } from 'config/server';
 import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
@@ -43,6 +43,7 @@ import { AdminUserSetInitialPasswordAction } from 'kaltura-ngx-client';
 import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
 import { switchMap, map } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
+import {AuthenticatorViewService} from "app-shared/kmc-shared/kmc-views/details-views";
 
 export interface UpdatePasswordPayload {
     email: string;
@@ -101,7 +102,8 @@ export class AppAuthentication {
                 private _appEvents: AppEventsService,
                 private _location: Location,
                 private _kmcViewsManager: KmcMainViewsService,
-                private _restorePasswordView: RestorePasswordViewService) {
+                private _restorePasswordView: RestorePasswordViewService,
+                private _authenticatorView: AuthenticatorViewService) {
         this._logger = logger.subLogger('AppAuthentication');
     }
 
@@ -120,7 +122,11 @@ export class AppAuthentication {
             'ADMIN_KUSER_WRONG_OLD_PASSWORD': 'app.login.error.wrongOldPassword',
             'WRONG_OLD_PASSWORD': 'app.login.error.wrongOldPassword',
             'INVALID_FIELD_VALUE': 'app.login.error.invalidField',
-            'USER_FORBIDDEN_FOR_BETA': 'app.login.error.userForbiddenForBeta'
+            'USER_FORBIDDEN_FOR_BETA': 'app.login.error.userForbiddenForBeta',
+            'MISSING_OTP': 'app.login.error.missingOtp',
+            'INVALID_OTP': 'app.login.error.invalidOtp',
+            'FEATURE_FORBIDDEN': 'app.login.error.ssoForbidden',
+            'SSO_NOT_FOUND': 'app.login.error.ssoNotFound'
         };
 
         if (code === 'PASSWORD_EXPIRED') {
@@ -178,12 +184,12 @@ export class AppAuthentication {
             .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
     }
 
-    setInitalPassword(payload: { newPassword: string, hashKey: string }): Observable<void> {
+    setInitalPassword(payload: { newPassword: string, hashKey: string }): Observable<KalturaAuthentication> {
         return this.kalturaServerClient.request(new AdminUserSetInitialPasswordAction(payload))
             .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
     }
 
-    login(loginId: string, password: string): Observable<LoginResponse> {
+    login(loginId: string, password: string, otp: string): Observable<LoginResponse> {
 
         const expiry = kmcAppConfig.kalturaServer.expiry;
         let privileges = kmcAppConfig.kalturaServer.privileges || '';
@@ -195,14 +201,17 @@ export class AppAuthentication {
         this._automaticLoginErrorReason = null;
         this._browserService.removeFromSessionStorage(ksSessionStorageKey);  // clear session storage
 
+        const requestedPartnerId = this._browserService.getFromLocalStorage('loginPartnerId');
+
         const request = new KalturaMultiRequest(
             new UserLoginByLoginIdAction(
                 {
                     loginId,
                     password,
-
+                    otp,
                     expiry: expiry,
-                    privileges: privileges
+                    privileges: privileges,
+                    partnerId: requestedPartnerId ? requestedPartnerId : null
                 }),
             new UserGetByLoginIdAction({loginId})
                 .setRequestOptions(
@@ -307,6 +316,8 @@ export class AppAuthentication {
             this._browserService.setInSessionStorage(ksSessionStorageKey, ks);  // save ks in session storage
         }
 
+        this._browserService.removeFromLocalStorage('loginPartnerId');
+
         const partnerPermissionList = permissionList.objects.map(item => item.name);
         const userRolePermissionList = userRole.permissionNames.split(',');
         this._permissionsService.load(userRolePermissionList, partnerPermissionList);
@@ -327,7 +338,8 @@ export class AppAuthentication {
                 landingPage: partner.landingPage,
                 adultContent: partner.adultContent,
                 publisherEnvironmentType: partner.publisherEnvironmentType,
-                publishersQuota: partner.publishersQuota
+                publishersQuota: partner.publishersQuota,
+                authenticationType: partner.authenticationType
             }
         });
 
@@ -454,6 +466,20 @@ export class AppAuthentication {
         }
     }
 
+    public authenticatorCode(hash: string): void {
+        this._clearSessionCredentials();
+
+        if (this._authenticatorView.isAvailable({hash})) {
+            this._authenticatorView.open({hash});
+        } else {
+
+            this._logger.warn(`Authentication view is not available, redirect to default view`, {
+                authenticatorHash: hash
+            });
+            this._browserService.navigateToDefault();
+        }
+    }
+
     public loginAutomatically(defaultUrl: string): Observable<boolean> {
         if (this._autoLoginAttempted || this.isLogged()) {
             return ObservableOf(this.isLogged());
@@ -546,5 +572,17 @@ export class AppAuthentication {
                     fullName: fullName
                 });
         }
+    }
+
+    public _ssoLogin(userId: string): Observable<{}>{
+        const applicationType = 'kmc';
+        const requestedPartnerId = this._browserService.getFromLocalStorage('loginPartnerId');
+        return this.kalturaServerClient.request(new SsoLoginAction({
+            userId,
+            applicationType,
+            partnerId: requestedPartnerId ? requestedPartnerId : null
+        }))
+        .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
+
     }
 }

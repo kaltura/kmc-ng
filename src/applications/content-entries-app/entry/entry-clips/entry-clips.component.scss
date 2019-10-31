@@ -22,10 +22,10 @@
 		margin-top: 24px;
 	}
 }
-:host /deep/ .ui-paginator {
+:host ::ng-deep .ui-paginator {
 	padding-right: 12px;
 }
-:host /deep/ .kTableFooter {
+:host ::ng-deep .kTableFooter {
   .ui-dropdown-panel {
     min-width: 70px;
   }

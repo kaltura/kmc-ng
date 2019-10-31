@@ -13,6 +13,9 @@ export interface GlobalConfig {
             maxItems: number,
             defaultPageSize: number,
             defaultSortOrder: number
+          },
+          dropFolders: {
+              maxItems: number,
           }
         }
     };
@@ -26,7 +29,7 @@ export interface GlobalConfig {
 export const globalConfig: GlobalConfig = {
     client: {
         production: environment.production,
-        appVersion: '5.10.0',
+        appVersion: '5.18.0',
         useSecuredProtocol: environment.client.useSecuredProtocol,
         countriesList: countryCodes,
         views: {
@@ -34,6 +37,9 @@ export const globalConfig: GlobalConfig = {
             'maxItems': 10000,
             'defaultPageSize': 50,
             'defaultSortOrder': -1
+          },
+          dropFolders: {
+              maxItems: 500,
           }
         }
     },

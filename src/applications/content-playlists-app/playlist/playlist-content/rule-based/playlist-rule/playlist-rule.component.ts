@@ -9,7 +9,7 @@ import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { PlaylistRuleParserService } from './playlist-rule-parser.service';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaEntryModerationStatus } from 'kaltura-ngx-client';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { PlaylistRule } from './playlist-rule.interface';
@@ -30,7 +30,7 @@ import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shar
 export class PlaylistRuleComponent implements OnInit {
   @Input() rule: PlaylistRule;
 
-  @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
+  @ViewChild(EntriesListComponent, { static: true }) public _entriesList: EntriesListComponent;
 
   @Output() onClosePopupWidget = new EventEmitter<void>();
   @Output() onSaveRule = new EventEmitter<PlaylistRule>();

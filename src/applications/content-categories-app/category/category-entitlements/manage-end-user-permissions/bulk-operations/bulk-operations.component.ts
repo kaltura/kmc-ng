@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import {MenuItem} from 'primeng/primeng';
+import {MenuItem} from 'primeng/api';
 import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client';
 import {UserActionData} from '../manage-end-user-permissions.component';
 import {KalturaUpdateMethodType} from 'kaltura-ngx-client';

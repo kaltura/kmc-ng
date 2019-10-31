@@ -224,7 +224,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
         feedImageUrl: this.feed.feedImageUrl,
         feedOwnerName: this.feed.ownerName,
         feedOwnerEmail: this.feed.ownerEmail,
-        language: this.feed.language,
+        language: this.feed.language ? this.feed.language : 'EN',
         adultContent: this.feed.adultContent
       });
     } else {
@@ -249,7 +249,7 @@ export class ItunesDestinationFormComponent extends DestinationComponentBase imp
       feedImageUrl: '',
       feedOwnerName: ['', Validators.required],
       feedOwnerEmail: ['', [Validators.required, Validators.email]],
-      language: '',
+      language: 'EN',
       adultContent: ''
     });
 

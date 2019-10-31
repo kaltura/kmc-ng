@@ -8,7 +8,7 @@ import { KalturaBulkUploadListResponse } from 'kaltura-ngx-client';
 import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
 import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client';
 import { KalturaBulkUpload } from 'kaltura-ngx-client';
@@ -210,10 +210,10 @@ export class BulkUploadMonitorService implements OnDestroy {
 
         if (this._poolingState !== 'running') {
             this._poolingState = 'running';
-            this._logger.info(`start server polling every 10 seconds to sync bulk upload status`);
+            this._logger.info(`start server polling every 30 seconds to sync bulk upload status`);
 
 
-            this._kmcServerPolls.register<KalturaBulkUploadListResponse>(10, this._bulkUploadChangesFactory)
+            this._kmcServerPolls.register<KalturaBulkUploadListResponse>(30, this._bulkUploadChangesFactory)
                 .pipe(cancelOnDestroy(this))
                 .subscribe((response) => {
                     if (response.error) {
