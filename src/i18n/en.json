@@ -1153,6 +1153,7 @@
                 "status": "Status: {{0}}",
                 "permissionLevels": "Permission Level: {{0}}",
                 "youtubeVideo": "Youtube video",
+                "videoQuiz": "Video with Quiz",
                 "preferences": {
                     "preferences": "Preferences",
                     "filterPreferences": "Filter Preferences",

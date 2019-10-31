@@ -9,17 +9,17 @@ import { KalturaClient } from 'kaltura-ngx-client';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import {
-  DatesRangeAdapter,
-  DatesRangeType,
-  EnumTypeAdapter,
-  FiltersStoreBase,
-  GroupedListAdapter,
-  GroupedListType,
-  ListTypeAdapter,
-  NumberTypeAdapter,
-  StringTypeAdapter,
-  TypeAdaptersMapping,
-    BooleanTypeAdapter
+    BooleanTypeAdapter,
+    DatesRangeAdapter,
+    DatesRangeType,
+    EnumTypeAdapter,
+    FiltersStoreBase,
+    GroupedListAdapter,
+    GroupedListType,
+    ListTypeAdapter,
+    NumberTypeAdapter,
+    StringTypeAdapter,
+    TypeAdaptersMapping
 } from '@kaltura-ng/mc-shared';
 import { CategoriesModeAdapter, CategoriesModes, CategoriesModeType } from 'app-shared/content-shared/categories/categories-mode-type';
 import { Subject } from 'rxjs/Subject';
@@ -69,7 +69,8 @@ export interface EntriesFilters {
   categoriesMode: CategoriesModeType;
   customMetadata: GroupedListType<string>;
   limits: number;
-    youtubeVideo: boolean;
+  youtubeVideo: boolean;
+  videoQuiz: boolean;
 }
 
 export const EntriesDataProviderToken = new InjectionToken('entries-data-provider');
@@ -258,7 +259,8 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
       categoriesMode: new CategoriesModeAdapter(),
       customMetadata: new GroupedListAdapter<string>(),
       limits: new NumberTypeAdapter(),
-        youtubeVideo: new BooleanTypeAdapter()
+      youtubeVideo: new BooleanTypeAdapter(),
+      videoQuiz: new BooleanTypeAdapter(),
     };
   }
 
