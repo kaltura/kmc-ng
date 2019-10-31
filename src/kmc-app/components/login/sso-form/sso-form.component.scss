@@ -76,11 +76,11 @@
         margin-bottom: 40px;
     }
 }
-:host /deep/ .kLoginForm a {
+:host ::ng-deep .kLoginForm a {
   color: $kGrayscale2;
 }
 
-:host /deep/ p-checkbox {
+:host ::ng-deep p-checkbox {
     .ui-chkbox-label {
         font-size: 16px;
         font-weight: normal;
