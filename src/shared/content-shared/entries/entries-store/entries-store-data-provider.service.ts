@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {EntriesDataProvider, EntriesFilters, MetadataProfileData, SortDirection} from './entries-store.service';
-import {KalturaBaseEntry} from 'kaltura-ngx-client';
+import { KalturaBaseEntry, KalturaEntryType, KalturaQuizAdvancedFilter } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
 import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
 import {KalturaMetadataSearchItem} from 'kaltura-ngx-client';
@@ -263,6 +263,10 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
             filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
           }
 
+          if (data.youtubeVideo) {
+              // TODO
+          }
+
           return filter;
         });
     } catch (err) {
@@ -270,11 +274,10 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
     }
   }
 
-
   public executeQuery(data: EntriesFilters): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }> {
     const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
       type: KalturaResponseProfileType.includeFields,
-      fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,moderationCount,tags,categoriesIds,downloadUrl,sourceType,entitledUsersPublish,entitledUsersView,entitledUsersEdit,externalSourceType,capabilities'
+      fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,moderationCount,tags,categoriesIds,downloadUrl,sourceType,entitledUsersPublish,entitledUsersEdit,externalSourceType'
     });
     let pagination: KalturaFilterPager = null;
 
@@ -329,6 +332,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
       categoriesMode,
       customMetadata: {},
       limits: 200,
+        youtubeVideo: false
     };
   }
 }

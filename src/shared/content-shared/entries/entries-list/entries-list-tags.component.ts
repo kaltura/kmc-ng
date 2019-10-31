@@ -101,6 +101,12 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                     break;
                 case "createdAt":
                     this._entriesStore.filter({createdAt: {fromDate: null, toDate: null}});
+                    break;
+                case 'youtubeVideo':
+                    this._entriesStore.filter({ youtubeVideo: true });
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -173,6 +179,10 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             this._syncTagsOfCustomMetadata(updates.customMetadata);
         }
 
+        if (typeof updates.youtubeVideo !== 'undefined') {
+            this._syncTagOfYoutubeVideo();
+        }
+
         refineListsType.forEach(listType => {
             if (typeof updates[listType] !== 'undefined') {
                 this._syncTagsOfList(listType);
@@ -233,6 +243,26 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 value: currentFreetextValue,
                 label: currentFreetextValue,
                 tooltip: this._appLocalization.get(`applications.content.filters.freeText`)
+            });
+        }
+    }
+
+    private _syncTagOfYoutubeVideo(): void {
+        const previousItem = this._tags.findIndex(item => item.type === 'youtubeVideo');
+        if (previousItem !== -1) {
+            this._tags.splice(
+                previousItem,
+                1);
+        }
+
+        const currentYoutubeVideoValue = this._entriesStore.cloneFilter('youtubeVideo', false);
+
+        if (currentYoutubeVideoValue) {
+            this._tags.push({
+                type: 'youtubeVideo',
+                value: currentYoutubeVideoValue,
+                label: this._appLocalization.get(`applications.content.filters.youtubeVideo`),
+                tooltip: this._appLocalization.get(`applications.content.filters.youtubeVideo`)
             });
         }
     }

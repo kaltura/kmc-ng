@@ -1152,6 +1152,7 @@
                 "uploadedItem": "Uploaded Item: {{0}}",
                 "status": "Status: {{0}}",
                 "permissionLevels": "Permission Level: {{0}}",
+                "youtubeVideo": "Youtube video",
                 "preferences": {
                     "preferences": "Preferences",
                     "filterPreferences": "Filter Preferences",
