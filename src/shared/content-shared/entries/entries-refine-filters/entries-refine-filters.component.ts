@@ -483,7 +483,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                               }
                           }
                       } else {
-                          if (node.listName === 'videoQuiz') {
+                          if (node.listName === 'videoQuiz' || node.listName === 'youtubeVideo') {
                               newFilterValue = false;
                           } else {
                               newFilterValue = null;
