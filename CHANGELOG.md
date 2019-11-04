@@ -1,3 +1,19 @@
+<a name="5.19.0"></a>
+# [5.19.0](https://github.com/kaltura/kmc-ng/compare/v5.18.0...v5.19.0) (2019-11-04)
+
+
+### Bug Fixes
+
+* **SUP-19722:** load max 500 dropfolders at once ([#868](https://github.com/kaltura/kmc-ng/issues/868)) ([023c0c7](https://github.com/kaltura/kmc-ng/commit/023c0c7))
+
+
+### Features
+
+* **entries/refine-filter:** Filter for entries with Quiz ([#745](https://github.com/kaltura/kmc-ng/issues/745)) ([be22f06](https://github.com/kaltura/kmc-ng/commit/be22f06))
+* **entries/refine-filter:** Filter for entries with YouTube entries ([#874](https://github.com/kaltura/kmc-ng/issues/874)) ([6620ffe](https://github.com/kaltura/kmc-ng/commit/6620ffe))
+
+
+
 <a name="5.18.0"></a>
 # [5.18.0](https://github.com/kaltura/kmc-ng/compare/v5.17.0...v5.18.0) (2019-10-07)
 
