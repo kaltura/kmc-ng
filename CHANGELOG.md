@@ -10,7 +10,7 @@
 ### Features
 
 * **entries/refine-filter:** Filter for entries with Quiz ([#745](https://github.com/kaltura/kmc-ng/issues/745)) ([be22f06](https://github.com/kaltura/kmc-ng/commit/be22f06))
-* **entries/refine-filter:** Filter for entries with YouTube entries ([#874](https://github.com/kaltura/kmc-ng/issues/874)) ([6620ffe](https://github.com/kaltura/kmc-ng/commit/6620ffe))
+* **entries/refine-filter:** Filter for YouTube entries ([#874](https://github.com/kaltura/kmc-ng/issues/874)) ([6620ffe](https://github.com/kaltura/kmc-ng/commit/6620ffe))
 
 
 
