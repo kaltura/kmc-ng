@@ -257,6 +257,10 @@
             {
                 "value": "https://knowledge.kaltura.com/node/2240",
                 "label": "Entry Level Analytics"
+            },
+            {
+                "value": "https://knowledge.kaltura.com/help/user-analytics",
+                "label": "User Analytics"
             }
         ]
     },
