@@ -173,12 +173,11 @@ export class EntryComponent implements OnInit, OnDestroy {
         const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
         const isDownloadCommand = commandName === 'download';
         const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
-        const canAccessNewLiveAnalytics = this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD);
         const isNotVideoAudioImage = [KalturaMediaType.video, KalturaMediaType.audio, KalturaMediaType.image].indexOf(mediaType) === -1;
         return !(
             (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
             // hide live-dashboard menu item for entry that isn't kaltura live or has permission to access new analytics
-            (isLiveDashboardCommand && (!isKalturaLiveStream || canAccessNewLiveAnalytics)) ||
+            (isLiveDashboardCommand && (!isKalturaLiveStream)) ||
             (isDownloadCommand && (isNotVideoAudioImage || isExternalMedia)) ||
             cannotDeleteEntry
         );
@@ -320,15 +319,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 								this._entryType = entry.mediaType;
 								this._sourceType = entry.sourceType;
                                 this._entry = entry;
-
-                                this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable() // new analytics app is available
-                                    && (
-                                        this._sourceType !== KalturaSourceType.liveStream // and not a live stream
-                                        || ((this._sourceType === KalturaSourceType.liveStream || this._sourceType === KalturaSourceType.manualLiveStream) // or it's a live stream and has permission
-                                            && this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD)
-                                        )
-                                    );
-
+                                this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable(); // new analytics app is available
                                 this._buildMenu(entry);
 								break;
 							case ActionTypes.EntryLoadingFailed:

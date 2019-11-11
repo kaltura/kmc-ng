@@ -133,7 +133,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                 open: () => {
                     this._router.navigateByUrl('/analytics/live');
                 },
-                menuTitle: this._permissions.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD) ? this._appLocalization.get('app.titles.realtime') : this._appLocalization.get('app.titles.live'),
+                menuTitle: this._appLocalization.get('app.titles.realtime'),
             });
         }
     }
