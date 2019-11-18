@@ -7,7 +7,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {ScrollToTopContainerComponent} from '@kaltura-ng/kaltura-ui';
 import {CategoriesFilters, CategoriesService} from '../categories.service';
 import {RefineGroup} from '../categories-refine-filters.service';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 
 const listOfFilterNames: (keyof CategoriesFilters)[] = [
   'createdAt',
@@ -45,7 +45,7 @@ export interface PrimeListsGroup {
 })
 export class CategoriesRefineFiltersComponent implements OnInit, OnDestroy, OnChanges {
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
+  @ViewChild(ScrollToTopContainerComponent, { static: true }) _treeContainer: ScrollToTopContainerComponent;
   @Input() refineFilters: RefineGroup[];
 
   @ViewChildren(RefinePrimeTree)

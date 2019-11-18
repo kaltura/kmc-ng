@@ -5,7 +5,7 @@ import { KalturaDistributionValidationErrorMissingThumbnail } from 'kaltura-ngx-
 import { KalturaDistributionValidationErrorMissingMetadata } from 'kaltura-ngx-client';
 import { KalturaDistributionValidationErrorMissingFlavor } from 'kaltura-ngx-client';
 import { KalturaDistributionValidationErrorInvalidData } from 'kaltura-ngx-client';
-import { OverlayPanel } from 'primeng/primeng';
+import { OverlayPanel } from 'primeng/overlaypanel';
 
 export interface DistributedProfileErrorsGroup {
   [key: string]: KalturaDistributionValidationError[]

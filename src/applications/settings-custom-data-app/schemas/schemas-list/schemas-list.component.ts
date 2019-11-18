@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { SchemasFilters, SchemasStore } from '../schemas-store/schemas-store.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { SettingsMetadataProfile } from '../schemas-store/settings-metadata-profile.interface';
@@ -19,7 +19,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
   providers: [KalturaLogger.createLogger('SchemasListComponent')]
 })
 export class SchemasListComponent implements OnInit, OnDestroy {
-  @ViewChild('customSchema') _customSchemaPopup: PopupWidgetComponent;
+  @ViewChild('customSchema', { static: true }) _customSchemaPopup: PopupWidgetComponent;
 
   public _selectedSchemas: SettingsMetadataProfile[] = [];
   public _selectedSchema: SettingsMetadataProfile = null;

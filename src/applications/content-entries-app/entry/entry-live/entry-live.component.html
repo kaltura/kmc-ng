@@ -1,13 +1,6 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [bodyScroll]="true">
   <div class="kLive">
     <p class="kTitle">{{'applications.content.entryDetails.live.live' | translate}}</p>
-    <div class="kButtons">
-      <button pButton icon="kIconstatistic" class="kButtonDefault"
-              *ngIf="!(_kmcPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD | kNgIfPermitted)"
-              [label]="'applications.content.entryDetails.live.liveDashboard' | translate"
-              [disabled]="!_widgetService._liveDashboardEnabled"
-              (click)="liveDashboard.open()"></button>
-    </div>
     <div class="kLiveDetails">
 
       <div *ngIf="_widgetService._liveType === 'kaltura'">

@@ -3,7 +3,7 @@ import { RolesFilters, RolesStoreService } from '../roles-store/roles-store.serv
 import { KalturaUserRole } from 'kaltura-ngx-client';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
@@ -18,7 +18,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 })
 
 export class RolesListComponent implements OnInit, OnDestroy {
-  @ViewChild('editPopup') public editPopup: PopupWidgetComponent;
+  @ViewChild('editPopup', { static: true }) public editPopup: PopupWidgetComponent;
 
   public _kmcPermissions = KMCPermissions;
   public _blockerMessage: AreaBlockerMessage = null;

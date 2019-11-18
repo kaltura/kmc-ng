@@ -3,7 +3,7 @@ import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaClient } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
@@ -11,7 +11,7 @@ import { KalturaFlavorParams } from 'kaltura-ngx-client';
 import { FlavorParamsListAction } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
 
-import {SelectItem} from 'primeng/primeng';
+import {SelectItem} from 'primeng/api';
 
 @Component({
 	selector: 'kBulkDownload',

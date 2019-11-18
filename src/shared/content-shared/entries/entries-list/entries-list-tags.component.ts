@@ -10,7 +10,7 @@ import {CategoriesSearchService} from 'app-shared/content-shared/categories/cate
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { Unsubscribable } from 'rxjs';
 import { DatePipe } from 'app-shared/kmc-shared/date-format/date.pipe';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 
 export interface TagItem {
     type: string;
@@ -21,7 +21,7 @@ export interface TagItem {
     disabled?: boolean;
 }
 
-const refineListsType: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions' ];
+const refineListsType: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions'];
 
 @Component({
     selector: 'k-entries-list-tags',
@@ -101,6 +101,15 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                     break;
                 case "createdAt":
                     this._entriesStore.filter({createdAt: {fromDate: null, toDate: null}});
+                    break;
+                case 'youtubeVideo':
+                    this._entriesStore.filter({ youtubeVideo: false });
+                    break;
+                case 'videoQuiz':
+                    this._entriesStore.filter({ videoQuiz: false });
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -173,6 +182,14 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             this._syncTagsOfCustomMetadata(updates.customMetadata);
         }
 
+        if (typeof updates.youtubeVideo !== 'undefined') {
+            this._syncTagOfYoutubeVideo();
+        }
+
+        if (typeof updates.videoQuiz !== 'undefined') {
+            this._syncTagOfVideoQuiz();
+        }
+
         refineListsType.forEach(listType => {
             if (typeof updates[listType] !== 'undefined') {
                 this._syncTagsOfList(listType);
@@ -233,6 +250,46 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 value: currentFreetextValue,
                 label: currentFreetextValue,
                 tooltip: this._appLocalization.get(`applications.content.filters.freeText`)
+            });
+        }
+    }
+
+    private _syncTagOfYoutubeVideo(): void {
+        const previousItem = this._tags.findIndex(item => item.type === 'youtubeVideo');
+        if (previousItem !== -1) {
+            this._tags.splice(
+                previousItem,
+                1);
+        }
+
+        const currentYoutubeVideoValue = this._entriesStore.cloneFilter('youtubeVideo', false);
+
+        if (currentYoutubeVideoValue) {
+            this._tags.push({
+                type: 'youtubeVideo',
+                value: currentYoutubeVideoValue,
+                label: this._appLocalization.get(`applications.content.filters.youtubeVideo`),
+                tooltip: this._appLocalization.get(`applications.content.filters.youtubeVideo`)
+            });
+        }
+    }
+
+    private _syncTagOfVideoQuiz(): void {
+        const previousItem = this._tags.findIndex(item => item.type === 'videoQuiz');
+        if (previousItem !== -1) {
+            this._tags.splice(
+                previousItem,
+                1);
+        }
+
+        const currentVideoQuizValue = this._entriesStore.cloneFilter('videoQuiz', null);
+
+        if (currentVideoQuizValue) {
+            this._tags.push({
+                type: 'videoQuiz',
+                value: currentVideoQuizValue,
+                label: this._appLocalization.get(`applications.content.filters.videoQuiz`),
+                tooltip: this._appLocalization.get(`applications.content.filters.videoQuiz`)
             });
         }
     }
@@ -327,7 +384,9 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
         if (this._refineFiltersMap.size > 0) {
             const list = this._refineFiltersMap.get(listName);
             if (list) {
-                const item = list.items.find(listItem => String(listItem.value) === String(value));
+                const item = list.items && list.items.length > 0
+                    ? list.items.find(listItem => String(listItem.value) === String(value))
+                    : list;
 
                 result = item ? item[prop] : result;
             }

@@ -33,7 +33,7 @@
   align-items: center;
   justify-content: center;
 }
-:host /deep/ kautocomplete {
+:host ::ng-deep kautocomplete {
   li.userAdded{
     background-color: transparentize($kPrimary, 0.5) !important;
   }

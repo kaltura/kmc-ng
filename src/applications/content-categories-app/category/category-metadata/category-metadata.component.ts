@@ -1,4 +1,4 @@
-import {MenuItem} from 'primeng/primeng';
+import {MenuItem} from 'primeng/api';
 import {ISubscription} from 'rxjs/Subscription';
 import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
 import {Subject} from 'rxjs/Subject';
@@ -23,7 +23,7 @@ export class CategoryMetadataComponent implements OnInit {
 
   @ViewChildren(JumpToSection) private _jumpToSectionQuery: QueryList<JumpToSection> = null;
 
-  @ViewChild('metadataContainer')
+  @ViewChild('metadataContainer', { static: true })
   public _container: ElementRef;
 
   constructor(public _widgetService: CategoryMetadataWidget,

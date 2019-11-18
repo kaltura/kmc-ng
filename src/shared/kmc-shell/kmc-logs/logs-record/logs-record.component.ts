@@ -31,7 +31,7 @@ export class LogsRecordComponent {
         }
     }
 
-    @ViewChild('recordPopup') _recordPopup: PopupWidgetComponent;
+    @ViewChild('recordPopup', { static: true }) _recordPopup: PopupWidgetComponent;
 
     private _appLogLevel: LogLevels = globalConfig.client.production ? 'Error' : 'All';
 

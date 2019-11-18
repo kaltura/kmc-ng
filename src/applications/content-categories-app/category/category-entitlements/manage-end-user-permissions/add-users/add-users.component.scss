@@ -74,7 +74,7 @@ $autoCompleteWidth: 326px;
       .kRadio {
         padding-right: 40px;
 
-        /deep/ .ui-radiobutton-label {
+        ::ng-deep .ui-radiobutton-label {
           font-weight: normal;
         }
       }
@@ -107,7 +107,7 @@ $autoCompleteWidth: 326px;
   }
 }
 
-:host /deep/ .ui-autocomplete.ui-widget {
+:host ::ng-deep .ui-autocomplete.ui-widget {
   width: $autoCompleteWidth;
   font-size: 15px;
 
@@ -133,7 +133,7 @@ $autoCompleteWidth: 326px;
   }
 }
 
-:host /deep/ {
+:host ::ng-deep {
   .ui-dropdown {
     height: 34px;
     width: 326px !important;

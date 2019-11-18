@@ -7,8 +7,8 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { subApplicationsConfig } from 'config/sub-applications';
-import { Calendar } from 'primeng/primeng';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { Calendar } from 'primeng/calendar';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 
 const listOfFilterNames: (keyof EntriesFilters)[] = [
     'createdAt',
@@ -23,15 +23,17 @@ const listOfFilterNames: (keyof EntriesFilters)[] = [
     'accessControlProfiles',
     'flavors',
     'distributions',
-    'customMetadata'
+    'customMetadata',
+    'youtubeVideo',
+    'videoQuiz',
 ];
 
 export interface PrimeListItem {
     label: string;
-    value: string;
     parent: PrimeListItem;
     listName: string;
     children: PrimeListItem[];
+    value: any;
 }
 
 export interface PrimeList {
@@ -53,7 +55,7 @@ export interface PrimeListsGroup {
 })
 export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChanges {
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
+  @ViewChild(ScrollToTopContainerComponent, { static: true }) _treeContainer: ScrollToTopContainerComponent;
     @Input() refineFilters: RefineGroup[];
     @Input() showEnforcedFilters = false;
 
@@ -62,8 +64,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
   @ViewChildren(RefinePrimeTree)
   public _primeTreesActions: RefinePrimeTree[];
 
-    @ViewChild('scheduledfrom') scheduledFrom: Calendar;
-    @ViewChild('scheduledto') scheduledTo: Calendar;
+    @ViewChild('scheduledfrom', { static: true }) scheduledFrom: Calendar;
+    @ViewChild('scheduledto', { static: true }) scheduledTo: Calendar;
 
   private _primeListsMap: { [key: string]: PrimeList } = {};
 
@@ -143,7 +145,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
               listFilter = updates[listName] ;
           }
 
-          if (typeof listFilter !== 'undefined') {
+          if (Array.isArray(listFilter) || listFilter === null) {
               // important: the above condition doesn't filter out 'null' because 'null' is valid value.
 
               const listSelectionsMap = this._entriesStore.filtersUtils.toMap(listData.selections, 'value');
@@ -172,6 +174,14 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                       updatedPrimeTreeSelections = true;
                   }
               });
+          }
+
+          if (listName === 'youtubeVideo') {
+              this._syncYoutubeVideoMode(listData);
+          }
+
+          if (listName === 'videoQuiz') {
+              this._syncVideoQuizMode(listData);
           }
 
           if (listName === 'timeScheduling') {
@@ -206,6 +216,16 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                     this._updateComponentState(changes);
                 }
             );
+    }
+
+    private _syncYoutubeVideoMode(listData: PrimeList): void {
+        const youtubeVideo = this._entriesStore.cloneFilter('youtubeVideo', false);
+        listData.selections = youtubeVideo ? [listData.items[0]] : [];
+    }
+
+    private _syncVideoQuizMode(listData: PrimeList): void {
+        const videoQuiz = this._entriesStore.cloneFilter('videoQuiz', false);
+        listData.selections = videoQuiz ? [listData.items[0]] : [];
     }
 
     private _syncScheduleDatesMode() {
@@ -253,41 +273,36 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
             this._primeListsGroups.push(filtersGroup);
 
             group.lists.forEach(list => {
+                const primeList = {items: [], selections: [], group: list.group};
+                const relevantEnforcedFilter = this.enforcedFilters ? this.enforcedFilters[list.name] : null;
+                const shouldAllowFilter = (!relevantEnforcedFilter || this.showEnforcedFilters);
+                if (shouldAllowFilter) {
+                    const listItems = list.items
+                        .filter(item => relevantEnforcedFilter ? relevantEnforcedFilter.indexOf(item.value) === -1 : true);
 
-                if (list.items.length > 0) {
-                    const primeList = {items: [], selections: [], group: list.group};
-                    const relevantEnforceFilter = this.enforcedFilters ? this.enforcedFilters[list.name] : null;
-
-                    if (!relevantEnforceFilter || this.showEnforcedFilters) {
-                        const listItems = list.items
-                            .filter(item => relevantEnforceFilter ? relevantEnforceFilter.indexOf(item.value) === -1 : true);
-
-                        if (listItems.length) {
-                            this._primeListsMap[list.name] = primeList;
-                            filtersGroup.lists.push(primeList);
-                            const listRootNode: PrimeListItem = {
-                                label: list.label,
-                                value: null,
-                                listName: list.name,
-                                parent: null,
-                                children: []
-                            };
-
-                            listItems.forEach(item => {
-                                listRootNode.children.push({
-                                    label: item.label,
-                                    value: item.value,
-                                    children: [],
-                                    listName: <any>list.name,
-                                    parent: listRootNode
-                                });
-                            });
-                            primeList.items.push(listRootNode);
-                        }
-                    }
+                    this._primeListsMap[list.name] = primeList;
+                    filtersGroup.lists.push(primeList);
+                    const listRootNode: PrimeListItem = {
+                        label: list.label,
+                        // single item filter (eg quiz, youtube) doesn't have value in children
+                        // set single item filter value here or set null for all other filters
+                        value: list.value || null,
+                        listName: list.name,
+                        parent: null,
+                        children: []
+                    };
+                    listItems.forEach(item => {
+                        listRootNode.children.push({
+                            label: item.label,
+                            value: item.value,
+                            children: [],
+                            listName: <any>list.name,
+                            parent: listRootNode
+                        });
+                    });
+                    primeList.items.push(listRootNode);
                 }
             });
-
         });
     }
 
@@ -391,7 +406,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                   newFilterItems = newFilterValue[node.listName] = newFilterValue[node.listName] || [];
                   newFilterName = 'customMetadata';
               } else {
-                  newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, []);
+                  if (node.listName === 'videoQuiz') {
+                      newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, false);
+                  } else {
+                      newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, []);
+                  }
                   newFilterName = node.listName;
               }
 
@@ -403,9 +422,14 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                       return selectedNode.value !== null && typeof selectedNode.value !== 'undefined';
                   })
                   .forEach(selectedNode => {
-                      if (!newFilterItems.find(item => item === selectedNode.value)) {
-                          newFilterItems.push(selectedNode.value);
+                      if (Array.isArray(newFilterItems)) {
+                          if (!newFilterItems.find(item => item === selectedNode.value)) {
+                              newFilterItems.push(selectedNode.value);
+                          }
+                      } else {
+                          newFilterValue = selectedNode.value;
                       }
+
                   });
               this._entriesStore.filter({[newFilterName]: newFilterValue});
           }
@@ -442,19 +466,27 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                       return selectedNode.value !== null && typeof selectedNode.value !== 'undefined';
                   })
                   .forEach(selectedNode => {
-                      const itemIndex = newFilterItems.findIndex(item => item === selectedNode.value);
-                      if (itemIndex > -1) {
-                          newFilterItems.splice(itemIndex, 1);
+                      if (Array.isArray(newFilterItems)) {
+                          const itemIndex = newFilterItems.findIndex(item => item === selectedNode.value);
+                          if (itemIndex > -1) {
+                              newFilterItems.splice(itemIndex, 1);
 
-                          if (node.listName === 'timeScheduling' && selectedNode.value === 'scheduled') {
-                              this._closeCalendar(this.scheduledFrom);
-                              this._closeCalendar(this.scheduledTo);
-                              this._entriesStore.filter({
-                                  scheduledAt: {
-                                      fromDate: null,
-                                      toDate: null
-                                  }
-                              });
+                              if (node.listName === 'timeScheduling' && selectedNode.value === 'scheduled') {
+                                  this._closeCalendar(this.scheduledFrom);
+                                  this._closeCalendar(this.scheduledTo);
+                                  this._entriesStore.filter({
+                                      scheduledAt: {
+                                          fromDate: null,
+                                          toDate: null
+                                      }
+                                  });
+                              }
+                          }
+                      } else {
+                          if (node.listName === 'videoQuiz' || node.listName === 'youtubeVideo') {
+                              newFilterValue = false;
+                          } else {
+                              newFilterValue = null;
                           }
                       }
                   });

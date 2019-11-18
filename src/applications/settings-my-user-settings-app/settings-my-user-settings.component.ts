@@ -23,9 +23,9 @@ export type UserSettingsPopup = 'editUserNamePopup' | 'editEmailAddressPopup' | 
   ]
 })
 export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
-  @ViewChild('editUserNamePopup') public editUserNamePopup: PopupWidgetComponent;
-  // @ViewChild('editEmailAddressPopup') public editEmailAddressPopup: PopupWidgetComponent;
-  @ViewChild('changePasswordPopup') public changePasswordPopup: PopupWidgetComponent;
+  @ViewChild('editUserNamePopup', { static: true }) public editUserNamePopup: PopupWidgetComponent;
+  // @ViewChild('editEmailAddressPopup', { static: true }) public editEmailAddressPopup: PopupWidgetComponent;
+  @ViewChild('changePasswordPopup', { static: true }) public changePasswordPopup: PopupWidgetComponent;
 
   private _updateUserName = false;
 

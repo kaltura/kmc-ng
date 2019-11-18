@@ -60,7 +60,7 @@
   flex-direction: column;
 }
 
-:host /deep/ p-table .stickyHeader{
+:host ::ng-deep p-table .stickyHeader{
   z-index: 10;
   display: table;
 }

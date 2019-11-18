@@ -10,10 +10,11 @@ import {
   ViewChild
 } from '@angular/core';
 import {KalturaCategory} from 'kaltura-ngx-client';
-import {Menu, MenuItem} from 'primeng/primeng';
+import { Menu } from 'primeng/menu';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'kEntitlementsTable',
@@ -42,7 +43,7 @@ export class EntitlementTableComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   @Output() onActionSelected = new EventEmitter<{ action: string, entitlement: KalturaCategory }>();
-  @ViewChild('actionsmenu') private actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
 
 
   constructor(private cdRef: ChangeDetectorRef,

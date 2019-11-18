@@ -8,7 +8,7 @@ import { KalturaIpAddressRestrictionType } from 'kaltura-ngx-client';
 import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client';
 import { AccessControlProfilesStore, ExtendedKalturaAccessControl } from '../profiles-store/profiles-store.service';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaAccessControl } from 'kaltura-ngx-client';
 import { KalturaSiteRestriction } from 'kaltura-ngx-client';
 import { KalturaCountryRestriction } from 'kaltura-ngx-client';

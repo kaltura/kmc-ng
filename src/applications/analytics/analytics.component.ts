@@ -8,7 +8,7 @@ import {
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ResetMenuEvent, UpdateMenuEvent } from 'app-shared/kmc-shared/events';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import {KMCPermissions, KMCPermissionsService} from "app-shared/kmc-shared/kmc-permissions";
 
 @Component({
@@ -133,7 +133,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                 open: () => {
                     this._router.navigateByUrl('/analytics/live');
                 },
-                menuTitle: this._permissions.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD) ? this._appLocalization.get('app.titles.realtime') : this._appLocalization.get('app.titles.live'),
+                menuTitle: this._appLocalization.get('app.titles.realtime'),
             });
         }
     }

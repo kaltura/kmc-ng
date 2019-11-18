@@ -19,8 +19,8 @@ import { serverConfig, buildBaseUri } from "config/server";
 })
 
 export class AccountsListComponent implements OnInit, OnDestroy {
-  @ViewChild('newAccountPopup') public newAccountPopup: PopupWidgetComponent;
-  @ViewChild('tags') private _tags: StickyComponent;
+  @ViewChild('newAccountPopup', { static: true }) public newAccountPopup: PopupWidgetComponent;
+  @ViewChild('tags', { static: true }) private _tags: StickyComponent;
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;

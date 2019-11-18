@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { StickyComponent } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { SectionWidgetItem, TranscodingProfileSectionsListWidget } from './transcoding-profile-sections-list-widget.service';
 import { TranscodingProfileStore } from '../transcoding-profile-store.service';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
@@ -11,7 +11,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
   styleUrls: ['./transcoding-profile-sections-list.component.scss']
 })
 export class TranscodingProfileSectionsListComponent implements OnInit, OnDestroy {
-  @ViewChild('profileSections') private _profileSections: StickyComponent;
+  @ViewChild('profileSections', { static: true }) private _profileSections: StickyComponent;
 
   public _loading = false;
   public _showList = false;

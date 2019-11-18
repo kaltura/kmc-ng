@@ -2,16 +2,6 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
 
-import {
-  ButtonModule,
-  CalendarModule,
-  CheckboxModule,
-  InputTextModule,
-  MenuModule,
-  PaginatorModule,
-  RadioButtonModule, TieredMenuModule,
-  TreeModule
-} from 'primeng/primeng';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {LocalizationModule} from '@kaltura-ng/mc-shared';
 import {AutoCompleteModule, KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
@@ -26,6 +16,15 @@ import { CategoriesTreePropagationDirective } from './categories-tree/categories
 import { CategoriesSearchService } from './categories-search.service';
 import { CategorySelectorComponent } from './category-selector/category-selector.component';
 import { CategoryTooltipPipe } from 'app-shared/content-shared/categories/category-tooltip.pipe';
+import { TreeModule } from 'primeng/tree';
+import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { CheckboxModule } from 'primeng/checkbox';
+import { MenuModule } from 'primeng/menu';
+import { PaginatorModule } from 'primeng/paginator';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { InputTextModule } from 'primeng/inputtext';
 
 @NgModule({
   imports: [

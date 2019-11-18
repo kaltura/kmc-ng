@@ -66,7 +66,7 @@
   color: $kGrayscale1;
 }
 
-:host /deep/ .ui-radiobutton-label {
+:host ::ng-deep .ui-radiobutton-label {
   margin-left: 10px;
   font-weight: normal;
   font-size: 15px;

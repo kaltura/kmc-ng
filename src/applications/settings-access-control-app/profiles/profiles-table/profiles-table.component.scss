@@ -141,7 +141,7 @@ $kmc-flags-path: '../../styles/flags/';
     flex-direction: column;
 }
 
-:host /deep/ .kAccessControlProfilesTable p-table {
+:host ::ng-deep .kAccessControlProfilesTable p-table {
     .ui-table .ui-table-tbody .pi-chevron-circle-down {
         margin-left: 0;
         margin-top: 3px;

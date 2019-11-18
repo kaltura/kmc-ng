@@ -50,6 +50,7 @@ export interface CaptionRow {
     label: string;
     fileExt: string;
     status?: KalturaCaptionAssetStatus;
+    displayOnPlayer?: boolean;
 }
 
 @Injectable()
@@ -266,7 +267,8 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       label: 'English',
       isDefault: 0,
       fileExt: '',
-      status: null
+      status: null,
+      displayOnPlayer: true,
     };
 
     // create a copy of the captions array without a reference to the original array
@@ -337,6 +339,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
               language: record.item.language,
               format: record.item.format,
               label: record.item.label,
+              displayOnPlayer: record.item.displayOnPlayer,
               isDefault: 0
             });
             const addCaptionRequest = new CaptionAssetAddAction({ entryId: this.data.id, captionAsset: captionAsset });

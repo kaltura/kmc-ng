@@ -1,3 +1,65 @@
+<a name="5.19.1"></a>
+## [5.19.1](https://github.com/kaltura/kmc-ng/compare/v5.19.0...v5.19.1) (2019-11-11)
+
+
+
+<a name="5.19.0"></a>
+# [5.19.0](https://github.com/kaltura/kmc-ng/compare/v5.18.0...v5.19.0) (2019-11-04)
+
+
+### Bug Fixes
+
+* **SUP-19722:** load max 500 dropfolders at once ([#868](https://github.com/kaltura/kmc-ng/issues/868)) ([023c0c7](https://github.com/kaltura/kmc-ng/commit/023c0c7))
+
+
+### Features
+
+* **entries/refine-filter:** Filter for entries with Quiz ([#745](https://github.com/kaltura/kmc-ng/issues/745)) ([be22f06](https://github.com/kaltura/kmc-ng/commit/be22f06))
+* **entries/refine-filter:** Filter for YouTube entries ([#874](https://github.com/kaltura/kmc-ng/issues/874)) ([6620ffe](https://github.com/kaltura/kmc-ng/commit/6620ffe))
+
+
+
+<a name="5.18.0"></a>
+# [5.18.0](https://github.com/kaltura/kmc-ng/compare/v5.17.0...v5.18.0) (2019-10-07)
+
+
+### Bug Fixes
+
+* **content/entry:** open live analytics for manual live entries ([614c63e](https://github.com/kaltura/kmc-ng/commit/614c63e))
+
+
+### Features
+
+* Upgrade to Angular 8 ([#853](https://github.com/kaltura/kmc-ng/issues/853)) ([82e506c](https://github.com/kaltura/kmc-ng/commit/82e506c))
+* Add the ability to toggle captions ([#869](https://github.com/kaltura/kmc-ng/issues/869)) ([6319b3d](https://github.com/kaltura/kmc-ng/commit/6319b3d))
+
+
+
+<a name="5.17.0"></a>
+# [5.17.0](https://github.com/kaltura/kmc-ng/compare/v5.16.1...v5.17.0) (2019-09-19)
+
+
+### Bug Fixes
+
+* **login:** direct users to login with SSO page ([22e9505](https://github.com/kaltura/kmc-ng/commit/22e9505))
+
+
+### Features
+
+* **administration/users:** add user analytics drill-down action ([#862](https://github.com/kaltura/kmc-ng/issues/862)) ([035e7e1](https://github.com/kaltura/kmc-ng/commit/035e7e1))
+
+
+<a name="5.16.1"></a>
+## [5.16.1](https://github.com/kaltura/kmc-ng/compare/v5.16.0...v5.16.1) (2019-09-15)
+
+
+### Bug Fixes
+
+* **content/syndication:** select default English language for iTunes syndication feeds ([b9b36a7](https://github.com/kaltura/kmc-ng/commit/b9b36a7))
+* **settings/transcoding:** make flavors checkboxes selectable ([#867](https://github.com/kaltura/kmc-ng/issues/867)) ([bf08b6e](https://github.com/kaltura/kmc-ng/commit/bf08b6e))
+
+
+
 <a name="5.16.0"></a>
 # [5.16.0](https://github.com/kaltura/kmc-ng/compare/v5.15.0...v5.16.0) (2019-09-08)
 

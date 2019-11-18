@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginScreens } from '../login.component';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { serverConfig } from 'config/server';
 
 @Component({
@@ -35,7 +35,7 @@ export class LoginFormComponent {
   @Output() onRememberMe = new EventEmitter<string>();
   @Output() onSetScreen = new EventEmitter<LoginScreens>();
 
-  @ViewChild('auth') authField;
+  @ViewChild('auth', { static: true }) authField;
 
   _loginForm: FormGroup;
   _usernameField: AbstractControl;

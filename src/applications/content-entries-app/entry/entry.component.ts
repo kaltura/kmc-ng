@@ -30,7 +30,7 @@ import { CustomMenuItem } from 'app-shared/content-shared/entries/entries-list/e
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ContentEntriesAppService } from '../content-entries-app.service';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
@@ -60,9 +60,9 @@ import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
 	]
 })
 export class EntryComponent implements OnInit, OnDestroy {
-    @ViewChild('liveDashboard') _liveDashboard: PopupWidgetComponent;
-    @ViewChild('clipAndTrim') _clipAndTrim: PopupWidgetComponent;
-    @ViewChild('bulkActionsPopup') _bulkActionsPopup: PopupWidgetComponent;
+    @ViewChild('liveDashboard', { static: true }) _liveDashboard: PopupWidgetComponent;
+    @ViewChild('clipAndTrim', { static: true }) _clipAndTrim: PopupWidgetComponent;
+    @ViewChild('bulkActionsPopup', { static: true }) _bulkActionsPopup: PopupWidgetComponent;
 	public _entryName: string;
 	public _entryType: KalturaMediaType;
 	public _sourceType: KalturaSourceType;
@@ -168,17 +168,16 @@ export class EntryComponent implements OnInit, OnDestroy {
         const { sourceType, status, mediaType } = entry;
         const isReadyStatus = status === KalturaEntryStatus.ready;
         const isPreviewCommand = commandName === 'preview';
-        const isKalturaLiveStream = sourceType === KalturaSourceType.liveStream;
+        const isKalturaLiveStream = (sourceType === KalturaSourceType.liveStream || sourceType === KalturaSourceType.manualLiveStream);
         const isLiveDashboardCommand = commandName === 'liveDashboard';
         const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
         const isDownloadCommand = commandName === 'download';
         const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
-        const canAccessNewLiveAnalytics = this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD);
         const isNotVideoAudioImage = [KalturaMediaType.video, KalturaMediaType.audio, KalturaMediaType.image].indexOf(mediaType) === -1;
         return !(
             (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
             // hide live-dashboard menu item for entry that isn't kaltura live or has permission to access new analytics
-            (isLiveDashboardCommand && (!isKalturaLiveStream || canAccessNewLiveAnalytics)) ||
+            (isLiveDashboardCommand && (!isKalturaLiveStream)) ||
             (isDownloadCommand && (isNotVideoAudioImage || isExternalMedia)) ||
             cannotDeleteEntry
         );
@@ -320,15 +319,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 								this._entryType = entry.mediaType;
 								this._sourceType = entry.sourceType;
                                 this._entry = entry;
-
-                                this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable() // new analytics app is available
-                                    && (
-                                        this._sourceType !== KalturaSourceType.liveStream // and not a live stream
-                                        || (this._sourceType === KalturaSourceType.liveStream // or it's a live stream and has permission
-                                            && this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD)
-                                        )
-                                    );
-
+                                this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable(); // new analytics app is available
                                 this._buildMenu(entry);
 								break;
 							case ActionTypes.EntryLoadingFailed:
@@ -465,7 +456,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 
     public _openEntryAnalytics(): void {
         if (this._analyticsAllowed) {
-            const route = this._sourceType === KalturaSourceType.liveStream ? 'analytics/entry-live' : 'analytics/entry';
+            const route = (this._sourceType === KalturaSourceType.liveStream || this._sourceType === KalturaSourceType.manualLiveStream) ? 'analytics/entry-live' : 'analytics/entry';
             this._router.navigate([route], { queryParams: { id: this._currentEntryId } });
         }
     }

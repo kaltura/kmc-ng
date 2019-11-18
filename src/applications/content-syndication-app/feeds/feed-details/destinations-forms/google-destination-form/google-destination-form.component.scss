@@ -11,7 +11,7 @@
 
 .kAddToDefaultTranscodingProfile {
   padding-top: 11px;
-  /deep/ {
+  ::ng-deep {
     .ui-chkbox-label {
       font-weight: normal;
     }
@@ -49,7 +49,7 @@
     padding-top: 12px;
   }
 }
-:host /deep/ .kSelectPlayer p-dropdown{
+:host ::ng-deep .kSelectPlayer p-dropdown{
     .ui-dropdown{
         width: 380px !important;
     }

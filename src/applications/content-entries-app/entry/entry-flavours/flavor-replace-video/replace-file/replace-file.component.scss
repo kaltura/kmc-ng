@@ -129,7 +129,7 @@
                 }
             }
 
-            .kHasError /deep/ .ui-dropdown {
+            .kHasError ::ng-deep .ui-dropdown {
                 border-color: $kDandger;
             }
         }
@@ -176,7 +176,7 @@
     }
 }
 
-:host /deep/ .kTranscodingProfile {
+:host ::ng-deep .kTranscodingProfile {
     .ui-dropdown-panel {
         width: 250px;
     }
@@ -189,36 +189,37 @@
     }
 
     .ui-dropdown.ui-widget {
+        min-width: 184px;
         width: 184px;
     }
 }
 
-:host /deep/ .kTable.empty .ui-widget-content {
+:host ::ng-deep .kTable.empty .ui-widget-content {
     display: none;
 }
 
-:host /deep/ .kTable .ui-table-scrollable-header,
-:host /deep/ .kTable .ui-table-scrollable-body {
+:host ::ng-deep .kTable .ui-table-scrollable-header,
+:host ::ng-deep .kTable .ui-table-scrollable-body {
     border-top: 1px $kGrayscale6 solid;
 }
 
-:host /deep/ .kTable .ui-table-scrollable-body {
+:host ::ng-deep .kTable .ui-table-scrollable-body {
     margin-bottom: -1px;
     max-height: 352px !important;
 }
 
-:host /deep/ .kTable.kLink .ui-table-scrollable-body {
+:host ::ng-deep .kTable.kLink .ui-table-scrollable-body {
     max-height: 281px !important;
 }
 
-:host /deep/ .kTable tr:hover .kIconRemoveFile { // show remove icon when hovering a row
+:host ::ng-deep .kTable tr:hover .kIconRemoveFile { // show remove icon when hovering a row
     display: block !important;
 }
 
-:host /deep/ .kTable .ui-table-scrollable-table-wrapper {
+:host ::ng-deep .kTable .ui-table-scrollable-table-wrapper {
     height: 280px;
 }
 
-button.kAddFileButton /deep/ .ui-button-icon-left {
+button.kAddFileButton ::ng-deep .ui-button-icon-left {
     font-size: 18px;
 }

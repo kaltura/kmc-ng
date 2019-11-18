@@ -10,12 +10,13 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
-import { Menu, MenuItem } from 'primeng/primeng';
+import { Menu } from 'primeng/menu';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaBulkUpload } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'kBulkLogTable',
@@ -49,7 +50,7 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Output()
   selectedBulkLogItemsChange = new EventEmitter<any>();
 
-  @ViewChild('actionsmenu') private actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
 
   private _deferredEntries: any[];
 

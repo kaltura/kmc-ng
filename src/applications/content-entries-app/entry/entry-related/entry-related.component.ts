@@ -6,8 +6,9 @@ import {KalturaAttachmentAsset} from 'kaltura-ngx-client';
 import {KalturaEntryStatus} from 'kaltura-ngx-client';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import {Menu, MenuItem, SelectItem} from 'primeng/primeng';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { Menu } from 'primeng/menu';
+import { MenuItem, SelectItem } from 'primeng/api';
 
 
 @Component({
@@ -21,8 +22,8 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
     public _loading = false;
     public _loadingError = null;
 
-	@ViewChild('actionsmenu') private actionsMenu: Menu;
-	@ViewChild('editPopup') public editPopup: PopupWidgetComponent;
+	@ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
+	@ViewChild('editPopup', { static: true }) public editPopup: PopupWidgetComponent;
 	public _currentFile: KalturaAttachmentAsset;
 
 	public _fileTypes: SelectItem[] = [

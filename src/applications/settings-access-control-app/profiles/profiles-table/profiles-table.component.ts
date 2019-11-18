@@ -10,11 +10,12 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { Menu, MenuItem } from 'primeng/primeng';
+import { Menu } from 'primeng/menu';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaAccessControl } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'kAccessControlProfilesTable',
@@ -50,7 +51,7 @@ export class ProfilesTableComponent implements AfterViewInit, OnInit, OnDestroy 
   @Output() selectedProfilesChange = new EventEmitter<KalturaAccessControl[]>();
   @Output() sortChanged = new EventEmitter<{ field: string, order: number }>();
 
-  @ViewChild('actionsmenu') private actionsMenu: Menu;
+  @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
 
   public _deferredLoading = true;
   public _emptyMessage = '';

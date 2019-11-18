@@ -3,7 +3,7 @@ import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaClient, KalturaMediaEntry, KalturaUser } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { AreaBlockerMessage, PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 
 @Component({

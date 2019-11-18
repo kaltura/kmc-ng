@@ -23,7 +23,7 @@ import { CategoriesModes } from 'app-shared/content-shared/categories/categories
 import { subApplicationsConfig } from 'config/sub-applications';
 import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 @Injectable()
 export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestroy {
   constructor(private _kalturaServerClient: KalturaClient,
@@ -71,6 +71,10 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
           const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
           advancedSearch.type = KalturaSearchOperatorType.searchAnd;
 
+          if (data.videoQuiz) {
+              // not supported by rulebased playlists, ignore it
+          }
+
           // filter 'freeText'
           if (data.freetext) {
             filter.freeText = data.freetext;
@@ -112,7 +116,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
                   }
                 );
 
-                distributionItem.items.push(newItem)
+                distributionItem.items.push(newItem);
               } else {
                 // this._logger.warn(`cannot convert distribution value '${item}' into number. ignoring value`);
               }
@@ -210,6 +214,10 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
             filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
           }
 
+          if (data.youtubeVideo) {
+              // not supported by rulebased playlists, ignore it
+          }
+
           filter.limit = data.limits && data.limits > 0 && data.limits <= subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults
             ? data.limits
             : subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults;
@@ -286,6 +294,8 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
       categoriesMode,
       customMetadata: {},
       limits: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults,
+      youtubeVideo: false,
+      videoQuiz: false,
     };
   }
 }

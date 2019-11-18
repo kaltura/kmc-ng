@@ -1152,6 +1152,8 @@
                 "uploadedItem": "Uploaded Item: {{0}}",
                 "status": "Status: {{0}}",
                 "permissionLevels": "Permission Level: {{0}}",
+                "youtubeVideo": "Youtube video",
+                "videoQuiz": "Video with Quiz",
                 "preferences": {
                     "preferences": "Preferences",
                     "filterPreferences": "Filter Preferences",
@@ -1207,7 +1209,8 @@
                 "nameTooltip": "{{0}}\nTags:\n{{1}}",
                 "download": "Download",
                 "editor": "Launch Editor",
-                "captionRequest": "Caption Request"
+                "captionRequest": "Caption Request",
+                "analytics": "View Analytics"
             },
             "paginator": {
                 "showRows": "Show rows:"
@@ -1782,7 +1785,8 @@
                     "uploadError": "Upload Error",
                     "remove": "Remove",
                     "noLabel": "Since no label was provided, the caption language will be used in the Player Captions menu",
-                    "pending": "Pending"
+                    "pending": "Pending",
+                    "displayOnPlayer": "Display on Player"
                 },
                 "live": {
                     "goLive": "Go Live",
@@ -2673,7 +2677,7 @@
                     },
                     "notifications": {
                         "title": "Notifications",
-                        "message": " Contact your Kaltura Representative to set up Notification Settings."
+                        "message": "Notifications are currently unavailable."
                     }
                 },
                 "entitlement": {
