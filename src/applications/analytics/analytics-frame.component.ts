@@ -66,8 +66,6 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                     }
                 }
             });
-
-        this.sendMessageToAnalyticsApp({'messageType': 'setLogsLevel', payload: { level: this._loggerConfigurator.currentLogLevel }});
     }
 
     private sendMessageToAnalyticsApp(message: any): void{
@@ -134,10 +132,11 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                 return;
             }
 
-            if (postMessageData.messageType === 'analytics-init') {
+            if (postMessageData.messageType === 'analyticsInit') {
+                this.sendMessageToAnalyticsApp({'messageType': 'setLogsLevel', payload: { level: this._loggerConfigurator.currentLogLevel }});
                 this.sendMessageToAnalyticsApp({'messageType': 'init', 'payload': config });
             };
-            if (postMessageData.messageType === 'analytics-init-complete') {
+            if (postMessageData.messageType === 'analyticsInitComplete') {
                 const prevRoute = this._browserService.previousRoute ? this._browserService.previousRoute.url : null;
                 this._initialized = true;
                 this.sendMessageToAnalyticsApp({'messageType': 'navigate', 'payload': { 'url': this._lastNav, 'queryParams': this._lastQueryParams, 'prevRoute': prevRoute }});
