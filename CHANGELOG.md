@@ -1,3 +1,8 @@
+<a name="5.19.2"></a>
+## [5.19.2](https://github.com/kaltura/kmc-ng/compare/v5.19.1...v5.19.2) (2019-11-21)
+
+
+
 <a name="5.19.1"></a>
 ## [5.19.1](https://github.com/kaltura/kmc-ng/compare/v5.19.0...v5.19.1) (2019-11-11)
 
