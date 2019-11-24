@@ -1339,7 +1339,8 @@
                 "dynamic": "Rule Based",
                 "external": "External RSS",
                 "staticList": "Manual",
-                "unknown": "Unknown"
+                "unknown": "Unknown",
+                "interactive": "Interactive Video"
             },
             "userStatus": {
                 "active": "Active",

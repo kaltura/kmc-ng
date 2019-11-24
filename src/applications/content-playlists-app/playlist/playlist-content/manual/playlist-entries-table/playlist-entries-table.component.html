@@ -13,10 +13,10 @@
             [(selection)]="selectedEntries">
             <ng-template pTemplate="header">
                 <tr>
-                    <th class="selectionColumn">
+                    <th class="selectionColumn" *ngIf="!isRapt">
                         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                     </th>
-                    <th class="thumbnailColumn" *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
+                    <th class="thumbnailColumn" [class.rapt]="isRapt" *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
                         {{'applications.content.table.thumbnail' | translate}}
                     </th>
                     <th [kpSortableColumn]="'name'">
@@ -36,19 +36,20 @@
                         <p-sortIcon [field]="'duration'"></p-sortIcon>
                     </th>
                     <th class="actionsColumn"
-                        *ngIf="isNewPlaylist || (_kmcPermissions.PLAYLIST_UPDATE | kNgIfPermitted)"></th>
+                        *ngIf="!isRapt && (isNewPlaylist || (_kmcPermissions.PLAYLIST_UPDATE | kNgIfPermitted))"></th>
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-entry let-i="rowIndex">
                 <tr [pSelectableRow]="entry">
 
-                    <td class="selectionColumn">
+                    <td class="selectionColumn" *ngIf="!isRapt">
                         <p-tableCheckbox [value]="entry"></p-tableCheckbox>
                     </td>
-                    <td class="thumbnailColumn" *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
+                    <td class="thumbnailColumn" [class.rapt]="isRapt" *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
                         <div class="kThumbnailHolder"
                              [class.kShowAsDisabled]="_kmcPermissions.CONTENT_MANAGE_BASE | kDisabledIfNotPermitted"
+                             [class.disablePointer]="isRapt"
                              (click)="_goToEntry(entry)">
                             <img [src]="entry.thumbnailUrl" onError="this.onerror=null;this.style.display='none'">
                             <i class="kIconyoutube kThumbnailTypeIcon" *ngIf="entry.externalSourceType === _youtubeExternalSourceType"></i>
@@ -57,8 +58,9 @@
                         </div>
                     </td>
                     <td>
-                    <span class="kTitle kTableColumn"
+                    <span class="kTableColumn"
                           [class.kShowAsDisabled]="_kmcPermissions.CONTENT_MANAGE_BASE | kDisabledIfNotPermitted"
+                          [class.kTitle]="!isRapt"
                           [kTooltip]="entry.name"
                           (click)="_goToEntry(entry)">{{entry.name}}</span>
                     </td>
@@ -68,7 +70,7 @@
                     </td>
                     <td class="createdAtColumn">{{entry.createdAt | kmcDate}}</td>
                     <td class="durationColumn">{{entry.duration | kTime | entryDuration:entry}}</td>
-                    <td class="actionsColumn">
+                    <td class="actionsColumn" *ngIf="!isRapt && (isNewPlaylist || (_kmcPermissions.PLAYLIST_UPDATE | kNgIfPermitted))">
                         <div class="kPlaylistEntriesTableActions">
                             <button type="button" pButton class="kMoreActionsButton" icon="kIconmore"
                                     (click)="_openActionsMenu($event, i, entry)"></button>

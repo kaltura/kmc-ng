@@ -29,6 +29,7 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
   public entries: PlaylistContentMediaEntry[] = [];
   public entriesTotalCount = 0;
   public entriesDuration = 0;
+  public _isRapt = false;
 
 
   constructor(private _kalturaClient: KalturaClient, logger: KalturaLogger) {
@@ -79,7 +80,7 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
 
   protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
     super._showLoader();
-
+    this._isRapt = this.data.adminTags ? this.data.adminTags.split(',').indexOf('raptentry') > -1 : false;
     return this._getEntriesRequest()
       .pipe(cancelOnDestroy(this, this.widgetReset$))
       .map((entries: KalturaMediaEntry[]) => {

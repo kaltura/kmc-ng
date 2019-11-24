@@ -6,6 +6,14 @@
   position: relative;
   padding: 0px;
 
+   .rapt {
+       width: 120px;
+       padding-left: 20px;
+   }
+    .disablePointer{
+        cursor: auto !important;
+    }
+
   .kThumbnailHolder {
     overflow: hidden;
     position: relative;

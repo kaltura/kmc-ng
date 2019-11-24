@@ -218,6 +218,10 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
                     throw error;
                 });
     }
+    
+    private _openRaptAnalytics(id: string): void {
+      this._router.navigate(['analytics/entry-rapt'], { queryParams: { id } });
+    }
 
   public _onTagsChange(): void {
     this.tags.updateLayout();
@@ -230,6 +234,9 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               break;
           case 'view':
               this._contentPlaylistViewService.open({ playlist: event.playlist, section: ContentPlaylistViewSections.Metadata });
+              break;
+          case 'analytics':
+              this._openRaptAnalytics( event.playlist.id );
               break;
           case 'delete':
               this._browserService.confirm(

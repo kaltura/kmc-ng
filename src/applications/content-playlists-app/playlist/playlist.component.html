@@ -6,17 +6,23 @@
 					<div class="kContent">
 						<button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
 						<div class="kTitle">{{ _playlistName }}</div>
-						<button pButton class="kButtonBranded kSaveBtn"
-                    [label]="'app.common.save' | translate"
-                    [disabled]="!_enableSaveBtn"
-                    (click)="save()"></button>
-						<button pButton class="kButtonDefault kNavigationBtnLeft"  icon="kIconarrow_backward" (click)="_navigateToPlaylist('prev')" [disabled]="!_enablePrevButton"></button>
-						<button pButton class="kButtonDefault kNavigationBtnRight" icon="kIconarrow_forward"  (click)="_navigateToPlaylist('next')" [disabled]="!_enableNextButton"></button>
-					</div>
+                        <div class="kEntryActionsWrapper">
+                            <button pButton icon="kIconstatistic" class="kButtonDefault kAnalytics"
+                                    *ngIf="_isRapt && _analyticsAllowed"
+                                    [label]="'applications.content.entries.viewAnalytics' | translate"
+                                    (click)="_openRaptAnalytics()"></button>
+                            <button pButton class="kButtonBranded kSaveBtn"
+                                    [label]="'app.common.save' | translate"
+                                    [disabled]="!_enableSaveBtn"
+                                    (click)="save()"></button>
+                            <button pButton class="kButtonDefault kNavigationBtnLeft"  icon="kIconarrow_backward" (click)="_navigateToPlaylist('prev')" [disabled]="!_enablePrevButton"></button>
+                            <button pButton class="kButtonDefault kNavigationBtnRight" icon="kIconarrow_forward"  (click)="_navigateToPlaylist('next')" [disabled]="!_enableNextButton"></button>
+                        </div>
+                    </div>
 				</div>
 			</kSticky>
 			<div class="kHeaderDetails">
-				<kPlaylistDetails></kPlaylistDetails>
+				<kPlaylistDetails [isRapt]="_isRapt"></kPlaylistDetails>
 			</div>
 			<div class="kDetailsMain">
 				<div class="kSections">
