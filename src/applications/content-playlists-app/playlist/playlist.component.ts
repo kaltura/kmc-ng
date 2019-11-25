@@ -260,7 +260,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   
   public _openRaptAnalytics(): void {
       if (this._analyticsAllowed) {
-          this._router.navigate(['analytics/entry-rapt'], { queryParams: { id: this._playlistStore.playlist.id } });
+          this._router.navigate(['analytics/playlist'], { queryParams: { id: this._playlistStore.playlist.id } });
       }
   }
 }
