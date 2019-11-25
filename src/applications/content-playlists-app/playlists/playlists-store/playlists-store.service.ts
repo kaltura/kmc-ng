@@ -24,6 +24,7 @@ import { globalConfig } from 'config/global';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaPlaylistListResponse } from 'kaltura-ngx-client';
+import {PlaylistsUtilsService} from "../../playlists-utils.service";
 
 export enum SortDirection {
   Desc = -1,
@@ -64,6 +65,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
   constructor(private _kalturaServerClient: KalturaClient,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
+              private _playlistsUtilsService: PlaylistsUtilsService,
               contentPlaylistsMainView: ContentPlaylistsMainViewService,
               _logger: KalturaLogger) {
         super(_logger);
@@ -142,7 +144,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
   private _extendPlaylistsWithTooltipAndRapt(playlists: ExtendedPlaylist[]): ExtendedPlaylist[] {
       playlists.forEach(playlist => {
           const tags = playlist.tags ? playlist.tags.split(',').filter(item => !!item).map(item => item.trim()).join('\n') : null;
-          playlist.isRapt = playlist.adminTags ? playlist.adminTags.split(',').indexOf('raptentry') > -1 : false;
+          playlist.isRapt = this._playlistsUtilsService.isRapt(playlist);
           playlist.tooltip = tags
               ? this._appLocalization.get('applications.content.table.nameTooltip', [playlist.name, tags])
               : playlist.name;

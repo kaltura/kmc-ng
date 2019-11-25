@@ -1,12 +1,15 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {KalturaPlaylist, KalturaPlaylistType} from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {PlaylistsUtilsService} from "../../playlists-utils.service";
 
 @Pipe({name: 'playlistType'})
 
 export class PlaylistTypePipe implements PipeTransform {
     
-    constructor(private appLocalization: AppLocalization) {
+    constructor(
+        private appLocalization: AppLocalization,
+        private _playlistsUtilsService: PlaylistsUtilsService) {
     }
     
     transform(value: KalturaPlaylist, isIcon: boolean): string {
@@ -32,7 +35,7 @@ export class PlaylistTypePipe implements PipeTransform {
                     break;
             }
         }
-        if (value.adminTags && value.adminTags.split(',').indexOf('raptentry') > -1){
+        if (this._playlistsUtilsService.isRapt(value)){
             className = 'kIconfeed'; /* TODO [kmc] update icon once ready */
             playlistType = this.appLocalization.get("applications.content.playlistType.interactive");
         }

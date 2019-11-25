@@ -17,6 +17,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { ContentPlaylistViewSections, ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { AnalyticsNewMainViewService } from "app-shared/kmc-shared/kmc-views";
+import {PlaylistsUtilsService} from "../playlists-utils.service";
 
 @Component({
   selector: 'kPlaylist',
@@ -57,6 +58,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
               private _playlistsStore: PlaylistsStore,
               private _permissionsService: KMCPermissionsService,
               private _playlistWidgetsManager: PlaylistWidgetsManager,
+              private _playlistsUtilsService: PlaylistsUtilsService,
               widget1: PlaylistSectionsListWidget,
               widget2: PlaylistDetailsWidget,
               widget3: ManualContentWidget,
@@ -114,7 +116,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
               case ActionTypes.PlaylistLoaded:
                 this._playlistName = this._playlistStore.playlist.name;
-                this._isRapt = this._playlistStore.playlist.adminTags && this._playlistStore.playlist.adminTags.split(',').indexOf('raptentry') > -1;
+                this._isRapt = this._playlistsUtilsService.isRapt(this._playlistStore.playlist);
                 this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable(); // new analytics app is available
                 this._playlistTypeIcon = this._playlistStore.playlist.playlistType === KalturaPlaylistType.staticList
                   ? 'kIconPlaylist_Manual'
