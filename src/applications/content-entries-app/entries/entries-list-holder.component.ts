@@ -61,19 +61,12 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       commandName: 'view',
       styleClass: ''
     },
-      this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD)
-          ? {
-              label: this._appLocalization.get('applications.content.table.realTimeAnalytics'),
-              commandName: 'realTimeAnalytics',
-              styleClass: '',
-              disabled: !this._analyticsNewMainViewService.isAvailable()
-          }
-          : {
-              label: this._appLocalization.get('applications.content.table.liveDashboard'),
-              commandName: 'liveDashboard',
-              styleClass: '',
-              disabled: !this._liveDashboardAppViewService.isAvailable()
-          },
+      {
+          label: this._appLocalization.get('applications.content.table.realTimeAnalytics'),
+          commandName: 'realTimeAnalytics',
+          styleClass: '',
+          disabled: !this._analyticsNewMainViewService.isAvailable()
+      },
       {
           label: this._appLocalization.get('applications.content.table.captionRequest'),
           commandName: 'captionRequest'

@@ -157,7 +157,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
     const newFlavor = <Flavor>flavor;
     newFlavor.name = flavor.flavorParams ? flavor.flavorParams.name : '';
     newFlavor.id = flavor.flavorAsset ? flavor.flavorAsset.id : '';
-    newFlavor.paramsId = flavor.flavorParams.id;
+    newFlavor.paramsId = flavor.flavorParams ? flavor.flavorParams.id : null;
     newFlavor.isSource = flavor.flavorAsset ? flavor.flavorAsset.isOriginal : false;
     newFlavor.isWidevine = flavor.flavorAsset ? flavor.flavorAsset instanceof KalturaWidevineFlavorAsset : false;
     newFlavor.isWeb = flavor.flavorAsset ? flavor.flavorAsset.isWeb : false;

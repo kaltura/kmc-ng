@@ -24,7 +24,8 @@ const listOfFilterNames: (keyof EntriesFilters)[] = [
     'flavors',
     'distributions',
     'customMetadata',
-    'youtubeVideo'
+    'youtubeVideo',
+    'videoQuiz',
 ];
 
 export interface PrimeListItem {
@@ -179,6 +180,10 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
               this._syncYoutubeVideoMode(listData);
           }
 
+          if (listName === 'videoQuiz') {
+              this._syncVideoQuizMode(listData);
+          }
+
           if (listName === 'timeScheduling') {
               this._syncScheduleDatesMode();
           }
@@ -216,6 +221,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
     private _syncYoutubeVideoMode(listData: PrimeList): void {
         const youtubeVideo = this._entriesStore.cloneFilter('youtubeVideo', false);
         listData.selections = youtubeVideo ? [listData.items[0]] : [];
+    }
+
+    private _syncVideoQuizMode(listData: PrimeList): void {
+        const videoQuiz = this._entriesStore.cloneFilter('videoQuiz', false);
+        listData.selections = videoQuiz ? [listData.items[0]] : [];
     }
 
     private _syncScheduleDatesMode() {
@@ -263,19 +273,25 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
             this._primeListsGroups.push(filtersGroup);
 
             group.lists.forEach(list => {
-                const primeList = { items: [], selections: [], group: list.group };
-                const shouldAllowFilter = (!this.enforcedFilters || !this.enforcedFilters[list.name]);
+                const primeList = {items: [], selections: [], group: list.group};
+                const relevantEnforcedFilter = this.enforcedFilters ? this.enforcedFilters[list.name] : null;
+                const shouldAllowFilter = (!relevantEnforcedFilter || this.showEnforcedFilters);
                 if (shouldAllowFilter) {
+                    const listItems = list.items
+                        .filter(item => relevantEnforcedFilter ? relevantEnforcedFilter.indexOf(item.value) === -1 : true);
+
                     this._primeListsMap[list.name] = primeList;
                     filtersGroup.lists.push(primeList);
                     const listRootNode: PrimeListItem = {
                         label: list.label,
-                        value: list.value,
+                        // single item filter (eg quiz, youtube) doesn't have value in children
+                        // set single item filter value here or set null for all other filters
+                        value: list.value || null,
                         listName: list.name,
                         parent: null,
                         children: []
                     };
-                    list.items.forEach(item => {
+                    listItems.forEach(item => {
                         listRootNode.children.push({
                             label: item.label,
                             value: item.value,
@@ -390,7 +406,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                   newFilterItems = newFilterValue[node.listName] = newFilterValue[node.listName] || [];
                   newFilterName = 'customMetadata';
               } else {
-                  newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, []);
+                  if (node.listName === 'videoQuiz') {
+                      newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, false);
+                  } else {
+                      newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, []);
+                  }
                   newFilterName = node.listName;
               }
 
@@ -409,6 +429,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                       } else {
                           newFilterValue = selectedNode.value;
                       }
+
                   });
               this._entriesStore.filter({[newFilterName]: newFilterValue});
           }
@@ -451,6 +472,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                               newFilterItems.splice(itemIndex, 1);
 
                               if (node.listName === 'timeScheduling' && selectedNode.value === 'scheduled') {
+                                  this._closeCalendar(this.scheduledFrom);
+                                  this._closeCalendar(this.scheduledTo);
                                   this._entriesStore.filter({
                                       scheduledAt: {
                                           fromDate: null,
@@ -460,7 +483,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                               }
                           }
                       } else {
-                          newFilterValue = null;
+                          if (node.listName === 'videoQuiz' || node.listName === 'youtubeVideo') {
+                              newFilterValue = false;
+                          } else {
+                              newFilterValue = null;
+                          }
                       }
                   });
 

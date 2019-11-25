@@ -1153,6 +1153,7 @@
                 "status": "Status: {{0}}",
                 "permissionLevels": "Permission Level: {{0}}",
                 "youtubeVideo": "Youtube video",
+                "videoQuiz": "Video with Quiz",
                 "preferences": {
                     "preferences": "Preferences",
                     "filterPreferences": "Filter Preferences",
@@ -2676,7 +2677,7 @@
                     },
                     "notifications": {
                         "title": "Notifications",
-                        "message": " Contact your Kaltura Representative to set up Notification Settings."
+                        "message": "Notifications are currently unavailable."
                     }
                 },
                 "entitlement": {

@@ -5,13 +5,11 @@ import {
   SortDirection
 } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
-import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client';
+import { KalturaPlayableEntryOrderBy, KalturaEntryModerationStatus, KalturaEntryStatus } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { PlaylistRuleParserService } from './playlist-rule-parser.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
-import { KalturaEntryModerationStatus } from 'kaltura-ngx-client';
-import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { PlaylistRule } from './playlist-rule.interface';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
@@ -52,7 +50,8 @@ export class PlaylistRuleComponent implements OnInit {
     ],
     'accessControlProfiles': [],
     'timeScheduling': [],
-      'youtubeVideo': false
+    'youtubeVideo': false,
+    'videoQuiz': false,
   };
 
   public _columns: EntriesTableColumns = {

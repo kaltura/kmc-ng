@@ -52,12 +52,6 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                 if (event instanceof NavigationEnd)  {
                     const { url, queryParams } = this._browserService.getUrlWithoutParams(event.urlAfterRedirects);
 
-                    // if it's a live entry and no permissions show warning
-                    if (url.indexOf('entry-live') !== -1 && !this._permissions.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD)) {
-                        this._browserService.handleUnpermittedAction(true);
-                        return;
-                    }
-
                     if (this._currentAppUrl !== url) {
                         this.updateLayout(window.innerHeight - 54);
                         this._currentAppUrl = url;
@@ -72,8 +66,6 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                     }
                 }
             });
-
-        this.sendMessageToAnalyticsApp({'messageType': 'setLogsLevel', payload: { level: this._loggerConfigurator.currentLogLevel }});
     }
 
     private sendMessageToAnalyticsApp(message: any): void{
@@ -112,7 +104,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             ks: this.appAuthentication.appUser.ks,
             pid: this.appAuthentication.appUser.partnerId,
             locale: 'en',
-            liveEntryUsersReports: this._browserService.getFromLocalStorage('kmc_analytics_live_entry_users_reports') || 'all',
+            liveEntryUsersReports: this._browserService.getFromLocalStorage('kmc_analytics_live_entry_users_reports') || 'All',
             dateFormat: this._browserService.getFromLocalStorage('kmc_date_format') || 'month-day-year',
             live: {
                 "pollInterval": 30,
@@ -120,8 +112,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             },
             multiAccount: multiAccountAnalyticsFlag === 'allAccounts',
             permissions: {
-                lazyLoadCategories: this._permissions.hasPermission(KMCPermissions.DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD),
-                enableLiveViews: this._permissions.hasPermission(KMCPermissions.FEATURE_LIVE_ANALYTICS_DASHBOARD),
+                lazyLoadCategories: this._permissions.hasPermission(KMCPermissions.DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD)
             }
         };
 
@@ -141,10 +132,11 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                 return;
             }
 
-            if (postMessageData.messageType === 'analytics-init') {
+            if (postMessageData.messageType === 'analyticsInit') {
+                this.sendMessageToAnalyticsApp({'messageType': 'setLogsLevel', payload: { level: this._loggerConfigurator.currentLogLevel }});
                 this.sendMessageToAnalyticsApp({'messageType': 'init', 'payload': config });
             };
-            if (postMessageData.messageType === 'analytics-init-complete') {
+            if (postMessageData.messageType === 'analyticsInitComplete') {
                 const prevRoute = this._browserService.previousRoute ? this._browserService.previousRoute.url : null;
                 this._initialized = true;
                 this.sendMessageToAnalyticsApp({'messageType': 'navigate', 'payload': { 'url': this._lastNav, 'queryParams': this._lastQueryParams, 'prevRoute': prevRoute }});
