@@ -36,7 +36,7 @@ export class PlaylistTypePipe implements PipeTransform {
             }
         }
         if (this._playlistsUtilsService.isRapt(value)){
-            className = 'kIconfeed'; /* TODO [kmc] update icon once ready */
+            className = 'kIconplaylist_interactive_small';
             playlistType = this.appLocalization.get("applications.content.playlistType.interactive");
         }
         return isIcon ? className : playlistType;
