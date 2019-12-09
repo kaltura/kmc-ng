@@ -76,12 +76,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _kmcPermissions = KMCPermissions;
     public _items: CustomMenuItem[] = [
         {
-            label: this._appLocalization.get('applications.content.table.liveDashboard'),
-            commandName: 'liveDashboard',
-            styleClass: '',
-            disabled: !this._liveDashboardAppViewService.isAvailable()
-        },
-        {
             label: this._appLocalization.get('applications.content.table.download'),
             commandName: 'download',
             styleClass: ''
@@ -169,15 +163,12 @@ export class EntryComponent implements OnInit, OnDestroy {
         const isReadyStatus = status === KalturaEntryStatus.ready;
         const isPreviewCommand = commandName === 'preview';
         const isKalturaLiveStream = (sourceType === KalturaSourceType.liveStream || sourceType === KalturaSourceType.manualLiveStream);
-        const isLiveDashboardCommand = commandName === 'liveDashboard';
         const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
         const isDownloadCommand = commandName === 'download';
         const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
         const isNotVideoAudioImage = [KalturaMediaType.video, KalturaMediaType.audio, KalturaMediaType.image].indexOf(mediaType) === -1;
         return !(
             (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
-            // hide live-dashboard menu item for entry that isn't kaltura live or has permission to access new analytics
-            (isLiveDashboardCommand && (!isKalturaLiveStream)) ||
             (isDownloadCommand && (isNotVideoAudioImage || isExternalMedia)) ||
             cannotDeleteEntry
         );
@@ -191,9 +182,6 @@ export class EntryComponent implements OnInit, OnDestroy {
                     case 'preview':
                         item.disabled = entry.status === KalturaEntryStatus.noContent;
                         item.command = () => this._appEvents.publish(new PreviewAndEmbedEvent(entry));
-                        break;
-                    case 'liveDashboard':
-                        item.command = () => this._liveDashboard.open();
                         break;
                     case 'editor':
                         item.disabled = !this._clipAndTrimAppViewService.isAvailable({
