@@ -60,7 +60,8 @@ export class CustomSchemaFormComponent {
   public _applyToField: AbstractControl;
   public _applyToValues = {
     entry: KalturaMetadataObjectType.entry.toString(),
-    category: KalturaMetadataObjectType.category.toString()
+    category: KalturaMetadataObjectType.category.toString(),
+    userEntry: KalturaMetadataObjectType.userEntry.toString()
   };
     public _nameMaxLength = 32;
 

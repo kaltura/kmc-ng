@@ -93,6 +93,7 @@
     <kCustomSchemaFieldForm [field]="_selectedField"
                             [fields]="_profileFields"
                             [parentPopupWidget]="customSchemaField"
+                            [applyTo]="_schema?.applyTo"
                             (onSave)="_saveField($event)"></kCustomSchemaFieldForm>
   </ng-template>
 </kPopupWidget>

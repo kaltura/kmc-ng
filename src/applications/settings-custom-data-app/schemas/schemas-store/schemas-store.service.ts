@@ -156,7 +156,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
       const filter = new KalturaMetadataProfileFilter({
         orderBy: KalturaMetadataOrderBy.createdAtDesc.toString(),
         createModeNotEqual: KalturaMetadataProfileCreateMode.app,
-        metadataObjectTypeIn: [KalturaMetadataObjectType.entry, KalturaMetadataObjectType.category].join(',')
+        metadataObjectTypeIn: [KalturaMetadataObjectType.entry, KalturaMetadataObjectType.category, KalturaMetadataObjectType.userEntry].join(',')
       });
       let pager: KalturaFilterPager = null;
 

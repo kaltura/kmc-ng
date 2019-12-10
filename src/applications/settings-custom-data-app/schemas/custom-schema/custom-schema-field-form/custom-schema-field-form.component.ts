@@ -7,6 +7,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui'
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { KalturaMetadataObjectType } from "kaltura-ngx-client";
 
 @Component({
   selector: 'kCustomSchemaFieldForm',
@@ -17,6 +18,8 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() field: MetadataItem | null;
+  
+  @Input() applyTo: KalturaMetadataObjectType;
 
   @Input() fields: MetadataItem[] | null;
 

@@ -2577,7 +2577,8 @@
                 "fields": "{{0}} Custom Fields",
                 "applyTo": {
                     "entries": "Entries",
-                    "categories": "Categories"
+                    "categories": "Categories",
+                    "userEntry": "User Entry"
                 },
                 "form": {
                     "customSchemaTitle": "Custom Schema Title",
@@ -2586,6 +2587,7 @@
                     "applyTo": "Apply to",
                     "entries": "Entries",
                     "categories": "Categories",
+                    "userEntry": "User Entry",
                     "schemaNameRequired": "Name is required",
                     "schemaNameMaxLength": "Name must be less than {{0}} characters long"
                 },
@@ -2638,6 +2640,8 @@
                     "shortDescription": "Short Description",
                     "description": "Description",
                     "searchable": "Searchable",
+                    "hidden": "Hidden",
+                    "required": "Required",
                     "includeTime": "Include Time",
                     "listValues": "List Values",
                     "listValuesPlaceholder": "Enter the values, one per line",
