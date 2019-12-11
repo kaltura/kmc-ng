@@ -19,19 +19,19 @@
                     <th class="thumbnailColumn" [class.rapt]="isRapt" *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
                         {{'applications.content.table.thumbnail' | translate}}
                     </th>
-                    <th [kpSortableColumn]="'name'">
+                    <th [kpSortableColumn]="isRapt ? null : 'name'">
                         {{'applications.content.table.name' | translate}}
                         <p-sortIcon [field]="'name'"></p-sortIcon>
                     </th>
-                    <th class="mediaTypeColumn" [kpSortableColumn]="'mediaType'">
+                    <th class="mediaTypeColumn" [kpSortableColumn]="isRapt ? null : 'mediaType'">
                         {{'applications.content.table.type' | translate}}
                         <p-sortIcon [field]="'mediaType'"></p-sortIcon>
                     </th>
-                    <th class="createdAtColumn" [kpSortableColumn]="'createdAt'">
+                    <th class="createdAtColumn" [kpSortableColumn]="isRapt ? null : 'createdAt'">
                         {{'applications.content.table.createdOn' | translate}}
                         <p-sortIcon [field]="'createdAt'"></p-sortIcon>
                     </th>
-                    <th class="durationColumn" [kpSortableColumn]="'duration'">
+                    <th class="durationColumn" [kpSortableColumn]="isRapt ? null : 'duration'">
                         {{'applications.content.table.duration' | translate}}
                         <p-sortIcon [field]="'duration'"></p-sortIcon>
                     </th>
