@@ -45,6 +45,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
   public _shortDescriptionField: AbstractControl;
   public _descriptionField: AbstractControl;
   public _searchableField: AbstractControl;
+  public _requiredField: AbstractControl;
   // optional fields
   public _includeTimeField: AbstractControl;
   public _listValuesFiled: AbstractControl;
@@ -116,7 +117,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
         shortDescription: this._field.description,
         description: this._field.documentations,
         searchable: !!this._field.isSearchable,
-
+        required: !!this._field.isRequired,
         includeTime: !!this._field.isTimeControl,
         listValues: (this._field.optionalValues && this._field.optionalValues.length)
           ? this._field.optionalValues.map(({ value }) => value).join('\n')
@@ -158,7 +159,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
       shortDescription: '',
       description: '',
       searchable: true,
-
+      required: false,
       // optional fields
       includeTime: false,
       listValues: '',
@@ -170,6 +171,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
     this._shortDescriptionField = this._fieldForm.controls['shortDescription'];
     this._descriptionField = this._fieldForm.controls['description'];
     this._searchableField = this._fieldForm.controls['searchable'];
+    this._requiredField = this._fieldForm.controls['required'];
 
     // optional fields
     this._includeTimeField = this._fieldForm.controls['includeTime'];
@@ -186,7 +188,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
   private _update(): MetadataItem {
     this._logger.info(`handle update field with form data`);
     const formValue = this._fieldForm.getRawValue();
-    const { label, shortDescription, description, searchable, includeTime, listValues } = formValue;
+    const { label, shortDescription, description, searchable, includeTime, listValues, required } = formValue;
 
     if (this._field.key !== label) {
       this._field.key = label;
@@ -202,6 +204,10 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
 
     if (this._field.isSearchable !== searchable) {
       this._field.isSearchable = searchable;
+    }
+    
+    if (this._field.isRequired !== required) {
+      this._field.isRequired = required;
     }
 
     if (this._field.isTimeControl !== includeTime) {
@@ -263,7 +269,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
   private _create(): MetadataItem {
     this._logger.info(`handle creation of new field with form data`);
     const formValue = this._fieldForm.value;
-    const { label, type, allowMultiple, shortDescription, description, searchable, includeTime, listValues } = formValue;
+    const { label, type, allowMultiple, shortDescription, description, searchable, required, includeTime, listValues } = formValue;
     const formattedLabel = label.trim();
     const systemName = formattedLabel
       .replace(/[~`:;,!@#$%\^*()\-+.={}|?\\\/\[\]]/g, '')
@@ -291,11 +297,11 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
       key: formattedLabel,
       label: formattedLabel,
       isSearchable: searchable,
+      isRequired: required,
       isTimeControl: includeTime,
       description: shortDescription,
       documentations: description,
       optionalValues: [],
-      isRequired: false,
       children: [],
       id: this._generateFieldId()
     };

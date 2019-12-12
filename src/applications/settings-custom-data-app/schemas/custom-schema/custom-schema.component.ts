@@ -27,8 +27,7 @@ export class CustomSchemaComponent implements OnInit {
   @ViewChild('customSchemaField', { static: true }) _customSchemaFieldPopup: PopupWidgetComponent;
 
   private _isFieldsOrderChanged = false;
-
-  public _isSavedDisabled = false;
+  
   public _title;
   public _schema: SettingsMetadataProfile;
   public _selectedFields: MetadataItem[] = [];

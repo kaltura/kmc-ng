@@ -180,7 +180,7 @@ export class MetadataProfileParser {
         'attr': {
           'id': item.id,
           'name': item.name,
-          'minOccurs': 0,
+          'minOccurs': item.isRequired ? 1 : 0,
           'maxOccurs': item.allowMultiple ? 'unbounded' : 1
         },
         'annotation': {
