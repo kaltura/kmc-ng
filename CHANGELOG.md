@@ -1,3 +1,18 @@
+<a name="5.20.0"></a>
+# [5.20.0](https://github.com/kaltura/kmc-ng/compare/v5.19.2...v5.20.0) (2019-12-12)
+
+
+### Bug Fixes
+
+* **KMCNG-2201:** selected entries bucket style ([#871](https://github.com/kaltura/kmc-ng/issues/871)) ([06c0e5b](https://github.com/kaltura/kmc-ng/commit/06c0e5b))
+
+
+### Features
+
+* **content/playlists:** support Interactive Video entries (rapt playlists) ([#880](https://github.com/kaltura/kmc-ng/issues/880)) ([e6778ee](https://github.com/kaltura/kmc-ng/commit/e6778ee))
+
+
+
 <a name="5.19.2"></a>
 ## [5.19.2](https://github.com/kaltura/kmc-ng/compare/v5.19.1...v5.19.2) (2019-11-21)
 
