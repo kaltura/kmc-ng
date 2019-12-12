@@ -1,6 +1,6 @@
 <k-details-bar #detailsBar [data]="_currentPlaylist">
-  <kDetailInfo [iconStyle]="_currentPlaylist?.playlistType | playlistType: true" [tooltip]="_currentPlaylist?.playlistType | playlistType: false"></kDetailInfo>
-  <kDetailInfo [label]="'applications.content.playlistDetails.details.type' | translate" [value]="_currentPlaylist?.playlistType | playlistType: false"></kDetailInfo>
+  <kDetailInfo [iconStyle]="_currentPlaylist ? (_currentPlaylist | playlistType: true) : ''" [tooltip]="_currentPlaylist ? (_currentPlaylist | playlistType: false) : ''"></kDetailInfo>
+  <kDetailInfo [label]="'applications.content.playlistDetails.details.type' | translate" [value]="_currentPlaylist ? (_currentPlaylist | playlistType: false) : ''"></kDetailInfo>
   <kDetailInfo *ngIf="!_isNew" [label]="'applications.content.playlistDetails.details.id' | translate" [valueField]="'id'"></kDetailInfo>
   <kDetailInfo [label]="'applications.content.playlistDetails.details.creator' | translate" [valueField]="'creatorId'" [tooltip]="_currentPlaylist?.creatorId"></kDetailInfo>
 

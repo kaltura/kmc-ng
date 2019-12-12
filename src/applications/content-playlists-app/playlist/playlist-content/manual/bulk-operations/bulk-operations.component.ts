@@ -12,6 +12,7 @@ export class BulkOperationsComponent {
   @Input() entriesTotalCount = 0;
   @Input() duration = 0;
   @Input() isNewPlaylist: boolean;
+  @Input() isRapt: boolean;
 
   @Output() addEntry = new EventEmitter<void>();
   @Output() clearSelection = new EventEmitter<void>();

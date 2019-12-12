@@ -35,6 +35,7 @@ import { MenuModule } from 'primeng/menu';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { SharedModule } from 'primeng/shared';
 import { DropdownModule } from 'primeng/dropdown';
+import { PlaylistsUtilsService } from './playlists-utils.service';
 
 @NgModule({
     imports: [
@@ -78,7 +79,8 @@ import { DropdownModule } from 'primeng/dropdown';
     exports: [
     ],
     providers : [
-      PlaylistCanDeactivate
+      PlaylistCanDeactivate,
+      PlaylistsUtilsService
     ]
 })
 export class ContentPlaylistsAppModule {

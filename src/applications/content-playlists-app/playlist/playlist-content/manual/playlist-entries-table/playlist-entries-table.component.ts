@@ -20,6 +20,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   @Input() sortBy: string;
   @Input() sortDirection: number;
   @Input() isNewPlaylist: boolean;
+  @Input() isRapt: boolean;
 
   @Input()
   set entries(data: any[]) {
@@ -117,7 +118,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   }
 
   public _goToEntry(entry: KalturaMediaEntry): void {
-    if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_BASE)) {
+    if (!this.isRapt && this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_BASE)) {
         this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
     }
   }

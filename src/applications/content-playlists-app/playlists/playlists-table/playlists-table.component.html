@@ -58,7 +58,7 @@
           </td>
 
             <td [ngStyle]="{'width': '44px'}">
-                <div [ngClass]="playlist.playlistType | playlistType: true" class="kMediaTypeIcon"></div>
+                <div [ngClass]="playlist | playlistType: true" class="kMediaTypeIcon"></div>
             </td>
 
           <td class="ui-resizable-column">
@@ -76,8 +76,8 @@
           </td>
 
           <td class="ui-resizable-column">
-              <span class="kTableColumn" [kTooltip]="playlist.playlistType | playlistType" [showOnEllipsis]="true">
-                  {{playlist.playlistType | playlistType}}
+              <span class="kTableColumn" [kTooltip]="playlist | playlistType : false" [showOnEllipsis]="true">
+                  {{playlist | playlistType : false}}
               </span>
           </td>
 

@@ -24,6 +24,7 @@ import { globalConfig } from 'config/global';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaPlaylistListResponse } from 'kaltura-ngx-client';
+import {PlaylistsUtilsService} from "../../playlists-utils.service";
 
 export enum SortDirection {
   Desc = -1,
@@ -41,6 +42,7 @@ export interface PlaylistsFilters {
 
 export interface ExtendedPlaylist extends KalturaPlaylist {
     tooltip?: string;
+    isRapt?: boolean;
 }
 
 const localStoragePageSizeKey = 'playlists.list.pageSize';
@@ -63,6 +65,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
   constructor(private _kalturaServerClient: KalturaClient,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
+              private _playlistsUtilsService: PlaylistsUtilsService,
               contentPlaylistsMainView: ContentPlaylistsMainViewService,
               _logger: KalturaLogger) {
         super(_logger);
@@ -127,7 +130,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
           this._playlists.state.next({ loading: false, errorMessage: null });
 
           this._playlists.data.next({
-            items: this._extendPlaylistsWithTooltip(response.objects),
+            items: this._extendPlaylistsWithTooltipAndRapt(response.objects),
             totalCount: <number>response.totalCount
           });
         },
@@ -138,9 +141,10 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
         });
   }
 
-  private _extendPlaylistsWithTooltip(playlists: ExtendedPlaylist[]): ExtendedPlaylist[] {
+  private _extendPlaylistsWithTooltipAndRapt(playlists: ExtendedPlaylist[]): ExtendedPlaylist[] {
       playlists.forEach(playlist => {
           const tags = playlist.tags ? playlist.tags.split(',').filter(item => !!item).map(item => item.trim()).join('\n') : null;
+          playlist.isRapt = this._playlistsUtilsService.isRapt(playlist);
           playlist.tooltip = tags
               ? this._appLocalization.get('applications.content.table.nameTooltip', [playlist.name, tags])
               : playlist.name;
@@ -174,7 +178,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       // update desired fields of entries
         responseProfile = new KalturaDetachedResponseProfile({
           type: KalturaResponseProfileType.includeFields,
-          fields: 'id,name,createdAt,playlistType,status,tags'
+          fields: 'id,name,createdAt,playlistType,status,tags,adminTags'
         });
 
       // update the sort by args

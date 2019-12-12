@@ -23,7 +23,7 @@
                   (click)="deleteEntries.emit(selectedEntries)"></button>
         </div>
         <ng-template #addEntryWrap>
-          <button
+          <button *ngIf="!isRapt"
             pButton
             [disabled]="!isNewPlaylist && (_kmcPermissions.PLAYLIST_UPDATE | kDisabledIfNotPermitted)"
             type="button"
@@ -44,7 +44,7 @@
           </a>
         </div>
       </div>
-      <div *ngIf="duration" class="kPlaylistEntriesTableDuration">
+      <div *ngIf="duration && !isRapt" class="kPlaylistEntriesTableDuration">
         <span>{{'applications.content.playlistDetails.details.duration' | translate : [(duration | kTime)] }}</span>
       </div>
     </div>

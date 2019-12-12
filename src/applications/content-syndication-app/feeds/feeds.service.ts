@@ -233,7 +233,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
       new PlaylistListAction({filter, pager})
     )
       .map((response: KalturaPlaylistListResponse) => {
-        return response.objects;
+        return response.objects.filter( (playlist: KalturaPlaylist) => !playlist.adminTags || (playlist.adminTags && playlist.adminTags.split(',').indexOf('raptentry') === -1));
       });
 
   }
