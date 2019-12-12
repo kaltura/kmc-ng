@@ -21,6 +21,7 @@ export interface MetadataItem
     documentations? : string;
     label? : string;
     isSearchable? : boolean;
+    isHidden? : boolean;
     key? : string;
     isTimeControl? : boolean;
     description? : string;

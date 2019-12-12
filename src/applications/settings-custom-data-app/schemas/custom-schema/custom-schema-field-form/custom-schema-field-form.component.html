@@ -107,6 +107,16 @@
           </div>
       </div>
 
+      <div class="kRow" [class.kHidden]="applyTo!=='6'">
+          <span class="kLabel">{{'applications.settings.metadata.fieldForm.hidden' | translate}}</span>
+          <div>
+              <p-inputSwitch [formControl]="_hiddenField"></p-inputSwitch>
+              <span class="kInputSwitchLabel">
+            {{_hiddenField.value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}
+        </span>
+          </div>
+      </div>
+
   </form>
 
   <div class="kFooter">

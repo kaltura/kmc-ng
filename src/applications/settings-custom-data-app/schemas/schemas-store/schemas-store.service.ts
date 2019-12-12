@@ -194,7 +194,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
     return new MetadataProfileUpdateAction({
       id: schema.id,
       metadataProfile: updatedProfile,
-      xsdData: this._metadataProfileParser.generateSchema(schema.parsedProfile)
+      xsdData: this._metadataProfileParser.generateSchema(schema.parsedProfile, schema.applyTo)
     });
   }
 
@@ -211,7 +211,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
 
     return new MetadataProfileAddAction({
       metadataProfile: newProfile,
-      xsdData: this._metadataProfileParser.generateSchema(schema.parsedProfile)
+      xsdData: this._metadataProfileParser.generateSchema(schema.parsedProfile, schema.applyTo)
     });
   }
 
