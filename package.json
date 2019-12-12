@@ -1,6 +1,6 @@
 {
   "name": "kmc-ng",
-  "version": "5.19.2",
+  "version": "5.20.0",
   "license": "AGPL-3.0",
   "private": true,
   "repository": {
@@ -64,7 +64,7 @@
     "@kaltura-ng/kaltura-primeng-ui": "~3.3.0",
     "@kaltura-ng/kaltura-ui": "~7.3.0",
     "@kaltura-ng/mc-shared": "~5.2.0",
-    "@kaltura-ng/mc-theme": "~3.1.1",
+    "@kaltura-ng/mc-theme": "~3.1.2",
     "@ngx-translate/core": "~11.0.1",
     "@ngx-translate/http-loader": "~4.0.0",
     "ajv": "~6.1.1",

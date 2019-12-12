@@ -5,6 +5,7 @@
         [isNewPlaylist]="_widgetService.isNewData"
         [duration]="_widgetService.entriesDuration"
         [entriesTotalCount]="_widgetService.entriesTotalCount"
+        [isRapt]="_widgetService._isRapt"
         (addEntry)="addEntry.open()"
         (deleteEntries)="_deleteSelected($event)"
         (clearSelection)="_clearSelection()"
@@ -14,6 +15,7 @@
     <kPlaylistEntriesTable
       class="kPlaylistEntriesTable"
       [isNewPlaylist]="_widgetService.isNewData"
+      [isRapt]="_widgetService._isRapt"
       [entries]="_widgetService.entries"
       (onActionSelected)="_onActionSelected($event)"
       (sortChanged)="_onSortChanged($event)"

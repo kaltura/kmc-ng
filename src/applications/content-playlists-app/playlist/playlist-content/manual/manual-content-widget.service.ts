@@ -17,6 +17,7 @@ import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import {PlaylistsUtilsService} from "../../../playlists-utils.service";
 
 export interface PlaylistContentMediaEntry extends KalturaMediaEntry {
   selectionId?: string;
@@ -29,9 +30,12 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
   public entries: PlaylistContentMediaEntry[] = [];
   public entriesTotalCount = 0;
   public entriesDuration = 0;
+  public _isRapt = false;
 
 
-  constructor(private _kalturaClient: KalturaClient, logger: KalturaLogger) {
+  constructor(private _kalturaClient: KalturaClient,
+              logger: KalturaLogger,
+              private _playlistsUtilsService: PlaylistsUtilsService) {
     super(ContentPlaylistViewSections.Content, logger);
   }
 
@@ -79,7 +83,7 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
 
   protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
     super._showLoader();
-
+    this._isRapt = this._playlistsUtilsService.isRapt(this.data);
     return this._getEntriesRequest()
       .pipe(cancelOnDestroy(this, this.widgetReset$))
       .map((entries: KalturaMediaEntry[]) => {
