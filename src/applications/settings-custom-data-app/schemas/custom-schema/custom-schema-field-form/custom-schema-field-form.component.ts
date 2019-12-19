@@ -19,7 +19,9 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
 
   @Input() field: MetadataItem | null;
   
-  @Input() applyTo: KalturaMetadataObjectType;
+  @Input() set applyTo(type: KalturaMetadataObjectType){
+    this._isUserEntry = type === KalturaMetadataObjectType.userEntry;
+  };
 
   @Input() fields: MetadataItem[] | null;
 
@@ -29,6 +31,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
 
   private _field: MetadataItem;
   public _isNew = true;
+  public _isUserEntry = true;
   private _systemNames: string[] = [];
 
   private get _requiredFieldsIsDirty(): boolean {

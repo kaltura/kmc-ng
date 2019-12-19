@@ -97,7 +97,7 @@
       </div>
     </div>
 
-      <div class="kRow" [class.kHidden]="applyTo!=='6'">
+      <div class="kRow" [class.kHidden]="!_isUserEntry">
           <span class="kLabel">{{'applications.settings.metadata.fieldForm.required' | translate}}</span>
           <div>
               <p-inputSwitch [formControl]="_requiredField"></p-inputSwitch>
@@ -107,7 +107,7 @@
           </div>
       </div>
 
-      <div class="kRow" [class.kHidden]="applyTo!=='6'">
+      <div class="kRow" [class.kHidden]="!_isUserEntry">
           <span class="kLabel">{{'applications.settings.metadata.fieldForm.hidden' | translate}}</span>
           <div>
               <p-inputSwitch [formControl]="_hiddenField"></p-inputSwitch>
