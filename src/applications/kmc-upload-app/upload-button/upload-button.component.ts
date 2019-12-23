@@ -28,7 +28,8 @@ export class UploadButtonComponent {
           KMCPermissions.CONTENT_INGEST_BULK_UPLOAD,
           KMCPermissions.CONTENT_INGEST_ORPHAN_VIDEO,
           KMCPermissions.CONTENT_INGEST_ORPHAN_AUDIO,
-          KMCPermissions.LIVE_STREAM_ADD
+          KMCPermissions.LIVE_STREAM_ADD,
+          KMCPermissions.ADMIN_USER_BULK
       ]);
   }
 
