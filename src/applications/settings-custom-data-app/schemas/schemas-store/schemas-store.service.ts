@@ -156,7 +156,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
       const filter = new KalturaMetadataProfileFilter({
         orderBy: KalturaMetadataOrderBy.createdAtDesc.toString(),
         createModeNotEqual: KalturaMetadataProfileCreateMode.app,
-        metadataObjectTypeIn: [KalturaMetadataObjectType.entry, KalturaMetadataObjectType.category].join(',')
+        metadataObjectTypeIn: [KalturaMetadataObjectType.entry, KalturaMetadataObjectType.category, KalturaMetadataObjectType.userEntry].join(',')
       });
       let pager: KalturaFilterPager = null;
 
@@ -194,7 +194,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
     return new MetadataProfileUpdateAction({
       id: schema.id,
       metadataProfile: updatedProfile,
-      xsdData: this._metadataProfileParser.generateSchema(schema.parsedProfile)
+      xsdData: this._metadataProfileParser.generateSchema(schema.parsedProfile, schema.applyTo)
     });
   }
 
@@ -211,7 +211,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
 
     return new MetadataProfileAddAction({
       metadataProfile: newProfile,
-      xsdData: this._metadataProfileParser.generateSchema(schema.parsedProfile)
+      xsdData: this._metadataProfileParser.generateSchema(schema.parsedProfile, schema.applyTo)
     });
   }
 

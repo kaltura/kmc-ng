@@ -14,7 +14,7 @@
     </div>
     <div class="kContainer">
       <div class="kSchemaFormWrapper">
-        <kCustomSchemaForm #customSchemaForm [(schema)]="_schema"
+        <kCustomSchemaForm #customSchemaForm [schema]="_schema"
                            [serverValidationError]="serverValidationError"
                            (schemaChanges)="_setDirty()"></kCustomSchemaForm>
 
@@ -85,7 +85,7 @@
 <kPopupWidget #customSchemaField
               data-aid="customSchemaField"
               [popupWidth]="586"
-              [popupHeight]="633"
+              [popupHeight]="700"
               [closeBtn]="true"
               [closeOnClickOutside]="false"
               [modal]="true">
@@ -93,6 +93,7 @@
     <kCustomSchemaFieldForm [field]="_selectedField"
                             [fields]="_profileFields"
                             [parentPopupWidget]="customSchemaField"
+                            [applyTo]="_schema?.applyTo"
                             (onSave)="_saveField($event)"></kCustomSchemaFieldForm>
   </ng-template>
 </kPopupWidget>

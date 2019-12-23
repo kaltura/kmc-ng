@@ -5,7 +5,7 @@ import {
 import { KalturaUtils, XmlParser } from '@kaltura-ng/kaltura-common';
 
 
-import { KalturaMetadataProfile } from 'kaltura-ngx-client';
+import {KalturaMetadataObjectType, KalturaMetadataProfile} from 'kaltura-ngx-client';
 
 import {
 	KalturaMetadataProfileStatus
@@ -152,6 +152,7 @@ export class MetadataProfileParser {
 				item.label = annotation.appinfo.label && annotation.appinfo.label.text ? annotation.appinfo.label.text : '';
 				item.key = annotation.appinfo.key && annotation.appinfo.key.text ? annotation.appinfo.key.text : '';
 				item.isSearchable = annotation.appinfo.searchable && (annotation.appinfo.searchable.text === 'true' || annotation.appinfo.searchable.text === '1');
+				item.isHidden = annotation.appinfo.hidden && (annotation.appinfo.hidden.text === 'true' || annotation.appinfo.hidden.text === '1');
 				item.isTimeControl = annotation.appinfo.timeControl && (annotation.appinfo.timeControl.text === 'true' || annotation.appinfo.timeControl.text === '1');
 				item.description = annotation.appinfo.description && annotation.appinfo.description.text ? annotation.appinfo.description.text : '';
 
@@ -174,13 +175,13 @@ export class MetadataProfileParser {
     }
   }
 
-  private _convertMetadataItems(items: MetadataItem[]): object[] {
+  private _convertMetadataItems(items: MetadataItem[], profileType: KalturaMetadataObjectType): object[] {
     return items.map(item => {
       const result = {
         'attr': {
           'id': item.id,
           'name': item.name,
-          'minOccurs': 0,
+          'minOccurs': profileType === KalturaMetadataObjectType.userEntry && item.isRequired ? 1 : 0,
           'maxOccurs': item.allowMultiple ? 'unbounded' : 1
         },
         'annotation': {
@@ -195,6 +196,10 @@ export class MetadataProfileParser {
         }
       };
 
+      if (profileType === KalturaMetadataObjectType.userEntry){
+          Object.assign(result.annotation.appinfo, { 'noprefix:hidden': { 'text': String(!!item.isHidden) } });
+      }
+      
       if (item.type !== MetadataItemTypes.List) {
         Object.assign(result.attr, { 'type': this._extractMetadataItemType(item.type) });
       } else {
@@ -212,7 +217,7 @@ export class MetadataProfileParser {
     });
   }
 
-  public generateSchema(parsedProfile: MetadataProfile): string {
+  public generateSchema(parsedProfile: MetadataProfile, profileType: KalturaMetadataObjectType): string {
     let result = '';
 
     const schemaObject = {
@@ -221,7 +226,7 @@ export class MetadataProfileParser {
         'attr': { 'name': 'metadata' },
         'complexType': {
           'sequence': {
-            'element': [...this._convertMetadataItems(parsedProfile.items)]
+            'element': [...this._convertMetadataItems(parsedProfile.items, profileType)]
           }
         }
       },
