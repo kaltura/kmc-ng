@@ -96,6 +96,27 @@
         </span>
       </div>
     </div>
+
+      <div class="kRow" [class.kHidden]="!_isUserEntry">
+          <span class="kLabel">{{'applications.settings.metadata.fieldForm.required' | translate}}</span>
+          <div>
+              <p-inputSwitch [formControl]="_requiredField"></p-inputSwitch>
+              <span class="kInputSwitchLabel">
+            {{_requiredField.value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}
+        </span>
+          </div>
+      </div>
+
+      <div class="kRow" [class.kHidden]="!_isUserEntry">
+          <span class="kLabel">{{'applications.settings.metadata.fieldForm.hidden' | translate}}</span>
+          <div>
+              <p-inputSwitch [formControl]="_hiddenField"></p-inputSwitch>
+              <span class="kInputSwitchLabel">
+            {{_hiddenField.value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}
+        </span>
+          </div>
+      </div>
+
   </form>
 
   <div class="kFooter">
