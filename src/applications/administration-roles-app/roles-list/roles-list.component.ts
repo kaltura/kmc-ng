@@ -133,16 +133,9 @@ export class RolesListComponent implements OnInit, OnDestroy {
               message: error.message,
               buttons: [
                 {
-                  label: this._appLocalization.get('app.common.retry'),
+                  label: this._appLocalization.get('app.common.ok'),
                   action: () => {
-                    this._logger.info(`user confirmed, retry action`);
-                    this._deleteRole(role);
-                  }
-                },
-                {
-                  label: this._appLocalization.get('app.common.cancel'),
-                  action: () => {
-                    this._logger.info(`user didn't confirm, abort action, dismiss alert`);
+                    this._logger.info(`abort action, dismiss alert`);
                     this._blockerMessage = null;
                   }
                 }
