@@ -1,3 +1,19 @@
+<a name="5.21.0"></a>
+# [5.21.0](https://github.com/kaltura/kmc-ng/compare/v5.20.0...v5.21.0) (2019-12-25)
+
+
+### Bug Fixes
+
+* **admin/roles:** Alert message when trying to delete a role that is assigned - should not include a 'Retry' button ([f28afe1](https://github.com/kaltura/kmc-ng/commit/f28afe1))
+* **admin/roles:** Fix permissions for bulk end user upload ([c603724](https://github.com/kaltura/kmc-ng/commit/c603724))
+
+
+### Features
+
+* **settings/metadata:** Add User Entry metadata fields ([#881](https://github.com/kaltura/kmc-ng/issues/881)) ([b80f5c6](https://github.com/kaltura/kmc-ng/commit/b80f5c6))
+
+
+
 <a name="5.20.0"></a>
 # [5.20.0](https://github.com/kaltura/kmc-ng/compare/v5.19.2...v5.20.0) (2019-12-12)
 
