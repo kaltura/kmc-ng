@@ -263,7 +263,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           if (embedType === 'dynamic'){
               config = `ks: '${ks}',`;
           } else {
-              config = `&config[provider]={"ks":"${ks}"}`;
+              config = `&config[provider]={"ks":"${ks}"&config[plugins]={"kava":{"disable":true}}`;
           }
       }
       embedConfig.serverUri = serverUri;

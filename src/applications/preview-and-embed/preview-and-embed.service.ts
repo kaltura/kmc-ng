@@ -66,7 +66,7 @@ export class PreviewEmbedService {
 	generateV3EmbedCode(config: any): string {
 	    let code = '';
         const rnd = Math.floor(Math.random() * 1000000000);
-
+        console.log(config.playerConfig);
         switch (config.embedType) {
             case 'dynamic':
             case 'thumb':
@@ -76,6 +76,11 @@ export class PreviewEmbedService {
     try {
       var kalturaPlayer = KalturaPlayer.setup({
         targetId: "kaltura_player_${rnd}",
+        plugins: {
+          kava: {
+            disable: true
+          }
+        },
         provider: {
           ${config.playerConfig}
           partnerId: ${config.pid},
