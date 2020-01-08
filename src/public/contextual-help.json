@@ -416,8 +416,8 @@
         "viewKey": "content-category-metadata",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2120#editing_overview",
-                "label": "Entry Editing Tabs Overview"
+                "value": "https://knowledge.kaltura.com/help/managing-categories#add_metadata",
+                "label": "Add/Edit Category Metadata"
             }
         ]
     },
