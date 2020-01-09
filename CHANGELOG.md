@@ -1,3 +1,15 @@
+<a name="5.21.1"></a>
+## [5.21.1](https://github.com/kaltura/kmc-ng/compare/v5.21.0...v5.21.1) (2020-01-09)
+
+
+### Bug Fixes
+
+* **content/entries:** Display Real-time Analytics in live entry actions for Akamai live entries ([d74a690](https://github.com/kaltura/kmc-ng/commit/d74a690))
+* **content/entry:** navigate to correct Analytics screen in Akamai live sources ([1c96107](https://github.com/kaltura/kmc-ng/commit/1c96107))
+* **contextual-help:** Fix contextual help for category metadata section ([08e04f7](https://github.com/kaltura/kmc-ng/commit/08e04f7))
+
+
+
 <a name="5.21.0"></a>
 # [5.21.0](https://github.com/kaltura/kmc-ng/compare/v5.20.0...v5.21.0) (2019-12-25)
 
