@@ -444,7 +444,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 
     public _openEntryAnalytics(): void {
         if (this._analyticsAllowed) {
-            const route = (this._sourceType === KalturaSourceType.liveStream || this._sourceType === KalturaSourceType.manualLiveStream) ? 'analytics/entry-live' : 'analytics/entry';
+            const route = (this._sourceType === KalturaSourceType.liveStream || this._sourceType === KalturaSourceType.manualLiveStream || this._sourceType === KalturaSourceType.akamaiLive || this._sourceType === KalturaSourceType.akamaiUniversalLive) ? 'analytics/entry-live' : 'analytics/entry';
             this._router.navigate([route], { queryParams: { id: this._currentEntryId } });
         }
     }
