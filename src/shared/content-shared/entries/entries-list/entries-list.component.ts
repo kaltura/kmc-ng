@@ -114,7 +114,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         const isLiveStreamFlash = mediaType && mediaType === KalturaMediaType.liveStreamFlash;
         const isPreviewCommand = commandName === 'preview';
         const isViewCommand = commandName === 'view';
-        const isKalturaLive = sourceType === KalturaSourceType.liveStream;
+        const isKalturaLive = (sourceType === KalturaSourceType.liveStream || sourceType === KalturaSourceType.manualLiveStream || sourceType === KalturaSourceType.akamaiLive || sourceType === KalturaSourceType.akamaiUniversalLive);
         const isLiveDashboardCommand = commandName === 'liveDashboard';
         const isRealTimeAnalyticsCommand = commandName === 'realTimeAnalytics';
         const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
