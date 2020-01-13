@@ -54,7 +54,19 @@
             "settings": "設定",
             "administration": "管理",
             "reachDashboardMenuTitle": "サービスダッシュボード",
-            "reachDashboardPageTitle": "サービスダッシュボード"
+            "reachDashboardPageTitle": "サービスダッシュボード",
+            "analyticsBW": "使用法",
+            "analyticsPublisher": "パブリッシャの帯域幅&amp;ストレージ",
+            "analyticsEndUser": "エンドユーザーストレージ",
+            "analyticsTopContributors": "トップ投稿者",
+            "analyticsTechnology": "テクノロジー",
+            "analyticsGeo": "ジオロケーション",
+            "analyticsInteractions": "コンテンツの相互作用",
+            "analyticsEngagement": "視聴時間",
+            "audience": "対象者",
+            "contributors": "投稿者",
+            "live": "Live",
+            "realtime": "リアルタイム"
         },
         "userSettings": {
             "changeAccount": "アカウントを変更",

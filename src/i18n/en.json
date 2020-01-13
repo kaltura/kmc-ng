@@ -57,6 +57,12 @@
             "studio": "Studio",
             "analytics": "Analytics",
             "analyticsDashboard": "Dashboard",
+            "settings": "Settings",
+            "administration": "Administration",
+            "reachDashboardMenuTitle": "Services Dashboard",
+            "reachDashboardPageTitle": "Services Dashboard",
+            "allAccounts": "All Accounts",
+            "parentOnly": "Parent Only",
             "analyticsBW": "Usage",
             "analyticsPublisher": "Publishers Bandwidth & Storage",
             "analyticsEndUser": "End Users Storage",
@@ -68,13 +74,7 @@
             "audience": "Audience",
             "contributors": "Contributors",
             "live": "Live",
-            "realtime": "Real-Time",
-            "settings": "Settings",
-            "administration": "Administration",
-            "reachDashboardMenuTitle": "Services Dashboard",
-            "reachDashboardPageTitle": "Services Dashboard",
-            "allAccounts": "All Accounts",
-            "parentOnly": "Parent Only"
+            "realtime": "Real-Time"
         },
         "userSettings": {
             "changeAccount": "Change Account",

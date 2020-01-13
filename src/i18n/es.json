@@ -54,7 +54,19 @@
             "settings": "Configuración",
             "administration": "Administración",
             "reachDashboardMenuTitle": "Panel de servicios",
-            "reachDashboardPageTitle": "Panel de servicios"
+            "reachDashboardPageTitle": "Panel de servicios",
+            "analyticsBW": "Uso",
+            "analyticsPublisher": "Ancho de banda y almacenamiento del editor",
+            "analyticsEndUser": "Almacenamiento del usuario final",
+            "analyticsTopContributors": "Principales colaboradores",
+            "analyticsTechnology": "Tecnología",
+            "analyticsGeo": "Geolocalización",
+            "analyticsInteractions": "Interacciones con el contenido",
+            "analyticsEngagement": "Participación",
+            "audience": "Espectadores",
+            "contributors": "Colaboradores",
+            "live": "Live",
+            "realtime": "Tiempo real"
         },
         "userSettings": {
             "changeAccount": "Cambiar cuenta",
