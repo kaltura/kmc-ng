@@ -26,7 +26,8 @@ import {
     KavaAppMainViewService,
     AnalyticsNewMainViewService,
     AnalyticsMainViewService,
-    ServicesDashboardMainViewService
+    ServicesDashboardMainViewService,
+    SettingsReachMainViewService
 } from './main-views';
 import {
     ContentCategoryViewService,
@@ -82,6 +83,7 @@ export class KmcViewsModule {
                 SettingsTranscodingMainViewService,
                 SettingsMetadataMainViewService,
                 SettingsMyUserSettingsMainViewService,
+                SettingsReachMainViewService,
                 SettingsAccountInformationMainViewService,
                 ContentPlaylistViewService,
                 SettingsTranscodingProfileViewService,

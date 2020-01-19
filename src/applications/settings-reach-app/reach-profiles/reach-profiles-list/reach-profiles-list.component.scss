@@ -1,0 +1,99 @@
+@import 'app-theme/_variables.scss';
+
+.kTranscodingProfilesList {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  background-color: white;
+  display: inline-block;
+  .kTranscodingProfilesListTitle {
+    margin-top: 28px;
+    margin-bottom: 12px;
+    font-size: 20px;
+    margin-left: 14px;
+  }
+
+  .kTranscodingProfilesTableHeader {
+    color: $kGrayscale1;
+    z-index: 500;
+    height: 66px;
+    flex: 0 0 auto;
+    align-items: center;
+    margin-left: 0;
+    border-bottom: none;
+    display: flex;
+
+    .kTotalProfilesCount {
+      padding-left: 16px;
+    }
+
+    .kBulkOperations {
+      display: flex;
+      align-items: center;
+    }
+
+    .kSelectedProfilesLabel {
+      font-weight: bold;
+      margin-right: 36px;
+      margin-left: 5px;
+    }
+
+    .kAddProfileBtn {
+      margin-left: 14px;
+      height: 36px;
+      border: none;
+    }
+
+    .kBulkCancel {
+      margin-left: 26px;
+    }
+
+    .kBulkDeleteBtn {
+      margin-right: 10px;
+      width: 44px;
+      font-size: 24px;
+    }
+
+    .kBulkActionsBtn {
+      font-weight: 400;
+      font-size: 15px;
+    }
+
+    .kHidden {
+      visibility: hidden;
+      width: 0;
+      height: 0;
+    }
+  }
+
+  .kProfilesTableFooter {
+    bottom: 0;
+    height: 34px;
+    background-color: white;
+    border-top: 1px solid $kGrayscale6;
+    position: relative;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    padding: 0 14px 28px;
+    display: block;
+  }
+
+  .kPaginatorShowRowsLabel {
+    color: $kGrayscale1;
+    position: absolute;
+    top: 7px;
+    right: 80px;
+  }
+}
+
+:host ::ng-deep k-area-blocker > .kAreaBlockerContainer {
+  z-index: 203;
+}
+
+:host ::ng-deep span.ui-button-icon-left.pi-kIcontrash {
+  margin-left: -.5em;
+}
+:host ::ng-deep .kProfilesTableFooter {
+  .ui-dropdown-panel {
+    min-width: 70px;
+  }
+}

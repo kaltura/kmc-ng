@@ -27,6 +27,7 @@ import {
     SettingsAccountInformationMainViewService,
     ServicesDashboardMainViewService,
     AnalyticsNewMainViewService,
+    SettingsReachMainViewService,
 } from './main-views';
 import { Observable } from 'rxjs';
 
@@ -73,6 +74,7 @@ export class KmcMainViewsService {
         private _settingsAccountSettingsMain: SettingsAccountSettingsMainViewService,
         private _settingsIntegrationSettingsMain: SettingsIntegrationSettingsMainViewService,
         private _settingsAccessControlMain: SettingsAccessControlMainViewService,
+        private _settingsReachMain: SettingsReachMainViewService,
         private _settingsTranscodingMain: SettingsTranscodingMainViewService,
         private _settingsMetadataMain: SettingsMetadataMainViewService,
         private _settingsMyUserSettingsMain: SettingsMyUserSettingsMainViewService,
@@ -259,6 +261,15 @@ export class KmcMainViewsService {
                             this._settingsAccessControlMain.open();
                         },
                         menuTitle: this._settingsAccessControlMain.getViewMetadata().menu,
+                        'position': 'left'
+                    },
+                    {
+                        isAvailable: this._settingsReachMain.isAvailable(),
+                        isActiveView:  (path) => this._settingsReachMain.isActiveView(path),
+                        open: () => {
+                            this._settingsReachMain.open();
+                        },
+                        menuTitle: this._settingsReachMain.getViewMetadata().menu,
                         'position': 'left'
                     },
                     {

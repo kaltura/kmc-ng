@@ -1,0 +1,31 @@
+<div class="kTranscodingProfilesList">
+  <h2 class="kTranscodingProfilesListTitle">{{'applications.settings.reach.reachProfiles'| translate}}</h2>
+  <div class="kTranscodingProfilesTableHeader kContent">
+    <!--button
+      pButton
+      type="button"
+      class="kButtonBranded kAddProfileBtn"
+      [disabled]="_kmcPermissions.TRANSCODING_ADD | kDisabledIfNotPermitted"
+      [class.kHidden]="_selectedProfiles.length"
+      [label]="'applications.settings.transcoding.addProfile' | translate"
+      (click)="addProfile.emit(_profilesType)"></button-->
+    <span class="kTotalProfilesCount" *ngIf="(_reachProfilesStore.profiles.data$ | async)?.totalCount">
+      {{'applications.settings.transcoding.profiles' | translate: [(_reachProfilesStore.profiles.data$ | async)?.totalCount]}}
+    </span>
+
+  </div>
+
+  <k-area-blocker [showLoader]="_tableIsBusy" [message]="_tableBlockerMessage">
+    <k-reach-profiles-table [profiles]="(_reachProfilesStore.profiles.data$ | async)?.items" (actionSelected)="_actionSelected($event)"></k-reach-profiles-table>
+  </k-area-blocker>
+
+  <div class="kProfilesTableFooter kContent" #footer *ngIf="(_reachProfilesStore.profiles.data$ | async)?.totalCount">
+    <p-paginator
+      [rows]="_query.pageSize"
+      [first]="_query.pageIndex * _query.pageSize"
+      [totalRecords]="(_reachProfilesStore.profiles.data$ | async)?.totalCount"
+      [rowsPerPageOptions]="[25,50,75,100]"
+      (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+    <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+  </div>
+</div>

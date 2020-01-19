@@ -91,6 +91,10 @@ const routes: Routes = <Routes>[
                             loadChildren: () => import('../applications/settings-access-control-app/settings-access-control-app.module').then(m => m.SettingsAccessControlAppModule)
                         },
                         {
+                            path: 'reach',
+                            loadChildren: () => import('../applications/settings-reach-app/settings-reach-app.module').then(m => m.SettingsReachAppModule)
+                        },
+                        {
                             path: 'metadata',
                             loadChildren: () => import('../applications/settings-custom-data-app/settings-custom-data-app.module').then(m => m.SettingsCustomDataAppModule)
                         },

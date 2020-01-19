@@ -1,0 +1,61 @@
+<div class="kTranscodingProfilesTable" [ngClass]="{'noResults' :!_profiles?.length, 'kSingleTableMode': singleTableMode}">
+    <p-table
+        scrollHeight="100%"
+        dataKey="id"
+        [value]="_profiles"
+        [resizableColumns]="true"
+        [scrollable]="true"
+        [rowTrackBy]="rowTrackBy">
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                <col data-cid="name">
+                <col data-cid="profileId">
+                <col data-cid="createdOn">
+                <col [ngStyle]="{'overflow':'visible', 'width':'80px'}">
+            </colgroup>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th data-cid="name" pResizableColumn>
+                    {{'applications.settings.reach.table.name' | translate}}
+                </th>
+                <th data-cid="profileId" pResizableColumn>
+                    {{'applications.settings.reach.table.id' | translate}}
+                </th>
+                <th data-cid="createdOn" pResizableColumn>
+                    {{'applications.settings.reach.table.created' | translate}}
+                </th>
+                <th [ngStyle]="{'overflow':'visible', 'width':'80px'}"></th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-profile>
+            <tr>
+                <td class="ui-resizable-column">
+                    <div class="kTranscodingProfileNameWrapper">
+                        <div class="kTranscodingProfileName kTableColumn"
+                             [kTooltip]="profile.name"
+                             (click)="_onActionSelected('edit', profile)">
+                            {{profile.name}}
+                        </div>
+                    </div>
+                </td>
+                <td class="ui-resizable-column">{{profile.id}}</td>
+                <td class="ui-resizable-column">{{profile.createdAt | kmcDate}}</td>
+                <td [ngStyle]="{'overflow':'visible', 'width':'80px'}">
+                    <div class="kTranscodingProfilesTableActions">
+                        <button class="kMoreActionsButton" type="button" pButton icon="kIconmore"
+                                (click)="_openActionsMenu($event, profile)"></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <div class="emptymessage">
+                <div class="kEmptyMessage">{{_emptyMessage}}</div>
+            </div>
+        </ng-template>
+    </p-table>
+    <p-menu #actionsmenu [popup]="true" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+</div>

@@ -2735,6 +2735,19 @@
                     }
                 }
             },
+            "reach": {
+                "reachProfiles": "Profiles",
+                "edit": "Edit",
+                "duplicate": "Duplicate",
+                "table": {
+                    "name": "Name",
+                    "id": "ID",
+                    "created": "Created On",
+                    "allocated": "Allocated Credit",
+                    "remaining": "Remaining Credit",
+                    "expiration": "Credit Expiration Date"
+                }
+            },
             "myUserSettings": {
                 "userDetails": "User Details",
                 "editUserName": "Edit User Name",
