@@ -3,18 +3,9 @@
 [![Gitter chat](https://badges.gitter.im/kaltura-ng/kmc-ng.png)](https://gitter.im/kaltura-ng/kmc-ng)
 
 
-> Kaltura Management Console HTML5 based application (a.k.a KMCng). Should replace the existing [KMC flash based application](https://kmc.kaltura.com/index.php/kmc/kmc).
+> Kaltura Management Console HTML5 based application (a.k.a KMCng). Replaces the legacy [KMC flash based application](https://kmc.kaltura.com/index.php/kmc/kmc).
 
-Thank you for your interest in the kmc-ng project. The project is currently under **Heavy Development**. Every month we add many features and bug fixes, part of them break previous versions code.
-
-In the coming months we plan to complete adding all the features we have in the legacy kmc as well as some new shiny features.
-
-The following list contains some major features in our road-map:
-- [ ] upgrade to Angular 5
-- [ ] embed permission support across views
-- [ ] add multi language translations
-- [ ] add missing views like  content > distribution, transcoding profile etc
-- [ ] add missing tools like create crop from thumbnail, entry flavor > replace media
+Thank you for your interest in the kmc-ng project.
 
 ## <a name="issue"></a> Got a question or found an Issue?
 If you find a bug in the source code, you can help us by
@@ -24,9 +15,9 @@ If you find a bug in the source code, you can help us by
 
 ### Prerequisites
 
-- [x] Ensure you have [node.js installed](https://nodejs.org/en/download/current/), version 7.0.0 or above. 
+- [x] Ensure you have [node.js installed](https://nodejs.org/en/download/current/), version 10.0.0 or above. 
 - [x] Ensure you have [git installed](https://git-for-windows.github.io/) 
-- [x] Ensure you have npm installed, version 5.0.0 or above.
+- [x] Ensure you have npm installed, version 6.0.0 or above.
 
 ### Run the application
 To run KMC-ng application, do the following:
