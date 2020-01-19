@@ -54,7 +54,19 @@
             "settings": "Paramètres",
             "administration": "Administration",
             "reachDashboardMenuTitle": "Tableau de bord des services",
-            "reachDashboardPageTitle": "Tableau de bord des services"
+            "reachDashboardPageTitle": "Tableau de bord des services",
+            "analyticsBW": "Utilisation",
+            "analyticsPublisher": "Bande passante et stockage des éditeurs",
+            "analyticsEndUser": "Stockage de l'utilisateur final",
+            "analyticsTopContributors": "Meilleurs contributeurs",
+            "analyticsTechnology": "Technologie",
+            "analyticsGeo": "Emplacement géographique",
+            "analyticsInteractions": "Interactions avec le contenu",
+            "analyticsEngagement": "Engagement",
+            "audience": "Audience",
+            "contributors": "Contributeurs",
+            "live": "Live",
+            "realtime": "Temps réel"
         },
         "userSettings": {
             "changeAccount": "Changer de compte",

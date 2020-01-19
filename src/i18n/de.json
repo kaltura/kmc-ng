@@ -54,7 +54,19 @@
             "settings": "Einstellungen",
             "administration": "Administration",
             "reachDashboardMenuTitle": "Dienstleistungs-Dashboard",
-            "reachDashboardPageTitle": "Dienstleistungs-Dashboard"
+            "reachDashboardPageTitle": "Dienstleistungs-Dashboard",
+            "analyticsBW": "Nutzung",
+            "analyticsPublisher": "Bandbreite und Speicherplatz des Herausgebers",
+            "analyticsEndUser": "Endbenutzer-Speicherplatz",
+            "analyticsTopContributors": "Top-Mitwirkende",
+            "analyticsTechnology": "Technologie",
+            "analyticsGeo": "Geolokalisierung",
+            "analyticsInteractions": "Inhaltliche Interaktionen",
+            "analyticsEngagement": "Beteiligung",
+            "audience": "Zielgruppe",
+            "contributors": "Mitwirkende",
+            "live": "Live",
+            "realtime": "Echtzeit"
         },
         "userSettings": {
             "changeAccount": "Konto wechseln",
