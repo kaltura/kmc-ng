@@ -1,24 +1,25 @@
 @import 'app-theme/_variables.scss';
 
 .kTranscodingProfilesList {
-
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  background-color: white;
+  display: inline-block;
   .kTranscodingProfilesListTitle {
-    margin-top: 0;
-    margin-bottom: 24px;
+    margin-top: 28px;
+    margin-bottom: 12px;
     font-size: 20px;
+    margin-left: 14px;
   }
 
   .kTranscodingProfilesTableHeader {
     color: $kGrayscale1;
     z-index: 500;
     height: 66px;
-    background-color: white;
     flex: 0 0 auto;
     align-items: center;
     margin-left: 0;
     border-bottom: none;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
     display: flex;
 
     .kTotalProfilesCount {
