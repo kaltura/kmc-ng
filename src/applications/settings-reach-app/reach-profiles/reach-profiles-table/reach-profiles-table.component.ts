@@ -11,9 +11,8 @@ import {
 import {Menu} from 'primeng/menu';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import { KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaReachProfile} from 'kaltura-ngx-client';
 import {MenuItem} from 'primeng/api';
-import {ColumnsResizeManagerService, ResizableColumnsTableName} from "app-shared/kmc-shared/columns-resize-manager";
+import {KalturaReachProfileWithCredit} from "../reach-profiles-store/reach-profiles-store.service";
 
 @Component({
     selector: 'k-reach-profiles-table',
@@ -23,7 +22,7 @@ import {ColumnsResizeManagerService, ResizableColumnsTableName} from "app-shared
 })
 
 export class ReachProfilesTableComponent implements OnInit, AfterViewInit, OnDestroy {
-    @Input() set profiles(data: KalturaReachProfile[]) {
+    @Input() set profiles(data: KalturaReachProfileWithCredit[]) {
         if (!this._deferredLoading) {
             this._profiles = [];
             this._cdRef.detectChanges();
@@ -34,7 +33,7 @@ export class ReachProfilesTableComponent implements OnInit, AfterViewInit, OnDes
         }
     }
     
-    @Output() actionSelected = new EventEmitter<{ action: string, profile: KalturaReachProfile }>();
+    @Output() actionSelected = new EventEmitter<{ action: string, profile: KalturaReachProfileWithCredit }>();
     @ViewChild('actionsmenu', {static: true}) private _actionsMenu: Menu;
     
     public _profiles = [];
@@ -70,7 +69,7 @@ export class ReachProfilesTableComponent implements OnInit, AfterViewInit, OnDes
         this._actionsMenu.hide();
     }
     
-    private _buildMenu(profile: KalturaReachProfile): void {
+    private _buildMenu(profile: KalturaReachProfileWithCredit): void {
         
         this._items = [
             {
@@ -86,14 +85,14 @@ export class ReachProfilesTableComponent implements OnInit, AfterViewInit, OnDes
         ];
     }
     
-    public _openActionsMenu(event: any, profile: KalturaReachProfile): void {
+    public _openActionsMenu(event: any, profile: KalturaReachProfileWithCredit): void {
         if (this._actionsMenu) {
             this._buildMenu(profile);
             this._actionsMenu.toggle(event);
         }
     }
     
-    public _onActionSelected(action: string, profile: KalturaReachProfile): void {
+    public _onActionSelected(action: string, profile: KalturaReachProfileWithCredit): void {
         this.actionSelected.emit({action, profile});
     }
     

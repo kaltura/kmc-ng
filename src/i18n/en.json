@@ -2739,6 +2739,7 @@
                 "reachProfiles": "Profiles",
                 "edit": "Edit",
                 "duplicate": "Duplicate",
+                "unlimited": "Unlimited",
                 "table": {
                     "name": "Name",
                     "id": "ID",

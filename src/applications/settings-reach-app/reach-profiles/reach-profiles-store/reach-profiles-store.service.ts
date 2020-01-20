@@ -3,10 +3,12 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
 import {
-    KalturaClient,
+    KalturaClient, KalturaDetachedResponseProfile,
     KalturaReachProfile,
-    KalturaReachProfileFilter, KalturaReachProfileListResponse, KalturaReachProfileOrderBy,
-    ReachProfileListAction
+    KalturaReachProfileFilter,
+    KalturaReachProfileListResponse,
+    KalturaReachProfileOrderBy, KalturaResponseProfileType,
+    ReachProfileListAction, UiConfListAction
 } from 'kaltura-ngx-client';
 import {KalturaFilterPager} from 'kaltura-ngx-client';
 import {BrowserService} from 'shared/kmc-shell/providers/browser.service';
@@ -14,7 +16,7 @@ import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {FiltersStoreBase, TypeAdaptersMapping} from '@kaltura-ng/mc-shared';
 import {NumberTypeAdapter} from '@kaltura-ng/mc-shared';
 import {globalConfig} from 'config/global';
-import {cancelOnDestroy, tag} from '@kaltura-ng/kaltura-common';
+import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {SettingsReachMainViewService} from "app-shared/kmc-shared/kmc-views/main-views/settings-reach-main-view.service";
 
 export interface ReachProfilesFilters {
@@ -22,10 +24,13 @@ export interface ReachProfilesFilters {
     pageIndex: number;
 }
 
+export interface KalturaReachProfileWithCredit extends KalturaReachProfile {
+    remaining?: number;
+}
 
 export class ReachProfilesStore extends FiltersStoreBase<ReachProfilesFilters> implements OnDestroy {
     private _profiles = {
-        data: new BehaviorSubject<{ items: KalturaReachProfile[], totalCount: number }>({items: [], totalCount: 0}),
+        data: new BehaviorSubject<{ items: KalturaReachProfileWithCredit[], totalCount: number }>({items: [], totalCount: 0}),
         state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({loading: false, errorMessage: null})
     };
     private _isReady = false;
@@ -40,9 +45,9 @@ export class ReachProfilesStore extends FiltersStoreBase<ReachProfilesFilters> i
     };
     
     constructor(private _kalturaServerClient: KalturaClient,
-                          private _browserService: BrowserService,
-                          settingsReachMainView: SettingsReachMainViewService,
-                          _logger: KalturaLogger) {
+                private _browserService: BrowserService,
+                settingsReachMainView: SettingsReachMainViewService,
+                _logger: KalturaLogger) {
         super(_logger);
         if (settingsReachMainView.isAvailable()) {
             setTimeout(() => {
@@ -91,7 +96,7 @@ export class ReachProfilesStore extends FiltersStoreBase<ReachProfilesFilters> i
                 });
     }
     
-    private _buildQueryRequest(): Observable<{ objects: KalturaReachProfile[], totalCount: number }> {
+    private _buildQueryRequest(): Observable<{ objects: KalturaReachProfileWithCredit[], totalCount: number }> {
         try {
             // create request items
             const filter = new KalturaReachProfileFilter({
@@ -110,16 +115,25 @@ export class ReachProfilesStore extends FiltersStoreBase<ReachProfilesFilters> i
                     }
                 );
             }
+    
+            const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
+                type: KalturaResponseProfileType.includeFields,
+                fields: 'id,name,createdAt,updatedAt,credit,usedCredit,toDate'
+            });
             
-            const reachProfileListAction = new ReachProfileListAction({ filter, pager });
+            const reachProfileListAction = new ReachProfileListAction({ filter, pager }).setRequestOptions({responseProfile});
             
             // build the request
             return this._kalturaServerClient
                 .request(reachProfileListAction)
                 .map((profilesResponse: KalturaReachProfileListResponse) => {
                     const profiles = profilesResponse.objects;
+                    let objects: KalturaReachProfileWithCredit[] = [];
+                    profiles.forEach(profile => {
+                        objects.push({...profile, remaining: profile.credit['credit'] !== -9999 ? parseFloat((profile.credit['credit'] - profile.usedCredit).toFixed(2)) : -9999} as KalturaReachProfileWithCredit);
+                    });
                     const totalCount = profilesResponse.totalCount;
-                    return { objects: profiles, totalCount };
+                    return { objects, totalCount };
                 });
         } catch (err) {
             return Observable.throw(err);

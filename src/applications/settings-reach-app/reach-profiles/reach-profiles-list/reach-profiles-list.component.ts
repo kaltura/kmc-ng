@@ -7,7 +7,11 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 import {SettingsReachMainViewService} from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import {ReachProfilesFilters, ReachProfilesStore} from "../reach-profiles-store/reach-profiles-store.service";
+import {
+    KalturaReachProfileWithCredit,
+    ReachProfilesFilters,
+    ReachProfilesStore
+} from "../reach-profiles-store/reach-profiles-store.service";
 import {KalturaReachProfile} from "kaltura-ngx-client";
 
 @Component({
@@ -128,10 +132,11 @@ export class ReachProfilesListComponent implements OnInit, OnDestroy {
 
   
 
-  public _actionSelected(event: { action: string, profile: KalturaReachProfile }): void {
+  public _actionSelected(event: { action: string, profile: KalturaReachProfileWithCredit }): void {
     switch (event.action) {
       case 'edit':
         this._logger.info(`handle 'edit' profile action by the user`, { profileId: event.profile.id });
+        alert("Edit");
         //this._settingsReachViewService.open({ profile: event.profile, section: SettingsTranscodingProfileViewSections.Metadata });
           break;
         case 'duplicate':

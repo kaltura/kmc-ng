@@ -1,4 +1,4 @@
-<div class="kTranscodingProfilesTable" [ngClass]="{'noResults' :!_profiles?.length, 'kSingleTableMode': singleTableMode}">
+<div class="kTranscodingProfilesTable" [ngClass]="{'noResults' :!_profiles?.length}">
     <p-table
         scrollHeight="100%"
         dataKey="id"
@@ -11,6 +11,9 @@
                 <col data-cid="name">
                 <col data-cid="profileId">
                 <col data-cid="createdOn">
+                <col data-cid="allocated">
+                <col data-cid="remaining">
+                <col data-cid="expiration">
                 <col [ngStyle]="{'overflow':'visible', 'width':'80px'}">
             </colgroup>
         </ng-template>
@@ -24,6 +27,15 @@
                 </th>
                 <th data-cid="createdOn" pResizableColumn>
                     {{'applications.settings.reach.table.created' | translate}}
+                </th>
+                <th data-cid="allocated" pResizableColumn>
+                    {{'applications.settings.reach.table.allocated' | translate}}
+                </th>
+                <th data-cid="remaining" pResizableColumn>
+                    {{'applications.settings.reach.table.remaining' | translate}}
+                </th>
+                <th data-cid="expiration">
+                    {{'applications.settings.reach.table.expiration' | translate}}
                 </th>
                 <th [ngStyle]="{'overflow':'visible', 'width':'80px'}"></th>
             </tr>
@@ -41,7 +53,10 @@
                     </div>
                 </td>
                 <td class="ui-resizable-column">{{profile.id}}</td>
-                <td class="ui-resizable-column">{{profile.createdAt | kmcDate}}</td>
+                <td class="ui-resizable-column">{{profile.createdAt | kmcDate:'dateOnly'}}</td>
+                <td class="ui-resizable-column">{{profile.credit ? (profile.credit.credit | kReachProfileCredit) : ('app.common.n_a' | translate)}}</td>
+                <td class="ui-resizable-column">{{profile.remaining | kReachProfileCredit}}</td>
+                <td class="ui-resizable-column">{{profile.credit.toDate | kmcDate:'dateOnly'}}</td>
                 <td [ngStyle]="{'overflow':'visible', 'width':'80px'}">
                     <div class="kTranscodingProfilesTableActions">
                         <button class="kMoreActionsButton" type="button" pButton icon="kIconmore"
