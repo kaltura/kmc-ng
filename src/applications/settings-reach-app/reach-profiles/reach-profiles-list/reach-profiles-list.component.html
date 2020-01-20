@@ -12,11 +12,15 @@
     <span class="kTotalProfilesCount" *ngIf="(_reachProfilesStore.profiles.data$ | async)?.totalCount">
       {{'applications.settings.transcoding.profiles' | translate: [(_reachProfilesStore.profiles.data$ | async)?.totalCount]}}
     </span>
-
+    <input type="text" pInputText class="kSearchInput" [(ngModel)]="_query.freeText" (keyup.enter)="_onFreetextChanged()" [placeholder]="'applications.settings.reach.search' | translate">
   </div>
 
+    <div class="kContent">
+        <k-reach-profiles-tags #tags (onTagsChange)="_onTagsChange()"></k-reach-profiles-tags>
+    </div>
+
   <k-area-blocker [showLoader]="_tableIsBusy" [message]="_tableBlockerMessage">
-    <k-reach-profiles-table [profiles]="(_reachProfilesStore.profiles.data$ | async)?.items" (actionSelected)="_actionSelected($event)"></k-reach-profiles-table>
+    <k-reach-profiles-table [profiles]="(_reachProfilesStore.profiles.data$ | async)?.items" (sortChanged)="_onSortChanged($event)" (actionSelected)="_actionSelected($event)" ></k-reach-profiles-table>
   </k-area-blocker>
 
   <div class="kProfilesTableFooter kContent" #footer *ngIf="(_reachProfilesStore.profiles.data$ | async)?.totalCount">

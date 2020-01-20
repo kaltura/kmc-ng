@@ -13,6 +13,7 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
 import { KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 import {MenuItem} from 'primeng/api';
 import {KalturaReachProfileWithCredit} from "../reach-profiles-store/reach-profiles-store.service";
+import {globalConfig} from "config/global";
 
 @Component({
     selector: 'k-reach-profiles-table',
@@ -34,13 +35,16 @@ export class ReachProfilesTableComponent implements OnInit, AfterViewInit, OnDes
     }
     
     @Output() actionSelected = new EventEmitter<{ action: string, profile: KalturaReachProfileWithCredit }>();
-    @ViewChild('actionsmenu', {static: true}) private _actionsMenu: Menu;
+    @Output() sortChanged = new EventEmitter<any>();
+    
+    @ViewChild('actionsmenu', { static: true }) private _actionsMenu: Menu;
     
     public _profiles = [];
     public _emptyMessage = '';
     public _items: MenuItem[];
     public _deferredLoading = true;
     public _deferredProfiles = [];
+    public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
     
     public rowTrackBy: Function = (index: number, item: any) => item.id;
     
@@ -96,4 +100,10 @@ export class ReachProfilesTableComponent implements OnInit, AfterViewInit, OnDes
         this.actionSelected.emit({action, profile});
     }
     
+    public _onSortChanged(event) {
+        if (event.field && event.order) {
+            // primeng workaround: must check that field and order was provided to prevent reset of sort value
+            this.sortChanged.emit({field: event.field, order: event.order});
+        }
+    }
 }

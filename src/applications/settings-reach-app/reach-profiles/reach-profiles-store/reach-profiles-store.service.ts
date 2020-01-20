@@ -13,15 +13,19 @@ import {
 import {KalturaFilterPager} from 'kaltura-ngx-client';
 import {BrowserService} from 'shared/kmc-shell/providers/browser.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-import {FiltersStoreBase, TypeAdaptersMapping} from '@kaltura-ng/mc-shared';
+import {FiltersStoreBase, ListTypeAdapter, StringTypeAdapter, TypeAdaptersMapping} from '@kaltura-ng/mc-shared';
 import {NumberTypeAdapter} from '@kaltura-ng/mc-shared';
 import {globalConfig} from 'config/global';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {SettingsReachMainViewService} from "app-shared/kmc-shared/kmc-views/main-views/settings-reach-main-view.service";
+import {SortDirection} from "../../../administration-multi-account-app/multi-account-store/multi-account-store.service";
 
 export interface ReachProfilesFilters {
+    freeText: string;
     pageSize: number;
     pageIndex: number;
+    sortBy: string;
+    sortDirection: number;
 }
 
 export interface KalturaReachProfileWithCredit extends KalturaReachProfile {
@@ -99,9 +103,7 @@ export class ReachProfilesStore extends FiltersStoreBase<ReachProfilesFilters> i
     private _buildQueryRequest(): Observable<{ objects: KalturaReachProfileWithCredit[], totalCount: number }> {
         try {
             // create request items
-            const filter = new KalturaReachProfileFilter({
-                orderBy: KalturaReachProfileOrderBy.createdAtDesc.toString()
-            });
+            const filter = new KalturaReachProfileFilter({});
             let pager: KalturaFilterPager = null;
             
             const data: ReachProfilesFilters = this._getFiltersAsReadonly();
@@ -114,6 +116,23 @@ export class ReachProfilesStore extends FiltersStoreBase<ReachProfilesFilters> i
                         pageIndex: data.pageIndex + 1
                     }
                 );
+            }
+    
+            // filter 'freeText'
+            if (data.freeText) {
+                if (/^-{0,1}\d+$/.test(data.freeText)){
+                    // number - search pid
+                    filter.idIn = data.freeText;
+                } else {
+                    // string - search account name
+                    filter.idIn = data.freeText;
+                }
+        
+            }
+            
+            // update the sort by args
+            if (data.sortBy) {
+                filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
             }
     
             const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
@@ -152,15 +171,21 @@ export class ReachProfilesStore extends FiltersStoreBase<ReachProfilesFilters> i
     protected _createDefaultFiltersValue(): ReachProfilesFilters {
         const pageSize = this._browserService.getFromLocalStorage(this.localStoragePageSizeKey) || globalConfig.client.views.tables.defaultPageSize;
         return {
+            freeText: '',
             pageSize: pageSize,
             pageIndex: 0,
+            sortBy: 'createdAt',
+            sortDirection: SortDirection.Desc
         };
     }
     
     protected _getTypeAdaptersMapping(): TypeAdaptersMapping<ReachProfilesFilters> {
         return {
+            freeText: new StringTypeAdapter(),
             pageSize: new NumberTypeAdapter(),
             pageIndex: new NumberTypeAdapter(),
+            sortBy: new StringTypeAdapter(),
+            sortDirection: new NumberTypeAdapter()
         };
     }
     

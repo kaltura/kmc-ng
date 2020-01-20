@@ -5,6 +5,10 @@
         [value]="_profiles"
         [resizableColumns]="true"
         [scrollable]="true"
+        [sortField]="'createdAt'"
+        [sortOrder]="-1"
+        [defaultSortOrder]="_defaultSortOrder"
+        (sortFunction)="_onSortChanged($event)" [customSort]="true"
         [rowTrackBy]="rowTrackBy">
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
@@ -25,8 +29,9 @@
                 <th data-cid="profileId" pResizableColumn>
                     {{'applications.settings.reach.table.id' | translate}}
                 </th>
-                <th data-cid="createdOn" pResizableColumn>
+                <th data-cid="createdOn" pResizableColumn [pSortableColumn]="'createdAt'">
                     {{'applications.settings.reach.table.created' | translate}}
+                    <p-sortIcon [field]="'createdAt'"></p-sortIcon>
                 </th>
                 <th data-cid="allocated" pResizableColumn>
                     {{'applications.settings.reach.table.allocated' | translate}}

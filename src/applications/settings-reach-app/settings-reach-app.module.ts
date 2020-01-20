@@ -5,6 +5,7 @@ import { routing } from './settings-reach-app.routes';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
+import { TagsModule } from '@kaltura-ng/kaltura-ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { ReachProfilesComponentsList } from './reach-profiles/components-list';
 import { KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
@@ -31,6 +32,7 @@ import { PaginatorModule } from 'primeng/paginator';
     InputTextareaModule,
     ButtonModule,
     AreaBlockerModule,
+    TagsModule,
     TranslateModule,
     TooltipModule,
     LocalizationModule,

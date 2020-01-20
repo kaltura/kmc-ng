@@ -26,36 +26,23 @@
       padding-left: 16px;
     }
 
-    .kBulkOperations {
-      display: flex;
-      align-items: center;
-    }
+    .kSearchInput {
+      margin-left: auto;
+      margin-right: 24px;
+      width: 280px;
+      height: 34px;
+      background: $kMagnifyingGlassBkg;
+      padding: 9px 4px 8px 38px;
 
-    .kSelectedProfilesLabel {
-      font-weight: bold;
-      margin-right: 36px;
-      margin-left: 5px;
+      &:focus {
+        background-color: white;
+      }
     }
 
     .kAddProfileBtn {
       margin-left: 14px;
       height: 36px;
       border: none;
-    }
-
-    .kBulkCancel {
-      margin-left: 26px;
-    }
-
-    .kBulkDeleteBtn {
-      margin-right: 10px;
-      width: 44px;
-      font-size: 24px;
-    }
-
-    .kBulkActionsBtn {
-      font-weight: 400;
-      font-size: 15px;
     }
 
     .kHidden {
