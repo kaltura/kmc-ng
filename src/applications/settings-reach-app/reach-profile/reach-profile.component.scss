@@ -1,0 +1,28 @@
+@import 'app-theme/_variables.scss';
+
+.kSectionsWrapper {
+  min-width: 178px;
+  border: 0px solid white;
+  border-top-left-radius: 3px;
+  flex: 0 0 auto;
+  z-index: 0;
+}
+.kSections{
+    height: 100%;
+}
+:host ::ng-deep span.ui-button-icon-left.pi-kIconarrow_forward, :host ::ng-deep span.ui-button-icon-left.pi-kIconarrow_backward {
+  margin-left: -.5em;
+}
+
+:host ::ng-deep .stickyHeader {
+  background-color: white;
+  height: auto;
+  z-index: 500;
+  left: 0px;
+  right: 0px;
+  padding-top: 11px;
+  padding-bottom: 11px;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.2);
+  width: 100% !important;
+}

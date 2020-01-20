@@ -21,6 +21,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
+import { ReachProfileComponentsList } from "./reach-profile/components-list";
 
 @NgModule({
   imports: [
@@ -50,7 +51,8 @@ import { PaginatorModule } from 'primeng/paginator';
   ],
   declarations: [
     SettingsReachComponent,
-    ...ReachProfilesComponentsList
+    ...ReachProfilesComponentsList,
+    ...ReachProfileComponentsList
   ],
   providers: [
   ]

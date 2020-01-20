@@ -35,6 +35,7 @@ import {
     ContentNewCategoryViewService,
     ContentPlaylistViewService,
     SettingsTranscodingProfileViewService,
+    SettingsReachProfileViewService,
     RestorePasswordViewService,
     AuthenticatorViewService,
     ReachAppViewService
@@ -87,6 +88,7 @@ export class KmcViewsModule {
                 SettingsAccountInformationMainViewService,
                 ContentPlaylistViewService,
                 SettingsTranscodingProfileViewService,
+                SettingsReachProfileViewService,
                 ContentEntryViewService,
                 ContentNewCategoryViewService,
                 LiveDashboardAppViewService,

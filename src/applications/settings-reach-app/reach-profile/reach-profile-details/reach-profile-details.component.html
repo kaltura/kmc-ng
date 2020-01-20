@@ -1,0 +1,5 @@
+<k-details-bar #detailsBar [data]="_currentProfile">
+  <kDetailInfo [label]="'applications.settings.transcoding.details.id' | translate" [valueField]="'id'"></kDetailInfo>
+  <kDetailInfo [label]="'applications.settings.transcoding.details.creationDate' | translate" [value]="_currentProfile?.createdAt | kmcDate:'dateOnly'"></kDetailInfo>
+</k-details-bar>
+

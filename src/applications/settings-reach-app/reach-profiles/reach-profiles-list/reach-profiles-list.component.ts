@@ -14,6 +14,10 @@ import {
 } from "../reach-profiles-store/reach-profiles-store.service";
 import {KalturaReachProfile} from "kaltura-ngx-client";
 import {SortDirection} from "../../../administration-multi-account-app/multi-account-store/multi-account-store.service";
+import {
+    SettingsReachProfileViewSections,
+    SettingsReachProfileViewService
+} from "app-shared/kmc-shared/kmc-views/details-views/settings-reach-profile-view.service";
 
 @Component({
     selector: 'k-reach-profiles-list',
@@ -42,6 +46,7 @@ export class ReachProfilesListComponent implements OnInit, OnDestroy {
                 private _logger: KalturaLogger,
                 private _browserService: BrowserService,
                 private _settingsReachMainViewService: SettingsReachMainViewService,
+                private _settingsReachViewService: SettingsReachProfileViewService,
                 public _reachProfilesStore: ReachProfilesStore) {
     }
     
@@ -56,7 +61,7 @@ export class ReachProfilesListComponent implements OnInit, OnDestroy {
     }
     
     private _prepare(): void {
-        this._logger.info(`initialize transcoding profiles list view`);
+        this._logger.info(`initialize reach profiles list view`);
         this._restoreFiltersState();
         this._registerToFilterStoreDataChanges();
         this._registerToDataChanges();
@@ -171,8 +176,7 @@ export class ReachProfilesListComponent implements OnInit, OnDestroy {
         switch (event.action) {
             case 'edit':
                 this._logger.info(`handle 'edit' profile action by the user`, {profileId: event.profile.id});
-                alert("Edit");
-                //this._settingsReachViewService.open({ profile: event.profile, section: SettingsTranscodingProfileViewSections.Metadata });
+                this._settingsReachViewService.open({ profile: event.profile, section: SettingsReachProfileViewSections.Settings });
                 break;
             case 'duplicate':
                 this._logger.info(`handle 'duplicate' action by the user`, {

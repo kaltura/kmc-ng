@@ -2748,6 +2748,13 @@
                     "allocated": "Allocated Credit",
                     "remaining": "Remaining Credit",
                     "expiration": "Credit Expiration Date"
+                },
+                "sections": {
+                    "settings": "Settings",
+                    "service": " Service Parameters",
+                    "credit": "Credit",
+                    "dictionary": "Dictionary",
+                    "rules": "Automatic Rules"
                 }
             },
             "myUserSettings": {
