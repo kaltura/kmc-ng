@@ -2795,8 +2795,8 @@
                         "doNothing": "Do Not Delete"
                     },
                     "regionOptions": {
-                        "us": "USA",
-                        "eu": "Europe"
+                        "us": "US",
+                        "eu": "EU"
                     }
                 }
             },
