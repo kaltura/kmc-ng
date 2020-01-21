@@ -1,1 +1,20 @@
-<span>Settings</span>
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+    <div class="kMetadataWrap">
+        <div class="kMetadataDetails">
+            <form [formGroup]="_widgetService.settingsForm" novalidate>
+                <div class="kRow kValign">
+                      <span class="kLabel">
+                        {{'applications.settings.reach.settings.name' | translate}}
+                      </span>
+                    <div class="kControl">
+                        <input [formControl]="_widgetService.nameField" pInputText [ngClass]="{'kHasError':_widgetService.nameField.touched && !_widgetService.nameField.valid}">
+                        <div *ngIf="_widgetService.nameField.touched && !_widgetService.nameField.valid" class="kHasError">
+                            {{'applications.settings.transcoding.metadata.nameIsMandatory' | translate}}
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</k-area-blocker>

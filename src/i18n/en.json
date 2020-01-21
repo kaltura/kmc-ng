@@ -2761,6 +2761,13 @@
                     "remaining": "Remaining Credit",
                     "expiration": "Credit Expiration Date",
                     "creationDate": "Creation Date"
+                },
+                "settings": {
+                    "name": "Name",
+                    "machine": "Moderation on Machine Requests",
+                    "professional": "Moderation on Professional Requests",
+                    "deletion": "Content Deletion Policy",
+                    "region": "Task Processing Region"
                 }
             },
             "myUserSettings": {
