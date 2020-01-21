@@ -80,8 +80,9 @@ export class ReachProfilesListComponent implements OnInit, OnDestroy {
             .pipe(cancelOnDestroy(this))
             .subscribe(
                 result => {
-                    this._tableIsBusy = result.loading;
-                    
+                    setTimeout(() => {
+                        this._tableIsBusy = result.loading;
+                    }, 0);
                     if (result.errorMessage) {
                         this._logger.info(`handle failing load profiles list data, show confirmation`);
                         this._tableBlockerMessage = new AreaBlockerMessage({

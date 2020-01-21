@@ -13,6 +13,9 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { ReachProfilesStore } from "../reach-profiles/reach-profiles-store/reach-profiles-store.service";
 import { SettingsReachProfileViewSections, SettingsReachProfileViewService } from "app-shared/kmc-shared/kmc-views/details-views/settings-reach-profile-view.service";
+import { ReachProfileCreditWidget } from "./reach-profile-credit/reach-profile-credit-widget.service";
+import { ReachProfileDictionaryWidget } from "./reach-profile-dictionary/reach-profile-dictionary-widget.service";
+import { ReachProfileRulesWidget } from "./reach-profile-rules/reach-profile-rules-widget.service";
 
 @Component({
   selector: 'kReachProfile',
@@ -24,7 +27,10 @@ import { SettingsReachProfileViewSections, SettingsReachProfileViewService } fro
     ReachProfileSectionsListWidget,
     ReachProfileDetailsWidget,
     ReachProfileSettingsWidget,
-    ReachProfileServiceWidget
+    ReachProfileServiceWidget,
+    ReachProfileCreditWidget,
+    ReachProfileDictionaryWidget,
+    ReachProfileRulesWidget
   ]
 })
 export class ReachProfileComponent implements OnInit, OnDestroy {
@@ -46,6 +52,9 @@ export class ReachProfileComponent implements OnInit, OnDestroy {
               widget2: ReachProfileDetailsWidget,
               widget3: ReachProfileSettingsWidget,
               widget4: ReachProfileServiceWidget,
+              widget5: ReachProfileCreditWidget,
+              widget6: ReachProfileDictionaryWidget,
+              widget7: ReachProfileRulesWidget,
               private _permissionsService: KMCPermissionsService,
               private _profileWidgetsManager: ReachProfileWidgetsManager,
               private _appLocalization: AppLocalization,
@@ -54,7 +63,7 @@ export class ReachProfileComponent implements OnInit, OnDestroy {
               private _settingsReachProfileViewService: SettingsReachProfileViewService,
               private _profileRoute: ActivatedRoute
   ) {
-    _profileWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4]);
+    _profileWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5, widget6, widget7]);
   }
 
   ngOnDestroy() {
