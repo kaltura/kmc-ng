@@ -128,7 +128,7 @@ export class ReachProfileComponent implements OnInit, OnDestroy {
               break;
             case ActionTypes.ProfileLoadingFailed:
               let message = status.error ? status.error.message : '';
-              message = message || this._appLocalization.get('applications.settings.transcoding.profile.errors.loadError');
+              message = message || this._appLocalization.get('applications.settings.reach.profile.errors.loadError');
               this._areaBlockerMessage = new AreaBlockerMessage({
                 message: message,
                 buttons: [
@@ -146,10 +146,10 @@ export class ReachProfileComponent implements OnInit, OnDestroy {
               break;
             case ActionTypes.ProfileSavingFailed:
               this._areaBlockerMessage = new AreaBlockerMessage({
-                message: this._appLocalization.get('applications.settings.transcoding.profile.errors.saveError'),
+                message: this._appLocalization.get('applications.settings.reach.profile.errors.saveError'),
                 buttons: [
                   {
-                    label: this._appLocalization.get('applications.settings.transcoding.profile.errors.reload'),
+                    label: this._appLocalization.get('applications.settings.reach.profile.errors.reload'),
                     action: () => {
                       this._profileStore.reloadProfile();
                     }
@@ -159,10 +159,10 @@ export class ReachProfileComponent implements OnInit, OnDestroy {
               break;
             case ActionTypes.ProfileDataIsInvalid:
               this._areaBlockerMessage = new AreaBlockerMessage({
-                message: this._appLocalization.get('applications.settings.transcoding.profile.errors.validationError'),
+                message: this._appLocalization.get('applications.settings.reach.profile.errors.validationError'),
                 buttons: [
                   {
-                    label: this._appLocalization.get('applications.settings.transcoding.profile.errors.dismiss'),
+                    label: this._appLocalization.get('applications.settings.reach.profile.errors.dismiss'),
                     action: () => {
                       this._areaBlockerMessage = null;
                     }
@@ -172,10 +172,10 @@ export class ReachProfileComponent implements OnInit, OnDestroy {
               break;
             case ActionTypes.ActiveSectionBusy:
               this._areaBlockerMessage = new AreaBlockerMessage({
-                message: this._appLocalization.get('applications.settings.transcoding.profile.errors.busyError'),
+                message: this._appLocalization.get('applications.settings.reach.profile.errors.busyError'),
                 buttons: [
                   {
-                    label: this._appLocalization.get('applications.settings.transcoding.profile.errors.dismiss'),
+                    label: this._appLocalization.get('applications.settings.reach.profile.errors.dismiss'),
                     action: () => {
                       this._areaBlockerMessage = null;
                     }
@@ -185,10 +185,10 @@ export class ReachProfileComponent implements OnInit, OnDestroy {
               break;
             case ActionTypes.ProfilePrepareSavingFailed:
               this._areaBlockerMessage = new AreaBlockerMessage({
-                message: this._appLocalization.get('applications.settings.transcoding.profile.errors.savePrepareError'),
+                message: this._appLocalization.get('applications.settings.reach.profile.errors.savePrepareError'),
                 buttons: [
                   {
-                    label: this._appLocalization.get('applications.settings.transcoding.profile.errors.dismiss'),
+                    label: this._appLocalization.get('applications.settings.reach.profile.errors.dismiss'),
                     action: () => {
                       this._areaBlockerMessage = null;
                     }
@@ -208,7 +208,7 @@ export class ReachProfileComponent implements OnInit, OnDestroy {
 
   private _createBackToProfilesButton(): AreaBlockerMessageButton {
     return {
-      label: this._appLocalization.get('applications.settings.transcoding.profile.backToProfiles'),
+      label: this._appLocalization.get('applications.settings.reach.profile.backToProfiles'),
       action: () => this._backToList()
     };
   }

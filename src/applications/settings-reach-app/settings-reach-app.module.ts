@@ -23,6 +23,7 @@ import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { ReachProfileComponentsList } from "./reach-profile/components-list";
 import { ReachProfileCanDeactivate } from "./reach-profile/reach-profile-can-deactivate.service";
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 @NgModule({
   imports: [
@@ -46,9 +47,10 @@ import { ReachProfileCanDeactivate } from "./reach-profile/reach-profile-can-dea
     TooltipModule,
     PopupWidgetModule,
     DropdownModule,
+    InputSwitchModule,
     KMCPermissionsModule,
-      TableModule,
-      DateFormatModule,
+    TableModule,
+    DateFormatModule,
   ],
   declarations: [
     SettingsReachComponent,

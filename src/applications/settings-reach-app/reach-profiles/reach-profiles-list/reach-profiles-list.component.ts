@@ -86,7 +86,7 @@ export class ReachProfilesListComponent implements OnInit, OnDestroy {
                     if (result.errorMessage) {
                         this._logger.info(`handle failing load profiles list data, show confirmation`);
                         this._tableBlockerMessage = new AreaBlockerMessage({
-                            message: result.errorMessage || this._appLocalization.get('applications.settings.transcoding.errorLoadingProfiles'),
+                            message: result.errorMessage || this._appLocalization.get('applications.settings.reach.errorLoadingProfiles'),
                             buttons: [
                                 {
                                     label: this._appLocalization.get('app.common.retry'),

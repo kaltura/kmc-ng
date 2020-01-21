@@ -1,6 +1,6 @@
 @import 'app-theme/_variables.scss';
 
-.kTranscodingProfilesTable {
+.kReachProfilesTable {
     .emptymessage {
         display: table-row;
         border: 0;
@@ -14,53 +14,25 @@
         }
     }
 
-  .kTranscodingProfileNameWrapper {
+  .kReachProfileNameWrapper {
     display: flex;
     align-items: center;
 
-    .kTranscodingProfileName {
+    .kReachProfileName {
       font-size: 15px;
       font-weight: bold;
       color: $kGrayscale1;
       cursor: pointer;
     }
-
-    .kTranscodingProfileNameDefault {
-      font-size: 12px;
-      font-weight: bold;
-      color: #FFFFFF;
-      background-color: $kSecondary;
-      border-radius: 9px;
-      padding: 3px 10px;
-      margin-left: 35px;
-      height: 18px;
-    }
   }
 
-  .kTranscodingProfilesTableActions {
+  .kReachProfilesTableActions {
     width: 100%;
     text-align: center;
     .kMoreActionsButton {
 
     }
   }
-}
-
-:host ::ng-deep .kTranscodingProfilesTable {
-    &:not(.kSingleTableMode) {
-        .ui-table-scrollable-body {
-            max-height: 280px !important;
-        }
-    }
-
-    .ui-widget-header,
-    .ui-table-scrollable-body-table {
-        background: #FFFFFF;
-    }
-
-    .ui-table-scrollable-table-wrapper {
-        max-height: 261px !important;
-    }
 }
 
 :host ::ng-deep p-table {

@@ -26,7 +26,8 @@
             }
 
             .kHasError {
-                color: $kDandger
+                color: $kDandger;
+                margin-top: 4px;
             }
 
             input {
@@ -42,6 +43,10 @@
             kmultiselect{
                 max-width: 500px;
                 display: block;
+            }
+
+            .kInputSwitch {
+                padding-right: 10px;
             }
 
             .kControl, k-prime-control {

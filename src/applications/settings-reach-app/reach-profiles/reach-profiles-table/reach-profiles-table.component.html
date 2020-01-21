@@ -1,4 +1,4 @@
-<div class="kTranscodingProfilesTable" [ngClass]="{'noResults' :!_profiles?.length}">
+<div class="kReachProfilesTable" [ngClass]="{'noResults' :!_profiles?.length}">
     <p-table
         scrollHeight="100%"
         dataKey="id"
@@ -49,8 +49,8 @@
         <ng-template pTemplate="body" let-profile>
             <tr>
                 <td class="ui-resizable-column">
-                    <div class="kTranscodingProfileNameWrapper">
-                        <div class="kTranscodingProfileName kTableColumn"
+                    <div class="kReachProfileNameWrapper">
+                        <div class="kReachProfileName kTableColumn"
                              [kTooltip]="profile.name"
                              (click)="_onActionSelected('edit', profile)">
                             {{profile.name}}
@@ -63,7 +63,7 @@
                 <td class="ui-resizable-column">{{profile.remaining | kReachProfileCredit}}</td>
                 <td class="ui-resizable-column">{{profile.credit.toDate | kmcDate:'dateOnly'}}</td>
                 <td [ngStyle]="{'overflow':'visible', 'width':'80px'}">
-                    <div class="kTranscodingProfilesTableActions">
+                    <div class="kReachProfilesTableActions">
                         <button class="kMoreActionsButton" type="button" pButton icon="kIconmore"
                                 (click)="_openActionsMenu($event, profile)"></button>
                     </div>

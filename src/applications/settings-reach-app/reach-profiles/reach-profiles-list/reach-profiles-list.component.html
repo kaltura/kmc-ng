@@ -1,16 +1,8 @@
-<div class="kTranscodingProfilesList">
-  <h2 class="kTranscodingProfilesListTitle">{{'applications.settings.reach.reachProfiles'| translate}}</h2>
-  <div class="kTranscodingProfilesTableHeader kContent">
-    <!--button
-      pButton
-      type="button"
-      class="kButtonBranded kAddProfileBtn"
-      [disabled]="_kmcPermissions.TRANSCODING_ADD | kDisabledIfNotPermitted"
-      [class.kHidden]="_selectedProfiles.length"
-      [label]="'applications.settings.transcoding.addProfile' | translate"
-      (click)="addProfile.emit(_profilesType)"></button-->
+<div class="kReachProfilesList">
+  <h2 class="kReachProfilesListTitle">{{'applications.settings.reach.reachProfiles'| translate}}</h2>
+  <div class="kReachProfilesTableHeader kContent">
     <span class="kTotalProfilesCount" *ngIf="(_reachProfilesStore.profiles.data$ | async)?.totalCount">
-      {{'applications.settings.transcoding.profiles' | translate: [(_reachProfilesStore.profiles.data$ | async)?.totalCount]}}
+      {{'applications.settings.reach.profiles' | translate: [(_reachProfilesStore.profiles.data$ | async)?.totalCount]}}
     </span>
     <input type="text" pInputText class="kSearchInput" [(ngModel)]="_query.freeText" (keyup.enter)="_onFreetextChanged()" [placeholder]="'applications.settings.reach.search' | translate">
   </div>

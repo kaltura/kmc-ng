@@ -2741,6 +2741,24 @@
                 "duplicate": "Duplicate",
                 "unlimited": "Unlimited",
                 "search": "Search",
+                "cancelEdit": "Cancel Edit",
+                "discard": "Discard all changes?",
+                "errorLoadingProfiles": "Failed to load transcoding profiles",
+                "profiles": "{{0}} Profiles",
+                "profile": {
+                    "save": "Save",
+                    "backToProfiles": "Back To Profiles",
+                    "errors": {
+                        "error": "Error",
+                        "dismiss": "Dismiss",
+                        "reload": "Reload",
+                        "loadError": "An error occurred while loading data.",
+                        "saveError": "An error occurred while saving.",
+                        "validationError": "The form contains some invalid information. Please review the sections marked as invalid",
+                        "busyError": "An operation is still in progress. Please try again in a while.",
+                        "savePrepareError": "An error occurred while preparing to save. Please try again."
+                    }
+                },
                 "table": {
                     "name": "Name",
                     "id": "ID",
@@ -2767,7 +2785,19 @@
                     "machine": "Moderation on Machine Requests",
                     "professional": "Moderation on Professional Requests",
                     "deletion": "Content Deletion Policy",
-                    "region": "Task Processing Region"
+                    "region": "Task Processing Region",
+                    "nameIsMandatory": "Name is required.",
+                    "deleteOptions": {
+                        "deleteAfterMonth": "Delete After One Month",
+                        "deleteAfterThreeMonths": "Delete After Three Months",
+                        "deleteAfterWeek": "Delete After One Week",
+                        "deleteOnceProcessed": "Delete Once Processed",
+                        "doNothing": "Do Not Delete"
+                    },
+                    "regionOptions": {
+                        "us": "USA",
+                        "eu": "Europe"
+                    }
                 }
             },
             "myUserSettings": {

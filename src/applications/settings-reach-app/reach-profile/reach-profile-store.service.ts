@@ -305,8 +305,8 @@ export class ReachProfileStore implements OnDestroy {
       if (this._profileIsDirty) {
         this._browserService.confirm(
           {
-            header: this._appLocalization.get('applications.settings.transcoding.cancelEdit'),
-            message: this._appLocalization.get('applications.settings.transcoding.discard'),
+            header: this._appLocalization.get('applications.settings.reach.cancelEdit'),
+            message: this._appLocalization.get('applications.settings.reach.discard'),
             accept: () => {
               this._profileIsDirty = false;
               observer.next({ allowed: true });
