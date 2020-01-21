@@ -2720,8 +2720,8 @@
                     "selectCountry": "Sélectionner le pays",
                     "findCountry": "Trouver un pays",
                     "findFlavor": "Trouver un type",
-                    "countriesSelected": " Pays sélectionnés",
-                    "flavorsSelected": " Types sélectionnés",
+                    "countriesSelected": "Pays sélectionnés",
+                    "flavorsSelected": "Types sélectionnés",
                     "invalidValue": "Valeur non valide",
                     "validationMessage": {
                         "invalidDomainName": "Nom de domaine non valide",
