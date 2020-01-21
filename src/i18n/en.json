@@ -2755,6 +2755,12 @@
                     "credit": "Credit",
                     "dictionary": "Dictionary",
                     "rules": "Automatic Rules"
+                },
+                "details": {
+                    "id": "ID",
+                    "remaining": "Remaining Credit",
+                    "expiration": "Credit Expiration Date",
+                    "creationDate": "Creation Date"
                 }
             },
             "myUserSettings": {

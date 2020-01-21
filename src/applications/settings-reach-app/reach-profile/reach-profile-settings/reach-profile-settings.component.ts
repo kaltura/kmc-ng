@@ -11,7 +11,6 @@ import { KalturaReachProfile } from "kaltura-ngx-client";
 })
 export class ReachProfileSettingsComponent implements OnInit, OnDestroy {
   public _currentProfile: KalturaReachProfile;
-  public _isNew = false;
 
   constructor(public _widgetService: ReachProfileSettingsWidget,
               public _profileStore: ReachProfileStore) {
@@ -26,7 +25,6 @@ export class ReachProfileSettingsComponent implements OnInit, OnDestroy {
       .subscribe(
         data => {
           this._currentProfile = data;
-          this._isNew = !this._currentProfile.id;
         });
   }
 

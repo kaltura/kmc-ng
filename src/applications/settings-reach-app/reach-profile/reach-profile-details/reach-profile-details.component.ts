@@ -3,6 +3,7 @@ import { ReachProfileStore } from '../reach-profile-store.service';
 import { ReachProfileDetailsWidget } from './reach-profile-details-widget.service';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KalturaReachProfile } from "kaltura-ngx-client";
+import {KalturaReachProfileWithCredit} from "../../reach-profiles/reach-profiles-store/reach-profiles-store.service";
 
 @Component({
   selector: 'kReachProfileDetails',
@@ -11,7 +12,7 @@ import { KalturaReachProfile } from "kaltura-ngx-client";
 })
 export class ReachProfileDetailsComponent implements OnInit, OnDestroy {
   public _currentProfile: KalturaReachProfile;
-  public _isNew = false;
+  public _remainingCredit: number;
 
   constructor(public _widgetService: ReachProfileDetailsWidget,
               public _profileStore: ReachProfileStore) {
@@ -26,7 +27,7 @@ export class ReachProfileDetailsComponent implements OnInit, OnDestroy {
       .subscribe(
         data => {
           this._currentProfile = data;
-          this._isNew = !this._currentProfile.id;
+          this._remainingCredit = this._currentProfile.credit['credit'] !== -9999 ? parseFloat((this._currentProfile.credit['credit'] - this._currentProfile.usedCredit).toFixed(2)) : -9999;
         });
   }
 

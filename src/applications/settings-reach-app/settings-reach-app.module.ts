@@ -22,6 +22,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { ReachProfileComponentsList } from "./reach-profile/components-list";
+import { ReachProfileCanDeactivate } from "./reach-profile/reach-profile-can-deactivate.service";
 
 @NgModule({
   imports: [
@@ -55,6 +56,7 @@ import { ReachProfileComponentsList } from "./reach-profile/components-list";
     ...ReachProfileComponentsList
   ],
   providers: [
+      ReachProfileCanDeactivate
   ]
 })
 export class SettingsReachAppModule {
