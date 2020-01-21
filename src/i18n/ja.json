@@ -2720,8 +2720,8 @@
                     "selectCountry": "国を選択",
                     "findCountry": "国を検索",
                     "findFlavor": "フレーバーを検索",
-                    "countriesSelected": "{0}件の国が選択されました",
-                    "flavorsSelected": "{0}件のフレーバーが選択されました",
+                    "countriesSelected": "件の国が選択されました",
+                    "flavorsSelected": "件のフレーバーが選択されました",
                     "invalidValue": "値が無効です",
                     "validationMessage": {
                         "invalidDomainName": "ドメイン名が無効です",

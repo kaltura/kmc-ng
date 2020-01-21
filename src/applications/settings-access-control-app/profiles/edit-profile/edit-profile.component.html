@@ -113,12 +113,21 @@
         <p-multiSelect class="kControl"
                        [options]="_countryCodes"
                        [showToggleAll]="false"
-                       [maxSelectedLabels]="0"
+                       [displaySelectedLabel]="false"
                        [resetFilterOnHide]="true"
                        [filterPlaceHolder]="'applications.settings.accessControl.editForm.findCountry' | translate"
-                       [selectedItemsLabel]="'applications.settings.accessControl.editForm.countriesSelected' | translate"
                        [formControl]="_allowedCountriesField"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectCountry' | translate">
+          <ng-template let-selectedCountries pTemplate="selectedItems">
+            <span *ngFor="let selectedCountryCode of selectedCountries" class="kCountryList selected">
+              <i class="kFlag" [ngClass]="selectedCountryCode | kCountryFromCode:'icon'"></i>
+              {{selectedCountryCode | kCountryFromCode:'label'}}
+            </span>
+            <span *ngIf="selectedCountries && selectedCountries.length" class="selected-amount">
+              <span class="amount">{{selectedCountries.length}}</span>
+              <span>{{'applications.settings.accessControl.editForm.countriesSelected' | translate}}</span>
+            </span>
+          </ng-template>
           <ng-template let-country pTemplate="item">
             <span class="kCountryList">
                 <i class="kFlag" [ngClass]="country.value | kCountryFromCode:'icon'"></i>
@@ -136,17 +145,26 @@
         </span>
         <p-multiSelect class="kControl"
                        [options]="_countryCodes"
-                       [maxSelectedLabels]="0"
-                       [selectedItemsLabel]="'applications.settings.accessControl.editForm.countriesSelected' | translate"
+                       [displaySelectedLabel]="false"
                        [filterPlaceHolder]="'applications.settings.accessControl.editForm.findCountry' | translate"
                        [showToggleAll]="false"
                        [resetFilterOnHide]="true"
                        [formControl]="_restrictedCountriesField"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectCountry' | translate">
+          <ng-template let-selectedCountries pTemplate="selectedItems">
+            <span *ngFor="let selectedCountryCode of selectedCountries" class="kCountryList selected">
+              <i class="kFlag" [ngClass]="selectedCountryCode | kCountryFromCode:'icon'"></i>
+              {{selectedCountryCode | kCountryFromCode:'label'}}
+            </span>
+            <span *ngIf="selectedCountries && selectedCountries.length" class="selected-amount">
+              <span class="amount">{{selectedCountries.length}}</span>
+              <span>{{'applications.settings.accessControl.editForm.countriesSelected' | translate}}</span>
+            </span>
+          </ng-template>
           <ng-template let-country pTemplate="item">
             <span class="kCountryList">
                 <i class="kFlag" [ngClass]="country.value | kCountryFromCode:'icon'"></i>
-              {{country.value | kCountryFromCode:'label'}}
+              {{country.label}}
               </span>
           </ng-template>
         </p-multiSelect>
@@ -235,13 +253,21 @@
                          [label]="'applications.settings.accessControl.editForm.selectedFlavorsOnly' | translate"></p-radioButton>
         </span>
         <p-multiSelect [options]="_store.flavors"
-                       [maxSelectedLabels]="0"
+                       [displaySelectedLabel]="false"
                        [formControl]="_allowedFlavorsField"
                        [resetFilterOnHide]="true"
                        [filterPlaceHolder]="'applications.settings.accessControl.editForm.findFlavor' | translate"
-                       [selectedItemsLabel]="'applications.settings.accessControl.editForm.flavorsSelected' | translate"
                        [showToggleAll]="false"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate">
+          <ng-template let-selectedFlavours pTemplate="selectedItems">
+            <span *ngFor="let selectedFlavourIndex of selectedFlavours" class="kFlavorList selected">
+              {{_store.getFlavorLabel(selectedFlavourIndex)}}
+            </span>
+            <span *ngIf="selectedFlavours && selectedFlavours.length" class="selected-amount">
+              <span class="amount">{{selectedFlavours.length}}</span>
+              <span>{{'applications.settings.accessControl.editForm.flavorsSelected' | translate}}</span>
+            </span>
+          </ng-template>
           <ng-template let-flavor pTemplate="item">
             <span class="kFlavorList">
               {{flavor.label}}
@@ -257,13 +283,21 @@
                          [label]="'applications.settings.accessControl.editForm.blockSelectedFlavors' | translate"></p-radioButton>
         </span>
         <p-multiSelect [options]="_store.flavors"
-                       [maxSelectedLabels]="0"
-                       [selectedItemsLabel]="'applications.settings.accessControl.editForm.flavorsSelected' | translate"
+                       [displaySelectedLabel]="false"
                        [showToggleAll]="false"
                        [resetFilterOnHide]="true"
                        [filterPlaceHolder]="'applications.settings.accessControl.editForm.findFlavor' | translate"
                        [formControl]="_restrictedFlavorsField"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate">
+          <ng-template let-selectedFlavours pTemplate="selectedItems">
+            <span *ngFor="let selectedFlavourIndex of selectedFlavours" class="kFlavorList selected">
+              {{_store.getFlavorLabel(selectedFlavourIndex)}}
+            </span>
+            <span *ngIf="selectedFlavours && selectedFlavours.length" class="selected-amount">
+              <span class="amount">{{selectedFlavours.length}}</span>
+              <span>{{'applications.settings.accessControl.editForm.flavorsSelected' | translate}}</span>
+            </span>
+          </ng-template>
           <ng-template let-flavor pTemplate="item">
             <span class="kFlavorList">
               {{flavor.label}}

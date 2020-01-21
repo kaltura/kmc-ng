@@ -2837,8 +2837,8 @@
                     "selectCountry": "Select Country",
                     "findCountry": "Find Country",
                     "findFlavor": "Find Flavor",
-                    "countriesSelected": "{0} Countries Selected",
-                    "flavorsSelected": "{0} Flavors Selected",
+                    "countriesSelected": " Countries Selected",
+                    "flavorsSelected": " Flavors Selected",
                     "invalidValue": "Invalid Value",
                     "validationMessage": {
                         "invalidDomainName": "Invalid Domain Name",

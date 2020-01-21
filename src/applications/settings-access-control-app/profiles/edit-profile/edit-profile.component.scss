@@ -2,6 +2,8 @@ $kmc-flags-path: '../../styles/flags/';
 @import "../../styles/flags/flags.scss";
 @import 'app-theme/_variables.scss';
 
+$edit-profile-dropdown-max-width: 275px;
+
 .kEditAccessControlProfile {
   .kHeader {
     height: 72px;
@@ -127,11 +129,19 @@ $kmc-flags-path: '../../styles/flags/';
           }
         }
         .kCountryList, .kFlavorList {
-          vertical-align: middle;
-          display: inline-block;
-          max-width: 275px;
+          max-width: $edit-profile-dropdown-max-width;
           overflow: hidden;
           text-overflow: ellipsis;
+          &.selected {
+            display: block;
+            white-space: nowrap;
+            margin: 0.3em 0;
+          }
+          &:not(.selected) {
+          vertical-align: middle;
+          display: inline-block;
+            white-space: normal;
+          }
 
           .kCountryListFlag {
             margin: 0 .125em 0 .5em;
@@ -170,11 +180,6 @@ $kmc-flags-path: '../../styles/flags/';
     font-weight: normal;
     font-size: 15px;
     margin-left: 5px;
-  }
-
-  .ui-multiselect-label {
-    font-weight: normal;
-    padding: .5em;
   }
 
   .ui-multiselect-trigger {
@@ -236,4 +241,44 @@ $kmc-flags-path: '../../styles/flags/';
       margin-right: 0;
     }
   }
+
+  .ui-multiselect {
+      height: auto;
+      width: calc(
+        #{$edit-profile-dropdown-max-width}
+        + 1em /*Padding*/
+        + 1.5em /*Dropdown Caret*/
+      );
+
+      .ui-multiselect-panel {
+        top: calc(100% + 1px) !important; // Overwrite inline style. (100% height of parent and 1px border)
+      }
+
+      .ui-multiselect-label-container {
+        height: auto;
+
+        .ui-multiselect-label {
+          min-height: 34px;
+          height: auto;
+          font-weight: normal;
+          padding: .5em;
+
+          .selected-amount {
+            border-bottom: 1px solid $kPrimary;
+            font-size: 0.9em;
+            margin-top: 0.8em;
+            display: inline-block;
+            font-weight: 800;
+
+            .amount {
+              margin-right: 0.2em;
+            }
+          }
+        }
+      }
+    }
+}
+
+:host .kEditAccessControlProfile .kContainer .kFormSection .kRow p-multiselect.kControl {
+  height: auto;
 }

@@ -94,6 +94,16 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
     this._profiles.state.complete();
   }
 
+  public getFlavorLabel(flavorId: string): string {
+    const flavor = this.flavors.find(value => value.value === flavorId);
+
+    if (flavor) {
+      return flavor.label;
+    }
+
+    return '';
+  }
+
   private _prepare(): void {
     if (!this._isReady) {
       this._logger.info(`initiate service`);
