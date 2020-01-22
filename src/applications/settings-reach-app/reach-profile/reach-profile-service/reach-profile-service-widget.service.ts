@@ -72,7 +72,7 @@ export class ReachProfileServiceWidget extends ReachProfileWidget implements OnD
     
     protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
         const formData = wasActivated ? this.serviceForm.value : this.data;
-        const max = (formData.max || '').trim();
+        const max = (formData.max.toString() || '').trim();
         const hasValue = max !== '';
     
         return Observable.of({
