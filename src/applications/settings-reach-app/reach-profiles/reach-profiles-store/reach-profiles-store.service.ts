@@ -29,6 +29,7 @@ export interface ReachProfilesFilters {
 }
 
 export interface KalturaReachProfileWithCredit extends KalturaReachProfile {
+    totalCredit?: number;
     remaining?: number;
 }
 
@@ -137,7 +138,7 @@ export class ReachProfilesStore extends FiltersStoreBase<ReachProfilesFilters> i
     
             const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
                 type: KalturaResponseProfileType.includeFields,
-                fields: 'id,name,createdAt,updatedAt,credit,usedCredit,toDate'
+                fields: 'id,name,createdAt,updatedAt,credit,usedCredit,toDate,addOn'
             });
             
             const reachProfileListAction = new ReachProfileListAction({ filter, pager }).setRequestOptions({responseProfile});
@@ -149,7 +150,9 @@ export class ReachProfilesStore extends FiltersStoreBase<ReachProfilesFilters> i
                     const profiles = profilesResponse.objects;
                     let objects: KalturaReachProfileWithCredit[] = [];
                     profiles.forEach(profile => {
-                        objects.push({...profile, remaining: profile.credit['credit'] !== -9999 ? parseFloat((profile.credit['credit'] - profile.usedCredit).toFixed(2)) : -9999} as KalturaReachProfileWithCredit);
+                        const totalCredit = profile.credit['credit'] !== -9999 ? parseFloat((profile.credit['credit'] + profile.credit['addOn']).toFixed(2)) : -9999;
+                        const remaining = profile.credit['credit'] !== -9999 ? parseFloat((totalCredit - profile.usedCredit).toFixed(2)) : -9999;
+                        objects.push({...profile, remaining, totalCredit} as KalturaReachProfileWithCredit);
                     });
                     const totalCount = profilesResponse.totalCount;
                     return { objects, totalCount };

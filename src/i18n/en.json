@@ -2814,6 +2814,18 @@
                         "dfxp": "DFXP",
                         "srt": "SRT"
                     }
+                },
+                "credit": {
+                    "type": "Credit type",
+                    "generic": "Generic Credit",
+                    "unlimited": "Unlimited Credit",
+                    "reoccurring": "Reoccurring Credit",
+                    "range": "Time ranged Credit",
+                    "amount": "Credit amount",
+                    "consumption": "% of consumption",
+                    "overage": "Allowed Overage",
+                    "from": "From Date",
+                    "to": "Expiration Date"
                 }
             },
             "myUserSettings": {

@@ -1,1 +1,35 @@
-<span>Credit Parameters</span>
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+    <div class="kMetadataWrap">
+        <div class="kMetadataDetails">
+            <div class="kRow">
+                <span class="kLabel">{{'applications.settings.reach.credit.type' | translate}}</span>
+                <span>{{_creditType}}</span>
+            </div>
+
+            <div class="kRow">
+                <span class="kLabel">{{'applications.settings.reach.credit.amount' | translate}}</span>
+                <span>{{_totalCredit}}</span>
+            </div>
+
+            <div class="kRow">
+                <span class="kLabel">{{'applications.settings.reach.credit.consumption' | translate}}</span>
+                <span>{{_consumption}}</span>
+            </div>
+
+            <div class="kRow">
+                <span class="kLabel">{{'applications.settings.reach.credit.overage' | translate}}</span>
+                <span>{{_currentProfile?.credit['overageCredit'] || '0'}}</span>
+            </div>
+
+            <div class="kRow">
+                <span class="kLabel">{{'applications.settings.reach.credit.from' | translate}}</span>
+                <span>{{_currentProfile?.credit['fromDate'] | kmcDate:'dateOnly'}}</span>
+            </div>
+
+            <div class="kRow">
+                <span class="kLabel">{{'applications.settings.reach.credit.to' | translate}}</span>
+                <span>{{_currentProfile?.credit['toDate'] | kmcDate:'dateOnly'}}</span>
+            </div>
+        </div>
+    </div>
+</k-area-blocker>
