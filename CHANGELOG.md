@@ -1,3 +1,18 @@
+<a name="5.22.0"></a>
+# [5.22.0](https://github.com/kaltura/kmc-ng/compare/v5.21.1...v5.22.0) (2020-01-22)
+
+
+### Bug Fixes
+
+* **content/playlist:** fix entries list filters alignment in IE11 ([807d296](https://github.com/kaltura/kmc-ng/commit/807d296))
+
+
+### Features
+
+* Support Analytics localization ([#883](https://github.com/kaltura/kmc-ng/issues/883)) ([709834d](https://github.com/kaltura/kmc-ng/commit/709834d))
+
+
+
 <a name="5.21.1"></a>
 ## [5.21.1](https://github.com/kaltura/kmc-ng/compare/v5.21.0...v5.21.1) (2020-01-09)
 
