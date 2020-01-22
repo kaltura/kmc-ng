@@ -135,7 +135,11 @@ $edit-profile-dropdown-max-width: 275px;
           &.selected {
             display: block;
             white-space: nowrap;
-            margin: 0.3em 0;
+            margin-bottom: 0.3em;
+
+            &:not(:first-child) {
+              margin-top: 0.3em;
+            }
           }
           &:not(.selected) {
           vertical-align: middle;
@@ -182,8 +186,13 @@ $edit-profile-dropdown-max-width: 275px;
     margin-left: 5px;
   }
 
+  p-multiSelect.item-selected .ui-multiselect .ui-multiselect-trigger {
+    display: none;
+  }
+
   .ui-multiselect-trigger {
     padding: .5em 1em;
+    height: 100%;
 
     .pi-caret-down {
       margin-left: -.25em;
@@ -242,6 +251,17 @@ $edit-profile-dropdown-max-width: 275px;
     }
   }
 
+  p-multiSelect {
+    &.item-selected {
+      .ui-multiselect .ui-multiselect-label-container {
+        padding-bottom: calc(1em + 16px);
+
+        .ui-multiselect-label {
+          box-shadow: 0 -3px 10px 3px transparentize(#000000, 0.7);
+        }
+      }
+    }
+
   .ui-multiselect {
       height: auto;
       width: calc(
@@ -256,19 +276,26 @@ $edit-profile-dropdown-max-width: 275px;
 
       .ui-multiselect-label-container {
         height: auto;
+        position: relative;
 
         .ui-multiselect-label {
           min-height: 34px;
+          max-height: 136px;
+          overflow: hidden;
+          overflow-y: scroll;
           height: auto;
           font-weight: normal;
-          padding: .5em;
+          padding: .5em .5em 0 .5em;
+          border-radius: 0;
 
           .selected-amount {
             border-bottom: 1px solid $kPrimary;
             font-size: 0.9em;
-            margin-top: 0.8em;
             display: inline-block;
             font-weight: 800;
+            position: absolute;
+            bottom: 0.5em; /* padding */
+            left: 0.5em; /* padding */
 
             .amount {
               margin-right: 0.2em;
@@ -277,6 +304,7 @@ $edit-profile-dropdown-max-width: 275px;
         }
       }
     }
+  }
 }
 
 :host .kEditAccessControlProfile .kContainer .kFormSection .kRow p-multiselect.kControl {
