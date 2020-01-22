@@ -2798,6 +2798,22 @@
                         "us": "US",
                         "eu": "EU"
                     }
+                },
+                "service": {
+                    "captions": "Captions Service",
+                    "format": "Default Caption Format",
+                    "max": "Max Characters Per Caption Line",
+                    "machine": "Auto Display Machine Captions On Player",
+                    "human": "Auto Display Human Captions On Player",
+                    "metadata": "Metadata Extraction",
+                    "speaker": "Speaker Change Indication",
+                    "audio": "Captions Audio Tags",
+                    "removal": "Captions Profanity Removal",
+                    "naxIsMandatory": "Max characters value is required.",
+                    "formatOptions": {
+                        "dfxp": "DFXP",
+                        "srt": "SRT"
+                    }
                 }
             },
             "myUserSettings": {
