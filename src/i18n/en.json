@@ -2745,6 +2745,7 @@
                 "discard": "Discard all changes?",
                 "errorLoadingProfiles": "Failed to load transcoding profiles",
                 "profiles": "{{0}} Profiles",
+                "autoRules": "For additional rules please contacy your CSM.",
                 "profile": {
                     "save": "Save",
                     "backToProfiles": "Back To Profiles",
