@@ -2827,6 +2827,13 @@
                     "overage": "Allowed Overage",
                     "from": "From Date",
                     "to": "Expiration Date"
+                },
+                "dictionary": {
+                    "language": "Language",
+                    "words": "Words",
+                    "add": "Add Dictionary",
+                    "delete": "Delete Dictionary",
+                    "error": "You exceed the maximum character limit"
                 }
             },
             "myUserSettings": {

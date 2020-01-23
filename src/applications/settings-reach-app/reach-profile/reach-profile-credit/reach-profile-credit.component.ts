@@ -1,14 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReachProfileStore } from '../reach-profile-store.service';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import {
-    KalturaBaseVendorCreditArgs,
-    KalturaReachProfile, KalturaReoccurringVendorCredit, KalturaTimeRangeVendorCredit,
-    KalturaUnlimitedVendorCredit,
-    KalturaVendorCredit
-} from "kaltura-ngx-client";
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { KalturaBaseVendorCreditArgs, KalturaReachProfile, KalturaReoccurringVendorCredit, KalturaTimeRangeVendorCredit, KalturaUnlimitedVendorCredit, KalturaVendorCredit } from "kaltura-ngx-client";
 import { ReachProfileCreditWidget } from "./reach-profile-credit-widget.service";
-import {AppLocalization} from "@kaltura-ng/mc-shared";
+import { AppLocalization } from "@kaltura-ng/mc-shared";
 
 @Component({
   selector: 'kReachProfileCredit',
@@ -42,7 +37,7 @@ export class ReachProfileCreditComponent implements OnInit, OnDestroy {
               this._consumption = parseFloat((this._currentProfile.usedCredit / totalCredit).toFixed(2)).toString();
           } else {
               this._totalCredit = this._appLocalization.get('applications.settings.reach.unlimited');
-              this._consumption = this._appLocalization.get('app.common.n_a');
+              this._consumption = '0';
           }
         });
   }

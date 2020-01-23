@@ -24,6 +24,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { ReachProfileComponentsList } from "./reach-profile/components-list";
 import { ReachProfileCanDeactivate } from "./reach-profile/reach-profile-can-deactivate.service";
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { ChipsModule } from 'primeng/chips';
 
 @NgModule({
   imports: [
@@ -51,6 +52,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
     KMCPermissionsModule,
     TableModule,
     DateFormatModule,
+    ChipsModule
   ],
   declarations: [
     SettingsReachComponent,
