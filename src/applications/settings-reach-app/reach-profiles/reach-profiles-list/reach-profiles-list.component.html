@@ -4,7 +4,7 @@
     <span class="kTotalProfilesCount" *ngIf="(_reachProfilesStore.profiles.data$ | async)?.totalCount">
       {{'applications.settings.reach.profiles' | translate: [(_reachProfilesStore.profiles.data$ | async)?.totalCount]}}
     </span>
-    <input type="text" pInputText class="kSearchInput" [(ngModel)]="_query.freeText" (keyup.enter)="_onFreetextChanged()" [placeholder]="'applications.settings.reach.search' | translate">
+    <!--input type="text" pInputText class="kSearchInput" [(ngModel)]="_query.freeText" (keyup.enter)="_onFreetextChanged()" [placeholder]="'applications.settings.reach.search' | translate"-->
   </div>
 
     <div class="kContent">
