@@ -80,12 +80,12 @@ export class ReachProfilesTableComponent implements OnInit, AfterViewInit, OnDes
                 id: 'edit',
                 label: this._appLocalization.get('applications.settings.reach.edit'),
                 command: () => this._onActionSelected('edit', profile)
-            },
-            {
-                id: 'duplicate',
-                label: this._appLocalization.get('applications.settings.reach.duplicate'),
-                command: () => this._onActionSelected('duplicate', profile)
-            }
+            }//,
+            // {
+            //     id: 'duplicate',
+            //     label: this._appLocalization.get('applications.settings.reach.duplicate'),
+            //     command: () => this._onActionSelected('duplicate', profile)
+            // }
         ];
     }
     
