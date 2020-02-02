@@ -12,7 +12,7 @@
         [rowTrackBy]="rowTrackBy">
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
-                <col data-cid="name">
+                <col data-cid="name" [ngStyle]="{'padding-left': '16px'}">
                 <col data-cid="profileId">
                 <col data-cid="createdOn">
                 <col data-cid="allocated">
@@ -23,7 +23,7 @@
         </ng-template>
         <ng-template pTemplate="header">
             <tr>
-                <th data-cid="name" pResizableColumn>
+                <th data-cid="name" pResizableColumn [ngStyle]="{'padding-left': '16px'}">
                     {{'applications.settings.reach.table.name' | translate}}
                 </th>
                 <th data-cid="profileId" pResizableColumn>
@@ -48,7 +48,7 @@
 
         <ng-template pTemplate="body" let-profile>
             <tr>
-                <td class="ui-resizable-column">
+                <td class="ui-resizable-column" [ngStyle]="{'padding-left': '16px'}">
                     <div class="kReachProfileNameWrapper">
                         <div class="kReachProfileName kTableColumn"
                              [kTooltip]="profile.name"
