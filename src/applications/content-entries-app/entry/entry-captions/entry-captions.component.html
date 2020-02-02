@@ -101,7 +101,14 @@
                 </ng-template>
 
                 <ng-template pTemplate="emptymessage">
-                    <div class="emptymessage">{{'applications.content.table.noResults' | translate}}</div>
+                    <div class="emptyMessage" *ngIf="!_widgetService.showSectionLoader">
+                        <div class="arrow"></div>
+                        <div class="emptyFolderMsg">
+                            <div class="emptyFolder"></div>
+                            <span class="emptyMsgTitle">{{'applications.content.entryDetails.captions.emptyMsgTitle' | translate}}</span>
+                            <span class="emptyMsg">{{'applications.content.entryDetails.captions.emptyMsg' | translate}}</span>
+                        </div>
+                    </div>
                 </ng-template>
             </p-table>
         </div>
