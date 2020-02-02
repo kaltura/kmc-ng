@@ -86,6 +86,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 						this.captionsEditForm.get("label").setValue(this.currentCaption.label);
 						this.captionsEditForm.get("language").setValue(this._languageOptions.getValueByLabel(this.currentCaption.language));
 						this.captionsEditForm.get("format").setValue(this.currentCaption.format);
+						this.captionsEditForm.get("accuracy").setValue(this.currentCaption.accuracy ? this.currentCaption.accuracy : 100);
 					}
 					if (event.state === PopupWidgetStates.BeforeClose) {
 						if (event.context && event.context.allowClose){
@@ -137,6 +138,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 		if (this.captionsEditForm.get("format").dirty) {
 			this.currentCaption.format = this.captionsEditForm.get("format").value;
 		}
+		this.currentCaption.accuracy = this.captionsEditForm.get("accuracy").value;
 		this._confirmClose = false;
 
 		let context = {}; // pass selected file or file URL to the parent component via the popup widget close context
@@ -210,6 +212,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 			label: '',
 			language: '',
 			format: '',
+            accuracy: 100,
 			uploadMethod: 'upload',
 			captionUrl: ['', KalturaValidators.url]
 		});
@@ -220,6 +223,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 			label: '',
 			language: '',
 			format: '',
+            accuracy: '',
 			uploadMethod: 'upload',
 			captionUrl: ''
 		});

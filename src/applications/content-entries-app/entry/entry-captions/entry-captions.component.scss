@@ -32,21 +32,44 @@
     .kInputSwitchLabel {
         margin-left: 8px;
     }
+    .kTableHeader {
+        display: flex;
+        align-items: center;
+        span{
+            line-height: 24px;
+        }
+        .kHelpTip {
+            font-size: 15px;
+            margin-left: 8px;
+            cursor: pointer;
+        }
+        kInputHelper span{
+            white-space: normal;
+            font-weight: normal;
+            line-height: 20px;
+        }
+    }
 }
-:host ::ng-deep .ui-table .ui-table-data tr.uoloading{
-	background: repeating-linear-gradient(
-			-75deg,
-			#ffffff,
-			#ffffff 15px,
-			$kGrayscale7 15px,
-			$kGrayscale7 30px
-	);
-	background-attachment: fixed;
+:host ::ng-deep .ui-table {
+    .ui-table-data tr.uoloading {
+        background: repeating-linear-gradient(
+                -75deg,
+                #ffffff,
+                #ffffff 15px,
+                $kGrayscale7 15px,
+                $kGrayscale7 30px
+        );
+        background-attachment: fixed;
 
-	-webkit-animation:progress 2s linear infinite;
-	-moz-animation:progress 2s linear infinite;
-	-ms-animation:progress 2s linear infinite;
-	animation:progress 2s linear infinite;
+        -webkit-animation: progress 2s linear infinite;
+        -moz-animation: progress 2s linear infinite;
+        -ms-animation: progress 2s linear infinite;
+        animation: progress 2s linear infinite;
+    }
+
+    .ui-table-scrollable-header {
+        overflow: visible;
+    }
 }
 
 @-webkit-keyframes progress{
