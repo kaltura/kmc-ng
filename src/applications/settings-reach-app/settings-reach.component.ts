@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { SettingsReachService } from './settings-reach.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ReachProfilesStore } from './reach-profiles/reach-profiles-store/reach-profiles-store.service';
+import { ReachServicesStore } from './reach-profiles/reach-services-store/reach-services-store.service';
 
 
 @Component({
@@ -10,6 +11,7 @@ import { ReachProfilesStore } from './reach-profiles/reach-profiles-store/reach-
   providers: [
     SettingsReachService,
     ReachProfilesStore,
+    ReachServicesStore,
     KalturaLogger.createLogger('SettingsReach')
   ],
 })

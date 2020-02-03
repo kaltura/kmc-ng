@@ -3,11 +3,15 @@ import { ReachProfilesListsHolderComponent } from './reach-profiles-lists-holder
 import { ReachProfilesTableComponent } from './reach-profiles-table/reach-profiles-table.component';
 import { ReachProfileCreditPipe } from './pipes/reach-profile-credit.pipe';
 import { ReachProfilesTagsComponent } from './reach-profiles-tags/reach-profiles-tags.component';
+import { ReachServicesTableComponent } from './reach-services-table/reach-services-table.component';
+import { ReachServicesListComponent } from './reach-services-list/reach-services-list.component';
 
 export const ReachProfilesComponentsList = [
   ReachProfilesListComponent,
   ReachProfilesListsHolderComponent,
   ReachProfilesTableComponent,
   ReachProfilesTagsComponent,
-  ReachProfileCreditPipe
+  ReachProfileCreditPipe,
+  ReachServicesTableComponent,
+  ReachServicesListComponent
 ];

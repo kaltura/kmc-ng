@@ -1,0 +1,64 @@
+<div class="kReachProfilesTable" [ngClass]="{'noResults' :!_services?.length}">
+    <p-table
+        scrollHeight="100%"
+        dataKey="id"
+        [value]="_services"
+        [resizableColumns]="true"
+        [scrollable]="true"
+        [sortField]="'createdAt'"
+        [sortOrder]="-1"
+        [defaultSortOrder]="_defaultSortOrder"
+        (sortFunction)="_onSortChanged($event)" [customSort]="true"
+        [rowTrackBy]="rowTrackBy">
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                <col data-cid="service" [ngStyle]="{'padding-left': '16px'}">
+                <col data-cid="id">
+                <col data-cid="tat">
+                <col data-cid="language">
+                <col data-cid="speaker">
+                <col data-cid="cpm">
+            </colgroup>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th data-cid="service" pResizableColumn [ngStyle]="{'padding-left': '16px'}">
+                    {{'applications.settings.reach.services.service' | translate}}
+                </th>
+                <th data-cid="profileId" pResizableColumn>
+                    {{'applications.settings.reach.services.id' | translate}}
+                </th>
+                <th data-cid="createdOn" pResizableColumn>
+                    {{'applications.settings.reach.services.tat' | translate}}
+                </th>
+                <th data-cid="allocated" pResizableColumn>
+                    {{'applications.settings.reach.services.language' | translate}}
+                </th>
+                <th data-cid="remaining" pResizableColumn>
+                    {{'applications.settings.reach.services.speaker' | translate}}
+                </th>
+                <th data-cid="expiration">
+                    {{'applications.settings.reach.services.cpm' | translate}}
+                </th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-service>
+            <tr>
+                <td class="ui-resizable-column" [ngStyle]="{'padding-left': '16px'}">{{service.serviceType.toString()}}</td>
+                <td class="ui-resizable-column">{{service.id}}</td>
+                <td class="ui-resizable-column">{{service.turnAroundTime.toString()}}</td>
+                <td class="ui-resizable-column">{{service.sourceLanguage.toString()}}</td>
+                <td class="ui-resizable-column">{{service.enableSpeakerId.toString()}}</td>
+                <td class="ui-resizable-column">{{service.pricing ? service.pricing.pricePerUnit : ''}}</td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <div class="emptymessage">
+                <div class="kEmptyMessage">{{_emptyMessage}}</div>
+            </div>
+        </ng-template>
+    </p-table>
+
+</div>

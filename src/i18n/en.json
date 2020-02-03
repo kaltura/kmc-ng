@@ -2743,7 +2743,8 @@
                 "search": "Search",
                 "cancelEdit": "Cancel Edit",
                 "discard": "Discard all changes?",
-                "errorLoadingProfiles": "Failed to load transcoding profiles",
+                "errorLoadingProfiles": "Failed to load Reach profiles",
+                "errorLoadingServices": "Failed to load Reach services",
                 "profiles": "{{0}} Profiles",
                 "autoRules": "For additional rules please contact your CSM.",
                 "profile": {
@@ -2834,6 +2835,16 @@
                     "add": "Add Dictionary",
                     "delete": "Delete Dictionary",
                     "error": "You exceed the maximum character limit"
+                },
+                "services": {
+                    "services": "{{0}} Services",
+                    "title": "Services",
+                    "service": "Service",
+                    "id": "ID",
+                    "tat": "Turn Around Time",
+                    "language": "Source Language",
+                    "speaker": "Speaker ID",
+                    "cpm": "Cost Per Minute"
                 }
             },
             "myUserSettings": {
