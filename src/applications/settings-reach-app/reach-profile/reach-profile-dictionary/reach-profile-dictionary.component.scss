@@ -1,0 +1,135 @@
+@import 'app-theme/_variables.scss';
+
+.kMetadataWrap {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex: 1 1 auto;
+}
+
+.kMetadataDetails {
+    padding: 26px 20px 20px 20px;
+    width: 100%;
+    position: relative;
+
+    .kSchemaTitle {
+        color: $kGrayscale1;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .kRow {
+        display: flex;
+        padding-top: 22px;
+        align-items: center;
+        button{
+            margin-left: 24px;
+        }
+        .kLabel {
+            width: 196px;
+            flex: 0 0 auto;
+            word-wrap: break-word;
+            padding-right: 12px;
+        }
+        .kHasError {
+            color: $kDandger;
+            margin-top: 4px;
+        }
+        .kChips {
+            width: 100%;
+            margin-right: 24px;
+            .kWordsFooter{
+                display: flex;
+                width: 100%;
+                align-items: center;
+                margin-top: 4px;
+                span {
+                    margin-left: auto;
+                }
+            }
+        }
+        .kRemove{
+            color: $kDandger;
+            margin-left: auto;
+            cursor: pointer;
+            font-size: 24px;
+            margin-right: 24px;
+        }
+    }
+
+    .kDictionary{
+        border: 1px solid $kGrayscale6;
+        border-radius: 3px;
+        padding-left: 20px;
+        margin-top: 20px;
+        flex-direction: column;
+        .kRow{
+            padding-top: 0px;
+            width: 100%;
+            margin-bottom: 32px;
+        }
+    }
+
+    ::ng-deep {
+        .ui-button-icon-left {
+            font-size: 24px;
+            color: $kGrayscale3;
+        }
+
+        .ui-button-text {
+            margin-left: 16px;
+        }
+    }
+
+}
+::ng-deep p-chips.kInvalid {
+    .ui-chips ul.ui-inputtext {
+        border: 1px solid $kDandger;
+    }
+}
+
+::ng-deep p-chips {
+    width: 100%;
+    .ui-chips {
+        ul.ui-inputtext {
+            max-height: 101px;
+            overflow-y: auto;
+            height: auto;
+        }
+        .ui-chips-token{
+            margin-right: 6px;
+            height: 24px;
+            border: 0px solid $kPrimary;
+            background-color: $kPrimary;
+            border-radius: 3px;
+            color: #ffffff;
+            padding-top: 4px;
+            margin-bottom: 3px;
+            margin-top: 3px;
+            &:hover {
+                background-color: darken(#00A784, 10%);
+            }
+            .ui-chips-token-label{
+                font-weight: bold;
+            }
+            .ui-chips-token-icon.pi-times{
+                flex: 0 0 auto;
+                margin-top: -10px;
+                right: 0px;
+                padding: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                margin-right: 2px;
+                padding-top: 4px;
+                &:hover{
+                    background-color: rgba(255,255,255,0.3);
+                    border: 0px solid rgba(255,255,255,0.3);
+                    border-radius: 3px;
+                }
+            }
+            .ui-chips-token-icon.pi-times:before {
+                content: "\e91d";
+            }
+        }
+    }
+}

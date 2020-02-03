@@ -1,18 +1,18 @@
 @import 'app-theme/_variables.scss';
 
-.kTranscodingProfilesList {
+.kReachProfilesList {
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   background-color: white;
   display: inline-block;
-  .kTranscodingProfilesListTitle {
+  .kReachProfilesListTitle {
     margin-top: 28px;
     margin-bottom: 12px;
     font-size: 20px;
     margin-left: 14px;
   }
 
-  .kTranscodingProfilesTableHeader {
+  .kReachProfilesTableHeader {
     color: $kGrayscale1;
     z-index: 500;
     height: 66px;
@@ -26,42 +26,17 @@
       padding-left: 16px;
     }
 
-    .kBulkOperations {
-      display: flex;
-      align-items: center;
-    }
+    .kSearchInput {
+      margin-left: auto;
+      margin-right: 24px;
+      width: 280px;
+      height: 34px;
+      background: $kMagnifyingGlassBkg;
+      padding: 9px 4px 8px 38px;
 
-    .kSelectedProfilesLabel {
-      font-weight: bold;
-      margin-right: 36px;
-      margin-left: 5px;
-    }
-
-    .kAddProfileBtn {
-      margin-left: 14px;
-      height: 36px;
-      border: none;
-    }
-
-    .kBulkCancel {
-      margin-left: 26px;
-    }
-
-    .kBulkDeleteBtn {
-      margin-right: 10px;
-      width: 44px;
-      font-size: 24px;
-    }
-
-    .kBulkActionsBtn {
-      font-weight: 400;
-      font-size: 15px;
-    }
-
-    .kHidden {
-      visibility: hidden;
-      width: 0;
-      height: 0;
+      &:focus {
+        background-color: white;
+      }
     }
   }
 

@@ -1,0 +1,7 @@
+<k-details-bar #detailsBar [data]="_currentProfile">
+  <kDetailInfo [label]="'applications.settings.reach.details.id' | translate" [valueField]="'id'"></kDetailInfo>
+  <kDetailInfo [label]="'applications.settings.reach.details.creationDate' | translate" [value]="_currentProfile?.createdAt | kmcDate:'dateOnly'"></kDetailInfo>
+  <kDetailInfo [label]="'applications.settings.reach.details.remaining' | translate" [value]="_remainingCredit | kReachProfileCredit"></kDetailInfo>
+  <kDetailInfo [label]="'applications.settings.reach.details.expiration' | translate" [value]="_currentProfile?.credit['toDate'] | kmcDate:'dateOnly'"></kDetailInfo>
+</k-details-bar>
+

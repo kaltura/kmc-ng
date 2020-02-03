@@ -1,0 +1,94 @@
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+    <div class="kMetadataWrap">
+        <div class="kMetadataDetails">
+            <span class="kSchemaTitle">{{'applications.settings.reach.service.captions' | translate}}</span>
+
+            <form [formGroup]="_widgetService.serviceForm" novalidate>
+
+                <div class="kRow">
+                    <span class="kLabel">
+                        {{'applications.settings.reach.service.format' | translate}}
+                      </span>
+                    <div class="kControl">
+                        <p-dropdown [options]="_widgetService.formatOptions"
+                                    [formControl]="_widgetService.formatField"
+                                    [autoWidth]="false"></p-dropdown>
+                    </div>
+                </div>
+
+                <div class="kRow kValign">
+                      <span class="kLabel">
+                        {{'applications.settings.reach.service.max' | translate}}
+                      </span>
+                    <div class="kControl">
+                        <input [formControl]="_widgetService.maxField" pInputText [ngClass]="{'kHasError':_widgetService.maxField.touched && !_widgetService.maxField.valid}">
+                        <div *ngIf="_widgetService.maxField.touched && !_widgetService.maxField.valid" class="kHasError">
+                            {{'applications.settings.reach.service.naxIsMandatory' | translate}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <span class="kLabel">
+                        {{'applications.settings.reach.service.machine' | translate}}
+                      </span>
+                    <div class="kControl">
+                        <p-inputSwitch class="kInputSwitch" [formControl]="_widgetService.machineField"></p-inputSwitch>
+                        <span>{{_widgetService.serviceForm.controls['machine'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <span class="kLabel">
+                        {{'applications.settings.reach.service.human' | translate}}
+                      </span>
+                    <div class="kControl">
+                        <p-inputSwitch class="kInputSwitch" [formControl]="_widgetService.humanField"></p-inputSwitch>
+                        <span>{{_widgetService.serviceForm.controls['human'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <span class="kLabel">
+                        {{'applications.settings.reach.service.metadata' | translate}}
+                      </span>
+                    <div class="kControl">
+                        <p-inputSwitch class="kInputSwitch" [formControl]="_widgetService.metadataField"></p-inputSwitch>
+                        <span>{{_widgetService.serviceForm.controls['metadata'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <span class="kLabel">
+                        {{'applications.settings.reach.service.speaker' | translate}}
+                      </span>
+                    <div class="kControl">
+                        <p-inputSwitch class="kInputSwitch" [formControl]="_widgetService.speakerField"></p-inputSwitch>
+                        <span>{{_widgetService.serviceForm.controls['speaker'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <span class="kLabel">
+                        {{'applications.settings.reach.service.audio' | translate}}
+                      </span>
+                    <div class="kControl">
+                        <p-inputSwitch class="kInputSwitch" [formControl]="_widgetService.audioField"></p-inputSwitch>
+                        <span>{{_widgetService.serviceForm.controls['audio'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <span class="kLabel">
+                        {{'applications.settings.reach.service.removal' | translate}}
+                      </span>
+                    <div class="kControl">
+                        <p-inputSwitch class="kInputSwitch" [formControl]="_widgetService.removalField"></p-inputSwitch>
+                        <span>{{_widgetService.serviceForm.controls['removal'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</k-area-blocker>

@@ -31,18 +31,20 @@
             "analyticsKavaMenuTitle": "KAVA",
             "settingsAccessControlPageTitle": "Settings > Access Control",
             "settingsAccessControlMenuTitle": "Access Control",
+            "settingsReachPageTitle": "Settings > Reach",
+            "settingsReachMenuTitle": "Reach",
             "settingsAccountInfoPageTitle": "Settings > Account Information",
             "settingsAccountInfoMenuTitle": "Account Information",
-            "settingsAccountSettingsPageTitle": "Settings > Account Settings",
-            "settingsAccountSettingsMenuTitle": "Account settings",
-            "settingsIntegrationPageTitle": "Settings > Integration Settings",
-            "settingsIntegrationMenuTitle": "Integration Settings",
+            "settingsAccountSettingsPageTitle": "Settings > Account",
+            "settingsAccountSettingsMenuTitle": "Account",
+            "settingsIntegrationPageTitle": "Settings > Integration",
+            "settingsIntegrationMenuTitle": "Integration",
             "settingsMetadataPageTitle": "Settings > Custom Data",
             "settingsMetadataMenuTitle": "Custom Data",
-            "settingsMyUserSettingsPageTitle": "Settings > My User Settings",
-            "settingsMyUserSettingsMenuTitle": "My User Settings",
-            "settingsTranscodingPageTitle": "Settings > Transcoding Settings",
-            "settingsTranscodingRolesMenuTitle": "Transcoding Settings",
+            "settingsMyUserSettingsPageTitle": "Settings > My User",
+            "settingsMyUserSettingsMenuTitle": "My User",
+            "settingsTranscodingPageTitle": "Settings > Transcoding",
+            "settingsTranscodingRolesMenuTitle": "Transcoding",
             "studioV2PageTitle": "Studio > Universal Studio",
             "studioV2MenuTitle": "Universal Studio",
             "studioV3PageTitle": "Studio > TV Platform Studio",
@@ -2731,6 +2733,107 @@
                     "errors": {
                         "loadError": "An error occurred while loading Entitlements."
                     }
+                }
+            },
+            "reach": {
+                "reachProfiles": "Profiles",
+                "edit": "Edit",
+                "duplicate": "Duplicate",
+                "unlimited": "Unlimited",
+                "search": "Search",
+                "cancelEdit": "Cancel Edit",
+                "discard": "Discard all changes?",
+                "errorLoadingProfiles": "Failed to load transcoding profiles",
+                "profiles": "{{0}} Profiles",
+                "autoRules": "For additional rules please contact your CSM.",
+                "profile": {
+                    "save": "Save",
+                    "backToProfiles": "Back To Profiles",
+                    "errors": {
+                        "error": "Error",
+                        "dismiss": "Dismiss",
+                        "reload": "Reload",
+                        "loadError": "An error occurred while loading data.",
+                        "saveError": "An error occurred while saving.",
+                        "validationError": "The form contains some invalid information. Please review the sections marked as invalid",
+                        "busyError": "An operation is still in progress. Please try again in a while.",
+                        "savePrepareError": "An error occurred while preparing to save. Please try again."
+                    }
+                },
+                "table": {
+                    "name": "Name",
+                    "id": "ID",
+                    "created": "Created On",
+                    "allocated": "Allocated Credit",
+                    "remaining": "Remaining Credit",
+                    "expiration": "Credit Expiration Date"
+                },
+                "sections": {
+                    "settings": "Settings",
+                    "service": " Service Parameters",
+                    "credit": "Credit",
+                    "dictionary": "Dictionary",
+                    "rules": "Automatic Rules"
+                },
+                "details": {
+                    "id": "ID",
+                    "remaining": "Remaining Credit",
+                    "expiration": "Credit Expiration Date",
+                    "creationDate": "Creation Date"
+                },
+                "settings": {
+                    "name": "Name",
+                    "machine": "Moderation on Machine Requests",
+                    "professional": "Moderation on Professional Requests",
+                    "deletion": "Content Deletion Policy",
+                    "region": "Task Processing Region",
+                    "nameIsMandatory": "Name is required.",
+                    "deleteOptions": {
+                        "deleteAfterMonth": "Delete After One Month",
+                        "deleteAfterThreeMonths": "Delete After Three Months",
+                        "deleteAfterWeek": "Delete After One Week",
+                        "deleteOnceProcessed": "Delete Once Processed",
+                        "doNothing": "Do Not Delete"
+                    },
+                    "regionOptions": {
+                        "us": "US",
+                        "eu": "EU"
+                    }
+                },
+                "service": {
+                    "captions": "Captions Service",
+                    "format": "Default Caption Format",
+                    "max": "Max Characters Per Caption Line",
+                    "machine": "Auto Display Machine Captions On Player",
+                    "human": "Auto Display Human Captions On Player",
+                    "metadata": "Metadata Extraction",
+                    "speaker": "Speaker Change Indication",
+                    "audio": "Captions Audio Tags",
+                    "removal": "Captions Profanity Removal",
+                    "naxIsMandatory": "Max characters value is required.",
+                    "formatOptions": {
+                        "dfxp": "DFXP",
+                        "srt": "SRT"
+                    }
+                },
+                "credit": {
+                    "type": "Credit type",
+                    "generic": "Generic Credit",
+                    "unlimited": "Unlimited Credit",
+                    "reoccurring": "Reoccurring Credit",
+                    "range": "Time ranged Credit",
+                    "amount": "Credit amount",
+                    "consumption": "% of consumption",
+                    "overage": "Allowed Overage",
+                    "from": "From Date",
+                    "to": "Expiration Date"
+                },
+                "dictionary": {
+                    "language": "Language",
+                    "words": "Words",
+                    "add": "Add Dictionary",
+                    "delete": "Delete Dictionary",
+                    "error": "You exceed the maximum character limit"
                 }
             },
             "myUserSettings": {

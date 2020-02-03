@@ -1,0 +1,31 @@
+@import 'app-theme/_variables.scss';
+
+.kMetadataWrap {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex: 1 1 auto;
+}
+
+.kMetadataDetails {
+    padding: 26px 20px 20px 20px;
+    width: 100%;
+    position: relative;
+
+    ::ng-deep {
+
+        .kRow {
+            display: flex;
+            padding-top: 22px;
+
+            .kLabel {
+                width: 196px;
+                flex: 0 0 auto;
+                word-wrap: break-word;
+                padding-right: 12px;
+            }
+        }
+    }
+
+}
+

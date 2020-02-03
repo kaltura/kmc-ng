@@ -1,0 +1,83 @@
+@import 'app-theme/_variables.scss';
+
+.kMetadataWrap {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex: 1 1 auto;
+}
+
+.kMetadataDetails {
+    padding: 26px 20px 20px 20px;
+    width: 100%;
+    position: relative;
+    .kSchemaTitle {
+        color: $kGrayscale1;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    ::ng-deep {
+
+        .kRow {
+            display: flex;
+            padding-top: 22px;
+
+            .kLabel {
+                width: 196px;
+                flex: 0 0 auto;
+                word-wrap: break-word;
+                padding-right: 12px;
+            }
+
+            .kHasError {
+                color: $kDandger;
+                margin-top: 4px;
+            }
+
+            input {
+                width: 100%;
+                max-width: 500px;
+                height: 34px;
+
+                &.kHasError {
+                    border-color: $kDandger
+                }
+            }
+
+            kmultiselect{
+                max-width: 500px;
+                display: block;
+            }
+
+            .kInputSwitch {
+                padding-right: 10px;
+            }
+
+            .kControl, k-prime-control {
+                width: 100%;
+                max-width: 500px;
+            }
+        }
+    }
+
+    .kValign {
+        align-items: center;
+    }
+
+    .extraPadding {
+        padding-bottom: 21px;
+    }
+
+
+
+    /*********************/
+    /* PrimeNG overrides */
+    /*********************/
+
+}
+
+:host ::ng-deep .kMetadataDetails {
+    .ui-dropdown.ui-widget {
+        width: 100%;
+    }
+}
