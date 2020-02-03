@@ -61,7 +61,7 @@
                 <td class="ui-resizable-column">{{profile.createdAt | kmcDate:'dateOnly'}}</td>
                 <td class="ui-resizable-column">{{profile.credit ? (profile.totalCredit | kReachProfileCredit) : ('app.common.n_a' | translate)}}</td>
                 <td class="ui-resizable-column">{{profile.remaining | kReachProfileCredit}}</td>
-                <td class="ui-resizable-column">{{profile.credit.toDate | kmcDate:'dateOnly'}}</td>
+                <td class="ui-resizable-column">{{profile.credit ? (profile.credit.toDate | kmcDate:'dateOnly') : ''}}</td>
                 <td [ngStyle]="{'overflow':'visible', 'width':'80px'}">
                     <div class="kReachProfilesTableActions">
                         <button class="kMoreActionsButton" type="button" pButton icon="kIconmore"
