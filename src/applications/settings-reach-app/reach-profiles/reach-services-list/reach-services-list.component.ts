@@ -11,6 +11,7 @@ import {ReachProfilesFilters} from "../reach-profiles-store/reach-profiles-store
 import {SortDirection} from "../../../administration-multi-account-app/multi-account-store/multi-account-store.service";
 import {SettingsReachProfileViewService} from "app-shared/kmc-shared/kmc-views/details-views/settings-reach-profile-view.service";
 import {ReachServicesStore} from "../reach-services-store/reach-services-store.service";
+import {KalturaVendorServiceFeature} from "kaltura-ngx-client";
 
 @Component({
     selector: 'k-reach-services-list',
@@ -25,6 +26,10 @@ export class ReachServicesListComponent implements OnInit, OnDestroy {
     public _tableIsBusy = false;
     public _tableBlockerMessage: AreaBlockerMessage;
     public _kmcPermissions = KMCPermissions;
+    public _serviceFeatures = [
+        { label: 'Captions', value: KalturaVendorServiceFeature.captions },
+        { label: 'Translations', value: KalturaVendorServiceFeature.translation }
+    ]
     
     public _query = {
         sortBy: 'createdAt',
@@ -153,5 +158,11 @@ export class ReachServicesListComponent implements OnInit, OnDestroy {
                 sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
             });
         }
+    }
+    
+    public _onFeatureChange(event): void {
+        this._reachServicesStore.filter({
+            feature: event.value
+        });
     }
 }

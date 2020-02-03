@@ -39,4 +39,10 @@
     .ui-table .ui-table-thead > tr > th {
         border-left: 1px solid $kGrayscale6;
     }
+    .ui-table-scrollable-body {
+        max-height: 280px !important;
+    }
+    .ui-table-scrollable-table-wrapper {
+        max-height: 261px !important;
+    }
 }

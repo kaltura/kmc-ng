@@ -2,7 +2,16 @@ import {OnDestroy} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
-import {KalturaClient, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaVendorCaptionsCatalogItemFilter, KalturaVendorCatalogItem, KalturaVendorCatalogItemListResponse, VendorCatalogItemListAction} from 'kaltura-ngx-client';
+import {
+    KalturaClient,
+    KalturaDetachedResponseProfile,
+    KalturaResponseProfileType,
+    KalturaVendorCaptionsCatalogItemFilter,
+    KalturaVendorCatalogItem,
+    KalturaVendorCatalogItemListResponse,
+    KalturaVendorServiceFeature,
+    VendorCatalogItemListAction
+} from 'kaltura-ngx-client';
 import {KalturaFilterPager} from 'kaltura-ngx-client';
 import {BrowserService} from 'shared/kmc-shell/providers/browser.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
@@ -19,6 +28,7 @@ export interface ReachServicesFilters {
     pageIndex: number;
     sortBy: string;
     sortDirection: number;
+    feature: number;
 }
 
 export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> implements OnDestroy {
@@ -110,6 +120,9 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
             
             // filter by partner ID
             filter.partnerIdEqual = this._appAuthentication.appUser.partnerId;
+            
+            // filter by feature
+            filter.serviceFeatureEqual = data.feature;
     
             // filter 'freeText'
             // if (data.freeText) {
@@ -163,7 +176,8 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
             pageSize: pageSize,
             pageIndex: 0,
             sortBy: 'createdAt',
-            sortDirection: SortDirection.Desc
+            sortDirection: SortDirection.Desc,
+            feature: KalturaVendorServiceFeature.captions
         };
     }
     
@@ -172,7 +186,8 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
             pageSize: new NumberTypeAdapter(),
             pageIndex: new NumberTypeAdapter(),
             sortBy: new StringTypeAdapter(),
-            sortDirection: new NumberTypeAdapter()
+            sortDirection: new NumberTypeAdapter(),
+            feature: new NumberTypeAdapter(),
         };
     }
     
