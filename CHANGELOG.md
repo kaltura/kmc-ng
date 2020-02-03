@@ -1,3 +1,13 @@
+<a name="5.23.0"></a>
+# [5.23.0](https://github.com/kaltura/kmc-ng/compare/v5.22.0...v5.23.0) (2020-02-03)
+
+
+### Features
+
+* **settings/reach:** View and edit Reach profiles ([#887](https://github.com/kaltura/kmc-ng/issues/887)) ([73c379a](https://github.com/kaltura/kmc-ng/commit/73c379a))
+
+
+
 <a name="5.22.0"></a>
 # [5.22.0](https://github.com/kaltura/kmc-ng/compare/v5.21.1...v5.22.0) (2020-01-22)
 
