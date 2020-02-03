@@ -1,0 +1,27 @@
+<div class="kReachProfilesList">
+  <h2 class="kReachProfilesListTitle">{{'applications.settings.reach.reachProfiles'| translate}}</h2>
+  <div class="kReachProfilesTableHeader kContent">
+    <span class="kTotalProfilesCount" *ngIf="(_reachProfilesStore.profiles.data$ | async)?.totalCount">
+      {{'applications.settings.reach.profiles' | translate: [(_reachProfilesStore.profiles.data$ | async)?.totalCount]}}
+    </span>
+    <!--input type="text" pInputText class="kSearchInput" [(ngModel)]="_query.freeText" (keyup.enter)="_onFreetextChanged()" [placeholder]="'applications.settings.reach.search' | translate"-->
+  </div>
+
+    <div class="kContent">
+        <k-reach-profiles-tags></k-reach-profiles-tags>
+    </div>
+
+  <k-area-blocker [showLoader]="_tableIsBusy" [message]="_tableBlockerMessage">
+    <k-reach-profiles-table [profiles]="(_reachProfilesStore.profiles.data$ | async)?.items" (sortChanged)="_onSortChanged($event)" (actionSelected)="_actionSelected($event)" ></k-reach-profiles-table>
+  </k-area-blocker>
+
+  <div class="kProfilesTableFooter kContent" #footer *ngIf="(_reachProfilesStore.profiles.data$ | async)?.totalCount">
+    <p-paginator
+      [rows]="_query.pageSize"
+      [first]="_query.pageIndex * _query.pageSize"
+      [totalRecords]="(_reachProfilesStore.profiles.data$ | async)?.totalCount"
+      [rowsPerPageOptions]="[25,50,75,100]"
+      (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+    <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+  </div>
+</div>

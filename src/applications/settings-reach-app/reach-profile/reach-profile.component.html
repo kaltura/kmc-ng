@@ -1,0 +1,31 @@
+<k-area-blocker [showLoader]="_showLoader" [message]="_areaBlockerMessage" [bodyScroll]="true">
+	<div class="kmcDetailsLayout kOverrideFAIcons">
+		<div class="kContent kDetailsWrapper">
+            <div class="kDetailsHeader">
+                <div class="kContent">
+                    <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
+                    <div class="kTitle">{{ _profileName }}</div>
+                    <button pButton class="kButtonBranded kSaveBtn"
+                [label]="'applications.settings.reach.profile.save' | translate"
+                [disabled]="_isSaveDisabled"
+                (click)="_save()"></button>
+                    <button pButton class="kButtonDefault kNavigationBtnLeft" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
+                    <button pButton class="kButtonDefault kNavigationBtnRight" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
+                </div>
+            </div>
+			<div class="kHeaderDetails">
+				<kReachProfileDetails></kReachProfileDetails>
+			</div>
+			<div class="kDetailsMain">
+        <div class="kSections">
+          <kReachProfileSectionsList></kReachProfileSectionsList>
+        </div>
+				<div class="kDetailsContent">
+					<router-outlet></router-outlet>
+				</div>
+			</div>
+			<div class="kSpacer"></div>
+		</div>
+
+	</div>
+</k-area-blocker>

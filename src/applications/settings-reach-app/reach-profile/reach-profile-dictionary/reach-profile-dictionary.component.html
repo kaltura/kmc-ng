@@ -1,0 +1,34 @@
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+    <div class="kMetadataWrap">
+        <div class="kMetadataDetails">
+
+            <div class="kRow">
+                <span class="kLabel">{{'applications.settings.reach.sections.dictionary' | translate}}</span>
+                <button type="button" class="kButtonDefault" pButton
+                        icon="kIconplus"
+                        label="{{'applications.settings.reach.dictionary.add' | translate}}"
+                        (click)="_widgetService._addDictionary()"></button>
+            </div>
+
+            <div class="kRow kDictionary" *ngFor="let dictionary of _widgetService._dictionaries, let i = index">
+                <div class="kRow">
+                    <span class="kLabel">{{'applications.settings.reach.dictionary.language' | translate}}</span>
+                    <p-dropdown [options]="_widgetService._languages" [(ngModel)]="dictionary.language" [autoWidth]="false" (onChange)="_widgetService._onDataChange(i)"></p-dropdown>
+                    <i class="kIconremove kRemove" [kTooltip]="'applications.settings.reach.dictionary.delete' | translate" (click)="_widgetService._deleteDictionary(i)"></i>
+                </div>
+                <div class="kRow">
+                    <span class="kLabel">{{'applications.settings.reach.dictionary.words' | translate}}</span>
+                    <div class="kChips">
+                        <p-chips [class.kInvalid]="!dictionary.isValid" [(ngModel)]="dictionary.words" (ngModelChange)="_widgetService._onDataChange(i, $event)"></p-chips>
+                        <div class="kWordsFooter">
+                            <div *ngIf="!dictionary.isValid" class="kHasError">
+                                {{'applications.settings.reach.dictionary.error' | translate}}
+                            </div>
+                            <span>{{dictionary.usedCharacters}}/{{_widgetService._maxCharacters}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</k-area-blocker>

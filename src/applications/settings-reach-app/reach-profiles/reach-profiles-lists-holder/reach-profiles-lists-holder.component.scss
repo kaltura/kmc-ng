@@ -1,0 +1,26 @@
+@import 'app-theme/_variables.scss';
+
+.kReachProfilesListsHolderWrapper {
+  font-size: 15px;
+  background-color: $appBkgColor;
+  padding-top: 24px;
+  width: 100%;
+  min-width: $minAppWidth;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0;
+  flex-direction: column;
+
+  .kReachProfilesListsHolder {
+    height: 460px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 42px !important;
+    .kSingleTableMode {
+      height: auto !important;
+    }
+  }
+}
+

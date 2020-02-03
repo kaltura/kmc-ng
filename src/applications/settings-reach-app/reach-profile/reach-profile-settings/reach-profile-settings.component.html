@@ -1,0 +1,61 @@
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+    <div class="kMetadataWrap">
+        <div class="kMetadataDetails">
+            <form [formGroup]="_widgetService.settingsForm" novalidate>
+                <div class="kRow kValign">
+                      <span class="kLabel">
+                        {{'applications.settings.reach.settings.name' | translate}}
+                      </span>
+                    <div class="kControl">
+                        <input [formControl]="_widgetService.nameField" pInputText [ngClass]="{'kHasError':_widgetService.nameField.touched && !_widgetService.nameField.valid}">
+                        <div *ngIf="_widgetService.nameField.touched && !_widgetService.nameField.valid" class="kHasError">
+                            {{'applications.settings.reach.settings.nameIsMandatory' | translate}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <span class="kLabel">
+                        {{'applications.settings.reach.settings.machine' | translate}}
+                      </span>
+                    <div class="kControl">
+                        <p-inputSwitch class="kInputSwitch" [formControl]="_widgetService.machineField"></p-inputSwitch>
+                        <span>{{_widgetService.settingsForm.controls['machine'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <span class="kLabel">
+                        {{'applications.settings.reach.settings.professional' | translate}}
+                      </span>
+                    <div class="kControl">
+                        <p-inputSwitch class="kInputSwitch" [formControl]="_widgetService.professionalField"></p-inputSwitch>
+                        <span>{{_widgetService.settingsForm.controls['professional'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <span class="kLabel">
+                        {{'applications.settings.reach.settings.deletion' | translate}}
+                      </span>
+                    <div class="kControl">
+                        <p-dropdown [options]="_widgetService.deleteOptions"
+                                    [formControl]="_widgetService.deletionField"
+                                    [autoWidth]="false"></p-dropdown>
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <span class="kLabel">
+                        {{'applications.settings.reach.settings.region' | translate}}
+                      </span>
+                    <div class="kControl">
+                        <p-dropdown [options]="_widgetService.regionOptions"
+                                    [formControl]="_widgetService.regionField"
+                                    [autoWidth]="false"></p-dropdown>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</k-area-blocker>

@@ -6,3 +6,4 @@ export * from './content-new-category-view.service';
 export * from './restore-password-view.service';
 export * from './reach-app-view.service';
 export * from './authenticator-view.service';
+export * from './settings-reach-profile-view.service';
