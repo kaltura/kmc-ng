@@ -2611,7 +2611,7 @@
                     "deleteCustomDataField": "Delete Custom Data Field",
                     "bulkDeleteCustomDataField": "Delete Custom Data Field",
                     "fieldBulkRemoveConfirmation": "Are you sure you want to delete the selected fields?\nWarning: You will lose all of the metadata for the deleted fields in existing entries.\nNote: If you use XMLs for Bulk Upload, deleting schema fields affects the validation of XMLs Custom Data elements. If you delete schema fields, you also need to update your exiting bulk upload XML structure to reflect the deletion.",
-                    "fieldRemoveConfirmation": "Are you sure you want to delete {{0}}?\nWarning: You will lose all of the metadata for the deleted fields in existing entries.\nNote: If you use XMLs for Bulk Ipload, deleting schema fields affects the validation of XMLs Custom Data elements. If you delete schema fields, you also need to update your exiting bulk upload XML structure to reflect the deletion.",
+                    "fieldRemoveConfirmation": "Are you sure you want to delete {{0}}?\nWarning: You will lose all of the metadata for the deleted fields in existing entries.\nNote: If you use XMLs for Bulk Upload, deleting schema fields affects the validation of XMLs Custom Data elements. If you delete schema fields, you also need to update your exiting bulk upload XML structure to reflect the deletion.",
                     "moveUp": "Move Up",
                     "moveDown": "Move Down",
                     "remove": "Remove",
