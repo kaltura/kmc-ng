@@ -269,7 +269,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       embedConfig.serverUri = serverUri;
       embedConfig.playerConfig = config;
 
-      return this._previewEmbedService.generateV3EmbedCode(embedConfig);
+      return this._previewEmbedService.generateV3EmbedCode(embedConfig, isPreview);
   }
 
   /* V3 specific code ends here */
