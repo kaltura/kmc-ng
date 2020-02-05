@@ -3,6 +3,7 @@ import { SettingsReachService } from './settings-reach.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ReachProfilesStore } from './reach-profiles/reach-profiles-store/reach-profiles-store.service';
 import { ReachServicesStore } from './reach-profiles/reach-services-store/reach-services-store.service';
+import { ReachServicesRefineFiltersService } from "./reach-profiles/reach-services-store/reach-services-refine-filters.service";
 
 
 @Component({
@@ -12,6 +13,7 @@ import { ReachServicesStore } from './reach-profiles/reach-services-store/reach-
     SettingsReachService,
     ReachProfilesStore,
     ReachServicesStore,
+    ReachServicesRefineFiltersService,
     KalturaLogger.createLogger('SettingsReach')
   ],
 })

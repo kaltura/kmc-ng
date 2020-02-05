@@ -1,0 +1,47 @@
+<k-area-blocker [showLoader]="_showLoader">
+  <div class="kOverrideFAIcons kRefineFilters">
+    <kScrollToTopContainer #refine class="kTreeContainer">
+      <div class="kFiltersGroupTitle">
+        <span>{{'applications.content.bulkUpload.filters.additionalFilters' | translate | uppercase}}</span>
+      </div>
+      <!--p>{{'applications.content.bulkUpload.filters.createdBetween' | translate}}</p>
+      <div class="kDateRange">
+
+        <p-calendar class="kDateRangeFirst" [(ngModel)]="_uploadedAfter" [readonlyInput]="true" [showIcon]="true"
+                    [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange" [dateFormat]="_calendarFormat"
+                    icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
+        <p-calendar class="kDateRangeLast kPullLeft90" [(ngModel)]="_uploadedBefore" [readonlyInput]="true" [dateFormat]="_calendarFormat"
+                    [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
+                    icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
+      </div>
+      <a class="kClearAll" (click)="_clearCreatedComponents()" [class.kDisabledLink]="!_uploadedAfter && !_uploadedBefore">
+        {{'applications.content.bulkUpload.filters.clearDates' | translate}}
+      </a>
+      <span *ngIf="_createdAtFilterError" class="kError">{{_createdAtFilterError}}</span-->
+        <div *ngFor="let treeInstance of _primeLists">
+          <p-tree [value]="treeInstance.items"
+                  [selectionMode]="'checkbox'"
+                  kRefinePrimeTree
+                  [(selection)]="treeInstance.selections"
+                  (onNodeSelect)="_onTreeNodeSelect($event)"
+                  (onNodeUnselect)="_onTreeNodeUnselect($event)">
+            <ng-template let-node pTemplate="default">
+              <span class="kTreeNodeLabel" [kTooltip]="node.label" [delay]="1000">
+                {{node.label}}
+              </span>
+            </ng-template>
+          </p-tree>
+        </div>
+    </kScrollToTopContainer>
+
+    <p>
+      <a class="clearAll" (click)="_clearAllComponents()">
+        {{'applications.content.bulkUpload.filters.clearAll' | translate}}
+      </a>
+      <a class="kClose" (click)="_close()">
+        {{'applications.content.bulkUpload.filters.close' | translate}}
+      </a>
+    </p>
+  </div>
+</k-area-blocker>
+

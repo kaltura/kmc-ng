@@ -12,6 +12,10 @@ import {SortDirection} from "../../../administration-multi-account-app/multi-acc
 import {SettingsReachProfileViewService} from "app-shared/kmc-shared/kmc-views/details-views/settings-reach-profile-view.service";
 import {ReachServicesStore} from "../reach-services-store/reach-services-store.service";
 import {KalturaVendorServiceFeature} from "kaltura-ngx-client";
+import {
+    ReachServicesRefineFiltersService,
+    RefineList
+} from "../reach-services-store/reach-services-refine-filters.service";
 
 @Component({
     selector: 'k-reach-services-list',
@@ -23,6 +27,8 @@ export class ReachServicesListComponent implements OnInit, OnDestroy {
     
     @Output() setParentBlockerMessage = new EventEmitter<AreaBlockerMessage>();
     
+    public _isBusy = false;
+    public _blockerMessage: AreaBlockerMessage = null;
     public _tableIsBusy = false;
     public _tableBlockerMessage: AreaBlockerMessage;
     public _kmcPermissions = KMCPermissions;
@@ -31,6 +37,7 @@ export class ReachServicesListComponent implements OnInit, OnDestroy {
         { label: 'Translations', value: KalturaVendorServiceFeature.translation }
     ];
     public _selectedFeature: KalturaVendorServiceFeature = KalturaVendorServiceFeature.captions;
+    public _window = window;
     
     public _query = {
         sortBy: 'createdAt',
@@ -38,11 +45,13 @@ export class ReachServicesListComponent implements OnInit, OnDestroy {
         pageIndex: 0,
         pageSize: 50
     };
+    public _refineFilters: RefineList[];
     
     constructor(private _appLocalization: AppLocalization,
                 private _router: Router,
                 private _logger: KalturaLogger,
                 private _browserService: BrowserService,
+                private _refineFiltersService: ReachServicesRefineFiltersService,
                 private _settingsReachMainViewService: SettingsReachMainViewService,
                 private _settingsReachViewService: SettingsReachProfileViewService,
                 public _reachServicesStore: ReachServicesStore) {
@@ -59,10 +68,37 @@ export class ReachServicesListComponent implements OnInit, OnDestroy {
     }
     
     private _prepare(): void {
-        this._logger.info(`initialize reach profiles list view`);
-        this._restoreFiltersState();
-        this._registerToFilterStoreDataChanges();
-        this._registerToDataChanges();
+        this._logger.info(`initiate reach profiles list view, load refine filters`);
+        this._isBusy = true;
+        this._refineFiltersService.getFilters()
+            .pipe(cancelOnDestroy(this))
+            .first() // only handle it once, no need to handle changes over time
+            .subscribe(
+                lists => {
+                    this._logger.info(`handle successful loading of filters, proceed initiation`);
+                    this._isBusy = false;
+                    this._refineFilters = lists;
+                    this._restoreFiltersState();
+                    this._registerToFilterStoreDataChanges();
+                    this._registerToDataChanges();
+                },
+                error => {
+                    this._logger.warn(`handle failed loading of filters, abort initiation, show alert`, { errorMessage: error.message });
+                    this._isBusy = false;
+                    this._blockerMessage = new AreaBlockerMessage({
+                        message: this._appLocalization.get('applications.content.filters.errorLoading'),
+                        buttons: [{
+                            label: this._appLocalization.get('app.common.retry'),
+                            action: () => {
+                                this._logger.info(`user selected retry, retry action`);
+                                this._blockerMessage = null;
+                                this._prepare();
+                                this._reachServicesStore.reload();
+                            }
+                        }
+                        ]
+                    });
+                });
     }
     
     private _registerToFilterStoreDataChanges(): void {
@@ -116,7 +152,9 @@ export class ReachServicesListComponent implements OnInit, OnDestroy {
                 'pageSize',
                 'pageIndex',
                 'sortBy',
-                'sortDirection'
+                'sortDirection',
+                'service',
+                'tat'
             ]
         ));
     }

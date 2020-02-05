@@ -1,28 +1,51 @@
-<div class="kReachProfilesList">
-  <h2 class="kReachProfilesListTitle">{{'applications.settings.reach.services.title'| translate}}</h2>
-  <div class="kReachProfilesTableHeader kContent">
-    <p-dropdown [options]="_serviceFeatures" (onChange)="_onFeatureChange($event)" [(ngModel)]="_selectedFeature"></p-dropdown>
-    <span class="kTotalProfilesCount" *ngIf="(_reachServicesStore.services.data$ | async)?.totalCount">
-      {{'applications.settings.reach.services.services' | translate: [(_reachServicesStore.services.data$ | async)?.totalCount]}}
-    </span>
-    <!--input type="text" pInputText class="kSearchInput" [(ngModel)]="_query.freeText" (keyup.enter)="_onFreetextChanged()" [placeholder]="'applications.settings.reach.search' | translate"-->
-  </div>
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
+    <div class="kReachProfilesList">
+      <h2 class="kReachProfilesListTitle">{{'applications.settings.reach.services.title'| translate}}</h2>
+      <div class="kReachProfilesTableHeader kContent">
+        <p-dropdown [options]="_serviceFeatures" (onChange)="_onFeatureChange($event)" [(ngModel)]="_selectedFeature"></p-dropdown>
+        <span class="kTotalProfilesCount" *ngIf="(_reachServicesStore.services.data$ | async)?.totalCount">
+          {{'applications.settings.reach.services.services' | translate: [(_reachServicesStore.services.data$ | async)?.totalCount]}}
+        </span>
+        <!--input type="text" pInputText class="kSearchInput" [(ngModel)]="_query.freeText" (keyup.enter)="_onFreetextChanged()" [placeholder]="'applications.settings.reach.search' | translate"-->
+          <div class="kFilters">
+              <div #refineBtn class="kRefine kDropdown">
+                  <i class="kIconfilter"></i>
+                  <span>{{'applications.content.bulkUpload.list.refine' | translate}}</span>
+                  <i class="kIcondropdown_arrow_bottom dropdown"></i>
+              </div>
+          </div>
+      </div>
 
-    <div class="kContent">
-        <k-reach-profiles-tags></k-reach-profiles-tags>
+        <div class="kContent">
+            <k-reach-profiles-tags></k-reach-profiles-tags>
+        </div>
+
+      <k-area-blocker [showLoader]="_tableIsBusy" [message]="_tableBlockerMessage" [style.height]="'auto'">
+        <k-reach-services-table [services]="(_reachServicesStore.services.data$ | async)?.items" (sortChanged)="_onSortChanged($event)" [_selectedFeature]="_selectedFeature"></k-reach-services-table>
+      </k-area-blocker>
+
+      <div class="kProfilesTableFooter kContent" #footer *ngIf="(_reachServicesStore.services.data$ | async)?.totalCount">
+        <p-paginator
+          [rows]="_query.pageSize"
+          [first]="_query.pageIndex * _query.pageSize"
+          [totalRecords]="(_reachServicesStore.services.data$ | async)?.totalCount"
+          [rowsPerPageOptions]="[25,50,75,100]"
+          (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+      </div>
     </div>
 
-  <k-area-blocker [showLoader]="_tableIsBusy" [message]="_tableBlockerMessage">
-    <k-reach-services-table [services]="(_reachServicesStore.services.data$ | async)?.items" (sortChanged)="_onSortChanged($event)" [_selectedFeature]="_selectedFeature"></k-reach-services-table>
-  </k-area-blocker>
+</k-area-blocker>
 
-  <div class="kProfilesTableFooter kContent" #footer *ngIf="(_reachServicesStore.services.data$ | async)?.totalCount">
-    <p-paginator
-      [rows]="_query.pageSize"
-      [first]="_query.pageIndex * _query.pageSize"
-      [totalRecords]="(_reachServicesStore.services.data$ | async)?.totalCount"
-      [rowsPerPageOptions]="[25,50,75,100]"
-      (onPageChange)="_onPaginationChanged($event)"></p-paginator>
-    <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
-  </div>
-</div>
+<kPopupWidget #refinePopup
+              data-aid="reachServicesRefinePopup"
+              placement="top"
+              [popupWidth]="400"
+              [popupHeight]="300"
+              [closeBtn]="false"
+              [targetRef]="refineBtn"
+              [targetOffset]="{'x':-236, 'y': _window.pageYOffset}">
+    <ng-template>
+        <k-services-refine-filters  [refineFilters]="_refineFilters" [parentPopupWidget]="refinePopup"></k-services-refine-filters>
+    </ng-template>
+</kPopupWidget>

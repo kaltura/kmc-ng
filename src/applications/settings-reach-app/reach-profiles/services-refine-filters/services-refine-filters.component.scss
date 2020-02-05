@@ -1,0 +1,65 @@
+@import "app-theme/_variables.scss";
+
+.kRefineFilters {
+  margin: 12px;
+}
+
+.kFiltersGroupTitle {
+  color: $kGrayscale3;
+  line-height: 40px;
+  letter-spacing: 0.1em;
+  font-size: 13px;
+  border-top: 1px solid $kGrayscale6;
+  border-bottom: 1px solid $kGrayscale6;
+  margin-left: -12px;
+  padding-left: 20px;
+  margin-right: -20px;
+  margin-bottom: 8px;
+}
+
+.kTreeContainer {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 240px;
+  border-bottom: 1px solid $kGrayscale6;
+  margin-left: -20px;
+  padding-left: 20px;
+  margin-right: -20px;
+  width: 387px;
+  position: relative;
+}
+.kClose {
+  float: right;
+}
+.kTreeNodeLabel {
+  width: 100%;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 43px;
+  color: $kGrayscale1;
+  text-overflow: ellipsis;
+  margin-left: 5px;
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  color: $kGrayscale5;
+  border: none;
+}
+
+.kTreeNodeNumChildren {
+  font-size: 14px;
+  font-weight: 400;
+  color: $kGrayscale3;
+  margin-left: 10px;
+}
+
+:host ::ng-deep .ui-tree .ui-tree-container {
+  overflow: visible;
+}
+
+:host ::ng-deep .ui-tree .ui-chkbox {
+  vertical-align: top;
+  margin-top: 16px;
+}

@@ -25,6 +25,7 @@ import { ReachProfileComponentsList } from "./reach-profile/components-list";
 import { ReachProfileCanDeactivate } from "./reach-profile/reach-profile-can-deactivate.service";
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { ChipsModule } from 'primeng/chips';
+import { TreeModule } from 'primeng/tree';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import { ChipsModule } from 'primeng/chips';
     TagsModule,
     TranslateModule,
     TooltipModule,
+    TreeModule,
     LocalizationModule,
     KalturaUIModule,
     PaginatorModule,

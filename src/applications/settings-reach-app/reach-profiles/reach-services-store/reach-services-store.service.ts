@@ -28,6 +28,8 @@ export interface ReachServicesFilters {
     sortBy: string;
     sortDirection: number;
     feature: number;
+    service: number;
+    tat: number;
 }
 
 export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> implements OnDestroy {
@@ -122,6 +124,16 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
             
             // filter by feature
             filter.serviceFeatureEqual = data.feature;
+            
+            // filter service
+            if (data.service){
+                filter.serviceTypeIn = data.service.toString();
+            }
+            
+            // filter tat
+            if (data.tat) {
+                filter.turnAroundTimeIn = data.tat.toString();
+            }
     
             // filter 'freeText'
             // if (data.freeText) {
@@ -176,7 +188,9 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
             pageIndex: 0,
             sortBy: 'createdAt',
             sortDirection: SortDirection.Desc,
-            feature: KalturaVendorServiceFeature.captions
+            feature: KalturaVendorServiceFeature.captions,
+            service: null,
+            tat: null
         };
     }
     
@@ -187,6 +201,8 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
             sortBy: new StringTypeAdapter(),
             sortDirection: new NumberTypeAdapter(),
             feature: new NumberTypeAdapter(),
+            service: new NumberTypeAdapter(),
+            tat: new NumberTypeAdapter()
         };
     }
     
