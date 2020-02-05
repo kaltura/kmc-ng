@@ -16,7 +16,8 @@
                 <col data-cid="id">
                 <col data-cid="tat">
                 <col data-cid="language">
-                <col data-cid="speaker">
+                <col data-cid="languageTarget" *ngIf="_selectedFeature === 2">
+                <col data-cid="speaker" *ngIf="_selectedFeature === 1">
                 <col data-cid="cpm">
             </colgroup>
         </ng-template>
@@ -34,7 +35,10 @@
                 <th data-cid="allocated" pResizableColumn>
                     {{'applications.settings.reach.services.language' | translate}}
                 </th>
-                <th data-cid="remaining" pResizableColumn>
+                <th data-cid="remaining" pResizableColumn *ngIf="_selectedFeature === 2">
+                    {{'applications.settings.reach.services.languageTar' | translate}}
+                </th>
+                <th data-cid="remaining" pResizableColumn *ngIf="_selectedFeature === 1">
                     {{'applications.settings.reach.services.speaker' | translate}}
                 </th>
                 <th data-cid="expiration">
@@ -45,11 +49,12 @@
 
         <ng-template pTemplate="body" let-service>
             <tr>
-                <td class="ui-resizable-column" [ngStyle]="{'padding-left': '16px'}">{{service.serviceType.toString()}}</td>
+                <td class="ui-resizable-column" [ngStyle]="{'padding-left': '16px'}">{{service.serviceType? (service.serviceType | kReachServiceType) : ''}}</td>
                 <td class="ui-resizable-column">{{service.id}}</td>
-                <td class="ui-resizable-column">{{service.turnAroundTime.toString()}}</td>
-                <td class="ui-resizable-column">{{service.sourceLanguage.toString()}}</td>
-                <td class="ui-resizable-column">{{service.enableSpeakerId.toString()}}</td>
+                <td class="ui-resizable-column">{{service.turnAroundTime !== undefined ? (service.turnAroundTime | kReachServiceTat) : ''}}</td>
+                <td class="ui-resizable-column">{{service.sourceLanguage?.toString()}}</td>
+                <td class="ui-resizable-column" *ngIf="_selectedFeature === 2">{{service.targetLanguage?.toString()}}</td>
+                <td class="ui-resizable-column" *ngIf="_selectedFeature === 1">{{service.enableSpeakerId !== undefined ? (service.enableSpeakerId | kReachServiceSpeaker) : ''}}</td>
                 <td class="ui-resizable-column">{{service.pricing ? service.pricing.pricePerUnit : ''}}</td>
             </tr>
         </ng-template>

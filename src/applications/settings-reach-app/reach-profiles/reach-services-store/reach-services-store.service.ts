@@ -6,8 +6,7 @@ import {
     KalturaClient,
     KalturaDetachedResponseProfile,
     KalturaResponseProfileType,
-    KalturaVendorCaptionsCatalogItemFilter,
-    KalturaVendorCatalogItem,
+    KalturaVendorCatalogItem, KalturaVendorCatalogItemFilter,
     KalturaVendorCatalogItemListResponse,
     KalturaVendorServiceFeature,
     VendorCatalogItemListAction
@@ -103,7 +102,7 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
     private _buildQueryRequest(): Observable<{ objects: KalturaVendorCatalogItem[], totalCount: number }> {
         try {
             // create request items
-            const filter = new KalturaVendorCaptionsCatalogItemFilter({});
+            const filter = new KalturaVendorCatalogItemFilter({});
             let pager: KalturaFilterPager = null;
             
             const data: ReachServicesFilters = this._getFiltersAsReadonly();

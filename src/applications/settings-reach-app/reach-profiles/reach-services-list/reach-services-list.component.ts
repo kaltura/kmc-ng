@@ -29,7 +29,8 @@ export class ReachServicesListComponent implements OnInit, OnDestroy {
     public _serviceFeatures = [
         { label: 'Captions', value: KalturaVendorServiceFeature.captions },
         { label: 'Translations', value: KalturaVendorServiceFeature.translation }
-    ]
+    ];
+    public _selectedFeature: KalturaVendorServiceFeature = KalturaVendorServiceFeature.captions;
     
     public _query = {
         sortBy: 'createdAt',

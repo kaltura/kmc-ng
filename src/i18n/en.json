@@ -2843,8 +2843,26 @@
                     "id": "ID",
                     "tat": "Turn Around Time",
                     "language": "Source Language",
+                    "languageTar": "Target Language",
                     "speaker": "Speaker ID",
-                    "cpm": "Cost Per Minute"
+                    "cpm": "Cost Per Minute",
+                    "human": "Human",
+                    "machine": "Machine",
+                    "turnAroundTime": {
+                        "bestEffort": "Best Effort",
+                        "eightHours": "8 Hours",
+                        "fiveDays": "5 Days",
+                        "fortyEightHours": "48 Hours",
+                        "fourDays": "4 Days",
+                        "immediate": "Immediate",
+                        "sixHours": "6 Hours",
+                        "tenDays": "10 Days",
+                        "thirtyMinutes": "30 Minutes",
+                        "threeHours": "3 Hours",
+                        "twelveHours": "12 Hours",
+                        "twentyFourHours": "24 Hours",
+                        "twoHours": "2 Hours"
+                    }
                 }
             },
             "myUserSettings": {

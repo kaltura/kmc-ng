@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDes
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { globalConfig } from "config/global";
-import { KalturaVendorCatalogItem } from "kaltura-ngx-client";
+import {KalturaVendorCatalogItem, KalturaVendorServiceFeature} from "kaltura-ngx-client";
 
 @Component({
     selector: 'k-reach-services-table',
@@ -21,6 +21,7 @@ export class ReachServicesTableComponent implements OnInit, AfterViewInit, OnDes
             this._deferredProfiles = data;
         }
     }
+    @Input() _selectedFeature: KalturaVendorServiceFeature;
     
     @Output() sortChanged = new EventEmitter<any>();
     

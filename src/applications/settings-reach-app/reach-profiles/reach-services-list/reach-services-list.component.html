@@ -1,7 +1,7 @@
 <div class="kReachProfilesList">
   <h2 class="kReachProfilesListTitle">{{'applications.settings.reach.services.title'| translate}}</h2>
   <div class="kReachProfilesTableHeader kContent">
-    <p-dropdown [options]="_serviceFeatures" (onChange)="_onFeatureChange($event)"></p-dropdown>
+    <p-dropdown [options]="_serviceFeatures" (onChange)="_onFeatureChange($event)" [(ngModel)]="_selectedFeature"></p-dropdown>
     <span class="kTotalProfilesCount" *ngIf="(_reachServicesStore.services.data$ | async)?.totalCount">
       {{'applications.settings.reach.services.services' | translate: [(_reachServicesStore.services.data$ | async)?.totalCount]}}
     </span>
@@ -13,7 +13,7 @@
     </div>
 
   <k-area-blocker [showLoader]="_tableIsBusy" [message]="_tableBlockerMessage">
-    <k-reach-services-table [services]="(_reachServicesStore.services.data$ | async)?.items" (sortChanged)="_onSortChanged($event)" ></k-reach-services-table>
+    <k-reach-services-table [services]="(_reachServicesStore.services.data$ | async)?.items" (sortChanged)="_onSortChanged($event)" [_selectedFeature]="_selectedFeature"></k-reach-services-table>
   </k-area-blocker>
 
   <div class="kProfilesTableFooter kContent" #footer *ngIf="(_reachServicesStore.services.data$ | async)?.totalCount">
