@@ -5,10 +5,10 @@ import {ISubscription} from 'rxjs/Subscription';
 import {
     KalturaClient,
     KalturaDetachedResponseProfile,
-    KalturaResponseProfileType,
+    KalturaResponseProfileType, KalturaVendorCaptionsCatalogItemFilter,
     KalturaVendorCatalogItem, KalturaVendorCatalogItemFilter,
     KalturaVendorCatalogItemListResponse,
-    KalturaVendorServiceFeature,
+    KalturaVendorServiceFeature, KalturaVendorTranslationCatalogItemFilter,
     VendorCatalogItemListAction
 } from 'kaltura-ngx-client';
 import {KalturaFilterPager} from 'kaltura-ngx-client';
@@ -47,6 +47,8 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
         state$: this._services.state.asObservable(),
         data: () => this._services.data.value
     };
+    
+    public _selectedFeature: KalturaVendorServiceFeature = KalturaVendorServiceFeature.captions;
     
     constructor(private _kalturaServerClient: KalturaClient,
                 private _browserService: BrowserService,
@@ -104,7 +106,7 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
     private _buildQueryRequest(): Observable<{ objects: KalturaVendorCatalogItem[], totalCount: number }> {
         try {
             // create request items
-            const filter = new KalturaVendorCatalogItemFilter({});
+            const filter = this._selectedFeature === KalturaVendorServiceFeature.captions ? new KalturaVendorCaptionsCatalogItemFilter({}) : new KalturaVendorTranslationCatalogItemFilter({});
             let pager: KalturaFilterPager = null;
             
             const data: ReachServicesFilters = this._getFiltersAsReadonly();

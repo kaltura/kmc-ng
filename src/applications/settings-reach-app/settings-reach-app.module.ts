@@ -10,7 +10,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ReachProfilesComponentsList } from './reach-profiles/components-list';
 import { KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import { MenuModule } from 'primeng/menu';
-import {LocalizationModule} from '@kaltura-ng/mc-shared';
+import { LocalizationModule } from '@kaltura-ng/mc-shared';
+import { FiltersModule } from '@kaltura-ng/mc-shared';
 import { DetailsBarModule } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
@@ -42,6 +43,7 @@ import { TreeModule } from 'primeng/tree';
     TooltipModule,
     TreeModule,
     LocalizationModule,
+    FiltersModule,
     KalturaUIModule,
     PaginatorModule,
     StickyModule,

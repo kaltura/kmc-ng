@@ -193,6 +193,7 @@ export class ServicesRefineFiltersComponent implements OnInit, OnDestroy, OnChan
    */
   public _clearAllComponents(): void {
     this._reachServicesStore.resetFilters(listOfFilterNames);
+    this._fixPrimeTreePropagation();
   }
   
   public _onTreeNodeSelect({ node }: { node: PrimeListItem }) {

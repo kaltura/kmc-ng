@@ -36,7 +36,6 @@ export class ReachServicesListComponent implements OnInit, OnDestroy {
         { label: 'Captions', value: KalturaVendorServiceFeature.captions },
         { label: 'Translations', value: KalturaVendorServiceFeature.translation }
     ];
-    public _selectedFeature: KalturaVendorServiceFeature = KalturaVendorServiceFeature.captions;
     public _window = window;
     
     public _query = {
