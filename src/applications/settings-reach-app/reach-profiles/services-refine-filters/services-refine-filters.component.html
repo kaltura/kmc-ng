@@ -4,8 +4,17 @@
       <div class="kFiltersGroupTitle">
         <span>{{'applications.content.bulkUpload.filters.additionalFilters' | translate | uppercase}}</span>
       </div>
-      <!--p>{{'applications.content.bulkUpload.filters.createdBetween' | translate}}</p>
-      <div class="kDateRange">
+      <p>{{'applications.settings.reach.services.languages' | translate}}</p>
+
+
+        <p-multiSelect class="kLanguages" [showToggleAll]="false" [options]="_languages" [scrollHeight]="'160px'"
+                       [showTransitionOptions]="'0ms ease-out'" [hideTransitionOptions]="'0ms ease-in'" [(ngModel)]="_selectedLanguages"
+                       [defaultLabel]="'applications.settings.reach.services.chooseLang' | translate"
+                       [filterPlaceHolder]="'applications.settings.reach.services.searchLang' | translate" (onChange)="onLanguagesChange($event)"
+                       [selectedItemsLabel]="'applications.settings.reach.services.langSelected' | translate"></p-multiSelect>
+
+
+      <!--div class="kDateRange">
 
         <p-calendar class="kDateRangeFirst" [(ngModel)]="_uploadedAfter" [readonlyInput]="true" [showIcon]="true"
                     [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange" [dateFormat]="_calendarFormat"

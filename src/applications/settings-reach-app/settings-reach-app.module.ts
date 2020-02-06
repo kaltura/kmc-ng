@@ -27,6 +27,7 @@ import { ReachProfileCanDeactivate } from "./reach-profile/reach-profile-can-dea
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { ChipsModule } from 'primeng/chips';
 import { TreeModule } from 'primeng/tree';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @NgModule({
   imports: [
@@ -42,6 +43,7 @@ import { TreeModule } from 'primeng/tree';
     TranslateModule,
     TooltipModule,
     TreeModule,
+    MultiSelectModule,
     LocalizationModule,
     FiltersModule,
     KalturaUIModule,

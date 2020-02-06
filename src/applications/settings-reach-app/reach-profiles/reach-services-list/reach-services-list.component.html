@@ -40,12 +40,12 @@
 <kPopupWidget #refinePopup
               data-aid="reachServicesRefinePopup"
               placement="top"
-              [popupWidth]="400"
-              [popupHeight]="300"
+              [popupWidth]="300"
+              [popupHeight]="400"
               [closeBtn]="false"
               [targetRef]="refineBtn"
-              [targetOffset]="{'x':-236, 'y': _window.pageYOffset}">
+              [targetOffset]="{'x':-136, 'y': _window.pageYOffset}">
     <ng-template>
-        <k-services-refine-filters  [refineFilters]="_refineFilters" [parentPopupWidget]="refinePopup"></k-services-refine-filters>
+        <k-services-refine-filters [refineFilters]="_refineFilters" [parentPopupWidget]="refinePopup"></k-services-refine-filters>
     </ng-template>
 </kPopupWidget>

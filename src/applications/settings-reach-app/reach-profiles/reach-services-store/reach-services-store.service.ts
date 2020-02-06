@@ -30,6 +30,7 @@ export interface ReachServicesFilters {
     feature: number;
     service: number;
     tat: number;
+    languages: string;
 }
 
 export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> implements OnDestroy {
@@ -137,17 +138,10 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
                 filter.turnAroundTimeIn = data.tat.toString();
             }
     
-            // filter 'freeText'
-            // if (data.freeText) {
-            //     if (/^-{0,1}\d+$/.test(data.freeText)){
-            //         // number - search pid
-            //         filter.idIn = data.freeText;
-            //     } else {
-            //         // string - search account name
-            //         filter.idIn = data.freeText;
-            //     }
-            //
-            // }
+            // filter 'languages'
+            if (data.languages) {
+                filter.sourceLanguageIn = data.languages;
+            }
             
             // update the sort by args
             if (data.sortBy) {
@@ -192,7 +186,8 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
             sortDirection: SortDirection.Desc,
             feature: KalturaVendorServiceFeature.captions,
             service: null,
-            tat: null
+            tat: null,
+            languages: ''
         };
     }
     
@@ -204,7 +199,8 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
             sortDirection: new NumberTypeAdapter(),
             feature: new NumberTypeAdapter(),
             service: new NumberTypeAdapter(),
-            tat: new NumberTypeAdapter()
+            tat: new NumberTypeAdapter(),
+            languages: new StringTypeAdapter()
         };
     }
     

@@ -3,7 +3,10 @@
 .kRefineFilters {
   margin: 12px;
 }
-
+p{
+    font-size: 14px;
+    font-weight: 700;
+}
 .kFiltersGroupTitle {
   color: $kGrayscale3;
   line-height: 40px;
@@ -20,12 +23,12 @@
 .kTreeContainer {
   overflow-y: auto;
   overflow-x: hidden;
-  height: 240px;
+  height: 340px;
   border-bottom: 1px solid $kGrayscale6;
   margin-left: -20px;
   padding-left: 20px;
   margin-right: -20px;
-  width: 387px;
+  width: 287px;
   position: relative;
 }
 .kClose {
@@ -62,4 +65,25 @@ a.disabled {
 :host ::ng-deep .ui-tree .ui-chkbox {
   vertical-align: top;
   margin-top: 16px;
+}
+.kLanguages{
+    margin-bottom: 12px;
+    display: block;
+}
+:host ::ng-deep .kLanguages {
+    .ui-multiselect {
+        padding-left: 0;
+        width: 274px;
+    }
+    .ui-multiselect-panel{
+        width: 272px;
+    }
+    .ui-multiselect-label {
+        padding: .5em;
+        line-height: inherit;
+    }
+
+    .ui-widget-header {
+        border-radius: 0;
+    }
 }
