@@ -9,6 +9,7 @@ import { ReachProfilesTagsComponent } from './reach-profiles-tags/reach-profiles
 import { ReachServicesTableComponent } from './reach-services-table/reach-services-table.component';
 import { ReachServicesListComponent } from './reach-services-list/reach-services-list.component';
 import {ServicesRefineFiltersComponent} from "./services-refine-filters/services-refine-filters.component";
+import {ReachServicesTagsComponent} from "./reach-services-tags/reach-services-tags.component";
 
 export const ReachProfilesComponentsList = [
   ReachProfilesListComponent,
@@ -21,5 +22,6 @@ export const ReachProfilesComponentsList = [
   ReachServiceSpeakerPipe,
   ReachServicesTableComponent,
   ReachServicesListComponent,
-  ServicesRefineFiltersComponent
+  ServicesRefineFiltersComponent,
+  ReachServicesTagsComponent
 ];
