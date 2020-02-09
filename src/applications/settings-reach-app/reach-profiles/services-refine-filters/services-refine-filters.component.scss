@@ -87,3 +87,6 @@ a.disabled {
         border-radius: 0;
     }
 }
+:host ::ng-deep .ui-multiselect-panel .ui-multiselect-items-wrapper {
+    overflow-x: hidden;
+}
