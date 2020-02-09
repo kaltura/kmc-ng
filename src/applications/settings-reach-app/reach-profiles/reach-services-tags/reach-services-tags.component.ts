@@ -23,6 +23,7 @@ const listTypes: (keyof ReachServicesFilters)[] = ['service', 'tat', 'languages'
 export class ReachServicesTagsComponent implements OnInit, OnDestroy {
     
     public _tags: TagItem[] = [];
+    public _showTags = false;
     
     constructor(private _store: ReachServicesStore,
                 private _browserService: BrowserService,
@@ -38,7 +39,7 @@ export class ReachServicesTagsComponent implements OnInit, OnDestroy {
     }
     
     private _restoreFiltersState(): void {
-        this._updateComponentState(this._store.cloneFilters(['service', 'tat', 'languages']));
+        this._updateComponentState(this._store.cloneFilters(['service', 'tat']));
     }
     
     private _updateComponentState(updates: Partial<ReachServicesFilters>): void {
@@ -51,6 +52,7 @@ export class ReachServicesTagsComponent implements OnInit, OnDestroy {
                 }
             });
         }
+        this._showTags = this._tags.length > 0;
     }
     
     private _syncTagsOfList(filterName: keyof ReachServicesFilters): void {
@@ -105,12 +107,14 @@ export class ReachServicesTagsComponent implements OnInit, OnDestroy {
         // add selected languages
         const langs = languages.split(',');
         langs.forEach(language =>{
-            this._tags.push({
-                type: 'languages',
-                value: language,
-                label: language,
-                tooltip: language
-            });
+            if (language.length) {
+                this._tags.push({
+                    type: 'languages',
+                    value: language,
+                    label: language,
+                    tooltip: language
+                });
+            }
         });
     }
     
@@ -139,6 +143,7 @@ export class ReachServicesTagsComponent implements OnInit, OnDestroy {
     
     public removeAllTags(): void {
         this._store.resetFilters(['service', 'tat', 'languages']);
+        this._tags = [];
     }
 }
 
