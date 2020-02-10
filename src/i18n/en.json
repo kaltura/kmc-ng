@@ -2743,7 +2743,8 @@
                 "search": "Search",
                 "cancelEdit": "Cancel Edit",
                 "discard": "Discard all changes?",
-                "errorLoadingProfiles": "Failed to load transcoding profiles",
+                "errorLoadingProfiles": "Failed to load Reach profiles",
+                "errorLoadingServices": "Failed to load Reach services",
                 "profiles": "{{0}} Profiles",
                 "autoRules": "For additional rules please contact your CSM.",
                 "profile": {
@@ -2834,6 +2835,38 @@
                     "add": "Add Dictionary",
                     "delete": "Delete Dictionary",
                     "error": "You exceed the maximum character limit"
+                },
+                "services": {
+                    "services": "{{0}} Services",
+                    "title": "Services",
+                    "service": "Service",
+                    "id": "ID",
+                    "tat": "Turn Around Time",
+                    "language": "Source Language",
+                    "languages": "Languages",
+                    "languageTar": "Target Language",
+                    "chooseLang": "Choose Languages",
+                    "searchLang": "Search",
+                    "langSelected": "{0} Selected Languages",
+                    "speaker": "Speaker ID",
+                    "cpm": "Cost Per Minute",
+                    "human": "Human",
+                    "machine": "Machine",
+                    "turnAroundTime": {
+                        "bestEffort": "Best Effort",
+                        "eightHours": "8 Hours",
+                        "fiveDays": "5 Days",
+                        "fortyEightHours": "48 Hours",
+                        "fourDays": "4 Days",
+                        "immediate": "Immediate",
+                        "sixHours": "6 Hours",
+                        "tenDays": "10 Days",
+                        "thirtyMinutes": "30 Minutes",
+                        "threeHours": "3 Hours",
+                        "twelveHours": "12 Hours",
+                        "twentyFourHours": "24 Hours",
+                        "twoHours": "2 Hours"
+                    }
                 }
             },
             "myUserSettings": {
