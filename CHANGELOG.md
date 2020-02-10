@@ -5,6 +5,7 @@
 ### Features
 
 * **settings/reach:** View and edit Reach profiles ([#887](https://github.com/kaltura/kmc-ng/issues/887)) ([73c379a](https://github.com/kaltura/kmc-ng/commit/73c379a))
+* **settings/reach:** Reach services ([#890](https://github.com/kaltura/kmc-ng/issues/890)) ([5ec8783](https://github.com/kaltura/kmc-ng/commit/5ec8783))
 
 
 
