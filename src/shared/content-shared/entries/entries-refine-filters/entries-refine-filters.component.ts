@@ -26,6 +26,7 @@ const listOfFilterNames: (keyof EntriesFilters)[] = [
     'customMetadata',
     'youtubeVideo',
     'videoQuiz',
+    'videoCaptions'
 ];
 
 export interface PrimeListItem {
@@ -184,6 +185,10 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
               this._syncVideoQuizMode(listData);
           }
 
+          if (listName === 'videoCaptions') {
+              this._syncVideoCaptionsMode(listData);
+          }
+
           if (listName === 'timeScheduling') {
               this._syncScheduleDatesMode();
           }
@@ -226,6 +231,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
     private _syncVideoQuizMode(listData: PrimeList): void {
         const videoQuiz = this._entriesStore.cloneFilter('videoQuiz', false);
         listData.selections = videoQuiz ? [listData.items[0]] : [];
+    }
+    
+    private _syncVideoCaptionsMode(listData: PrimeList): void {
+        const videoCaptions = this._entriesStore.cloneFilter('videoCaptions', false);
+        listData.selections = videoCaptions ? [listData.items[0]] : [];
     }
 
     private _syncScheduleDatesMode() {
@@ -406,7 +416,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                   newFilterItems = newFilterValue[node.listName] = newFilterValue[node.listName] || [];
                   newFilterName = 'customMetadata';
               } else {
-                  if (node.listName === 'videoQuiz') {
+                  if (node.listName === 'videoQuiz' || node.listName === 'videoCaptions') {
                       newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, false);
                   } else {
                       newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, []);
@@ -483,7 +493,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
                               }
                           }
                       } else {
-                          if (node.listName === 'videoQuiz' || node.listName === 'youtubeVideo') {
+                          if (node.listName === 'videoQuiz' || node.listName === 'youtubeVideo' || node.listName === 'videoCaptions') {
                               newFilterValue = false;
                           } else {
                               newFilterValue = null;
