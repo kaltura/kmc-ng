@@ -76,7 +76,7 @@ export class ReachServicesTagsComponent implements OnInit, OnDestroy {
                 type: filterName,
                 value: item,
                 label: label,
-                tooltip: this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': label})
+                tooltip: this._appLocalization.get(`applications.settings.reach.services.${filterName}`) + ": " + label
             });
         });
     }
@@ -112,7 +112,7 @@ export class ReachServicesTagsComponent implements OnInit, OnDestroy {
                     type: 'languages',
                     value: language,
                     label: language,
-                    tooltip: language
+                    tooltip: this._appLocalization.get('applications.settings.reach.services.language') + ": " + language
                 });
             }
         });
