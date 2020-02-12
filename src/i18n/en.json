@@ -2659,7 +2659,7 @@
                         "invalidLabelPrefix": "Field name must begin with a letter.",
                         "invalidChars": "Invalid input. The special characters < > & \" and ' are not allowed.",
                         "emptyListValues": "Invalid input in \"List values\": at least one option should be listed.",
-                        "invalidListOptions": "Invalid input in \"List values\": only letters, digits and the following special characters - ()|-@~&/^$=_%.': -  are allowed.",
+                        "invalidListOptions": "Invalid input in \"List values\": only letters, digits and the following special characters - ()|-@~&/^$=+_%.': -  are allowed.",
                         "invalidListOptionsPrefix": "Invalid input in \"List values\": - is an illegal prefix."
                     }
                 },
