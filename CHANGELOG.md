@@ -1,6 +1,9 @@
 <a name="5.23.0"></a>
 # [5.23.0](https://github.com/kaltura/kmc-ng/compare/v5.22.0...v5.23.0) (2020-02-03)
 
+### Bug Fixes
+
+* **settings/custom-metadata:** Allow using the '+' character in text select list values
 
 ### Features
 
