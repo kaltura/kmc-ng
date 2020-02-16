@@ -32,10 +32,7 @@ export class ReachServicesListComponent implements OnInit, OnDestroy {
     public _tableIsBusy = false;
     public _tableBlockerMessage: AreaBlockerMessage;
     public _kmcPermissions = KMCPermissions;
-    public _serviceFeatures = [
-        { label: 'Captions', value: KalturaVendorServiceFeature.captions },
-        { label: 'Translations', value: KalturaVendorServiceFeature.translation }
-    ];
+    public _serviceFeatures = [];
     public _window = window;
     
     public _query = {
@@ -54,6 +51,14 @@ export class ReachServicesListComponent implements OnInit, OnDestroy {
                 private _settingsReachMainViewService: SettingsReachMainViewService,
                 private _settingsReachViewService: SettingsReachProfileViewService,
                 public _reachServicesStore: ReachServicesStore) {
+        
+        this._serviceFeatures = [
+            { label: this._appLocalization.get('applications.settings.reach.services.captions'), value: KalturaVendorServiceFeature.captions },
+            { label: this._appLocalization.get('applications.settings.reach.services.translations'), value: KalturaVendorServiceFeature.translation },
+            { label: this._appLocalization.get('applications.settings.reach.services.alignment'), value: KalturaVendorServiceFeature.alignment },
+            { label: this._appLocalization.get('applications.settings.reach.services.audioDescription'), value: KalturaVendorServiceFeature.audioDescription },
+            { label: this._appLocalization.get('applications.settings.reach.services.chaptering'), value: KalturaVendorServiceFeature.chaptering }
+        ];
     }
     
     ngOnInit() {

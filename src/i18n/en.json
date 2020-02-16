@@ -2612,7 +2612,7 @@
                     "deleteCustomDataField": "Delete Custom Data Field",
                     "bulkDeleteCustomDataField": "Delete Custom Data Field",
                     "fieldBulkRemoveConfirmation": "Are you sure you want to delete the selected fields?\nWarning: You will lose all of the metadata for the deleted fields in existing entries.\nNote: If you use XMLs for Bulk Upload, deleting schema fields affects the validation of XMLs Custom Data elements. If you delete schema fields, you also need to update your exiting bulk upload XML structure to reflect the deletion.",
-                    "fieldRemoveConfirmation": "Are you sure you want to delete {{0}}?\nWarning: You will lose all of the metadata for the deleted fields in existing entries.\nNote: If you use XMLs for Bulk Ipload, deleting schema fields affects the validation of XMLs Custom Data elements. If you delete schema fields, you also need to update your exiting bulk upload XML structure to reflect the deletion.",
+                    "fieldRemoveConfirmation": "Are you sure you want to delete {{0}}?\nWarning: You will lose all of the metadata for the deleted fields in existing entries.\nNote: If you use XMLs for Bulk Upload, deleting schema fields affects the validation of XMLs Custom Data elements. If you delete schema fields, you also need to update your exiting bulk upload XML structure to reflect the deletion.",
                     "moveUp": "Move Up",
                     "moveDown": "Move Down",
                     "remove": "Remove",
@@ -2660,7 +2660,7 @@
                         "invalidLabelPrefix": "Field name must begin with a letter.",
                         "invalidChars": "Invalid input. The special characters < > & \" and ' are not allowed.",
                         "emptyListValues": "Invalid input in \"List values\": at least one option should be listed.",
-                        "invalidListOptions": "Invalid input in \"List values\": only letters, digits and the following special characters - ()|-@~&/^$=_%.': -  are allowed.",
+                        "invalidListOptions": "Invalid input in \"List values\": only letters, digits and the following special characters - ()|-@~&/^$=+_%.': -  are allowed.",
                         "invalidListOptionsPrefix": "Invalid input in \"List values\": - is an illegal prefix."
                     }
                 },
@@ -2840,6 +2840,11 @@
                 "services": {
                     "services": "{{0}} Services",
                     "title": "Services",
+                    "captions": "Captions",
+                    "translations": "Translations",
+                    "alignment": "Alignment",
+                    "audioDescription": "Audio Description",
+                    "chaptering": "Chaptering",
                     "service": "Service",
                     "id": "ID",
                     "tat": "Turn Around Time",
