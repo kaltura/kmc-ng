@@ -2839,6 +2839,11 @@
                 "services": {
                     "services": "{{0}} Services",
                     "title": "Services",
+                    "captions": "Captions",
+                    "translations": "Translations",
+                    "alignment": "Alignment",
+                    "audioDescription": "Audio Description",
+                    "chaptering": "Chaptering",
                     "service": "Service",
                     "id": "ID",
                     "tat": "Turn Around Time",

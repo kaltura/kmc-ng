@@ -5,10 +5,15 @@ import {ISubscription} from 'rxjs/Subscription';
 import {
     KalturaClient,
     KalturaDetachedResponseProfile,
-    KalturaResponseProfileType, KalturaVendorCaptionsCatalogItemFilter,
-    KalturaVendorCatalogItem, KalturaVendorCatalogItemFilter,
+    KalturaResponseProfileType,
+    KalturaVendorAlignmentCatalogItemFilter,
+    KalturaVendorAudioDescriptionCatalogItemFilter,
+    KalturaVendorCaptionsCatalogItemFilter,
+    KalturaVendorCatalogItem,
     KalturaVendorCatalogItemListResponse,
-    KalturaVendorServiceFeature, KalturaVendorTranslationCatalogItemFilter,
+    KalturaVendorChapteringCatalogItemFilter,
+    KalturaVendorServiceFeature,
+    KalturaVendorTranslationCatalogItemFilter,
     VendorCatalogItemListAction
 } from 'kaltura-ngx-client';
 import {KalturaFilterPager} from 'kaltura-ngx-client';
@@ -19,8 +24,12 @@ import {NumberTypeAdapter} from '@kaltura-ng/mc-shared';
 import {globalConfig} from 'config/global';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {SettingsReachMainViewService} from "app-shared/kmc-shared/kmc-views/main-views/settings-reach-main-view.service";
-import {SortDirection} from "../../../administration-multi-account-app/multi-account-store/multi-account-store.service";
 import {AppAuthentication} from "app-shared/kmc-shell";
+
+export enum SortDirection {
+    Desc = -1,
+    Asc = 1
+}
 
 export interface ReachServicesFilters {
     pageSize: number;
@@ -107,9 +116,24 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
     private _buildQueryRequest(): Observable<{ objects: KalturaVendorCatalogItem[], totalCount: number }> {
         try {
             // create request items
-            const filter = this._selectedFeature === KalturaVendorServiceFeature.captions ? new KalturaVendorCaptionsCatalogItemFilter({}) : new KalturaVendorTranslationCatalogItemFilter({});
             let pager: KalturaFilterPager = null;
             
+            // set filter type according to selected feature. Default feature is Captions
+            let filter: any = new KalturaVendorCaptionsCatalogItemFilter({});
+            switch (this._selectedFeature) {
+                case KalturaVendorServiceFeature.translation:
+                    filter = new KalturaVendorTranslationCatalogItemFilter({});
+                    break;
+                case KalturaVendorServiceFeature.alignment:
+                    filter = new KalturaVendorAlignmentCatalogItemFilter({});
+                    break;
+                case KalturaVendorServiceFeature.audioDescription:
+                    filter = new KalturaVendorAudioDescriptionCatalogItemFilter({});
+                    break;
+                case KalturaVendorServiceFeature.chaptering:
+                    filter = new KalturaVendorChapteringCatalogItemFilter({});
+                    break;
+            }
             const data: ReachServicesFilters = this._getFiltersAsReadonly();
             
             // update pagination args
