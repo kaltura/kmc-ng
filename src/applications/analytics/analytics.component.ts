@@ -136,6 +136,14 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                 menuTitle: this._appLocalization.get('app.titles.realtime'),
             });
         }
+        this.menuConfig.push({
+            isAvailable: true,
+            isActiveView: (activePath: string) => (activePath.indexOf(`/analytics/embed`) !== -1),
+            open: () => {
+                this._router.navigateByUrl('/analytics/embed');
+            },
+            menuTitle: 'Share & Embed',
+        });
     }
 
     private onMultiAccountSelected(event: string): void {
