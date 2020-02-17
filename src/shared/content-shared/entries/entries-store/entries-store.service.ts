@@ -71,6 +71,7 @@ export interface EntriesFilters {
   limits: number;
   youtubeVideo: boolean;
   videoQuiz: boolean;
+  videoCaptions: boolean;
 }
 
 export const EntriesDataProviderToken = new InjectionToken('entries-data-provider');
@@ -261,6 +262,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
       limits: new NumberTypeAdapter(),
       youtubeVideo: new BooleanTypeAdapter(),
       videoQuiz: new BooleanTypeAdapter(),
+      videoCaptions: new BooleanTypeAdapter()
     };
   }
 

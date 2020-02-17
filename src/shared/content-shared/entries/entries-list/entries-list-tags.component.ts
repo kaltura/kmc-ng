@@ -108,6 +108,9 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 case 'videoQuiz':
                     this._entriesStore.filter({ videoQuiz: false });
                     break;
+                case 'videoCaptions':
+                    this._entriesStore.filter({ videoCaptions: false });
+                    break;
                 default:
                     break;
             }
@@ -188,6 +191,10 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
         if (typeof updates.videoQuiz !== 'undefined') {
             this._syncTagOfVideoQuiz();
+        }
+        
+        if (typeof updates.videoCaptions !== 'undefined') {
+            this._syncTagOfVideoCaptions();
         }
 
         refineListsType.forEach(listType => {
@@ -290,6 +297,26 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 value: currentVideoQuizValue,
                 label: this._appLocalization.get(`applications.content.filters.videoQuiz`),
                 tooltip: this._appLocalization.get(`applications.content.filters.videoQuiz`)
+            });
+        }
+    }
+
+    private _syncTagOfVideoCaptions(): void {
+        const previousItem = this._tags.findIndex(item => item.type === 'videoCaptions');
+        if (previousItem !== -1) {
+            this._tags.splice(
+                previousItem,
+                1);
+        }
+
+        const currentVideoCaptionsValue = this._entriesStore.cloneFilter('videoCaptions', null);
+
+        if (currentVideoCaptionsValue) {
+            this._tags.push({
+                type: 'videoCaptions',
+                value: currentVideoCaptionsValue,
+                label: this._appLocalization.get(`applications.content.filters.videoCaptions`),
+                tooltip: this._appLocalization.get(`applications.content.filters.videoCaptions`)
             });
         }
     }

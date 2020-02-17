@@ -19,7 +19,8 @@ import {
     KalturaSearchOperator,
     KalturaSearchOperatorType,
     KalturaExternalMediaSourceType,
-    KalturaExternalMediaEntryFilter
+    KalturaExternalMediaEntryFilter,
+    KalturaEntryCaptionAdvancedFilter
 } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
 import { cancelOnDestroy, KalturaUtils } from '@kaltura-ng/kaltura-common';
@@ -106,6 +107,14 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
                 advancedSearch.items.push(new KalturaSearchOperator({
                     type: KalturaSearchOperatorType.searchOr,
                     items: [new KalturaQuizAdvancedFilter({ isQuiz: KalturaNullableBoolean.trueValue })]
+                }));
+            }
+            
+          // filter video captions
+            if (data.videoCaptions) {
+                advancedSearch.items.push(new KalturaSearchOperator({
+                    type: KalturaSearchOperatorType.searchOr,
+                    items: [new KalturaEntryCaptionAdvancedFilter({ hasCaption: KalturaNullableBoolean.trueValue })]
                 }));
             }
 
@@ -345,6 +354,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
       limits: 200,
       youtubeVideo: false,
       videoQuiz: false,
+      videoCaptions: false,
     };
   }
 }

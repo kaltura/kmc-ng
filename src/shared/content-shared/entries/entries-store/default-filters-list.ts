@@ -30,6 +30,12 @@ export const DefaultFiltersList: DefaultFilterList[] = [
         items: []
     },
     {
+        name: 'videoCaptions',
+        label: 'Video with Captions',
+        value: true,
+        items: []
+    },
+    {
         name: 'ingestionStatuses', label: 'Ingestion Statuses',
         items: [
             { value: KalturaEntryStatus.ready.toString(), label: 'Ready' },

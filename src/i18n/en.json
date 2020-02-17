@@ -1156,6 +1156,7 @@
                 "permissionLevels": "Permission Level: {{0}}",
                 "youtubeVideo": "Youtube video",
                 "videoQuiz": "Video with Quiz",
+                "videoCaptions": "Video with Captions",
                 "preferences": {
                     "preferences": "Preferences",
                     "filterPreferences": "Filter Preferences",
