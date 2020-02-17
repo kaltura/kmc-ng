@@ -15,6 +15,7 @@ import {LocalizationModule} from '@kaltura-ng/mc-shared';
 import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
 import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
 import {AutoCompleteModule} from '@kaltura-ng/kaltura-primeng-ui';
+import {SliderModule} from '@kaltura-ng/kaltura-primeng-ui';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui';
 import {DynamicFormModule} from '@kaltura-ng/kaltura-ui';
 import {DynamicFormModule as PrimeDynamicFormModule} from '@kaltura-ng/kaltura-primeng-ui';
@@ -61,12 +62,13 @@ import { InputSwitchModule } from 'primeng/inputswitch';
     AccordionModule,
     AreaBlockerModule,
     AutoCompleteModule,
+    SliderModule,
     ButtonModule,
     CalendarModule,
     CheckboxModule,
     CommonModule,
     ConfirmDialogModule,
-      CategoriesModule,
+    CategoriesModule,
     DropdownModule,
     DynamicFormModule,
     FormsModule,
@@ -92,7 +94,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
     TooltipModule,
     TreeModule,
     DetailsBarModule,
-      EntriesModule,
+    EntriesModule,
     StickyModule,
     CopyToClipboardModule,
     OverlayPanelModule,
@@ -104,8 +106,8 @@ import { InputSwitchModule } from 'primeng/inputswitch';
     InputHelperModule,
     AnalyticsLiveModule,
     KPTableModule,
-      ClearableInputModule,
-      DateFormatModule,
+    ClearableInputModule,
+    DateFormatModule,
   ],
   declarations: [
     ContentEntriesComponent,
