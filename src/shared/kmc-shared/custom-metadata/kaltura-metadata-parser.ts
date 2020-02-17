@@ -110,9 +110,9 @@ export class MetadataProfileParser {
 						items: []
 					};
 
-					if (metadataElement.complexType && metadataElement.complexType.sequence)
+					if (metadataElement.complexType && ( metadataElement.complexType.sequence || metadataElement.complexType.choice))
 					{
-						let metadataItems = metadataElement.complexType.sequence.element;
+						let metadataItems = metadataElement.complexType.sequence ? metadataElement.complexType.sequence.element : metadataElement.complexType.choice.element;
 						metadataItems = metadataItems instanceof Array ? metadataItems : metadataItems ? [metadataItems] : null;
 						if (metadataItems) {
 							metadataItems.forEach(elementItem => {
