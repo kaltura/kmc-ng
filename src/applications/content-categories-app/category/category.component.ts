@@ -1,6 +1,6 @@
 import {CategoryMetadataWidget} from './category-metadata/category-metadata-widget.service';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationTypes, ActionTypes, CategoryService} from './category.service';
 import {CategorySectionsListWidget} from './category-sections-list/category-sections-list-widget.service';
 import {CategoriesService} from '../categories/categories.service';
@@ -20,6 +20,8 @@ import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { AnalyticsNewMainViewService } from "app-shared/kmc-shared/kmc-views";
+import {KalturaSourceType} from "kaltura-ngx-client";
 
 @Component({
   selector: 'kCategory',
@@ -45,6 +47,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
   public _enablePrevButton: boolean;
   public _enableNextButton: boolean;
   public _kmcPermissions = KMCPermissions;
+  public _analyticsAllowed: boolean;
 
   constructor(categoryWidgetsManager: CategoryWidgetsManager,
               widget1: CategorySectionsListWidget,
@@ -58,7 +61,9 @@ export class CategoryComponent implements OnInit, OnDestroy {
               private _appLocalization: AppLocalization,
               private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
               private _logger: KalturaLogger,
+              private _router: Router,
               private _contentCategoryView: ContentCategoryViewService,
+              private _analyticsNewMainViewService: AnalyticsNewMainViewService,
               private _categoryRoute: ActivatedRoute) {
 
     categoryWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5]);
@@ -72,7 +77,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._showLoader = true;
-
+    this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable(); // new analytics app is available
     this._categoriesStatusMonitorService.status$
 	    .pipe(cancelOnDestroy(this))
 	    .first()
@@ -289,6 +294,12 @@ export class CategoryComponent implements OnInit, OnDestroy {
   public canLeave(): Observable<{ allowed: boolean }> {
     return this._categoryStore.canLeaveWithoutSaving();
   }
-
+  
+  public _openCategoryAnalytics(): void {
+      if (this._analyticsAllowed) {
+          const route = 'analytics/category';
+          this._router.navigate([route], { queryParams: { id: this._currentCategoryId } });
+      }
+  }
 }
 

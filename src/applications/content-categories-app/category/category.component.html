@@ -6,12 +6,20 @@
           <div class="kContent">
             <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
             <div class="kTitle">{{ _categoryHeader }}</div>
-            <button pButton class="kButtonBranded kSaveBtn"
-                    [label]="'applications.content.categoryDetails.save' | translate"
-                    [disabled]="!_categoryStore.categoryIsDirty || _kmcPermissions.CONTENT_MANAGE_EDIT_CATEGORIES | kDisabledIfNotPermitted"
-                    (click)="_save()"></button>
-            <button pButton class="kButtonDefault kNavigationBtnLeft" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
-            <button pButton class="kButtonDefault kNavigationBtnRight" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
+              <div class="kCategoryActionsWrapper">
+                  <button pButton icon="kIconstatistic" class="kButtonDefault kAnalytics"
+                          *ngIf="_analyticsAllowed"
+                          [label]="'applications.content.entries.viewAnalytics' | translate"
+                          (click)="_openCategoryAnalytics()"></button>
+                  <button pButton class="kButtonBranded kSaveBtn"
+                          [label]="'applications.content.categoryDetails.save' | translate"
+                          [disabled]="!_categoryStore.categoryIsDirty || _kmcPermissions.CONTENT_MANAGE_EDIT_CATEGORIES | kDisabledIfNotPermitted"
+                          (click)="_save()"></button>
+                  <button pButton class="kButtonDefault kNavigationBtnLeft" [disabled]="!_enablePrevButton"
+                          (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
+                  <button pButton class="kButtonDefault kNavigationBtnRight" [disabled]="!_enableNextButton"
+                          (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
+              </div>
           </div>
         </div>
       </kSticky>

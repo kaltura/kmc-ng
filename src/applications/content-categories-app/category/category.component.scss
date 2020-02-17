@@ -7,6 +7,22 @@
   flex: 0 0 auto;
   z-index: 0;
 }
+.kCategoryActionsWrapper {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+
+    .kAnalytics {
+        margin-right: 24px;
+        ::ng-deep .kIconstatistic {
+            font-size: 24px;
+        }
+        ::ng-deep .ui-button-text{
+            padding-left: 42px;
+            white-space: nowrap;
+        }
+    }
+}
 :host ::ng-deep span.ui-button-icon-left.pi-kIconarrow_forward, :host ::ng-deep span.ui-button-icon-left.pi-kIconarrow_backward{
   margin-left: -.5em;
 }
