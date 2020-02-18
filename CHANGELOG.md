@@ -1,3 +1,22 @@
+<a name="5.24.0"></a>
+# [5.24.0](https://github.com/kaltura/kmc-ng/compare/v5.22.1...v5.24.0) (2020-02-18)
+
+
+### Bug Fixes
+
+* typo from 'Ipload' to 'Upload' ([#889](https://github.com/kaltura/kmc-ng/issues/889)) ([a089a31](https://github.com/kaltura/kmc-ng/commit/a089a31))
+* **settings/custom-data:** add support to complexType choice attribute ([#892](https://github.com/kaltura/kmc-ng/issues/892)) ([da12caf](https://github.com/kaltura/kmc-ng/commit/da12caf))
+* **settings/custom-metadata:** Allow using the '+' character in text select list values ([4c44673](https://github.com/kaltura/kmc-ng/commit/4c44673))
+
+
+### Features
+
+* **entry/captions:** display / add / edit captions accuracy ([#888](https://github.com/kaltura/kmc-ng/issues/888)) ([40a93b0](https://github.com/kaltura/kmc-ng/commit/40a93b0))
+* **settings/reach:** List Reach services: Alignment, Audio Description, Chaptering ([d475cea](https://github.com/kaltura/kmc-ng/commit/d475cea))
+* **settings/reach:** Reach services ([#890](https://github.com/kaltura/kmc-ng/issues/890)) ([5ec8783](https://github.com/kaltura/kmc-ng/commit/5ec8783))
+
+
+
 <a name="5.23.0"></a>
 # [5.23.0](https://github.com/kaltura/kmc-ng/compare/v5.22.0...v5.23.0) (2020-02-03)
 
