@@ -54,7 +54,7 @@
                         <td [ngStyle]="{'padding-left': '24px'}">{{caption.label}}</td>
                         <td>{{_widgetService._getCaptionType(caption.format)}}</td>
                         <td>{{caption.language}}</td>
-                        <td>{{!!caption.accuracy ? caption.accuracy + '%' : ('app.common.undefined' | translate)}}</td>
+                        <td>{{!!caption.accuracy || caption.accuracy === 0 ? caption.accuracy + '%' : ('app.common.none' | translate)}}</td>
                         <td>
                             <span *ngIf="!caption.uploadFailure">{{_widgetService._getCaptionStatus(caption)}}</span>
                             <div *ngIf="caption.uploadFailure" class="kError">

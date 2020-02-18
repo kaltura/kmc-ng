@@ -21,7 +21,7 @@
       <div class="kRow kSlider">
         <span class="kLabel">{{'applications.content.entryDetails.captions.accuracy' | translate}}</span>
         <div class="kAccuracySlider">
-            <kSlider #acc [min]="0" [max]="100" [step]="1" formControlName="accuracy"></kSlider>
+            <kSlider #acc [min]="1" [max]="100" [step]="1" formControlName="accuracy"></kSlider>
             <span>{{acc.value + '% '}}{{'applications.content.entryDetails.captions.accurate' | translate}}</span>
         </div>
       </div>

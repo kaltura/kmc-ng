@@ -199,9 +199,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       if (typeof caption.isDefault === "undefined") {
           caption.isDefault = 0; // set as not default
       }
-      if (!caption.accuracy){
-          caption.accuracy = undefined;
-      }
+
     });
   }
 

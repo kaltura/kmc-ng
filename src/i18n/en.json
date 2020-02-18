@@ -108,6 +108,7 @@
         },
         "common": {
             "n_a": "N/A",
+            "none": "None",
             "undefined": "Undefined",
             "copyToClipboard": "Copy to clipboard",
             "copySuccess": "Copied to clipboard",
@@ -2754,7 +2755,7 @@
                 "errorLoadingProfiles": "Failed to load Reach profiles",
                 "errorLoadingServices": "Failed to load Reach services",
                 "profiles": "{{0}} Profiles",
-                "autoRules": "For additional rules please contact your CSM.",
+                "autoRules": "For rules setting please contact your CSM.",
                 "profile": {
                     "save": "Save",
                     "backToProfiles": "Back To Profiles",
