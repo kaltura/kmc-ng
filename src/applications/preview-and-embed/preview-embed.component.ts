@@ -234,8 +234,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     this._embedTypes.push({"label": this._appLocalization.get("applications.embed.embedAuto"), "value": "auto"});
     if (this.media instanceof KalturaMediaEntry && this._selectedPlayerVersion === 2) {
       this._embedTypes.push({"label": this._appLocalization.get("applications.embed.embedThumb"), "value": "thumb"}); // no thumb embed for playlists and v3 players
+    } else {
+        this._embedTypes.push({"label": this._appLocalization.get("Web Page"), "value": "wc"});
     }
-    this._embedTypes.push({"label": this._appLocalization.get("Web Component"), "value": "wc"});
   }
 
   /* V3 specific code starts here */
