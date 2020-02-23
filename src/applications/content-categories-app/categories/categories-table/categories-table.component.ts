@@ -17,6 +17,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { MenuItem } from 'primeng/api';
+import { AnalyticsNewMainViewService } from "app-shared/kmc-shared/kmc-views";
 
 @Component({
   selector: 'kCategoriesTable',
@@ -69,6 +70,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
               private appLocalization: AppLocalization,
               private cdRef: ChangeDetectorRef,
               private _reachAppViewService: ReachAppViewService,
+              private _analyticsNewMainViewService: AnalyticsNewMainViewService,
               private _el: ElementRef<HTMLElement>,
               private _permissionsService: KMCPermissionsService) {
   }
@@ -126,14 +128,27 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
             id: 'addServiceRule',
             label: this.appLocalization.get('applications.content.categories.addServiceRule'),
             command: () => this.onActionSelected('addServiceRule', category)
-        },
-      {
-        id: 'delete',
-        label: this.appLocalization.get('applications.content.categories.delete'),
-        styleClass: 'kDanger',
-        command: () => this.onActionSelected('delete', category)
-      }
+        }
     ];
+    
+      if (this._analyticsNewMainViewService.isAvailable()) {
+          this._items.push(
+              {
+                  id: 'analytics',
+                  label: this.appLocalization.get('applications.content.entries.viewAnalytics'),
+                  command: () => this.onActionSelected('analytics', category)
+              }
+          );
+      }
+      
+      this._items.push(
+          {
+              id: 'delete',
+              label: this.appLocalization.get('applications.content.categories.delete'),
+              styleClass: 'kDanger',
+              command: () => this.onActionSelected('delete', category)
+          }
+      );
 
     this._permissionsService.filterList(
       <{ id: string }[]>this._items,

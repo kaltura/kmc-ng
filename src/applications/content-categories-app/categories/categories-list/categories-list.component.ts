@@ -321,6 +321,9 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 this._logger.info(`handle edit action by user`, { categoryId: category.id });
                 this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });
                 break;
+            case 'analytics':
+                this.router.navigate(['analytics/category'], { queryParams: { id: category.id } });
+                break;
             case 'delete':
                 this.deleteCategory(category);
                 break;
