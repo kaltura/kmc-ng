@@ -3,7 +3,7 @@ import { PlaylistWidget } from '../../playlist-widget';
 import { Observable } from 'rxjs';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
-import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaFilterPager } from 'kaltura-ngx-client';
 import { KalturaPlaylist } from 'kaltura-ngx-client';
 import { PlaylistExecuteFromFiltersAction } from 'kaltura-ngx-client';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
@@ -13,7 +13,7 @@ import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { PlaylistRule } from './playlist-rule/playlist-rule.interface';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
-import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Injectable()
@@ -69,6 +69,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     const rules = this.data.filters.map(filter => {
       return new PlaylistExecuteFromFiltersAction({
         totalResults: filter.limit,
+        pager: new KalturaFilterPager({pageIndex: 1, pageSize: 500}),
         filters: [filter]
       }).setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
