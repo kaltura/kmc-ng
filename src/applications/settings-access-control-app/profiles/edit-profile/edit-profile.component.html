@@ -118,7 +118,7 @@
                        [filterPlaceHolder]="'applications.settings.accessControl.editForm.findCountry' | translate"
                        [formControl]="_allowedCountriesField"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectCountry' | translate"
-                       [class.item-selected]="_allowedCountriesField.value.length">
+                       [class.item-selected]="_allowedCountriesField && _allowedCountriesField.value && _allowedCountriesField.value.length">
           <ng-template let-selectedCountries pTemplate="selectedItems">
             <span *ngFor="let selectedCountryCode of selectedCountries" class="kCountryList selected">
               <i class="kFlag" [ngClass]="selectedCountryCode | kCountryFromCode:'icon'"></i>
@@ -152,7 +152,7 @@
                        [resetFilterOnHide]="true"
                        [formControl]="_restrictedCountriesField"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectCountry' | translate"
-                       [class.item-selected]="_restrictedCountriesField.value.length">
+                       [class.item-selected]="_restrictedCountriesField && _restrictedCountriesField.value && _restrictedCountriesField.value.length">
           <ng-template let-selectedCountries pTemplate="selectedItems">
             <span *ngFor="let selectedCountryCode of selectedCountries" class="kCountryList selected">
               <i class="kFlag" [ngClass]="selectedCountryCode | kCountryFromCode:'icon'"></i>
@@ -261,7 +261,7 @@
                        [filterPlaceHolder]="'applications.settings.accessControl.editForm.findFlavor' | translate"
                        [showToggleAll]="false"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate"
-                       [class.item-selected]="_allowedFlavorsField.value.length">
+                       [class.item-selected]="_allowedFlavorsField && _allowedFlavorsField.value && _allowedFlavorsField.value.length">
           <ng-template let-selectedFlavours pTemplate="selectedItems">
             <span *ngFor="let selectedFlavourIndex of selectedFlavours" class="kFlavorList selected">
               {{_store.getFlavorLabel(selectedFlavourIndex)}}
@@ -292,7 +292,7 @@
                        [filterPlaceHolder]="'applications.settings.accessControl.editForm.findFlavor' | translate"
                        [formControl]="_restrictedFlavorsField"
                        [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate"
-                       [class.item-selected]="_restrictedFlavorsField.value.length">
+                       [class.item-selected]="_restrictedFlavorsField && _restrictedFlavorsField.value && _restrictedFlavorsField.value.length">
           <ng-template let-selectedFlavours pTemplate="selectedItems">
             <span *ngFor="let selectedFlavourIndex of selectedFlavours" class="kFlavorList selected">
               {{_store.getFlavorLabel(selectedFlavourIndex)}}
