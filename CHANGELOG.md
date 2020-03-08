@@ -1,6 +1,9 @@
 <a name="5.24.1"></a>
-## [5.24.1](https://github.com/kaltura/kmc-ng/compare/v5.24.0...v5.24.1) (2020-03-08)
+# [5.24.1](https://github.com/kaltura/kmc-ng/compare/v5.24.0...v5.24.1) (2020-03-08)
 
+### Bug Fixes
+
+* **content/playlist:** Fixed rule-based playlist entries count calculation
 
 
 <a name="5.24.0"></a>
