@@ -14,10 +14,16 @@
         <span class="kLabel">{{'applications.content.entryDetails.captions.language' | translate}}</span>
         <p-dropdown [options]="_languages" [autoWidth]="false" formControlName="language"></p-dropdown>
       </div>
-      <div class="kRow">
+      <div class="kRow" *ngIf="_newCaption">
         <span class="kLabel">{{'applications.content.entryDetails.captions.type' | translate}}</span>
-        <p-dropdown *ngIf="_newCaption" [options]="_captionFormats" [autoWidth]="false" formControlName="format"></p-dropdown>
-        <span *ngIf="!_newCaption">{{_getCaptionFormatLabel(currentCaption?.format)}}</span>
+        <p-dropdown [options]="_captionFormats" [autoWidth]="false" formControlName="format"></p-dropdown>
+      </div>
+      <div class="kRow kSlider">
+        <span class="kLabel">{{'applications.content.entryDetails.captions.accuracy' | translate}}</span>
+        <div class="kAccuracySlider">
+            <kSlider #acc [min]="1" [max]="100" [step]="1" formControlName="accuracy"></kSlider>
+            <span>{{acc.value + '% '}}{{'applications.content.entryDetails.captions.accurate' | translate}}</span>
+        </div>
       </div>
       <div class="kRow" *ngIf="_newCaption">
         <span class="kLabel">{{'applications.content.entryDetails.captions.add' | translate}}</span>

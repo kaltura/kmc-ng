@@ -41,6 +41,7 @@ export interface CaptionRow {
     uploadFileId?: string;
     serverUploadToken?: string;
     uploadFailure?: boolean;
+    accuracy?: number;
     progress?: string;
     uploadUrl: string;
     id: string;
@@ -198,6 +199,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       if (typeof caption.isDefault === "undefined") {
           caption.isDefault = 0; // set as not default
       }
+
     });
   }
 
@@ -262,6 +264,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       serverUploadToken: '',
       uploadUrl: '',
       id: null,
+      accuracy: 100,
       format: KalturaCaptionType.srt,
       language: KalturaLanguage.en,
       label: 'English',
@@ -340,6 +343,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
               format: record.item.format,
               label: record.item.label,
               displayOnPlayer: record.item.displayOnPlayer,
+              accuracy: record.item.accuracy,
               isDefault: 0
             });
             const addCaptionRequest = new CaptionAssetAddAction({ entryId: this.data.id, captionAsset: captionAsset });

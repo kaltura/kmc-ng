@@ -16,7 +16,7 @@ export class ReachProfileDictionaryWidget extends ReachProfileWidget {
     
     public _languages: { label: string, value: string }[] = [];
     public _dictionaries: Dictionary[] = [];
-    public _maxCharacters = 1000;
+    public _maxCharacters = 4000;
     
     constructor(logger: KalturaLogger) {
         super(SettingsReachProfileViewSections.Dictionary, logger);

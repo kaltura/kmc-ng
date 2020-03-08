@@ -26,6 +26,16 @@
                         <th>
                             {{'applications.content.entryDetails.captions.language' | translate}}
                         </th>
+                        <th [ngStyle]="{'overflow': 'visible'}">
+                            <div class="kTableHeader">
+                                <span>{{'applications.content.entryDetails.captions.accuracy' | translate}}</span>
+                                <!--i class="kIconhelp_full kHelpTip" [kTooltip]="'applications.content.entryDetails.captions.accuracy_tt' | translate"></i-->
+                                <kInputHelper class="kHelp" icon="kIconlife_donut" trigger="click"
+                                              [title]="'applications.content.entryDetails.captions.accuracy_title' | translate">
+                                    <span>{{'applications.content.entryDetails.captions.accuracy_tt' | translate}}</span>
+                                </kInputHelper>
+                            </div>
+                        </th>
                         <th>
                             {{'applications.content.entryDetails.captions.status' | translate}}
                         </th>
@@ -44,6 +54,7 @@
                         <td [ngStyle]="{'padding-left': '24px'}">{{caption.label}}</td>
                         <td>{{_widgetService._getCaptionType(caption.format)}}</td>
                         <td>{{caption.language}}</td>
+                        <td>{{!!caption.accuracy || caption.accuracy === 0 ? caption.accuracy + '%' : ('app.common.none' | translate)}}</td>
                         <td>
                             <span *ngIf="!caption.uploadFailure">{{_widgetService._getCaptionStatus(caption)}}</span>
                             <div *ngIf="caption.uploadFailure" class="kError">
@@ -90,7 +101,14 @@
                 </ng-template>
 
                 <ng-template pTemplate="emptymessage">
-                    <div class="emptymessage">{{'applications.content.table.noResults' | translate}}</div>
+                    <div class="emptyMessage" *ngIf="!_widgetService.showSectionLoader">
+                        <div class="arrow"></div>
+                        <div class="emptyFolderMsg">
+                            <div class="emptyFolder"></div>
+                            <span class="emptyMsgTitle">{{'applications.content.entryDetails.captions.emptyMsgTitle' | translate}}</span>
+                            <span class="emptyMsg">{{'applications.content.entryDetails.captions.emptyMsg' | translate}}</span>
+                        </div>
+                    </div>
                 </ng-template>
             </p-table>
         </div>
@@ -98,7 +116,7 @@
 
     <p-menu #actionsmenu [popup]="true" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 
-    <kPopupWidget #editPopup data-aid="editCaptionPopup" [popupWidth]="380" [popupHeight]="472" [modal]="true">
+    <kPopupWidget #editPopup data-aid="editCaptionPopup" [popupWidth]="586" [modal]="true">
         <ng-template>
             <kEntryCaptionsEdit [currentCaption]="_widgetService.currentCaption"
                                 [parentPopupWidget]="editPopup"></kEntryCaptionsEdit>

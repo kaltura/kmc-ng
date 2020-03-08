@@ -108,6 +108,8 @@
         },
         "common": {
             "n_a": "N/A",
+            "none": "None",
+            "undefined": "Undefined",
             "copyToClipboard": "Copy to clipboard",
             "copySuccess": "Copied to clipboard",
             "copyFailure": "Copy operation failed",
@@ -735,7 +737,8 @@
                 "totalDuration": "Total duration {{0}}",
                 "resultsLimitRange": "1 - 200 Entries",
                 "noEntries": "No entries",
-                "viewAnalytics": "View Analytics"
+                "viewAnalytics": "View Analytics",
+                "filterError": "Could not filter entries using the provided filters combination.\nPlease remove some of the filters and try again."
             },
             "playlists": {
                 "playlists": "{{0}} Playlists",
@@ -1767,6 +1770,12 @@
                     "type": "File Type",
                     "language": "Language",
                     "status": "Status",
+                    "accuracy": "Accuracy",
+                    "emptyMsgTitle": "No Captions Yet",
+                    "emptyMsg": "Click \"Add Caption\" to upload caption files",
+                    "accuracy_title": "Set captions accuracy",
+                    "accuracy_tt": "You can update the captions accuracy by using the \"edit\" option",
+                    "accurate": "Accurate",
                     "defaultTitle": "Default",
                     "default": "Default Caption",
                     "setDefault": "Set as default",
@@ -2747,7 +2756,7 @@
                 "errorLoadingProfiles": "Failed to load Reach profiles",
                 "errorLoadingServices": "Failed to load Reach services",
                 "profiles": "{{0}} Profiles",
-                "autoRules": "For additional rules please contact your CSM.",
+                "autoRules": "For rules setting please contact your CSM.",
                 "profile": {
                     "save": "Save",
                     "backToProfiles": "Back To Profiles",

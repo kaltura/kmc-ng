@@ -21,7 +21,7 @@ export interface TagItem {
     disabled?: boolean;
 }
 
-const refineListsType: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions'];
+const refineListsType: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions', 'youtubeVideo', 'videoQuiz', 'videoCaptions'];
 
 @Component({
     selector: 'k-entries-list-tags',
@@ -65,7 +65,8 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             tag.dataFetchSubscription = null;
         }
 
-        if (tag.type === 'categories' || refineListsType.indexOf(tag.type) > -1) {
+        const booleanFilters = ['youtubeVideo', 'videoQuiz', 'videoCaptions'];
+        if (tag.type === 'categories' || (refineListsType.indexOf(tag.type) > -1 && booleanFilters.indexOf(tag.type) === -1)) {
             // remove tag of type list from filters
             const previousData = this._entriesStore.cloneFilter(tag.type, []);
             const previousDataItemIndex = previousData.findIndex(item => item === tag.value);
