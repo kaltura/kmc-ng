@@ -737,7 +737,8 @@
                 "totalDuration": "Total duration {{0}}",
                 "resultsLimitRange": "1 - 200 Entries",
                 "noEntries": "No entries",
-                "viewAnalytics": "View Analytics"
+                "viewAnalytics": "View Analytics",
+                "filterError": "Could not filter entries using the provided filters combination.\nPlease remove some of the filters and try again."
             },
             "playlists": {
                 "playlists": "{{0}} Playlists",

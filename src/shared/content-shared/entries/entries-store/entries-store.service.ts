@@ -9,6 +9,7 @@ import { KalturaClient } from 'kaltura-ngx-client';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import {
+    AppLocalization,
     BooleanTypeAdapter,
     DatesRangeAdapter,
     DatesRangeType,
@@ -99,6 +100,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
   constructor(private _kalturaServerClient: KalturaClient,
               private _browserService: BrowserService,
               private _metadataProfileService: MetadataProfileStore,
+              private _appLocalization: AppLocalization,
               @Inject(EntriesDataProviderToken) private _dataProvider: EntriesDataProvider,
               @Inject(EntriesStorePaginationCacheToken) @Optional() private _paginationCacheToken: string,
               @Inject(EntriesManualExecutionModeToken) @Optional() manualExecutionMode: boolean,
@@ -211,7 +213,10 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
         },
         error => {
           this._querySubscription = null;
-          const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+          let errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+          if (error && error.code && error.code === "UNABLE_TO_EXECUTE_ENTRY_CAPTION_ADVANCED_FILTER"){
+              errorMessage = this._appLocalization.get('applications.content.entries.filterError');
+          }
           this._entries.state.next({ loading: false, errorMessage });
         });
   }
