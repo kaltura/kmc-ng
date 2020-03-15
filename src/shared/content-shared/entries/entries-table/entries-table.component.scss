@@ -43,10 +43,10 @@
 
           &.kIconyoutube {
               font-size: 30px;
-              top: 7px;
-              left: 1px;
+              top: -2px;
+              left: 26px;
               z-index: 2;
-              color: $kDandger;
+              color: #ff0000;
               opacity: 1;
           }
           &.kIconquiz {
@@ -61,8 +61,8 @@
           position: absolute;
           width: 15px;
           height: 15px;
-          top: 25px;
-          left: 10px;
+          top: 16px;
+          left: 34px;
           background-color: #FFFFFF;
           z-index: 1;
       }

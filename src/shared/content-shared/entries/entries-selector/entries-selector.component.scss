@@ -48,16 +48,25 @@
 
                 &.kIconquiz {
                     font-size: 20px;
-                    top: 15px;
+                    top: 8px;
                     right: 1px;
                 }
                 &.kIconyoutube {
-                  font-size: 20px;
-                  top: 15px;
-                  right: 1px;
+                  font-size: 24px;
+                  top: 7px;
+                  right: 17px;
                   z-index: 2;
-                  color: $kDandger;
+                  color: #ff0000;
                 }
+            }
+            .kYoutubeIconFix {
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                top: 13px;
+                left: 30px;
+                background-color: #FFFFFF;
+                z-index: 1;
             }
         }
 
