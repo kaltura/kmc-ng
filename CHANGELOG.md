@@ -1,3 +1,18 @@
+<a name="5.25.0"></a>
+# [5.25.0](https://github.com/kaltura/kmc-ng/compare/v5.24.1...v5.25.0) (2020-03-17)
+
+
+### Bug Fixes
+
+* **content/entries:** style and position of Youtube and Quiz icons in entries list ([c82b280](https://github.com/kaltura/kmc-ng/commit/c82b280))
+
+
+### Features
+
+* **content/category:** add category Analytics ([#893](https://github.com/kaltura/kmc-ng/issues/893)) ([6d1a79a](https://github.com/kaltura/kmc-ng/commit/6d1a79a))
+
+
+
 <a name="5.24.1"></a>
 # [5.24.1](https://github.com/kaltura/kmc-ng/compare/v5.24.0...v5.24.1) (2020-03-08)
 
