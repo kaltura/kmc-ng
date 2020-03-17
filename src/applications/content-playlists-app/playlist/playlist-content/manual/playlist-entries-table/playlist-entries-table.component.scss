@@ -35,38 +35,23 @@
       height: auto;
       border-radius: 3px;
     }
-
-      .kThumbnailTypeIcon {
+      .kIcons {
+          display: flex;
+          align-items: center;
+          justify-content: center;
           position: absolute;
-          color: #FFFFFF;
-
-          &.kIconyoutube {
-              color: #ff0000;
-              font-size: 30px;
-              top: 8px;
-              left: 26px;
-              z-index: 2;
-          }
-      }
-
-      .kYoutubeIconFix {
-          position: absolute;
-          width: 15px;
-          height: 15px;
-          top: 15px;
-          left: 34px;
-          background-color: #FFFFFF;
-          z-index: 1;
-      }
-
-      .kThumbnailTypeIcon {
-          position: absolute;
-          color: #FFFFFF;
-
-          &.kIconquiz {
-              font-size: 30px;
-              top: 15px;
-              right: 1px;
+          width: 100%;
+          height: 100%;
+          .kThumbnailTypeIcon {
+              color: #ffffff;
+              margin: 2px;
+              &.kIconyoutube {
+                  font-size: 30px;
+                  z-index: 2;
+              }
+              &.kIconquiz {
+                  font-size: 30px;
+              }
           }
       }
   }

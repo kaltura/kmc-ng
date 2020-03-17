@@ -42,31 +42,24 @@
                 height: auto;
                 border-radius: 5px;
             }
-            .kThumbnailTypeIcon {
+            .kIcons {
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 position: absolute;
-                color: #FFFFFF;
-
-                &.kIconquiz {
-                    font-size: 20px;
-                    top: 8px;
-                    right: 1px;
+                width: 100%;
+                height: 100%;
+                .kThumbnailTypeIcon {
+                    color: #ffffff;
+                    margin: 2px;
+                    &.kIconquiz {
+                        font-size: 24px;
+                    }
+                    &.kIconyoutube {
+                        font-size: 26px;
+                        z-index: 2;
+                    }
                 }
-                &.kIconyoutube {
-                  font-size: 24px;
-                  top: 7px;
-                  right: 17px;
-                  z-index: 2;
-                  color: #ff0000;
-                }
-            }
-            .kYoutubeIconFix {
-                position: absolute;
-                width: 8px;
-                height: 8px;
-                top: 13px;
-                left: 30px;
-                background-color: #FFFFFF;
-                z-index: 1;
             }
         }
 
