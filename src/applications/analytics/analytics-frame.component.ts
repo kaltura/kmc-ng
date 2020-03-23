@@ -209,9 +209,6 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     }
 
     private _updateQueryParams(queryParams: Params): void {
-        if (queryParams.id && this._lastParams.id && queryParams.id !== this._lastParams.id){
-            return;
-        }
         const urlTree = this.router.parseUrl(this.router.url);
         urlTree.queryParams = queryParams;
         this.router.navigateByUrl(urlTree);
