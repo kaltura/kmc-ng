@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, Renderer2, Input } from '@angular/core';
-import { Router, NavigationEnd, Params } from '@angular/router';
+import { Router, NavigationEnd, Params, ActivatedRoute } from '@angular/router';
 import { AppAuthentication } from 'shared/kmc-shell/index';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { serverConfig } from 'config/server';
@@ -35,12 +35,14 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     private _lastNav = '';
     private _currentAppUrl: string;
     private _lastQueryParams: { [key: string]: string }[] = null;
+    private _lastParams: any;
     private _analyticsDefaultPage = '/analytics/engagement';
     private _multiAccount: string = null;
 
     constructor(private appAuthentication: AppAuthentication,
                 private logger: KalturaLogger,
                 private router: Router,
+                private _route: ActivatedRoute,
                 private _appLocalization: AppLocalization,
                 private _browserService: BrowserService,
                 private renderer: Renderer2,
@@ -52,14 +54,14 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             .subscribe((event) => {
                 if (event instanceof NavigationEnd)  {
                     const { url, queryParams } = this._browserService.getUrlWithoutParams(event.urlAfterRedirects);
-
-                    if (this._currentAppUrl !== url) {
+                    if (this._currentAppUrl !== url || (this._currentAppUrl === url && this._lastParams && this._lastParams.id && this._lastParams.id !== this._route.snapshot.queryParams['id'])) {
+                        this._lastParams = this._route.snapshot.queryParams;
                         this.updateLayout(window.innerHeight - 54);
                         this._currentAppUrl = url;
                         if (this._initialized) {
                             const prevRoute = this._browserService.previousRoute ? this._browserService.previousRoute.url : null;
                             this.sendMessageToAnalyticsApp({'messageType': 'navigate', payload: { url, queryParams, prevRoute }});
-                            this.sendMessageToAnalyticsApp({'messageType': 'updateFilters', payload: { queryParams }});
+                            this.sendMessageToAnalyticsApp({'messageType': 'updateFilters', 'payload': { queryParams }});
                         } else {
                             this._lastQueryParams = queryParams;
                             this._lastNav = url;
