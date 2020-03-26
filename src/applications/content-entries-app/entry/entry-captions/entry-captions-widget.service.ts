@@ -199,7 +199,12 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       if (typeof caption.isDefault === "undefined") {
           caption.isDefault = 0; // set as not default
       }
-
+      
+      // handle old captions with no accuracy: inject null accuracy to enable differ to detect changes to the accuracy
+      if (typeof caption.accuracy === "undefined"){
+          caption.accuracy = null;
+      }
+    
     });
   }
 
