@@ -63,7 +63,7 @@ export class ReachProfileServiceWidget extends ReachProfileWidget implements OnD
             .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
             .subscribe(() => {
                     super.updateState({
-                        isValid: true,
+                        isValid: this.serviceForm.status !== 'INVALID',
                         isDirty: this.serviceForm.dirty
                     });
                 }
