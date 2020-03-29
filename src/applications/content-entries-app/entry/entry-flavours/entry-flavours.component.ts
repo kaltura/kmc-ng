@@ -236,7 +236,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 			filter = ".flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v,.mpeg,.mxf,.rm,.rv,.rmvb,.ts,.ogg,.ogv,.vob,.webm,.mts,.arf,.mkv";
 		}
 		if (entry.mediaType.toString() === KalturaMediaType.audio.toString()){
-			filter = ".flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp3,.wav";
+			filter = ".flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp3,.wav,.flac";
 		}
 		return filter;
 	}
