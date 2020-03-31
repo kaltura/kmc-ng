@@ -46,6 +46,9 @@ export class PlaylistsRefineFiltersComponent implements OnInit, OnDestroy {
       this._createdBefore = updates.createdAt.toDate || null;
       this._createdAtFilterError = null;
     }
+    if (typeof updates.adminTagsMultiLikeOr !== 'undefined') {
+      this.pathFilter = updates.adminTagsMultiLikeOr === 'raptentry';
+    }
   }
 
 

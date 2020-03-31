@@ -12,7 +12,7 @@
     </div>
     <span *ngIf="_createdAtFilterError" class="kError">{{_createdAtFilterError}}</span>
 
-    <p-checkbox binary="true" [(ngModel)]="pathFilter" (onChange)="updatePathFilter()" label="Interactive Video"></p-checkbox>
+    <p-checkbox binary="true" [(ngModel)]="pathFilter" (onChange)="updatePathFilter()" [label]="'applications.content.playlistType.interactive' | translate"></p-checkbox>
 
   </kScrollToTopContainer>
 
