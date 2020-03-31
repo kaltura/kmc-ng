@@ -6,7 +6,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { PlaylistsFilters, PlaylistsStore } from '../playlists-store/playlists-store.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 
-const listOfFilterNames: (keyof PlaylistsFilters)[] = ['createdAt'];
+const listOfFilterNames: (keyof PlaylistsFilters)[] = ['createdAt','adminTagsMultiLikeOr'];
 
 @Component({
   selector: 'k-playlists-refine-filters',
@@ -20,7 +20,8 @@ export class PlaylistsRefineFiltersComponent implements OnInit, OnDestroy {
   public _createdBefore: Date;
   public _createdAtFilterError: string = null;
   public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
-    public _calendarFormat = this._browserService.getCurrentDateFormat(true);
+  public _calendarFormat = this._browserService.getCurrentDateFormat(true);
+  public pathFilter = false;
 
   constructor(private _store: PlaylistsStore,
               private _browserService: BrowserService,
@@ -70,6 +71,14 @@ export class PlaylistsRefineFiltersComponent implements OnInit, OnDestroy {
    */
   public _clearAllComponents(): void {
     this._store.resetFilters(listOfFilterNames);
+  }
+  
+  public updatePathFilter(): void {
+      if (this.pathFilter) {
+          this._store.filter({ adminTagsMultiLikeOr: 'raptentry' });
+      } else {
+          this._store.filter({ adminTagsMultiLikeOr: '' });
+      }
   }
 
   public _onCreatedChanged(): void {

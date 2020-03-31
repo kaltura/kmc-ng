@@ -36,6 +36,7 @@ export interface PlaylistsFilters {
   pageIndex: number,
   freeText: string,
   sortBy: string,
+  adminTagsMultiLikeOr: string,
   sortDirection: number,
   createdAt: DatesRangeType
 }
@@ -174,6 +175,13 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
           filter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(data.createdAt.toDate);
         }
       }
+      
+      // filter interactive video
+      if (data.adminTagsMultiLikeOr !== '') {
+          filter.adminTagsMultiLikeOr = data.adminTagsMultiLikeOr;
+      } else {
+          delete filter.adminTagsMultiLikeOr;
+      }
 
       // update desired fields of entries
         responseProfile = new KalturaDetachedResponseProfile({
@@ -233,6 +241,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       pageSize: pageSize,
       pageIndex: 0,
       freeText: '',
+      adminTagsMultiLikeOr: '',
       sortBy: 'createdAt',
       sortDirection: SortDirection.Desc,
       createdAt: { fromDate: null, toDate: null }
@@ -246,6 +255,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       sortBy: new StringTypeAdapter(),
       sortDirection: new NumberTypeAdapter(),
       freeText: new StringTypeAdapter(),
+      adminTagsMultiLikeOr: new StringTypeAdapter(),
       createdAt: new DatesRangeAdapter(),
     };
   }

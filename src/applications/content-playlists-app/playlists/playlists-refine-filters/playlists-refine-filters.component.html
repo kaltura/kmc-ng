@@ -11,6 +11,9 @@
                   icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
     </div>
     <span *ngIf="_createdAtFilterError" class="kError">{{_createdAtFilterError}}</span>
+
+    <p-checkbox binary="true" [(ngModel)]="pathFilter" (onChange)="updatePathFilter()" label="Interactive Video"></p-checkbox>
+
   </kScrollToTopContainer>
 
   <p>
