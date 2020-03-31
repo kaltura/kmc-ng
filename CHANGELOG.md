@@ -1,3 +1,20 @@
+<a name="5.26.0"></a>
+# [5.26.0](https://github.com/kaltura/kmc-ng/compare/v5.25.0...v5.26.0) (2020-03-31)
+
+
+### Bug Fixes
+
+* **category/analytics:** Update Analytics queryParams upon switching IDs in the same route ([#897](https://github.com/kaltura/kmc-ng/issues/897)) ([c774054](https://github.com/kaltura/kmc-ng/commit/c774054))
+* **settings/reach:** mark section as invalid when caption max characters is empty ([640b045](https://github.com/kaltura/kmc-ng/commit/640b045))
+* **upload:** Add support for .flac audio type ([dbdbbce](https://github.com/kaltura/kmc-ng/commit/dbdbbce))
+
+
+### Features
+
+* **content/playlists:** Add Interactive Video filter ([#899](https://github.com/kaltura/kmc-ng/issues/899)) ([6541a42](https://github.com/kaltura/kmc-ng/commit/6541a42))
+
+
+
 <a name="5.25.0"></a>
 # [5.25.0](https://github.com/kaltura/kmc-ng/compare/v5.24.1...v5.25.0) (2020-03-17)
 
