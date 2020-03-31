@@ -76,6 +76,16 @@ export class PlaylistsRefineFiltersComponent implements OnInit, OnDestroy {
     this._store.resetFilters(listOfFilterNames);
   }
   
+public _clearCreatedComponents(): void {
+    this._createdAtFilterError = '';
+    this._store.filter({
+        createdAt: {
+            fromDate: null,
+            toDate: null
+        }
+    });
+}
+  
   public updatePathFilter(): void {
       if (this.pathFilter) {
           this._store.filter({ adminTagsMultiLikeOr: 'raptentry' });
