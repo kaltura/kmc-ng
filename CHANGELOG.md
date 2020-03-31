@@ -7,6 +7,7 @@
 * **category/analytics:** Update Analytics queryParams upon switching IDs in the same route ([#897](https://github.com/kaltura/kmc-ng/issues/897)) ([c774054](https://github.com/kaltura/kmc-ng/commit/c774054))
 * **settings/reach:** mark section as invalid when caption max characters is empty ([640b045](https://github.com/kaltura/kmc-ng/commit/640b045))
 * **upload:** Add support for .flac audio type ([dbdbbce](https://github.com/kaltura/kmc-ng/commit/dbdbbce))
+* **content/entry:** track accuracy changes made to old captions with no accuracy
 
 
 ### Features
