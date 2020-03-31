@@ -47,6 +47,10 @@ export class PlaylistsTagsComponent implements OnInit, OnDestroy {
     if (typeof updates.freeText !== 'undefined') {
       this._syncTagOfFreetext();
     }
+
+    if (typeof updates.adminTagsMultiLikeOr !== 'undefined') {
+      this._syncTagOfAdminTags();
+    }
   }
 
   private _registerToFilterStoreDataChanges(): void {
@@ -96,12 +100,33 @@ export class PlaylistsTagsComponent implements OnInit, OnDestroy {
       });
     }
   }
+  private _syncTagOfAdminTags(): void {
+    const previousItem = this._filterTags.findIndex(item => item.type === 'adminTagsMultiLikeOr');
+    if (previousItem !== -1) {
+      this._filterTags.splice(
+        previousItem,
+        1);
+    }
+
+    const currentAdminTagsValue = this._store.cloneFilter('adminTagsMultiLikeOr', null);
+
+    if (currentAdminTagsValue) {
+      this._filterTags.push({
+        type: 'adminTagsMultiLikeOr',
+        value: currentAdminTagsValue,
+        label: this._appLocalization.get(`applications.content.playlistType.interactive`),
+        tooltip: this._appLocalization.get(`applications.content.playlistType.interactive`)
+      });
+    }
+  }
 
   public removeTag(tag: any): void {
     if (tag.type === 'createdAt') {
       this._store.filter({ createdAt: { fromDate: null, toDate: null } });
     } else if (tag.type === 'freetext') {
       this._store.filter({ freeText: null })
+    } else if (tag.type === 'adminTagsMultiLikeOr') {
+      this._store.filter({ adminTagsMultiLikeOr: '' })
     }
   }
 

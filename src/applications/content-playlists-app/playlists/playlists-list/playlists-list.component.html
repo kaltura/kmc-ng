@@ -32,7 +32,12 @@
                      [(ngModel)]="_query.freetext"
                      (keyup.enter)="_onFreetextChanged()"
                      placeholder="{{'applications.content.playlists.searchEntries' | translate}}">
-              <div #refineBtn class="kRefine kDropdown"><i class="kIconcalendar"></i></div>
+
+                <div #refineBtn class="kRefine kDropdown">
+                    <i class="kIconfilter"></i>
+                    <span>{{'applications.content.bulkUpload.list.refine' | translate}}</span>
+                    <i class="kIcondropdown_arrow_bottom dropdown"></i>
+                </div>
             </div>
             <button pButton
                     class="kButtonDefault kRefreshBtn small"
@@ -80,10 +85,10 @@
   data-aid="playlistsRefinePopup"
   [appendTo]="playlistsTableHolder"
   [popupWidth]="350"
-  [popupHeight]="169"
+  [popupHeight]="220"
   [closeBtn]="false"
   [targetRef]="refineBtn"
-  [targetOffset]="{'x':-294, 'y': -20}"
+  [targetOffset]="{'x':-156, 'y': -15}"
   kSticky
   [sticksTo]="'header'"
   [stickyClass]="'kForceFix'"
