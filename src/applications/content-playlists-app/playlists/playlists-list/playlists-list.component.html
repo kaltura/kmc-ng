@@ -1,6 +1,6 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
   <div class="kPlaylists kOverrideFAIcons">
-    <div #playlistsTableHolder class="kPlaylistsHolder kContent">
+    <div class="kPlaylistsHolder kContent">
       <kSticky stickyId="playlistsFilters" [scrollOffset]="80" [sticksTo]="'header'">
         <div class="kContent kFiltersWrapper">
           <div class="kPlaylistsTableFilters kContent">
@@ -83,12 +83,11 @@
 <kPopupWidget
   #refinePopup
   data-aid="playlistsRefinePopup"
-  [appendTo]="playlistsTableHolder"
   [popupWidth]="350"
-  [popupHeight]="220"
+  [popupHeight]="300"
   [closeBtn]="false"
   [targetRef]="refineBtn"
-  [targetOffset]="{'x':-156, 'y': -15}"
+  [targetOffset]="{'x':-156, 'y': -20}"
   kSticky
   [sticksTo]="'header'"
   [stickyClass]="'kForceFix'"

@@ -11,23 +11,27 @@
     display: block;
 }
 .kFiltersGroupTitle {
-  color: $kGrayscale3;
-  line-height: 40px;
-  letter-spacing: 0.1em;
-  font-size: 13px;
-  margin-left: -20px;
-  padding-left: 20px;
-  margin-right: -20px;
-  margin-bottom: 8px;
+    color: $kGrayscale3;
+    line-height: 40px;
+    letter-spacing: 0.1em;
+    font-size: 13px;
+    border-top: 1px solid $kGrayscale6;
+    border-bottom: 1px solid $kGrayscale6;
+    margin-left: -12px;
+    padding-left: 20px;
+    margin-right: -20px;
+    margin-bottom: 8px;
+    margin-top: 8px;
+    display: inline-block;
+    width: 330px;
 }
 
 .kTreeContainer {
-  height: 175px;
+  height: 255px;
   border-bottom: 1px solid $kGrayscale6;
   margin-left: -20px;
   padding-left: 20px;
   margin-right: -20px;
-  width: 387px;
   position: relative;
   overflow: visible;
 }
@@ -77,4 +81,5 @@
 }
 :host ::ng-deep .ui-chkbox-label {
     margin-left: 8px;
+    font-size: 14px;
 }

@@ -1,6 +1,9 @@
 <div class="kOverrideFAIcons kRefineFilters">
   <kScrollToTopContainer #refine class="kTreeContainer">
-    <p class="kFiltersGroupTitle">{{'applications.content.bulkUpload.filters.createdBetween' | translate | uppercase}}</p>
+      <div class="kFiltersGroupTitle">
+          <span>{{'applications.content.dropFolders.filters.additionalFilters' | translate | uppercase}}</span>
+      </div>
+      <p>{{'applications.content.dropFolders.filters.createdBetween' | translate}}</p>
     <div class="kDateRange">
 
       <p-calendar class="kDateRangeFirst" [(ngModel)]="_createdAfter" [readonlyInput]="true" [showIcon]="true"
