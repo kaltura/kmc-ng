@@ -209,9 +209,16 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     }
 
     private _updateQueryParams(queryParams: Params): void {
-        const urlTree = this.router.parseUrl(this.router.url);
-        urlTree.queryParams = queryParams;
-        this.router.navigateByUrl(urlTree);
+        if (JSON.stringify(this._route.snapshot.queryParams) !== JSON.stringify(queryParams)) {
+            this.router.navigate(
+                [],
+                {
+                    relativeTo: this._route,
+                    queryParams: queryParams,
+                    replaceUrl: true,
+                    queryParamsHandling: 'merge'
+                });
+        }
     }
 
     private logout(): void {
