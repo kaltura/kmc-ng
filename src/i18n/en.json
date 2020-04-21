@@ -1929,6 +1929,7 @@
                     "delete": "Delete",
                     "deleteConfirm": "You are about to remove the exported video that was distributed by {{0}}. The video will no longer be available via the video page on the external platform. How do you want to proceed?",
                     "form": {
+                        "provider": "Provider: {{0}}",
                         "status": "Status",
                         "updates": "Updates",
                         "updateAutomatically": "Update Automatically",

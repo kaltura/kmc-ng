@@ -5,7 +5,7 @@
         <div [class]="'kProfileIcon ' + (undistributedProfile?.providerType | kEntriesDistributionProviderTypeIcon)"></div>
         <div class="kTitleNames">
           <span class="kTitleProfileName">{{_profileName}}</span>
-          <span *ngIf="!_forDistribution" class="kTitleDistributionName">{{_distributionName}}</span>
+          <span *ngIf="!_forDistribution" class="kTitleDistributionName">{{'applications.content.entryDetails.distribution.form.provider' | translate:[_distributionName]}}</span>
         </div>
       </div>
       <div class="kButtons">

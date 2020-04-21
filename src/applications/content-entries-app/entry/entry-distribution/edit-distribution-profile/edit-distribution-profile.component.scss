@@ -31,7 +31,7 @@ $app-styles-path: '../../../styles';
       .kTitle {
         display: flex;
         align-items: center;
-
+        margin-left: 8px;
         img {
           width: 24px;
           margin-right: 10px;
@@ -40,7 +40,7 @@ $app-styles-path: '../../../styles';
         .kTitleNames {
           display: flex;
           flex-direction: column;
-
+          margin-left: 10px;
           .kTitleProfileName {
             color: $kGrayscale1;
             font-size: 15px;
@@ -50,7 +50,7 @@ $app-styles-path: '../../../styles';
           .kTitleDistributionName {
             color: $kGrayscale3;
             font-size: 14px;
-            margin-top: 10px;
+            margin-top: 6px;
             text-transform: capitalize;
           }
         }
