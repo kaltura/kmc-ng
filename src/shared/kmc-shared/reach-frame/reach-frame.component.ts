@@ -119,6 +119,11 @@ export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
                 'language': this._appLocalization.selectedLanguage
             };
 
+            if (this.page === ReachPages.entry) {
+                const duration: number = this.data.entry ? this.data.entry.duration : 0;
+                this._reachConfig['showShortTurnaroundTimeAlert'] = duration > 600;
+            }
+
             if (this.page === ReachPages.entries) {
                 this._reachConfig['entryIds'] = this.data.entries.map(({ id }) => id).join(',');
             }
