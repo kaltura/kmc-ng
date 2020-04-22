@@ -1,3 +1,15 @@
+<a name="5.26.1"></a>
+## [5.26.1](https://github.com/kaltura/kmc-ng/compare/v5.26.0...v5.26.1) (2020-04-22)
+
+
+### Bug Fixes
+
+* **analytics:** fix history navigation using the browser back button ([13ab682](https://github.com/kaltura/kmc-ng/commit/13ab682))
+* **entry/captions:** set showShortTurnaroundTimeAlert in reach configuration according to entry duration ([104b8f1](https://github.com/kaltura/kmc-ng/commit/104b8f1))
+* **entry/distribution:** fix stying for Youtube compliance ([3b3f57d](https://github.com/kaltura/kmc-ng/commit/3b3f57d))
+
+
+
 <a name="5.26.0"></a>
 # [5.26.0](https://github.com/kaltura/kmc-ng/compare/v5.25.0...v5.26.0) (2020-03-31)
 
