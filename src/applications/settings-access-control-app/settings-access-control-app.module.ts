@@ -24,7 +24,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { CalendarModule } from 'primeng/calendar';
-import { SharedModule } from 'primeng/shared';
+import { SharedModule } from 'primeng/api/shared';
 import { TreeModule } from 'primeng/tree';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { MultiSelectModule } from 'primeng/multiselect';

@@ -9,7 +9,7 @@ import { NewReplaceVideoUploadService } from './new-replace-video-upload.service
 })
 export class NewReplaceVideoUploadModule {
 
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<NewReplaceVideoUploadModule> {
     return {
       ngModule: NewReplaceVideoUploadModule,
       providers: <any[]>[

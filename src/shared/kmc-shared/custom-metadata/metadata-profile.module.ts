@@ -8,7 +8,7 @@ import { MetadataProfileStore } from './metadata-profile-store.service';
   providers: <any[]>[]
 })
 export class MetadataProfileModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<MetadataProfileModule> {
     return {
       ngModule: MetadataProfileModule,
       providers: <any[]>[

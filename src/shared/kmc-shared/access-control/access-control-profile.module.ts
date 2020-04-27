@@ -8,7 +8,7 @@ import { AccessControlProfileStore } from 'app-shared/kmc-shared/access-control/
   providers: <any[]>[]
 })
 export class AccessControlProfileModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<AccessControlProfileModule> {
     return {
       ngModule: AccessControlProfileModule,
       providers: <any[]>[

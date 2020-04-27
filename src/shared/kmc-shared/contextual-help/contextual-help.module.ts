@@ -8,7 +8,7 @@ import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/con
     providers: <any[]>[]
 })
 export class ContextualHelpModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<ContextualHelpModule> {
         return {
             ngModule: ContextualHelpModule,
             providers: <any[]>[

@@ -55,7 +55,7 @@ import { HotspotsAppViewService } from 'app-shared/kmc-shared/kmc-views/componen
     providers: <any[]>[]
 })
 export class KmcViewsModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<KmcViewsModule> {
         return {
             ngModule: KmcViewsModule,
             providers: <any[]>[

@@ -6,7 +6,7 @@ import { AppEventsService } from './app-events.service';
     ]
 })
 export class AppEventsModule {
-    public static forRoot(): ModuleWithProviders {
+    public static forRoot(): ModuleWithProviders<AppEventsModule> {
         return {
             ngModule: AppEventsModule,
             providers: [

@@ -31,7 +31,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { MenuModule } from 'primeng/menu';
-import { SharedModule } from 'primeng/shared';
+import { SharedModule } from 'primeng/api/shared';
 import { ProgressBarModule } from 'primeng/progressbar';
 
 @NgModule({

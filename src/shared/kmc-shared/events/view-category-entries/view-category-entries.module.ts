@@ -8,7 +8,7 @@ import { ViewCategoryEntriesService } from './view-category-entries.service';
   providers: <any[]>[]
 })
 export class ViewCategoryEntriesModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<ViewCategoryEntriesModule> {
     return {
       ngModule: ViewCategoryEntriesModule,
       providers: [ViewCategoryEntriesService]

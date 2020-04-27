@@ -8,7 +8,7 @@ import { ColumnsResizeStorageManagerService } from './columns-resize-storage-man
     providers: []
 })
 export class ColumnsResizeManagerModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<ColumnsResizeManagerModule> {
         return {
             ngModule: ColumnsResizeManagerModule,
             providers: [ColumnsResizeStorageManagerService]

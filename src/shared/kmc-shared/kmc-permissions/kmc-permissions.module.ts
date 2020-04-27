@@ -22,7 +22,7 @@ import { NgIfPermittedPipe } from 'app-shared/kmc-shared/kmc-permissions/ng-if-p
         ]
 })
 export class KMCPermissionsModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<KMCPermissionsModule> {
         return {
             ngModule: KMCPermissionsModule,
             providers: <any[]>[

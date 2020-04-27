@@ -11,7 +11,7 @@ import { TranscodingProfileManagement } from './transcoding-profile-management.s
   providers: <any[]>[]
 })
 export class TranscodingProfileManagementModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<TranscodingProfileManagementModule> {
     return {
       ngModule: TranscodingProfileManagementModule,
       providers: <any[]>[

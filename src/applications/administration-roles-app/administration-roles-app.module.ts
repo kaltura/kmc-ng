@@ -37,7 +37,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { PaginatorModule } from 'primeng/paginator';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { SharedModule } from 'primeng/shared';
+import { SharedModule } from 'primeng/api/shared';
 import { SpinnerModule } from 'primeng/spinner';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { TreeModule } from 'primeng/tree';

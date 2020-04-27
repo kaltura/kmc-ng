@@ -9,7 +9,7 @@ import { NewEntryCreateFromUrlService } from './new-entry-create-from-url.servic
 })
 export class NewEntryCreateFromUrlModule {
 
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<NewEntryCreateFromUrlModule> {
     return {
       ngModule: NewEntryCreateFromUrlModule,
       providers: <any[]>[

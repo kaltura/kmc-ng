@@ -9,7 +9,7 @@ import { NewEntryUploadService } from './new-entry-upload.service';
 })
 export class NewEntryUploadModule {
 
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<NewEntryUploadModule> {
     return {
       ngModule: NewEntryUploadModule,
       providers: <any[]>[

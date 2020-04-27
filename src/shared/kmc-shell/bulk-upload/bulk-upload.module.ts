@@ -8,7 +8,7 @@ import { BulkUploadService } from 'app-shared/kmc-shell/bulk-upload/bulk-upload.
   providers: <any[]>[]
 })
 export class BulkUploadModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<BulkUploadModule> {
     return {
       ngModule: BulkUploadModule,
       providers: <any[]>[

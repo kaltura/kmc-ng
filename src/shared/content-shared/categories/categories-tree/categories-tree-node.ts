@@ -1,4 +1,4 @@
-import { TreeNode } from "primeng/components/common/api";
+import { TreeNode } from "primeng/api";
 
 export enum NodeChildrenStatuses
 {

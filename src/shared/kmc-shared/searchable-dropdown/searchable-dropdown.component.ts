@@ -1,9 +1,9 @@
 import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Dropdown } from 'primeng/components/dropdown/dropdown';
+import { Dropdown } from 'primeng/dropdown/dropdown';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { DomHandler } from 'primeng/components/dom/domhandler';
-import { ObjectUtils } from 'primeng/components/utils/objectutils';
+import { DomHandler } from 'primeng/dom/domhandler';
+import { ObjectUtils } from 'primeng/utils/objectutils';
 
 export const DROPDOWN_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,

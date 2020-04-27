@@ -14,7 +14,7 @@ export class CategoriesStatusModule {
         // even when it is not in use internally.
         // getting it from the DI will force initiation of that service
     }
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<CategoriesStatusModule> {
         return {
             ngModule: CategoriesStatusModule,
             providers: [CategoriesStatusMonitorService]

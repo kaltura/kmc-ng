@@ -1,4 +1,4 @@
-import {OnDestroy} from '@angular/core';
+import { OnDestroy, Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
@@ -33,6 +33,7 @@ export interface KalturaReachProfileWithCredit extends KalturaReachProfile {
     remaining?: number;
 }
 
+@Injectable()
 export class ReachProfilesStore extends FiltersStoreBase<ReachProfilesFilters> implements OnDestroy {
     private _profiles = {
         data: new BehaviorSubject<{ items: KalturaReachProfileWithCredit[], totalCount: number }>({items: [], totalCount: 0}),

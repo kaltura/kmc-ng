@@ -111,7 +111,7 @@ import { InputTextModule } from 'primeng/inputtext';
   ]
 })
 export class EntriesModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<EntriesModule> {
         return {
             ngModule: EntriesModule,
             providers: <any[]>[

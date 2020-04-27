@@ -8,7 +8,7 @@ import { TranscodingProfileCreationService } from './transcoding-profile-creatio
   providers: <any[]>[]
 })
 export class TranscodingProfileCreationModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<TranscodingProfileCreationModule> {
     return {
       ngModule: TranscodingProfileCreationModule,
       providers: [TranscodingProfileCreationService]

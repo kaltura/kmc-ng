@@ -8,7 +8,7 @@ import { PlaylistCreationService } from 'shared/kmc-shared/events/playlist-creat
   providers: <any[]>[]
 })
 export class PlaylistCreationModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<PlaylistCreationModule> {
     return {
       ngModule: PlaylistCreationModule,
       providers: [PlaylistCreationService]

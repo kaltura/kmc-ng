@@ -8,7 +8,7 @@ import { KmcServerPolls } from './kmc-server-polls.service';
   providers: []
 })
 export class KMCServerPollsModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<KMCServerPollsModule> {
     return {
       ngModule: KMCServerPollsModule,
       providers: [KmcServerPolls]
