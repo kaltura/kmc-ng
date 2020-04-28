@@ -105,7 +105,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmationService } from 'primeng/api';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { CheckboxModule } from 'primeng/checkbox';
-import { GrowlModule } from 'primeng/growl';
+import { ToastModule } from 'primeng/toast';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { MenuModule } from 'primeng/menu';
 
@@ -158,7 +158,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     CheckboxModule,
     ReactiveFormsModule,
     TooltipModule,
-    GrowlModule,
+    ToastModule,
     CopyToClipboardModule,
     KmcUploadAppModule.forRoot(),
     NewEntryUploadModule.forRoot(),

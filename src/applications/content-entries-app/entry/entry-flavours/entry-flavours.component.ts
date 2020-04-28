@@ -66,7 +66,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
         this._widgetService.data$
             .pipe(cancelOnDestroy(this))
             .filter(Boolean)
-            .subscribe(entry => {
+            .subscribe((entry: KalturaMediaEntry) => {
                 if (entry.status === KalturaEntryStatus.noContent) {
                     this._replaceButtonsLabel = entry.mediaType === KalturaMediaType.audio
                         ? this._appLocalization.get('applications.content.entryDetails.flavours.replaceVideo.addAudio')

@@ -10,9 +10,9 @@ import { AppLocalization } from "@kaltura-ng/mc-shared";
   styleUrls: ['./playlist-details.component.scss']
 })
 export class PlaylistDetailsComponent implements OnInit, OnDestroy {
-  
+
   @Input() isRapt: boolean;
-  
+
   public _currentPlaylist: KalturaPlaylist;
   public _isNew = false;
 
@@ -26,7 +26,7 @@ export class PlaylistDetailsComponent implements OnInit, OnDestroy {
     this._widgetService.data$
       .pipe(cancelOnDestroy(this))
       .filter(Boolean)
-      .subscribe(data => {
+      .subscribe((data: KalturaPlaylist) => {
         this._currentPlaylist = data;
         this._isNew = !this._currentPlaylist.id;
       });

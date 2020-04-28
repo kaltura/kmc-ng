@@ -15,7 +15,7 @@ export class ReachProfileCreditComponent implements OnInit, OnDestroy {
   public _creditType = '';
   public _totalCredit = '';
   public _consumption = '';
-  
+
   constructor(public _widgetService: ReachProfileCreditWidget,
               private _appLocalization: AppLocalization,
               public _profileStore: ReachProfileStore) {
@@ -28,7 +28,7 @@ export class ReachProfileCreditComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this))
       .filter(Boolean)
       .subscribe(
-        data => {
+          (data: KalturaReachProfile) => {
           this._currentProfile = data;
           this._creditType = this.setCreditType(this._currentProfile.credit);
           if (this._currentProfile.credit['credit'] !== -9999){
@@ -41,7 +41,7 @@ export class ReachProfileCreditComponent implements OnInit, OnDestroy {
           }
         });
   }
-  
+
   private setCreditType(credit: KalturaBaseVendorCreditArgs): string {
       if (credit instanceof KalturaUnlimitedVendorCredit){
           return this._appLocalization.get('applications.settings.reach.credit.unlimited');

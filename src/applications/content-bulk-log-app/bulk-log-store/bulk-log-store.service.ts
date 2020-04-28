@@ -205,7 +205,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
     const value = (list || []).map(item => item).join(',');
 
     if (value) {
-      requestFilter[requestFilterProperty] = value;
+      requestFilter[requestFilterProperty.toString()] = value;
     }
   }
 

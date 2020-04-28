@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NotificationTypes, ActionTypes, TranscodingProfileStore } from './transcoding-profile-store.service';
+import {NotificationTypes, ActionTypes, TranscodingProfileStore, StatusArgs} from './transcoding-profile-store.service';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Observable } from 'rxjs';
@@ -119,7 +119,7 @@ export class TranscodingProfileComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this))
       .filter(Boolean)
       .subscribe(
-        status => {
+          (status: StatusArgs) => {
           this._showLoader = false;
           this._areaBlockerMessage = null;
           switch (status.action) {

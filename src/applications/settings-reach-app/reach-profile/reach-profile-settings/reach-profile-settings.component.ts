@@ -23,7 +23,7 @@ export class ReachProfileSettingsComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this))
       .filter(Boolean)
       .subscribe(
-        data => {
+          (data: KalturaReachProfile) => {
           this._currentProfile = data;
         });
   }

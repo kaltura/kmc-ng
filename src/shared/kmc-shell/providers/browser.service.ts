@@ -13,6 +13,7 @@ import { EmailConfig } from '../../../kmc-app/components/open-email/open-email.c
 import { serverConfig } from 'config/server';
 import { PageExitVerificationService } from '../page-exit-verification';
 import { filter, map, pairwise } from 'rxjs/operators';
+import { MessageService } from 'primeng/api';
 
 export enum HeaderTypes {
     error = 1,
@@ -60,7 +61,6 @@ export class BrowserService implements IAppStorage {
     private _initialQueryParams: { [key: string]: any; } = {};
     private _growlMessage = new Subject<GrowlMessage>();
     private _sessionStartedAt: Date = new Date();
-    public growlMessage$ = this._growlMessage.asObservable();
     private _previousRoute: RoutesRecognized;
 
     public get previousRoute(): RoutesRecognized {
@@ -98,6 +98,7 @@ export class BrowserService implements IAppStorage {
                 private _logger: KalturaLogger,
                 private _appEvents: AppEventsService,
                 private _appLocalization: AppLocalization,
+                private _messageService: MessageService,
                 private _pageExitVerificationService: PageExitVerificationService) {
         this._recordInitialQueryParams();
     }
@@ -378,7 +379,7 @@ export class BrowserService implements IAppStorage {
 
     public showGrowlMessage(message: GrowlMessage): void {
         if (message.detail || message.summary) {
-            this._growlMessage.next(message);
+            this._messageService.add(message);
         }
     }
 

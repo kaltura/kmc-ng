@@ -163,7 +163,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
         });
   }
 
-  private buildQueryRequest(): Observable<Feeds> {
+  private buildQueryRequest(): Observable<any>{
     try {
       // create request items
       const filter: KalturaBaseSyndicationFeedFilter = new KalturaBaseSyndicationFeedFilter({

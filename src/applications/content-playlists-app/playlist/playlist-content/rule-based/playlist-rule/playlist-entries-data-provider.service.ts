@@ -41,7 +41,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
     const value = (list || []).map(item => item).join(',');
 
     if (value) {
-      requestFilter[requestFilterProperty] = value;
+      requestFilter[requestFilterProperty.toString()] = value;
     }
   }
 

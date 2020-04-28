@@ -25,7 +25,7 @@ export class ReachProfileDetailsComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this))
       .filter(Boolean)
       .subscribe(
-        data => {
+          (data: KalturaReachProfile) => {
           this._currentProfile = data;
           this._remainingCredit = this._currentProfile.credit['credit'] !== -9999 ? parseFloat((this._currentProfile.credit['credit'] - this._currentProfile.usedCredit).toFixed(2)) : -9999;
         });
