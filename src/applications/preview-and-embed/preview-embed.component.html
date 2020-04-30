@@ -51,8 +51,8 @@
                         </div>
                         <div class="kSection kRow kAlignTop">
                             <span class="kCol">{{'applications.embed.qr' | translate}}</span>
-                            <!--qrcode *ngIf="_shortLink"
-                                    [qrdata]="_shortLink" [size]="80" [level]="'M'"></qrcode-->
+                            <qrcode *ngIf="_shortLink"
+                                    [qrdata]="_shortLink" [size]="80" [level]="'M'"></qrcode>
                         </div>
 
                         <div class="kSection kRow">

@@ -69,7 +69,7 @@
     "@ngx-translate/core": "~11.0.1",
     "@ngx-translate/http-loader": "~4.0.0",
     "ajv": "~6.1.1",
-    "angularx-qrcode": "~1.5.1",
+    "angularx-qrcode": "~2.1.1",
     "core-js": "^3.2.1",
     "intl": "^1.2.5",
     "jquery": "~3.4.1",
