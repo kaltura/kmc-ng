@@ -9,7 +9,6 @@
                 <span>{{ 'applications.content.entryDetails.flavours.replaceVideo.transcodingProfile' | translate }}</span>
                 <p-dropdown class="kTranscodingProfile"
                             [options]="_transcodingProfilesOptions"
-                            [autoWidth]="false"
                             [placeholder]="'applications.content.entryDetails.flavours.replaceVideo.profilePlaceholder' | translate"
                             [formControl]="_transcodingProfileField"
                             (onChange)="_updateFlavorsOption(); _updateStorageProfile()">
@@ -113,7 +112,6 @@
                                 <p-dropdown class="kTranscodingProfile"
                                             [options]="_flavorOptions"
                                             [class.kHasError]="file.errorToken === 'applications.upload.validation.selectFlavor'"
-                                            [autoWidth]="false"
                                             [disabled]="_flavorsFieldDisabled"
                                             appendTo="body"
                                             kDropdownCloseOnScroll

@@ -2,10 +2,10 @@ import { ModuleWithProviders, NgModule, Optional, Self } from '@angular/core';
 import { ViewCategoryEntriesService } from './view-category-entries.service';
 
 @NgModule({
-  imports: <any[]>[],
-  declarations: <any[]>[],
-  exports: <any[]>[],
-  providers: <any[]>[]
+  imports: [],
+  declarations: [],
+  exports: [],
+  providers: []
 })
 export class ViewCategoryEntriesModule {
   static forRoot(): ModuleWithProviders<ViewCategoryEntriesModule> {

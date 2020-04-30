@@ -40,7 +40,6 @@
                             <p-dropdown
                                 [disabled]="file.uploading || file.uploadFailure || (_kmcPermissions.ATTACHMENT_MODIFY | kDisabledIfNotPermitted)"
                                 [options]="_fileTypes"
-                                [autoWidth]="false"
                                 [placeholder]="'applications.content.entryDetails.related.select' | translate"
                                 [(ngModel)]="file.format"
                                 (onChange)="_widgetService._setDirty()"></p-dropdown>

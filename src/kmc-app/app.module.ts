@@ -109,7 +109,7 @@ import { ToastModule } from 'primeng/toast';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { MenuModule } from 'primeng/menu';
 
-const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
+const partnerProviders: any[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
 export function kalturaClientOptionsFactory(): KalturaClientOptions {
 
@@ -121,7 +121,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
 }
 
 @NgModule({
-  imports: <any>[
+  imports: [
     AuthModule.forRoot(),
     FormsModule,
     BrowserModule,
@@ -185,7 +185,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       CaptionRequestAppModule,
       ColumnsResizeManagerModule.forRoot()
   ],
-  declarations: <any>[
+  declarations: [
     AppComponent,
       AppDefaultViewComponent,
     DashboardComponent,
@@ -214,15 +214,14 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       ProgressBarComponent,
       PersistLoginByKsComponent,
   ],
-  bootstrap: <any>[
+  bootstrap: [
     AppComponent
   ],
   exports: [],
-  providers: <any>[
+  providers: [
       ...partnerProviders,
-      {
-           provide: APP_STORAGE_TOKEN, useExisting: BrowserService },
-    ConfirmationService,
+      ConfirmationService,
+      { provide: APP_STORAGE_TOKEN, useExisting: BrowserService },
       { provide: KalturaLoggerInjectionToken, useClass: KalturaLogger }
   ]
 })

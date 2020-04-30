@@ -13,7 +13,7 @@ import { SharedModule } from 'primeng/api/shared';
 import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
-    imports: <any[]>[
+    imports: [
         CommonModule,
         FormsModule,
         CheckboxModule,
@@ -24,21 +24,21 @@ import { DropdownModule } from 'primeng/dropdown';
         DropdownModule,
         ButtonModule
     ],
-    declarations: <any[]>[
+    declarations: [
         PowerUserConsoleComponent,
         LogsRecordComponent
     ],
-    exports: <any[]>[
+    exports: [
         PowerUserConsoleComponent,
         LogsRecordComponent
     ],
-    providers: <any[]>[]
+    providers: []
 })
 export class KmcLogsModule {
     static forRoot(): ModuleWithProviders<KmcLogsModule> {
         return {
             ngModule: KmcLogsModule,
-            providers: <any[]>[
+            providers: [
                 KmcLoggerConfigurator
             ]
         };

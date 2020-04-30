@@ -6,7 +6,7 @@ import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
 import { PreviewEmbedComponent } from './preview-and-embed.component';
 import { PreviewEmbedDetailsComponent } from './preview-embed.component';
-import { QRCodeModule } from 'angularx-qrcode';
+// import { QRCodeModule } from 'angularx-qrcode';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextareaModule } from 'primeng/inputtextarea';
@@ -27,7 +27,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     InputTextareaModule,
     InputSwitchModule,
     RadioButtonModule,
-      QRCodeModule
+     // QRCodeModule
   ],
   declarations: [
     PreviewEmbedComponent,

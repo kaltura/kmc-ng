@@ -8,7 +8,6 @@
                 <span>{{ 'applications.upload.uploadSettings.profile' | translate }}</span>
                 <p-dropdown class="kTranscodingProfile"
                             [options]="_transcodingProfiles"
-                            [autoWidth]="false"
                             [placeholder]="'applications.upload.uploadSettings.profilePlaceholder' | translate"
                             [formControl]="_transcodingProfileField">
                     <ng-template let-profile pTemplate="item">
@@ -80,7 +79,6 @@
                                 [ngStyle]="{ 'width': '150px', 'overflow':'visible' }">
                                 <p-dropdown class="kFileType"
                                             [options]="_fileTypes"
-                                            [autoWidth]="false"
                                             appendTo="body"
                                             kDropdownCloseOnScroll
                                             [scrollTarget]="_tableScrollableWrapper"

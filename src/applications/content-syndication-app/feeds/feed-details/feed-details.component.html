@@ -63,7 +63,6 @@
                                      [class.kInvalid]="_missingPlaylist"
                                      [placeholder]="'applications.content.syndication.details.choosePlaylist' | translate"
                                      [filterPlaceholder]="'applications.content.syndication.details.search' | translate"
-                                     [autoWidth]="false"
                                      (customSearch)="searchPlaylists.emit($event)"
                                      (onChange)="_onSelectPlaylist($event)">
                     <!--template for the selected item-->
@@ -116,8 +115,7 @@
               placeholder="{{'applications.content.syndication.details.availableDestinations.promptText' | translate}}"
               class="kControl"
               [options]="_availableDestinations"
-              formControlName="destination"
-              [autoWidth]="false">
+              formControlName="destination">
             </p-dropdown>
           </div>
         </div>

@@ -2,16 +2,16 @@ import { ModuleWithProviders, NgModule, Optional, Self } from '@angular/core';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 @NgModule({
-    imports: <any[]>[],
-    declarations: <any[]>[],
-    exports: <any[]>[],
-    providers: <any[]>[]
+    imports: [],
+    declarations: [],
+    exports: [],
+    providers: []
 })
 export class ContextualHelpModule {
     static forRoot(): ModuleWithProviders<ContextualHelpModule> {
         return {
             ngModule: ContextualHelpModule,
-            providers: <any[]>[
+            providers: [
                 ContextualHelpService
             ]
         };

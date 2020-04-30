@@ -10,7 +10,7 @@
       <div class="kControlContainer">
         <span class="kControl">
           <p-dropdown class="kControl" [options]="_availableContentFlavors" formControlName="contentFlavor"
-                      [autoWidth]="false" [filter]="true">
+                      [filter]="true">
           </p-dropdown>
         </span>
         <!--Add to default transcoding profile-->
@@ -68,7 +68,7 @@
         <div class="kSelectPlayer" *ngIf="_form.get('playback').value === 'fromGoogle'">
           <div class="kSelectPlayerLabel">{{'applications.content.syndication.details.destinationsForms.google.playback.player' | translate}}</div>
           <p-dropdown class="kSelectPlayerControl" [options]="_availablePlayers" formControlName="selectedPlayer"
-                      [autoWidth]="false" [filter]="true">
+                      [filter]="true">
               <ng-template let-item pTemplate="selectedItem">
                   <div class="playerItem selectedPlayer">
                       <div [class]="'playerIcon v'+item.version"></div>

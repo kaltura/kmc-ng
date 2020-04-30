@@ -71,7 +71,7 @@ export class CategoriesModule {
     static forRoot(): ModuleWithProviders<CategoriesModule> {
         return {
             ngModule: CategoriesModule,
-            providers: <any[]>[
+            providers: [
                 CategoriesSearchService // singleton by design: this service sync inner state when needed thus can be shareable/provided by the module
             ]
         };

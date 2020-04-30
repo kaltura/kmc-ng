@@ -114,7 +114,7 @@ export class EntriesModule {
     static forRoot(): ModuleWithProviders<EntriesModule> {
         return {
             ngModule: EntriesModule,
-            providers: <any[]>[
+            providers: [
                 { provide: EntriesDataProviderToken, useClass: EntriesStoreDataProvider }
             ]
         };

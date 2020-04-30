@@ -25,7 +25,7 @@ export class KMCPermissionsModule {
     static forRoot(): ModuleWithProviders<KMCPermissionsModule> {
         return {
             ngModule: KMCPermissionsModule,
-            providers: <any[]>[
+            providers: [
                 KMCPermissionsService
             ]
         };

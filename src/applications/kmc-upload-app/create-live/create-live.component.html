@@ -10,7 +10,7 @@
       <span class="kLabel">{{'applications.upload.prepareLive.streamTypeLabel' | translate}}</span>
       <ng-container *ngIf="!_manualStreamOnly">
         <div class="kRequired"></div>
-        <p-dropdown [options]="_availableStreamTypes" [(ngModel)]="_selectedStreamType" [autoWidth]="false"></p-dropdown>
+        <p-dropdown [options]="_availableStreamTypes" [(ngModel)]="_selectedStreamType"></p-dropdown>
       </ng-container>
       <ng-container *ngIf="_manualStreamOnly">
         <span class="kManualType">{{'applications.upload.prepareLive.streamTypes.manual' | translate}}</span>

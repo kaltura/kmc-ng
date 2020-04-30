@@ -13,27 +13,27 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { SharedModule } from 'primeng/api/shared';
 
 @NgModule({
-    imports: <any[]>[
+    imports: [
         CommonModule,
         FormsModule,
         CheckboxModule,
         SharedModule
     ],
-    declarations: <any[]>[
+    declarations: [
         AppContainerComponent,
         ReleaseNotesComponent,
         ScrollToTopComponent,
         EntryTypePipe,
         PreventPasswordAutofillDirective,
     ],
-    exports: <any[]>[
+    exports: [
         AppContainerComponent,
         ReleaseNotesComponent,
         ScrollToTopComponent,
         EntryTypePipe,
         PreventPasswordAutofillDirective,
     ],
-    providers: <any[]>[]
+    providers: []
 })
 export class KMCShellModule {
     constructor(@Optional() @Self()  _uploadPageExitVerificationService: UploadPageExitVerificationService,
@@ -50,7 +50,7 @@ export class KMCShellModule {
     static forRoot(): ModuleWithProviders<KMCShellModule> {
         return {
             ngModule: KMCShellModule,
-            providers: <any[]>[
+            providers: [
                 BrowserService,
                 AppShellService,
                 PageExitVerificationService,

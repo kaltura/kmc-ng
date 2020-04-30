@@ -49,16 +49,16 @@ import { QuizAppViewService } from 'app-shared/kmc-shared/kmc-views/component-vi
 import { HotspotsAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views/hotspots-app-view.service';
 
 @NgModule({
-    imports: <any[]>[],
-    declarations: <any[]>[],
-    exports: <any[]>[],
-    providers: <any[]>[]
+    imports: [],
+    declarations: [],
+    exports: [],
+    providers: []
 })
 export class KmcViewsModule {
     static forRoot(): ModuleWithProviders<KmcViewsModule> {
         return {
             ngModule: KmcViewsModule,
-            providers: <any[]>[
+            providers: [
                 KmcMainViewsService,
                 ContentEntriesMainViewService,
                 ContentCategoriesMainViewService,

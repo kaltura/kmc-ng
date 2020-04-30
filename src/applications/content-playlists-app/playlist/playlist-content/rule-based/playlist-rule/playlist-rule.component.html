@@ -32,7 +32,6 @@
             </div>
             <div class="kOrderBy">
               <p-dropdown [options]="_orderByOptions"
-                          [autoWidth]="false"
                           (onChange)="_onOrderByChange()"
                           [(ngModel)]="_orderBy">
                 <ng-template let-item pTemplate="selectedItem">

@@ -80,7 +80,7 @@ export class KmcUploadAppModule {
   static forRoot(): ModuleWithProviders<KmcUploadAppModule> {
     return {
       ngModule: KmcUploadAppModule,
-      providers: <any[]>[
+      providers: [
         KalturaLogger,
         {
           provide: KalturaLoggerName, useValue: 'upload-monitor'
