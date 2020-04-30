@@ -77,7 +77,7 @@
     "kaltura-ngx-client": "file:libs/kaltura-ngx-client-11.4.0-v20200210-132058.tgz",
     "moment": "~2.22.2",
     "ngx-page-scroll": "~5.0.1",
-    "ngx-webstorage": "~3.0.2",
+    "ngx-webstorage": "~5.0.0",
     "normalize.css": "~8.0.1",
     "primeicons": "~1.0.0",
     "primeng": "~9.0.6",
