@@ -62,7 +62,7 @@ import { MenuModule } from 'primeng/menu';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { PaginatorModule } from 'primeng/paginator';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { SharedModule } from 'primeng/api/shared';
+import { SharedModule } from 'primeng/api';
 import { SpinnerModule } from 'primeng/spinner';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { TreeModule } from 'primeng/tree';

@@ -10,7 +10,7 @@ import { EntryTypePipe } from 'app-shared/kmc-shell/pipes/entry-type.pipe';
 import { PageExitVerificationService, UploadPageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { PreventPasswordAutofillDirective } from 'app-shared/kmc-shell/directives/prevent-password-autofill.directive';
 import { CheckboxModule } from 'primeng/checkbox';
-import { SharedModule } from 'primeng/api/shared';
+import { SharedModule } from 'primeng/api';
 
 @NgModule({
     imports: [

@@ -23,7 +23,7 @@ import { DateFormatModule } from 'app-shared/kmc-shared/date-format/date-format.
 import { PaginatorModule } from 'primeng/paginator';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
-import { SharedModule } from 'primeng/api/shared';
+import { SharedModule } from 'primeng/api';
 import { AccordionModule } from 'primeng/accordion';
 import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
