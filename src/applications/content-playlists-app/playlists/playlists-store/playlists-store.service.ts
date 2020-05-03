@@ -44,6 +44,7 @@ export interface PlaylistsFilters {
 export interface ExtendedPlaylist extends KalturaPlaylist {
     tooltip?: string;
     isRapt?: boolean;
+    isPath?: boolean;
 }
 
 const localStoragePageSizeKey = 'playlists.list.pageSize';
@@ -146,6 +147,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       playlists.forEach(playlist => {
           const tags = playlist.tags ? playlist.tags.split(',').filter(item => !!item).map(item => item.trim()).join('\n') : null;
           playlist.isRapt = this._playlistsUtilsService.isRapt(playlist);
+          playlist.isPath = this._playlistsUtilsService.isPath(playlist);
           playlist.tooltip = tags
               ? this._appLocalization.get('applications.content.table.nameTooltip', [playlist.name, tags])
               : playlist.name;
@@ -175,7 +177,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
           filter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(data.createdAt.toDate);
         }
       }
-      
+
       // filter interactive video
       if (data.adminTagsMultiLikeOr !== '') {
           filter.adminTagsMultiLikeOr = data.adminTagsMultiLikeOr;

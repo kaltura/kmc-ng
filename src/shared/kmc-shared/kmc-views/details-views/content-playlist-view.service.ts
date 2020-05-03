@@ -1,15 +1,14 @@
-import { Injectable } from '@angular/core';
-import { KMCPermissionsService } from '../../kmc-permissions';
-import { Observable } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { DetailsViewMetadata, KmcDetailsViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { KalturaPlaylistType } from 'kaltura-ngx-client';
-import { KalturaPlaylist } from 'kaltura-ngx-client';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { Title } from '@angular/platform-browser';
-import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
+import {Injectable} from '@angular/core';
+import {KMCPermissionsService} from '../../kmc-permissions';
+import {Observable} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {DetailsViewMetadata, KmcDetailsViewBaseService} from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import {KalturaPlaylist, KalturaPlaylistType} from 'kaltura-ngx-client';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {Title} from '@angular/platform-browser';
+import {ContextualHelpService} from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 
 export enum ContentPlaylistViewSections {
     Metadata = 'Metadata',
@@ -63,7 +62,7 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
                 const sectionToken = activatedRoute.snapshot.firstChild.url[0].path;
                 switch (sectionToken) {
                     case 'content':
-                        result = playlist.playlistType === KalturaPlaylistType.staticList
+                        result = (playlist.playlistType === KalturaPlaylistType.staticList || playlist.playlistType === KalturaPlaylistType.path)
                             ? ContentPlaylistViewSections.Content
                             : ContentPlaylistViewSections.ContentRuleBased;
                         break;
@@ -106,7 +105,7 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
         let result = false;
         switch (section) {
             case ContentPlaylistViewSections.Content:
-                result = playlist.playlistType === KalturaPlaylistType.staticList;
+                result = playlist.playlistType === KalturaPlaylistType.staticList || playlist.playlistType === KalturaPlaylistType.path;
                 break;
             case ContentPlaylistViewSections.ContentRuleBased:
                 result = playlist.playlistType === KalturaPlaylistType.dynamic;

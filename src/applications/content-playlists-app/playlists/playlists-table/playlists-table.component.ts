@@ -41,27 +41,27 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
             this._deferredPlaylists = data;
         }
     }
-    
+
     @Input() sortField: string = null;
     @Input() sortOrder: number = null;
     @Input() selectedPlaylists: any[] = [];
-    
+
     @Output() sortChanged = new EventEmitter<{ field: string, order: number }>();
     @Output() selectedPlaylistsChange = new EventEmitter<any>();
     @Output() actionSelected = new EventEmitter<any>();
-    
+
     @ViewChild('actionsmenu', {static: true}) private actionsMenu: Menu;
-    
+
     private _deferredPlaylists: KalturaPlaylist[];
-    
+
     public _deferredLoading = true;
     public _emptyMessage = '';
     public _playlists: KalturaPlaylist[] = [];
     public _items: MenuItem[];
     public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
-    
+
     public rowTrackBy: Function = (index: number, item: any) => item.id;
-    
+
     constructor(public _columnsResizeManager: ColumnsResizeManagerService,
                 private _appLocalization: AppLocalization,
                 private _permissionsService: KMCPermissionsService,
@@ -69,11 +69,11 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
                 private _cdRef: ChangeDetectorRef,
                 private _el: ElementRef<HTMLElement>) {
     }
-    
+
     ngOnInit() {
         this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
     }
-    
+
     ngAfterViewInit() {
         if (this._deferredLoading) {
             // use timeout to allow the DOM to render before setting the data to the datagrid.
@@ -84,21 +84,21 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
                 this._deferredPlaylists = null;
             }, 0);
         }
-        
+
         this._columnsResizeManager.updateColumns(this._el.nativeElement);
     }
-    
+
     openActionsMenu(event: any, playlist: KalturaPlaylist) {
         if (this.actionsMenu) {
             this.buildMenu(playlist);
             this.actionsMenu.toggle(event);
         }
     }
-    
+
     ngOnDestroy() {
         this.actionsMenu.hide();
     }
-    
+
     buildMenu(playlist: ExtendedPlaylist): void {
         this._items = [
             {
@@ -112,8 +112,8 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
                 command: () => this.onActionSelected('view', playlist)
             }
         ];
-        
-        if (playlist.status !== KalturaEntryStatus.ready || playlist.isRapt) {
+
+        if (playlist.status !== KalturaEntryStatus.ready || playlist.isRapt || playlist.isPath) {
             this._items.shift();
         } else {
             const hasEmbedPermission = this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_EMBED_CODE);
@@ -121,7 +121,7 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
                 this._items[0].label = this._appLocalization.get('applications.content.table.previewInPlayer');
             }
         }
-        
+
         if (this._analyticsNewMainViewService.isAvailable() && playlist.isRapt) {
             this._items.push(
                 {
@@ -139,7 +139,7 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
                 command: () => this.onActionSelected('delete', playlist)
             }
         );
-        
+
         this._permissionsService.filterList(
             <{ id: string }[]>this._items,
             {
@@ -147,16 +147,16 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
             }
         );
     }
-    
-    
+
+
     onSelectionChange(event) {
         this.selectedPlaylistsChange.emit(event);
     }
-    
+
     onActionSelected(action: string, playlist: KalturaPlaylist) {
         this.actionSelected.emit({'action': action, 'playlist': playlist});
     }
-    
+
     onSortChanged(event) {
         if (event.field && event.order) {
             // primeng workaround: must check that field and order was provided to prevent reset of sort value
