@@ -11,6 +11,7 @@ import { PageExitVerificationService, UploadPageExitVerificationService } from '
 import { PreventPasswordAutofillDirective } from 'app-shared/kmc-shell/directives/prevent-password-autofill.directive';
 import { CheckboxModule } from 'primeng/checkbox';
 import { SharedModule } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
     imports: [
@@ -33,7 +34,7 @@ import { SharedModule } from 'primeng/api';
         EntryTypePipe,
         PreventPasswordAutofillDirective,
     ],
-    providers: []
+    providers: [MessageService]
 })
 export class KMCShellModule {
     constructor(@Optional() @Self()  _uploadPageExitVerificationService: UploadPageExitVerificationService,

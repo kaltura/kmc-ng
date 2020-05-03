@@ -108,6 +108,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ToastModule } from 'primeng/toast';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { MenuModule } from 'primeng/menu';
+import { KalturaRequestOptionsArgs } from "kaltura-ngx-client/lib/api/kaltura-request-options";
 
 const partnerProviders: any[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -118,6 +119,9 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
         clientTag: 'kmcng',
         chunkFileSize: 5 * 1024 * 1024
     };
+}
+export function kalturaClientDefaultOptionsFactory(): KalturaRequestOptionsArgs {
+    return  {};
 }
 
 @NgModule({
@@ -175,7 +179,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     AccessControlProfileModule.forRoot(),
     KMCPermissionsModule.forRoot(),
     TranscodingProfileCreationModule.forRoot(),
-    KalturaClientModule.forRoot(kalturaClientOptionsFactory),
+    KalturaClientModule.forRoot(kalturaClientOptionsFactory, kalturaClientDefaultOptionsFactory),
       KmcLogsModule.forRoot(),
       KalturaLoggerModule.forRoot('kmc'),
       ContextualHelpModule.forRoot(),

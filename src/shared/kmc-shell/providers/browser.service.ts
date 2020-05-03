@@ -2,7 +2,6 @@ import {EventEmitter, Injectable} from '@angular/core';
 import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
 import {IAppStorage} from '@kaltura-ng/kaltura-common';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
-import {Subject} from 'rxjs/Subject';
 import { Observable } from 'rxjs';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { Router, ActivatedRoute, NavigationExtras, NavigationEnd, RoutesRecognized } from '@angular/router';
@@ -59,7 +58,6 @@ export type AppStatus = {
 export class BrowserService implements IAppStorage {
 
     private _initialQueryParams: { [key: string]: any; } = {};
-    private _growlMessage = new Subject<GrowlMessage>();
     private _sessionStartedAt: Date = new Date();
     private _previousRoute: RoutesRecognized;
 

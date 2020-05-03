@@ -31,7 +31,6 @@
   "homepage": "https://github.com/kaltura/kmc-ng#readme",
   "scripts": {
     "setup": "node ./scripts/setup.js",
-    "postinstall": "ngcc",
     "build": "ng build",
     "build:prod": "node --max_old_space_size=8092 ./node_modules/@angular/cli/bin/ng build --prod",
     "build:analyze": "node --max_old_space_size=8092 ./node_modules/@angular/cli/bin/ng build --prod--preserve-symlinks --aot --extract-licenses --named-chunks --stats-json && webpack-bundle-analyzer dist/stats.json",
@@ -74,7 +73,7 @@
     "intl": "^1.2.5",
     "jquery": "~3.4.1",
     "jsnlog": "~2.26.2",
-    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-11.4.0-v20200210-132058.tgz",
+    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-11.4.0-v20200503-114328.tgz",
     "moment": "~2.22.2",
     "ngx-page-scroll": "~5.0.1",
     "ngx-webstorage": "~5.0.0",
