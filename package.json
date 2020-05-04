@@ -71,7 +71,7 @@
     "angularx-qrcode": "~1.5.1",
     "core-js": "^3.2.1",
     "intl": "^1.2.5",
-    "jquery": "~3.4.1",
+    "jquery": "~3.5.0",
     "jsnlog": "~2.26.2",
     "kaltura-ngx-client": "file:libs/kaltura-ngx-client-11.4.0-v20200503-114328.tgz",
     "moment": "~2.22.2",
