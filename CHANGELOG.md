@@ -1,6 +1,9 @@
 <a name="5.26.2"></a>
 ## [5.26.2](https://github.com/kaltura/kmc-ng/compare/v5.26.1...v5.26.2) (2020-05-04)
 
+### Bug Fixes
+
+* **content/playlists:** Handle path interactive videos in playlist list and edit views
 
 
 <a name="5.26.1"></a>
