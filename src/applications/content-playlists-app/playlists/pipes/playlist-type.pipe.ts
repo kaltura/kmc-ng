@@ -6,12 +6,12 @@ import {PlaylistsUtilsService} from "../../playlists-utils.service";
 @Pipe({name: 'playlistType'})
 
 export class PlaylistTypePipe implements PipeTransform {
-    
+
     constructor(
         private appLocalization: AppLocalization,
         private _playlistsUtilsService: PlaylistsUtilsService) {
     }
-    
+
     transform(value: KalturaPlaylist, isIcon: boolean): string {
         let className = "",
             playlistType = "";
@@ -28,6 +28,10 @@ export class PlaylistTypePipe implements PipeTransform {
                 case KalturaPlaylistType.staticList:
                     className = 'kIconPlaylist_Manual';
                     playlistType = this.appLocalization.get("applications.content.playlistType.staticList");
+                    break;
+                case KalturaPlaylistType.path:
+                    className = 'kIconplaylist_interactive_small';
+                    playlistType = this.appLocalization.get("applications.content.playlistType.interactive");
                     break;
                 default:
                     className = 'kIconUnknown';

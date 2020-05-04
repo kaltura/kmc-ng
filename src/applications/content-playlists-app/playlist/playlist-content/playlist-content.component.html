@@ -1,4 +1,5 @@
 <div [ngSwitch]="_playlistStore?.playlist?.playlistType">
   <kPlaylistContentManual *ngSwitchCase="_playlistTypes.staticList"></kPlaylistContentManual>
+  <kPlaylistContentManual *ngSwitchCase="_playlistTypes.path"></kPlaylistContentManual>
   <kPlaylistContentRuleBased *ngSwitchCase="_playlistTypes.dynamic"></kPlaylistContentRuleBased>
 </div>
