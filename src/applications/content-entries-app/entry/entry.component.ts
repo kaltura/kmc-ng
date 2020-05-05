@@ -209,7 +209,7 @@ export class EntryComponent implements OnInit, OnDestroy {
     }
 
     private _downloadEntry(entry: KalturaMediaEntry): void {
-	    if (entry.mediaType === KalturaMediaType.video) {
+	    if (entry.mediaType === KalturaMediaType.video || entry.mediaType === KalturaMediaType.audio) {
             this._bulkActionsPopup.open();
         } else {
             this._browserService.openLink(entry.downloadUrl);
