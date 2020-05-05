@@ -63,7 +63,7 @@
                         </td>
                         <td>
                             <p-inputSwitch class="kInputSwitch"
-                                            [disabled]="caption.isDefault"
+                                            [disabled]="caption.isDefault && caption.displayOnPlayer"
                                             (ngModelChange)="_widgetService.setDirty()"
                                             [(ngModel)]="caption.displayOnPlayer"></p-inputSwitch>
                             <span class="kInputSwitchLabel">
