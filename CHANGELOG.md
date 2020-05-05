@@ -5,6 +5,7 @@
 
 * **content/playlists:** Handle path interactive videos in playlist list and edit views
 * **entry/captions:** Enable "Display On player" for default captions when its set to false
+* **entry/download:** Open flavours selector for audio entries download
 
 
 <a name="5.26.1"></a>
