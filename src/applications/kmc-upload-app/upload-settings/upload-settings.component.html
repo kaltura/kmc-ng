@@ -77,11 +77,10 @@
                             </td>
                             <td *ngIf="creationType === _creationTypes.upload"
                                 [ngStyle]="{ 'width': '150px', 'overflow':'visible' }">
-                                <p-dropdown class="kFileType"
+                                <p-dropdown class="kFileType" #fileTypes
                                             [options]="_fileTypes"
                                             appendTo="body"
-                                            kDropdownCloseOnScroll
-                                            [scrollTarget]="_tableScrollableWrapper"
+                                            kDropdownCloseOnScroll [scrollTarget]="_tableScrollableWrapper" [dropdownComponent]="fileTypes"
                                             [(ngModel)]="file.mediaType"
                                             (onChange)="_updateFileValidityOnTypeChange(file)"
                                             [placeholder]="'applications.content.entryDetails.related.select' | translate"></p-dropdown>
