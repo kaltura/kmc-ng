@@ -15,6 +15,7 @@ import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entr
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { ISubscription } from 'rxjs/Subscription';
 
 export enum StreamTypes {
   kaltura,
@@ -30,6 +31,7 @@ export enum StreamTypes {
 })
 export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   private _showConfirmationOnClose = true;
+  private _stateChangeSubscription: ISubscription = null;
 
   public _selectedStreamType: StreamTypes = StreamTypes.kaltura;
   public kalturaLiveStreamData: KalturaLive = {
@@ -109,7 +111,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     if (this.parentPopupWidget) {
-      this.parentPopupWidget.state$
+      this._stateChangeSubscription = this.parentPopupWidget.state$
         .pipe(cancelOnDestroy(this))
         .subscribe(event => {
           if (event.state === PopupWidgetStates.Open) {
@@ -137,6 +139,10 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+      if (this._stateChangeSubscription) {
+          this._stateChangeSubscription.unsubscribe();
+          this._stateChangeSubscription = null;
+      }
   }
 
   submitCurrentSelectedForm() {

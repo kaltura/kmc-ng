@@ -18,11 +18,9 @@
     </div>
 
     <div [ngSwitch]="_selectedStreamType">
-      <kKalturaLiveStream #kalturaLiveStreamComponent *ngSwitchCase="_streamTypes.kaltura"
-                          [(data)]="kalturaLiveStreamData"></kKalturaLiveStream>
+      <kKalturaLiveStream #kalturaLiveStreamComponent *ngSwitchCase="_streamTypes.kaltura" [(data)]="kalturaLiveStreamData"></kKalturaLiveStream>
       <kManualLive #manualLiveComponent *ngSwitchCase="_streamTypes.manual" [(data)]="manualLiveData"></kManualLive>
       <kUniversalLive #universalLiveComponent *ngSwitchCase="_streamTypes.universal" [(data)]="universalLiveData"></kUniversalLive>
-
     </div>
   </div>
   </k-area-blocker>
