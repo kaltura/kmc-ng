@@ -421,7 +421,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   public copyEmbedCode(el):void{
     this._browserService.copyElementToClipboard(el);
-    this._browserService.showGrowlMessage({severity: 'success', detail: this._appLocalization.get('app.common.copySuccess')});
+    this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('app.common.copySuccess')});
   }
 
   public toggleEmbedParams():void{

@@ -38,10 +38,11 @@ export interface Confirmation {
 	alignMessage?: 'left' | 'center' | 'byContent';
 }
 
-export interface GrowlMessage {
+export interface ToastMessage {
   severity : 'success' | 'info' | 'error' | 'warn';
   summary?: string;
   detail?: string;
+  sticky? :boolean;
 }
 
 export declare type QueryParams = {
@@ -375,7 +376,7 @@ export class BrowserService implements IAppStorage {
         }
     }
 
-    public showGrowlMessage(message: GrowlMessage): void {
+    public showToastMessage(message: ToastMessage): void {
         if (message.detail || message.summary) {
             this._messageService.add(message);
         }

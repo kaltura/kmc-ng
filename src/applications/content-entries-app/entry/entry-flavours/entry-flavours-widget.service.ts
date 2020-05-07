@@ -487,7 +487,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                     this._browserService.openLink(dowmloadUrl);
                 },
                 error => {
-                    this._browserService.showGrowlMessage({
+                    this._browserService.showToastMessage({
                         severity: 'error',
                         detail: this._appLocalization.get('applications.content.entryDetails.flavours.downloadFailure')
                     });
@@ -572,7 +572,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                             break;
 
                         case TrackedFileStatuses.failure:
-                            this._browserService.showGrowlMessage({
+                            this._browserService.showToastMessage({
                                 severity: 'error',
                                 detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')
                             });
@@ -593,7 +593,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                     flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.importing');
                 },
                 () => {
-                    this._browserService.showGrowlMessage({
+                    this._browserService.showToastMessage({
                         severity: 'error',
                         detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')
                     });

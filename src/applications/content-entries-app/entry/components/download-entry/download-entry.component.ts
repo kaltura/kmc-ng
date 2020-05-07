@@ -94,7 +94,7 @@ export class DownloadEntryComponent implements OnInit, OnDestroy {
                 },
                 error => {
                     this.parentPopupWidget.close();
-                    this._browserService.showGrowlMessage({
+                    this._browserService.showToastMessage({
                         severity: 'error',
                         detail: this._appLocalization.get('applications.content.entryDetails.flavours.downloadFailure')
                     });
