@@ -2755,7 +2755,7 @@
                         "actions": {
                             "edit": "Edit",
                             "delete": "Delete",
-                            "token": "Refresh Token"
+                            "token": "Authorize"
                         }
                     },
                     "errors": {
