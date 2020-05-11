@@ -1,0 +1,62 @@
+<div class="kTable">
+    <p-table dataKey="id"
+             scrollHeight="100%"
+             [scrollable]="true"
+             [value]="_profiles"
+             [class.noResults]="!_profiles?.length"
+             [rowTrackBy]="rowTrackBy">
+        <ng-template pTemplate="header">
+            <tr>
+                <th class="kApplicationRootCategory">
+                    {{'applications.settings.integrationSettings.distribution.name' | translate}}
+                </th>
+                <th class="kPrivacyContextLabel">
+                    {{'applications.settings.integrationSettings.distribution.creation' | translate}}
+                </th>
+                <th class="kPrivacyContextLabel">
+                    {{'applications.settings.integrationSettings.distribution.update' | translate}}
+                </th>
+                <th class="kPrivacyContextLabel">
+                    {{'applications.settings.integrationSettings.distribution.account' | translate}}
+                </th>
+                <th class="kActionsColumn"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-profile>
+            <tr>
+                <td class="kApplicationRootCategory">
+                    <div class="kApplicationRootCategoryLabel kTableColumn" [kTooltip]="profile.name">
+                        {{profile.name}}
+                    </div>
+                </td>
+                <td class="kPrivacyContextLabel">
+                        <span class="kTableColumn" [kTooltip]="profile.createdAt | date">
+                            {{profile.createdAt | date}}
+                        </span>
+                </td>
+                <td class="kPrivacyContextLabel">
+                        <span class="kTableColumn" [kTooltip]="profile.updatedAt | date">
+                            {{profile.updatedAt | date}}
+                        </span>
+                </td>
+                <td class="kPrivacyContextLabel">
+                        <span class="kTableColumn" [kTooltip]="profile.username">
+                            {{profile.username}}
+                        </span>
+                </td>
+
+                <td class="kActionsColumn">
+                    <div class="kTableActions">
+                        <button type="button" pButton icon="kIconmore" class="kMoreActionsButton"
+                                (click)="_openActionsMenu($event, profile)"></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <div class="emptymessage">{{_emptyMessage}}</div>
+        </ng-template>
+    </p-table>
+    <p-menu #actionsmenu [popup]="true" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+</div>
