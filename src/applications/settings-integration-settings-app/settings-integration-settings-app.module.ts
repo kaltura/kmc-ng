@@ -19,6 +19,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
+import { DistributionComponent } from "./distribution/distribution.component";
+import { ProfilesTableComponent } from "./distribution/profiles-table/profiles-table.component";
 
 @NgModule({
   imports: [
@@ -46,7 +48,9 @@ import { MenuModule } from 'primeng/menu';
     EntitlementComponent,
     EntitlementTableComponent,
     NewEntitlementComponent,
-    EditEntitlementComponent
+    EditEntitlementComponent,
+    DistributionComponent,
+    ProfilesTableComponent
   ]
 })
 export class SettingsIntegrationSettingsAppModule {

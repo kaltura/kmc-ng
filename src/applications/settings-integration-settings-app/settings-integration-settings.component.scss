@@ -8,20 +8,19 @@
   .kRightColumn{
     margin-left: 30px;
   }
-  .kRightColumnShown {
-    max-width: 586px;
-  }
   .kColumn {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     width: 50%;
-
+      &.fillWidth {
+          width: 100%;
+      }
     .kAccountInfoContainer {
       background-color: white;
       flex: 0 0 auto;
       margin-bottom: 30px;
-      height: 46%;
+      height: 200px;
       padding: 30px 28px;
       min-height: 175px;
       max-height: 279px;

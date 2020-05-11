@@ -2696,7 +2696,23 @@
                     "notifications": {
                         "title": "Notifications",
                         "message": "Notifications are currently unavailable."
+                    },
+                    "distribution": {
+                        "title": "Distribution Profiles",
+                        "text": "YouTube Distribution Profiles"
                     }
+                },
+                "distribution": {
+                    "name": "Name",
+                    "creation": "Creation Date",
+                    "update": "Updated At",
+                    "account": "Youtube Account",
+                    "empty": "No profiles for this Kaltura account ",
+                    "loadError": "An error occurred while loading distribution profiles.",
+                    "deleteTitle": "Delete YouTube Profile",
+                    "deleteText": "The '{{0}}' YouTube profile will be delete and you will not be able to use if for distributing your videos to YouTube.\n\nAre you sure you want to continue?",
+                    "token": "Authorize YouTube API Access",
+                    "tokenText": "Click or copy the link below and login using your KMC credentials, then authenticate at Google using his Google Account that is linked with his YouTube channel."
                 },
                 "entitlement": {
                     "title": "Entitlement",
@@ -2738,7 +2754,8 @@
                         "privacyContextLabel": "Privacy Context Label",
                         "actions": {
                             "edit": "Edit",
-                            "delete": "Delete"
+                            "delete": "Delete",
+                            "token": "Authorize"
                         }
                     },
                     "errors": {

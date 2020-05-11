@@ -1,0 +1,22 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+  <div class="tableHolder">
+      <kProfilesTable [_profiles]="_profiles" (onActionSelected)="_onActionSelected($event)"></kProfilesTable>
+  </div>
+
+</k-area-blocker>
+
+<kPopupWidget #regenerateTokenPopup data-aid="regenerateToken" [popupWidth]="586" [popupHeight]="380" [modal]="true" [preventPageScroll]="true" [closeOnClickOutside]="false">
+<ng-template>
+    <div class="token">
+        <span class="tokenTitle">{{'applications.settings.integrationSettings.distribution.token' | translate}}</span>
+        <a (click)="onTokenClick(_currentProfile.apiAuthorizeUrl)">{{_currentProfile.apiAuthorizeUrl}}</a>
+        <span class="tokenText">{{'applications.settings.integrationSettings.distribution.tokenText' | translate}}</span>
+    </div>
+    <div class="footer">
+        <button type="button" class="kButtonBranded" pButton
+                label="{{'app.common.close' | translate}}"
+                (click)="regenerateTokenPopup.close()"></button>
+    </div>
+</ng-template>
+</kPopupWidget>
+
