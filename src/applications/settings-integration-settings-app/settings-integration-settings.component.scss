@@ -8,31 +8,31 @@
   .kRightColumn{
     margin-left: 30px;
   }
-  .kRightColumnShown {
-    max-width: 586px;
-  }
   .kColumn {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     width: 50%;
-
+      &.fillWidth {
+          width: 100%;
+      }
     .kAccountInfoContainer {
       background-color: white;
       flex: 0 0 auto;
       margin-bottom: 30px;
-      height: 46%;
+      height: 200px;
       padding: 30px 28px;
-      min-height: 175px;
-      max-height: 279px;
     }
 
     .kNotifications {
+      display: flex;
+      flex-direction: column;
       background-color: white;
       flex: 1 1 auto;
       padding-left: 30px;
       padding-top: 28px;
-      padding-bottom: 28px;
+      height: 100%;
+      overflow: hidden;
       .kTitle {
         color: $kGrayscale1;
         padding-bottom: 30px;
@@ -41,6 +41,13 @@
         font-size: 20px;
         font-weight: bold;
         line-height: 24px;
+      }
+      .profiles {
+        padding-bottom: 28px;
+        padding-top: 12px;
+        height: 100%;
+        flex: 1 1 auto;
+        overflow: hidden;
       }
     }
   }

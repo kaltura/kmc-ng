@@ -216,7 +216,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                     relativeTo: this._route,
                     queryParams: queryParams,
                     replaceUrl: true,
-                    queryParamsHandling: 'merge'
+                    queryParamsHandling: ''
                 });
         }
     }

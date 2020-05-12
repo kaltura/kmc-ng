@@ -1,0 +1,40 @@
+@import 'app-theme/_variables.scss';
+
+.tableHolder{
+    height: 100%;
+    margin-right: 24px;
+    overflow-y: auto;
+}
+.token{
+    color: $kGrayscale1;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    .tokenTitle{
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 24px;
+    }
+    .tokenText{
+        font-size: 15px;
+        font-weight: 300;
+        line-height: 20px;
+    }
+    a {
+        word-break: break-all;
+        width: 100%;
+        margin-bottom: 24px;
+    }
+}
+.footer {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    text-align: center;
+    border-top: 1px solid $kGrayscale4;
+    height: 64px;
+    button {
+        margin-top: 14px;
+        min-width: 80px;
+    }
+}

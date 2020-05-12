@@ -1,3 +1,23 @@
+<a name="5.27.0"></a>
+# [5.27.0](https://github.com/kaltura/kmc-ng/compare/v5.26.2...v5.27.0) (2020-05-11)
+
+
+### Features
+
+* **settings/integration-settings:** Add Youtube distribution profiles management ([#904](https://github.com/kaltura/kmc-ng/issues/904)) ([dab5c01](https://github.com/kaltura/kmc-ng/commit/dab5c01))
+
+
+
+<a name="5.26.2"></a>
+## [5.26.2](https://github.com/kaltura/kmc-ng/compare/v5.26.1...v5.26.2) (2020-05-04)
+
+### Bug Fixes
+
+* **content/playlists:** Handle path interactive videos in playlist list and edit views
+* **entry/captions:** Enable "Display On player" for default captions when its set to false
+* **entry/download:** Open flavours selector for audio entries download
+
+
 <a name="5.26.1"></a>
 ## [5.26.1](https://github.com/kaltura/kmc-ng/compare/v5.26.0...v5.26.1) (2020-04-22)
 

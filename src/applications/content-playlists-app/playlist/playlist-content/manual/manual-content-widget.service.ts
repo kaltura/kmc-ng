@@ -83,7 +83,7 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
 
   protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
     super._showLoader();
-    this._isRapt = this._playlistsUtilsService.isRapt(this.data);
+    this._isRapt = this._playlistsUtilsService.isRapt(this.data) || this._playlistsUtilsService.isPath(this.data);
     return this._getEntriesRequest()
       .pipe(cancelOnDestroy(this, this.widgetReset$))
       .map((entries: KalturaMediaEntry[]) => {
