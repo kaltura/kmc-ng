@@ -2712,7 +2712,7 @@
                     "deleteTitle": "Delete YouTube Profile",
                     "deleteText": "The '{{0}}' YouTube profile will be delete and you will not be able to use if for distributing your videos to YouTube.\n\nAre you sure you want to continue?",
                     "token": "Authorize YouTube API Access",
-                    "tokenText": "Click or copy the link below and login using your KMC credentials, then authenticate at Google using his Google Account that is linked with his YouTube channel."
+                    "tokenText": "Click or copy the link below and login using your KMC credentials, then authenticate at Google using your Google Account that is linked with your YouTube channel."
                 },
                 "entitlement": {
                     "title": "Entitlement",
