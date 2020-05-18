@@ -24,6 +24,8 @@ export class PlaylistIconPipe implements PipeTransform {
 
     if (typeof(playlistType) !== 'undefined' && playlistType !== null) {
       switch (playlistType) {
+        case KalturaPlaylistType.path:
+          return 'kIconplaylist_interactive_small';
         case KalturaPlaylistType.dynamic:
         case KalturaPlaylistType.external:
           return 'kIconPlaylist_RuleBased';
