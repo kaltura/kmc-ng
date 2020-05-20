@@ -1,3 +1,13 @@
+<a name="5.28.0"></a>
+# [5.28.0](https://github.com/kaltura/kmc-ng/compare/v5.27.0...v5.28.0) (2020-05-20)
+
+
+### Features
+
+* upgrade libraries to Angular 9 ([#905](https://github.com/kaltura/kmc-ng/issues/905)) ([7caac21](https://github.com/kaltura/kmc-ng/commit/7caac21))
+
+
+
 <a name="5.27.0"></a>
 # [5.27.0](https://github.com/kaltura/kmc-ng/compare/v5.26.2...v5.27.0) (2020-05-11)
 
