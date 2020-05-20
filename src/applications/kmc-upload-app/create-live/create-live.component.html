@@ -10,7 +10,7 @@
       <span class="kLabel">{{'applications.upload.prepareLive.streamTypeLabel' | translate}}</span>
       <ng-container *ngIf="!_manualStreamOnly">
         <div class="kRequired"></div>
-        <p-dropdown [options]="_availableStreamTypes" [(ngModel)]="_selectedStreamType" [autoWidth]="false"></p-dropdown>
+        <p-dropdown [options]="_availableStreamTypes" [(ngModel)]="_selectedStreamType"></p-dropdown>
       </ng-container>
       <ng-container *ngIf="_manualStreamOnly">
         <span class="kManualType">{{'applications.upload.prepareLive.streamTypes.manual' | translate}}</span>
@@ -18,11 +18,9 @@
     </div>
 
     <div [ngSwitch]="_selectedStreamType">
-      <kKalturaLiveStream #kalturaLiveStreamComponent *ngSwitchCase="_streamTypes.kaltura"
-                          [(data)]="kalturaLiveStreamData"></kKalturaLiveStream>
+      <kKalturaLiveStream #kalturaLiveStreamComponent *ngSwitchCase="_streamTypes.kaltura" [(data)]="kalturaLiveStreamData"></kKalturaLiveStream>
       <kManualLive #manualLiveComponent *ngSwitchCase="_streamTypes.manual" [(data)]="manualLiveData"></kManualLive>
       <kUniversalLive #universalLiveComponent *ngSwitchCase="_streamTypes.universal" [(data)]="universalLiveData"></kUniversalLive>
-
     </div>
   </div>
   </k-area-blocker>

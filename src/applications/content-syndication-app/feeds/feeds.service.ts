@@ -29,7 +29,7 @@ import {KalturaPlaylistOrderBy} from 'kaltura-ngx-client';
 import {KalturaPlaylistListResponse} from 'kaltura-ngx-client';
 import {SyndicationFeedDeleteAction} from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
-import {KalturaSyndicationFeedEntryCount} from 'kaltura-ngx-client';
+import {KalturaSyndicationFeedEntryCount, KalturaPlaylistType} from 'kaltura-ngx-client';
 import {SyndicationFeedGetEntryCountAction} from 'kaltura-ngx-client';
 import {SyndicationFeedAddAction} from 'kaltura-ngx-client';
 import {SyndicationFeedUpdateAction} from 'kaltura-ngx-client';
@@ -163,7 +163,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
         });
   }
 
-  private buildQueryRequest(): Observable<Feeds> {
+  private buildQueryRequest(): Observable<any>{
     try {
       // create request items
       const filter: KalturaBaseSyndicationFeedFilter = new KalturaBaseSyndicationFeedFilter({
@@ -233,7 +233,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
       new PlaylistListAction({filter, pager})
     )
       .map((response: KalturaPlaylistListResponse) => {
-        return response.objects.filter( (playlist: KalturaPlaylist) => !playlist.adminTags || (playlist.adminTags && playlist.adminTags.split(',').indexOf('raptentry') === -1));
+        return response.objects.filter( (playlist: KalturaPlaylist) => playlist.playlistType !== KalturaPlaylistType.path && (!playlist.adminTags || (playlist.adminTags && playlist.adminTags.split(',').indexOf('raptentry') === -1)));
       });
 
   }

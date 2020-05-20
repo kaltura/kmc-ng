@@ -45,7 +45,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
     const value = (list || []).map(item => item).join(',');
 
     if (value) {
-      requestFilter[requestFilterProperty] = value;
+      requestFilter[requestFilterProperty.toString()] = value;
     }
   }
 
@@ -109,7 +109,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
                     items: [new KalturaQuizAdvancedFilter({ isQuiz: KalturaNullableBoolean.trueValue })]
                 }));
             }
-            
+
           // filter video captions
             if (data.videoCaptions) {
                 advancedSearch.items.push(new KalturaSearchOperator({

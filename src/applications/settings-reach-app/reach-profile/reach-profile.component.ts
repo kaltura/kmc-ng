@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NotificationTypes, ActionTypes, ReachProfileStore } from './reach-profile-store.service';
+import {NotificationTypes, ActionTypes, ReachProfileStore, StatusArgs} from './reach-profile-store.service';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Observable } from 'rxjs';
@@ -109,7 +109,7 @@ export class ReachProfileComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this))
       .filter(Boolean)
       .subscribe(
-        status => {
+          (status: StatusArgs) => {
           this._showLoader = false;
           this._areaBlockerMessage = null;
           switch (status.action) {

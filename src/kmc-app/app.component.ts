@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import { ConfirmDialog } from 'primeng/confirmdialog';
-import { BrowserService, GrowlMessage } from 'app-shared/kmc-shell/providers/browser.service';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { OperationTagManagerService} from '@kaltura-ng/kaltura-common';
 import { NavigationEnd, Router } from '@angular/router';
 import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
@@ -30,7 +30,6 @@ export class AppComponent implements OnInit {
   @ViewChild('openEmailPopup', { static: true }) private _emailDialog: PopupWidgetComponent;
 
   public _isBusy: boolean = false;
-  public _growlMessages: GrowlMessage[] = [];
   public _confirmDialogAlignLeft = false;
   public _openEmailConfig: EmailConfig = {email: "", title: "", message:""};
   public _confirmationLabels = {
@@ -108,13 +107,6 @@ export class AppComponent implements OnInit {
         .subscribe((tags: {[key: string]: number}) => {
             this._isBusy = tags['block-shell'] > 0;
         });
-
-    // handle app growlMessages
-    this._browserService.growlMessage$.subscribe(
-      (message: GrowlMessage) => {
-        this._growlMessages = [ ...this._growlMessages, message ];
-      }
-    );
 
       // handle open Email event
       this._appEvents.event(OpenEmailEvent)

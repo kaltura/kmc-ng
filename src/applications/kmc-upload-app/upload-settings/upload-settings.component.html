@@ -8,7 +8,6 @@
                 <span>{{ 'applications.upload.uploadSettings.profile' | translate }}</span>
                 <p-dropdown class="kTranscodingProfile"
                             [options]="_transcodingProfiles"
-                            [autoWidth]="false"
                             [placeholder]="'applications.upload.uploadSettings.profilePlaceholder' | translate"
                             [formControl]="_transcodingProfileField">
                     <ng-template let-profile pTemplate="item">
@@ -78,12 +77,10 @@
                             </td>
                             <td *ngIf="creationType === _creationTypes.upload"
                                 [ngStyle]="{ 'width': '150px', 'overflow':'visible' }">
-                                <p-dropdown class="kFileType"
+                                <p-dropdown class="kFileType" #fileTypes
                                             [options]="_fileTypes"
-                                            [autoWidth]="false"
                                             appendTo="body"
-                                            kDropdownCloseOnScroll
-                                            [scrollTarget]="_tableScrollableWrapper"
+                                            kDropdownCloseOnScroll [scrollTarget]="_tableScrollableWrapper" [dropdownComponent]="fileTypes"
                                             [(ngModel)]="file.mediaType"
                                             (onChange)="_updateFileValidityOnTypeChange(file)"
                                             [placeholder]="'applications.content.entryDetails.related.select' | translate"></p-dropdown>

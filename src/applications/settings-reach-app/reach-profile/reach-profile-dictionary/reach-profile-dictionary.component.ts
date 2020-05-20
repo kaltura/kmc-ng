@@ -11,23 +11,23 @@ import { ReachProfileDictionaryWidget } from "./reach-profile-dictionary-widget.
 })
 export class ReachProfileDictionaryComponent implements OnInit, OnDestroy {
     public _currentProfile: KalturaReachProfile;
-    
+
     constructor(public _widgetService: ReachProfileDictionaryWidget,
                 public _profileStore: ReachProfileStore) {
     }
-    
+
     ngOnInit() {
         this._widgetService.attachForm();
-        
+
         this._widgetService.data$
             .pipe(cancelOnDestroy(this))
             .filter(Boolean)
             .subscribe(
-                data => {
+                (data: KalturaReachProfile) => {
                     this._currentProfile = data;
                 });
     }
-    
+
     ngOnDestroy() {
         this._widgetService.detachForm();
     }

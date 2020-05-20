@@ -19,7 +19,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 })
 export class BulkUploadMenuComponent {
   @Output() onClose = new EventEmitter<void>();
-  @ViewChild('fileDialog', { static: false }) fileDialog: FileDialogComponent;
+  @ViewChild('fileDialog') fileDialog: FileDialogComponent;
   @ViewChild('uploadSucceed', { static: true }) uploadSucceed: PopupWidgetComponent;
 
   private _selectedType: BulkUploadTypes;

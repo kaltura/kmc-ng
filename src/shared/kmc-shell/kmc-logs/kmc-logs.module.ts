@@ -9,11 +9,11 @@ import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-
 import { PowerUserConsoleComponent } from 'app-shared/kmc-shell/kmc-logs/power-user-console/power-user-console.component';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
-import { SharedModule } from 'primeng/shared';
+import { SharedModule } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
-    imports: <any[]>[
+    imports: [
         CommonModule,
         FormsModule,
         CheckboxModule,
@@ -24,21 +24,21 @@ import { DropdownModule } from 'primeng/dropdown';
         DropdownModule,
         ButtonModule
     ],
-    declarations: <any[]>[
+    declarations: [
         PowerUserConsoleComponent,
         LogsRecordComponent
     ],
-    exports: <any[]>[
+    exports: [
         PowerUserConsoleComponent,
         LogsRecordComponent
     ],
-    providers: <any[]>[]
+    providers: []
 })
 export class KmcLogsModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<KmcLogsModule> {
         return {
             ngModule: KmcLogsModule,
-            providers: <any[]>[
+            providers: [
                 KmcLoggerConfigurator
             ]
         };

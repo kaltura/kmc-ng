@@ -105,11 +105,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmationService } from 'primeng/api';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { CheckboxModule } from 'primeng/checkbox';
-import { GrowlModule } from 'primeng/growl';
+import { ToastModule } from 'primeng/toast';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { MenuModule } from 'primeng/menu';
+import { KalturaRequestOptionsArgs } from "kaltura-ngx-client/lib/api/kaltura-request-options";
 
-const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
+const partnerProviders: any[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
 export function kalturaClientOptionsFactory(): KalturaClientOptions {
 
@@ -119,9 +120,12 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
         chunkFileSize: 5 * 1024 * 1024
     };
 }
+export function kalturaClientDefaultOptionsFactory(): KalturaRequestOptionsArgs {
+    return  {};
+}
 
 @NgModule({
-  imports: <any>[
+  imports: [
     AuthModule.forRoot(),
     FormsModule,
     BrowserModule,
@@ -158,7 +162,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     CheckboxModule,
     ReactiveFormsModule,
     TooltipModule,
-    GrowlModule,
+    ToastModule,
     CopyToClipboardModule,
     KmcUploadAppModule.forRoot(),
     NewEntryUploadModule.forRoot(),
@@ -175,7 +179,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
     AccessControlProfileModule.forRoot(),
     KMCPermissionsModule.forRoot(),
     TranscodingProfileCreationModule.forRoot(),
-    KalturaClientModule.forRoot(kalturaClientOptionsFactory),
+    KalturaClientModule.forRoot(kalturaClientOptionsFactory, kalturaClientDefaultOptionsFactory),
       KmcLogsModule.forRoot(),
       KalturaLoggerModule.forRoot('kmc'),
       ContextualHelpModule.forRoot(),
@@ -185,7 +189,7 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       CaptionRequestAppModule,
       ColumnsResizeManagerModule.forRoot()
   ],
-  declarations: <any>[
+  declarations: [
     AppComponent,
       AppDefaultViewComponent,
     DashboardComponent,
@@ -214,15 +218,14 @@ export function kalturaClientOptionsFactory(): KalturaClientOptions {
       ProgressBarComponent,
       PersistLoginByKsComponent,
   ],
-  bootstrap: <any>[
+  bootstrap: [
     AppComponent
   ],
   exports: [],
-  providers: <any>[
+  providers: [
       ...partnerProviders,
-      {
-           provide: APP_STORAGE_TOKEN, useExisting: BrowserService },
-    ConfirmationService,
+      ConfirmationService,
+      { provide: APP_STORAGE_TOKEN, useExisting: BrowserService },
       { provide: KalturaLoggerInjectionToken, useClass: KalturaLogger }
   ]
 })

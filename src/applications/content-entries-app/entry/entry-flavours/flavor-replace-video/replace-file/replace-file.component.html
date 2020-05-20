@@ -9,7 +9,6 @@
                 <span>{{ 'applications.content.entryDetails.flavours.replaceVideo.transcodingProfile' | translate }}</span>
                 <p-dropdown class="kTranscodingProfile"
                             [options]="_transcodingProfilesOptions"
-                            [autoWidth]="false"
                             [placeholder]="'applications.content.entryDetails.flavours.replaceVideo.profilePlaceholder' | translate"
                             [formControl]="_transcodingProfileField"
                             (onChange)="_updateFlavorsOption(); _updateStorageProfile()">
@@ -110,14 +109,12 @@
                             </td>
                             <td [ngStyle]="{'width': '210px', 'overflow':'visible'}"
                                 *ngIf="_kmcPermissions.FEATURE_MULTI_FLAVOR_INGESTION | kNgIfPermitted">
-                                <p-dropdown class="kTranscodingProfile"
+                                <p-dropdown class="kTranscodingProfile" #transcodingProfile
                                             [options]="_flavorOptions"
                                             [class.kHasError]="file.errorToken === 'applications.upload.validation.selectFlavor'"
-                                            [autoWidth]="false"
                                             [disabled]="_flavorsFieldDisabled"
                                             appendTo="body"
-                                            kDropdownCloseOnScroll
-                                            [scrollTarget]="_tableScrollableWrapper"
+                                            kDropdownCloseOnScroll [scrollTarget]="_tableScrollableWrapper" [dropdownComponent]="transcodingProfile"
                                             [(ngModel)]="file.flavor"
                                             (onChange)="_updateFileValidityOnTypeChange(file)"
                                             [placeholder]="'applications.content.entryDetails.flavours.replaceVideo.select' | translate">

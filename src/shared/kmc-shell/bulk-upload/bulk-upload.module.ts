@@ -2,16 +2,16 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { BulkUploadService } from 'app-shared/kmc-shell/bulk-upload/bulk-upload.service';
 
 @NgModule({
-  imports: <any[]>[],
-  declarations: <any[]>[],
-  exports: <any[]>[],
-  providers: <any[]>[]
+  imports: [],
+  declarations: [],
+  exports: [],
+  providers: []
 })
 export class BulkUploadModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<BulkUploadModule> {
     return {
       ngModule: BulkUploadModule,
-      providers: <any[]>[
+      providers: [
         BulkUploadService
       ]
     };

@@ -167,6 +167,9 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
         }
       }
 
+      // filter bulkUploadObjectTypeIn
+      filter.bulkUploadObjectTypeIn = '1,2,3,4';
+
       // filters of joined list
       this._updateFilterWithJoinedList(data.uploadedItem, filter, 'bulkUploadObjectTypeIn');
       this._updateFilterWithJoinedList(data.status, filter, 'statusIn');
@@ -205,7 +208,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
     const value = (list || []).map(item => item).join(',');
 
     if (value) {
-      requestFilter[requestFilterProperty] = value;
+      requestFilter[requestFilterProperty.toString()] = value;
     }
   }
 

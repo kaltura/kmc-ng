@@ -13,7 +13,7 @@
             <div class="kRow kDictionary" *ngFor="let dictionary of _widgetService._dictionaries, let i = index">
                 <div class="kRow">
                     <span class="kLabel">{{'applications.settings.reach.dictionary.language' | translate}}</span>
-                    <p-dropdown [options]="_widgetService._languages" [(ngModel)]="dictionary.language" [autoWidth]="false" (onChange)="_widgetService._onDataChange(i)"></p-dropdown>
+                    <p-dropdown [options]="_widgetService._languages" [(ngModel)]="dictionary.language" (onChange)="_widgetService._onDataChange(i)"></p-dropdown>
                     <i class="kIconremove kRemove" [kTooltip]="'applications.settings.reach.dictionary.delete' | translate" (click)="_widgetService._deleteDictionary(i)"></i>
                 </div>
                 <div class="kRow">

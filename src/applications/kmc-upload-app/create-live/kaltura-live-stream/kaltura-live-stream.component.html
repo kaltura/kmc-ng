@@ -42,7 +42,7 @@
         <div class="kRequired"></div>
         <div>
           <p-dropdown class="kControl" formControlName="transcodingProfile"
-                      [options]="_availableTranscodingProfiles" [autoWidth]="false"></p-dropdown>
+                      [options]="_availableTranscodingProfiles"></p-dropdown>
         </div>
       </div>
 
@@ -64,7 +64,7 @@
           <p-inputSwitch class="kControl kInputSwitch" formControlName="enableRecording" (onChange)="_toggleRecordingSelectedOption($event.checked)"></p-inputSwitch>
           <span>{{_form.controls['enableRecording'].value ? ( 'app.common.on' | translate) : ( 'app.common.off' | translate)}}</span>
           <p-dropdown class="kControl kEnableRecordingOptions" formControlName="enableRecordingSelectedOption"
-                      [options]="_enableRecordingOptions" [autoWidth]="false"></p-dropdown>
+                      [options]="_enableRecordingOptions"></p-dropdown>
         </div>
       </div>
 

@@ -4,15 +4,15 @@ import {KalturaUIModule} from '@kaltura-ng/kaltura-ui';
 import {KeditHosterComponent} from 'app-shared/kmc-shared/kedit-hoster/kedit-hoster.component';
 
 @NgModule({
-  imports: <any[]>[
+  imports: [
       CommonModule,
       KalturaUIModule
   ],
-  declarations: <any[]>[
+  declarations: [
       KeditHosterComponent
   ],
-  exports: <any[]>[KeditHosterComponent],
-  providers: <any[]>[
+  exports: [KeditHosterComponent],
+  providers: [
   ]
 })
 export class KEditHosterModule {

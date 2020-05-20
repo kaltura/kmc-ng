@@ -12,7 +12,7 @@
                     <th [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
                         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                     </th>
-                    <th>
+                    <th [ngStyle]="{'width': '100%'}">
                         {{'applications.content.table.ruleName' | translate}}
                     </th>
                     <th [ngStyle]="{'width': '80px'}">
@@ -24,7 +24,7 @@
                     <th [ngStyle]="{'width': '120px'}">
                         {{'applications.content.table.orderBy' | translate}}
                     </th>
-                    <th [ngStyle]="{'width': '70px'}">
+                    <th [ngStyle]="{'width': '80px'}">
                         {{'applications.content.table.duration' | translate}}
                     </th>
                     <th [ngStyle]="{'width': '70px'}"
@@ -38,7 +38,7 @@
                     <td [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
                         <p-tableCheckbox [value]="rule"></p-tableCheckbox>
                     </td>
-                    <td>
+                    <td [ngStyle]="{'width': '100%'}">
                     <span class="kTitle kTableColumn" [kTooltip]="rule.name" (click)="_viewRule(rule)">
                         {{rule.name}}
                     </span>
@@ -46,7 +46,7 @@
                     <td [ngStyle]="{'width': '80px'}">{{rule.entriesCount}}</td>
                     <td [ngStyle]="{'width': '100px'}">{{rule.limit}}</td>
                     <td [ngStyle]="{'width': '120px'}">{{rule | playlistRuleOrderBy}}</td>
-                    <td [ngStyle]="{'width': '70px'}">{{rule.entriesDuration | kTime}}</td>
+                    <td [ngStyle]="{'width': '80px'}">{{rule.entriesDuration | kTime}}</td>
                     <td [ngStyle]="{'width': '70px'}"
                         *ngIf="_isNewPlaylist || (_kmcPermissions.PLAYLIST_UPDATE | kNgIfPermitted)">
                         <div class="kPlaylistRulesTableActions">

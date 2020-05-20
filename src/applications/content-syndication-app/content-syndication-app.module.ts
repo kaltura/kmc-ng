@@ -8,7 +8,7 @@ import {KMCShellModule} from 'app-shared/kmc-shell';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
-import {ButtonModule} from 'primeng/components/button/button';
+import {ButtonModule} from 'primeng/button';
 import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
 import {FeedsListComponent} from './feeds/feeds-list/feeds-list.component';
 import {FeedsTableComponent} from './feeds/feeds-table/feeds-table.component';

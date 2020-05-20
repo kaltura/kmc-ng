@@ -1,13 +1,4 @@
-import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    EventEmitter,
-    Input,
-    OnDestroy,
-    OnInit,
-    Output,
-    ViewChild
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, Directive } from '@angular/core';
 import { Menu } from 'primeng/menu';
 import { KalturaConversionProfileWithAsset } from '../transcoding-profiles-store/base-transcoding-profiles-store.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
@@ -15,6 +6,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { KalturaConversionProfileType } from 'kaltura-ngx-client';
 import { MenuItem } from 'primeng/api';
 
+@Directive()
 export abstract class TranscodingProfilesTableComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() set profiles(data: KalturaConversionProfileWithAsset[]) {
     if (!this._deferredLoading) {

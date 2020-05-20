@@ -12,11 +12,11 @@
       </div>
       <div class="kRow">
         <span class="kLabel">{{'applications.content.entryDetails.captions.language' | translate}}</span>
-        <p-dropdown [options]="_languages" [autoWidth]="false" formControlName="language"></p-dropdown>
+        <p-dropdown [options]="_languages" formControlName="language"></p-dropdown>
       </div>
       <div class="kRow" *ngIf="_newCaption">
         <span class="kLabel">{{'applications.content.entryDetails.captions.type' | translate}}</span>
-        <p-dropdown [options]="_captionFormats" [autoWidth]="false" formControlName="format"></p-dropdown>
+        <p-dropdown [options]="_captionFormats" formControlName="format"></p-dropdown>
       </div>
       <div class="kRow kSlider">
         <span class="kLabel">{{'applications.content.entryDetails.captions.accuracy' | translate}}</span>

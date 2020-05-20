@@ -10,30 +10,31 @@ import { EntryTypePipe } from 'app-shared/kmc-shell/pipes/entry-type.pipe';
 import { PageExitVerificationService, UploadPageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { PreventPasswordAutofillDirective } from 'app-shared/kmc-shell/directives/prevent-password-autofill.directive';
 import { CheckboxModule } from 'primeng/checkbox';
-import { SharedModule } from 'primeng/shared';
+import { SharedModule } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
-    imports: <any[]>[
+    imports: [
         CommonModule,
         FormsModule,
         CheckboxModule,
         SharedModule
     ],
-    declarations: <any[]>[
+    declarations: [
         AppContainerComponent,
         ReleaseNotesComponent,
         ScrollToTopComponent,
         EntryTypePipe,
         PreventPasswordAutofillDirective,
     ],
-    exports: <any[]>[
+    exports: [
         AppContainerComponent,
         ReleaseNotesComponent,
         ScrollToTopComponent,
         EntryTypePipe,
         PreventPasswordAutofillDirective,
     ],
-    providers: <any[]>[]
+    providers: [MessageService]
 })
 export class KMCShellModule {
     constructor(@Optional() @Self()  _uploadPageExitVerificationService: UploadPageExitVerificationService,
@@ -47,10 +48,10 @@ export class KMCShellModule {
         }
     }
 
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<KMCShellModule> {
         return {
             ngModule: KMCShellModule,
-            providers: <any[]>[
+            providers: [
                 BrowserService,
                 AppShellService,
                 PageExitVerificationService,

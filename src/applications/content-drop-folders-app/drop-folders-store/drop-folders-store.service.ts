@@ -267,7 +267,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
     const value = (list || []).map(item => item).join(',');
 
     if (value) {
-      requestFilter[requestFilterProperty] = value;
+      requestFilter[requestFilterProperty.toString()] = value;
     }
   }
 

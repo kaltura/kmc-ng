@@ -3,18 +3,18 @@ import { KalturaClientModule } from 'kaltura-ngx-client';
 import { TranscodingProfileManagement } from './transcoding-profile-management.service';
 
 @NgModule({
-  imports: <any[]>[
+  imports: [
     KalturaClientModule,
   ],
-  declarations: <any[]>[],
-  exports: <any[]>[],
-  providers: <any[]>[]
+  declarations: [],
+  exports: [],
+  providers: []
 })
 export class TranscodingProfileManagementModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<TranscodingProfileManagementModule> {
     return {
       ngModule: TranscodingProfileManagementModule,
-      providers: <any[]>[
+      providers: [
         TranscodingProfileManagement
       ]
     };

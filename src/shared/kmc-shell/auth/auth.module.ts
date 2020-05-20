@@ -6,12 +6,12 @@ import { AppBootstrap } from './app-bootstrap.service';
 import { InvalidKsInterceptorService } from './invalid-ks-interceptor.service';
 
 @NgModule({
-    imports: <any>[
+    imports: [
 
     ],
-    declarations: <any>[
+    declarations: [
     ],
-    providers: <any>[
+    providers: [
         AuthCanActivate,
         AppBootstrap,
         AppAuthentication,
@@ -21,10 +21,10 @@ export class AuthModule {
     constructor() {
     }
 
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<AuthModule> {
         return {
             ngModule: AuthModule,
-            providers: <any[]>[
+            providers: [
                 {
                     provide: HTTP_INTERCEPTORS,
                     useClass: InvalidKsInterceptorService,

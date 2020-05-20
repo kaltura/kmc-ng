@@ -24,7 +24,7 @@ export class TranscodingProfileDetailsComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this))
       .filter(Boolean)
       .subscribe(
-        data => {
+          (data: KalturaConversionProfileWithAsset) => {
           this._currentProfile = data;
           this._isNew = !this._currentProfile.id;
         });

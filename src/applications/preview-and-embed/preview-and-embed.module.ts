@@ -27,7 +27,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     InputTextareaModule,
     InputSwitchModule,
     RadioButtonModule,
-      QRCodeModule
+    QRCodeModule
   ],
   declarations: [
     PreviewEmbedComponent,

@@ -1,4 +1,4 @@
-import {OnDestroy} from '@angular/core';
+import { OnDestroy, Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
@@ -42,6 +42,7 @@ export interface ReachServicesFilters {
     languages: string;
 }
 
+@Injectable()
 export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> implements OnDestroy {
     private _services = {
         data: new BehaviorSubject<{ items: KalturaVendorCatalogItem[], totalCount: number }>({items: [], totalCount: 0}),

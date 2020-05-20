@@ -29,7 +29,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { MenuModule } from 'primeng/menu';
-import { SharedModule } from 'primeng/shared';
+import { SharedModule } from 'primeng/api';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CheckboxModule } from 'primeng/checkbox';
 
@@ -77,10 +77,10 @@ import { CheckboxModule } from 'primeng/checkbox';
   ]
 })
 export class KmcUploadAppModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<KmcUploadAppModule> {
     return {
       ngModule: KmcUploadAppModule,
-      providers: <any[]>[
+      providers: [
         KalturaLogger,
         {
           provide: KalturaLoggerName, useValue: 'upload-monitor'

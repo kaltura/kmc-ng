@@ -35,7 +35,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   @Input() media: KalturaPlaylist | KalturaMediaEntry;
 
-  @ViewChild('previewIframe', { static: false }) previewIframe: ElementRef;
+  @ViewChild('previewIframe') previewIframe: ElementRef;
 
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -421,7 +421,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   public copyEmbedCode(el):void{
     this._browserService.copyElementToClipboard(el);
-    this._browserService.showGrowlMessage({severity: 'success', detail: this._appLocalization.get('app.common.copySuccess')});
+    this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('app.common.copySuccess')});
   }
 
   public toggleEmbedParams():void{

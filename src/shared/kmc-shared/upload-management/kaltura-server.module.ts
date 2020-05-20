@@ -4,15 +4,15 @@ import { UploadFileAdapterToken, UploadManagementModule } from '@kaltura-ng/kalt
 import { KalturaUploadAdapter } from './kaltura-upload-adapter.service';
 
 @NgModule({
-    imports: <any[]>[
+    imports: [
         KalturaClientModule,
         UploadManagementModule
     ],
-    declarations: <any[]>[
+    declarations: [
     ],
-    exports: <any[]>[
+    exports: [
     ],
-    providers: <any[]>[
+    providers: [
         {
             provide : UploadFileAdapterToken,
             useClass : KalturaUploadAdapter,
