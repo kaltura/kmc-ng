@@ -167,6 +167,9 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
         }
       }
 
+      // filter bulkUploadObjectTypeIn
+      filter.bulkUploadObjectTypeIn = '1,2,3,4';
+
       // filters of joined list
       this._updateFilterWithJoinedList(data.uploadedItem, filter, 'bulkUploadObjectTypeIn');
       this._updateFilterWithJoinedList(data.status, filter, 'statusIn');
