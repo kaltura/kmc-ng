@@ -1,5 +1,9 @@
-<a name="5.28.0"></a>
-# [5.28.0](https://github.com/kaltura/kmc-ng/compare/v5.27.0...v5.28.0) (2020-05-20)
+<a name="6.0.0"></a>
+# [6.0.0](https://github.com/kaltura/kmc-ng/compare/v5.27.0...v6.0.0) (2020-05-20)
+
+### Bug Fixes
+
+* **content/bulk-log:** Updated filter to list only relevant bulk log types
 
 
 ### Features
