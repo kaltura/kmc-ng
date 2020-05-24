@@ -1,0 +1,12 @@
+{
+    "disableUserCache": false,
+    "player": {
+        "plugins": {},
+        "playback": {
+            "textLanguage": "auto"
+        }
+    },
+    "provider": {
+        "env": {}
+    }
+}

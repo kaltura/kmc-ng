@@ -115,6 +115,7 @@ ws --spa index.html
 1. Prepare a release `npm run release:prepare`.
    * open file `src/configuration/global-config.ts` and make sure `appVersion` was updated correctly.
    * Update KMCng version in deploy/config.ini to the current KMCng version: vX.X.X
+   * Update KMCng version in deploy_v7/config.ini to the current KMCng version: vX.X.X
    * commit your changes with commit message 'chore: update version of deployed assets'
 
 2. Update  `changelog.md` and `changelog-content.component.html` with new features (provided by product) and bug fixes
