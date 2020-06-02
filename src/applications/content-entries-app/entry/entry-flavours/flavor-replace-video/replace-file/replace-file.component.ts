@@ -469,7 +469,6 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         this._newReplaceVideoUpload.link(linkFileDataList, this.entry.id, Number(transcodingProfileId), this._selectedStorageProfile.id)
             .pipe(cancelOnDestroy(this))
-            .pipe(tag('block-shell'))
             .subscribe(this._replacementResultHandler);
     }
 
@@ -486,7 +485,6 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         this._newReplaceVideoUpload.import(importFileDataList, this.entry.id, Number(transcodingProfileId))
             .pipe(cancelOnDestroy(this))
-            .pipe(tag('block-shell'))
             .subscribe(this._replacementResultHandler);
     }
 
@@ -504,7 +502,6 @@ export class ReplaceFileComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this._newReplaceVideoUpload.upload(uploadFileDataList, this.entry.id, Number(transcodingProfileId))
             .pipe(cancelOnDestroy(this))
-            .pipe(tag('block-shell'))
             .filter(entryId => entryId === this.entry.id)
             .map(() => {})
             .subscribe(this._replacementResultHandler);
