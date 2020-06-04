@@ -16,7 +16,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ViewCategoryEntriesService } from 'app-shared/kmc-shared/events/view-category-entries';
 import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, TreeNode } from 'primeng/api';
 
 export interface CustomMenuItem extends MenuItem {
     metadata?: any;
@@ -67,6 +67,8 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         categories: [],
         categoriesMode: null
     };
+
+    public selectedSearchFields = '';
 
     constructor(public _entriesStore: EntriesStore,
                 private _entriesRefineFilters: EntriesRefineFiltersService,
@@ -407,5 +409,17 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
       this._reload();
     }
   }
+
+    public applySearchFields(selectedSearchFields: TreeNode[]): void {
+        this.selectedSearchFields = '';
+        if (selectedSearchFields && selectedSearchFields.length) {
+            selectedSearchFields.forEach((node, index) => {
+                this.selectedSearchFields += node.data;
+                if (index < selectedSearchFields.length -1 ) {
+                    this.selectedSearchFields += ',';
+                }
+            });
+        }
+    }
 }
 

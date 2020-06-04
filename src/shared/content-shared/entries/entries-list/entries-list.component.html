@@ -27,12 +27,15 @@
             </div>
 
             <div class="kFilters">
-              <input type="text"
-                     pInputText
-                     class="kSearchInput"
-                     [(ngModel)]="_query.freetext"
-                     (keyup.enter)="onFreetextChanged()"
-                     placeholder="{{'applications.content.entries.searchEntries' | translate}}">
+                <div class="searchHolder">
+                    <input type="text"
+                           pInputText
+                           class="kSearchInput"
+                           [(ngModel)]="_query.freetext"
+                           (keyup.enter)="onFreetextChanged()"
+                           placeholder="{{'applications.content.entries.searchEntries' | translate}}">
+                    <i class="kIconsettings-solid dropdown" [class.kSelected]="selectedSearchFields.length" #searchHolder></i>
+                </div>
               <div #categoriesFilterBtn class="kCategoriesFilter kDropdown">
                 <i class="kIconfolder" *ngIf="!_categoriesUpdating"></i>
               <div *ngIf="_categoriesUpdating" class="k-spinner-background kSpinnerBkg" kTooltip="{{'applications.content.categories.categoriesUpdateMsg' | translate}}">
@@ -150,4 +153,16 @@
                               [enforcedFilters] = "enforcedFilters"
                               [parentPopupWidget]="refinePopup"></k-entries-refine-filters>
   </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #searchPopup
+              data-aid="entriesSearchPopup"
+              [popupWidth]="250"
+              [popupHeight]="300"
+              placement="top"
+              [closeBtn]="false"
+              [targetRef]="searchHolder"
+              [targetOffset]="{'x':-223, 'y': 32}"
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'searchPopup'" [scrollOffset]="80">
+    <k-entries-search-filters [parentPopupWidget]="searchPopup" (searchFieldsSelected)="applySearchFields($event)"></k-entries-search-filters>
 </kPopupWidget>

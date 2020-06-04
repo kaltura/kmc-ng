@@ -389,6 +389,7 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
 body {
     kpopupwidget[data-aid="categoriesFilterPopup"],
     kpopupwidget[data-aid="entriesRefinePopup"],
+    kpopupwidget[data-aid="entriesSearchPopup"],
     kpopupwidget[data-aid="resultsLimitPopup"],
     kpopupwidget[data-aid="manageUsersRefinePopup"],
     kpopupwidget[data-aid="bulkLogRefinePopup"],
@@ -401,7 +402,6 @@ body {
         }
     }
 }
-
 div, span, tr, td, li {
     outline: none !important;
 }

@@ -1,0 +1,6 @@
+<div class="searchFields">
+    <p-tree [value]="searchFields" selectionMode="checkbox" [(selection)]="selectedSearchFields"></p-tree>
+    <div class="footer">
+        <button type="button" class="kButtonBranded" pButton label="{{'app.common.apply' | translate}}" (click)="applySearchFields()"></button>
+    </div>
+</div>

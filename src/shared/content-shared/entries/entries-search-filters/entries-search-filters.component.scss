@@ -1,0 +1,36 @@
+@import "app-theme/_variables.scss";
+
+.searchFields {
+    width: 250px;
+    height: 300px;
+    border-radius: 4px;
+    border: 1px solid $kGrayscale4;
+    overflow: hidden;
+    padding: 16px;
+    padding-top: 8px;
+    box-sizing: border-box;
+    position: relative;
+    .footer {
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        padding: 14px;
+        display: flex;
+        border-top: 1px solid $kGrayscale4;
+        align-items: center;
+        button {
+            margin-left: auto;
+        }
+    }
+}
+
+:host ::ng-deep p-tree .ui-tree .ui-treenode-label {
+    line-height: 40px;
+    font-size: 14px;
+    color: $kGrayscale1;
+}
+
+:host ::ng-deep p-tree .ui-tree .ui-tree-toggler {
+    display: none;
+}
