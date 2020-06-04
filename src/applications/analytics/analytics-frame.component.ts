@@ -100,7 +100,8 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
         const config = {
             kalturaServer: {
                 uri : serverConfig.kalturaServer.uri,
-                previewUIConf: serverConfig.kalturaServer.previewUIConf
+                previewUIConf: serverConfig.kalturaServer.previewUIConf,
+                previewUIConfV7: serverConfig.kalturaServer.previewUIConfV7
             },
             cdnServers: serverConfig.cdnServers,
             liveAnalytics: serverConfig.externalApps.liveAnalytics,

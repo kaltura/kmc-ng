@@ -60,6 +60,7 @@ export interface ServerConfig {
         defaultPrivileges?: string,
         deployUrl?: string,
         previewUIConf: number,
+        previewUIConfV7: number,
         resetPasswordUri?: string,
         freeTrialExpiration?: {
             trialPeriodInDays: number
@@ -237,7 +238,6 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
         if (configuration) {
             result = !!configuration.uri &&
                 !configuration.uri.match(/\s/g); // not contains white spaces
-
             if (result) {
                 configuration.uri = buildBaseUri(configuration.uri);
             }
