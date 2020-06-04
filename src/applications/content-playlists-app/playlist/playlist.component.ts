@@ -42,6 +42,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   public isValid = true;
   public isDirty = true;
   public _isRapt = false;
+  public _isPath = false;
   public _analyticsAllowed = false;
   public _enablePrevButton: boolean;
   public _enableNextButton: boolean;
@@ -117,6 +118,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
               case ActionTypes.PlaylistLoaded:
                 this._playlistName = this._playlistStore.playlist.name;
                 this._isRapt = this._playlistsUtilsService.isRapt(this._playlistStore.playlist);
+                this._isPath = this._playlistsUtilsService.isPath(this._playlistStore.playlist);
                 this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable(); // new analytics app is available
                 this._playlistTypeIcon = this._playlistStore.playlist.playlistType === KalturaPlaylistType.staticList
                   ? 'kIconPlaylist_Manual'
@@ -259,7 +261,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   public canLeave(): Observable<{ allowed: boolean }> {
     return this._playlistStore.canLeaveWithoutSaving();
   }
-  
+
   public _openRaptAnalytics(): void {
       if (this._analyticsAllowed) {
           this._router.navigate(['analytics/playlist'], { queryParams: { id: this._playlistStore.playlist.id } });

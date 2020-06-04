@@ -122,7 +122,7 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
             }
         }
 
-        if (this._analyticsNewMainViewService.isAvailable() && playlist.isRapt) {
+        if (this._analyticsNewMainViewService.isAvailable() && (playlist.isRapt || playlist.isPath)) {
             this._items.push(
                 {
                     id: 'analytics',
