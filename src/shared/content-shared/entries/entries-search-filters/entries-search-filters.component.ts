@@ -10,29 +10,10 @@ import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
   styleUrls: ['./entries-search-filters.component.scss']
 })
 export class EntriesSearchFiltersComponent implements  AfterViewInit, OnDestroy{
-    public selectedSearchFields: TreeNode;
+    public selectedSearchField = 'all';
+    public includeCaptions = true;
     @Input() parentPopupWidget: PopupWidgetComponent;
-    @Output() searchFieldsSelected = new EventEmitter<TreeNode>();
-
-    public searchFields: TreeNode[] = [
-        {
-        "label": "Title",
-        "data": "title"
-        },
-        {
-        "label": "Description",
-        "data": "description"
-        },
-        {
-        "label": "Tags",
-        "data": "tags"
-        },
-        {
-        "label": "Captions",
-        "data": "caprions"
-        }
-    ];
-
+    @Output() searchFieldSelected = new EventEmitter<{selectedSearchField: string, includeCaptions: boolean}>();
 
   constructor(private _appLocalization: AppLocalization) {
   }
@@ -43,7 +24,7 @@ export class EntriesSearchFiltersComponent implements  AfterViewInit, OnDestroy{
                 .pipe(cancelOnDestroy(this))
                 .subscribe(event => {
                     if (event.state === PopupWidgetStates.BeforeClose) {
-                        this.searchFieldsSelected.emit(this.selectedSearchFields);
+                        this.searchFieldSelected.emit({selectedSearchField: this.selectedSearchField, includeCaptions: this.includeCaptions});
                     }
                 });
         }

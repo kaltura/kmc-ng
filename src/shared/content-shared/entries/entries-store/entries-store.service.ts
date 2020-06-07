@@ -50,6 +50,8 @@ export interface MetadataProfileData {
 
 export interface EntriesFilters {
   freetext: string;
+  includeCaptions: boolean;
+  freetextSearchField: string;
   pageSize: number;
   pageIndex: number;
   sortBy: string;
@@ -245,6 +247,8 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
   protected _getTypeAdaptersMapping(): TypeAdaptersMapping<EntriesFilters> {
     return {
       freetext: new StringTypeAdapter(),
+      freetextSearchField: new StringTypeAdapter(),
+      includeCaptions: new BooleanTypeAdapter(),
       pageSize: new NumberTypeAdapter(),
       pageIndex: new NumberTypeAdapter(),
       sortBy: new StringTypeAdapter(),

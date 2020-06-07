@@ -6,7 +6,7 @@ import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-t
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaEntryStatus, KalturaMediaEntry, KalturaMediaType, KalturaSourceType } from 'kaltura-ngx-client';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { Menu } from 'primeng/menu';
 import { EntriesRefineFiltersService,
     RefineGroup } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
@@ -16,7 +16,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ViewCategoryEntriesService } from 'app-shared/kmc-shared/events/view-category-entries';
 import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { MenuItem, TreeNode } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 
 export interface CustomMenuItem extends MenuItem {
     metadata?: any;
@@ -58,6 +58,8 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
 
     public _query = {
         freetext: '',
+        freetextSearchField: '',
+        includeCaptions: true,
         createdAfter: null,
         createdBefore: null,
         pageIndex: 0,
@@ -280,6 +282,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
   private _restoreFiltersState(): void {
     this._updateComponentState(this._entriesStore.cloneFilters([
       'freetext',
+      'freetextSearchField',
       'pageSize',
       'pageIndex',
       'sortBy',
@@ -292,6 +295,10 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
   private _updateComponentState(updates: Partial<EntriesFilters>): void {
     if (typeof updates.freetext !== 'undefined') {
       this._query.freetext = updates.freetext || '';
+    }
+
+    if (typeof updates.freetextSearchField !== 'undefined') {
+      this._query.freetextSearchField = updates.freetextSearchField || '';
     }
 
     if (typeof updates.pageSize !== 'undefined') {
@@ -363,7 +370,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
       if (this._query.freetext.length > 0 && this._query.freetext.trim().length === 0){
           this._query.freetext = '';
       }else {
-          this._entriesStore.filter({freetext: this._query.freetext});
+          this._entriesStore.filter({freetext: this._query.freetext, freetextSearchField: this._query.freetextSearchField, includeCaptions: this._query.includeCaptions});
       }
   }
 
@@ -410,15 +417,14 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-    public applySearchFields(selectedSearchFields: TreeNode[]): void {
-        this.selectedSearchFields = '';
-        if (selectedSearchFields && selectedSearchFields.length) {
-            selectedSearchFields.forEach((node, index) => {
-                this.selectedSearchFields += node.data;
-                if (index < selectedSearchFields.length -1 ) {
-                    this.selectedSearchFields += ',';
-                }
-            });
+    public applySearchFields(fields: {selectedSearchField: string, includeCaptions: boolean}): void {
+        if (fields.selectedSearchField === 'all') {
+            this._query.freetextSearchField = '';
+            this._query.includeCaptions = fields.includeCaptions === true;
+            this._entriesStore.filter({freetext: this._query.freetext, freetextSearchField: this._query.freetextSearchField, includeCaptions: this._query.includeCaptions});
+        } else {
+            this._query.freetextSearchField = fields.selectedSearchField;
+            this._entriesStore.filter({freetext: this._query.freetext, freetextSearchField: fields.selectedSearchField, includeCaptions: this._query.includeCaptions});
         }
     }
 }

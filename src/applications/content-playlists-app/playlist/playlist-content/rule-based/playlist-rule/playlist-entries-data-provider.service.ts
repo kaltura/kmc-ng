@@ -275,6 +275,8 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
 
     return {
       freetext: '',
+      freetextSearchField: '',
+      includeCaptions: true,
       pageSize: pageSize,
       pageIndex: 0,
       sortBy: 'plays',

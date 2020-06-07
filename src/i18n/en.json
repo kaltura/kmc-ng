@@ -1173,7 +1173,13 @@
                 "privacyTypes": "Content Privacy: {{0}}",
                 "categoryListing": "Category Listing: {{0}}",
                 "contributionPolicy": "Contribution Policy: {{0}}",
-                "endUserPermissions": "End-User Permission: {{0}}"
+                "endUserPermissions": "End-User Permission: {{0}}",
+                "searchFields": {
+                    "all": "All Fields and Metadata",
+                    "includeCaptions": "Include Captions",
+                    "name": "Entry Name",
+                    "help": "Search Syntax"
+                }
             },
             "table": {
                 "thumbnail": "Thumbnail",
