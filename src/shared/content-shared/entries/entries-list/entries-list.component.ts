@@ -67,6 +67,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         categories: [],
         categoriesMode: null
     };
+    public searchFieldsTooltip = '';
 
     constructor(public _entriesStore: EntriesStore,
                 private _entriesRefineFilters: EntriesRefineFiltersService,
@@ -418,10 +419,12 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
 
     public applySearchFields(fields: {selectedSearchField: string, includeCaptions: boolean}): void {
         if (fields.selectedSearchField === 'all') {
+            this.searchFieldsTooltip = '';
             this._query.freetextSearchField = '';
             this._query.includeCaptions = fields.includeCaptions === true;
         } else {
             this._query.freetextSearchField = fields.selectedSearchField;
+            this.searchFieldsTooltip = this._appLocalization.get('applications.content.filters.searchFields.tooltips.' + fields.selectedSearchField);
         }
         if (this._query.freetext) {
             this._entriesStore.filter({

@@ -3,6 +3,8 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { TreeNode } from "primeng/api";
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
+import {BrowserService} from "app-shared/kmc-shell";
+import {serverConfig} from "config/server";
 
 @Component({
   selector: 'k-entries-search-filters',
@@ -15,7 +17,7 @@ export class EntriesSearchFiltersComponent implements  AfterViewInit, OnDestroy{
     @Input() parentPopupWidget: PopupWidgetComponent;
     @Output() searchFieldSelected = new EventEmitter<{selectedSearchField: string, includeCaptions: boolean}>();
 
-  constructor(private _appLocalization: AppLocalization) {
+  constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService,) {
   }
 
     ngAfterViewInit() {
@@ -36,6 +38,12 @@ export class EntriesSearchFiltersComponent implements  AfterViewInit, OnDestroy{
     public reset(): void {
       this.selectedSearchField = 'all';
       this.includeCaptions = true;
+    }
+
+    public openHelp() {
+        if (serverConfig.externalLinks.kaltura.search) {
+            this._browserService.openLink(serverConfig.externalLinks.kaltura.search);
+        }
     }
 
     ngOnDestroy(): void {

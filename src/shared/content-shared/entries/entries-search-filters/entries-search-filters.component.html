@@ -3,7 +3,8 @@
         <p-radioButton name="search" value="all" label="{{'applications.content.filters.searchFields.all' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
         <p-checkbox class="includeCaptions" [disabled]="selectedSearchField!=='all'" label="{{'applications.content.filters.searchFields.includeCaptions' | translate}}" [(ngModel)]="includeCaptions" binary="true"></p-checkbox>
         <p-radioButton name="search" value="nameLike" label="{{'applications.content.filters.searchFields.name' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
-        <p-radioButton name="search" value="userIdIn" label="{{'applications.content.filters.searchFields.owner' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
+        <p-radioButton name="search" value="searchTextMatchOr" label="{{'applications.content.filters.searchFields.description' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
+        <p-radioButton name="search" value="userIdEqual" label="{{'applications.content.filters.searchFields.owner' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
         <p-radioButton name="search" value="entitledUsersEditMatchOr" label="{{'applications.content.filters.searchFields.coeditor' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
         <p-radioButton name="search" value="entitledUsersPublishMatchOr" label="{{'applications.content.filters.searchFields.copublisher' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
         <p-radioButton name="search" value="captions" label="{{'applications.content.filters.searchFields.captions' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
@@ -11,7 +12,7 @@
         <p-radioButton name="search" value="creatorIdEqual" label="{{'applications.content.filters.searchFields.entryCreatorId' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
     </div>
     <div class="footer">
-        <a>{{'applications.content.filters.searchFields.help' | translate}}</a>
+        <a (click)="openHelp()">{{'applications.content.filters.searchFields.help' | translate}}</a>
         <button type="button" class="kButtonBranded" pButton label="{{'app.common.apply' | translate}}" (click)="applySearchFields()"></button>
     </div>
 </div>

@@ -94,6 +94,7 @@ export interface ServerConfig {
             support?: string,
             signUp?: string,
             contactUs?: string,
+            search?: string,
             upgradeAccount?: string,
             contactSalesforce?: string,
             dropFoldersManual?: string,

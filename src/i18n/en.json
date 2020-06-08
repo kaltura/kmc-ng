@@ -1185,7 +1185,17 @@
                     "captions": "Captions",
                     "entryId": "Entry ID",
                     "entryCreatorId": "Entry Creator ID",
-                    "help": "Help"
+                    "help": "Help",
+                    "tooltips": {
+                        "nameLike": "Search Field: Entry Name",
+                        "searchTextMatchOr": "Search Field: Description",
+                        "userIdIn": "Search Field: Owner",
+                        "entitledUsersEditMatchOr": "Search In: Co-Editor",
+                        "entitledUsersPublishMatchOr": "Search Field: Co-Publisher",
+                        "captions": "Search Field: Captions",
+                        "idIn": "Search Field: Entry ID",
+                        "creatorIdEqual": "Search Field: Entry Creator ID"
+                    }
                 }
             },
             "table": {

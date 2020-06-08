@@ -34,7 +34,7 @@
                            [(ngModel)]="_query.freetext"
                            (keyup.enter)="onFreetextChanged()"
                            placeholder="{{'applications.content.entries.searchEntries' | translate}}">
-                    <i class="kIconsettings-solid dropdown" [class.kSelected]="entriesSearchFilter.selectedSearchField!=='all'" #searchHolder></i>
+                    <i class="kIconsettings-solid dropdown" [class.kSelected]="entriesSearchFilter.selectedSearchField!=='all'" #searchHolder [kTooltip]="searchFieldsTooltip"></i>
                 </div>
               <div #categoriesFilterBtn class="kCategoriesFilter kDropdown">
                 <i class="kIconfolder" *ngIf="!_categoriesUpdating"></i>
