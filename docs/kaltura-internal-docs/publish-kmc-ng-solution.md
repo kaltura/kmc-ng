@@ -139,6 +139,7 @@ npm run build:prod
 kmc-ng-vX.X.X.zip
 | -> vX.X.X
   |----> deploy folder (copied from /deploy)
+  |----> deploy folder_v7 (copied from /deploy_v7)
   |----> app content (copied from /dist)
 ```
 
