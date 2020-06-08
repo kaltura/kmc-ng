@@ -2,6 +2,7 @@
     <p-radioButton name="search" value="all" label="{{'applications.content.filters.searchFields.all' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
     <p-checkbox class="includeCaptions" [disabled]="selectedSearchField!=='all'" label="{{'applications.content.filters.searchFields.includeCaptions' | translate}}" [(ngModel)]="includeCaptions" binary="true"></p-checkbox>
     <p-radioButton name="search" value="nameLike" label="{{'applications.content.filters.searchFields.name' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
+    <p-radioButton name="search" value="userIdIn" label="{{'applications.content.filters.searchFields.owner' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
 
     <div class="footer">
         <a>{{'applications.content.filters.searchFields.help' | translate}}</a>

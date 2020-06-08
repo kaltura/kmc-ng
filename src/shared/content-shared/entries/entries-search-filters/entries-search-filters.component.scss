@@ -14,6 +14,7 @@
     flex-direction: column;
     .includeCaptions {
         margin-left: 24px;
+        margin-bottom: 12px;
     }
     .footer {
         position: absolute;
@@ -32,7 +33,7 @@
             margin-right: 16px;
             flex-shrink: 0;
             color: #333333;
-            font-size: 15px;
+            font-size: 14px;
             text-decoration: underline;
             cursor: pointer;
             &:hover{

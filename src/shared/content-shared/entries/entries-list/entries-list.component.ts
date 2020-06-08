@@ -70,8 +70,6 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         categoriesMode: null
     };
 
-    public selectedSearchFields = '';
-
     constructor(public _entriesStore: EntriesStore,
                 private _entriesRefineFilters: EntriesRefineFiltersService,
                 private _appLocalization: AppLocalization,
@@ -421,11 +419,11 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         if (fields.selectedSearchField === 'all') {
             this._query.freetextSearchField = '';
             this._query.includeCaptions = fields.includeCaptions === true;
-            this._entriesStore.filter({freetext: this._query.freetext, freetextSearchField: this._query.freetextSearchField, includeCaptions: this._query.includeCaptions});
         } else {
             this._query.freetextSearchField = fields.selectedSearchField;
-            this._entriesStore.filter({freetext: this._query.freetext, freetextSearchField: fields.selectedSearchField, includeCaptions: this._query.includeCaptions});
         }
+        this._entriesStore.filter({freetext: this._query.freetext, freetextSearchField: this._query.freetextSearchField, includeCaptions: this._query.includeCaptions});
+
     }
 }
 

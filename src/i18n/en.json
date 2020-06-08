@@ -1178,7 +1178,9 @@
                     "all": "All Fields and Metadata",
                     "includeCaptions": "Include Captions",
                     "name": "Entry Name",
-                    "help": "Search Syntax"
+                    "description": "Description",
+                    "owner": "Owner",
+                    "help": "Help"
                 }
             },
             "table": {
