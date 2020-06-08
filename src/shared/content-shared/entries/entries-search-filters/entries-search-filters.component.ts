@@ -33,6 +33,11 @@ export class EntriesSearchFiltersComponent implements  AfterViewInit, OnDestroy{
         this.parentPopupWidget.close();
     }
 
+    public reset(): void {
+      this.selectedSearchField = 'all';
+      this.includeCaptions = true;
+    }
+
     ngOnDestroy(): void {
     }
 

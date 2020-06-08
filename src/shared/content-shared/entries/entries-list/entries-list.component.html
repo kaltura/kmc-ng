@@ -34,7 +34,7 @@
                            [(ngModel)]="_query.freetext"
                            (keyup.enter)="onFreetextChanged()"
                            placeholder="{{'applications.content.entries.searchEntries' | translate}}">
-                    <i class="kIconsettings-solid dropdown" [class.kSelected]="true" #searchHolder></i>
+                    <i class="kIconsettings-solid dropdown" [class.kSelected]="entriesSearchFilter.selectedSearchField!=='all'" #searchHolder></i>
                 </div>
               <div #categoriesFilterBtn class="kCategoriesFilter kDropdown">
                 <i class="kIconfolder" *ngIf="!_categoriesUpdating"></i>
@@ -77,6 +77,7 @@
               [refineFilters]="_refineFilters"
               [enforcedFilters] = "enforcedFilters"
               (onTagsBarVisible)="_isTagsBarVisible = $event"
+              (onClearAll)="onClearAllTags()"
               (onTagsChange)="onTagsChange()"></k-entries-list-tags>
         </div>
       </kSticky>
@@ -158,11 +159,11 @@
 <kPopupWidget #searchPopup
               data-aid="entriesSearchPopup"
               [popupWidth]="250"
-              [popupHeight]="300"
+              [popupHeight]="350"
               placement="top"
               [closeBtn]="false"
               [targetRef]="searchHolder"
               [targetOffset]="{'x':-223, 'y': 32}"
               kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'searchPopup'" [scrollOffset]="80">
-    <k-entries-search-filters [parentPopupWidget]="searchPopup" (searchFieldSelected)="applySearchFields($event)"></k-entries-search-filters>
+    <k-entries-search-filters #entriesSearchFilter [parentPopupWidget]="searchPopup" (searchFieldSelected)="applySearchFields($event)"></k-entries-search-filters>
 </kPopupWidget>

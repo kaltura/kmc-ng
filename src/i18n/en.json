@@ -1180,6 +1180,11 @@
                     "name": "Entry Name",
                     "description": "Description",
                     "owner": "Owner",
+                    "coeditor": "Co-Editor",
+                    "copublisher": "Co-Publisher",
+                    "captions": "Captions",
+                    "entryId": "Entry ID",
+                    "entryCreatorId": "Entry Creator ID",
                     "help": "Help"
                 }
             },

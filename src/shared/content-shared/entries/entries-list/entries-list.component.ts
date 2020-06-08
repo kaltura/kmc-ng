@@ -8,15 +8,13 @@ import { KalturaEntryStatus, KalturaMediaEntry, KalturaMediaType, KalturaSourceT
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { Menu } from 'primeng/menu';
-import { EntriesRefineFiltersService,
-    RefineGroup } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
-
-
+import { EntriesRefineFiltersService, RefineGroup } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ViewCategoryEntriesService } from 'app-shared/kmc-shared/events/view-category-entries';
 import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { MenuItem } from 'primeng/api';
+import { EntriesSearchFiltersComponent } from "app-shared/content-shared/entries/entries-search-filters/entries-search-filters.component";
 
 export interface CustomMenuItem extends MenuItem {
     metadata?: any;
@@ -41,7 +39,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
 
     @ViewChild('tags', { static: true }) private tags: StickyComponent;
     @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
-
+    @ViewChild('entriesSearchFilter', { static: true }) private entriesSearchFilter: EntriesSearchFiltersComponent;
 
   @Output() onActionsSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
 
@@ -323,6 +321,9 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  onClearAllTags() {
+    this.entriesSearchFilter.reset();
+  }
   onCategoriesModeChanged(categoriesMode) {
     this._entriesStore.filter({
       categoriesMode
@@ -422,7 +423,13 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         } else {
             this._query.freetextSearchField = fields.selectedSearchField;
         }
-        this._entriesStore.filter({freetext: this._query.freetext, freetextSearchField: this._query.freetextSearchField, includeCaptions: this._query.includeCaptions});
+        if (this._query.freetext) {
+            this._entriesStore.filter({
+                freetext: this._query.freetext,
+                freetextSearchField: this._query.freetextSearchField,
+                includeCaptions: this._query.includeCaptions
+            });
+        }
 
     }
 }
