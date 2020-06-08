@@ -1,3 +1,19 @@
+<a name="6.1.0"></a>
+# [6.1.0](https://github.com/kaltura/kmc-ng/compare/v6.0.0...v6.1.0) (2020-06-08)
+
+
+### Bug Fixes
+
+* **content/entry:** prevent infinite spinner when replacing media (SUP-22420) ([d670118](https://github.com/kaltura/kmc-ng/commit/d670118))
+* **playlists:** Support Path Analytics ([44c8281](https://github.com/kaltura/kmc-ng/commit/44c8281))
+
+
+### Features
+
+* **content/entries:** Provide search fields selection for free text search ([#909](https://github.com/kaltura/kmc-ng/issues/909)) ([a2f83a3](https://github.com/kaltura/kmc-ng/commit/a2f83a3))
+
+
+
 <a name="6.0.0"></a>
 # [6.0.0](https://github.com/kaltura/kmc-ng/compare/v5.27.0...v6.0.0) (2020-05-20)
 
