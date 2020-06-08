@@ -10,7 +10,7 @@
 
 ### Features
 
-* **content/entries:** Provide search fields selection for free text search ([#909](https://github.com/kaltura/kmc-ng/issues/909)) ([a2f83a3](https://github.com/kaltura/kmc-ng/commit/a2f83a3))
+* **content/entries:** Advanced Search Options ([#909](https://github.com/kaltura/kmc-ng/issues/909)) ([a2f83a3](https://github.com/kaltura/kmc-ng/commit/a2f83a3))
 
 
 
