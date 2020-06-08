@@ -39,6 +39,8 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
 
   }
 
+  private saveFreetextSearchField = '';
+
   private _updateFilterWithJoinedList(list: any[],
                                       requestFilter: KalturaMediaEntryFilter,
                                       requestFilterProperty: keyof KalturaMediaEntryFilter): void {
@@ -79,7 +81,27 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
 
           // filter 'freeText'
           if (data.freetext) {
-            filter.freeText = data.freetext;
+              if (data.freetextSearchField === '' || data.freetextSearchField === 'captions') {
+                  if (this.saveFreetextSearchField.length) {
+                      delete filter[this.saveFreetextSearchField];
+                      this.saveFreetextSearchField = '';
+                  }
+                  filter.freeText = data.freetext;
+                  if (data.freetextSearchField === '') {
+                      if (data.includeCaptions) {
+                          delete filter["excludedFreeTextGroups"];
+                      } else {
+                          filter.excludedFreeTextGroups = 'captions';
+                      }
+                  } else { // search only in captions
+                      filter.excludedFreeTextGroups = 'entry,category_entry,cue_point,metadata';
+                  }
+              } else {
+                  filter[data.freetextSearchField] = data.freetext;
+                  this.saveFreetextSearchField = data.freetextSearchField;
+              }
+          } else {
+              delete filter["excludedFreeTextGroups"];
           }
 
           // filter 'createdAt'
@@ -333,6 +355,8 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
 
     return {
       freetext: '',
+      freetextSearchField: '',
+      includeCaptions: true,
       pageSize: pageSize,
       pageIndex: 0,
       sortBy: 'createdAt',

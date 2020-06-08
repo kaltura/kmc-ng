@@ -34,6 +34,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
     @Input() showEnforcedFilters = false;
     @Output() onTagsBarVisible = new EventEmitter<boolean>();
     @Output() onTagsChange = new EventEmitter<void>();
+    @Output() onClearAll = new EventEmitter<void>();
 
     @Input() set refineFilters(groups: RefineGroup[]) {
         this._refineFiltersMap.clear();
@@ -123,6 +124,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
         if (this.enforcedFilters) {
             this._entriesStore.filter(this.enforcedFilters);
         }
+        this.onClearAll.emit();
     }
 
     ngOnInit() {
@@ -193,7 +195,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
         if (typeof updates.videoQuiz !== 'undefined') {
             this._syncTagOfVideoQuiz();
         }
-        
+
         if (typeof updates.videoCaptions !== 'undefined') {
             this._syncTagOfVideoCaptions();
         }

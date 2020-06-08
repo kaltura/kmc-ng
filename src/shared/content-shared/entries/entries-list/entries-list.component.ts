@@ -6,17 +6,15 @@ import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-t
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaEntryStatus, KalturaMediaEntry, KalturaMediaType, KalturaSourceType } from 'kaltura-ngx-client';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { Menu } from 'primeng/menu';
-import { EntriesRefineFiltersService,
-    RefineGroup } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
-
-
+import { EntriesRefineFiltersService, RefineGroup } from 'app-shared/content-shared/entries/entries-store/entries-refine-filters.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ViewCategoryEntriesService } from 'app-shared/kmc-shared/events/view-category-entries';
 import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { MenuItem } from 'primeng/api';
+import { EntriesSearchFiltersComponent } from "app-shared/content-shared/entries/entries-search-filters/entries-search-filters.component";
 
 export interface CustomMenuItem extends MenuItem {
     metadata?: any;
@@ -41,7 +39,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
 
     @ViewChild('tags', { static: true }) private tags: StickyComponent;
     @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
-
+    @ViewChild('entriesSearchFilter', { static: true }) private entriesSearchFilter: EntriesSearchFiltersComponent;
 
   @Output() onActionsSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
 
@@ -58,6 +56,8 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
 
     public _query = {
         freetext: '',
+        freetextSearchField: '',
+        includeCaptions: true,
         createdAfter: null,
         createdBefore: null,
         pageIndex: 0,
@@ -67,6 +67,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         categories: [],
         categoriesMode: null
     };
+    public searchFieldsTooltip = '';
 
     constructor(public _entriesStore: EntriesStore,
                 private _entriesRefineFilters: EntriesRefineFiltersService,
@@ -278,6 +279,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
   private _restoreFiltersState(): void {
     this._updateComponentState(this._entriesStore.cloneFilters([
       'freetext',
+      'freetextSearchField',
       'pageSize',
       'pageIndex',
       'sortBy',
@@ -290,6 +292,10 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
   private _updateComponentState(updates: Partial<EntriesFilters>): void {
     if (typeof updates.freetext !== 'undefined') {
       this._query.freetext = updates.freetext || '';
+    }
+
+    if (typeof updates.freetextSearchField !== 'undefined') {
+      this._query.freetextSearchField = updates.freetextSearchField || '';
     }
 
     if (typeof updates.pageSize !== 'undefined') {
@@ -316,6 +322,9 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  onClearAllTags() {
+    this.entriesSearchFilter.reset();
+  }
   onCategoriesModeChanged(categoriesMode) {
     this._entriesStore.filter({
       categoriesMode
@@ -361,7 +370,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
       if (this._query.freetext.length > 0 && this._query.freetext.trim().length === 0){
           this._query.freetext = '';
       }else {
-          this._entriesStore.filter({freetext: this._query.freetext});
+          this._entriesStore.filter({freetext: this._query.freetext, freetextSearchField: this._query.freetextSearchField, includeCaptions: this._query.includeCaptions});
       }
   }
 
@@ -407,5 +416,24 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
       this._reload();
     }
   }
+
+    public applySearchFields(fields: {selectedSearchField: string, includeCaptions: boolean}): void {
+        if (fields.selectedSearchField === 'all') {
+            this.searchFieldsTooltip = '';
+            this._query.freetextSearchField = '';
+            this._query.includeCaptions = fields.includeCaptions === true;
+        } else {
+            this._query.freetextSearchField = fields.selectedSearchField;
+            this.searchFieldsTooltip = this._appLocalization.get('applications.content.filters.searchFields.tooltips.' + fields.selectedSearchField);
+        }
+        if (this._query.freetext) {
+            this._entriesStore.filter({
+                freetext: this._query.freetext,
+                freetextSearchField: this._query.freetextSearchField,
+                includeCaptions: this._query.includeCaptions
+            });
+        }
+
+    }
 }
 

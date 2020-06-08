@@ -41,6 +41,7 @@ import { MenuModule } from 'primeng/menu';
 import { PaginatorModule } from 'primeng/paginator';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { InputTextModule } from 'primeng/inputtext';
+import { EntriesSearchFiltersComponent } from "app-shared/content-shared/entries/entries-search-filters/entries-search-filters.component";
 
 @NgModule({
   imports: [
@@ -82,6 +83,7 @@ import { InputTextModule } from 'primeng/inputtext';
     PrimeTableSortTransformPipe,
     ModerationPipe,
     EntriesRefineFiltersComponent,
+    EntriesSearchFiltersComponent,
     EntriesTableComponent,
     EntriesListComponent,
     EntriesListTagsComponent,

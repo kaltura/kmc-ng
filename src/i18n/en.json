@@ -1173,7 +1173,30 @@
                 "privacyTypes": "Content Privacy: {{0}}",
                 "categoryListing": "Category Listing: {{0}}",
                 "contributionPolicy": "Contribution Policy: {{0}}",
-                "endUserPermissions": "End-User Permission: {{0}}"
+                "endUserPermissions": "End-User Permission: {{0}}",
+                "searchFields": {
+                    "all": "All Fields and Metadata",
+                    "includeCaptions": "Include Captions",
+                    "name": "Entry Name",
+                    "description": "Description",
+                    "owner": "Owner",
+                    "coeditor": "Co-Editor",
+                    "copublisher": "Co-Publisher",
+                    "captions": "Captions",
+                    "entryId": "Entry ID",
+                    "entryCreatorId": "Entry Creator ID",
+                    "help": "Help",
+                    "tooltips": {
+                        "nameLike": "Search Field: Entry Name",
+                        "searchTextMatchOr": "Search Field: Description",
+                        "userIdIn": "Search Field: Owner",
+                        "entitledUsersEditMatchOr": "Search In: Co-Editor",
+                        "entitledUsersPublishMatchOr": "Search Field: Co-Publisher",
+                        "captions": "Search Field: Captions",
+                        "idIn": "Search Field: Entry ID",
+                        "creatorIdEqual": "Search Field: Entry Creator ID"
+                    }
+                }
             },
             "table": {
                 "thumbnail": "Thumbnail",

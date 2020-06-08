@@ -27,12 +27,15 @@
             </div>
 
             <div class="kFilters">
-              <input type="text"
-                     pInputText
-                     class="kSearchInput"
-                     [(ngModel)]="_query.freetext"
-                     (keyup.enter)="onFreetextChanged()"
-                     placeholder="{{'applications.content.entries.searchEntries' | translate}}">
+                <div class="searchHolder">
+                    <input type="text"
+                           pInputText
+                           class="kSearchInput"
+                           [(ngModel)]="_query.freetext"
+                           (keyup.enter)="onFreetextChanged()"
+                           placeholder="{{'applications.content.entries.searchEntries' | translate}}">
+                    <i class="kIconsettings-solid dropdown" [class.kSelected]="entriesSearchFilter.selectedSearchField!=='all'" #searchHolder [kTooltip]="searchFieldsTooltip"></i>
+                </div>
               <div #categoriesFilterBtn class="kCategoriesFilter kDropdown">
                 <i class="kIconfolder" *ngIf="!_categoriesUpdating"></i>
               <div *ngIf="_categoriesUpdating" class="k-spinner-background kSpinnerBkg" kTooltip="{{'applications.content.categories.categoriesUpdateMsg' | translate}}">
@@ -74,6 +77,7 @@
               [refineFilters]="_refineFilters"
               [enforcedFilters] = "enforcedFilters"
               (onTagsBarVisible)="_isTagsBarVisible = $event"
+              (onClearAll)="onClearAllTags()"
               (onTagsChange)="onTagsChange()"></k-entries-list-tags>
         </div>
       </kSticky>
@@ -150,4 +154,16 @@
                               [enforcedFilters] = "enforcedFilters"
                               [parentPopupWidget]="refinePopup"></k-entries-refine-filters>
   </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #searchPopup
+              data-aid="entriesSearchPopup"
+              [popupWidth]="250"
+              [popupHeight]="350"
+              placement="top"
+              [closeBtn]="false"
+              [targetRef]="searchHolder"
+              [targetOffset]="{'x':-223, 'y': 32}"
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'searchPopup'" [scrollOffset]="80">
+    <k-entries-search-filters #entriesSearchFilter [parentPopupWidget]="searchPopup" (searchFieldSelected)="applySearchFields($event)"></k-entries-search-filters>
 </kPopupWidget>

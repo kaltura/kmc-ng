@@ -67,12 +67,10 @@
         height: 88px;
         justify-content: space-between;
         padding-right: 12px;
-
         .kSearchInput {
-          width: 298px;
-          margin-right: 16px;
+             width: 298px;
+             margin-right: 16px;
         }
-
         .kCategoriesFilter, .kRefine {
           width: 258px;
           margin-right: 16px;
@@ -114,9 +112,24 @@
     margin-right: 36px;
     margin-left: 5px;
   }
+  .searchHolder{
+    position: relative;
+    i {
+        position: absolute;
+        right: 12px;
+        top: 6px;
+        font-size: 24px;
+        cursor: pointer;
+        color: $kGrayscale4;
+        &.kSelected {
+            color: $kPrimary;
+        }
+    }
+  }
   .kSearchInput {
     background: $kMagnifyingGlassBkg;
     padding-left: 38px;
+    padding-right: 32px;
     margin-right: 8px;
     width: 250px;
   }
@@ -190,7 +203,7 @@
       margin-right: 12px;
       margin-left: 8px;
       font-size: 24px;
-      color: $kGrayscale4;
+      color: $kGrayscale3;
       &.dropdown {
         font-size: 10px;
       }
@@ -218,6 +231,7 @@
 :host{
   width: 100%;
 }
+
 :host ::ng-deep .kStickyClass {
   border-bottom: 1px solid $kGrayscale5;
 }
@@ -253,3 +267,4 @@
     min-width: 70px;
   }
 }
+
