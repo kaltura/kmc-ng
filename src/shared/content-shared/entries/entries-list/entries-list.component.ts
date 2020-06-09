@@ -323,6 +323,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   onClearAllTags() {
+    this.searchFieldsTooltip = '';
     this.entriesSearchFilter.reset();
   }
   onCategoriesModeChanged(categoriesMode) {

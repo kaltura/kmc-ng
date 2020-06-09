@@ -3,7 +3,7 @@
         <p-radioButton name="search" value="all" label="{{'applications.content.filters.searchFields.all' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
         <p-checkbox class="includeCaptions" [disabled]="selectedSearchField!=='all'" label="{{'applications.content.filters.searchFields.includeCaptions' | translate}}" [(ngModel)]="includeCaptions" binary="true"></p-checkbox>
         <p-radioButton name="search" value="nameLike" label="{{'applications.content.filters.searchFields.name' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
-        <p-radioButton name="search" value="searchTextMatchOr" label="{{'applications.content.filters.searchFields.description' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
+        <p-radioButton name="search" value="tagsMultiLikeOr" label="{{'applications.content.filters.searchFields.tags' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
         <p-radioButton name="search" value="userIdEqual" label="{{'applications.content.filters.searchFields.owner' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
         <p-radioButton name="search" value="entitledUsersEditMatchOr" label="{{'applications.content.filters.searchFields.coeditor' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>
         <p-radioButton name="search" value="entitledUsersPublishMatchOr" label="{{'applications.content.filters.searchFields.copublisher' | translate}}" [(ngModel)]="selectedSearchField"></p-radioButton>

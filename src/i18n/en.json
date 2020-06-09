@@ -1179,6 +1179,7 @@
                     "includeCaptions": "Include Captions",
                     "name": "Entry Name",
                     "description": "Description",
+                    "tags": "Tags",
                     "owner": "Owner",
                     "coeditor": "Co-Editor",
                     "copublisher": "Co-Publisher",
@@ -1189,7 +1190,8 @@
                     "tooltips": {
                         "nameLike": "Search Field: Entry Name",
                         "searchTextMatchOr": "Search Field: Description",
-                        "userIdIn": "Search Field: Owner",
+                        "tagsMultiLikeOr": "Search Field: Tags",
+                        "userIdEqual": "Search Field: Owner",
                         "entitledUsersEditMatchOr": "Search In: Co-Editor",
                         "entitledUsersPublishMatchOr": "Search Field: Co-Publisher",
                         "captions": "Search Field: Captions",
