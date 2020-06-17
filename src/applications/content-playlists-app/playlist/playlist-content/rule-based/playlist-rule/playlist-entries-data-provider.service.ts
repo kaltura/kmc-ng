@@ -71,7 +71,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
           const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
           advancedSearch.type = KalturaSearchOperatorType.searchAnd;
 
-          if (data.videoQuiz || data.videoCaptions) {
+          if (data.videoQuiz || data.videoCaptions || data.videoNoCaptions) {
               // not supported by rulebased playlists, ignore it
           }
 
@@ -298,7 +298,8 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
       limits: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults,
       youtubeVideo: false,
       videoQuiz: false,
-      videoCaptions: false
+      videoCaptions: false,
+      videoNoCaptions: false
     };
   }
 }
