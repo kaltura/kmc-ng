@@ -21,7 +21,7 @@ export interface TagItem {
     disabled?: boolean;
 }
 
-const refineListsType: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions', 'youtubeVideo', 'videoQuiz', 'videoCaptions'];
+const refineListsType: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions', 'youtubeVideo', 'videoQuiz', 'videoCaptions', 'videoNoCaptions'];
 
 @Component({
     selector: 'k-entries-list-tags',
@@ -66,7 +66,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             tag.dataFetchSubscription = null;
         }
 
-        const booleanFilters = ['youtubeVideo', 'videoQuiz', 'videoCaptions'];
+        const booleanFilters = ['youtubeVideo', 'videoQuiz', 'videoCaptions', 'videoNoCaptions'];
         if (tag.type === 'categories' || (refineListsType.indexOf(tag.type) > -1 && booleanFilters.indexOf(tag.type) === -1)) {
             // remove tag of type list from filters
             const previousData = this._entriesStore.cloneFilter(tag.type, []);
@@ -112,6 +112,9 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                     break;
                 case 'videoCaptions':
                     this._entriesStore.filter({ videoCaptions: false });
+                    break;
+                case 'videoNoCaptions':
+                    this._entriesStore.filter({ videoNoCaptions: false });
                     break;
                 default:
                     break;
@@ -198,6 +201,10 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
         if (typeof updates.videoCaptions !== 'undefined') {
             this._syncTagOfVideoCaptions();
+        }
+
+        if (typeof updates.videoNoCaptions !== 'undefined') {
+            this._syncTagOfVideoNoCaptions();
         }
 
         refineListsType.forEach(listType => {
@@ -320,6 +327,26 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 value: currentVideoCaptionsValue,
                 label: this._appLocalization.get(`applications.content.filters.videoCaptions`),
                 tooltip: this._appLocalization.get(`applications.content.filters.videoCaptions`)
+            });
+        }
+    }
+
+    private _syncTagOfVideoNoCaptions(): void {
+        const previousItem = this._tags.findIndex(item => item.type === 'videoNoCaptions');
+        if (previousItem !== -1) {
+            this._tags.splice(
+                previousItem,
+                1);
+        }
+
+        const currentVideoNoCaptionsValue = this._entriesStore.cloneFilter('videoNoCaptions', null);
+
+        if (currentVideoNoCaptionsValue) {
+            this._tags.push({
+                type: 'videoNoCaptions',
+                value: currentVideoNoCaptionsValue,
+                label: this._appLocalization.get(`applications.content.filters.videoNoCaptions`),
+                tooltip: this._appLocalization.get(`applications.content.filters.videoNoCaptions`)
             });
         }
     }

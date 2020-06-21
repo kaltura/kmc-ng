@@ -140,6 +140,14 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
                 }));
             }
 
+          // filter video without captions
+            if (data.videoNoCaptions) {
+                advancedSearch.items.push(new KalturaSearchOperator({
+                    type: KalturaSearchOperatorType.searchOr,
+                    items: [new KalturaEntryCaptionAdvancedFilter({ hasCaption: KalturaNullableBoolean.falseValue })]
+                }));
+            }
+
           // filter 'distribution'
           if (data.distributions && data.distributions.length > 0) {
             const distributionItem = new KalturaSearchOperator({
@@ -379,6 +387,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
       youtubeVideo: false,
       videoQuiz: false,
       videoCaptions: false,
+      videoNoCaptions: false,
     };
   }
 }

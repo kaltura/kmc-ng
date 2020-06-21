@@ -1160,6 +1160,7 @@
                 "youtubeVideo": "Youtube video",
                 "videoQuiz": "Video with Quiz",
                 "videoCaptions": "Video with Captions",
+                "videoNoCaptions": "Video without Captions",
                 "preferences": {
                     "preferences": "Preferences",
                     "filterPreferences": "Filter Preferences",
