@@ -5,6 +5,7 @@
 ### Features
 
 * **content/entries:** Support entries description field in free text advanced search options ([f45dc03](https://github.com/kaltura/kmc-ng/commit/f45dc03))
+* **content/entries:** Filter for entries without captions ([b858417](https://github.com/kaltura/kmc-ng/commit/b858417))
 
 
 
