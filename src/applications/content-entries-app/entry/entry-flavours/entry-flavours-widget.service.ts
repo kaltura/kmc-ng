@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaAPIException, KalturaClient, KalturaMultiResponse, KalturaRequestOptions } from 'kaltura-ngx-client';
+import { FlavorAssetGetDownloadUrlAction, KalturaAPIException, KalturaClient, KalturaMultiResponse, KalturaRequestOptions } from 'kaltura-ngx-client';
 import { KalturaFlavorAsset } from 'kaltura-ngx-client';
 import { KalturaFlavorAssetWithParams } from 'kaltura-ngx-client';
 import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client';
@@ -22,7 +22,6 @@ import { KalturaUrlResource } from 'kaltura-ngx-client';
 import { KalturaContentResource } from 'kaltura-ngx-client';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
 import { Flavor } from './flavor';
-import { FlavorAssetGetUrlAction } from 'kaltura-ngx-client';
 import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client';
 import { EntryWidget } from '../entry-widget';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
@@ -41,7 +40,6 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { EntryStore } from '../entry-store.service';
 import { KalturaStorageProfile } from 'kaltura-ngx-client';
 import { ConversionProfileAssetParamsListAction } from 'kaltura-ngx-client';
-import { ConversionProfileGetAction } from 'kaltura-ngx-client';
 import { StorageProfileListAction } from 'kaltura-ngx-client';
 import { KalturaStorageProfileFilter } from 'kaltura-ngx-client';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client';
@@ -478,7 +476,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
 
     public downloadFlavor(flavor: Flavor): void {
         const id = flavor.flavorAsset.id;
-        this._kalturaServerClient.request(new FlavorAssetGetUrlAction({
+        this._kalturaServerClient.request(new FlavorAssetGetDownloadUrlAction({
             id: id
         }))
             .pipe(cancelOnDestroy(this, this.widgetReset$))
