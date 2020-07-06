@@ -1,7 +1,8 @@
 {
     "kalturaServer": {
         "uri" : "www.kaltura.com",
-        "previewUIConf": 38524931
+        "previewUIConf": 38524931,
+        "previewUIConfV7":45948622
     },
     "cdnServers": {
         "serverUri": "http://cdnapi.kaltura.com",
