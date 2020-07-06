@@ -1,3 +1,13 @@
+<a name="6.2.1"></a>
+## [6.2.1](https://github.com/kaltura/kmc-ng/compare/v6.2.0...v6.2.1) (2020-07-06)
+
+
+### Bug Fixes
+
+* **content/entry:** Allow downloading flavors when using access control restrictions ([be5fa44](https://github.com/kaltura/kmc-ng/commit/be5fa44))
+
+
+
 <a name="6.2.0"></a>
 # [6.2.0](https://github.com/kaltura/kmc-ng/compare/v6.1.0...v6.2.0) (2020-06-22)
 
