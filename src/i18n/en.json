@@ -1241,7 +1241,7 @@
                 "nameTooltip": "{{0}}\nTags:\n{{1}}",
                 "download": "Download",
                 "editor": "Launch Editor",
-                "captionRequest": "Caption Request",
+                "captionRequest": "Captions & Enrich",
                 "analytics": "View Analytics"
             },
             "paginator": {
@@ -1395,7 +1395,7 @@
                 "dismiss": "Dismiss"
             },
             "bulkActions": {
-                "captionRequest": "Caption Request",
+                "captionRequest": "Captions & Enrich",
                 "setScheduling": "Set Scheduling",
                 "setAccessControl": "Set Access Control",
                 "addRemovePublishers": "Add / Remove Co-Publishers",
@@ -1791,7 +1791,7 @@
                 "captions": {
                     "captions": "Captions",
                     "add": "Add Caption",
-                    "request": "Request Captions",
+                    "request": "Captions & Enrich",
                     "label": "Label",
                     "type": "File Type",
                     "language": "Language",
@@ -3199,7 +3199,7 @@
            "releaseSupports": "This release supports analytics for “Live” entries only. For all other media, please <a href=\"{{0}}\" target=\"_blank\">login to the legacy KMC</a> to view and create analytics and reports. Analytics for all media should be available soon"
         },
         "reach": {
-            "captionRequests": "Caption Requests",
+            "captionRequests": "Captions & Enrich",
             "addServiceRule": "Add Service Rule"
         }
     },
