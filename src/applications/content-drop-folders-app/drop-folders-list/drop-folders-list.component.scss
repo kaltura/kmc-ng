@@ -18,7 +18,16 @@
     background: $kMagnifyingGlassBkg;
     margin-right: 8px;
     padding: 9px 4px 8px 38px;
-
+      &::placeholder {
+          color: $kGrayscale3;
+          opacity: 1;
+      }
+      &:-ms-input-placeholder {
+          color: $kGrayscale3;
+      }
+      &::-ms-input-placeholder {
+          color: $kGrayscale3;
+      }
     &:focus {
       background-color: white;
     }
@@ -182,7 +191,7 @@
     i {
       margin-right: 12px;
       margin-left: 8px;
-      color: $kGrayscale4;
+      color: $kGrayscale3;
       font-size: 24px;
       &.dropdown {
         font-size: 10px;

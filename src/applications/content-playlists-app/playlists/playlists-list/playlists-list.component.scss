@@ -98,6 +98,16 @@
 		margin-right: 8px;
 		padding: 9px 4px 8px 38px;
 		width: 260px;
+        &::placeholder {
+            color: $kGrayscale3;
+            opacity: 1;
+        }
+        &:-ms-input-placeholder {
+            color: $kGrayscale3;
+        }
+        &::-ms-input-placeholder {
+            color: $kGrayscale3;
+        }
 	}
 	.kTagContent {
 		display: flex;
@@ -160,7 +170,7 @@
         i {
             margin-right: 12px;
             margin-left: 8px;
-            color: $kGrayscale4;
+            color: $kGrayscale3;
         }
         .kIconfilter {
 			font-size: 24px;

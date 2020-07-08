@@ -88,6 +88,16 @@
     padding-left: 38px;
     margin-right: 8px;
     width: 260px;
+      &::placeholder {
+          color: $kGrayscale3;
+          opacity: 1;
+      }
+      &:-ms-input-placeholder {
+          color: $kGrayscale3;
+      }
+      &::-ms-input-placeholder {
+          color: $kGrayscale3;
+      }
     &:focus {
       background-color: white;
     }
@@ -131,7 +141,7 @@
       margin-right: 12px;
       margin-left: 8px;
       font-size: 24px;
-      color: $kGrayscale4;
+      color: $kGrayscale3;
       &.dropdown {
         font-size: 10px;
       }
