@@ -1,3 +1,13 @@
+<a name="6.2.2"></a>
+## [6.2.2](https://github.com/kaltura/kmc-ng/compare/v6.2.1...v6.2.2) (2020-07-12)
+
+
+### Bug Fixes
+
+* **content:** style fixes for search field and filter icons ([874227a](https://github.com/kaltura/kmc-ng/commit/874227a))
+
+
+
 <a name="6.2.1"></a>
 ## [6.2.1](https://github.com/kaltura/kmc-ng/compare/v6.2.0...v6.2.1) (2020-07-06)
 
