@@ -1,12 +1,7 @@
 <div class="kLoginContainer" *ngIf="_showLogin">
   <div class="kLoginCenter">
     <div class="kLoginWindow">
-      <div class="kLogo">
-        <i class="k-logo"></i>
-        <span>
-          <strong>KALTURA</strong> MANAGEMENT CONSOLE
-        </span>
-      </div>
+      <div class="kLogo"></div>
 
       <ng-container [ngSwitch]="_currentScreen">
         <kKMCLoginForm *ngSwitchCase="_loginScreens.Login"
