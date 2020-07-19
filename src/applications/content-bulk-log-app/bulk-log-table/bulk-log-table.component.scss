@@ -80,6 +80,15 @@
   .kBulkLogTableFailed {
     color: $kDandger;
   }
+    .kStatusRow {
+        display: flex;
+        align-items: center;
+        .kStatusIcon {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+    }
+
 }
 
 :host {
