@@ -6,7 +6,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
-import { KalturaCaptionAssetStatus } from 'kaltura-ngx-client';
+import { KalturaCaptionAssetStatus, KalturaCaptionType } from 'kaltura-ngx-client';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 
 import { EntryCaptionsWidget } from './entry-captions-widget.service';
@@ -46,10 +46,11 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
         this._widgetService.attachForm();
 
 		this._actions = [
-			{label: this._appLocalization.get('applications.content.entryDetails.captions.edit'), command: (event) => {this.actionSelected("edit");}},
-			{label: this._appLocalization.get('applications.content.entryDetails.captions.download'), command: (event) => {this.actionSelected("download");}},
-			{label: this._appLocalization.get('applications.content.entryDetails.captions.preview'), command: (event) => {this.actionSelected("preview");}},
-			{label: this._appLocalization.get('applications.content.entryDetails.captions.delete'), styleClass: 'kDanger', command: (event) => {this.actionSelected("delete");}}
+			{id: 'edit', label: this._appLocalization.get('applications.content.entryDetails.captions.edit'), command: (event) => {this.actionSelected("edit");}},
+			{id: 'editor', label: this._appLocalization.get('applications.content.entryDetails.captions.editor'), command: (event) => {this.actionSelected("editor");}},
+			{id: 'download', label: this._appLocalization.get('applications.content.entryDetails.captions.download'), command: (event) => {this.actionSelected("download");}},
+			{id: 'preview', label: this._appLocalization.get('applications.content.entryDetails.captions.preview'), command: (event) => {this.actionSelected("preview");}},
+			{id: 'delete', label: this._appLocalization.get('applications.content.entryDetails.captions.delete'), styleClass: 'kDanger', command: (event) => {this.actionSelected("delete");}}
 		];
 
         this._widgetService.data$
@@ -60,6 +61,18 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 	}
 
 	openActionsMenu(event: any, caption: any): void{
+        if (!this._requestCaptionsAvailable && this._actions[1].id === 'editor') {
+            this._actions.splice(1,1);
+        }
+         if (this._requestCaptionsAvailable && this._actions[1].id === 'editor') {
+           if (caption.format !== KalturaCaptionType.srt && caption.format !== KalturaCaptionType.dfxp) {
+               this._actions[1].disabled = true;
+               this._actions[1].title = this._appLocalization.get('applications.content.entryDetails.captions.editorDisabled');
+           } else {
+               this._actions[1].disabled = false;
+               this._actions[1].title = null;
+           }
+        }
 		if (this.actionsMenu){
 			// save the selected caption for usage in the actions menu
 			this._widgetService.currentCaption = caption;
@@ -96,6 +109,9 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 		switch (action){
 			case "edit":
 				this.editPopup.open();
+				break;
+			case "editor":
+				this._requestCaptions();
 				break;
 			case "delete":
 				this._widgetService.removeCaption();

@@ -1806,6 +1806,8 @@
                     "default": "Default Caption",
                     "setDefault": "Set as default",
                     "edit": "Edit",
+                    "editor": "Closed Captions Editor",
+                    "editorDisabled": "Format is not supported",
                     "editCaption": "Edit Caption",
                     "download": "Download",
                     "delete": "Delete",
