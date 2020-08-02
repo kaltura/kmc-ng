@@ -56,8 +56,6 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   public _previewForm: FormGroup;
   public _selectedPlayerVersion = 2;
   public _showPlayer = true;
-
-  private generator: any;
   private _previewLink = null;
 
   public get _showEmberCode(): boolean {
@@ -72,14 +70,12 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
               private _browserService: BrowserService,
               private _permissionsService: KMCPermissionsService,
               private _fb: FormBuilder) {
-
   }
 
   ngOnInit(){
     this._playersSortBy = this._browserService.getFromLocalStorage('previewEmbed.sortBy') || 'updatedAt';
     this.listPlayers();
     this.createForm();
-    this.generator = this.getGenerator();
     this._title = this._showEmberCode
       ? this._appLocalization.get('applications.embed.previewShare')
       : this._appLocalization.get('applications.embed.previewInPlayer');
@@ -274,38 +270,31 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   /* V3 specific code ends here */
 
-  private getGenerator():any{
-    const baseCdnUrl = serverConfig.cdnServers.serverUri.replace("http://","");
-    const securedCdnUrl = serverConfig.cdnServers.securedServerUri.replace("https://","");
-    // 'kEmbedCodeGenerator' is bundled with the app. Location: assets/js/KalturaEmbedCodeGenerator.min.js
-    return new window['kEmbedCodeGenerator']({
-      host: baseCdnUrl,
-      securedHost: securedCdnUrl,
-      partnerId: this._appAuthentication.appUser.partnerId,
-      includeKalturaLinks: subApplicationsConfig.previewAndEmbedApp.includeKalturaLinks
-    });
-  }
-
   private generateCode(isPreview = false): string{
     this._previewLink = null;
     this._shortLink = "";
     const cacheStr = Math.floor(new Date().getTime() / 1000) + (15 * 60); // start caching in 15 minutes
-    const params = {
-      protocol: this.getProtocol(isPreview),
+    const isSecured = this._previewForm.controls['secured'].value === true;
+    const baseCdnUrl = serverConfig.cdnServers.serverUri.replace("http://","");
+    const securedCdnUrl = serverConfig.cdnServers.securedServerUri.replace("https://","");
+    const includeSeoMetadata = this._previewForm.controls['seo'].value === true;
+    const videoMeta = includeSeoMetadata ? ' itemprop="video" itemscope itemtype="http://schema.org/VideoObject' : '';
+      const params = {
+      serverUri: isSecured ? this.getProtocol(isPreview) + '://' + securedCdnUrl : this.getProtocol(isPreview) + '://' + baseCdnUrl,
       embedType: this._previewForm.controls['selectedEmbedType'].value,
       uiConfId: this._previewForm.controls['selectedPlayer'].value.uiConf.id,
       width: this._previewForm.controls['selectedPlayer'].value.uiConf.width,
       height: this._previewForm.controls['selectedPlayer'].value.uiConf.height,
-      entryMeta: this.getMediaMetadata(),
-      includeSeoMetadata: this._previewForm.controls['seo'].value,
+      entryMeta: includeSeoMetadata ? this.getMediaMetadata() : '',
+      videoMeta: videoMeta,
       playerId: 'kaltura_player_' + cacheStr,
+      entryId: this.media.id,
+      pid: this._appAuthentication.appUser.partnerId,
       cacheSt: cacheStr,
+      includeSeoMetadata: this._previewForm.controls['seo'].value,
       flashVars: this.getEmbedFlashVars(isPreview)
     };
-    if (this.media instanceof KalturaMediaEntry){
-      params['entryId'] = this.media.id;
-    }
-    return this.generator.getCode(params);
+    return this._previewEmbedService.generateV2EmbedCode(params);
   }
 
   private getProtocol(isPreview: boolean){
@@ -317,14 +306,18 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     }
   }
 
-  private getMediaMetadata(): any{
-    return {
-      "name": this.media.name,
-      "description": this.media.description,
-      "thumbnailUrl": this.media.thumbnailUrl,
-      "duration": this.media.duration,
-      "uploadDate": this.media.createdAt.toISOString()
-    }
+  private getMediaMetadata(): string {
+      const name = this.media.name ? this.media.name : '';
+      const description = this.media.description ? this.media.description : '';
+      return `
+<span itemprop="name" content="${name}"></span>
+<span itemprop="description" content="${description}"></span>
+<span itemprop="duration" content="${this.media.duration}"></span>
+<span itemprop="thumbnailUrl" content="${this.media.thumbnailUrl}"></span>
+<span itemprop="uploadDate" content="${this.media.createdAt.toISOString()}"></span>
+<span itemprop="width" content="${this._previewForm.controls['selectedPlayer'].value.uiConf.width}"></span>
+<span itemprop="height" content="${this._previewForm.controls['selectedPlayer'].value.uiConf.height}"></span>
+`;
   }
 
   private getEmbedFlashVars(isPreview: boolean): any{
