@@ -278,9 +278,10 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     const baseCdnUrl = serverConfig.cdnServers.serverUri.replace("http://","");
     const securedCdnUrl = serverConfig.cdnServers.securedServerUri.replace("https://","");
     const includeSeoMetadata = this._previewForm.controls['seo'].value === true;
-    const videoMeta = includeSeoMetadata ? ' itemprop="video" itemscope itemtype="http://schema.org/VideoObject' : '';
+    const videoMeta = includeSeoMetadata ? ' itemprop="video" itemscope itemtype="http://schema.org/VideoObject"' : '';
+    const flashVars = this.getEmbedFlashVars(isPreview);
       const params = {
-      serverUri: isSecured ? this.getProtocol(isPreview) + '://' + securedCdnUrl : this.getProtocol(isPreview) + '://' + baseCdnUrl,
+      serverUri: isSecured && !isPreview ? this.getProtocol(isPreview) + '://' + securedCdnUrl : this.getProtocol(isPreview) + '://' + baseCdnUrl,
       embedType: this._previewForm.controls['selectedEmbedType'].value,
       uiConfId: this._previewForm.controls['selectedPlayer'].value.uiConf.id,
       width: this._previewForm.controls['selectedPlayer'].value.uiConf.width,
@@ -292,7 +293,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       pid: this._appAuthentication.appUser.partnerId,
       cacheSt: cacheStr,
       includeSeoMetadata: this._previewForm.controls['seo'].value,
-      flashVars: this.getEmbedFlashVars(isPreview)
+      flashVars: JSON.stringify(flashVars, null, 1),
+      flashVarsUrl: this.flashVarsToUrl(flashVars).length ? '&' + this.flashVarsToUrl(flashVars) : ''
     };
     return this._previewEmbedService.generateV2EmbedCode(params);
   }
