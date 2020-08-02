@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-import { KalturaAuthentication, KalturaClient, KalturaMultiRequest, KalturaRequestOptions, SsoLoginAction } from 'kaltura-ngx-client';
+import { KalturaAuthentication, KalturaClient, KalturaMultiRequest, KalturaRequestOptions, SessionEndAction, SsoLoginAction, AdminUserSetInitialPasswordAction } from 'kaltura-ngx-client';
 import { UserLoginByLoginIdAction } from 'kaltura-ngx-client';
 import { UserGetByLoginIdAction } from 'kaltura-ngx-client';
 import { UserGetAction } from 'kaltura-ngx-client';
@@ -35,15 +35,12 @@ import { HttpClient } from '@angular/common/http';
 import { buildBaseUri } from 'config/server';
 import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
-
-
-
-const ksSessionStorageKey = 'auth.login.ks';
-import { AdminUserSetInitialPasswordAction } from 'kaltura-ngx-client';
 import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
 import { switchMap, map } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
-import {AuthenticatorViewService} from "app-shared/kmc-shared/kmc-views/details-views";
+import { AuthenticatorViewService } from "app-shared/kmc-shared/kmc-views/details-views";
+
+const ksSessionStorageKey = 'auth.login.ks';
 
 export interface UpdatePasswordPayload {
     email: string;
@@ -557,9 +554,18 @@ export class AppAuthentication {
         this._appUser = null;
         this._appEvents.publish(new UserLoginStatusEvent(false));
         this._pageExitVerificationService.removeAll();
-        if (reloadPage) {
+        const reload = () => {
             this._logger.info(`force reload of browser`);
             this._forceReload();
+        };
+        if (reloadPage) {
+            this.kalturaServerClient.request(new SessionEndAction()).subscribe(result => {
+                this._logger.info(`server session cleared`);
+                reload();
+            }, error => {
+                this._logger.info(`error clearing server session: ${error.message}`);
+                reload();
+            });
         }
     }
 
