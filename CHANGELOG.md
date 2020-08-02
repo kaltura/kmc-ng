@@ -1,3 +1,14 @@
+<a name="6.2.3"></a>
+## [6.2.3](https://github.com/kaltura/kmc-ng/compare/v6.2.2...v6.2.3) (2020-08-02)
+
+
+### Bug Fixes
+
+* **entry/captions:** Add Caption Editor option to caption actions menu ([d82d45c](https://github.com/kaltura/kmc-ng/commit/d82d45c))
+* **login:** security enhancement - add autocomplete="off" to all login form inputs ([dd9bf8e](https://github.com/kaltura/kmc-ng/commit/dd9bf8e))
+
+
+
 <a name="6.2.2"></a>
 ## [6.2.2](https://github.com/kaltura/kmc-ng/compare/v6.2.1...v6.2.2) (2020-07-12)
 
