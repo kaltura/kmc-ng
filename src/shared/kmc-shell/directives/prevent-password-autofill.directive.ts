@@ -6,7 +6,7 @@ import { Directive, ElementRef, Renderer2 } from '@angular/core';
 export class PreventPasswordAutofillDirective {
     constructor(private _el: ElementRef,
                 private _renderer: Renderer2) {
-        this._renderer.setAttribute(_el.nativeElement, 'autocomplete', 'user-password');
+        this._renderer.setAttribute(_el.nativeElement, 'autocomplete', 'off');
         this._renderer.setAttribute(_el.nativeElement, 'readonly', 'true');
 
         setTimeout(() => {
