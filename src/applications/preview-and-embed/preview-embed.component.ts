@@ -289,11 +289,11 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       entryMeta: includeSeoMetadata ? this.getMediaMetadata() : '',
       videoMeta: videoMeta,
       playerId: 'kaltura_player_' + cacheStr,
-      entryId: this.media.id,
+      entryId: this.media instanceof KalturaPlaylist ? '' : this.media.id,
       pid: this._appAuthentication.appUser.partnerId,
       cacheSt: cacheStr,
       includeSeoMetadata: this._previewForm.controls['seo'].value,
-      flashVars: JSON.stringify(flashVars, null, 1),
+      flashVars: JSON.stringify(flashVars, null, 2),
       flashVarsUrl: this.flashVarsToUrl(flashVars).length ? '&' + this.flashVarsToUrl(flashVars) : ''
     };
     return this._previewEmbedService.generateV2EmbedCode(params);
