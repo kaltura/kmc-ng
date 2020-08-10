@@ -333,6 +333,7 @@ export class AppAuthentication {
                 name: partner.name,
                 partnerPackage: partner.partnerPackage,
                 landingPage: partner.landingPage,
+                logoutUrl: partner.logoutUrl,
                 adultContent: partner.adultContent,
                 publisherEnvironmentType: partner.publisherEnvironmentType,
                 publishersQuota: partner.publishersQuota,
@@ -533,11 +534,11 @@ export class AppAuthentication {
         document.location.reload(false);
     }
 
-    private _forceReload() {
-        const baseUrl = this._location.prepareExternalUrl('');
+    private _forceReload(logoutUrl = '') {
+        const baseUrl = logoutUrl.length ?  logoutUrl : this._location.prepareExternalUrl('');
 
         if (baseUrl) {
-            this._logger.info(`redirect the user to base url`, { url: baseUrl });
+            this._logger.info(`redirect the user to url`, { url: baseUrl });
             this._logout(false);
             window.location.href = baseUrl;
         } else {
@@ -551,21 +552,24 @@ export class AppAuthentication {
         this.kalturaServerClient.setDefaultRequestOptions({});
         this._permissionsService.flushPermissions();
         delete window['kmcng'];
-        this._appUser = null;
         this._appEvents.publish(new UserLoginStatusEvent(false));
         this._pageExitVerificationService.removeAll();
-        const reload = () => {
+        const reload = (logoutUrl: string) => {
             this._logger.info(`force reload of browser`);
-            this._forceReload();
+            this._forceReload(logoutUrl);
         };
         if (reloadPage) {
+            const logoutUrl = this._appUser.partnerInfo.logoutUrl || '';
+            this._appUser = null;
             this.kalturaServerClient.request(new SessionEndAction()).subscribe(result => {
                 this._logger.info(`server session cleared`);
-                reload();
+                reload(logoutUrl);
             }, error => {
                 this._logger.info(`error clearing server session: ${error.message}`);
-                reload();
+                reload(logoutUrl);
             });
+        } else {
+            this._appUser = null;
         }
     }
 
