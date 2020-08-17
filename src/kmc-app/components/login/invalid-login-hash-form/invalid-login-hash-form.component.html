@@ -7,7 +7,7 @@
     <p [innerHTML]="'app.login.invalidLoginHash.instructions' | translate"></p>
 
     <div>
-      <input pInputText
+      <input pInputText autocomplete="off"
              [placeholder]="'app.login.invalidLoginHash.placeholder' | translate"
              [formControl]="_emailField"
              [ngClass]="{

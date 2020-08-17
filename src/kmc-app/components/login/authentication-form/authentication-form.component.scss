@@ -9,13 +9,12 @@
   width: 100%;
   position: relative;
   .kSpinnerBkg{
-      top: 110px;
+      top: 60px;
       position: absolute;
   }
   .qrCode {
     width: 150px;
     height: 150px;
-    margin-top: 60px;
   }
 
   .qrCodeLabel{
@@ -44,6 +43,7 @@
   .kButtonDefault {
     width: 160px;
     height: 48px;
+    border-radius: 4px;
     background-color: $kPrimary;
     color: white;
     font-weight: normal;

@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
-import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaPlaylistType } from 'kaltura-ngx-client';
 import { PlaylistListAction } from 'kaltura-ngx-client';
 import { KalturaPlaylistFilter } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
@@ -211,12 +211,42 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
         );
       }
 
+      let result: Observable<KalturaPlaylistListResponse> = null;
       // build the request
-      return this._kalturaServerClient.request(
-        new PlaylistListAction({ filter, pager}).setRequestOptions({
-            responseProfile
-        })
-      );
+      if (filter.adminTagsMultiLikeOr) {
+          // create multirequest for interactive videos list since we need to list both rapt and path
+          // create path filter
+          let pathFilter = Object.assign(new KalturaPlaylistFilter({}), filter);
+          delete pathFilter.adminTagsMultiLikeOr;
+          pathFilter.playListTypeEqual = KalturaPlaylistType.path;
+
+          result = this._kalturaServerClient.multiRequest([
+              new PlaylistListAction({filter: pathFilter, pager}).setRequestOptions({
+                  responseProfile
+              }),
+              new PlaylistListAction({filter, pager}).setRequestOptions({
+                  responseProfile
+              }),
+          ]).map(responses => {
+              const path = responses[0]; // path result
+              const rapt = responses[1]; // rapt result
+              // merge rapt result to path result
+              if (rapt.result.objects && path.result.objects) {
+                  rapt.result.objects.forEach(playlist => path.result.objects.push(playlist));
+              }
+              // update totalCount to the sum of totalCount of both calls
+              path.result.totalCount = path.result.totalCount + rapt.result.totalCount;
+              return path.result;
+          });
+      } else {
+          // filter without interactive videos (dates or free text search)
+          result = this._kalturaServerClient.request(
+              new PlaylistListAction({filter, pager}).setRequestOptions({
+                  responseProfile
+              })
+          );
+      }
+      return result;
     } catch (err) {
       return Observable.throw(err);
     }

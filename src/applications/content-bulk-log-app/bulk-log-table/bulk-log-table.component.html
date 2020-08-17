@@ -88,10 +88,12 @@
           </td>
 
           <td class="ui-resizable-column">
-            <i [class]="bulkLogItem.status | kBulkLogTableStatusIcon"></i>
-            <span class="kTableColumn" [kTooltip]="bulkLogItem.status | kBulkLogTableStatus" [showOnEllipsis]="true">
-              {{bulkLogItem.status | kBulkLogTableStatus}}
-            </span>
+              <div class="kStatusRow">
+                  <i [class]="bulkLogItem.status | kBulkLogTableStatusIcon" [kTooltip]="bulkLogItem.error ? bulkLogItem.error : ''"></i>
+                  <span class="kTableColumn" [kTooltip]="bulkLogItem.status | kBulkLogTableStatus" [showOnEllipsis]="true">
+                     {{bulkLogItem.status | kBulkLogTableStatus}}
+                  </span>
+              </div>
           </td>
 
           <td [ngStyle]="{'width': '80px'}" *ngIf="_actionsAllowed">

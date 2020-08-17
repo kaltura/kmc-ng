@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-import { KalturaAuthentication, KalturaClient, KalturaMultiRequest, KalturaRequestOptions, SsoLoginAction } from 'kaltura-ngx-client';
+import { KalturaAuthentication, KalturaClient, KalturaMultiRequest, KalturaRequestOptions, SessionEndAction, SsoLoginAction, AdminUserSetInitialPasswordAction } from 'kaltura-ngx-client';
 import { UserLoginByLoginIdAction } from 'kaltura-ngx-client';
 import { UserGetByLoginIdAction } from 'kaltura-ngx-client';
 import { UserGetAction } from 'kaltura-ngx-client';
@@ -35,15 +35,12 @@ import { HttpClient } from '@angular/common/http';
 import { buildBaseUri } from 'config/server';
 import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
-
-
-
-const ksSessionStorageKey = 'auth.login.ks';
-import { AdminUserSetInitialPasswordAction } from 'kaltura-ngx-client';
 import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
 import { switchMap, map } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
-import {AuthenticatorViewService} from "app-shared/kmc-shared/kmc-views/details-views";
+import { AuthenticatorViewService } from "app-shared/kmc-shared/kmc-views/details-views";
+
+const ksSessionStorageKey = 'auth.login.ks';
 
 export interface UpdatePasswordPayload {
     email: string;
@@ -336,6 +333,7 @@ export class AppAuthentication {
                 name: partner.name,
                 partnerPackage: partner.partnerPackage,
                 landingPage: partner.landingPage,
+                logoutUrl: partner.logoutUrl,
                 adultContent: partner.adultContent,
                 publisherEnvironmentType: partner.publisherEnvironmentType,
                 publishersQuota: partner.publishersQuota,
@@ -536,11 +534,11 @@ export class AppAuthentication {
         document.location.reload(false);
     }
 
-    private _forceReload() {
-        const baseUrl = this._location.prepareExternalUrl('');
+    private _forceReload(logoutUrl = '') {
+        const baseUrl = logoutUrl.length ?  logoutUrl : this._location.prepareExternalUrl('');
 
         if (baseUrl) {
-            this._logger.info(`redirect the user to base url`, { url: baseUrl });
+            this._logger.info(`redirect the user to url`, { url: baseUrl });
             this._logout(false);
             window.location.href = baseUrl;
         } else {
@@ -554,12 +552,24 @@ export class AppAuthentication {
         this.kalturaServerClient.setDefaultRequestOptions({});
         this._permissionsService.flushPermissions();
         delete window['kmcng'];
-        this._appUser = null;
         this._appEvents.publish(new UserLoginStatusEvent(false));
         this._pageExitVerificationService.removeAll();
-        if (reloadPage) {
+        const reload = (logoutUrl: string) => {
             this._logger.info(`force reload of browser`);
-            this._forceReload();
+            this._forceReload(logoutUrl);
+        };
+        if (reloadPage) {
+            const logoutUrl = this._appUser.partnerInfo.logoutUrl || '';
+            this._appUser = null;
+            this.kalturaServerClient.request(new SessionEndAction()).subscribe(result => {
+                this._logger.info(`server session cleared`);
+                reload(logoutUrl);
+            }, error => {
+                this._logger.info(`error clearing server session: ${error.message}`);
+                reload(logoutUrl);
+            });
+        } else {
+            this._appUser = null;
         }
     }
 

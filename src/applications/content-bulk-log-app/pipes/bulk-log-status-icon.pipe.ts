@@ -8,21 +8,21 @@ export class BulkLogStatusIconPipe implements PipeTransform {
       case KalturaBatchJobStatus.pending:
       case KalturaBatchJobStatus.queued:
       case KalturaBatchJobStatus.dontProcess:
-        return 'kIconUpload2 kBulkLogTablePending';
+        return 'kStatusIcon kIconupload2 kBulkLogTablePending';
 
       case KalturaBatchJobStatus.processing:
       case KalturaBatchJobStatus.almostDone:
-        return 'kIconSync kBulkLogTableProgress';
+        return 'kStatusIcon kIconsync kBulkLogTableProgress';
 
       case KalturaBatchJobStatus.finished:
       case KalturaBatchJobStatus.finishedPartially: // waiting for icon
-        return 'kIconComplete kBulkLogTableSuccess';
+        return 'kStatusIcon kIconcomplete kBulkLogTableSuccess';
 
       case KalturaBatchJobStatus.failed:
       case KalturaBatchJobStatus.fatal:
       case KalturaBatchJobStatus.aborted: // waiting for icon
       case KalturaBatchJobStatus.retry: // waiting for icon
-        return 'kIconError kBulkLogTableFailed';
+        return 'kStatusIcon kIconerror kBulkLogTableFailed';
 
       default:
         return '';

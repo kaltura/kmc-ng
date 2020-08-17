@@ -4,7 +4,7 @@
   <h1>{{ 'app.login.login.title' | translate}}</h1>
 
   <div>
-    <input pInputText
+    <input pInputText autocomplete="off"
            [placeholder]="'app.login.login.placeholder.username' | translate"
            [formControl]="_usernameField"
            [ngClass]="{
@@ -16,7 +16,7 @@
   </div>
 
   <div>
-    <input type="password"
+    <input type="password" autocomplete="off"
            appPreventPasswordAutofill pInputText
            [placeholder]="'app.login.login.placeholder.password' | translate"
            [formControl]="_passwordField"
@@ -24,7 +24,7 @@
   </div>
 
     <div [class.kHidden]="!showAuthenticationCode">
-        <input pInputText class="kAuth" #auth
+        <input pInputText class="kAuth" #auth autocomplete="off"
                [placeholder]="'app.login.login.placeholder.auth' | translate"
                [formControl]="_authenticationField"
                [ngClass]="{
