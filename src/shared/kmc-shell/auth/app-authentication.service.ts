@@ -549,7 +549,6 @@ export class AppAuthentication {
 
     private _logout(reloadPage = true) {
         this._logger.info(`log out user from the application`, { forceReload: reloadPage });
-        this.kalturaServerClient.setDefaultRequestOptions({});
         this._permissionsService.flushPermissions();
         delete window['kmcng'];
         this._appEvents.publish(new UserLoginStatusEvent(false));
@@ -563,12 +562,15 @@ export class AppAuthentication {
             this._appUser = null;
             this.kalturaServerClient.request(new SessionEndAction()).subscribe(result => {
                 this._logger.info(`server session cleared`);
+                this.kalturaServerClient.setDefaultRequestOptions({});
                 reload(logoutUrl);
             }, error => {
                 this._logger.info(`error clearing server session: ${error.message}`);
+                this.kalturaServerClient.setDefaultRequestOptions({});
                 reload(logoutUrl);
             });
         } else {
+            this.kalturaServerClient.setDefaultRequestOptions({});
             this._appUser = null;
         }
     }
