@@ -18,6 +18,7 @@ export interface ReachData {
     entry?: KalturaMediaEntry;
     entries?: KalturaMediaEntry[];
     category?: KalturaCategory;
+    captionId?: string;
 }
 
 @Component({
@@ -136,6 +137,11 @@ export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
         this._url = null;
 
         switch (this.page) {
+            case ReachPages.caption:
+                if (this.data.captionId && this.data.entry) {
+                    this._url = `${serverConfig.externalApps.reach.uri}#/caption/${this.data.captionId}/${this.data.entry.id}`;
+                }
+                break;
             case ReachPages.entry:
                 if (this.data.entry) {
                     this._url = `${serverConfig.externalApps.reach.uri}#/entry/${this.data.entry.id}`;

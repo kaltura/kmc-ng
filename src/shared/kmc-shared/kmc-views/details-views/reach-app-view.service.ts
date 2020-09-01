@@ -17,13 +17,15 @@ export enum ReachPages {
     entry = 'entry',
     entries = 'entries',
     category = 'category',
-    dashboard = 'dashboard'
+    dashboard = 'dashboard',
+    caption = 'caption'
 }
 
 export interface ReachAppViewArgs {
     entry?: KalturaMediaEntry;
     entries?: KalturaMediaEntry[];
     category?: KalturaCategory;
+    captionId?: string;
     page: ReachPages;
 }
 
@@ -55,6 +57,7 @@ export class ReachAppViewService extends KmcDetailsViewBaseService<ReachAppViewA
     private _availableByData(args: ReachAppViewArgs): boolean {
         switch (args.page) {
             case ReachPages.entry:
+            case ReachPages.caption:
                 return this.isRelevantEntry(args.entry);
             case ReachPages.entries:
             case ReachPages.dashboard:

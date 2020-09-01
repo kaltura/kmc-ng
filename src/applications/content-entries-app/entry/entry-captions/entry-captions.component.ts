@@ -111,7 +111,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
                 this.editPopup.open();
                 break;
             case "editor":
-                this._requestCaptions();
+                this.editCaption();
                 break;
             case "delete":
                 this._widgetService.removeCaption();
@@ -158,6 +158,12 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
         if (actionKey === 'retry') {
 
         }
+    }
+
+    private editCaption(): void {
+        const entry = this._widgetService.data;
+        const captionId = this._widgetService.currentCaption.id;
+        this._reachAppViewService.open({ entry, page: ReachPages.caption, captionId });
     }
 
     public _requestCaptions(): void {
