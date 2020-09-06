@@ -11,6 +11,7 @@
 ### Features
 
 * **entry/captions:** Edit specific caption in Captions Editor ([5d08474](https://github.com/kaltura/kmc-ng/commit/5d08474))
+* **entry/analytics:** Support Webcast Analytics
 
 
 
