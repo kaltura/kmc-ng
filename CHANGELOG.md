@@ -1,3 +1,19 @@
+<a name="6.3.0"></a>
+# [6.3.0](https://github.com/kaltura/kmc-ng/compare/v6.2.3...v6.3.0) (2020-09-06)
+
+
+### Bug Fixes
+
+* **logout:** call session.end with KS ([3c0f3c8](https://github.com/kaltura/kmc-ng/commit/3c0f3c8))
+* **logout:** redirect to partner logoutUrl (if defined) upon logout ([744d89a](https://github.com/kaltura/kmc-ng/commit/744d89a))
+
+
+### Features
+
+* **entry/captions:** Edit specific caption in Captions Editor ([5d08474](https://github.com/kaltura/kmc-ng/commit/5d08474))
+
+
+
 <a name="6.2.3"></a>
 ## [6.2.3](https://github.com/kaltura/kmc-ng/compare/v6.2.2...v6.2.3) (2020-08-02)
 
