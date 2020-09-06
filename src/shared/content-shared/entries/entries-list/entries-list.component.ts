@@ -116,15 +116,18 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         const isPreviewCommand = commandName === 'preview';
         const isViewCommand = commandName === 'view';
         const isKalturaLive = (sourceType === KalturaSourceType.liveStream || sourceType === KalturaSourceType.manualLiveStream || sourceType === KalturaSourceType.akamaiLive || sourceType === KalturaSourceType.akamaiUniversalLive);
+        const isWebcast = isKalturaLive && entry.adminTags && entry.adminTags.indexOf('kms-webcast-event') !== -1;
         const isLiveDashboardCommand = commandName === 'liveDashboard';
         const isRealTimeAnalyticsCommand = commandName === 'realTimeAnalytics';
+        const isWebcastAnalyticsCommand = commandName === 'webcastAnalytics';
         const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
         const isCaptionRequestCommand = commandName === 'captionRequest';
         return !(
             (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
             (!isReadyStatus && isLiveStreamFlash && isViewCommand) || // hide if trying to view live that isn't ready
             (isLiveDashboardCommand && !isKalturaLive) || // hide live-dashboard menu item for entry that isn't kaltura live
-            (isRealTimeAnalyticsCommand && !isKalturaLive) || // hide real time analytics menu item for entry that isn't kaltura live
+            (isRealTimeAnalyticsCommand && (!isKalturaLive || isWebcast)) || // hide real time analytics menu item for entry that isn't kaltura live or is webcast
+            (isWebcastAnalyticsCommand && !isWebcast) || // hide webcast analytics menu item for entry that isn't kaltura live webcast
             cannotDeleteEntry ||
             (isCaptionRequestCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry })) // hide caption request if not audio/video or if it is then if not ready or it's forbidden by permission
         );

@@ -68,6 +68,12 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
           disabled: !this._analyticsNewMainViewService.isAvailable()
       },
       {
+          label: this._appLocalization.get('applications.content.table.webcastAnalytics'),
+          commandName: 'webcastAnalytics',
+          styleClass: '',
+          disabled: !this._analyticsNewMainViewService.isAvailable()
+      },
+      {
           label: this._appLocalization.get('applications.content.table.captionRequest'),
           commandName: 'captionRequest'
       },
@@ -166,6 +172,15 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
           this._entryId = entry.id;
             if (this._analyticsNewMainViewService.isAvailable()) {
                 this._router.navigate(['analytics/entry-live'], { queryParams: { id: this._entryId }});
+            }
+        }
+        break;
+      case 'webcastAnalytics':
+        if (entry && entry.id) {
+          this._entriesList.clearSelection();
+          this._entryId = entry.id;
+            if (this._analyticsNewMainViewService.isAvailable()) {
+                this._router.navigate(['analytics/entry-webcast'], { queryParams: { id: this._entryId }});
             }
         }
         break;
