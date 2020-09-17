@@ -421,15 +421,17 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
                   label: this._appLocalization.get('applications.content.bulkActions.addToNewCategory'),
                   command: (event) => {
                       this._addSelectedEntriesToNewCategory();
-                  }
+                  },
+                  disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES)
               },
               {
                   label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'),
                   command: (event) => {
                       this.performBulkAction('addToNewPlaylist');
                   },
-                disabled: !this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_ADD)
-              }]
+                  disabled: !this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_ADD)
+              }],
+              disabled: !this._permissionsService.hasAnyPermissions([KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES, KMCPermissions.PLAYLIST_ADD])
           },
           {
               label: this._appLocalization.get('applications.content.bulkActions.addRemoveCategories'), items: [
@@ -444,7 +446,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
                   command: (event) => {
                       this.openBulkActionWindow('removeFromCategories', 500, 500);
                   }
-              }]
+              }],
+              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ASSIGN_CATEGORIES)
           },
           {
               disabled: !this._permissionsService.hasAnyPermissions([

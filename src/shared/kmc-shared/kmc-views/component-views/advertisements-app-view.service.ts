@@ -7,10 +7,11 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KmcComponentViewBaseService } from 'app-shared/kmc-shared/kmc-views/kmc-component-view-base.service';
 import { serverConfig } from 'config/server';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
-import {KalturaEntryStatus} from 'kaltura-ngx-client';
-import {KalturaEntryReplacementStatus} from 'kaltura-ngx-client';
-import {KalturaExternalMediaEntry} from 'kaltura-ngx-client';
-import {KalturaMediaType} from 'kaltura-ngx-client';
+import { KalturaEntryStatus } from 'kaltura-ngx-client';
+import { KalturaEntryReplacementStatus } from 'kaltura-ngx-client';
+import { KalturaExternalMediaEntry } from 'kaltura-ngx-client';
+import { KalturaMediaType } from 'kaltura-ngx-client';
+import { KMCPermissions, KMCPermissionsService } from "app-shared/kmc-shared/kmc-permissions";
 
 export interface AdvertisementsAppViewArgs {
     entry: KalturaMediaEntry;
@@ -21,6 +22,7 @@ export interface AdvertisementsAppViewArgs {
 export class AdvertisementsAppViewService extends KmcComponentViewBaseService<AdvertisementsAppViewArgs> {
 
     constructor(private _appLocalization: AppLocalization,
+                private _appPermissions: KMCPermissionsService,
                 private _kalturaClient: KalturaClient,
                 private _router: Router,
                 _browserService: BrowserService,
@@ -46,7 +48,9 @@ export class AdvertisementsAppViewService extends KmcComponentViewBaseService<Ad
     }
 
     private _isAvailableByPermission(): boolean {
-        return true;
+        return this._appPermissions.hasAnyPermissions([
+            KMCPermissions.CUEPOINT_MANAGE
+        ]);
     }
 
     private _isAvailableByData(args: AdvertisementsAppViewArgs): boolean {
