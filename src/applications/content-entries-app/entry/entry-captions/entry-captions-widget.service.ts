@@ -12,7 +12,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { KalturaClient } from 'kaltura-ngx-client';
+import {KalturaClient, KalturaFilterPager} from 'kaltura-ngx-client';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { CaptionAssetListAction } from 'kaltura-ngx-client';
 import { CaptionAssetDeleteAction } from 'kaltura-ngx-client';
@@ -148,7 +148,8 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     this._captions.next({ items: [] });
 
     return this._kalturaServerClient.request(new CaptionAssetListAction({
-      filter: new KalturaAssetFilter({ entryIdEqual: this._entryId })
+      filter: new KalturaAssetFilter({ entryIdEqual: this._entryId }),
+      pager: new KalturaFilterPager( { pageIndex: 0, pageSize: 500 })
     }))
       .pipe(cancelOnDestroy(this, this.widgetReset$))
       .map(response => {
@@ -199,12 +200,12 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       if (typeof caption.isDefault === "undefined") {
           caption.isDefault = 0; // set as not default
       }
-      
+
       // handle old captions with no accuracy: inject null accuracy to enable differ to detect changes to the accuracy
       if (typeof caption.accuracy === "undefined"){
           caption.accuracy = null;
       }
-    
+
     });
   }
 
