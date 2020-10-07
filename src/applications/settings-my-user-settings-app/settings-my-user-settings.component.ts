@@ -10,6 +10,7 @@ import { UserUpdateLoginDataActionArgs } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { SettingsMyUserSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
+import {AppAuthentication} from "app-shared/kmc-shell";
 
 export type UserSettingsPopup = 'editUserNamePopup' | 'editEmailAddressPopup' | 'changePasswordPopup'
 
@@ -35,11 +36,13 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
   public _role: KalturaUserRole = null;
   public _isBusy = false;
   public _showAuthenticator = false;
+  public _showPassword = true;
 
   constructor(private _myUserSettingsStore: SettingsMyUserSettingsService,
               private _logger: KalturaLogger,
               private _settingsMyUserSettingsMainView: SettingsMyUserSettingsMainViewService,
               private _browserService: BrowserService,
+              private _appAuthentication: AppAuthentication,
               private _appLocalization: AppLocalization) {
   }
 
@@ -48,6 +51,7 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
         this._logger.info(`initiate my user settings view`);
         this._getUserData();
     }
+    this._showPassword = this._appAuthentication.appUser.partnerInfo.blockDirectLogin ? false : true;
   }
 
   ngOnDestroy() {

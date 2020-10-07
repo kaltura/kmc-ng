@@ -6,6 +6,7 @@ export interface PartnerInfo {
     partnerPackage: PartnerPackageTypes;
     landingPage: string;
     adultContent: boolean;
+    blockDirectLogin: boolean;
     publisherEnvironmentType: number;
     authenticationType: KalturaPartnerAuthenticationType;
 }

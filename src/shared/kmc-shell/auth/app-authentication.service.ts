@@ -334,6 +334,7 @@ export class AppAuthentication {
                 partnerPackage: partner.partnerPackage,
                 landingPage: partner.landingPage,
                 logoutUrl: partner.logoutUrl,
+                blockDirectLogin: partner.blockDirectLogin,
                 adultContent: partner.adultContent,
                 publisherEnvironmentType: partner.publisherEnvironmentType,
                 publishersQuota: partner.publishersQuota,

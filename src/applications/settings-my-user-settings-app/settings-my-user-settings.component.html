@@ -32,7 +32,7 @@
           <div class="kLabel">{{'applications.settings.myUserSettings.roleDescription' | translate}}</div>
           <span>{{_role?.description}}</span>
         </div>
-        <div class="kRow">
+        <div class="kRow" *ngIf="_showPassword">
           <div class="kLabel">{{'applications.settings.myUserSettings.password' | translate}}</div>
           <span>
             <a (click)="_changePassword()">{{'applications.settings.myUserSettings.editUser' | translate}}</a>
