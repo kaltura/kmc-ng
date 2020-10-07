@@ -20,7 +20,8 @@ import {
     KalturaSearchOperatorType,
     KalturaExternalMediaSourceType,
     KalturaExternalMediaEntryFilter,
-    KalturaEntryCaptionAdvancedFilter
+    KalturaEntryCaptionAdvancedFilter,
+    KalturaLiveChannel
 } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
 import { cancelOnDestroy, KalturaUtils } from '@kaltura-ng/kaltura-common';
@@ -350,7 +351,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
             pager: pagination,
           }).setRequestOptions({
                   responseProfile,
-                  acceptedTypes: [KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry, KalturaExternalMediaEntry]
+                  acceptedTypes: [KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry, KalturaExternalMediaEntry, KalturaLiveChannel]
               })
         )).map(response => ({ entries: response.objects, totalCount: response.totalCount })
       );
