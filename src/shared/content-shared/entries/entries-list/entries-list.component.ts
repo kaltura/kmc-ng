@@ -126,7 +126,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
             (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
             (!isReadyStatus && isLiveStreamFlash && isViewCommand) || // hide if trying to view live that isn't ready
             (isLiveDashboardCommand && !isKalturaLive) || // hide live-dashboard menu item for entry that isn't kaltura live
-            (isRealTimeAnalyticsCommand && (!isKalturaLive || isWebcast)) || // hide real time analytics menu item for entry that isn't kaltura live or is webcast
+            (isRealTimeAnalyticsCommand && !isKalturaLive) || // hide real time analytics menu item for entry that isn't kaltura live
             (isWebcastAnalyticsCommand && !isWebcast) || // hide webcast analytics menu item for entry that isn't kaltura live webcast
             cannotDeleteEntry ||
             (isCaptionRequestCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry })) // hide caption request if not audio/video or if it is then if not ready or it's forbidden by permission
