@@ -46,6 +46,10 @@ export const kmcAppConfig: KmcAppConfig = {
       'label': 'Français'
     },
     {
+      'id': 'pt_br',
+      'label': 'Português'
+    },
+    {
       'id': 'ja',
       'label': '日本語'
     }
