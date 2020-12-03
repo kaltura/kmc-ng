@@ -68,8 +68,8 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit, OnDestroy
   ];
 
   public _allowedExtensions = `
-    .flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v,.mpeg,.mxf,.rm,.rv,.rmvb,.ts,.ogg,.ogv,.vob,.webm,.mts,.arf,.mkv,
-    .flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp3,.wav,.ra,.rm,.wma,.aif,.m4a,.flac,
+    .flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v,.mpeg,.mxf,.rm,.rv,.rmvb,.ts,.ogg,.ogv,.vob,.webm,.mts,.arf,.mkv,.m2v,
+    .mp3,.wav,.ra,.rm,.wma,.aif,.m4a,.flac,
     .jpg,.jpeg,.gif,.png
   `;
 
@@ -140,7 +140,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit, OnDestroy
       'avi', 'wmv', 'mp4', '3gp', 'f4v',
       'm4v', 'mpeg', 'mxf', 'rm', 'rv',
       'rmvb', 'ts', 'ogg', 'ogv', 'vob',
-      'webm', 'mts', 'arf', 'mkv'
+      'webm', 'mts', 'arf', 'mkv','m2v'
     ];
 
     switch (true) {
