@@ -133,6 +133,7 @@ export class PlaylistRuleParserService implements OnDestroy {
           limits: rule.limit,
           categories: uniqueCategoriesIds,
           freetext: originalFilter.freeText,
+          includeCaptions: !originalFilter.excludedFreeTextGroups,
           sortBy: sortBy,
           sortDirection: sortDirection,
           createdAt: {
@@ -140,6 +141,17 @@ export class PlaylistRuleParserService implements OnDestroy {
             toDate: originalFilter.createdAtLessThanOrEqual ? new Date(originalFilter.createdAtLessThanOrEqual) : null
           }
         };
+        const filterProps = ['nameLike', 'descriptionLike', 'tagsMultiLikeOr', 'userIdEqual', 'entitledUsersEditMatchOr', 'entitledUsersPublishMatchOr', 'idIn', 'creatorIdEqual'];
+        filterProps.forEach(prop => {
+            if (originalFilter[prop]) {
+                result.freetextSearchField = prop;
+                result.freetext = originalFilter[prop];
+            }
+        })
+
+        if (originalFilter.excludedFreeTextGroups === 'entry,category_entry,cue_point,metadata') {
+            result.freetextSearchField = 'captions'
+        }
 
         if (customMetadata) {
           result.customMetadata = customMetadata;
