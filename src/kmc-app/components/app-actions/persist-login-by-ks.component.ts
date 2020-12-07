@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
+import { serverConfig } from 'config/server';
 
 @Component({
     selector: 'kPersistLoginByKs',
@@ -18,7 +19,7 @@ export class PersistLoginByKsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._logger.info(`handle 'persist-login-by-ks' action`);
-        const ks = (this._route.snapshot.params['ks'] || '').trim();
+        const ks = serverConfig.ks ? serverConfig.ks : (this._route.snapshot.params['ks'] || '').trim();
         if (!ks) {
             this._logger.info(`missing 'ks' value, navigating to default page`);
             this._browserService.navigateToDefault();

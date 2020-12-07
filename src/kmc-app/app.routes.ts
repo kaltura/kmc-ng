@@ -22,7 +22,9 @@ const routes: Routes = <Routes>[
                 path: 'actions',
                 children: [
                     { path: 'login-by-ks/:ks', component: LoginByKSComponent, pathMatch: 'full' },
+                    { path: 'login-by-ks', component: LoginByKSComponent, pathMatch: 'full' },
                     { path: 'persist-login-by-ks/:ks', component: PersistLoginByKsComponent, pathMatch: 'full' },
+                    { path: 'persist-login-by-ks', component: PersistLoginByKsComponent, pathMatch: 'full' },
                     { path: 'restore-password/:hash', component: RestorePasswordComponent, pathMatch: 'full'  },
                     { path: 'auth-info/:hash', component: AuthenticatorComponent, pathMatch: 'full'  }
                 ]

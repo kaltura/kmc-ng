@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import 'rxjs/add/operator/first';
@@ -20,7 +21,7 @@ export class LoginByKSComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._logger.info(`handle 'login-by-ks' action`);
-        const ks = (this._route.snapshot.params['ks'] || '').trim();
+        const ks = serverConfig.ks ? serverConfig.ks : (this._route.snapshot.params['ks'] || '').trim();
         if (!ks) {
             this._logger.info(`missing 'ks' value, navigating to default page`);
             this._browserService.navigateToDefault();

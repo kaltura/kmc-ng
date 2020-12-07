@@ -55,6 +55,7 @@ export interface ExternalApplications {
 }
 
 export interface ServerConfig {
+    ks?: string,
     kalturaServer: {
         uri: string,
         defaultPrivileges?: string,
