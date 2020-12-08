@@ -12,8 +12,8 @@ import {serverConfig} from "config/server";
   styleUrls: ['./entries-search-filters.component.scss']
 })
 export class EntriesSearchFiltersComponent implements  AfterViewInit, OnDestroy{
-    public selectedSearchField = 'all';
-    public includeCaptions = true;
+    @Input() selectedSearchField = 'all';
+    @Input() includeCaptions = false;
     @Input() parentPopupWidget: PopupWidgetComponent;
     @Output() searchFieldSelected = new EventEmitter<{selectedSearchField: string, includeCaptions: boolean}>();
 
@@ -37,7 +37,7 @@ export class EntriesSearchFiltersComponent implements  AfterViewInit, OnDestroy{
 
     public reset(): void {
       this.selectedSearchField = 'all';
-      this.includeCaptions = true;
+      this.includeCaptions = false;
     }
 
     public openHelp() {

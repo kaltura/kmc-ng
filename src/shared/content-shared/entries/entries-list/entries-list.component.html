@@ -165,5 +165,5 @@
               [targetRef]="searchHolder"
               [targetOffset]="{'x':-223, 'y': 32}"
               kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'searchPopup'" [scrollOffset]="80">
-    <k-entries-search-filters #entriesSearchFilter [parentPopupWidget]="searchPopup" (searchFieldSelected)="applySearchFields($event)"></k-entries-search-filters>
+    <k-entries-search-filters #entriesSearchFilter [selectedSearchField]="_query.freetextSearchField || 'all'" [includeCaptions]="_query.includeCaptions" [parentPopupWidget]="searchPopup" (searchFieldSelected)="applySearchFields($event)"></k-entries-search-filters>
 </kPopupWidget>
