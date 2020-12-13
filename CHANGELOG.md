@@ -8,7 +8,7 @@
 * **entry/permissions:** Handle advertising and category / playlist permissions on bulk actions ([#920](https://github.com/kaltura/kmc-ng/issues/920)) ([efc7742](https://github.com/kaltura/kmc-ng/commit/efc7742))
 * **entry/upload:** Support m2v video file format ([820810c](https://github.com/kaltura/kmc-ng/commit/820810c))
 * **login:** support 2FA login where the KS is passed via configuration instead of URL parameters ([f702963](https://github.com/kaltura/kmc-ng/commit/f702963))
-
+* **localization:** support Portuguese language ([#923](https://github.com/kaltura/kmc-ng/issues/923)) ([b86cd65](https://github.com/kaltura/kmc-ng/commit/b86cd65))
 
 
 <a name="6.3.0"></a>
