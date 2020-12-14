@@ -4,7 +4,10 @@
     display: block;
     margin-left: 24px;
 }
-
+.kButtons {
+    display: flex;
+    align-items: center;
+}
 .kReplaceMediaButtonsLabel {
     color: $kGrayscale1;
     font-size: 15px;
@@ -14,7 +17,7 @@
 }
 
 .kFlavorReplaceButton {
-    margin-right: 20px;
+    margin-right: 16px;
     margin-bottom: 16px;
     font-size: 14px;
     font-weight: bold;
@@ -44,7 +47,7 @@
 
 @media screen and (max-width: 1310px) {
     .kFlavorReplaceButton {
-        width: 130px;
+        width: 140px;
         height: 48px;
         margin-right: 10px;
     }

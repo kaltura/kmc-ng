@@ -1,24 +1,25 @@
 <div class="kReplaceMediaButtonsLabel">{{replaceButtonsLabel}}</div>
+<div class="kButtons">
+    <button *ngIf="_uploadEnabled"
+            pButton class="kFlavorReplaceButton kButtonDefault"
+            [label]="'applications.content.entryDetails.flavours.replaceVideo.uploadFromDesktop' | translate"
+            (click)="_openReplacementMenu('upload')"></button>
 
-<button *ngIf="_uploadEnabled"
-        pButton class="kFlavorReplaceButton kButtonDefault"
-        [label]="'applications.content.entryDetails.flavours.replaceVideo.uploadFromDesktop' | translate"
-        (click)="_openReplacementMenu('upload')"></button>
+    <button *ngIf="_importEnabled"
+            pButton class="kFlavorReplaceButton kButtonDefault"
+            [label]="'applications.content.entryDetails.flavours.replaceVideo.importFromUrl' | translate"
+            (click)="_openReplacementMenu('import')"></button>
 
-<button *ngIf="_importEnabled"
-        pButton class="kFlavorReplaceButton kButtonDefault"
-        [label]="'applications.content.entryDetails.flavours.replaceVideo.importFromUrl' | translate"
-        (click)="_openReplacementMenu('import')"></button>
+    <button *ngIf="_linkEnabled"
+            pButton class="kFlavorReplaceButton kButtonDefault"
+            [label]="'applications.content.entryDetails.flavours.replaceVideo.linkRemoteStorage' | translate"
+            (click)="_openReplacementMenu('link')"></button>
 
-<button *ngIf="_linkEnabled"
-        pButton class="kFlavorReplaceButton kButtonDefault"
-        [label]="'applications.content.entryDetails.flavours.replaceVideo.linkRemoteStorage' | translate"
-        (click)="_openReplacementMenu('link')"></button>
-
-<button *ngIf="_matchEnabled"
-        pButton class="kFlavorReplaceButton kButtonDefault"
-        [label]="'applications.content.entryDetails.flavours.replaceVideo.matchFromDropFolder' | translate"
-        (click)="matchDropFolder.open()"></button>
+    <button *ngIf="_matchEnabled"
+            pButton class="kFlavorReplaceButton kButtonDefault"
+            [label]="'applications.content.entryDetails.flavours.replaceVideo.matchFromDropFolder' | translate"
+            (click)="matchDropFolder.open()"></button>
+</div>
 
 <kPopupWidget #uploadMenu data-aid="uploadMenu" [popupWidth]="791" [popupHeight]="607" [modal]="true" [preventPageScroll]="true">
     <ng-template>
