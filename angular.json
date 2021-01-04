@@ -35,10 +35,7 @@
                       "src/styles",
                       "node_modules"
                   ]
-              },
-            "scripts": [
-              "src/assets/js/KalturaEmbedCodeGenerator.min.js"
-            ]
+              }
           },
           "configurations": {
             "production": {
@@ -90,9 +87,6 @@
             "karmaConfig": "./karma.conf.js",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.spec.json",
-            "scripts": [
-              "src/assets/js/KalturaEmbedCodeGenerator.min.js"
-            ],
             "styles": [
               "src/styles/app-theme/styles.scss"
             ],

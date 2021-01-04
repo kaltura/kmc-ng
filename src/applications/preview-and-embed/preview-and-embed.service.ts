@@ -63,6 +63,54 @@ export class PreviewEmbedService {
 		return this._kalturaClient.request(new ShortLinkAddAction({shortLink}));
 	}
 
+    generateV2EmbedCode(config: any): string {
+        let code = '';
+        switch (config.embedType) {
+            case 'dynamic':
+                const dynamicEntryId = !config.entryId.length ? '' : `,
+  "entry_id": "${config.entryId}"`;
+                code = `<script src="${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}"></script>
+<div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>
+<script>
+kWidget.embed({
+  "targetId": "${config.playerId}",
+  "wid": "_${config.pid}",
+  "uiconf_id": ${config.uiConfId},
+  "flashvars": ${config.flashVars},
+  "cache_st": ${config.cacheSt}${dynamicEntryId}
+});
+</script>`
+                break;
+            case 'iframe':
+                const iframeEntryId = config.entryId.length ? `&entry_id=${config.entryId}` : '';
+                code = `<iframe id="${config.playerId}" src="${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}?iframeembed=true&playerId=${config.playerId}${iframeEntryId}${config.flashVarsUrl}" width="${config.width}" height="${config.height}" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"${config.videoMeta}>${config.entryMeta}</iframe>`
+                break;
+            case 'auto':
+                const autoEntryId = config.entryId.length ? `&entry_id=${config.entryId}` : '';
+                code = `<script src="${config.serverUri}/p/${config.pid}/sp/${config.pid}100/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}?autoembed=true${autoEntryId}&playerId=${config.playerId}&cache_st=${config.cacheSt}&width=${config.width}&height=${config.height}${config.flashVarsUrl}"></script>`
+                if (config.includeSeoMetadata) {
+                    code = `<div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>
+` + code;
+                }
+                break;
+            case 'thumb':
+                code = `<script src="${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}"></script>
+<div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>
+<script>
+kWidget.thumbEmbed({
+  "targetId": "${config.playerId}",
+  "wid": "_${config.pid}",
+  "uiconf_id": ${config.uiConfId},
+  "flashvars": ${config.flashVars},
+  "cache_st": ${config.cacheSt},
+  "entry_id": "${config.entryId}"
+});
+</script>`;
+                break;
+        }
+        return code;
+    }
+
 	generateV3EmbedCode(config: any, isPreview: boolean): string {
 	    let code = '';
         const rnd = Math.floor(Math.random() * 1000000000);
