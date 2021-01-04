@@ -57,7 +57,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     public _query = {
         freetext: '',
         freetextSearchField: '',
-        includeCaptions: true,
+        includeCaptions: false,
         createdAfter: null,
         createdBefore: null,
         pageIndex: 0,
@@ -282,6 +282,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
   private _restoreFiltersState(): void {
     this._updateComponentState(this._entriesStore.cloneFilters([
       'freetext',
+      'includeCaptions',
       'freetextSearchField',
       'pageSize',
       'pageIndex',
@@ -297,6 +298,9 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
       this._query.freetext = updates.freetext || '';
     }
 
+    if (typeof updates.includeCaptions !== 'undefined') {
+      this._query.includeCaptions = updates.includeCaptions || false;
+    }
     if (typeof updates.freetextSearchField !== 'undefined') {
       this._query.freetextSearchField = updates.freetextSearchField || '';
     }

@@ -34,7 +34,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
   ngOnDestroy() {
 
   }
-
+  private saveFreetextSearchField = '';
   private _updateFilterWithJoinedList(list: any[],
                                       requestFilter: KalturaMediaEntryFilter,
                                       requestFilterProperty: keyof KalturaMediaEntryFilter): void {
@@ -76,9 +76,29 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
           }
 
           // filter 'freeText'
-          if (data.freetext) {
-            filter.freeText = data.freetext;
-          }
+            if (data.freetext) {
+                if (data.freetextSearchField === '' || data.freetextSearchField === 'captions') {
+                    if (this.saveFreetextSearchField.length) {
+                        delete filter[this.saveFreetextSearchField];
+                        this.saveFreetextSearchField = '';
+                    }
+                    filter.freeText = data.freetext;
+                    if (data.freetextSearchField === '') {
+                        if (data.includeCaptions) {
+                            delete filter["excludedFreeTextGroups"];
+                        } else {
+                            filter.excludedFreeTextGroups = 'captions';
+                        }
+                    } else { // search only in captions
+                        filter.excludedFreeTextGroups = 'entry,category_entry,cue_point,metadata';
+                    }
+                } else {
+                    filter[data.freetextSearchField] = data.freetext;
+                    this.saveFreetextSearchField = data.freetextSearchField;
+                }
+            } else {
+                delete filter["excludedFreeTextGroups"];
+            }
 
           // filter 'createdAt'
           if (data.createdAt) {

@@ -135,6 +135,16 @@
   }
 }
 
+:host ::ng-deep .kSearchInput {
+    margin-right: 0px !important;
+}
+:host ::ng-deep .searchHolder {
+    margin-right: 16px !important;
+    i {
+        right: 6px !important;
+    }
+}
+
 :host ::ng-deep .kPlaylistRuleWrap {
   .kEntries {
     min-width: auto;
