@@ -1,3 +1,13 @@
+<a name="6.3.2"></a>
+## [6.3.2](https://github.com/kaltura/kmc-ng/compare/v6.3.1...v6.3.2) (2021-01-04)
+
+
+### Bug Fixes
+
+* **playlist/rule-based:** Support eSearch free text field in playlist execution and save filter status SUP-24606 ([#921](https://github.com/kaltura/kmc-ng/issues/921)) ([26cf75c](https://github.com/kaltura/kmc-ng/commit/26cf75c))
+
+
+
 <a name="6.3.1"></a>
 ## [6.3.1](https://github.com/kaltura/kmc-ng/compare/v6.3.0...v6.3.1) (2020-12-13)
 
