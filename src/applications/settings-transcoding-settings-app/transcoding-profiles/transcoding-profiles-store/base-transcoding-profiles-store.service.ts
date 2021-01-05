@@ -1,4 +1,4 @@
-import { OnDestroy } from '@angular/core';
+import {Directive, OnDestroy} from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
@@ -37,6 +37,7 @@ export interface TranscodingProfilesFilters {
   pageIndex: number;
 }
 
+@Directive()
 export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<TranscodingProfilesFilters> implements OnDestroy {
   private _profiles = {
     data: new BehaviorSubject<{ items: KalturaConversionProfileWithAsset[], totalCount: number }>({ items: [], totalCount: 0 }),
