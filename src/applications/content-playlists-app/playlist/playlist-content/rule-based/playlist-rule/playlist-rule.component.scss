@@ -154,11 +154,11 @@
   .kContent {
     width: 992px;
 
-    .ui-table-scrollable-body {
+    .p-datatable-scrollable-body {
       height: calc(100vh - 409px) !important;
     }
 
-    .kTagsVisible .ui-table-scrollable-body {
+    .kTagsVisible .p-datatable-scrollable-body {
       height: calc(100vh - 450px) !important;
     }
 

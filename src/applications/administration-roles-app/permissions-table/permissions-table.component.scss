@@ -30,11 +30,11 @@
 }
 
 :host ::ng-deep .kPermissionsTable {
-  p-table .ui-table-scrollable-body{
+  p-table .p-datatable-scrollable-body{
     margin-bottom: 34px;
   }
 
-  .ui-table .ui-table-thead > tr > th {
+  .p-datatable .p-datatable-thead > tr > th {
     border: 1px solid $kGrayscale6;
     border-left: none;
     border-right: none;

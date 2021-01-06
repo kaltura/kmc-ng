@@ -188,12 +188,12 @@
   display: none;
 }
 
-:host ::ng-deep .kTable .ui-table-scrollable-header,
-:host ::ng-deep .kTable .ui-table-scrollable-body {
+:host ::ng-deep .kTable .p-datatable-scrollable-header,
+:host ::ng-deep .kTable .p-datatable-scrollable-body {
   border-top: 1px $kGrayscale6 solid;
 }
 
-:host ::ng-deep .kTable .ui-table-scrollable-body {
+:host ::ng-deep .kTable .p-datatable-scrollable-body {
   margin-bottom: -1px;
     max-height: 348px !important;
 }
@@ -203,7 +203,7 @@
   display: block !important;
 }
 
-:host ::ng-deep .kTable .ui-table-scrollable-table-wrapper {
+:host ::ng-deep .kTable .p-datatable-scrollable-table-wrapper {
   height: 280px;
 }
 
