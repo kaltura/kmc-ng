@@ -64,7 +64,7 @@
   align-items: center;
   justify-content: center;
 }
-:host ::ng-deep kautocomplete ul.ui-autocomplete-multiple-container.ui-inputtext{
+:host ::ng-deep kautocomplete ul.ui-autocomplete-multiple-container.p-inputtext{
   padding: 0px;
   .ui-autocomplete-input-token{
     padding: 0px;
@@ -86,6 +86,6 @@
   }
 }
 
-:host ::ng-deep .ui-dropdown-label.ui-inputtext{
+:host ::ng-deep .ui-dropdown-label.p-inputtext{
   background-color: #ffffff;
 }

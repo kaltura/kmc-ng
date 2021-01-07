@@ -71,19 +71,19 @@
     }
 
     ::ng-deep {
-        .ui-button-icon-left {
+        .p-button-icon-left {
             font-size: 24px;
             color: $kGrayscale3;
         }
 
-        .ui-button-text {
+        .p-button-text {
             margin-left: 16px;
         }
     }
 
 }
 ::ng-deep p-chips.kInvalid {
-    .ui-chips ul.ui-inputtext {
+    .ui-chips ul.p-inputtext {
         border: 1px solid $kDandger;
     }
 }
@@ -91,7 +91,7 @@
 ::ng-deep p-chips {
     width: 100%;
     .ui-chips {
-        ul.ui-inputtext {
+        ul.p-inputtext {
             max-height: 101px;
             overflow-y: auto;
             height: auto;

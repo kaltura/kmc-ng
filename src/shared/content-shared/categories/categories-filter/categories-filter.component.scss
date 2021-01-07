@@ -80,17 +80,17 @@ a.disabled {
 }
 
 /* Make sure toggler and checkbox remain aligned even if the node height changes */
-:host ::ng-deep .ui-treenode .ui-tree-toggler {
+:host ::ng-deep .p-treenode .p-tree-toggler {
   vertical-align: top;
   margin-top: 13px;
 }
 
-:host ::ng-deep .ui-tree .ui-chkbox {
+:host ::ng-deep .p-tree .ui-chkbox {
   vertical-align: top;
   margin-top: 16px;
 }
 
-:host ::ng-deep .ui-tree .ui-tree-toggler {
+:host ::ng-deep .p-tree .p-tree-toggler {
   margin-top: 15px;
 }
 
@@ -104,7 +104,7 @@ a.disabled {
   text-decoration: underline;
 }
 
-:host ::ng-deep kautocomplete ul.ui-autocomplete-multiple-container.ui-inputtext {
+:host ::ng-deep kautocomplete ul.ui-autocomplete-multiple-container.p-inputtext {
   padding: 0px;
   .ui-autocomplete-input-token {
     padding: 0px;

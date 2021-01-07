@@ -218,14 +218,14 @@
     width: 380px !important;
     border: 1px solid $kGrayscale2;
   }
-  .ui-dropdown-label.ui-inputtext, .ui-dropdown .ui-dropdown-trigger{
+  .ui-dropdown-label.p-inputtext, .ui-dropdown .ui-dropdown-trigger{
     background-color: $kBlack;
     color: $kGrayscale3;
   }
   .ui-dropdown-panel .ui-dropdown-filter-container{
       padding-left: 12px;
   }
-  .ui-dropdown-filter.ui-inputtext{
+  .ui-dropdown-filter.p-inputtext{
     width: 350px;
   }
   .pi-pi-search:before{
@@ -258,7 +258,7 @@
   .ui-dropdown{
     width: 260px !important;
   }
-  .ui-dropdown-filter.ui-inputtext{
+  .ui-dropdown-filter.p-inputtext{
     width: 240px;
   }
 }
@@ -274,11 +274,11 @@
     display: block;
   }
 
-  .ui-radiobutton {
+  .p-radiobutton {
     float: left;
   }
 
-  .ui-radiobutton-label {
+  .p-radiobutton-label {
     margin-left: 12px;
     color: $kGrayscale3;
     font-size: 14px;

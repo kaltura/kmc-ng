@@ -345,8 +345,8 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
 .ui-column-resizer-helper {
     background-color: $kGrayscale5;
 }
-.ui-button{
-    .ui-button-icon-left{
+.p-button{
+    .p-button-icon-left{
         font-size: inherit;
     }
 }
@@ -372,7 +372,7 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
         }
     }
 }
-.ui-menu{
+.p-menu{
     li.kSelected{
         font-weight: bold;
         a:after{
@@ -406,7 +406,7 @@ div, span, tr, td, li {
     outline: none !important;
 }
 
-.ui-datepicker-trigger {
+.p-datepicker-trigger {
     position: absolute;
 }
 

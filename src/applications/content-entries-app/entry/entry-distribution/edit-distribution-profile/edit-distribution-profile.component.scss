@@ -182,11 +182,11 @@ $app-styles-path: '../../../styles';
     }
   }
 
-  .kDateControl .ui-inputtext {
+  .kDateControl .p-inputtext {
     width: 176px;
   }
 
-  .ui-inputtext:disabled {
+  .p-inputtext:disabled {
     border-color: $kGrayscale2;
     color: $kGrayscale2;
   }
@@ -196,7 +196,7 @@ $app-styles-path: '../../../styles';
       font-size: 24px;
     }
 
-    .ui-button-text {
+    .p-button-text {
       margin-left: 16px;
     }
   }
