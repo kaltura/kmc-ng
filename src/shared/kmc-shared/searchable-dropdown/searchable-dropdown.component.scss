@@ -35,7 +35,7 @@
     position: absolute;
 }
 
-.ui-dropdown .ui-dropdown-label {
+.ui-dropdown .p-dropdown-label {
     display: block;
     border: none;
     white-space: nowrap;
@@ -46,21 +46,21 @@
 }
 
 .ui-dropdown-item-empty,
-.ui-dropdown-label-empty {
+.p-dropdown-label-empty {
     text-indent: -9999px;
     overflow: hidden;
 }
 
 .ui-dropdown.ui-state-disabled .ui-dropdown-trigger,
-.ui-dropdown.ui-state-disabled .ui-dropdown-label {
+.ui-dropdown.ui-state-disabled .p-dropdown-label {
     cursor: default;
 }
 
-.ui-dropdown label.ui-dropdown-label {
+.ui-dropdown label.p-dropdown-label {
     cursor: pointer;
 }
 
-.ui-dropdown input.ui-dropdown-label {
+.ui-dropdown input.p-dropdown-label {
     cursor: default;
 }
 

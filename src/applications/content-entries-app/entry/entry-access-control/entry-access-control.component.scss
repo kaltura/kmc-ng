@@ -39,11 +39,11 @@
 	width: 180px !important;
 }
 
-:host ::ng-deep .ui-dropdown-label.p-inputtext{
+:host ::ng-deep .p-dropdown-label.p-inputtext{
 	background-color: #ffffff;
 }
 
-:host ::ng-deep .ui-dropdown-label {
+:host ::ng-deep .p-dropdown-label {
   text-overflow: ellipsis;
 }
 :host ::ng-deep .kAccessControlProfiles {
@@ -51,7 +51,7 @@
         width: 250px;
     }
 
-    .ui-dropdown-label {
+    .p-dropdown-label {
         text-overflow: ellipsis;
         font-weight: normal;
         font-size: 15px;

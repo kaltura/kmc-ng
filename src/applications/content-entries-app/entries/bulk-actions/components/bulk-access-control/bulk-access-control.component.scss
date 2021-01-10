@@ -81,11 +81,11 @@
     width: 220px !important;
   }
 
-  .ui-dropdown-label {
+  .p-dropdown-label {
     text-overflow: ellipsis;
   }
 }
 
-:host ::ng-deep .ui-dropdown-label.p-inputtext{
+:host ::ng-deep .p-dropdown-label.p-inputtext{
   background-color: #ffffff;
 }
