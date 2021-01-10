@@ -42,6 +42,7 @@
                                 [options]="_fileTypes"
                                 [placeholder]="'applications.content.entryDetails.related.select' | translate"
                                 [(ngModel)]="file.format"
+                                [appendTo]="'body'"
                                 (onChange)="_widgetService._setDirty()"></p-dropdown>
                         </td>
                         <td [ngStyle]="{'width':'100px'}">{{file.size | kFileSize}}</td>

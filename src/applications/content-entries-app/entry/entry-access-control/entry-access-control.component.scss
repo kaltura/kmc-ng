@@ -34,7 +34,7 @@
 		}
 	}
 }
-:host ::ng-deep .ui-dropdown.ui-widget{
+:host ::ng-deep .p-dropdown{
     min-width: 180px;
 	width: 180px !important;
 }
@@ -58,7 +58,7 @@
         color: $kGrayscale1;
     }
 
-    .ui-dropdown.ui-widget {
+    .p-dropdown {
         min-width: 184px;
         width: 184px;
     }
