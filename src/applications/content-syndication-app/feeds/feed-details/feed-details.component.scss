@@ -52,13 +52,13 @@
         width: 258px;
 
         &.kHasError{
-          ::ng-deep .ui-widget.ui-dropdown {
+          ::ng-deep .p-dropdown {
             border: none;
             padding-top: 1px;
           }
         }
 
-        ::ng-deep .ui-dropdown-items-wrapper {
+        ::ng-deep .p-dropdown-items-wrapper {
           max-height:250px !important;
         }
       }
@@ -207,12 +207,12 @@
     }
   }
 
-  .ui-widget.ui-dropdown {
+  .p-dropdown {
     width: 258px;
     font-size: 14px;
   }
 
-  .ui-dropdown-filter-container {
+  .p-dropdown-filter-container {
     width: 100%;
   }
 

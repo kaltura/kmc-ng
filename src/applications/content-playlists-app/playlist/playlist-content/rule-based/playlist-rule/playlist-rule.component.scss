@@ -108,7 +108,7 @@
           width: 260px;
           margin-right: 16px;
 
-          p-dropdown {
+          .p-dropdown {
             width: 100%;
           }
         }
@@ -165,7 +165,7 @@
   }
 }
 
-:host ::ng-deep .kOrderBy .ui-dropdown {
+:host ::ng-deep .kOrderBy .p-dropdown {
   width: 100%;
 
   label {
