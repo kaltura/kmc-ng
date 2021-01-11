@@ -190,11 +190,11 @@ hr{
 		/* PrimeNG overrides */
 		/*********************/
 
-	  .ui-dropdown.ui-widget{
+	  .p-dropdown{
 			width: 100% !important;
 		}
 
-    .ui-autocomplete-multiple-container {
+    .p-autocomplete-multiple-container {
       max-height: 101px;
       overflow-y: auto;
     }
@@ -203,21 +203,21 @@ hr{
 			background-color: #ffffff;
               padding-left: 1em;
 		}
-		  .ui-multiselect{
+		  .p-multiselect{
 			width: 100% !important;
 		}
-		  .ui-multiselect-label-container{
+		  .p-multiselect-label-container{
 			color: $kGrayscale3;
 		}
 
-		  .ui-multiselect-trigger .pi-pi-caret-down{
+		  .p-multiselect-trigger .pi-pi-caret-down{
 			margin-top: 0px;
 			right: 8px;
 			position: absolute;
 			color: $kGrayscale3;
 		}
 
-		  .ui-autocomplete.ui-widget{
+		  .p-autocomplete{
 			width: 100%;
 			input{
 				width: 100%;
@@ -228,7 +228,7 @@ hr{
 			padding-right: 4px;
 		}
 
-		  .ui-autocomplete.ui-widget{
+		  .p-autocomplete{
 			width: 100%;
 			input{
 				width: 100%;
@@ -242,7 +242,7 @@ hr{
 			margin-left: -.5em;
 		}
 
-		  .ui-multiselect-panel .ui-multiselect-filter-container .pi{
+		  .p-multiselect-panel .p-multiselect-filter-container .pi{
 			color: $kGrayscale3;
 			font-size: 14px;
 			font-weight: 400;
@@ -253,7 +253,7 @@ hr{
             max-width: 500px;
             display: block;
 
-        .ui-state-disabled {
+        .p-disabled {
           background-color: $kGrayscale5;
         }
 		}
