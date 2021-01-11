@@ -147,7 +147,7 @@
 
 
 :host ::ng-deep {
-  .ui-dropdown {
+  .p-dropdown {
     height: 34px;
     border: 1px solid $kGrayscale4;
 
@@ -195,7 +195,7 @@
   width: inherit;
 }
 :host ::ng-deep .kTableFooter {
-  .ui-dropdown-panel {
+  .p-dropdown-panel {
     min-width: 70px;
   }
 }

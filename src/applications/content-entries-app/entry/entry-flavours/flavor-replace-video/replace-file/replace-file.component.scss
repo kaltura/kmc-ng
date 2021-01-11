@@ -128,7 +128,7 @@
                 }
             }
 
-            .kHasError ::ng-deep .ui-dropdown {
+            .kHasError ::ng-deep .p-dropdown {
                 border-color: $kDandger;
             }
         }
@@ -176,7 +176,7 @@
 }
 
 :host ::ng-deep .kTranscodingProfile {
-    .ui-dropdown-panel {
+    .p-dropdown-panel {
         width: 250px;
     }
 
@@ -187,7 +187,7 @@
         color: $kGrayscale1;
     }
 
-    .ui-dropdown.ui-widget {
+    .p-dropdown {
         min-width: 184px;
         width: 184px;
     }

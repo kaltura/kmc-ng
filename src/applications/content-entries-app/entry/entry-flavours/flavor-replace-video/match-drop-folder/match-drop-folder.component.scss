@@ -190,7 +190,7 @@
 }
 
 :host ::ng-deep .kDropFoldersList {
-    .ui-dropdown-panel {
+    .p-dropdown-panel {
         width: 238px;
     }
 
@@ -201,7 +201,7 @@
         color: $kGrayscale1;
     }
 
-    .ui-dropdown.ui-widget {
+    .p-dropdown {
         min-width: 238px;
         width: 238px;
     }
