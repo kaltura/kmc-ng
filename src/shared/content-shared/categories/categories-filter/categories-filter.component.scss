@@ -60,9 +60,6 @@ a.disabled {
 
 .kHeader {
   padding-top: 10px;
-  kautocomplete{
-    margin-left: 4px;
-  }
 }
 
 .kLoadingMessage {
@@ -110,8 +107,7 @@ a.disabled {
     padding: 0px;
     input {
       height: 34px;
-      padding-left: 8px;
-      width: 328px;
+      width: 320px;
       &:active {
         background-color: white;
       }

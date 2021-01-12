@@ -280,6 +280,9 @@ hr{
 		color: $kBlack;
 	}
 }
-:host ::ng-deep kautocomplete input{
-	height: auto !important;
+:host ::ng-deep kautocomplete ul{
+	width: 100% !important;
+}
+:host ::ng-deep .kHighlightedText {
+    text-decoration: underline;
 }
