@@ -30,9 +30,7 @@
 .p-dropdown .p-dropdown-trigger .p-dropdown-trigger-icon {
     top: 50%;
     left: 50%;
-    margin-top: -.5em;
     margin-left: -.5em;
-    position: absolute;
 }
 
 .p-dropdown .p-dropdown-label {
@@ -50,7 +48,9 @@
     text-indent: -9999px;
     overflow: hidden;
 }
-
+.p-dropdown-empty-message {
+    padding: 4px;
+}
 .p-dropdown.ui-state-disabled .p-dropdown-trigger,
 .p-dropdown.ui-state-disabled .p-dropdown-label {
     cursor: default;
@@ -123,7 +123,9 @@
 
 .lds-ring {
     display: inline-block;
-    position: relative;
+    position: absolute;
+    right: 18px;
+    top: 10px;
     width: 16px;
     height: 16px;
 }
