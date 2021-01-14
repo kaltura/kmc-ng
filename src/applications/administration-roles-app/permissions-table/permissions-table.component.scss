@@ -45,25 +45,21 @@
     position: relative;
   }
 
-  .kHasError .ui-multiselect {
+  .kHasError .p-multiselect {
     border: 1px solid $kDandger;
   }
 
-  .ui-multiselect .ui-multiselect-panel{
+  .p-multiselect .p-multiselect-panel{
       z-index: 1;
   }
 
   .kPermissionsList {
-    .ui-multiselect {
+    .p-multiselect {
       width: 320px;
     }
 
-    .ui-multiselect-label {
+    .p-multiselect-label {
       padding: .5em .5em;
-    }
-
-    .ui-multiselect-trigger {
-      padding: .25em !important;
     }
   }
 }
