@@ -2845,6 +2845,9 @@
                     "professional": "Moderation on Professional Requests",
                     "deletion": "Content Deletion Policy",
                     "region": "Task Processing Region",
+                    "machineCaptions": "Machine captions label suffix",
+                    "defaultMachineCaptionsLabel": "(Auto Generated)",
+                    "humanCaptions": "Human captions label suffix",
                     "nameIsMandatory": "Name is required.",
                     "deleteOptions": {
                         "deleteAfterMonth": "Delete After One Month",

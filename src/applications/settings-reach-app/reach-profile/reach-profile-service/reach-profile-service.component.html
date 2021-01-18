@@ -39,11 +39,33 @@
 
                 <div class="kRow">
                     <span class="kLabel">
+                        {{'applications.settings.reach.settings.machineCaptions' | translate}}
+                      </span>
+                    <div class="kControl">
+                        <p-inputSwitch class="kInputSwitch" [formControl]="_widgetService.useMachineCaptionsLabelField"></p-inputSwitch>
+                        <span class="switchLabel">{{_widgetService.serviceForm.controls['useMachineCaptionsLabel'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+                        <input class="label" [formControl]="_widgetService.machineCaptionsLabelField" pInputText [class.disabled]="!_widgetService.serviceForm.controls['useMachineCaptionsLabel'].value">
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <span class="kLabel">
                         {{'applications.settings.reach.service.human' | translate}}
                       </span>
                     <div class="kControl">
                         <p-inputSwitch class="kInputSwitch" [formControl]="_widgetService.humanField"></p-inputSwitch>
                         <span>{{_widgetService.serviceForm.controls['human'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <span class="kLabel">
+                        {{'applications.settings.reach.settings.humanCaptions' | translate}}
+                      </span>
+                    <div class="kControl">
+                        <p-inputSwitch class="kInputSwitch" [formControl]="_widgetService.useHumanCaptionsLabelField"></p-inputSwitch>
+                        <span class="switchLabel">{{_widgetService.serviceForm.controls['useHumanCaptionsLabel'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+                        <input class="label" [formControl]="_widgetService.humanCaptionsLabelField" pInputText [class.disabled]="!_widgetService.serviceForm.controls['useHumanCaptionsLabel'].value">
                     </div>
                 </div>
 
