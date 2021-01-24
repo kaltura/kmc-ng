@@ -1,3 +1,18 @@
+<a name="6.4.0"></a>
+# [6.4.0](https://github.com/kaltura/kmc-ng/compare/v6.3.2...v6.4.0) (2021-01-24)
+
+
+### Bug Fixes
+
+* **entry/captions:** support captions editor for WebVTT ([#925](https://github.com/kaltura/kmc-ng/issues/925)) ([26283af](https://github.com/kaltura/kmc-ng/commit/26283af))
+
+
+### Features
+
+* **settings/reach:** add captions label suffix field ([b1fe1ca](https://github.com/kaltura/kmc-ng/commit/b1fe1ca))
+
+
+
 <a name="6.3.2"></a>
 ## [6.3.2](https://github.com/kaltura/kmc-ng/compare/v6.3.1...v6.3.2) (2021-01-04)
 
