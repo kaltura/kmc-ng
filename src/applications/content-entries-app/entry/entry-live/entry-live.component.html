@@ -28,13 +28,13 @@
             <span>{{_widgetService.data?.streamName.replace('%i', '1')}}</span>
               <kCopyToClipboard class="kIcon" [text]="_widgetService.data?.streamName.replace('%i', '1')" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
           </div>
-          <div class="kRow">
-            <span class="kLabels"></span>
-            <button pButton class="kButtonDefault" (click)="_widgetService._exportXML()"
-                    [disabled]="_kmcPermissions.LIVE_STREAM_UPDATE | kDisabledIfNotPermitted"
-                    label="{{'applications.content.entryDetails.live.export' | translate}}"></button>
-            <a *ngIf="_widgetService._liveType === 'kaltura' && enableLiveAnalytics" class="kReportLink" [class.kDisabled]="!enableLiveAnalytics" (click)="_openLiveAnalytics()">{{'applications.content.entryDetails.live.report' | translate}}</a>
-          </div>
+<!--          <div class="kRow">-->
+<!--            <span class="kLabels"></span>-->
+<!--            <button pButton class="kButtonDefault" (click)="_widgetService._exportXML()"-->
+<!--                    [disabled]="_kmcPermissions.LIVE_STREAM_UPDATE | kDisabledIfNotPermitted"-->
+<!--                    label="{{'applications.content.entryDetails.live.export' | translate}}"></button>-->
+<!--            <a *ngIf="_widgetService._liveType === 'kaltura' && enableLiveAnalytics" class="kReportLink" [class.kDisabled]="!enableLiveAnalytics" (click)="_openLiveAnalytics()">{{'applications.content.entryDetails.live.report' | translate}}</a>-->
+<!--          </div>-->
         </div>
 
         <div>
