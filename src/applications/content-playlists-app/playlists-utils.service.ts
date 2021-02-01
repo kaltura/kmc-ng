@@ -13,4 +13,10 @@ export class PlaylistsUtilsService {
   public isPath(playlist: KalturaPlaylist): boolean {
       return playlist.playlistType === KalturaPlaylistType.path;
   }
+  public isManual(playlist: KalturaPlaylist): boolean {
+      return playlist.playlistType === KalturaPlaylistType.staticList;
+  }
+  public isRuleBased(playlist: KalturaPlaylist): boolean {
+      return playlist.playlistType === KalturaPlaylistType.dynamic;
+  }
 }
