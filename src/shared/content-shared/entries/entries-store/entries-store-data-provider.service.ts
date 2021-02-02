@@ -116,6 +116,11 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
             }
           }
 
+          // filter 'lastPlayedAt'
+          if (data.lastPlayedAt) {
+              filter.lastPlayedAtLessThanOrEqual = KalturaUtils.getEndDateValue(new Date(data.lastPlayedAt * 1000));
+          }
+
           // filters of joined list
           this._updateFilterWithJoinedList(data.mediaTypes, filter, 'mediaTypeIn');
           this._updateFilterWithJoinedList(data.ingestionStatuses, filter, 'statusIn');
@@ -371,6 +376,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
       sortBy: 'createdAt',
       sortDirection: SortDirection.Desc,
       createdAt: { fromDate: null, toDate: null },
+      lastPlayedAt: null,
       scheduledAt: { fromDate: null, toDate: null },
       mediaTypes: [],
       timeScheduling: [],

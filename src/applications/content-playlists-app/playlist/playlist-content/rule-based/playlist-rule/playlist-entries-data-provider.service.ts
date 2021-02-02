@@ -302,6 +302,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
       sortBy: 'plays',
       sortDirection: SortDirection.Desc,
       createdAt: { fromDate: null, toDate: null },
+      lastPlayedAt: null,
       scheduledAt: { fromDate: null, toDate: null },
       mediaTypes: [],
       timeScheduling: [],

@@ -104,6 +104,9 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 case "createdAt":
                     this._entriesStore.filter({createdAt: {fromDate: null, toDate: null}});
                     break;
+                case "lastPlayedAt":
+                    this._entriesStore.filter({lastPlayedAt: null});
+                    break;
                 case 'youtubeVideo':
                     this._entriesStore.filter({ youtubeVideo: false });
                     break;
@@ -164,6 +167,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             [
                 'freetext',
                 'createdAt',
+                'lastPlayedAt',
                 'customMetadata',
                 ...refineListsType,
                 'categories'
@@ -185,6 +189,10 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
         if (typeof updates.createdAt !== 'undefined') {
             this._syncTagOfCreatedAt();
+        }
+
+        if (typeof updates.lastPlayedAt !== 'undefined') {
+            this._syncTagOflastPlayedAt();
         }
 
         if (typeof updates.customMetadata !== 'undefined') {
@@ -249,6 +257,25 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
         }
         this._tags.push({type: 'createdAt', value: null, label: 'Dates', tooltip});
       }
+    }
+
+    private _syncTagOflastPlayedAt(): void {
+        const previousItem = this._tags.findIndex(item => item.type === 'lastPlayedAt');
+        if (previousItem !== -1) {
+            this._tags.splice(
+                previousItem,
+                1);
+        }
+
+      const lastPlayedAtValue = this._entriesStore.cloneFilter('lastPlayedAt', null);
+        if (lastPlayedAtValue) {
+            this._tags.push({
+                type: 'lastPlayedAt',
+                value: lastPlayedAtValue,
+                label: 'Last Played',
+                tooltip: `Last played before: ${(new DatePipe(this._browserService)).transform(lastPlayedAtValue * 1000, 'longDateOnly')}`
+            });
+        }
     }
 
     private _syncTagOfFreetext(): void {

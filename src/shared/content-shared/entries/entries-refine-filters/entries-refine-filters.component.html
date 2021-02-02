@@ -17,6 +17,17 @@
         <a class="kClearAll" (click)="_clearCreatedComponents()" [class.kDisabledLink]="!_createdAfter && !_createdBefore">
           {{'applications.content.filters.clearDates' |
           translate}}</a>
+
+        <p>{{'applications.content.filters.lastPlayedAt' | translate}}</p>
+        <div class="kDateRange">
+            <p-calendar class="kDateRangeFirst" [(ngModel)]="_lastPlayedAt" [readonlyInput]="true" [showIcon]="true"
+                        [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange" [dateFormat]="_calendarFormat"
+                        icon="kIconcalendar" (onSelect)="_onLastPlayedAtChanged()"></p-calendar>
+        </div>
+        <a class="kClearAll" (click)="_clearLastPlayedAtComponents()" [class.kDisabledLink]="!_lastPlayedAt">
+            {{'applications.content.filters.clearDates' |
+            translate}}</a>
+
         <span *ngIf="_createdFilterError" class="kError">{{_createdFilterError}}</span>
         <div *ngFor="let group of _primeListsGroups">
           <div *ngIf="group.label" class="kFiltersGroupTitle">
