@@ -3495,6 +3495,7 @@
         "FJ": "Fiji",
         "FO": "Faeroese",
         "FR": "French",
+        "FRCA": "French (Canada)",
         "FY": "Frisian",
         "GA": "Irish",
         "GD": "Gaelic (Scots Gaelic)",
@@ -3558,6 +3559,7 @@
         "PL": "Polish",
         "PS": "Pashto (Pushto)",
         "PT": "Portuguese",
+        "PTBR": "Portuguese (Brazil)",
         "QU": "Quechua",
         "RM": "Rhaeto-Romance",
         "RN": "Kirundi",
@@ -3610,6 +3612,7 @@
         "YI": "Yiddish",
         "YO": "Yoruba",
         "ZH": "Chinese",
+        "ZHTW": "Taiwanese Mandarin",
         "ZU": "Zulu"
     },
     "shared": {
