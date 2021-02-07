@@ -1,3 +1,18 @@
+<a name="6.5.0"></a>
+# [6.5.0](https://github.com/kaltura/kmc-ng/compare/v6.4.0...v6.5.0) (2021-02-07)
+
+
+### Bug Fixes
+
+* **entry/live:** remove "Export XML for FMLE" button and ""Live Content Detailed Report" link (KMCNG-2292) ([ef0d844](https://github.com/kaltura/kmc-ng/commit/ef0d844))
+
+
+### Features
+
+* **content/entries:** add "Played Until" filter to entries list ([#926](https://github.com/kaltura/kmc-ng/issues/926)) ([9db8108](https://github.com/kaltura/kmc-ng/commit/9db8108))
+
+
+
 <a name="6.4.0"></a>
 # [6.4.0](https://github.com/kaltura/kmc-ng/compare/v6.3.2...v6.4.0) (2021-01-24)
 
