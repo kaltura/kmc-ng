@@ -272,8 +272,8 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             this._tags.push({
                 type: 'lastPlayedAt',
                 value: lastPlayedAtValue,
-                label: 'Last Played',
-                tooltip: `Last played before: ${(new DatePipe(this._browserService)).transform(lastPlayedAtValue * 1000, 'longDateOnly')}`
+                label: 'Played Until',
+                tooltip: `Played until ${(new DatePipe(this._browserService)).transform(lastPlayedAtValue * 1000, 'longDateOnly')}`
             });
         }
     }

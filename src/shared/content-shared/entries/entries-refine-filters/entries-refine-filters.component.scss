@@ -4,7 +4,17 @@
   margin: 12px;
   background-color: white;
 }
-
+.kFilterLabel{
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 40px;
+}
+.kPlayedUntil{
+    border-top: 1px solid $kGrayscale6;
+    margin-bottom: 16px;
+    margin-left: -12px;
+    padding-left: 16px;
+}
 .kFiltersGroupTitle {
   color: $kGrayscale3;
   line-height: 40px;
@@ -17,7 +27,6 @@
   margin-right: -20px;
   margin-bottom: 8px;
 }
-
 .kTreeContainer {
   overflow-y: auto;
   overflow-x: hidden;

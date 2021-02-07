@@ -364,7 +364,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
       this._closeCalendar(this.scheduledFrom);
       this._closeCalendar(this.scheduledTo);
       this._entriesStore.resetFilters(listOfFilterNames);
-
+      this._lastPlayedAt = null;
       if (this.enforcedFilters) {
           this._entriesStore.filter(this.enforcedFilters);
       }

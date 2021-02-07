@@ -1153,7 +1153,7 @@
                 "flavors": "Flavor: {{0}}",
                 "distributions": "Distribution: {{0}}",
                 "freeText": "Free Text Search",
-                "lastPlayedAt": "Last Played",
+                "lastPlayedAt": "Played Until",
                 "metaData": "{{0}}: {{1}}",
                 "uploadedItem": "Uploaded Item: {{0}}",
                 "status": "Status: {{0}}",
