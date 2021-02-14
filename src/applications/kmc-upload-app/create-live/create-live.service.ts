@@ -59,13 +59,6 @@ export class CreateLiveService {
       stream.liveStreamConfigurations.push(cfg);
     }
 
-    if (data.flashHDSURL) {
-      const cfg = new KalturaLiveStreamConfiguration();
-      cfg.protocol = data.useAkamaiHdProtocol ? KalturaPlaybackProtocol.akamaiHds : KalturaPlaybackProtocol.hds;
-      cfg.url = data.flashHDSURL;
-      stream.liveStreamConfigurations.push(cfg);
-    }
-
     return this._kalturaServerClient
       .request(new LiveStreamAddAction({liveStreamEntry: stream, sourceType: KalturaSourceType.manualLiveStream}))
   }

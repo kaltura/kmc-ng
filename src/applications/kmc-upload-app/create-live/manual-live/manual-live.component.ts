@@ -36,7 +36,6 @@ export class ManualLiveComponent implements OnInit, OnDestroy {
       description: this.data.description,
       useAkamaiHdProtocol: this.data.useAkamaiHdProtocol,
       streamUrl: {
-        flashHDSURL: this.data.flashHDSURL,
         hlsStreamUrl: this.data.hlsStreamUrl
       }
     });
@@ -61,7 +60,6 @@ export class ManualLiveComponent implements OnInit, OnDestroy {
   // Create empty structured form on loading
   private _createForm(): void {
     this._streamUrlForm = this._fb.group({
-        flashHDSURL: ['', KalturaValidators.url],
         hlsStreamUrl: ['', KalturaValidators.url]
       },
       {
@@ -85,14 +83,13 @@ export class ManualLiveComponent implements OnInit, OnDestroy {
             name: data.name,
             description: data.description,
             useAkamaiHdProtocol: data.useAkamaiHdProtocol,
-            flashHDSURL: data.streamUrl.flashHDSURL,
             hlsStreamUrl: data.streamUrl.hlsStreamUrl
           });
       });
   }
 
   private _atLeastOneUrlValidator(formgroup: FormGroup) {
-    if (!formgroup.controls['flashHDSURL'].value && !formgroup.controls['hlsStreamUrl'].value) {
+    if (!formgroup.controls['hlsStreamUrl'].value) {
       return {atLeastOneUrl: true};
     } else {
       return null;

@@ -32,22 +32,6 @@
     </div>
     <form [formGroup]="_streamUrlForm" novalidate>
       <div class="kRow">
-        <span class="kLabel">{{'applications.upload.prepareLive.manualStreamType.flashHDSURL' | translate}}</span>
-        <div class="kRequired"></div>
-        <div>
-          <input class="kControl" formControlName="flashHDSURL" pInputText
-                 [ngClass]="{'kHasError':!_streamUrlForm.controls['flashHDSURL'].valid &&
-                   _streamUrlForm.controls['flashHDSURL'].touched}">
-          <div *ngIf="_streamUrlForm.controls['flashHDSURL'].touched">
-            <div *ngIf="_streamUrlForm.controls['flashHDSURL'].hasError('url')"
-                 class="error">
-              {{'applications.upload.prepareLive.manualStreamType.errors.invalidUrl' | translate}}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="kRow">
         <span class="kLabel">{{'applications.upload.prepareLive.manualStreamType.hlsStreamUrl' | translate}}</span>
         <div class="kRequired"></div>
         <div>
