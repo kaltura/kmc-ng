@@ -48,7 +48,8 @@ export class StudioV3Component implements OnInit, AfterViewInit, OnDestroy {
                        'html5_version': serverConfig.externalApps.studioV3.html5_version,
                        'showFlashStudio': false,
                        'showHTMLStudio': false,
-                       'playerVersionsMap': serverConfig.externalApps.studioV3.playerVersionsMap
+                       'playerVersionsMap': serverConfig.externalApps.studioV3.playerVersionsMap,
+                       'playerConfVars': serverConfig.externalApps.studioV3.playerConfVars
                    }
                },
                'functions': {}
