@@ -4,7 +4,7 @@
 
 ### Bug Fixes
 
-* **live:** Remove the option to define Flash HDS URL when createing a new manual live entry KMCNG-2298 ([eba941d](https://github.com/kaltura/kmc-ng/commit/eba941d))
+* **studio:** Add playerConfVars to studio configuration
 
 
 
