@@ -1,3 +1,13 @@
+<a name="6.5.1"></a>
+## [6.5.1](https://github.com/kaltura/kmc-ng/compare/v6.5.0...v6.5.1) (2021-02-17)
+
+
+### Bug Fixes
+
+* **live:** Remove the option to define Flash HDS URL when createing a new manual live entry KMCNG-2298 ([eba941d](https://github.com/kaltura/kmc-ng/commit/eba941d))
+
+
+
 <a name="6.5.0"></a>
 # [6.5.0](https://github.com/kaltura/kmc-ng/compare/v6.4.0...v6.5.0) (2021-02-07)
 
