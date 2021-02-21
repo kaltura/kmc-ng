@@ -77,18 +77,21 @@ form{
     }
   }
 }
+
 kautocomplete {
     width: 100%;
 }
-:host ::ng-deep kautocomplete ul{
+
+kautocomplete ::ng-deep ul{
     width: 100% !important;
+    .p-autocomplete-input-token input {
+        width: 220px;
+    }
 }
 :host ::ng-deep .kHighlightedText {
     text-decoration: underline;
 }
 
-::ng-deep kPopupWidget .kPopupWidget {
-	overflow: visible !important;
+kPopupWidget ::ng-deep .kPopupWidget {
+    overflow: visible !important;
 }
-
-

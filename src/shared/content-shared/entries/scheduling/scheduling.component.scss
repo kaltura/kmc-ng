@@ -36,6 +36,9 @@
     cursor: default;
     pointer-events: none;
   }
+  .error {
+    margin-top: 4px;
+  }
 }
 
 :host ::ng-deep label {
