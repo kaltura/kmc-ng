@@ -122,7 +122,7 @@
 }
 
 :host ::ng-deep p-checkbox {
-  .p-checkbox .p-checkbox-box {
+  .p-checkbox, .p-checkbox-box {
     width: 18px;
     height: 18px;
   }
