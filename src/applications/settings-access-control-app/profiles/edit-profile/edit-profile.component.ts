@@ -423,8 +423,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     accessControlProfile.name = formValue.name;
     accessControlProfile.description = formValue.description;
     accessControlProfile.restrictions = [];
-
-    const { domainsType, allowedDomains, restrictedDomains } = formValue;
+    const { allowedDomains, restrictedDomains } = formValue;
+    const domainsType = this._profileForm.get('domainsType').value;
     if (domainsType !== null) {
       const items = domainsType === KalturaSiteRestrictionType.allowSiteList ? allowedDomains : restrictedDomains;
       const siteList = this._getAutocompleteList(items);
@@ -436,7 +436,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       }
     }
 
-    const { countriesType, allowedCountries, restrictedCountries } = formValue;
+    const { allowedCountries, restrictedCountries } = formValue;
+    const countriesType = this._profileForm.get('countriesType').value;
     if (countriesType !== null) {
       const items = countriesType === KalturaCountryRestrictionType.allowCountryList ? allowedCountries : restrictedCountries;
       const countryList = this._getList(items);
@@ -448,7 +449,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       }
     }
 
-    const { ipsType, allowedIps, restrictedIps } = formValue;
+    const { allowedIps, restrictedIps } = formValue;
+    const ipsType = this._profileForm.get('ipsType').value;
     if (ipsType !== null) {
       const items = ipsType === KalturaIpAddressRestrictionType.allowList ? allowedIps : restrictedIps;
       const ipAddressList = this._getAutocompleteList(items);
@@ -460,7 +462,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       }
     }
 
-    const { flavorsType, allowedFlavors, restrictedFlavors } = formValue;
+    const { allowedFlavors, restrictedFlavors } = formValue;
+    const flavorsType = this._profileForm.get('flavorsType').value;
     if (flavorsType !== null) {
       const items = flavorsType === KalturaLimitFlavorsRestrictionType.allowList ?  allowedFlavors : restrictedFlavors;
       const flavorParamsIds = this._getList(items);
