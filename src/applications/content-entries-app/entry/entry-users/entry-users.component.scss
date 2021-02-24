@@ -87,6 +87,9 @@ kautocomplete ::ng-deep ul{
     .p-autocomplete-input-token input {
         width: 220px;
     }
+    li.userAdded {
+        background-color: transparentize($kPrimary, 0.5) !important;
+    }
 }
 :host ::ng-deep .kHighlightedText {
     text-decoration: underline;
@@ -95,3 +98,5 @@ kautocomplete ::ng-deep ul{
 kPopupWidget ::ng-deep .kPopupWidget {
     overflow: visible !important;
 }
+
+
