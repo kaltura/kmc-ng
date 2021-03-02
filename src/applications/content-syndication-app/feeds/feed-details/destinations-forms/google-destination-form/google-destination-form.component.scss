@@ -12,7 +12,7 @@
 .kAddToDefaultTranscodingProfile {
   padding-top: 11px;
   ::ng-deep {
-    .ui-chkbox-label {
+    .p-chkbox-label {
       font-weight: normal;
     }
   }
@@ -54,7 +54,8 @@
         width: 380px !important;
     }
     .p-dropdown-panel .p-dropdown-filter-container{
-        padding-left: 12px;
+        padding: 8px;
+        padding-right: 0px;
     }
     .p-dropdown-filter.p-inputtext{
         width: 350px;
@@ -67,19 +68,18 @@
     .p-dropdown label{
         padding-left: 2px;
     }
-    .p-dropdown-item.ui-corner-all{
+    .p-dropdown-item{
         padding-left: 8px;
         padding-right: 8px;
-        width: 340px;
     }
-    .p-dropdown-item.ui-corner-all.ui-state-highlight:after{
+    .p-dropdown-item.p-highlight:after{
         content: none;
     }
     .check{
         margin-left: auto;
         display: none;
     }
-    .p-dropdown-item.ui-corner-all.ui-state-highlight .check{
+    .p-dropdown-item.p-highlight .check{
         display: block;
     }
 }
