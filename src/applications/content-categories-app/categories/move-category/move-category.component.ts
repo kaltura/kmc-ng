@@ -10,12 +10,13 @@ import {
   CategoriesStatusMonitorService
 } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import { SelectedCategory } from 'app-shared/content-shared/categories/category-selector/category-selector.component';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { of } from 'rxjs';
+import { switchMap, toArray } from 'rxjs/operators';
 
 @Component({
   selector: 'kMoveCategory',
@@ -87,9 +88,9 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
     }
 
     this._logger.info(`validate categories to move`);
-    Observable.from(this.selectedCategories)
-      .switchMap(category => this._validateCategoryMove(category))
-      .toArray()
+    from(this.selectedCategories)
+      .pipe(switchMap(category => this._validateCategoryMove(category)))
+      .pipe(toArray())
       .subscribe(
         validatedCategories => {
           const allValid = validatedCategories.every(Boolean);
@@ -144,7 +145,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
   private _moveCategory() {
       this._logger.info(`handle move category request, load category parent data`);
     this._getCategoryParentData()
-      .switchMap(categoryParent => this._categoriesService.moveCategory({ categories: this.selectedCategories, categoryParent }))
+      .pipe(switchMap(categoryParent => this._categoriesService.moveCategory({ categories: this.selectedCategories, categoryParent })))
       .pipe(tag('block-shell'))
       .pipe(cancelOnDestroy(this))
       .subscribe(() => {

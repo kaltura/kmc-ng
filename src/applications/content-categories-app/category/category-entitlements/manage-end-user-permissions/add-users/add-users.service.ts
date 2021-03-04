@@ -10,7 +10,7 @@ import {CategoryUserAddAction} from 'kaltura-ngx-client';
 import {KalturaCategoryUser} from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {CategoryUserCopyFromCategoryAction} from 'kaltura-ngx-client';
-import { delay } from 'rxjs/operators';
+import { delay, map, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
 @Injectable()
@@ -40,7 +40,7 @@ export class AddUsersService {
     });
 
     return this._kalturaServerClient.multiRequest(multiRequest)
-      .map(response => {
+      .pipe(map(response => {
           if (response.hasErrors()) {
             const errorMessage = (response.find(r => (r.error && r.error.code !== 'CATEGORY_USER_ALREADY_EXISTS'))) ?
                 'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.addUsersFailed':
@@ -49,8 +49,8 @@ export class AddUsersService {
           }
           return undefined;
         }
-      )
-      .catch(err => throwError(err));
+      ))
+      .pipe(catchError(err => throwError(err)));
   }
 
 

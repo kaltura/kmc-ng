@@ -24,7 +24,7 @@ import { ContentPlaylistsMainViewService } from 'app-shared/kmc-shared/kmc-views
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { debounce } from 'rxjs/operators';
 import { timer } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 
 export enum ActionTypes {
   PlaylistLoading,
@@ -287,13 +287,13 @@ export class PlaylistStore implements OnDestroy {
       this._widgetsManager.notifyDataSaving(newPlaylist, request, this.playlist)
         .pipe(cancelOnDestroy(this))
         .pipe(tag('block-shell'))
-        .switchMap((response: { ready: boolean, reason?: OnDataSavingReasons, errors?: Error[] }) => {
+        .pipe(switchMap((response: { ready: boolean, reason?: OnDataSavingReasons, errors?: Error[] }) => {
             if (response.ready) {
               this._savePlaylistInvoked = true;
 
               return this._kalturaServerClient.multiRequest(request)
                 .pipe(tag('block-shell'))
-                .map(([res]) => {
+                .pipe(map(([res]) => {
                     if (res.error) {
                       this._state.next({ action: ActionTypes.PlaylistSavingFailed });
                     } else {
@@ -307,7 +307,7 @@ export class PlaylistStore implements OnDestroy {
 
                     return Observable.empty();
                   }
-                )
+                ))
             } else {
               switch (response.reason) {
                 case OnDataSavingReasons.validationErrors:
@@ -324,7 +324,7 @@ export class PlaylistStore implements OnDestroy {
               return Observable.empty();
             }
           }
-        )
+        ))
         .subscribe(
           response => {
             // do nothing - the service state is modified inside the map functions.

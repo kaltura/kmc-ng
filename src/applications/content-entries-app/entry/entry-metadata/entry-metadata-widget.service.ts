@@ -32,7 +32,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { subApplicationsConfig } from 'config/sub-applications';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { observeOn } from 'rxjs/operators';
+import { observeOn, flatMap, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { merge, forkJoin } from 'rxjs';
 
@@ -176,7 +176,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
             .pipe(catchError(() => {
                 return of([false]);
             }))
-            .map(responses => {
+            .pipe(map(responses => {
                 super._hideLoader();
 
                 const isValid = responses.reduce(((acc, response) => (acc && response)), true);
@@ -195,7 +195,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                         return {failed: true, error: e};
                     }
                 }
-            });
+            }));
     }
 
     private _syncHandlerContent()
@@ -257,7 +257,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
             .pipe(tap(response => {
                 this._entryMetadata = response.objects;
             }))
-            .map(response => true)
+            .pipe(map(response => true))
             .pipe(catchError((error) => {
                 this._logger.error('failed to get category custom metadata', error);
                 return of(false);
@@ -280,7 +280,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                     })
                 }
             ))
-            .flatMap(response => {
+            .pipe(flatMap(response => {
                 const categoriesList = response.objects.map(category => category.categoryId);
 
                 if (categoriesList.length) {
@@ -288,7 +288,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 } else {
                     return of({items: []});
                 }
-            })
+            }))
             .pipe(cancelOnDestroy(this, this.widgetReset$))
             .pipe(tap(
                 categories =>
@@ -296,7 +296,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                     this._entryCategories = categories.items;
                 }
             ))
-            .map(response => true)
+            .pipe(map(response => true))
             .pipe(catchError((error) => {
                 this._logger.error('failed to load entry categories', error);
                 return of(false);
@@ -319,7 +319,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                     });
                 }
             }))
-            .map(response => true)
+            .pipe(map(response => true))
             .pipe(catchError((error) => {
                 this._logger.error('failed to load entry custom metadata profiles', error);
                 return of(false);

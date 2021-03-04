@@ -29,7 +29,7 @@ import { AdminMultiAccountMainViewService } from 'app-shared/kmc-shared/kmc-view
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from "app-shared/kmc-shell";
 import { throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, switchMap } from 'rxjs/operators';
 
 export enum SortDirection {
   Desc = -1,
@@ -287,7 +287,8 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
               ks: this._appAuthentication.appUser.ks
           })];
 
-      return this._kalturaClient.multiRequest(requests).switchMap(
+      return this._kalturaClient.multiRequest(requests)
+          .pipe(switchMap(
           (responses: KalturaMultiResponse) => {
               if (responses.hasErrors()) {
                   throw new Error(`Error occur during session creation for partner ${impersonatedPartnerId}`);
@@ -305,7 +306,7 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
                   return ks;
               }))
           }
-      );
+      ));
   }
 
   public addAccount(partner: KalturaPartner, templatePartnerId: number): Observable<KalturaPartner> {

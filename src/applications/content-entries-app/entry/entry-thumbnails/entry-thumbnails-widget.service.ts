@@ -32,6 +32,7 @@ import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/detail
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 export interface ThumbnailRow {
   id: string;
@@ -90,13 +91,13 @@ export class EntryThumbnailsWidget extends EntryWidget {
         return forkJoin(getThumbnails$, getProfiles$)
             .pipe(cancelOnDestroy(this, this.widgetReset$))
 
-            .catch((error, caught) => {
+            .pipe(catchError((error, caught) => {
                 super._hideLoader();
                 super._showActivationError();
                 this._thumbnails.next({items: []});
                 return throwError(error);
-            })
-            .map(responses => {
+            }))
+            .pipe(map(responses => {
                 const thumbnails = responses[0] || [];
                 this._distributionProfiles = (responses[1] as KalturaDistributionProfileListResponse).objects || [];
                 this.buildThumbnailsData(thumbnails);
@@ -106,7 +107,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
                 super._hideLoader();
 
                 return {failed: false};
-            });
+            }));
 
     }
 

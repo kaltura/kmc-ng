@@ -55,8 +55,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { of as ObservableOf} from 'rxjs';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KalturaConversionProfileAssetParamsListResponse, ConversionProfileListAction, KalturaNullableBoolean } from 'kaltura-ngx-client';
-import { map, switchMap } from 'rxjs/operators';
-import { filter } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { of } from 'rxjs';
 
@@ -321,15 +320,15 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         return this._kalturaServerClient
             .multiRequest(this._flavorsDataRequestFactory.create())
             .pipe(flavorsData$ => this._mapFlavorsData(flavorsData$.map(result => ({ result, error: null }))))
-            .map((response) => {
+            .pipe(map((response) => {
                 this._handleFlavorsDataResponse(response);
-            })
-            .switchMap(() => this._getLinkData())
-            .map(({ storageProfile, conversionProfileAsset }) => {
+            }))
+            .pipe(switchMap(() => this._getLinkData()))
+            .pipe(map(({ storageProfile, conversionProfileAsset }) => {
                 this.storageProfile = storageProfile;
                 this.conversionProfileAsset = conversionProfileAsset;
                 return undefined;
-            });
+            }));
     }
 
     private _getFlavorsDataAction(entryId: string): FlavorAssetGetFlavorAssetsWithParamsAction {

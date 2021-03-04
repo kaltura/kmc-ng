@@ -16,6 +16,7 @@ import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/ca
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { throwError } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 export interface EntitlementSectionData {
   categories: KalturaCategory[];
@@ -39,7 +40,7 @@ export class EntitlementService implements OnDestroy{
       })
     );
 
-    return this._kalturaServerClient.multiRequest(request).pipe(cancelOnDestroy(this)).map(
+    return this._kalturaServerClient.multiRequest(request).pipe(cancelOnDestroy(this)).pipe(map(
       response => {
         if (response.hasErrors()) {
           throw new Error('error occurred in action \'getEntitlementsSectionData\'');
@@ -49,7 +50,7 @@ export class EntitlementService implements OnDestroy{
         const categories: KalturaCategory[] = response[1].result.objects;
         return {categories, partnerDefaultEntitlementEnforcement};
       }
-    );
+    ));
   }
 
   public deleteEntitlement({id, privacyContextData}: { id: number, privacyContextData?: { privacyContext: string, privacyContexts: string } }): Observable<void> {
@@ -88,7 +89,7 @@ export class EntitlementService implements OnDestroy{
     }
 
     return this._categoriesSearch.getCategory(id)
-        .switchMap(category =>
+        .pipe(switchMap(category =>
         {
             if (category.privacyContext && category.privacyContext.length)
             {
@@ -106,7 +107,7 @@ export class EntitlementService implements OnDestroy{
                     })
                     .map(_ => (undefined));
             }
-        });
+        }));
   }
 
   private _notifyCategoriesGraphChanges(): void{

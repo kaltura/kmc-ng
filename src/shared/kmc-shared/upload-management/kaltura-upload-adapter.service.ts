@@ -14,6 +14,7 @@ import { KalturaUploadTokenFilter } from 'kaltura-ngx-client';
 import { KalturaUploadTokenListResponse } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
@@ -92,7 +93,7 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
                 this._logger.info(`starting upload for file '${id}'`);
 
                 let requestSubscription = of(fileData.serverUploadToken)
-                    .switchMap(serverUploadToken =>
+                    .pipe(switchMap(serverUploadToken =>
                     {
                         if (!serverUploadToken)
                         {
@@ -121,8 +122,8 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
                                 return of(0);
                             });
                         }
-                    })
-                    .switchMap(uploadedFileSize =>
+                    }))
+                    .pipe(switchMap(uploadedFileSize =>
                     {
                         const payload = {
                             uploadTokenId: fileData.serverUploadToken,
@@ -138,7 +139,7 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
                                 }
                             )
                         )
-                    })
+                    }))
                     .subscribe(
                         () => {
                             requestSubscription = null;

@@ -26,6 +26,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaPlaylistListResponse } from 'kaltura-ngx-client';
 import {PlaylistsUtilsService} from "../../playlists-utils.service";
+import { map } from 'rxjs/operators';
 
 export enum SortDirection {
   Desc = -1,
@@ -228,7 +229,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
               new PlaylistListAction({filter, pager}).setRequestOptions({
                   responseProfile
               }),
-          ]).map(responses => {
+          ]).pipe(map(responses => {
               const path = responses[0]; // path result
               const rapt = responses[1]; // rapt result
               // merge rapt result to path result
@@ -238,7 +239,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
               // update totalCount to the sum of totalCount of both calls
               path.result.totalCount = path.result.totalCount + rapt.result.totalCount;
               return path.result;
-          });
+          }));
       } else {
           // filter without interactive videos (dates or free text search)
           result = this._kalturaServerClient.request(

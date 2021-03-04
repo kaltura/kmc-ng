@@ -1,7 +1,7 @@
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
 import { map } from 'rxjs/operators';
 import {KalturaFilterPager, PlaylistGetAction} from 'kaltura-ngx-client';
@@ -296,7 +296,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
     }
     multiRequests.push(this._kalturaClient.multiRequest(mr));
 
-    return Observable.forkJoin(multiRequests)
+    return forkJoin(multiRequests)
       .pipe(map(responses => {
         const mergedResponses = [].concat.apply([], responses);
         const hasFailure = !!mergedResponses.find(function (response) {

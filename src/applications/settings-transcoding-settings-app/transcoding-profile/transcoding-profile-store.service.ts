@@ -36,7 +36,7 @@ import { SettingsTranscodingMainViewService } from 'app-shared/kmc-shared/kmc-vi
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { TranscodingProfilesUpdatedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { debounce } from 'rxjs/operators';
+import { debounce, map, flatMap, switchMap } from 'rxjs/operators';
 import { timer } from 'rxjs';
 import { of } from 'rxjs';
 
@@ -249,17 +249,17 @@ export class TranscodingProfileStore implements OnDestroy {
     this._widgetsManager.notifyDataSaving(newProfile, request, this.profile.data())
       .pipe(cancelOnDestroy(this))
       .pipe(tag('block-shell'))
-      .flatMap(prepareResponse => {
+      .pipe(flatMap(prepareResponse => {
         if (prepareResponse.ready) {
           return this._checkFlavors(newProfile)
-            .switchMap(({ proceedSave }) => {
+            .pipe(switchMap(({ proceedSave }) => {
               if (!proceedSave) {
                 return Observable.empty();
               }
 
               return this._kalturaServerClient.multiRequest(request)
                 .pipe(tag('block-shell'))
-                .map(multiResponse => {
+                .pipe(map(multiResponse => {
                   if (multiResponse.hasErrors()) {
                     const errorMessage = multiResponse.map(response => {
                       if (response.error) {
@@ -283,8 +283,8 @@ export class TranscodingProfileStore implements OnDestroy {
                   }
 
                   return Observable.empty();
-                });
-            });
+                }));
+            }));
         } else {
           switch (prepareResponse.reason) {
             case OnDataSavingReasons.validationErrors:
@@ -300,7 +300,7 @@ export class TranscodingProfileStore implements OnDestroy {
 
           return Observable.empty();
         }
-      })
+      }))
       .subscribe(
         response => {
           // do nothing - the service state is modified inside the map functions.

@@ -15,6 +15,7 @@ import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { throwError } from 'rxjs';
 import { of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class BulkRemoveCategoriesService extends BulkActionBaseService<number[]> implements OnDestroy {
@@ -51,7 +52,7 @@ export class BulkRemoveCategoriesService extends BulkActionBaseService<number[]>
     public getCategoriesOfEntries(entries: string[]): Observable<CategoryData[]> {
         return this._getCategoryEntryMapping(entries)
             .pipe(cancelOnDestroy(this))
-            .switchMap(items => {
+            .pipe(switchMap(items => {
                 // got all entry categories - load category details for each entry category
                 if (items && items.length) {
                     const categoriesIds = Object.keys(items.reduce((acc, category) => {
@@ -65,7 +66,7 @@ export class BulkRemoveCategoriesService extends BulkActionBaseService<number[]>
                 } else {
                     return of([]);
                 }
-            })
+            }))
     }
 
     public execute(entries: KalturaMediaEntry[], categoriesId: number[]): Observable<{}> {

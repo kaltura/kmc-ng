@@ -1,6 +1,6 @@
 import {Directive, OnDestroy} from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient, KalturaMultiRequest, KalturaRequest } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
@@ -193,7 +193,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
     const multiRequests = splitRequests
       .map(reqChunk => this._kalturaServerClient.multiRequest(reqChunk));
 
-    return Observable.forkJoin(multiRequests)
+    return forkJoin(multiRequests)
       .map(responses => {
         const errorMessage = [].concat.apply([], responses)
           .filter(response => !!response.error)

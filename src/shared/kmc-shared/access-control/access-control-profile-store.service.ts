@@ -12,6 +12,7 @@ import { KalturaAccessControlListResponse } from 'kaltura-ngx-client';
 import { AppEventsService } from '../app-events';
 import { AccessControlProfileUpdatedEvent } from '../events/access-control-profile-updated.event';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { map, catchError, publishReplay, refCount} from 'rxjs/operators';
 
 @Injectable()
 export class AccessControlProfileStore extends PartnerProfileStore implements OnDestroy {
@@ -39,17 +40,17 @@ export class AccessControlProfileStore extends PartnerProfileStore implements On
       // execute the request
       this._cachedProfiles$ = this._buildGetRequest()
         .pipe(cancelOnDestroy(this))
-        .map(
+        .pipe(map(
           response => {
             return ({items: response ? response.objects : []});
-          })
-        .catch(error => {
+          }))
+        .pipe(catchError(error => {
           // re-throw the provided error
           this._cachedProfiles$ = null;
           return throwError(new Error('failed to retrieve access control profiles list'));
-        })
-        .publishReplay(1)
-        .refCount();
+        }))
+        .pipe(publishReplay(1))
+        .pipe(refCount());
     }
 
     return this._cachedProfiles$;

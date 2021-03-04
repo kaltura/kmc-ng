@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { KalturaClient, KalturaCategory, KalturaRequest, KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-ngx-client';
 
@@ -29,7 +29,7 @@ export abstract class CategoriesBulkActionBaseService<T> {
     }
     multiRequests.push(this._kalturaServerClient.multiRequest(mr));
 
-    return Observable.forkJoin(multiRequests)
+    return forkJoin(multiRequests)
       .map(responses => {
           const mergedResponses = [].concat.apply([], responses);
           const errorMessage = mergedResponses.reduce((acc, val) => `${acc}${val.error ? val.error.message : ''}\n`, '').trim();

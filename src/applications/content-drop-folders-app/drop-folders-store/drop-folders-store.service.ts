@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { BrowserService } from 'shared/kmc-shell';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import {
     BaseEntryGetAction,
     DropFolderFileDeleteAction,
@@ -41,6 +41,7 @@ import { serverConfig } from 'config/server';
 import { ContentDropFoldersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { globalConfig } from 'config/global';
 import { of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 const localStoragePageSizeKey = 'dropFolders.list.pageSize';
 
@@ -176,9 +177,9 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
 
   }
 
-  private _buildQueryRequest(reloadFolders: boolean): Observable<KalturaDropFolderFileListResponse> {
+  private _buildQueryRequest(reloadFolders: boolean): Observable<any> {
     return this.loadDropFoldersList(reloadFolders)
-      .switchMap(({ dropFoldersList, error }) => {
+      .pipe(switchMap(({ dropFoldersList, error }) => {
         if (!dropFoldersList.length || error) {
           this._browserService.alert({
               header: this._appLocalization.get('app.common.attention'),
@@ -260,7 +261,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
 
             return response;
           });
-      });
+      }));
 
   }
 
@@ -395,7 +396,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
     const multiRequests = splittedRequests
       .map(reqChunk => this._kalturaServerClient.multiRequest(reqChunk));
 
-    return Observable.forkJoin(multiRequests)
+    return forkJoin(multiRequests)
       .map(responses => {
         const errorMessage = [].concat.apply([], responses)
           .filter(response => !!response.error)

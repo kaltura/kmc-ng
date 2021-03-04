@@ -37,7 +37,7 @@ export abstract class KmcDetailsViewBaseService<TArgs extends {}> {
         if (this.isAvailable(args)) {
             this._lastArgsUsedByOpen = args;
             this._open(args)
-                .map(result => result === null ? true : result) // treat navigation to save route as successful operation
+                .pipe(map(result => result === null ? true : result)) // treat navigation to save route as successful operation
                 .subscribe(
                 result => {
                     if (!result) {

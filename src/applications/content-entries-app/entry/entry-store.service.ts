@@ -19,7 +19,7 @@ import { BaseEntryDeleteAction } from 'kaltura-ngx-client';
 import { BehaviorSubject, Observable, Subject, Unsubscribable } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { timer } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, map, flatMap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
 export enum ActionTypes
@@ -184,14 +184,14 @@ export class EntryStore implements OnDestroy {
 		this._widgetsManager.notifyDataSaving(newEntry, request, this.entry)
             .pipe(cancelOnDestroy(this))
             .pipe(tag('block-shell'))
-            .flatMap(
+            .pipe(flatMap(
 				(response) => {
 					if (response.ready) {
 						this._refreshEntriesListUponLeave = true;
 
 						return this._kalturaServerClient.multiRequest(request)
                             .pipe(tag('block-shell'))
-                            .map(
+                            .pipe(map(
 								response => {
 									if (response.hasErrors()) {
 										this._state.next({action: ActionTypes.EntrySavingFailed});
@@ -202,7 +202,7 @@ export class EntryStore implements OnDestroy {
 
 									return Observable.empty();
 								}
-							)
+							))
 					}
 					else {
 						switch (response.reason) {
@@ -220,7 +220,7 @@ export class EntryStore implements OnDestroy {
 						return Observable.empty();
 					}
 				}
-			)
+			))
             .subscribe(
 				response => {
 					// do nothing - the service state is modified inside the map functions.
@@ -314,7 +314,7 @@ export class EntryStore implements OnDestroy {
                     new BaseEntryGetAction({ entryId }),
                     new FlavorAssetGetFlavorAssetsWithParamsAction({ entryId })
                 )
-            ).map(responses => {
+            ).pipe(map(responses => {
                 if (responses.hasErrors()) {
                     const errorMessage = responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, '');
                     throw new Error(errorMessage);
@@ -329,7 +329,7 @@ export class EntryStore implements OnDestroy {
                 } else {
                     throw new Error(`invalid type provided, expected KalturaMediaEntry, got ${typeof entry}`);
                 }
-            });
+            }));
         } else {
             return throwError(new Error('missing entryId'));
         }

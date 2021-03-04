@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { throwError } from 'rxjs';
-import { publishReplay, refCount } from 'rxjs/operators';
+import { publishReplay, refCount, map, catchError } from 'rxjs/operators';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { CategoryListAction } from 'kaltura-ngx-client';
@@ -97,10 +97,10 @@ export class CategoriesSearchService implements OnDestroy {
       // changing it prioritize cache will require refactoring places that are using this method.
     if (categoriesList && categoriesList.length) {
         return this.buildCategoryListRequest({ categoriesList })
-            .map(response => {
+            .pipe(map(response => {
                 // parse response into categories items
                 return { items: this.parseAndCacheCategories(response.objects) };
-            });
+            }));
     } else {
       return throwError({ message: 'missing categoriesList argument' });
     }
@@ -160,15 +160,15 @@ export class CategoriesSearchService implements OnDestroy {
     if (!cachedResponse) {
         this._logger.info(`caching categories for token '${cacheToken}'`);
         this._groupedCategoriesCache[cacheToken] = cachedResponse = this.buildCategoryListRequest({ parentId, categoriesList })
-        .map(response => {
+        .pipe(map(response => {
           // parse response into categories items
           return { items: this.parseAndCacheCategories(response.objects) };
-        }).catch(error => {
+        })).pipe(catchError(error => {
           this._groupedCategoriesCache[cacheToken] = null;
 
           // re-throw the provided error
           return throwError(error);
-        })
+        }))
         .pipe(publishReplay(1))
         .pipe(refCount());
     }

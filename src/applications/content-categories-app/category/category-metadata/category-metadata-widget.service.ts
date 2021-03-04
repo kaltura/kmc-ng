@@ -10,7 +10,7 @@ import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
 import {KalturaCategory} from 'kaltura-ngx-client';
 import {KalturaMetadataFilter} from 'kaltura-ngx-client';
 import {KalturaMetadata} from 'kaltura-ngx-client';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import {
   DynamicMetadataForm,
   DynamicMetadataFormFactory,
@@ -130,7 +130,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
         if (!actions.length) {
             return of(afterOnActivated());
         } else {
-            return Observable.forkJoin(actions)
+            return forkJoin(actions)
                 .catch(() => {
                     return of([false]);
                 })

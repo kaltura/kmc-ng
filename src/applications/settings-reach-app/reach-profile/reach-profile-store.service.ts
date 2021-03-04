@@ -18,7 +18,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { ReachProfilesStore } from "../reach-profiles/reach-profiles-store/reach-profiles-store.service";
 import { SettingsReachProfileViewSections, SettingsReachProfileViewService } from "app-shared/kmc-shared/kmc-views/details-views/settings-reach-profile-view.service";
 import { SettingsReachMainViewService } from "app-shared/kmc-shared/kmc-views";
-import { debounce } from 'rxjs/operators';
+import { debounce, map, flatMap } from 'rxjs/operators';
 import { timer } from 'rxjs';
 
 export enum ActionTypes {
@@ -169,11 +169,11 @@ export class ReachProfileStore implements OnDestroy {
     this._widgetsManager.notifyDataSaving(newProfile, request, this.profile.data())
       .pipe(cancelOnDestroy(this))
       .pipe(tag('block-shell'))
-      .flatMap(prepareResponse => {
+      .pipe(flatMap(prepareResponse => {
         if (prepareResponse.ready) {
           return this._kalturaServerClient.multiRequest(request)
             .pipe(tag('block-shell'))
-            .map(multiResponse => {
+            .pipe(map(multiResponse => {
               if (multiResponse.hasErrors()) {
                 const errorMessage = multiResponse.map(response => {
                   if (response.error) {
@@ -188,7 +188,7 @@ export class ReachProfileStore implements OnDestroy {
                 this._loadProfile(profileResponse.result.id);
               }
               return Observable.empty();
-            });
+            }));
         } else {
           switch (prepareResponse.reason) {
             case OnDataSavingReasons.validationErrors:
@@ -204,7 +204,7 @@ export class ReachProfileStore implements OnDestroy {
 
           return Observable.empty();
         }
-      })
+      }))
       .subscribe(
         response => {
           // do nothing - the service state is modified inside the map functions.

@@ -22,6 +22,7 @@ import {KalturaUtils} from '@kaltura-ng/kaltura-common';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import { throwError } from 'rxjs';
 import { forkJoin } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import * as R from 'ramda';
 import {EntryWidget} from '../entry-widget';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
@@ -76,7 +77,7 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
 
       return forkJoin(getAPProfiles$, getFlavours$)
         .pipe(cancelOnDestroy(this))
-        .map(
+        .pipe(map(
           response => {
             let ACProfiles = response[0].items;
             if (ACProfiles.length) {
@@ -99,14 +100,14 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
 
               return {failed: false};
 
-          })
-        .catch((error, caught) => {
+          }))
+        .pipe(catchError((error, caught) => {
             super._hideLoader();
             super._showActivationError();
             this._accessControlProfiles.next({items: []});
             return throwError(error);
           }
-        );
+        ));
     } else {
       this._setProfile();
     }

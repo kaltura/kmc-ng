@@ -5,7 +5,8 @@ import { subApplicationsConfig } from 'config/sub-applications';
 import { KalturaClient, KalturaRequest } from 'kaltura-ngx-client';
 import { BaseEntryApproveAction } from 'kaltura-ngx-client';
 import { BaseEntryRejectAction } from 'kaltura-ngx-client';
-import { throwError } from 'rxjs';
+import { throwError, forkJoin } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class BulkService implements OnDestroy {
@@ -33,8 +34,8 @@ export class BulkService implements OnDestroy {
     const multiRequests = splittedRequests
       .map(reqChunk => this._kalturaServerClient.multiRequest(reqChunk));
 
-    return Observable.forkJoin(multiRequests)
-      .map(responses => {
+    return forkJoin(multiRequests)
+      .pipe(map(responses => {
         const errorMessage = [].concat.apply([], responses)
           .filter(response => !!response.error)
           .reduce((acc, { error }) => `${acc}\n${error.message}`, '')
@@ -45,14 +46,14 @@ export class BulkService implements OnDestroy {
         } else {
           return {};
         }
-      }).catch(error => {
+      })).pipe(catchError(error => {
         const message = error && error.message
           ? error.message
           : typeof error === 'string'
             ? error
             : this._appLocalization.get('applications.content.moderation.errorConnecting');
         throw new Error(message)
-      });
+      }));
   }
 
   public approveEntry(entryIds: string[]): Observable<{}> {

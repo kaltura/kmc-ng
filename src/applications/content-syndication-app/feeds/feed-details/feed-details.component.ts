@@ -8,7 +8,7 @@ import {FeedsService} from 'applications/content-syndication-app/feeds/feeds.ser
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {KalturaSyndicationFeedType} from 'kaltura-ngx-client';
 import {FlavoursStore} from 'app-shared/kmc-shared';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { throwError } from 'rxjs';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {KalturaSyndicationFeedEntryCount} from 'kaltura-ngx-client';
@@ -270,7 +270,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
       const getEntriesCount$ = this._feedsService.getFeedEntryCount(this.feed.id).pipe(cancelOnDestroy(this));
       requests.push(getEntriesCount$);
     }
-    return Observable.forkJoin(...requests)
+    return forkJoin(...requests)
       .pipe(cancelOnDestroy(this))
       .map(response => {
         const players = response[0].items.map(player => ({
