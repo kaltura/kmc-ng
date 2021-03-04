@@ -5,6 +5,7 @@ import { subApplicationsConfig } from 'config/sub-applications';
 import { KalturaClient, KalturaRequest } from 'kaltura-ngx-client';
 import { BaseEntryApproveAction } from 'kaltura-ngx-client';
 import { BaseEntryRejectAction } from 'kaltura-ngx-client';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class BulkService implements OnDestroy {
@@ -56,7 +57,7 @@ export class BulkService implements OnDestroy {
 
   public approveEntry(entryIds: string[]): Observable<{}> {
     if (!entryIds || entryIds.length <= 0) {
-      return Observable.throw(new Error(this._appLocalization.get('applications.content.moderation.missingIds')));
+      return throwError(new Error(this._appLocalization.get('applications.content.moderation.missingIds')));
     }
 
     return this._transmit(entryIds.map(entryId => new BaseEntryApproveAction({ entryId })), true);
@@ -64,7 +65,7 @@ export class BulkService implements OnDestroy {
 
   public rejectEntry(entryIds: string[]): Observable<{}> {
     if (!entryIds || entryIds.length <= 0) {
-      return Observable.throw(new Error(this._appLocalization.get('applications.content.moderation.missingIds')));
+      return throwError(new Error(this._appLocalization.get('applications.content.moderation.missingIds')));
     }
 
     return this._transmit(entryIds.map(entryId => new BaseEntryRejectAction({ entryId })), true);

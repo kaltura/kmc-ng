@@ -14,6 +14,7 @@ import { AppEventsService } from 'app-shared/kmc-shared/app-events';
 import { MetadataProfileUpdatedEvent } from 'app-shared/kmc-shared/events/metadata-profile-updated.event';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { of } from 'rxjs';
 
 export enum MetadataProfileCreateModes {
     Api,
@@ -60,7 +61,7 @@ export class MetadataProfileStore extends PartnerProfileStore implements OnDestr
     public get(filters : GetFilters) : Observable<{items : MetadataProfile[]}>
     {
         if (!this._permissionsService.hasPermission(KMCPermissions.METADATA_PLUGIN_PERMISSION)) {
-            return Observable.of({ items: [] });
+            return of({ items: [] });
         }
 
         return Observable.create(observer =>

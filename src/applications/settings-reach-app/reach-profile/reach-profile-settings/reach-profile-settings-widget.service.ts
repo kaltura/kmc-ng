@@ -5,7 +5,7 @@ import { SettingsReachProfileViewSections } from "app-shared/kmc-shared/kmc-view
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Observable } from "rxjs";
 import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
-import { async } from "rxjs-compat/scheduler/async";
+import { asyncScheduler } from 'rxjs';
 import {
     KalturaMultiRequest,
     KalturaReachProfile,
@@ -16,6 +16,7 @@ import { KMCPermissions, KMCPermissionsService } from "app-shared/kmc-shared/kmc
 import { AppLocalization } from "@kaltura-ng/mc-shared";
 import { observeOn } from 'rxjs/operators';
 import { merge } from 'rxjs';
+import { of } from 'rxjs';
 
 @Injectable()
 export class ReachProfileSettingsWidget extends ReachProfileWidget implements OnDestroy {
@@ -58,7 +59,7 @@ export class ReachProfileSettingsWidget extends ReachProfileWidget implements On
     private _monitorFormChanges(): void {
         merge(this.settingsForm.valueChanges, this.settingsForm.statusChanges)
             .pipe(cancelOnDestroy(this))
-            .pipe(observeOn(async)) // using async scheduler so the form group status/dirty mode will be synchornized
+            .pipe(observeOn(asyncScheduler)) // using async scheduler so the form group status/dirty mode will be synchornized
             .subscribe(() => {
                     super.updateState({
                         isValid: this.settingsForm.status !== 'INVALID',
@@ -73,7 +74,7 @@ export class ReachProfileSettingsWidget extends ReachProfileWidget implements On
         const name = (formData.name || '').trim();
         const hasValue = name !== '';
 
-        return Observable.of({
+        return of({
             isValid: hasValue
         });
     }

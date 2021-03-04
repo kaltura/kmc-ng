@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
+import { throwError } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient, KalturaPlaylistType } from 'kaltura-ngx-client';
 import { PlaylistListAction } from 'kaltura-ngx-client';
@@ -248,7 +249,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       }
       return result;
     } catch (err) {
-      return Observable.throw(err);
+      return throwError(err);
     }
   }
 

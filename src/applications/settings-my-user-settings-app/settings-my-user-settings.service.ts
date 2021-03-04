@@ -39,7 +39,7 @@ export class SettingsMyUserSettingsService {
         };
       })
       .catch(() => {
-        return Observable.throw(new Error(this._appLocalization.get('applications.settings.myUserSettings.errors.getUserData')));
+        return throwError(new Error(this._appLocalization.get('applications.settings.myUserSettings.errors.getUserData')));
       });
   }
 
@@ -69,7 +69,7 @@ export class SettingsMyUserSettingsService {
         if (error && error.code && error.code === "MISSING_OTP"){
             message = this._appLocalization.get('app.login.error.missingOtp');
         }
-        return Observable.throw(new Error(message));
+        return throwError(new Error(message));
       });
   }
 

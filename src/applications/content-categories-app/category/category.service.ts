@@ -3,7 +3,7 @@ import {Host, Injectable, OnDestroy} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Observable, Subject, BehaviorSubject, Unsubscribable } from 'rxjs';
-
+import { of } from 'rxjs';
 import {KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory} from 'kaltura-ngx-client';
 import {KalturaCategory} from 'kaltura-ngx-client';
 import {CategoryGetAction} from 'kaltura-ngx-client';
@@ -178,7 +178,7 @@ export class CategoryService implements OnDestroy {
     if (!newCategory.referenceId ||
 		((newCategory.referenceId || null) === (this.category.referenceId || null))
 	) {
-      return Observable.of(true);
+      return of(true);
     }
 
     return Observable.create(observer => {

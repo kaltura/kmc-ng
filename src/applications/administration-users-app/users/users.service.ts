@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { Observable } from 'rxjs';
+import { of } from 'rxjs';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { IsUserExistsStatuses } from './user-exists-statuses';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
@@ -26,6 +27,7 @@ import { UserGetAction } from 'kaltura-ngx-client';
 import { UserEnableLoginAction } from 'kaltura-ngx-client';
 import { UserAddAction } from 'kaltura-ngx-client';
 import { AdminUsersMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { throwError } from 'rxjs';
 
 export interface QueryData {
   pageIndex: number;
@@ -161,7 +163,7 @@ export class UsersStore implements OnDestroy {
     const isAdminUser = this._usersDataValue && this._usersDataValue.partnerInfo.adminUserId === user.id;
 
     if (isCurrentUser || isAdminUser) {
-      return Observable.throw(new Error(this._appLocalization.get('applications.administration.users.cantPerform')));
+      return throwError(new Error(this._appLocalization.get('applications.administration.users.cantPerform')));
     }
 
     const relevantUser = this._usersDataValue.users.items.find(item => user.id === item.id);
@@ -183,7 +185,7 @@ export class UsersStore implements OnDestroy {
     const isAdminUser = this._usersDataValue && this._usersDataValue.partnerInfo.adminUserId === user.id;
 
     if (isCurrentUser || isAdminUser) {
-      return Observable.throw(new Error(this._appLocalization.get('applications.administration.users.cantPerform')));
+      return throwError(new Error(this._appLocalization.get('applications.administration.users.cantPerform')));
     }
 
     return this._kalturaServerClient
@@ -203,7 +205,7 @@ export class UsersStore implements OnDestroy {
         const status = error.code === 'LOGIN_DATA_NOT_FOUND'
           ? IsUserExistsStatuses.unknownUser :
           (error.code === 'USER_NOT_FOUND' ? IsUserExistsStatuses.otherKMCUser : null);
-        return Observable.of(status);
+        return of(status);
       });
   }
 
@@ -215,7 +217,7 @@ export class UsersStore implements OnDestroy {
     const { roleIds, id, email, firstName, lastName } = userData;
 
     if (!email || !firstName || !lastName || !roleIds) {
-      return Observable.throw(new Error(this._appLocalization.get('applications.administration.users.addUserError')));
+      return throwError(new Error(this._appLocalization.get('applications.administration.users.addUserError')));
     }
 
     const user = new KalturaUser({
@@ -237,7 +239,7 @@ export class UsersStore implements OnDestroy {
     const { roleIds, id, email } = userData;
 
     if ((!id && !email) || !userId || !roleIds) {
-      return Observable.throw(new Error(this._appLocalization.get('applications.administration.users.invalidUserId')));
+      return throwError(new Error(this._appLocalization.get('applications.administration.users.invalidUserId')));
     }
 
     const user = new KalturaUser({
@@ -255,7 +257,7 @@ export class UsersStore implements OnDestroy {
   public associateUserToAccount(userProvidedEmail: string, user: KalturaUser, roleIds: string): Observable<void> {
 
       if (!user || !roleIds) {
-          return Observable.throw(new Error('cannot associate user to account'));
+          return throwError(new Error('cannot associate user to account'));
       }
     const updatedUser = new KalturaUser({
       roleIds: roleIds,

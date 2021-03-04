@@ -3,7 +3,7 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import { Observable } from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
-import 'rxjs/add/operator/map';
+import { map } from 'rxjs/operators';
 import {KalturaFilterPager, PlaylistGetAction} from 'kaltura-ngx-client';
 import {KalturaClient, KalturaMultiRequest, KalturaMultiResponse, KalturaRequest} from 'kaltura-ngx-client';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
@@ -38,6 +38,7 @@ import { ContentSyndicationMainViewService } from 'app-shared/kmc-shared/kmc-vie
 import { globalConfig } from 'config/global';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { filter as oFilter } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -204,7 +205,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
           filter,
           pager: pagination
         })
-      ).map((response: KalturaBaseSyndicationFeedListResponse) => {
+      ).pipe(map((response: KalturaBaseSyndicationFeedListResponse) => {
         const feedsArray: KalturaBaseSyndicationFeed[] = [];
         response.objects.forEach(feed => {
           if (feed instanceof KalturaBaseSyndicationFeed) {
@@ -218,10 +219,10 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
           }
         });
         return {items: feedsArray, totalCount: response.totalCount};
-      })
-        .pipe(oFilter(Boolean));
+      }))
+      .pipe(oFilter(Boolean));
     } catch (err) {
-      return Observable.throw(err);
+      return throwError(err);
     }
 
   }
@@ -233,9 +234,9 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
     return this._kalturaClient.request(
       new PlaylistListAction({filter, pager})
     )
-      .map((response: KalturaPlaylistListResponse) => {
+      .pipe(map((response: KalturaPlaylistListResponse) => {
         return response.objects.filter( (playlist: KalturaPlaylist) => playlist.playlistType !== KalturaPlaylistType.path && (!playlist.adminTags || (playlist.adminTags && playlist.adminTags.split(',').indexOf('raptentry') === -1)));
-      });
+      }));
 
   }
   public getPlaylist(id: string): Observable<KalturaPlaylist> {
@@ -247,7 +248,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
   // bulk delete
   public deleteFeeds(ids: string[]): Observable<void> {
     if (!ids || !ids.length) {
-      return Observable.throw(new Error('An error occurred while trying to delete feeds, please review your selection'));
+      return throwError(new Error('An error occurred while trying to delete feeds, please review your selection'));
     }
 
     return Observable.create(observer => {
@@ -296,7 +297,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
     multiRequests.push(this._kalturaClient.multiRequest(mr));
 
     return Observable.forkJoin(multiRequests)
-      .map(responses => {
+      .pipe(map(responses => {
         const mergedResponses = [].concat.apply([], responses);
         const hasFailure = !!mergedResponses.find(function (response) {
           return response.error
@@ -306,7 +307,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
         } else {
           return {};
         }
-      });
+      }));
   }
 
 
@@ -346,7 +347,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
   public confirmDelete(feeds: KalturaBaseSyndicationFeed[]): Observable<{ confirmed: boolean, error?: Error }> {
 
     if (!feeds || !feeds.length) {
-      return Observable.throw(new Error(this._appLocalization.get('applications.content.syndication.errors.deleteAttemptFailed')))
+      return throwError(new Error(this._appLocalization.get('applications.content.syndication.errors.deleteAttemptFailed')))
     }
 
     return Observable.create(observer => {
@@ -379,7 +380,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
 
   public getFeedEntryCount(feedId: string): Observable<KalturaSyndicationFeedEntryCount> {
     if (!feedId) {
-      return Observable.throw(new Error(this._appLocalization.get('applications.content.syndication.errors.getFeedEntryCount')))
+      return throwError(new Error(this._appLocalization.get('applications.content.syndication.errors.getFeedEntryCount')))
     }
 
     return this._kalturaClient.request(
@@ -391,12 +392,12 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
     return this._kalturaClient.request(
       new SyndicationFeedUpdateAction({id, syndicationFeed})
     )
-      .map(() => undefined);
+      .pipe(map(() => undefined));
   }
 
   public create(syndicationFeed: KalturaBaseSyndicationFeed): Observable<KalturaBaseSyndicationFeed> {
     if (syndicationFeed.id) {
-      return Observable.throw(new Error('An error occurred while trying to Add Feed. \n Unable to add feed that already exists.'));
+      return throwError(new Error('An error occurred while trying to Add Feed. \n Unable to add feed that already exists.'));
     }
     return this._kalturaClient.request(
       new SyndicationFeedAddAction({syndicationFeed})

@@ -22,6 +22,7 @@ import { NumberTypeAdapter } from '@kaltura-ng/mc-shared';
 import { SettingsTranscodingMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { globalConfig } from 'config/global';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { throwError } from 'rxjs';
 
 export interface ExtendedKalturaConversionProfileAssetParams extends KalturaConversionProfileAssetParams {
   updated?: boolean;
@@ -174,7 +175,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
           return { objects, totalCount };
         });
     } catch (err) {
-      return Observable.throw(err);
+      return throwError(err);
     }
   }
 

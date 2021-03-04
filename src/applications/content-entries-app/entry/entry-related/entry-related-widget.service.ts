@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
-
+import { throwError } from 'rxjs';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
@@ -170,7 +170,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
           this._relatedFiles.next({ items: [] });
           super._hideLoader();
           super._showActivationError();
-          return Observable.throw(error);
+          return throwError(error);
         }
       );
   }

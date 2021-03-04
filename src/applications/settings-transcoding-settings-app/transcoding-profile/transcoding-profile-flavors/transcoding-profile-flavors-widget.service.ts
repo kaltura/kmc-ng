@@ -16,6 +16,7 @@ import { ConversionProfileAssetParamsUpdateAction } from 'kaltura-ngx-client';
 import { SettingsTranscodingProfileViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { of } from 'rxjs';
 
 @Injectable()
 export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget implements OnDestroy {
@@ -36,7 +37,7 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
   }
 
   protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
-    return Observable.of({ isValid: true });
+    return of({ isValid: true });
   }
 
   protected onDataSaving(data: KalturaConversionProfileWithAsset, request: KalturaMultiRequest): void {
@@ -148,7 +149,7 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
       .catch(error => {
         super._hideLoader();
         super._showActivationError(error.message);
-        return Observable.of({ failed: true, error });
+        return of({ failed: true, error });
       });
   }
 

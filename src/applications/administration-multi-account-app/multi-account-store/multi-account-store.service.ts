@@ -28,6 +28,8 @@ import { globalConfig } from 'config/global';
 import { AdminMultiAccountMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from "app-shared/kmc-shell";
+import { throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 export enum SortDirection {
   Desc = -1,
@@ -258,19 +260,19 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
           new PartnerListAction({ filter: accountsFilter }).setRequestOptions({ responseProfile })
       ));
     } catch (err) {
-      return Observable.throw(err);
+      return throwError(err);
     }
 
   }
 
   public updateAccountStatus(id: number, status: KalturaPartnerStatus): Observable<void> {
       return this._kalturaClient.request(new VarConsoleUpdateStatusAction({id, status}))
-          .map(() => {
+          .pipe(map(() => {
               return undefined;
-          })
-          .catch(error => {
+          }))
+          .pipe(catchError(error => {
               throw error;
-          });
+          }));
   }
 
   public getAdminSession(impersonatedPartnerId: number): Observable<string> {
@@ -298,10 +300,10 @@ export class MultiAccountStoreService extends FiltersStoreBase<AccountFilters> i
                   partnerId: this._appAuthentication.appUser.partnerInfo.partnerId,
                   privileges: loggedInUserId !== responses[1].result.adminUserId ? `disableentitlement,enablechangeaccount:${impersonatedPartnerId}` : 'disableentitlement'
 
-              })).map(response => {
+              })).pipe(map(response => {
                   const ks: string = response;
                   return ks;
-              })
+              }))
           }
       );
   }

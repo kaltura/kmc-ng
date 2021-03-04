@@ -7,6 +7,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { KalturaConversionProfileType } from 'kaltura-ngx-client';
 import { KalturaStorageProfile } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
+import { throwError } from 'rxjs';
 import { StorageProfilesStore } from 'app-shared/kmc-shared/storage-profiles';
 import { BaseEntryGetAction } from 'kaltura-ngx-client';
 import { KalturaAPIException, KalturaClient } from 'kaltura-ngx-client';
@@ -15,6 +16,8 @@ import { KalturaConversionProfile } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 export interface NewTranscodingProfileFormData {
   name: string;
@@ -118,20 +121,20 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
       .map(({ items }) => [createEmptyRemoteStorageProfile(), ...items])
       .catch((error) => {
         if (error.code && error.code === "SERVICE_FORBIDDEN") {
-          return Observable.of([createEmptyRemoteStorageProfile()]);
+          return of([createEmptyRemoteStorageProfile()]);
         }
-        return Observable.throw(error);
+        return throwError(error);
       });
   }
 
   private _validateEntryExists(entryId: string): Observable<boolean> {
     return this._kalturaClient.request(new BaseEntryGetAction({ entryId }))
-      .map(Boolean)
-      .catch(
+      .pipe(map(Boolean))
+      .pipe(catchError(
         error => (error instanceof KalturaAPIException && error.code === 'ENTRY_ID_NOT_FOUND')
-          ? Observable.of(false)
-          : Observable.throw(error.message)
-      );
+          ? of(false)
+          : throwError(error.message)
+      ));
   }
 
   private _proceedSave(profile: KalturaConversionProfile): void {

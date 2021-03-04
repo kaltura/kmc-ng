@@ -16,6 +16,8 @@ import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/det
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { merge } from 'rxjs';
+import { throwError } from 'rxjs';
+import { of } from 'rxjs';
 
 @Injectable()
 export class CategoryEntitlementsWidget extends CategoryWidget implements OnDestroy {
@@ -45,7 +47,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
                   return value.membersCount;
               });
       } else {
-          return Observable.throw(new Error('missing data'));
+          return throwError(new Error('missing data'));
       }
   }
 
@@ -68,7 +70,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
       .catch(error => {
         super._hideLoader();
         super._showActivationError();
-        return Observable.of({failed: true, error});
+        return of({failed: true, error});
       });
   }
 
@@ -119,7 +121,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
                   });
       }else
       {
-          return Observable.of({ owner: null, parentCategory: null});
+          return of({ owner: null, parentCategory: null});
       }
   }
 

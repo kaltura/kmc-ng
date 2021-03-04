@@ -1,7 +1,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import { Observable, of as ObservableOf } from 'rxjs';
-
+import { throwError } from 'rxjs';
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
 import {KalturaSourceType} from 'kaltura-ngx-client';
 import {KalturaLiveStreamBitrate} from 'kaltura-ngx-client';
@@ -138,7 +138,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
               super._hideLoader();
               super._showActivationError();
               this._conversionProfiles.next({ items: [] });
-              return Observable.throw(error);
+              return throwError(error);
             })
             .map(response => {
               if (response.objects && response.objects.length) {

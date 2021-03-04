@@ -15,6 +15,7 @@ import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/ca
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'kMoveCategory',
@@ -182,7 +183,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
 
   private _validateCategoryMove(categoryToMove: KalturaCategory) {
     if (this._selectedParentCategory === 'missing') {
-      return Observable.of(false);
+      return of(false);
     }
 
     // if category moved to the same parent or to 'no parent' as it was before
@@ -197,11 +198,11 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
           }
         }]
       });
-      return Observable.of(false);
+      return of(false);
     }
 
     if (this._selectedParentCategory === null) { // no parent selected
-      return Observable.of(true);
+      return of(true);
     }
 
     return this._categoriesService.getCategoryById(<number>this._selectedParentCategory)

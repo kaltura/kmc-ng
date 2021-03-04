@@ -13,6 +13,7 @@ import { KalturaResponseProfileType } from 'kaltura-ngx-client';
 import { KalturaMediaEntryFilter } from 'kaltura-ngx-client';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { KalturaClient } from 'kaltura-ngx-client';
+import { throwError } from 'rxjs';
 import {
   EntriesDataProvider, EntriesFilters, MetadataProfileData,
   SortDirection
@@ -25,6 +26,7 @@ import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes 
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { first } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestroy {
@@ -66,7 +68,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
   public getServerFilter(data: EntriesFilters, mediaTypesDefault = true): Observable<KalturaMediaEntryFilterForPlaylist> {
     try {
       return this._getMetadataProfiles()
-        .map(metadataProfiles => {
+        .pipe(map(metadataProfiles => {
           // create request items
           const filter = new KalturaMediaEntryFilterForPlaylist({});
 
@@ -250,9 +252,9 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
           filter.moderationStatusIn = '1,2,5,6';
 
           return filter;
-        });
+        }));
     } catch (err) {
-      return Observable.throw(err);
+      return throwError(err);
     }
   }
 
@@ -278,7 +280,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
     // build the request
     return <any>
       this.getServerFilter(data)
-        .switchMap(filter => this._kalturaServerClient.request(
+        .pipe(switchMap(filter => this._kalturaServerClient.request(
           new PlaylistExecuteFromFiltersAction({
             filters: [filter],
             totalResults: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults,
@@ -286,7 +288,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
           }).setRequestOptions({
               responseProfile
           }))
-        ).map(response => ({ entries: response, totalCount: response.length })
+        )).pipe(map(response => ({ entries: response, totalCount: response.length }))
       );
   }
 

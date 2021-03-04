@@ -16,15 +16,15 @@ import {
     UserListAction
 } from 'kaltura-ngx-client';
 
-import 'rxjs/add/observable/forkJoin';
 import { EntryWidget } from '../entry-widget';
-import { async } from 'rxjs/scheduler/async';
+import { asyncScheduler } from 'rxjs';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { merge } from 'rxjs';
+import { merge, forkJoin } from 'rxjs';
 import { observeOn } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Injectable()
 export class EntryUsersWidget extends EntryWidget implements OnDestroy
@@ -53,7 +53,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 
 		merge(this.usersForm.valueChanges,
 			this.usersForm.statusChanges)
-            .pipe(observeOn(async)) // using async scheduler so the form group status/dirty mode will be synchornized
+            .pipe(observeOn(asyncScheduler)) // using async scheduler so the form group status/dirty mode will be synchornized
             .pipe(cancelOnDestroy(this))
             .subscribe(
 				() => {
@@ -246,7 +246,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
             actions.push(fetchPublishersData$);
         }
 
-	    return Observable.forkJoin(actions)
+	    return forkJoin(actions)
 		    .map(responses => {
 			    super._hideLoader();
 			    return {failed : false};
@@ -257,7 +257,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 			    super._hideLoader();
 			    super._showActivationError();
 
-			    return Observable.of({failed : true, error});
+			    return of({failed : true, error});
 		    });
 
     }

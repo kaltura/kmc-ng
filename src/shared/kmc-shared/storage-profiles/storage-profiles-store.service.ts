@@ -8,6 +8,7 @@ import { StorageProfileListAction } from 'kaltura-ngx-client';
 import { KalturaStorageProfileListResponse } from 'kaltura-ngx-client';
 import { KalturaStorageProfile } from 'kaltura-ngx-client';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class StorageProfilesStore extends PartnerProfileStore implements OnDestroy {
@@ -28,7 +29,7 @@ export class StorageProfilesStore extends PartnerProfileStore implements OnDestr
           error => {
             // re-throw the provided error
             this._getStorageProfiles$ = null;
-            return Observable.throw(error);
+            return throwError(error);
           }
         )
         .publishReplay(1)

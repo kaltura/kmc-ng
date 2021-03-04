@@ -16,7 +16,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { Title } from '@angular/platform-browser';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import 'rxjs/add/observable/fromPromise';
+import { from as fromPromise} from 'rxjs';
 
 export enum ContentEntryViewSections {
     Metadata = 'Metadata',
@@ -280,7 +280,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
     protected _open(args: ContentEntryViewArgs): Observable<boolean> {
         const sectionToken = this._getSectionRouteToken(args.section);
         this._logger.info('handle open entry view request by the user', { entryId: args.entry.id, sectionToken });
-        return Observable.fromPromise(this._router.navigateByUrl(`/content/entries/entry/${args.entry.id}/${sectionToken}`));
+        return fromPromise(this._router.navigateByUrl(`/content/entries/entry/${args.entry.id}/${sectionToken}`));
     }
 
     public openById(entryId: string, section: ContentEntryViewSections, reloadEntriesListOnNavigateOut?: boolean, draftEntry?: boolean): void {

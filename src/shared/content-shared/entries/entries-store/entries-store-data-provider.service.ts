@@ -29,6 +29,8 @@ import { CategoriesModes } from 'app-shared/content-shared/categories/categories
 import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { first } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy {
@@ -60,19 +62,19 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
     })
       .pipe(cancelOnDestroy(this))
       .pipe(first())
-      .map(metadataProfiles => {
+      .pipe(map(metadataProfiles => {
         return metadataProfiles.items.map(metadataProfile => ({
           id: metadataProfile.id,
           name: metadataProfile.name,
           lists: (metadataProfile.items || []).map(item => ({ id: item.id, name: item.name }))
         }));
-      });
+      }));
   }
 
   public getServerFilter(data: EntriesFilters): Observable<KalturaMediaEntryFilter> {
     try {
       return this._getMetadataProfiles()
-        .map(metadataProfiles => {
+        .pipe(map(metadataProfiles => {
           // create request items
             const filter = data.youtubeVideo
                 ? new KalturaExternalMediaEntryFilter({ externalSourceTypeEqual: KalturaExternalMediaSourceType.youtube })
@@ -320,9 +322,9 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
           }
 
           return filter;
-        });
+        }));
     } catch (err) {
-      return Observable.throw(err);
+      return throwError(err);
     }
   }
 
@@ -346,7 +348,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
     // build the request
     return <any>
       this.getServerFilter(data)
-        .switchMap(filter => this._kalturaServerClient.request(
+        .pipe(switchMap(filter => this._kalturaServerClient.request(
           new BaseEntryListAction({
             filter,
             pager: pagination,
@@ -354,7 +356,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
                   responseProfile,
                   acceptedTypes: [KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry, KalturaExternalMediaEntry, KalturaLiveChannel]
               })
-        )).map(response => ({ entries: response.objects, totalCount: response.totalCount })
+        ))).pipe(map(response => ({ entries: response.objects, totalCount: response.totalCount }))
       );
   }
 

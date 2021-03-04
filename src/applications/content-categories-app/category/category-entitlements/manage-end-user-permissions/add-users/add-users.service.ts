@@ -10,7 +10,8 @@ import {CategoryUserAddAction} from 'kaltura-ngx-client';
 import {KalturaCategoryUser} from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {CategoryUserCopyFromCategoryAction} from 'kaltura-ngx-client';
-import 'rxjs/add/operator/delay';
+import { delay } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class AddUsersService {
@@ -22,7 +23,7 @@ export class AddUsersService {
 
   public addUsers({usersIds, categoryId, permissionLevel, updateMethod}: { usersIds: string[], categoryId: number, permissionLevel: KalturaCategoryUserPermissionLevel, updateMethod: KalturaUpdateMethodType}): Observable<void> {
     if (!usersIds || !usersIds.length) {
-      return Observable.throw(
+      return throwError(
         new Error(this._appLocalization
           .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.missingUsers')));
     }
@@ -49,7 +50,7 @@ export class AddUsersService {
           return undefined;
         }
       )
-      .catch(err => Observable.throw(err));
+      .catch(err => throwError(err));
   }
 
 
@@ -57,7 +58,7 @@ export class AddUsersService {
   public copyUsersFromParent({categoryId}: {categoryId: number}): Observable<void> {
     return this._kalturaServerClient.request(
       new CategoryUserCopyFromCategoryAction({categoryId})
-    ).delay(6000); // we delay the response for the server to be able to index the new users
+    ).pipe(delay(6000)); // we delay the response for the server to be able to index the new users
   }
 
 

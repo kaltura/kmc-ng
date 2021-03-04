@@ -1,6 +1,7 @@
 import { OnDestroy, Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {Observable} from 'rxjs';
+import { throwError } from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
 import {
     KalturaClient, KalturaDetachedResponseProfile,
@@ -159,7 +160,7 @@ export class ReachProfilesStore extends FiltersStoreBase<ReachProfilesFilters> i
                     return { objects, totalCount };
                 });
         } catch (err) {
-            return Observable.throw(err);
+            return throwError(err);
         }
     }
 

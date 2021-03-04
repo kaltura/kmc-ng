@@ -15,6 +15,7 @@ import { PlaylistRule } from './playlist-rule/playlist-rule.interface';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { of } from 'rxjs';
 
 @Injectable()
 export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy {
@@ -35,17 +36,17 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
   protected onValidate(wasActivated?: boolean): Observable<{ isValid: boolean }> {
     if (this.data.playlistType === KalturaPlaylistType.dynamic) { // validate only rule-based playlist
       if (this.wasActivated) {
-        return Observable.of({ isValid: !!this.rules.length });
+        return of({ isValid: !!this.rules.length });
       }
 
       if (this.isNewData && Array.isArray(this.data.filters)) {
-        return Observable.of({ isValid: !!this.data.filters.length })
+        return of({ isValid: !!this.data.filters.length })
       }
 
-      return Observable.of({ isValid: false });
+      return of({ isValid: false });
     }
 
-    return Observable.of({ isValid: true });
+    return of({ isValid: true });
   }
 
   protected onDataSaving(data: KalturaPlaylist): void {
@@ -112,7 +113,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
       .catch(error => {
         super._hideLoader();
         super._showActivationError(error.message);
-        return Observable.of({ failed: true, error });
+        return of({ failed: true, error });
       });
   }
 

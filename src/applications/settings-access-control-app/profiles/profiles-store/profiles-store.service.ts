@@ -32,6 +32,7 @@ import { SettingsAccessControlMainViewService } from 'app-shared/kmc-shared/kmc-
 import { FlavoursStore } from 'app-shared/kmc-shared';
 import { switchMap, map } from 'rxjs/operators';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { throwError } from 'rxjs';
 
 const localStoragePageSizeKey = 'accessControlProfiles.list.pageSize';
 
@@ -196,7 +197,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
               })
           );
     } catch (err) {
-      return Observable.throw(err);
+      return throwError(err);
     }
   }
 
@@ -382,7 +383,7 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
         if (response && response.length) {
           const failedResponse = response.find(res => !!res.error);
           if (failedResponse) {
-            throw Observable.throw(failedResponse.error);
+            throw throwError(failedResponse.error);
           }
         }
       });

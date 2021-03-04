@@ -57,6 +57,8 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KalturaConversionProfileAssetParamsListResponse, ConversionProfileListAction, KalturaNullableBoolean } from 'kaltura-ngx-client';
 import { map, switchMap } from 'rxjs/operators';
 import { filter } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { of } from 'rxjs';
 
 export interface ReplacementData {
     status: KalturaEntryReplacementStatus;
@@ -131,19 +133,19 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             .catch(error => {
                 super._hideLoader();
                 super._showActivationError();
-                return Observable.of({ failed: true, error });
+                return of({ failed: true, error });
             });
     }
 
     private _getLinkData(): Observable<{storageProfile: KalturaStorageProfile, conversionProfileAsset: KalturaConversionProfileAssetParams}> {
         if (!this._permissionsService.hasPermission(KMCPermissions.CONTENT_INGEST_REMOTE_STORAGE)) {
-            return Observable.of({ storageProfile: null, conversionProfileAsset: null });
+            return of({ storageProfile: null, conversionProfileAsset: null });
         }
 
         let conversionProfileAssetRequest;
 
         if (!Number.isInteger(this.data.conversionProfileId)) {
-            conversionProfileAssetRequest = Observable.of(null);
+            conversionProfileAssetRequest = of(null);
         } else {
             const filter = new KalturaConversionProfileFilter({
                 orderBy: KalturaConversionProfileOrderBy.createdAtDesc.toString(),
@@ -189,7 +191,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                     const relevantProfile = profiles.find(profile => profile.id === this.data.conversionProfileId) || defaultProfile;
 
                     if (!relevantProfile || !Number.isInteger(relevantProfile.storageProfileId)) {
-                        return Observable.of(null);
+                        return of(null);
                     }
 
                     const action = new StorageProfileListAction({
@@ -585,7 +587,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     }
 
     public uploadFlavor(flavor: Flavor, fileData: File): void {
-        Observable.of(this._uploadManagement.addFile(new NewEntryFlavourFile(fileData, this.data.id, this.data.mediaType)))
+        of(this._uploadManagement.addFile(new NewEntryFlavourFile(fileData, this.data.id, this.data.mediaType)))
             .subscribe((response) => {
                     flavor.uploadFileId = response.id;
                     flavor.status = KalturaFlavorAssetStatus.importing.toString();
@@ -609,7 +611,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             .pipe(tag('block-shell'))
             .catch(error => {
                 this._uploadManagement.cancelUploadWithError(flavor.uploadFileId, 'Cannot update flavor, cancel related file');
-                return Observable.throw(error);
+                return throwError(error);
             })
             .subscribe(
                 response => {
@@ -641,7 +643,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             .pipe(tag('block-shell'))
             .catch(error => {
                 this._uploadManagement.cancelUploadWithError(flavor.uploadFileId, 'Cannot update flavor, cancel related file');
-                return Observable.throw(error);
+                return throwError(error);
             })
             .subscribe(
                 response => {

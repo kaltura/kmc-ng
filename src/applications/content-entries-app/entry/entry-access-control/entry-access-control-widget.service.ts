@@ -20,8 +20,8 @@ import {KalturaFlavorParams} from 'kaltura-ngx-client';
 import {AccessControlProfileStore, FlavoursStore} from 'app-shared/kmc-shared';
 import {KalturaUtils} from '@kaltura-ng/kaltura-common';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
-
-import 'rxjs/add/observable/forkJoin';
+import { throwError } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import * as R from 'ramda';
 import {EntryWidget} from '../entry-widget';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
@@ -74,7 +74,7 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
       const getAPProfiles$ = this._accessControlProfileStore.get().pipe(cancelOnDestroy(this));
       const getFlavours$ = this._flavoursStore.get().pipe(cancelOnDestroy(this));
 
-      return Observable.forkJoin(getAPProfiles$, getFlavours$)
+      return forkJoin(getAPProfiles$, getFlavours$)
         .pipe(cancelOnDestroy(this))
         .map(
           response => {
@@ -104,7 +104,7 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
             super._hideLoader();
             super._showActivationError();
             this._accessControlProfiles.next({items: []});
-            return Observable.throw(error);
+            return throwError(error);
           }
         );
     } else {

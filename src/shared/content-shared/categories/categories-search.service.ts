@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/publishReplay';
+import { throwError } from 'rxjs';
+import { publishReplay, refCount } from 'rxjs/operators';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { CategoryListAction } from 'kaltura-ngx-client';
@@ -17,6 +18,7 @@ import { CategoryGetAction } from 'kaltura-ngx-client';
 import { KalturaAppearInListType } from 'kaltura-ngx-client';
 import { KalturaPrivacyType } from 'kaltura-ngx-client';
 import { KalturaContributionPolicyType } from 'kaltura-ngx-client';
+import { of } from 'rxjs';
 
 export interface CategoryData {
     parentId?: number,
@@ -100,14 +102,14 @@ export class CategoriesSearchService implements OnDestroy {
                 return { items: this.parseAndCacheCategories(response.objects) };
             });
     } else {
-      return Observable.throw({ message: 'missing categoriesList argument' });
+      return throwError({ message: 'missing categoriesList argument' });
     }
   }
 
   public getChildrenCategories(parentId: number): Observable<CategoriesQuery> {
 
     if (parentId === null) {
-      return Observable.throw({ message: 'missing parentId argument' });
+      return throwError({ message: 'missing parentId argument' });
     }
 
     return this._getCategoriesWithCache({ cacheToken: parentId + '', parentId });
@@ -147,7 +149,7 @@ export class CategoriesSearchService implements OnDestroy {
         }
       });
     } else {
-      return Observable.of([]);
+      return of([]);
     }
   }
 
@@ -165,10 +167,10 @@ export class CategoriesSearchService implements OnDestroy {
           this._groupedCategoriesCache[cacheToken] = null;
 
           // re-throw the provided error
-          return Observable.throw(error);
+          return throwError(error);
         })
-        .publishReplay(1)
-        .refCount();
+        .pipe(publishReplay(1))
+        .pipe(refCount());
     }
 
     return cachedResponse;

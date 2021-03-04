@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/map';
 import { KalturaAuthentication, KalturaClient, KalturaMultiRequest, KalturaRequestOptions, SessionEndAction, SsoLoginAction, AdminUserSetInitialPasswordAction } from 'kaltura-ngx-client';
 import { UserLoginByLoginIdAction } from 'kaltura-ngx-client';
 import { UserGetByLoginIdAction } from 'kaltura-ngx-client';
@@ -39,6 +38,7 @@ import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/deta
 import { switchMap, map } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { AuthenticatorViewService } from "app-shared/kmc-shared/kmc-views/details-views";
+import { throwError } from 'rxjs';
 
 const ksSessionStorageKey = 'auth.login.ks';
 
@@ -153,7 +153,7 @@ export class AppAuthentication {
     validateResetPasswordHash(hash: string): Observable<string> {
         if (!serverConfig.kalturaServer.resetPasswordUri) {
             this._logger.warn(`resetPasswordUri was not provided by configuration, abort request`);
-            return Observable.of('RESET_URI_NOT_DEFINED');
+            return ObservableOf('RESET_URI_NOT_DEFINED');
         }
 
         const url = serverConfig.kalturaServer.resetPasswordUri.replace('{hash}', hash);
@@ -161,7 +161,7 @@ export class AppAuthentication {
         this._logger.debug(`check if provided hash is valid`, { hash, url });
 
         return this._http.get(url, { responseType: 'json' })
-            .map(res => res['errorCode'])
+            .pipe(map(res => res['errorCode']))
             .catch((e) => {
                 this._logger.error('Failed to check if provided hash is valid', e);
                 throw Error('Failed to check if provided hash is valid');
@@ -172,18 +172,18 @@ export class AppAuthentication {
         if (!this.isLogged()) {
             return this.kalturaServerClient.request(new UserResetPasswordAction({email}));
         } else {
-            return Observable.throw(new Error('cannot reset password, user is logged'));
+            return throwError(new Error('cannot reset password, user is logged'));
         }
     }
 
     updatePassword(payload: UpdatePasswordPayload): Observable<{ email: string, password: string }> {
         return this.kalturaServerClient.request(new AdminUserUpdatePasswordAction(payload))
-            .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
+            .catch(error => throwError(this._getLoginErrorMessage({error})));
     }
 
     setInitalPassword(payload: { newPassword: string, hashKey: string }): Observable<KalturaAuthentication> {
         return this.kalturaServerClient.request(new AdminUserSetInitialPasswordAction(payload))
-            .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
+            .catch(error => throwError(this._getLoginErrorMessage({error})));
     }
 
     login(loginId: string, password: string, otp: string): Observable<LoginResponse> {
@@ -283,7 +283,7 @@ export class AppAuthentication {
 
     private _checkIfPartnerCanAccess(partner: KalturaPartner): Observable<boolean> {
         if (!serverConfig.kalturaServer.limitAccess){
-            return Observable.of(true);
+            return ObservableOf(true);
         }
         const serviceUrl = serverConfig.kalturaServer.limitAccess.serviceUrl;
 
@@ -291,7 +291,7 @@ export class AppAuthentication {
         this._logger.debug(`check if partner can access the KMC`, {partnerId: partner.id, limitAccess: true, url});
 
         return this._http.get(url, { responseType: 'json' })
-            .map(res => {
+            .pipe(map(res => {
                 const {isPartnerPartOfBeta: canPartnerAccess} = <any>res;
 
                 this._automaticLoginErrorReason = canPartnerAccess ? null : AutomaticLoginErrorReasons.closedForBeta;
@@ -300,7 +300,7 @@ export class AppAuthentication {
                     canPartnerAccess
                 });
                 return canPartnerAccess;
-            })
+            }))
             .catch((e) => {
                 this._logger.error('Failed to check if partner can access the KMC', e);
                 throw Error('Failed to check if partner can access the KMC');
@@ -508,7 +508,7 @@ export class AppAuthentication {
         }
 
         this._logger.debug(`ignore automatic login logic as no session ks found `);
-        return Observable.of(false);
+        return ObservableOf(false);
     }
 
     public switchPartnerId(partnerId: number): Observable<void> {
@@ -595,7 +595,7 @@ export class AppAuthentication {
             applicationType,
             partnerId: requestedPartnerId ? requestedPartnerId : null
         }))
-        .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
+        .catch(error => throwError(this._getLoginErrorMessage({error})));
 
     }
 }

@@ -15,6 +15,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/categories-graph-updated/categories-graph-updated';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { throwError } from 'rxjs';
 
 export interface EntitlementSectionData {
   categories: KalturaCategory[];
@@ -53,7 +54,7 @@ export class EntitlementService implements OnDestroy{
 
   public deleteEntitlement({id, privacyContextData}: { id: number, privacyContextData?: { privacyContext: string, privacyContexts: string } }): Observable<void> {
       if (!id) {
-          return Observable.throw(new Error('Error occurred while trying to delete entitlement'));
+          return throwError(new Error('Error occurred while trying to delete entitlement'));
       }
 
       const category = new KalturaCategory();
@@ -83,7 +84,7 @@ export class EntitlementService implements OnDestroy{
 
   public addEntitlement({id, privacyContext}: { id: number, privacyContext: string }): Observable<void> {
     if (!id || !privacyContext) {
-      return Observable.throw(new Error('Error occurred while trying to add entitlement, invalid entitlement\'s data'));
+      return throwError(new Error('Error occurred while trying to add entitlement, invalid entitlement\'s data'));
     }
 
     return this._categoriesSearch.getCategory(id)
@@ -91,7 +92,7 @@ export class EntitlementService implements OnDestroy{
         {
             if (category.privacyContext && category.privacyContext.length)
             {
-                return Observable.throw(new Error(this._appLocalization.get('applications.settings.integrationSettings.entitlement.editEntitlement.errors.privacyContextLabelExists')));
+                return throwError(new Error(this._appLocalization.get('applications.settings.integrationSettings.entitlement.editEntitlement.errors.privacyContextLabelExists')));
             }else {
 
                 return this._kalturaServerClient.request(new CategoryUpdateAction({

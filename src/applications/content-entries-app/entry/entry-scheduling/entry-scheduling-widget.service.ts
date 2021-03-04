@@ -6,7 +6,7 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { EntryWidget } from '../entry-widget';
-import { async } from 'rxjs/scheduler/async';
+import { asyncScheduler } from 'rxjs';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
@@ -150,7 +150,7 @@ export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
 
       merge(this.schedulingForm.valueChanges,
         this.schedulingForm.statusChanges)
-        .pipe(observeOn(async)) // using async scheduler so the form group status/dirty mode will be synchornized
+        .pipe(observeOn(asyncScheduler)) // using async scheduler so the form group status/dirty mode will be synchornized
         .pipe(cancelOnDestroy(this))
         .subscribe(
           () => {

@@ -40,6 +40,7 @@ import { subApplicationsConfig } from 'config/sub-applications';
 import { serverConfig } from 'config/server';
 import { ContentDropFoldersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { globalConfig } from 'config/global';
+import { of } from 'rxjs';
 
 const localStoragePageSizeKey = 'dropFolders.list.pageSize';
 
@@ -187,7 +188,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
             )
           });
 
-          return Observable.of({
+          return of({
             objects: [],
             totalCount: 0
           });

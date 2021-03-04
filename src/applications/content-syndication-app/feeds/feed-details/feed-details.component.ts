@@ -9,6 +9,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {KalturaSyndicationFeedType} from 'kaltura-ngx-client';
 import {FlavoursStore} from 'app-shared/kmc-shared';
 import { Observable } from 'rxjs';
+import { throwError } from 'rxjs';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {KalturaSyndicationFeedEntryCount} from 'kaltura-ngx-client';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -257,7 +258,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
       this._logger.debug(`query data`, { mode: this._mode });
     if (this._mode === 'edit' && (!this.feed || !this.feed.id)) {
         this._logger.warn(`cannot load data for edit mode without feedId`);
-      return Observable.throw('An error occurred while trying to load feed');
+      return throwError('An error occurred while trying to load feed');
     }
 
     const getPlayers$ = this._playersStore.get({type: PlayerTypes.Entry}).pipe(cancelOnDestroy(this));

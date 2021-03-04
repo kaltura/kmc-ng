@@ -28,6 +28,7 @@ import { KalturaBaseEntry } from 'kaltura-ngx-client';
 import { KalturaMediaEntryFilter } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { throwError } from 'rxjs';
 
 export enum SortDirection {
   Desc = -1,
@@ -228,7 +229,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
 
     if (!entryId || !entryId.length) {
-      return Observable.throw(new Error('missing entryId argument'));
+      return throwError(new Error('missing entryId argument'));
     }
 
 

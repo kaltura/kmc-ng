@@ -43,10 +43,9 @@ import { Flavor } from '../../flavor';
 import { FlavorAssetSetContentAction } from 'kaltura-ngx-client';
 import { FlavorAssetAddAction } from 'kaltura-ngx-client';
 import { KalturaFlavorAsset } from 'kaltura-ngx-client';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { of as ObservableOf} from 'rxjs';
-
 
 export interface ConversionProfileWithAssets {
     id: number;
@@ -261,7 +260,7 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
 
         return this._kalturaClient.request(dropFoldersListAction)
             .pipe(cancelOnDestroy(this))
-            .map(response => {
+            .pipe(map(response => {
                 if (response.objects.length) {
                     const dropFoldersList = [];
                     response.objects.forEach(dropFolder => {
@@ -285,19 +284,19 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
                 } else {
                     return [];
                 }
-            })
-            .do(dropFoldersList => {
+            }))
+            .pipe(tap(dropFoldersList => {
                 this._dropFoldersList = dropFoldersList;
                 this._dropFoldersListOptions = dropFoldersList.map(folder => ({ label: folder.name, value: folder.id }));
                 this._selectedDropFolder = dropFoldersList.length ? dropFoldersList[0].id : null;
-            })
-            .switchMap(() => {
+            }))
+            .pipe(switchMap(() => {
                 if (this._selectedDropFolder === null) {
-                    return Observable.of([]);
+                    return ObservableOf([]);
                 }
 
                 return this._loadDropFolder();
-            });
+            }));
     }
 
     private _loadConversionProfiles(): Observable<KalturaConversionProfileAssetParams[]> {

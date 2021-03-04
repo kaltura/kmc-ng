@@ -3,6 +3,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BehaviorSubject } from 'rxjs';
 import { Subject } from 'rxjs';
+import { throwError } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs';
 import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory, ReachProfileGetAction, ReachProfileUpdateAction } from 'kaltura-ngx-client';
@@ -289,7 +290,7 @@ export class ReachProfileStore implements OnDestroy {
       return this._kalturaServerClient
         .request(reachProfileAction);
     } else {
-      return Observable.throw(new Error('missing profileId'));
+      return throwError(new Error('missing profileId'));
     }
   }
 

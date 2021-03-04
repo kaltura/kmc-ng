@@ -23,6 +23,7 @@ import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared';
 import { ContentBulkUploadsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { throwError } from 'rxjs';
 
 const localStoragePageSizeKey = 'bulklog.list.pageSize';
 
@@ -199,7 +200,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
         })
       );
     } catch (err) {
-      return Observable.throw(err);
+      return throwError(err);
     }
 
   }

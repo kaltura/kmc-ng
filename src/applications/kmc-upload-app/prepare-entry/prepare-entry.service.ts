@@ -6,7 +6,7 @@ import {MediaAddAction} from 'kaltura-ngx-client';
 import {KalturaMediaEntry} from 'kaltura-ngx-client';
 import {KalturaMediaType} from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
-
+import { throwError } from 'rxjs';
 
 export interface DraftEntry {
   id: string;
@@ -35,7 +35,7 @@ export class PrepareEntryService {
       .map(media => ({id: media.id}))
       .catch(error => {
         // re-throw the provided error
-        return Observable.throw(new Error('Unable to create draft entry'));
+        return throwError(new Error('Unable to create draft entry'));
       });
   }
 }

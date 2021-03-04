@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UploadFileAdapter, UploadFileData } from '@kaltura-ng/kaltura-common';
 import { Observable } from 'rxjs';
-import 'rxjs/add/observable/throw';
+import { throwError } from 'rxjs';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { UploadTokenAddAction } from 'kaltura-ngx-client';
 import { UploadTokenUploadAction } from 'kaltura-ngx-client';
@@ -13,6 +13,7 @@ import { UploadTokenListAction } from 'kaltura-ngx-client';
 import { KalturaUploadTokenFilter } from 'kaltura-ngx-client';
 import { KalturaUploadTokenListResponse } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { of } from 'rxjs';
 
 @Injectable()
 export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
@@ -81,7 +82,7 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
 
     resume(id: string, fileData: KalturaUploadFile): Observable<{ id: string, progress?: number }> {
       if (!fileData || !(fileData instanceof KalturaUploadFile) || !fileData.serverUploadToken) {
-        return Observable.throw('missing upload token');
+        return throwError('missing upload token');
       }
     }
 
@@ -90,13 +91,13 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
             if (fileData && fileData instanceof KalturaUploadFile) {
                 this._logger.info(`starting upload for file '${id}'`);
 
-                let requestSubscription = Observable.of(fileData.serverUploadToken)
+                let requestSubscription = of(fileData.serverUploadToken)
                     .switchMap(serverUploadToken =>
                     {
                         if (!serverUploadToken)
                         {
                             // start from the beginning
-                            return Observable.of(0);
+                            return of(0);
                         }else
                         {
                             return this._serverClient.request(
@@ -117,7 +118,7 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
                             }).catch(caught =>
                             {
                                 this._logger.warn(`file '${id}': failed to get 'uploadedFileSize' for '${fileData.serverUploadToken}'. re-start new upload. error: ${caught.message}`);
-                                return Observable.of(0);
+                                return of(0);
                             });
                         }
                     })

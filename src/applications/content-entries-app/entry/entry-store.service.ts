@@ -20,6 +20,7 @@ import { BehaviorSubject, Observable, Subject, Unsubscribable } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { timer } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 export enum ActionTypes
 {
@@ -330,7 +331,7 @@ export class EntryStore implements OnDestroy {
                 }
             });
         } else {
-            return Observable.throw(new Error('missing entryId'));
+            return throwError(new Error('missing entryId'));
         }
     }
 

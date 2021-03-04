@@ -24,6 +24,8 @@ import { modulesConfig } from 'config/modules';
 import { globalConfig } from 'config/global';
 import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { throwError } from 'rxjs';
+import { of } from 'rxjs';
 
 @Injectable()
 export class CategorySubcategoriesWidget extends CategoryWidget implements OnDestroy {
@@ -57,7 +59,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
       .catch((error, caught) => {
         super._hideLoader();
         super._showActivationError();
-        return Observable.of({failed: true, error});
+        return of({failed: true, error});
       });
   }
 
@@ -82,10 +84,10 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
   private _getSubcategories(parentCategory: KalturaCategory): Observable<KalturaCategoryListResponse> {
     const subcategoriesLimit: number = modulesConfig.contentShared.categories.subCategoriesLimit || globalConfig.client.views.tables.defaultPageSize;
     if (!parentCategory) {
-      return Observable.throw(new Error('parentCategory to get subcategories for is not defined'));
+      return throwError(new Error('parentCategory to get subcategories for is not defined'));
     }
     if (parentCategory.directSubCategoriesCount > subcategoriesLimit) {
-      return Observable.throw(new Error(`parent category subcategories count exceeds ${{subcategoriesLimit}} limit`));
+      return throwError(new Error(`parent category subcategories count exceeds ${{subcategoriesLimit}} limit`));
     }
     try {
       const filter: KalturaCategoryFilter = new KalturaCategoryFilter({
@@ -114,7 +116,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
             })
         );
     } catch (err) {
-      return Observable.throw(err);
+      return throwError(err);
     }
   }
 

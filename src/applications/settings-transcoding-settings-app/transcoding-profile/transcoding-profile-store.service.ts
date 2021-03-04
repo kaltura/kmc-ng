@@ -3,6 +3,7 @@ import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BehaviorSubject } from 'rxjs';
 import { Subject } from 'rxjs';
+import { throwError } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs';
 import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
@@ -37,6 +38,7 @@ import { TranscodingProfilesUpdatedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { debounce } from 'rxjs/operators';
 import { timer } from 'rxjs';
+import { of } from 'rxjs';
 
 export enum ActionTypes {
   ProfileLoading,
@@ -217,7 +219,7 @@ export class TranscodingProfileStore implements OnDestroy {
 
   private _checkFlavors(newProfile: KalturaConversionProfileWithAsset): Observable<{ proceedSave: boolean }> {
     if (newProfile.flavorParamsIds && newProfile.flavorParamsIds.trim().length) {
-      return Observable.of({ proceedSave: true });
+      return of({ proceedSave: true });
     }
 
     return Observable.create(observer => {
@@ -413,7 +415,7 @@ export class TranscodingProfileStore implements OnDestroy {
           return Object.assign(profile, { assets, flavors });
         });
     } else {
-      return Observable.throw(new Error('missing profileId'));
+      return throwError(new Error('missing profileId'));
     }
   }
 

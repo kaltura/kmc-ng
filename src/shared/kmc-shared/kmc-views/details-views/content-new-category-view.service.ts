@@ -11,6 +11,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-category-view.service';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { of } from 'rxjs';
 
 export interface ContentNewCategoryViewArgs {
     entries: KalturaMediaEntry[];
@@ -54,7 +55,7 @@ export class ContentNewCategoryViewService extends KmcDetailsViewBaseService<Con
             this._contentCategoriesMainView.openWithState()
                 .pipe(cancelOnDestroy(this))
                 .catch((error, caught) => {
-                    return Observable.of(false);
+                    return of(false);
                 })
                 .subscribe(
                     result => {

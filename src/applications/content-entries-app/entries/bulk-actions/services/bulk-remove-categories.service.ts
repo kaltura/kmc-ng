@@ -13,6 +13,8 @@ import { KalturaFilterPager } from 'kaltura-ngx-client';
 import { CategoryEntryDeleteAction } from 'kaltura-ngx-client';
 import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { throwError } from 'rxjs';
+import { of } from 'rxjs';
 
 @Injectable()
 export class BulkRemoveCategoriesService extends BulkActionBaseService<number[]> implements OnDestroy {
@@ -26,7 +28,7 @@ export class BulkRemoveCategoriesService extends BulkActionBaseService<number[]>
     private _getCategoryEntryMapping(entries: string[]): Observable<KalturaCategoryEntry[]> {
 
         if (entries.length === 0) {
-            return Observable.throw(new Error('no entries were selected'));
+            return throwError(new Error('no entries were selected'));
         }
         // load all category entries
         const filter: KalturaCategoryEntryFilter = new KalturaCategoryEntryFilter(
@@ -61,7 +63,7 @@ export class BulkRemoveCategoriesService extends BulkActionBaseService<number[]>
                         .pipe(cancelOnDestroy(this))
                         .map(categoryListResponse => categoryListResponse.items)
                 } else {
-                    return Observable.of([]);
+                    return of([]);
                 }
             })
     }

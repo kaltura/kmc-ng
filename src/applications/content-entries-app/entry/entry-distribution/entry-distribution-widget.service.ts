@@ -39,6 +39,7 @@ import { KalturaDistributionProviderType } from 'kaltura-ngx-client';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { of } from 'rxjs';
 
 export interface ExtendedKalturaEntryDistribution extends KalturaEntryDistribution {
   name: string;
@@ -108,7 +109,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
       .catch(error => {
           super._hideLoader();
           super._showActivationError();
-          return Observable.of({ failed: true, error });
+          return of({ failed: true, error });
         }
       );
   }

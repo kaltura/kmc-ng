@@ -21,13 +21,14 @@ import {
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CategoryWidget} from '../category-widget';
-import {async} from 'rxjs/scheduler/async';
+import { asyncScheduler } from 'rxjs';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { observeOn } from 'rxjs/operators';
 import { merge } from 'rxjs';
+import { of } from 'rxjs';
 
 @Injectable()
 export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy {
@@ -66,7 +67,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
 
         merge(...formsChanges)
             .pipe(cancelOnDestroy(this, this.widgetReset$))
-            .pipe(observeOn(async)) // using async scheduler so the form group status/dirty mode will be synchornized
+            .pipe(observeOn(asyncScheduler)) // using async scheduler so the form group status/dirty mode will be synchornized
             .subscribe(
             () => {
                 let isValid = true;
@@ -127,11 +128,11 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
         }
 
         if (!actions.length) {
-            return Observable.of(afterOnActivated());
+            return of(afterOnActivated());
         } else {
             return Observable.forkJoin(actions)
                 .catch(() => {
-                    return Observable.of([false]);
+                    return of([false]);
                 })
                 .map(responses => {
                     super._hideLoader();
@@ -205,7 +206,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             .map(response => true)
             .catch((error) => {
                 this._logger.error('failed to get category custom metadata', error);
-                return Observable.of(false);
+                return of(false);
             });
     }
 
@@ -228,7 +229,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             .map(response => true)
             .catch((error, caught) => {
                 this._logger.error('failed to get categories custom metadata profiles', error);
-                return Observable.of(false);
+                return of(false);
             });
     }
 

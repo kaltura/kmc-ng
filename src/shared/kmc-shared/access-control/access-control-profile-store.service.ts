@@ -4,7 +4,7 @@ import { PartnerProfileStore } from '../partner-profile';
 
 import { KalturaClient } from 'kaltura-ngx-client';
 import { AccessControlListAction } from 'kaltura-ngx-client';
-
+import { throwError } from 'rxjs';
 import { KalturaAccessControlFilter } from 'kaltura-ngx-client';
 import { KalturaAccessControl } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client';
@@ -46,7 +46,7 @@ export class AccessControlProfileStore extends PartnerProfileStore implements On
         .catch(error => {
           // re-throw the provided error
           this._cachedProfiles$ = null;
-          return Observable.throw(new Error('failed to retrieve access control profiles list'));
+          return throwError(new Error('failed to retrieve access control profiles list'));
         })
         .publishReplay(1)
         .refCount();

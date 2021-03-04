@@ -26,6 +26,8 @@ import { MetadataProfileAddAction } from 'kaltura-ngx-client';
 import { getKalturaServerUri } from 'config/server';
 import { SettingsMetadataMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { throwError } from 'rxjs';
+
 export interface SchemasFilters {
   pageSize: number;
   pageIndex: number;
@@ -177,7 +179,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
         new MetadataProfileListAction({ filter, pager })
       );
     } catch (err) {
-      return Observable.throw(err);
+      return throwError(err);
     }
   }
 

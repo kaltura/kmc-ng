@@ -36,6 +36,8 @@ import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/detail
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { filter } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { of } from 'rxjs';
 
 export interface CaptionRow {
     uploading: boolean;
@@ -174,7 +176,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
           super._hideLoader();
           super._showActivationError();
           this._captions.next({ items: [] });
-          return Observable.throw(error);
+          return throwError(error);
         }
       );
   }
@@ -293,7 +295,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         this.currentCaption.uploading = true;
         this.updateState({ isBusy: true });
 
-        Observable.of(this._uploadManagement.addFile(new NewEntryCaptionFile(captionFile)))
+        of(this._uploadManagement.addFile(new NewEntryCaptionFile(captionFile)))
             .subscribe((response) => {
                     this.currentCaption.uploadFileId = response.id;
                     this.currentCaption.uploading = false;
@@ -424,7 +426,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         if (this.currentCaption.id) {
             return this._kalturaServerClient.request(new CaptionAssetServeAction({captionAssetId: this.currentCaption.id}));
         } else {
-            return Observable.throw(new Error('cannot generate caption preview url. missing caption id'));
+            return throwError(new Error('cannot generate caption preview url. missing caption id'));
         }
     }
 

@@ -18,6 +18,7 @@ import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/det
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {PlaylistsUtilsService} from "../../../playlists-utils.service";
+import { of } from 'rxjs';
 
 export interface PlaylistContentMediaEntry extends KalturaMediaEntry {
   selectionId?: string;
@@ -45,17 +46,17 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
   protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
     if (this.data.playlistType === KalturaPlaylistType.staticList) { // validate only manual playlist
       if (this.wasActivated) {
-        return Observable.of({ isValid: !!this.entries.length });
+        return of({ isValid: !!this.entries.length });
       }
 
       if (this.isNewData && (this.data.playlistContent || '').trim().length > 0) {
-        return Observable.of({ isValid: true });
+        return of({ isValid: true });
       }
 
-      return Observable.of({ isValid: false });
+      return of({ isValid: false });
     }
 
-    return Observable.of({ isValid: true });
+    return of({ isValid: true });
   }
 
   protected onDataSaving(data: KalturaPlaylist, request: KalturaMultiRequest): void {
@@ -95,7 +96,7 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
       .catch(error => {
         super._hideLoader();
         super._showActivationError(error.message);
-        return Observable.of({ failed: true, error });
+        return of({ failed: true, error });
       });
   }
 
@@ -124,7 +125,7 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
               });
           });
       } else {
-        return Observable.of([]);
+        return of([]);
       }
     } else {
       return this._kalturaClient.request(new PlaylistExecuteAction({

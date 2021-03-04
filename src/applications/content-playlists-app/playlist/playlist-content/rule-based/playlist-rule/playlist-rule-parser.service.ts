@@ -1,5 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
+import { throwError } from 'rxjs';
 import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client';
 import { KalturaSearchOperator } from 'kaltura-ngx-client';
@@ -11,6 +12,7 @@ import { PlaylistRule } from './playlist-rule.interface';
 import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { of } from 'rxjs';
 
 @Injectable()
 export class PlaylistRuleParserService implements OnDestroy {
@@ -34,7 +36,7 @@ export class PlaylistRuleParserService implements OnDestroy {
 
   private _mapCustomMetadata(advancedSearch: KalturaSearchOperator): Observable<GroupedListType<string>> {
     if (!advancedSearch) {
-      return Observable.of(null);
+      return of(null);
     }
 
     try {
@@ -103,7 +105,7 @@ export class PlaylistRuleParserService implements OnDestroy {
             .reduce(createGroupedList, {}); // Step 5
         });
     } catch (error) {
-      return Observable.throw(error);
+      return throwError(error);
     }
   }
 

@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { IterableDiffers, IterableDiffer, IterableChangeRecord } from '@angular/core';
-import { async } from 'rxjs/scheduler/async';
+import { asyncScheduler } from 'rxjs';
 import { Observable } from 'rxjs';
 import { KalturaCategoryEntryFilter } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
@@ -26,15 +26,15 @@ import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { DynamicMetadataForm, DynamicMetadataFormFactory } from 'app-shared/kmc-shared';
 import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import 'rxjs/add/observable/forkJoin';
-import 'rxjs/add/operator/catch';
+import { catchError, tap } from 'rxjs/operators';
 import { EntryWidget } from '../entry-widget';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { observeOn } from 'rxjs/operators';
-import { merge } from 'rxjs';
+import { of } from 'rxjs';
+import { merge, forkJoin } from 'rxjs';
 
 @Injectable()
 export class EntryMetadataWidget extends EntryWidget implements OnDestroy
@@ -109,7 +109,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
 
         merge(...formsChanges)
             .pipe(cancelOnDestroy(this, this.widgetReset$))
-            .pipe(observeOn(async)) // using async scheduler so the form group status/dirty mode will be synchornized
+            .pipe(observeOn(asyncScheduler)) // using async scheduler so the form group status/dirty mode will be synchornized
             .subscribe(
                 () => {
 
@@ -172,10 +172,10 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         }
 
 
-        return Observable.forkJoin(actions)
-            .catch(() => {
-                return Observable.of([false]);
-            })
+        return forkJoin(actions)
+            .pipe(catchError(() => {
+                return of([false]);
+            }))
             .map(responses => {
                 super._hideLoader();
 
@@ -254,14 +254,14 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
             }
         ))
             .pipe(cancelOnDestroy(this, this.widgetReset$))
-            .do(response => {
+            .pipe(tap(response => {
                 this._entryMetadata = response.objects;
-            })
+            }))
             .map(response => true)
-            .catch((error) => {
+            .pipe(catchError((error) => {
                 this._logger.error('failed to get category custom metadata', error);
-                return Observable.of(false);
-            });
+                return of(false);
+            }));
     }
 
     private _loadEntryCategories(entry : KalturaMediaEntry) : Observable<boolean> {
@@ -286,21 +286,21 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 if (categoriesList.length) {
                     return this._categoriesSearchService.getCategories(categoriesList);
                 } else {
-                    return Observable.of({items: []});
+                    return of({items: []});
                 }
             })
             .pipe(cancelOnDestroy(this, this.widgetReset$))
-            .do(
+            .pipe(tap(
                 categories =>
                 {
                     this._entryCategories = categories.items;
                 }
-            )
+            ))
             .map(response => true)
-            .catch((error) => {
+            .pipe(catchError((error) => {
                 this._logger.error('failed to load entry categories', error);
-                return Observable.of(false);
-            });
+                return of(false);
+            }));
     }
 
     private _loadProfileMetadata() : Observable<boolean> {
@@ -309,7 +309,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
             ignoredCreateMode: MetadataProfileCreateModes.App
         })
             .pipe(cancelOnDestroy(this))
-            .do(response => {
+            .pipe(tap(response => {
 
                 this.customDataForms = [];
                 if (response.items) {
@@ -318,12 +318,12 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                         this.customDataForms.push(newCustomDataForm);
                     });
                 }
-            })
+            }))
             .map(response => true)
-            .catch((error) => {
+            .pipe(catchError((error) => {
                 this._logger.error('failed to load entry custom metadata profiles', error);
-                return Observable.of(false);
-            });
+                return of(false);
+            }));
     }
 
     protected onDataSaving(newData : KalturaMediaEntry, request : KalturaMultiRequest) : void

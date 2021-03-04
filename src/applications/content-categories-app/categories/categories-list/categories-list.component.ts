@@ -23,7 +23,7 @@ import {
     ReachAppViewService, ReachPages
 } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
-import { async } from 'rxjs/scheduler/async';
+import { asyncScheduler } from 'rxjs';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContentCategoriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
@@ -152,7 +152,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
 
     private _registerToDataChanges(): void {
         this._categoriesService.categories.state$
-            .pipe(observeOn(async))
+            .pipe(observeOn(asyncScheduler))
             .pipe(cancelOnDestroy(this))
             .subscribe(
                 result => {
