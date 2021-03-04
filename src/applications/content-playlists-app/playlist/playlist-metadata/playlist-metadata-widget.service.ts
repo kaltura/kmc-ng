@@ -14,6 +14,8 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { observeOn } from 'rxjs/operators';
+import { merge } from 'rxjs';
 
 @Injectable()
 export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy {
@@ -40,9 +42,9 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
   }
 
   private _monitorFormChanges(): void {
-    Observable.merge(this.metadataForm.valueChanges, this.metadataForm.statusChanges)
+    merge(this.metadataForm.valueChanges, this.metadataForm.statusChanges)
       .pipe(cancelOnDestroy(this))
-        .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
+        .pipe(observeOn(async)) // using async scheduler so the form group status/dirty mode will be synchornized
       .subscribe(() => {
           super.updateState({
             isValid: this.metadataForm.status !== 'INVALID',

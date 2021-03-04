@@ -8,7 +8,7 @@ import {
   KeyValueDiffers,
   OnDestroy
 } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
@@ -35,6 +35,7 @@ import { FriendlyHashId } from '@kaltura-ng/kaltura-common';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { filter } from 'rxjs/operators';
 
 export interface CaptionRow {
     uploading: boolean;
@@ -95,7 +96,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         }
         return { relevantCaption, uploadedFile };
       })
-      .filter(({ relevantCaption }) => !!relevantCaption)
+      .pipe(filter(({ relevantCaption }) => !!relevantCaption))
       .subscribe(
         ({ relevantCaption, uploadedFile }) => {
           switch (uploadedFile.status) {

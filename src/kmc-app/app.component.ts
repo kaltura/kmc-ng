@@ -5,7 +5,7 @@ import { OperationTagManagerService} from '@kaltura-ng/kaltura-common';
 import { NavigationEnd, Router } from '@angular/router';
 import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
 import { async } from 'rxjs/scheduler/async';
-
+import { observeOn } from 'rxjs/operators';
 import { OpenEmailEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
@@ -103,7 +103,7 @@ export class AppComponent implements OnInit {
 
     // handle app status: busy and error messages. Allow closing error window using the 'OK' button
     this._oprationsTagManager.tagStatus$
-        .observeOn(async)
+        .pipe(observeOn(async))
         .subscribe((tags: {[key: string]: number}) => {
             this._isBusy = tags['block-shell'] > 0;
         });

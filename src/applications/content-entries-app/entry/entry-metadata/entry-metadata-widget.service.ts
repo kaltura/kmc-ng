@@ -27,14 +27,14 @@ import { DynamicMetadataForm, DynamicMetadataFormFactory } from 'app-shared/kmc-
 import { CategoriesSearchService, CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import 'rxjs/add/observable/forkJoin';
-import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
 import { EntryWidget } from '../entry-widget';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-
+import { observeOn } from 'rxjs/operators';
+import { merge } from 'rxjs';
 
 @Injectable()
 export class EntryMetadataWidget extends EntryWidget implements OnDestroy
@@ -107,9 +107,9 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
             formsChanges.push(formGroup.valueChanges, formGroup.statusChanges);
         });
 
-        Observable.merge(...formsChanges)
+        merge(...formsChanges)
             .pipe(cancelOnDestroy(this, this.widgetReset$))
-            .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
+            .pipe(observeOn(async)) // using async scheduler so the form group status/dirty mode will be synchornized
             .subscribe(
                 () => {
 

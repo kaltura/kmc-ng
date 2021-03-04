@@ -24,6 +24,8 @@ import { subApplicationsConfig } from 'config/sub-applications';
 import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { first } from 'rxjs/operators';
+
 @Injectable()
 export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestroy {
   constructor(private _kalturaServerClient: KalturaClient,
@@ -51,7 +53,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
       ignoredCreateMode: MetadataProfileCreateModes.App
     })
       .pipe(cancelOnDestroy(this))
-      .first()
+      .pipe(first())
       .map(metadataProfiles => {
         return metadataProfiles.items.map(metadataProfile => ({
           id: metadataProfile.id,

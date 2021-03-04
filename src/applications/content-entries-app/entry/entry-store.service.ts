@@ -17,6 +17,9 @@ import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/detail
 import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client';
 import { BaseEntryDeleteAction } from 'kaltura-ngx-client';
 import { BehaviorSubject, Observable, Subject, Unsubscribable } from 'rxjs';
+import { debounce } from 'rxjs/operators';
+import { timer } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 export enum ActionTypes
 {
@@ -99,7 +102,7 @@ export class EntryStore implements OnDestroy {
 	{
 		this._widgetsManager.widgetsState$
             .pipe(cancelOnDestroy(this))
-            .debounce(() => Observable.timer(500))
+            .pipe(debounce(() => timer(500)))
             .subscribe(
 				sectionsState =>
 				{
@@ -335,7 +338,7 @@ export class EntryStore implements OnDestroy {
         const entryId = entry instanceof KalturaMediaEntry ? entry.id : entry;
         if (entryId !== this.entryId) {
             this.canLeave()
-                .filter(({ allowed }) => allowed)
+                .pipe(filter(({ allowed }) => allowed))
                 .pipe(cancelOnDestroy(this))
                 .subscribe(() => {
                     if (entry instanceof KalturaMediaEntry) {

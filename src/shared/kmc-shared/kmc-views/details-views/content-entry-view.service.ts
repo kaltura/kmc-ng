@@ -16,6 +16,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { Title } from '@angular/platform-browser';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import 'rxjs/add/observable/fromPromise';
 
 export enum ContentEntryViewSections {
     Metadata = 'Metadata',

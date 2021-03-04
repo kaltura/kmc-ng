@@ -1,7 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import { Observable } from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
-import 'rxjs/add/observable/throw';
 import {KalturaClient} from 'kaltura-ngx-client';
 import {KalturaFilterPager} from 'kaltura-ngx-client';
 import {UiConfListAction} from 'kaltura-ngx-client';

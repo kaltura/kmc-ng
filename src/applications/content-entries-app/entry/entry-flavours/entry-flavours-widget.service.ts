@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
@@ -56,6 +56,7 @@ import { of as ObservableOf} from 'rxjs';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KalturaConversionProfileAssetParamsListResponse, ConversionProfileListAction, KalturaNullableBoolean } from 'kaltura-ngx-client';
 import { map, switchMap } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 
 export interface ReplacementData {
     status: KalturaEntryReplacementStatus;
@@ -317,7 +318,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
 
         return this._kalturaServerClient
             .multiRequest(this._flavorsDataRequestFactory.create())
-            .let(flavorsData$ => this._mapFlavorsData(flavorsData$.map(result => ({ result, error: null }))))
+            .pipe(flavorsData$ => this._mapFlavorsData(flavorsData$.map(result => ({ result, error: null }))))
             .map((response) => {
                 this._handleFlavorsDataResponse(response);
             })
@@ -551,7 +552,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
                 }
                 return {relevantFlavor, uploadedFile};
             })
-            .filter(({relevantFlavor}) => !!relevantFlavor)
+            .pipe(filter(({relevantFlavor}) => !!relevantFlavor))
             .subscribe(
                 ({relevantFlavor, uploadedFile}) => {
                     switch (uploadedFile.status) {

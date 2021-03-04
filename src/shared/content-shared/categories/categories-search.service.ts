@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/multicast';
 import 'rxjs/add/operator/publishReplay';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KalturaClient } from 'kaltura-ngx-client';

@@ -1,8 +1,8 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs';
 import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory, ReachProfileGetAction, ReachProfileUpdateAction } from 'kaltura-ngx-client';
@@ -17,6 +17,8 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { ReachProfilesStore } from "../reach-profiles/reach-profiles-store/reach-profiles-store.service";
 import { SettingsReachProfileViewSections, SettingsReachProfileViewService } from "app-shared/kmc-shared/kmc-views/details-views/settings-reach-profile-view.service";
 import { SettingsReachMainViewService } from "app-shared/kmc-shared/kmc-views";
+import { debounce } from 'rxjs/operators';
+import { timer } from 'rxjs';
 
 export enum ActionTypes {
   ProfileLoading,
@@ -86,7 +88,7 @@ export class ReachProfileStore implements OnDestroy {
   private _onSectionsStateChanges(): void {
     this._widgetsManager.widgetsState$
       .pipe(cancelOnDestroy(this))
-      .debounce(() => Observable.timer(500))
+      .pipe(debounce(() => timer(500)))
       .subscribe(
         sectionsState => {
           const newDirtyState = Object

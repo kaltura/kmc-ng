@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import { Observable } from 'rxjs';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject} from 'rxjs';
 import {SelectItem} from 'primeng/api';
 
 import {KalturaMultiRequest} from 'kaltura-ngx-client';

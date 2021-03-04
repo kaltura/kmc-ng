@@ -8,7 +8,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui'
 
 
 import { Observable } from 'rxjs';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { SelectItem } from 'primeng/api';
 
 import { KalturaAccessControl } from 'kaltura-ngx-client';

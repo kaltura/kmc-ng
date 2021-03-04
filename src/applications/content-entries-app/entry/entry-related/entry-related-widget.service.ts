@@ -7,7 +7,7 @@ import {
   KeyValueDiffers,
   OnDestroy
 } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 
 import { KalturaClient } from 'kaltura-ngx-client';
@@ -33,6 +33,7 @@ import { getKalturaServerUri } from 'config/server';
 import { globalConfig } from 'config/global';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { filter } from 'rxjs/operators';
 
 export interface RelatedFile extends KalturaAttachmentAsset {
   uploading?: boolean,
@@ -72,7 +73,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
   private _trackUploadFiles(): void {
     this._uploadManagement.onTrackedFileChanged$
       .pipe(cancelOnDestroy(this))
-      .filter(uploadedFile => uploadedFile.data instanceof NewEntryRelatedFile)
+      .pipe(filter(uploadedFile => uploadedFile.data instanceof NewEntryRelatedFile))
       .map(uploadedFile => {
         let relevantRelatedFile = null;
         if (uploadedFile.data instanceof NewEntryRelatedFile) {
@@ -81,7 +82,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
         }
         return { relevantRelatedFile, uploadedFile };
       })
-      .filter(({ relevantRelatedFile }) => !!relevantRelatedFile)
+      .pipe(filter(({ relevantRelatedFile }) => !!relevantRelatedFile))
       .subscribe(
         ({ relevantRelatedFile, uploadedFile }) => {
           switch (uploadedFile.status) {

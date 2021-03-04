@@ -1,7 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import { Observable } from 'rxjs';
 import {PartnerProfileStore} from '../partner-profile';
-import 'rxjs/add/observable/throw';
 import {KalturaClient} from 'kaltura-ngx-client';
 import {FlavorParamsListAction} from 'kaltura-ngx-client';
 import {KalturaFlavorParams} from 'kaltura-ngx-client';

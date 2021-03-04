@@ -1,7 +1,7 @@
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {KalturaCategoryFilter} from 'kaltura-ngx-client';
 import {Injectable, OnDestroy} from '@angular/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject} from 'rxjs';
 import { Observable } from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';

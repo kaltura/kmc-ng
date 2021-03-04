@@ -23,6 +23,8 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { merge } from 'rxjs';
+import { observeOn } from 'rxjs/operators';
 
 @Injectable()
 export class EntryUsersWidget extends EntryWidget implements OnDestroy
@@ -49,9 +51,9 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 			viewers: [],
 		});
 
-		Observable.merge(this.usersForm.valueChanges,
+		merge(this.usersForm.valueChanges,
 			this.usersForm.statusChanges)
-            .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
+            .pipe(observeOn(async)) // using async scheduler so the form group status/dirty mode will be synchornized
             .pipe(cancelOnDestroy(this))
             .subscribe(
 				() => {

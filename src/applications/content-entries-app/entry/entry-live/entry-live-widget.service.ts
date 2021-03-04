@@ -1,5 +1,5 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject} from 'rxjs';
 import { Observable, of as ObservableOf } from 'rxjs';
 
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';

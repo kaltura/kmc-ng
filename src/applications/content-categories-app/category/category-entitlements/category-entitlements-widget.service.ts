@@ -15,6 +15,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { merge } from 'rxjs';
 
 @Injectable()
 export class CategoryEntitlementsWidget extends CategoryWidget implements OnDestroy {
@@ -136,7 +137,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   }
 
   private _monitorFormChanges() {
-    Observable.merge(this.entitlementsForm.valueChanges, this.entitlementsForm.statusChanges)
+    merge(this.entitlementsForm.valueChanges, this.entitlementsForm.statusChanges)
       .pipe(cancelOnDestroy(this, this.widgetReset$))
       .subscribe(
         () => {

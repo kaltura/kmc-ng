@@ -17,7 +17,7 @@ import {CategoryUpdateAction} from 'kaltura-ngx-client';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {CategoryDeleteAction} from 'kaltura-ngx-client';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject} from 'rxjs';
 import {CategoriesUtilsService} from '../../categories-utils.service';
 import {CategoryService} from '../category.service';
 import { modulesConfig } from 'config/modules';

@@ -17,6 +17,7 @@ import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/det
 import { ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { ContentPlaylistsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { observeOn } from 'rxjs/operators';
 
 @Component({
   selector: 'kPlaylistsList',
@@ -190,7 +191,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
     private _registerToDataChanges(): void {
         this._playlistsStore.playlists.state$
-            .observeOn(async)
+            .pipe(observeOn(async))
             .pipe(cancelOnDestroy(this))
             .subscribe(
                 result => {
@@ -218,7 +219,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
                     throw error;
                 });
     }
-    
+
     private _openRaptAnalytics(id: string): void {
       this._router.navigate(['analytics/playlist'], { queryParams: { id } });
     }

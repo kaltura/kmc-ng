@@ -22,7 +22,7 @@ import { KalturaWidevineFlavorAsset } from 'kaltura-ngx-client';
 import { KalturaThumbAsset } from 'kaltura-ngx-client';
 import { KalturaEntryDistribution } from 'kaltura-ngx-client';
 import { KalturaDistributionProfile } from 'kaltura-ngx-client';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { EntryDistributionSubmitDeleteAction } from 'kaltura-ngx-client';
 import { EntryDistributionDeleteAction } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';

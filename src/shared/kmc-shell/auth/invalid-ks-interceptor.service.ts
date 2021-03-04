@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AppAuthentication } from './app-authentication.service';
 import { BrowserService } from '../providers/browser.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
+import 'rxjs/add/operator/switchMap';
 
 @Injectable()
 export class InvalidKsInterceptorService implements HttpInterceptor {

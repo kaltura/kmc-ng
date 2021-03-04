@@ -1,7 +1,7 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
 import { PlaylistGetAction } from 'kaltura-ngx-client';
@@ -22,6 +22,9 @@ import { ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/deta
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-playlist-view.service';
 import { ContentPlaylistsMainViewService } from 'app-shared/kmc-shared/kmc-views/main-views/content-playlists-main-view.service';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { debounce } from 'rxjs/operators';
+import { timer } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 export enum ActionTypes {
   PlaylistLoading,
@@ -110,7 +113,7 @@ export class PlaylistStore implements OnDestroy {
   private _onSectionsStateChanges(): void {
     this._widgetsManager.widgetsState$
       .pipe(cancelOnDestroy(this))
-      .debounce(() => Observable.timer(500))
+      .pipe(debounce(() => timer(500)))
       .subscribe(
         sectionsState => {
           const newDirtyState = Object.keys(sectionsState)
@@ -214,7 +217,7 @@ export class PlaylistStore implements OnDestroy {
   private _onRouterEvents(): void {
     this._router.events
       .pipe(cancelOnDestroy(this))
-      .filter(event => event instanceof NavigationEnd)
+      .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(
         () => {
           const currentPlaylistId = this._playlistRoute.snapshot.params.id;
@@ -385,7 +388,7 @@ export class PlaylistStore implements OnDestroy {
   public returnToPlaylists(): void {
     this.canLeaveWithoutSaving()
       .pipe(cancelOnDestroy(this))
-      .filter(({ allowed }) => allowed)
+      .pipe(filter(({ allowed }) => allowed))
       .subscribe(() => {
           this._contentPlaylistsMainView.open();
       });

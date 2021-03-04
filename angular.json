@@ -20,10 +20,8 @@
             "preserveSymlinks": true,
               "allowedCommonJsDependencies": [
                   "seamless-immutable",
-                  "rxjs-compat",
                   "jquery",
                   "qrcode",
-                  "rxjs",
                   "ajv"
               ],
             "assets": [

@@ -1,8 +1,8 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs';
 import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
@@ -35,6 +35,8 @@ import { SettingsTranscodingMainViewService } from 'app-shared/kmc-shared/kmc-vi
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { TranscodingProfilesUpdatedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
+import { debounce } from 'rxjs/operators';
+import { timer } from 'rxjs';
 
 export enum ActionTypes {
   ProfileLoading,
@@ -107,7 +109,7 @@ export class TranscodingProfileStore implements OnDestroy {
   private _onSectionsStateChanges(): void {
     this._widgetsManager.widgetsState$
       .pipe(cancelOnDestroy(this))
-      .debounce(() => Observable.timer(500))
+      .pipe(debounce(() => timer(500)))
       .subscribe(
         sectionsState => {
           const newDirtyState = Object

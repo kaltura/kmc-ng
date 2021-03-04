@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { globalConfig } from 'config/global';
 import { buildDeployUrl } from 'config/server';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import * as Ajv from 'ajv';

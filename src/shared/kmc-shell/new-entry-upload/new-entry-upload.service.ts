@@ -1,7 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs/Subscription';
 import { KalturaMediaType } from 'kaltura-ngx-client';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryUploadFile } from './new-entry-upload-file';
@@ -13,8 +12,9 @@ import { KalturaAssetsParamsResourceContainers } from 'kaltura-ngx-client';
 import { MediaUpdateContentAction } from 'kaltura-ngx-client';
 import { UploadTokenDeleteAction } from 'kaltura-ngx-client';
 import { TrackedFileData } from '@kaltura-ng/kaltura-common';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { filter } from 'rxjs/operators';
 
 export interface KmcNewEntryUpload {
   file: File;
@@ -39,7 +39,7 @@ export class NewEntryUploadService implements OnDestroy {
   private _monitorTrackedFilesChanges(): void {
     this._uploadManagement.onTrackedFileChanged$
       .pipe(cancelOnDestroy(this))
-      .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile)
+      .pipe(filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile))
       .subscribe(
         trackedFile => {
           // NOTE: this service handles only 'purged' and 'waitingUpload' statuses by design.
@@ -60,7 +60,7 @@ export class NewEntryUploadService implements OnDestroy {
   private _cleanupUpload(trackedFile: TrackedFileData): void {
     const trackedFileData = <NewEntryUploadFile>trackedFile.data;
 
-    if (trackedFileData.createMediaEntrySubscription instanceof Subscription) {
+    if (trackedFileData.createMediaEntrySubscription) {
       trackedFileData.createMediaEntrySubscription.unsubscribe();
       trackedFileData.createMediaEntrySubscription = null;
     }

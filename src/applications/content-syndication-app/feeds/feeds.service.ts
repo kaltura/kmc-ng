@@ -1,6 +1,6 @@
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {Injectable, OnDestroy} from '@angular/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject} from 'rxjs';
 import { Observable } from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
@@ -37,6 +37,7 @@ import { subApplicationsConfig } from 'config/sub-applications';
 import { ContentSyndicationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { globalConfig } from 'config/global';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { filter as oFilter } from 'rxjs/operators';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -218,7 +219,7 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
         });
         return {items: feedsArray, totalCount: response.totalCount};
       })
-        .filter(Boolean);
+        .pipe(oFilter(Boolean));
     } catch (err) {
       return Observable.throw(err);
     }

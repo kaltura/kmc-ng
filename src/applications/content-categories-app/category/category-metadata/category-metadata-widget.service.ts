@@ -26,6 +26,8 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { observeOn } from 'rxjs/operators';
+import { merge } from 'rxjs';
 
 @Injectable()
 export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy {
@@ -62,9 +64,9 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             formsChanges.push(formGroup.valueChanges, formGroup.statusChanges);
         });
 
-        Observable.merge(...formsChanges)
+        merge(...formsChanges)
             .pipe(cancelOnDestroy(this, this.widgetReset$))
-            .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
+            .pipe(observeOn(async)) // using async scheduler so the form group status/dirty mode will be synchornized
             .subscribe(
             () => {
                 let isValid = true;

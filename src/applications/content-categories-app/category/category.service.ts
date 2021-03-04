@@ -23,6 +23,9 @@ import { ContentCategoryViewSections, ContentCategoryViewService } from 'app-sha
 import { ContentCategoriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { modulesConfig } from 'config/modules';
+import { debounce } from 'rxjs/operators';
+import { timer } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 export enum ActionTypes {
   CategoryLoading,
@@ -104,7 +107,7 @@ export class CategoryService implements OnDestroy {
     private _onSectionsStateChanges() {
         this._widgetsManager.widgetsState$
             .pipe(cancelOnDestroy(this))
-            .debounce(() => Observable.timer(500))
+            .pipe(debounce(() => timer(500)))
             .subscribe(
                 sectionsState => {
                     const newDirtyState = Object.keys(sectionsState).reduce((result, sectionName) => result || sectionsState[sectionName].isDirty, false);
@@ -153,8 +156,8 @@ export class CategoryService implements OnDestroy {
 	private _onRouterEvents(): void {
 		this._router.events
 			.pipe(cancelOnDestroy(this))
-			.filter(
-			event => event instanceof NavigationEnd)
+			.pipe(filter(
+			event => event instanceof NavigationEnd))
 .subscribe(
                 event => {
 					// we must defer the loadCategory to the next event cycle loop to allow components

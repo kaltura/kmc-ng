@@ -1,5 +1,5 @@
 import { Inject, Injectable, InjectionToken, OnDestroy, Optional } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { MetadataProfileStore } from 'app-shared/kmc-shared';
@@ -23,7 +23,7 @@ import {
     TypeAdaptersMapping
 } from '@kaltura-ng/mc-shared';
 import { CategoriesModeAdapter, CategoriesModes, CategoriesModeType } from 'app-shared/content-shared/categories/categories-mode-type';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { KalturaBaseEntry } from 'kaltura-ngx-client';
 import { KalturaMediaEntryFilter } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
