@@ -11,7 +11,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { TranscodingProfilesUpdatedEvent } from 'app-shared/kmc-shared/events';
 import { throwError } from 'rxjs';
-import { publishReplay, refCount, catchError } from 'rxjs/operators';
+import { publishReplay, refCount, catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class TranscodingProfileManagement implements OnDestroy {
@@ -41,7 +41,7 @@ export class TranscodingProfileManagement implements OnDestroy {
               pager: new KalturaFilterPager({ pageSize: 500 })
           })
       )
-      .map((res: KalturaConversionProfileListResponse) => res.objects);
+      .pipe(map((res: KalturaConversionProfileListResponse) => res.objects));
   }
 
   public get(): Observable<KalturaConversionProfile[]> {

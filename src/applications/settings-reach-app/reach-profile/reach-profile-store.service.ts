@@ -1,7 +1,7 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BehaviorSubject } from 'rxjs';
+import {BehaviorSubject, EMPTY} from 'rxjs';
 import { Subject } from 'rxjs';
 import { throwError } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
@@ -18,7 +18,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { ReachProfilesStore } from "../reach-profiles/reach-profiles-store/reach-profiles-store.service";
 import { SettingsReachProfileViewSections, SettingsReachProfileViewService } from "app-shared/kmc-shared/kmc-views/details-views/settings-reach-profile-view.service";
 import { SettingsReachMainViewService } from "app-shared/kmc-shared/kmc-views";
-import { debounce, map, flatMap } from 'rxjs/operators';
+import { debounce, map, flatMap, filter } from 'rxjs/operators';
 import { timer } from 'rxjs';
 
 export enum ActionTypes {
@@ -187,7 +187,7 @@ export class ReachProfileStore implements OnDestroy {
                 this._saveProfileInvoked = true;
                 this._loadProfile(profileResponse.result.id);
               }
-              return Observable.empty();
+              return EMPTY;
             }));
         } else {
           switch (prepareResponse.reason) {
@@ -202,7 +202,7 @@ export class ReachProfileStore implements OnDestroy {
               break;
           }
 
-          return Observable.empty();
+          return EMPTY;
         }
       }))
       .subscribe(
@@ -296,7 +296,7 @@ export class ReachProfileStore implements OnDestroy {
 
   public openProfile(profile: KalturaReachProfile): void {
     this.canLeave()
-        .filter(({ allowed }) => allowed)
+        .pipe(filter(({ allowed }) => allowed))
         .pipe(cancelOnDestroy(this))
         .subscribe(() => {
             this._settingsReachProfileViewService.open({ profile, section: SettingsReachProfileViewSections.Settings });

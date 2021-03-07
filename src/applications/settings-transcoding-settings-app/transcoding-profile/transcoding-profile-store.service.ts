@@ -1,7 +1,7 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BehaviorSubject } from 'rxjs';
+import {BehaviorSubject, EMPTY} from 'rxjs';
 import { Subject } from 'rxjs';
 import { throwError } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
@@ -254,7 +254,7 @@ export class TranscodingProfileStore implements OnDestroy {
           return this._checkFlavors(newProfile)
             .pipe(switchMap(({ proceedSave }) => {
               if (!proceedSave) {
-                return Observable.empty();
+                return EMPTY;
               }
 
               return this._kalturaServerClient.multiRequest(request)
@@ -282,7 +282,7 @@ export class TranscodingProfileStore implements OnDestroy {
                     }
                   }
 
-                  return Observable.empty();
+                  return EMPTY;
                 }));
             }));
         } else {
@@ -298,7 +298,7 @@ export class TranscodingProfileStore implements OnDestroy {
               break;
           }
 
-          return Observable.empty();
+          return EMPTY;
         }
       }))
       .subscribe(

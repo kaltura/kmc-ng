@@ -59,7 +59,7 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
             );
         });
         return this._serverClient.multiRequest(multiRequest)
-            .map(responses => {
+            .pipe(map(responses => {
                 return files.map((file, index) => {
                     const response = responses[index];
                     let status = !!response.result;
@@ -73,7 +73,7 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
 
                     return {id: file.id, status};
                 });
-            });
+            }));
     }
 
     canHandle(uploadFile: UploadFileData): boolean {

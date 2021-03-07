@@ -19,6 +19,7 @@ import { KalturaPreviewRestriction } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { filter } from 'rxjs/operators';
 
 export interface AccessControlAutocompleteItem {
   value: string;
@@ -347,28 +348,28 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
     this._allowedIpsField.valueChanges
       .pipe(cancelOnDestroy(this))
-      .filter(value => value && this._allowedIpsField.enabled)
+      .pipe(filter(value => value && this._allowedIpsField.enabled))
       .subscribe(value => {
         this._ipsFormatError = value.some(ip => ip && ip.__class === 'invalid');
       });
 
     this._restrictedIpsField.valueChanges
       .pipe(cancelOnDestroy(this))
-      .filter(value => value && this._restrictedIpsField.enabled)
+      .pipe(filter(value => value && this._restrictedIpsField.enabled))
       .subscribe(value => {
         this._ipsFormatError = value.some(ip => ip && ip.__class === 'invalid');
       });
 
     this._allowedDomainsField.valueChanges
       .pipe(cancelOnDestroy(this))
-      .filter(value => value && this._allowedDomainsField.enabled)
+      .pipe(filter(value => value && this._allowedDomainsField.enabled))
       .subscribe(value => {
         this._domainsFormatError = value.some(domain => domain && domain.__class === 'invalid');
       });
 
     this._restrictedDomainsField.valueChanges
       .pipe(cancelOnDestroy(this))
-      .filter(value => value && this._restrictedDomainsField.enabled)
+      .pipe(filter(value => value && this._restrictedDomainsField.enabled))
       .subscribe(value => {
         this._domainsFormatError = value.some(domain => domain && domain.__class === 'invalid');
       });

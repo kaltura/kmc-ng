@@ -7,6 +7,7 @@ import { KalturaPartnerStatistics } from 'kaltura-ngx-client';
 import { PartnerGetStatisticsAction } from 'kaltura-ngx-client';
 import { serverConfig } from 'config/server';
 import { throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class SettingsAccountInformationService {
@@ -31,7 +32,7 @@ export class SettingsAccountInformationService {
         try {
             return this._http
                 .post(serverConfig.externalLinks.kaltura.contactSalesforce, data, httpOptions)
-                .map(() => undefined);
+                .pipe(map(() => undefined));
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to contact SalesForce'));
         }

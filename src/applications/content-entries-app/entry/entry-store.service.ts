@@ -18,7 +18,7 @@ import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client';
 import { BaseEntryDeleteAction } from 'kaltura-ngx-client';
 import { BehaviorSubject, Observable, Subject, Unsubscribable } from 'rxjs';
 import { debounce } from 'rxjs/operators';
-import { timer } from 'rxjs';
+import { timer, EMPTY } from 'rxjs';
 import { filter, map, flatMap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
@@ -200,7 +200,7 @@ export class EntryStore implements OnDestroy {
 										this._loadEntry(this.entryId);
 									}
 
-									return Observable.empty();
+									return EMPTY;
 								}
 							))
 					}
@@ -217,7 +217,7 @@ export class EntryStore implements OnDestroy {
 								break;
 						}
 
-						return Observable.empty();
+						return EMPTY;
 					}
 				}
 			))

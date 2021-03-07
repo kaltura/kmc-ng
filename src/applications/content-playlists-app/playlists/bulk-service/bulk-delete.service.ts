@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs';
+import {Observable, forkJoin, EMPTY} from 'rxjs';
 import { PlaylistsStore } from '../playlists-store/playlists-store.service';
 import { PlaylistDeleteAction } from 'kaltura-ngx-client';
 import { KalturaRequest } from 'kaltura-ngx-client';
@@ -14,7 +14,7 @@ export class BulkDeleteService {
 
   public deletePlaylist(ids: string[]): Observable<{}> {
     if (!ids || ids.length <= 0) {
-      return Observable.empty();
+      return EMPTY;
     }
 
     return this._transmit(ids.map(id => new PlaylistDeleteAction({ id })), true);

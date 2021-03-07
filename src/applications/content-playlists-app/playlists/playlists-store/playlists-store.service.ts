@@ -309,8 +309,8 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
   public deletePlaylist(id: string): Observable<void> {
     return this._kalturaServerClient
       .request(new PlaylistDeleteAction({ id }))
-      .map(() => {
-      });
+      .pipe(map(() => {
+      }));
   }
 }
 

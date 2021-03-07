@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import {BehaviorSubject, EMPTY} from 'rxjs';
 import { BrowserService } from 'shared/kmc-shell';
 import { Observable, forkJoin } from 'rxjs';
 import {
@@ -378,7 +378,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
 
   public deleteDropFiles(ids: number[]): Observable<{}> {
     if (!ids || !ids.length) {
-      return Observable.empty();
+      return EMPTY;
     }
 
     const requests = ids.map(id => new DropFolderFileDeleteAction({ dropFolderFileId: id }));

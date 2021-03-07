@@ -1,6 +1,6 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import {BehaviorSubject, EMPTY} from 'rxjs';
 import { Subject } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
@@ -305,7 +305,7 @@ export class PlaylistStore implements OnDestroy {
                       }
                     }
 
-                    return Observable.empty();
+                    return EMPTY;
                   }
                 ))
             } else {
@@ -321,7 +321,7 @@ export class PlaylistStore implements OnDestroy {
                   break;
               }
 
-              return Observable.empty();
+              return EMPTY;
             }
           }
         ))

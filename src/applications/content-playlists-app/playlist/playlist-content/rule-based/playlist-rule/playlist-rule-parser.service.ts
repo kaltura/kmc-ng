@@ -13,6 +13,7 @@ import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class PlaylistRuleParserService implements OnDestroy {
@@ -169,7 +170,7 @@ export class PlaylistRuleParserService implements OnDestroy {
     const entriesCount = entries.length || 0;
 
     return this._entriesStore.convertFiltersToServerStruct()
-      .map(originalFilter => {
+      .pipe(map(originalFilter => {
         if (originalFilter instanceof KalturaMediaEntryFilterForPlaylist) {
             originalFilter.name = payload.name;
 
@@ -185,6 +186,6 @@ export class PlaylistRuleParserService implements OnDestroy {
           this._logger.error(`cannot build playlist rule. expected filter of type 'KalturaMediaEntryFilterForPlaylist'.`);
           throw new Error(`cannot build playlist rule. expected filter of type 'KalturaMediaEntryFilterForPlaylist'.`);
         }
-      });
+      }));
   }
 }

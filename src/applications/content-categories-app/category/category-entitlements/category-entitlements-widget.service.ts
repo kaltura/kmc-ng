@@ -44,9 +44,9 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
           return this._kalturaClient.request(
               new CategoryGetAction({id: this.data.id})
           ).pipe(cancelOnDestroy(this, this.widgetReset$))
-              .map(value => {
+              .pipe(map(value => {
                   return value.membersCount;
-              });
+              }));
       } else {
           return throwError(new Error('missing data'));
       }

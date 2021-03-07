@@ -2,7 +2,7 @@ import { CategoriesService } from '../categories/categories.service';
 import {Host, Injectable, OnDestroy} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { Observable, Subject, BehaviorSubject, Unsubscribable } from 'rxjs';
+import {Observable, Subject, BehaviorSubject, Unsubscribable, EMPTY} from 'rxjs';
 import { of } from 'rxjs';
 import {KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory} from 'kaltura-ngx-client';
 import {KalturaCategory} from 'kaltura-ngx-client';
@@ -274,11 +274,11 @@ export class CategoryService implements OnDestroy {
                         this._loadCategory(this.categoryId);
                       }
 
-                      return Observable.empty();
+                      return EMPTY;
                     }
                   ))
               } else {
-                return Observable.empty();
+                return EMPTY;
               }
             }));
 				}
@@ -295,7 +295,7 @@ export class CategoryService implements OnDestroy {
 							break;
 					}
 
-					return Observable.empty();
+					return EMPTY;
 				}
 			}
 			))
