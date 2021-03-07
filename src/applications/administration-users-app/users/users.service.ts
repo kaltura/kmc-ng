@@ -176,9 +176,9 @@ export class UsersStore implements OnDestroy {
           userId: user.id,
           user: new KalturaUser({ status: newStatus })
         })
-      ).map(() => {
+      ).pipe(map(() => {
         return;
-      });
+      }));
   }
 
   public deleteUser(user: KalturaUser): Observable<void> {
@@ -191,9 +191,9 @@ export class UsersStore implements OnDestroy {
 
     return this._kalturaServerClient
       .request(new UserDeleteAction({ userId: user.id }))
-      .map(() => {
+      .pipe(map(() => {
         return;
-      });
+      }));
   }
 
   public isUserAlreadyExists(email: string): Observable<IsUserExistsStatuses | null> {
@@ -233,7 +233,7 @@ export class UsersStore implements OnDestroy {
 
     return this._kalturaServerClient
         .request(new UserAddAction({ user }))
-        .map(() => {});
+        .pipe(map(() => {}));
   }
 
   public updateUser(userData: { roleIds: string, id: string, email: string}, userId: string): Observable<void> {
@@ -250,9 +250,9 @@ export class UsersStore implements OnDestroy {
     });
     return this._kalturaServerClient
       .request(new UserUpdateAction({ userId, user }))
-      .map(() => {
+      .pipe(map(() => {
         return;
-      });
+      }));
   }
 
   public associateUserToAccount(userProvidedEmail: string, user: KalturaUser, roleIds: string): Observable<void> {
@@ -270,7 +270,7 @@ export class UsersStore implements OnDestroy {
     );
     return this._kalturaServerClient
       .multiRequest(request)
-      .map((responses) => {
+      .pipe(map((responses) => {
         if (responses.hasErrors()) {
           const errorMessage = responses.map(response => {
             if (response.error) {
@@ -279,7 +279,7 @@ export class UsersStore implements OnDestroy {
           }).join('');
           throw Error(errorMessage);
         }
-      });
+      }));
   }
 
   public reload(force: boolean): void;

@@ -254,7 +254,7 @@ export class EntryStore implements OnDestroy {
     private _deleteEntry(entryId: string): Observable<void> {
         return this._kalturaServerClient
             .request(new BaseEntryDeleteAction({ entryId }))
-            .map(() => {});
+            .pipe(map(() => {}));
     }
 
 	private _loadEntry(entryId : string) : void {
