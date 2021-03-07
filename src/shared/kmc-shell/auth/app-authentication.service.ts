@@ -35,7 +35,7 @@ import { buildBaseUri } from 'config/server';
 import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
 import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
-import { switchMap, map } from 'rxjs/operators';
+import {switchMap, map, catchError} from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { AuthenticatorViewService } from "app-shared/kmc-shared/kmc-views/details-views";
 import { throwError } from 'rxjs';
@@ -162,10 +162,10 @@ export class AppAuthentication {
 
         return this._http.get(url, { responseType: 'json' })
             .pipe(map(res => res['errorCode']))
-            .catch((e) => {
+            .pipe(catchError((e) => {
                 this._logger.error('Failed to check if provided hash is valid', e);
                 throw Error('Failed to check if provided hash is valid');
-            });
+            }));
     }
 
     resetPassword(email: string): Observable<void> {
@@ -178,12 +178,12 @@ export class AppAuthentication {
 
     updatePassword(payload: UpdatePasswordPayload): Observable<{ email: string, password: string }> {
         return this.kalturaServerClient.request(new AdminUserUpdatePasswordAction(payload))
-            .catch(error => throwError(this._getLoginErrorMessage({error})));
+            .pipe(catchError(error => throwError(this._getLoginErrorMessage({error}))));
     }
 
     setInitalPassword(payload: { newPassword: string, hashKey: string }): Observable<KalturaAuthentication> {
         return this.kalturaServerClient.request(new AdminUserSetInitialPasswordAction(payload))
-            .catch(error => throwError(this._getLoginErrorMessage({error})));
+            .pipe(catchError(error => throwError(this._getLoginErrorMessage({error}))));
     }
 
     login(loginId: string, password: string, otp: string): Observable<LoginResponse> {
@@ -301,10 +301,10 @@ export class AppAuthentication {
                 });
                 return canPartnerAccess;
             }))
-            .catch((e) => {
+            .pipe(catchError((e) => {
                 this._logger.error('Failed to check if partner can access the KMC', e);
                 throw Error('Failed to check if partner can access the KMC');
-            });
+            }));
     }
 
     private _afterLogin(ks: string, storeCredentialsInSessionStorage: boolean, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse): void {
@@ -595,7 +595,7 @@ export class AppAuthentication {
             applicationType,
             partnerId: requestedPartnerId ? requestedPartnerId : null
         }))
-        .catch(error => throwError(this._getLoginErrorMessage({error})));
+        .pipe(catchError(error => throwError(this._getLoginErrorMessage({error}))));
 
     }
 }

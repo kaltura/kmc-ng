@@ -26,6 +26,7 @@ import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/det
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { throwError } from 'rxjs';
 import { of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class CategorySubcategoriesWidget extends CategoryWidget implements OnDestroy {
@@ -52,15 +53,15 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
     super._showLoader();
 
     return this._loadSubcategories()
-      .map(() => {
+      .pipe(map(() => {
         super._hideLoader();
         return {failed: false};
-      })
-      .catch((error, caught) => {
+      }))
+      .pipe(catchError((error, caught) => {
         super._hideLoader();
         super._showActivationError();
         return of({failed: true, error});
-      });
+      }));
   }
 
   protected onReset() {

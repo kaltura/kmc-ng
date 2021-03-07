@@ -16,7 +16,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { of } from 'rxjs';
-import { switchMap, toArray } from 'rxjs/operators';
+import { switchMap, toArray, tap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'kMoveCategory',
@@ -207,14 +207,14 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
     }
 
     return this._categoriesService.getCategoryById(<number>this._selectedParentCategory)
-      .map(selectedParent => {
+      .pipe(map(selectedParent => {
         return this._categoriesService.isParentCategorySelectionValid(
           {
             categories: this.selectedCategories,
             categoryParent: { id: selectedParent.id, fullIds: selectedParent.fullIdPath }
           });
-      })
-      .do(isParentCategorySelectionValid => {
+      }))
+      .pipe(tap(isParentCategorySelectionValid => {
         if (!isParentCategorySelectionValid) {
           this._blockerMessage = new AreaBlockerMessage({
             message: this._appLocalization.get('applications.content.moveCategory.errors.invalidParentSelection'),
@@ -228,7 +228,7 @@ export class MoveCategoryComponent implements OnInit, OnDestroy {
             ]
           });
         }
-      });
+      }));
   }
 
 

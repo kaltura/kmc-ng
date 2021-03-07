@@ -379,14 +379,14 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
     const actions = profiles.map(({ id }) => new AccessControlDeleteAction({ id }));
     return this._kalturaServerClient
       .multiRequest(new KalturaMultiRequest(...actions))
-      .map((response) => {
+      .pipe(map((response) => {
         if (response && response.length) {
           const failedResponse = response.find(res => !!res.error);
           if (failedResponse) {
             throw throwError(failedResponse.error);
           }
         }
-      });
+      }));
   }
 
   public saveProfile(profile: KalturaAccessControl): Observable<void> {
@@ -397,8 +397,8 @@ export class AccessControlProfilesStore extends FiltersStoreBase<AccessControlPr
     profile.allowEmptyArray('restrictions');
 
     return this._kalturaServerClient.request(saveAction)
-      .map(() => {
-      });
+      .pipe(map(() => {
+      }));
   }
 }
 

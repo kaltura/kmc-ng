@@ -18,6 +18,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { merge } from 'rxjs';
 import { throwError } from 'rxjs';
 import { of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class CategoryEntitlementsWidget extends CategoryWidget implements OnDestroy {
@@ -60,18 +61,18 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
 
     return this._fetchAdditionalData()
       .pipe(cancelOnDestroy(this, this.widgetReset$))
-      .map(({owner, parentCategory}) => {
+      .pipe(map(({owner, parentCategory}) => {
         super._hideLoader();
         this.parentCategory = parentCategory || null;
         this._resetFormData(owner);
         this._monitorFormChanges();
         return {failed: false};
-      })
-      .catch(error => {
+      }))
+      .pipe(catchError(error => {
         super._hideLoader();
         super._showActivationError();
         return of({failed: true, error});
-      });
+      }));
   }
 
 

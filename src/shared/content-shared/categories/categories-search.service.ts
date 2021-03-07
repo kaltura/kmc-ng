@@ -87,9 +87,9 @@ export class CategoriesSearchService implements OnDestroy {
           new CategoryGetAction({id: categoryId}).setRequestOptions({
               responseProfile
           })
-      ).map(category => {
+      ).pipe(map(category => {
           return this.parseAndCacheCategories([category])[0];
-      })
+      }))
   }
 
   public getCategories(categoriesList: number[]): Observable<CategoriesQuery> {

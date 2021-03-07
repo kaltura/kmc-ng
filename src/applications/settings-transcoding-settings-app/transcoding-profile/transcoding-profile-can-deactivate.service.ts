@@ -3,12 +3,13 @@ import { CanDeactivate } from '@angular/router';
 import { TranscodingProfileComponent } from './transcoding-profile.component';
 import { Observable } from 'rxjs';
 import { of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class TranscodingProfileCanDeactivate implements CanDeactivate<TranscodingProfileComponent> {
   canDeactivate(component: TranscodingProfileComponent): Observable<boolean> {
     return component.canLeave()
-      .map(({ allowed }) => allowed)
-      .catch(() => of(false));
+      .pipe(map(({ allowed }) => allowed))
+      .pipe(catchError(() => of(false)));
   }
 }

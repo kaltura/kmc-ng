@@ -28,6 +28,7 @@ import { UserEnableLoginAction } from 'kaltura-ngx-client';
 import { UserAddAction } from 'kaltura-ngx-client';
 import { AdminUsersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 export interface QueryData {
   pageIndex: number;
@@ -198,15 +199,15 @@ export class UsersStore implements OnDestroy {
   public isUserAlreadyExists(email: string): Observable<IsUserExistsStatuses | null> {
     return this._kalturaServerClient
       .request(new UserGetByLoginIdAction({ loginId: email }))
-      .map(() => {
+      .pipe(map(() => {
         return IsUserExistsStatuses.kmcUser;
-      })
-      .catch(error => {
+      }))
+      .pipe(catchError(error => {
         const status = error.code === 'LOGIN_DATA_NOT_FOUND'
           ? IsUserExistsStatuses.unknownUser :
           (error.code === 'USER_NOT_FOUND' ? IsUserExistsStatuses.otherKMCUser : null);
         return of(status);
-      });
+      }));
   }
 
   public getUserById(userId: string): Observable<KalturaUser> {

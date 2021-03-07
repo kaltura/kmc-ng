@@ -11,6 +11,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { TranscodingProfilesUpdatedEvent } from 'app-shared/kmc-shared/events';
 import { throwError } from 'rxjs';
+import { publishReplay, refCount, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class TranscodingProfileManagement implements OnDestroy {
@@ -46,13 +47,13 @@ export class TranscodingProfileManagement implements OnDestroy {
   public get(): Observable<KalturaConversionProfile[]> {
     if (!this._transcodingProfileCache$) {
       this._transcodingProfileCache$ = this._loadTranscodingProfiles()
-        .catch(err => {
+        .pipe(catchError(err => {
           console.log(`log: [warn] [transcodingProfile-management] Error during load transcoding profiles: ${err}`);
           this._transcodingProfileCache$ = null;
           return throwError(err);
-        })
-        .publishReplay(1)
-        .refCount();
+        }))
+        .pipe(publishReplay(1))
+        .pipe(refCount());
     }
 
     return this._transcodingProfileCache$;

@@ -29,6 +29,7 @@ import { KalturaMediaEntryFilter } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export enum SortDirection {
   Desc = -1,
@@ -235,9 +236,9 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
     return this._kalturaServerClient
       .request(new BaseEntryDeleteAction({ entryId }))
-      .map(() => {
+      .pipe(map(() => {
         return;
-      });
+      }));
   }
 
   protected _createDefaultFiltersValue(): EntriesFilters {

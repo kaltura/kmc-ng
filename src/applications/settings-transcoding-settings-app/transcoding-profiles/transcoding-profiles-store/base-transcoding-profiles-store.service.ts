@@ -23,6 +23,7 @@ import { SettingsTranscodingMainViewService } from 'app-shared/kmc-shared/kmc-vi
 import { globalConfig } from 'config/global';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export interface ExtendedKalturaConversionProfileAssetParams extends KalturaConversionProfileAssetParams {
   updated?: boolean;
@@ -146,7 +147,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
       // build the request
       return this._kalturaServerClient
         .multiRequest(new KalturaMultiRequest(conversionProfileAction, conversionProfileAssetParamsAction))
-        .map(([profilesResponse, assetsResponse]) => {
+        .pipe(map(([profilesResponse, assetsResponse]) => {
           if (profilesResponse.error) {
             throw Error(profilesResponse.error.message);
           }
@@ -173,7 +174,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
           }
 
           return { objects, totalCount };
-        });
+        }));
     } catch (err) {
       return throwError(err);
     }
@@ -194,7 +195,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
       .map(reqChunk => this._kalturaServerClient.multiRequest(reqChunk));
 
     return forkJoin(multiRequests)
-      .map(responses => {
+      .pipe(map(responses => {
         const errorMessage = [].concat.apply([], responses)
           .filter(response => !!response.error)
           .reduce((acc, { error }) => `${acc}\n${error.message}`, '')
@@ -203,7 +204,7 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
         if (!!errorMessage) {
           throw new Error(errorMessage);
         }
-      });
+      }));
   }
 
   private _prepare(): void {
@@ -261,8 +262,8 @@ export abstract class BaseTranscodingProfilesStore extends FiltersStoreBase<Tran
   public setAsDefault(profile: KalturaConversionProfileWithAsset): Observable<void> {
     return this._kalturaServerClient
       .request(new ConversionProfileSetAsDefaultAction({ id: profile.id }))
-      .map(() => {
-      });
+      .pipe(map(() => {
+      }));
   }
 
   public deleteProfiles(profiles: KalturaConversionProfileWithAsset[]): Observable<void> {

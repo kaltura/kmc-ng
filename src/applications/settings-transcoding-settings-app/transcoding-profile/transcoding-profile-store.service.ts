@@ -399,7 +399,7 @@ export class TranscodingProfileStore implements OnDestroy {
       // build the request
       return this._kalturaServerClient
         .multiRequest(new KalturaMultiRequest(conversionProfileAction, conversionProfileAssetParamsAction))
-        .map(([profilesResponse, assetsResponse]) => {
+        .pipe(map(([profilesResponse, assetsResponse]) => {
           if (profilesResponse.error) {
             throw Error(profilesResponse.error.message);
           }
@@ -413,7 +413,7 @@ export class TranscodingProfileStore implements OnDestroy {
           const flavorParamsIds = (profile.flavorParamsIds || '').trim();
           const flavors = flavorParamsIds ? flavorParamsIds.split(',').length : 0;
           return Object.assign(profile, { assets, flavors });
-        });
+        }));
     } else {
       return throwError(new Error('missing profileId'));
     }

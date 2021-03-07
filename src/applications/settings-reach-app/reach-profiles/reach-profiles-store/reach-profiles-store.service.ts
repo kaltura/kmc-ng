@@ -2,6 +2,7 @@ import { OnDestroy, Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {Observable} from 'rxjs';
 import { throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {ISubscription} from 'rxjs/Subscription';
 import {
     KalturaClient, KalturaDetachedResponseProfile,
@@ -148,7 +149,7 @@ export class ReachProfilesStore extends FiltersStoreBase<ReachProfilesFilters> i
             // build the request
             return this._kalturaServerClient
                 .request(reachProfileListAction)
-                .map((profilesResponse: KalturaReachProfileListResponse) => {
+                .pipe(map((profilesResponse: KalturaReachProfileListResponse) => {
                     const profiles = profilesResponse.objects;
                     let objects: KalturaReachProfileWithCredit[] = [];
                     profiles.forEach(profile => {
@@ -158,7 +159,7 @@ export class ReachProfilesStore extends FiltersStoreBase<ReachProfilesFilters> i
                     });
                     const totalCount = profilesResponse.totalCount;
                     return { objects, totalCount };
-                });
+                }));
         } catch (err) {
             return throwError(err);
         }

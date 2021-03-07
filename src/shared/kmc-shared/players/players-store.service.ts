@@ -15,6 +15,7 @@ import {AppEventsService} from "app-shared/kmc-shared";
 import {PlayersUpdatedEvent} from "app-shared/kmc-shared/events";
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { publishReplay, refCount } from 'rxjs/operators';
 
 export enum PlayerTypes {
   Entry = 1,
@@ -100,8 +101,8 @@ export class PlayersStore implements OnDestroy {
           return () => {
           }
         })
-          .publishReplay(1)
-          .refCount();
+          .pipe(publishReplay(1))
+          .pipe(refCount());
     }
 
     return cachedResponse;

@@ -41,7 +41,7 @@ import { serverConfig } from 'config/server';
 import { ContentDropFoldersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { globalConfig } from 'config/global';
 import { of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map, publishReplay, refCount } from 'rxjs/operators';
 
 const localStoragePageSizeKey = 'dropFolders.list.pageSize';
 
@@ -250,7 +250,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
         // build the request
         return <any>this._kalturaServerClient
           .request(new DropFolderFileListAction({ filter, pager }))
-          .map(response => {
+          .pipe(map(response => {
             response.objects.forEach(object => {
               dropFoldersList.forEach(folder => {
                 if (object.dropFolderId === folder.id) {
@@ -260,7 +260,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
             });
 
             return response;
-          });
+          }));
       }));
 
   }
@@ -290,7 +290,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
       }).setRequestOptions({
           acceptedTypes: [KalturaDropFolder, KalturaDropFolderContentFileHandlerConfig]
       }))
-      .map(response => {
+      .pipe(map(response => {
         this._dropFolders.state.next({ loading: false, errorMessage: null });
         if (response.objects.length) {
           let df: KalturaDropFolder;
@@ -326,16 +326,16 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
               )
           };
         }
-      })
-      .publishReplay(1)
-      .refCount();
+      }))
+      .pipe(publishReplay(1))
+      .pipe(refCount());
 
     return this._dropFoldersList$;
   }
 
   public isEntryExist(entryId: string): Observable<boolean> {
     return this._kalturaServerClient.request(new BaseEntryGetAction({ entryId }))
-      .map(Boolean);
+      .pipe(map(Boolean));
   }
 
   protected _createDefaultFiltersValue(): DropFoldersFilters {
@@ -397,7 +397,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
       .map(reqChunk => this._kalturaServerClient.multiRequest(reqChunk));
 
     return forkJoin(multiRequests)
-      .map(responses => {
+      .pipe(map(responses => {
         const errorMessage = [].concat.apply([], responses)
           .filter(response => !!response.error)
           .reduce((acc, { error }) => `${acc}\n${error.message}`, '')
@@ -408,7 +408,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
         } else {
           return {};
         }
-      });
+      }));
   }
 }
 

@@ -23,7 +23,7 @@ import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/detail
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { merge, forkJoin } from 'rxjs';
-import { observeOn, map } from 'rxjs/operators';
+import { observeOn, map, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 @Injectable()
@@ -247,18 +247,18 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
         }
 
 	    return forkJoin(actions)
-		    .map(responses => {
+		    .pipe(map(responses => {
 			    super._hideLoader();
 			    return {failed : false};
-		    })
-		    .catch((error, caught) =>
+		    }))
+		    .pipe(catchError((error, caught) =>
 		    {
 		        console.warn(error);
 			    super._hideLoader();
 			    super._showActivationError();
 
 			    return of({failed : true, error});
-		    });
+		    }));
 
     }
 

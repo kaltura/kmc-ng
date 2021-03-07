@@ -26,7 +26,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { ContentCategoryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { observeOn } from 'rxjs/operators';
+import { map, catchError, tap, observeOn } from 'rxjs/operators';
 import { merge } from 'rxjs';
 import { of } from 'rxjs';
 
@@ -131,10 +131,10 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             return of(afterOnActivated());
         } else {
             return forkJoin(actions)
-                .catch(() => {
+                .pipe(catchError(() => {
                     return of([false]);
-                })
-                .map(responses => {
+                }))
+                .pipe(map(responses => {
                     super._hideLoader();
 
                     const isValid = responses.reduce(((acc, response) => (acc && response)), true);
@@ -145,7 +145,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
                     } else {
                         return afterOnActivated();
                     }
-                });
+                }));
         }
     }
 
@@ -200,14 +200,14 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             }
         ))
             .pipe(cancelOnDestroy(this, this.widgetReset$))
-            .do(response => {
+            .pipe(tap(response => {
                 this._categoryMetadata = response.objects;
-            })
-            .map(response => true)
-            .catch((error) => {
+            }))
+            .pipe(map(response => true))
+            .pipe(catchError((error) => {
                 this._logger.error('failed to get category custom metadata', error);
                 return of(false);
-            });
+            }));
     }
 
     private _loadProfileMetadata(): Observable<boolean> {
@@ -216,7 +216,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             ignoredCreateMode: MetadataProfileCreateModes.App
         })
             .pipe(cancelOnDestroy(this))
-            .do(response => {
+            .pipe(tap(response => {
 
                 this.customDataForms = [];
                 if (response.items) {
@@ -225,12 +225,12 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
                         this.customDataForms.push(newCustomDataForm);
                     });
                 }
-            })
-            .map(response => true)
-            .catch((error, caught) => {
+            }))
+            .pipe(map(response => true))
+            .pipe(catchError((error, caught) => {
                 this._logger.error('failed to get categories custom metadata profiles', error);
                 return of(false);
-            });
+            }));
     }
 
     protected onDataSaving(newData: KalturaCategory, request: KalturaMultiRequest): void {

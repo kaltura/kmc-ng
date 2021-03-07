@@ -55,7 +55,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 import { of as ObservableOf} from 'rxjs';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KalturaConversionProfileAssetParamsListResponse, ConversionProfileListAction, KalturaNullableBoolean } from 'kaltura-ngx-client';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { of } from 'rxjs';
 
@@ -125,15 +125,15 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
 
         return this._loadFlavorsSectionData()
             .pipe(cancelOnDestroy(this, this.widgetReset$))
-            .map(() => {
+            .pipe(map(() => {
                 super._hideLoader();
                 return { failed: false };
-            })
-            .catch(error => {
+            }))
+            .pipe(catchError(error => {
                 super._hideLoader();
                 super._showActivationError();
                 return of({ failed: true, error });
-            });
+            }));
     }
 
     private _getLinkData(): Observable<{storageProfile: KalturaStorageProfile, conversionProfileAsset: KalturaConversionProfileAssetParams}> {
@@ -302,7 +302,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
             this._logger.info(`start server polling every 10 seconds to sync entry's flavors data`, { entryId: this.data.id });
 
             this._flavorsDataPollingSubscription = this._kmcServerPolls.register<KalturaMultiResponse>(10, this._flavorsDataRequestFactory)
-                .let(flavorsData$ => this._mapFlavorsData(flavorsData$))
+                .pipe(flavorsData$ => this._mapFlavorsData(flavorsData$))
                 .pipe(cancelOnDestroy(this, this.widgetReset$))
                 .subscribe(
                     (response) => {
@@ -319,7 +319,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
 
         return this._kalturaServerClient
             .multiRequest(this._flavorsDataRequestFactory.create())
-            .pipe(flavorsData$ => this._mapFlavorsData(flavorsData$.map(result => ({ result, error: null }))))
+            .pipe(flavorsData$ => this._mapFlavorsData(flavorsData$.pipe(map(result => ({ result, error: null })))))
             .pipe(map((response) => {
                 this._handleFlavorsDataResponse(response);
             }))
@@ -545,14 +545,14 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     private _trackUploadFiles(): void {
         this._uploadManagement.onTrackedFileChanged$
             .pipe(cancelOnDestroy(this))
-            .map(uploadedFile => {
+            .pipe(map(uploadedFile => {
                 let relevantFlavor = null;
                 if (uploadedFile.data instanceof NewEntryFlavourFile) {
                     const flavors = this._flavors.getValue();
                     relevantFlavor = flavors ? flavors.find(flavorFile => flavorFile.uploadFileId === uploadedFile.id) : null;
                 }
                 return {relevantFlavor, uploadedFile};
-            })
+            }))
             .pipe(filter(({relevantFlavor}) => !!relevantFlavor))
             .subscribe(
                 ({relevantFlavor, uploadedFile}) => {
@@ -608,10 +608,10 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         }))
             .pipe(cancelOnDestroy(this, this.widgetReset$))
             .pipe(tag('block-shell'))
-            .catch(error => {
+            .pipe(catchError(error => {
                 this._uploadManagement.cancelUploadWithError(flavor.uploadFileId, 'Cannot update flavor, cancel related file');
                 return throwError(error);
-            })
+            }))
             .subscribe(
                 response => {
                     this.refresh();
@@ -640,10 +640,10 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         }))
             .pipe(cancelOnDestroy(this, this.widgetReset$))
             .pipe(tag('block-shell'))
-            .catch(error => {
+            .pipe(catchError(error => {
                 this._uploadManagement.cancelUploadWithError(flavor.uploadFileId, 'Cannot update flavor, cancel related file');
                 return throwError(error);
-            })
+            }))
             .subscribe(
                 response => {
                     flavor.id = response.id;

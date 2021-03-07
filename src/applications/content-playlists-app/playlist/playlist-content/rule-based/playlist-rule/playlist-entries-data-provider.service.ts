@@ -56,13 +56,13 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
     })
       .pipe(cancelOnDestroy(this))
       .pipe(first())
-      .map(metadataProfiles => {
+      .pipe(map(metadataProfiles => {
         return metadataProfiles.items.map(metadataProfile => ({
           id: metadataProfile.id,
           name: metadataProfile.name,
           lists: (metadataProfile.items || []).map(item => ({ id: item.id, name: item.name }))
         }));
-      });
+      }));
   }
 
   public getServerFilter(data: EntriesFilters, mediaTypesDefault = true): Observable<KalturaMediaEntryFilterForPlaylist> {

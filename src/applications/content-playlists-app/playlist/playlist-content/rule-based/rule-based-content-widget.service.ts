@@ -16,6 +16,7 @@ import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/det
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy {
@@ -82,7 +83,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
 
     return this._kalturaClient.multiRequest(rules)
       .pipe(cancelOnDestroy(this, this.widgetReset$))
-      .map(responses => {
+      .pipe(map(responses => {
         const responseIncomplete = !Array.isArray(responses)
           || responses.some(response => !!response.error || !Array.isArray(response.result));
         if (responseIncomplete) {
@@ -109,12 +110,12 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
         this._updateDurationAndCount();
         super._hideLoader();
         return { failed: false };
-      })
-      .catch(error => {
+      }))
+      .pipe(catchError(error => {
         super._hideLoader();
         super._showActivationError(error.message);
         return of({ failed: true, error });
-      });
+      }));
   }
 
   private _setDirty(): void {

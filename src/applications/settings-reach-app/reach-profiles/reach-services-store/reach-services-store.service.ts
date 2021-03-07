@@ -2,6 +2,7 @@ import { OnDestroy, Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {Observable} from 'rxjs';
 import { throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {ISubscription} from 'rxjs/Subscription';
 import {
     KalturaClient,
@@ -184,11 +185,11 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
             // build the request
             return this._kalturaServerClient
                 .request(reachServicesListAction)
-                .map((servicesResponse: KalturaVendorCatalogItemListResponse) => {
+                .pipe(map((servicesResponse: KalturaVendorCatalogItemListResponse) => {
                     const objects: KalturaVendorCatalogItem[] = servicesResponse.objects;
                     const totalCount = servicesResponse.totalCount;
                     return { objects, totalCount };
-                });
+                }));
         } catch (err) {
             return throwError(err);
         }

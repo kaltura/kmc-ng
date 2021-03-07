@@ -17,7 +17,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaRemoteStorageResource } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 
 export interface KmcNewReplaceEntryLink {
     url: string;
@@ -200,8 +200,8 @@ export class NewReplaceVideoUploadService implements OnDestroy {
 
         return this._kalturaServerClient
             .request(new MediaUpdateContentAction({ entryId, resource, conversionProfileId }))
-            .map(() => {
-            });
+            .pipe(map(() => {
+            }));
     }
 
     public cancelUploadByEntryId(entryId: string): void {
@@ -221,7 +221,7 @@ export class NewReplaceVideoUploadService implements OnDestroy {
 
         return this._kalturaServerClient
             .request(new MediaUpdateContentAction({ entryId, resource, conversionProfileId }))
-            .map(() => {
-            });
+            .pipe(map(() => {
+            }));
     }
 }

@@ -35,7 +35,7 @@ import { FriendlyHashId } from '@kaltura-ng/kaltura-common';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { filter } from 'rxjs/operators';
+import { filter, map, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { of } from 'rxjs';
 
@@ -90,14 +90,14 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
   private _trackUploadFiles(): void {
     this._uploadManagement.onTrackedFileChanged$
       .pipe(cancelOnDestroy(this))
-      .map(uploadedFile => {
+      .pipe(map(uploadedFile => {
         let relevantCaption = null;
         if (uploadedFile.data instanceof NewEntryCaptionFile) {
           const captions = this._captions.getValue().items;
           relevantCaption = captions ? captions.find(captionFile => captionFile.uploadFileId === uploadedFile.id) : null;
         }
         return { relevantCaption, uploadedFile };
-      })
+      }))
       .pipe(filter(({ relevantCaption }) => !!relevantCaption))
       .subscribe(
         ({ relevantCaption, uploadedFile }) => {
@@ -155,7 +155,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       pager: new KalturaFilterPager( { pageIndex: 0, pageSize: 500 })
     }))
       .pipe(cancelOnDestroy(this, this.widgetReset$))
-      .map(response => {
+      .pipe(map(response => {
         // Restore previous upload state
         this._updateCaptionsResponse(response);
 
@@ -171,14 +171,14 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         super._hideLoader();
 
           return {failed: false};
-      })
-      .catch(error => {
+      }))
+      .pipe(catchError(error => {
           super._hideLoader();
           super._showActivationError();
           this._captions.next({ items: [] });
           return throwError(error);
         }
-      );
+      ));
   }
 
   private _updateCaptionsResponse(response): void {

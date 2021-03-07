@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import { Observable } from 'rxjs';
 import { publishReplay, refCount } from 'rxjs/operators';
 import { throwError } from 'rxjs';
-
+import { map, catchError } from 'rxjs/operators';
 import {KalturaClient} from 'kaltura-ngx-client';
 import {
   MetadataItemTypes,
@@ -55,7 +55,7 @@ export class CategoriesRefineFiltersService {
     if (!this._getRefineFilters$) {
       // execute the request
       this._getRefineFilters$ = this._getMetadataFilters()
-        .map(
+        .pipe(map(
           (response) => {
               this._logger.trace(`handle successful get categories refine filters request, mapping response`);
 
@@ -73,12 +73,12 @@ export class CategoriesRefineFiltersService {
             }
 
             return result;
-          })
-        .catch(err => {
+          }))
+        .pipe(catchError(err => {
           this._logger.warn(`failed to create refine filters`, { errorMessage: err.message });
           this._getRefineFilters$ = null;
           return throwError(err);
-        })
+        }))
         .pipe(publishReplay(1))
         .pipe(refCount());
     }

@@ -6,7 +6,6 @@ import { KalturaClient } from 'kaltura-ngx-client';
 import { UploadTokenAddAction } from 'kaltura-ngx-client';
 import { UploadTokenUploadAction } from 'kaltura-ngx-client';
 import { KalturaUploadToken } from 'kaltura-ngx-client';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KalturaUploadFile } from './kaltura-upload-file';
 import { KalturaRequest } from 'kaltura-ngx-client';
 import { UploadTokenListAction } from 'kaltura-ngx-client';
@@ -14,7 +13,7 @@ import { KalturaUploadTokenFilter } from 'kaltura-ngx-client';
 import { KalturaUploadTokenListResponse } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
@@ -105,7 +104,7 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
                                 new UploadTokenListAction({
                                     filter: new KalturaUploadTokenFilter({ idIn: fileData.serverUploadToken })
                                 })
-                            ).map((response: KalturaUploadTokenListResponse) => {
+                            ).pipe(map((response: KalturaUploadTokenListResponse) => {
                                 const uploadedFileSize = response && response.objects && response.objects.length > 0 ? response.objects[0].uploadedFileSize : null;
 
                                 if (typeof uploadedFileSize === 'number') {
@@ -116,11 +115,11 @@ export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {
                                     this._logger.info(`file '${id}': server resulted without information about previous uploads '${fileData.serverUploadToken}'. (re)start new upload.`);
                                     return 0;
                                 }
-                            }).catch(caught =>
+                            })).pipe(catchError(caught =>
                             {
                                 this._logger.warn(`file '${id}': failed to get 'uploadedFileSize' for '${fileData.serverUploadToken}'. re-start new upload. error: ${caught.message}`);
                                 return of(0);
-                            });
+                            }));
                         }
                     }))
                     .pipe(switchMap(uploadedFileSize =>

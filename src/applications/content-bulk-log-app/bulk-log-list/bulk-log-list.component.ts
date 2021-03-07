@@ -13,7 +13,7 @@ import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContentBulkUploadsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { first } from 'rxjs/operators';
+import { first, delay } from 'rxjs/operators';
 
 @Component({
   selector: 'kBulkLogList',
@@ -55,7 +55,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
       if (this._contentBulkUploadsMainView.viewEntered()) {
           this._appEvents.event(BulkLogUploadingStartedEvent)
               .pipe(cancelOnDestroy(this))
-              .delay(2000) // Component specific - need to wait due to updating the list on the server side
+              .pipe(delay(2000)) // Component specific - need to wait due to updating the list on the server side
               .subscribe(() => this._store.reload());
 
           this._prepare();

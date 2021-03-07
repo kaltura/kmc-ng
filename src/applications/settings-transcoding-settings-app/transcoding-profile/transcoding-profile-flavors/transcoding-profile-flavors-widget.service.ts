@@ -17,6 +17,7 @@ import { SettingsTranscodingProfileViewSections } from 'app-shared/kmc-shared/km
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget implements OnDestroy {
@@ -105,7 +106,7 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
 
     return this._flavorsStore.get()
       .pipe(cancelOnDestroy(this, this.widgetReset$))
-      .map((response: { items: KalturaFlavorParams[] }) => {
+      .pipe(map((response: { items: KalturaFlavorParams[] }) => {
         const items = response.items;
         const profileType: KalturaConversionProfileType = this.data.type;
         let flavors = [];
@@ -145,12 +146,12 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
 
         super._hideLoader();
         return { failed: false };
-      })
-      .catch(error => {
+      }))
+      .pipe(catchError(error => {
         super._hideLoader();
         super._showActivationError(error.message);
         return of({ failed: true, error });
-      });
+      }));
   }
 
   private _setDirty(): void {

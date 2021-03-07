@@ -37,7 +37,7 @@ import { subApplicationsConfig } from 'config/sub-applications';
 import { ContentSyndicationMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { globalConfig } from 'config/global';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { filter as oFilter } from 'rxjs/operators';
+import { filter as oFilter, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
 export interface UpdateStatus {
@@ -270,9 +270,9 @@ export class FeedsService extends FiltersStoreBase<FeedsFilters> implements OnDe
         }
       );
     })
-      .do(result => {
+      .pipe(tap(result => {
         this.reload();
-      });
+      }));
   }
 
   private _transmit(requests: KalturaRequest<any>[], chunk: boolean): Observable<{}> {

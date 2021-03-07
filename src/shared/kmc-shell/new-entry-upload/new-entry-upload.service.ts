@@ -14,7 +14,7 @@ import { UploadTokenDeleteAction } from 'kaltura-ngx-client';
 import { TrackedFileData } from '@kaltura-ng/kaltura-common';
 import { Subject } from 'rxjs';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { filter, switchMap } from 'rxjs/operators';
+import { filter, switchMap, tap } from 'rxjs/operators';
 
 export interface KmcNewEntryUpload {
   file: File;
@@ -79,10 +79,10 @@ export class NewEntryUploadService implements OnDestroy {
 
   private _linkEntryWithFile(trackedFile: TrackedFileData): void {
     (<NewEntryUploadFile>trackedFile.data).createMediaEntrySubscription = this._createMediaEntry(<NewEntryUploadFile>trackedFile.data)
-      .do(entry => {
+      .pipe(tap(entry => {
         (<NewEntryUploadFile>trackedFile.data).entryId = entry.id;
         this._mediaCreated.next({ id: trackedFile.id, entryId: entry.id });
-      })
+      }))
       .pipe(switchMap((entry: KalturaMediaEntry) => this._updateMediaContent(entry, <NewEntryUploadFile>trackedFile.data)))
       .subscribe(
         () => {

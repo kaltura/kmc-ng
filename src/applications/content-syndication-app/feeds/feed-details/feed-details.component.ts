@@ -10,6 +10,7 @@ import {KalturaSyndicationFeedType} from 'kaltura-ngx-client';
 import {FlavoursStore} from 'app-shared/kmc-shared';
 import { Observable, forkJoin } from 'rxjs';
 import { throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {KalturaSyndicationFeedEntryCount} from 'kaltura-ngx-client';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -272,7 +273,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
     }
     return forkJoin(...requests)
       .pipe(cancelOnDestroy(this))
-      .map(response => {
+      .pipe(map(response => {
         const players = response[0].items.map(player => ({
           id: player.id,
           version: player.tags.indexOf('kalturaPlayerJs') > -1 ? '3' : '2',
@@ -280,7 +281,7 @@ export class FeedDetailsComponent implements OnInit, OnDestroy {
         }));
 
         return {players, flavors: response[1].items, entriesCount: this._mode === 'edit' ? response[2] : null};
-      });
+      }));
   }
 
   // Create empty structured form on loading

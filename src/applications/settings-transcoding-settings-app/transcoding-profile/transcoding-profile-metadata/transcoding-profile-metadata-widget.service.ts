@@ -52,8 +52,8 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
     };
 
     return this._storageProfilesStore.get()
-      .map(({ items }) => [createEmptyRemoteStorageProfile(), ...items])
-      .catch(() => of([createEmptyRemoteStorageProfile()]));
+      .pipe(map(({ items }) => [createEmptyRemoteStorageProfile(), ...items]))
+      .pipe(catchError(() => of([createEmptyRemoteStorageProfile()])));
   }
 
   private _buildForm(): void {
@@ -157,13 +157,13 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
     if (!this.hideStorageProfileIdField) {
       return this._loadRemoteStorageProfiles()
         .pipe(cancelOnDestroy(this))
-        .map(profiles => {
+        .pipe(map(profiles => {
           prepare();
           this.remoteStorageProfilesOptions = profiles.map(profile => ({ label: profile.name, value: profile.id }));
 
           super._hideLoader();
           return { failed: false };
-        });
+        }));
     } else {
       prepare();
       super._hideLoader();

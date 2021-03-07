@@ -16,7 +16,7 @@ import { CategoriesGraphUpdatedEvent } from 'app-shared/kmc-shared/app-events/ca
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { throwError } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 export interface EntitlementSectionData {
   categories: KalturaCategory[];
@@ -77,10 +77,10 @@ export class EntitlementService implements OnDestroy{
           id,
           category
       }))
-          .do(() => {
+          .pipe(tap(() => {
               this._notifyCategoriesGraphChanges();
-          })
-          .map(_ => (undefined));
+          }))
+          .pipe(map(_ => (undefined)));
   }
 
   public addEntitlement({id, privacyContext}: { id: number, privacyContext: string }): Observable<void> {
@@ -102,10 +102,10 @@ export class EntitlementService implements OnDestroy{
                         privacyContext
                     })
                 }))
-                    .do(() => {
+                    .pipe(tap(() => {
                         this._notifyCategoriesGraphChanges();
-                    })
-                    .map(_ => (undefined));
+                    }))
+                    .pipe(map(_ => (undefined)));
             }
         }));
   }

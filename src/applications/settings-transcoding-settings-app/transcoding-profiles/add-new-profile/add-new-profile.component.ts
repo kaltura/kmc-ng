@@ -80,7 +80,7 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
       this._dataLoading = true;
       this._loadRemoteStorageProfiles()
         .pipe(cancelOnDestroy(this))
-        .map(profiles => profiles.map(profile => ({ label: profile.name, value: profile.id })))
+        .pipe(map(profiles => profiles.map(profile => ({ label: profile.name, value: profile.id }))))
         .subscribe(
           profiles => {
             this._dataLoading = false;
@@ -118,13 +118,13 @@ export class AddNewProfileComponent implements OnInit, OnDestroy {
     };
 
     return this._storageProfilesStore.get()
-      .map(({ items }) => [createEmptyRemoteStorageProfile(), ...items])
-      .catch((error) => {
+      .pipe(map(({ items }) => [createEmptyRemoteStorageProfile(), ...items]))
+      .pipe(catchError((error) => {
         if (error.code && error.code === "SERVICE_FORBIDDEN") {
           return of([createEmptyRemoteStorageProfile()]);
         }
         return throwError(error);
-      });
+      }));
   }
 
   private _validateEntryExists(entryId: string): Observable<boolean> {

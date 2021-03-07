@@ -110,7 +110,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
     this._schemas.state.next({ loading: true, errorMessage: null });
     this._querySubscription = this._buildQueryRequest()
       .pipe(cancelOnDestroy(this))
-      .map(({ objects, totalCount }) => {
+      .pipe(map(({ objects, totalCount }) => {
         objects.forEach((object: SettingsMetadataProfile) => {
           if (!object.createMode || object.createMode === KalturaMetadataProfileCreateMode.kmc) {
             const parsedProfile = this._metadataProfileParser.parse(object);
@@ -132,7 +132,7 @@ export class SchemasStore extends FiltersStoreBase<SchemasFilters> implements On
         });
 
         return { objects, totalCount };
-      })
+      }))
       .subscribe(
         response => {
           this._logger.info(`handle success data loading`);
