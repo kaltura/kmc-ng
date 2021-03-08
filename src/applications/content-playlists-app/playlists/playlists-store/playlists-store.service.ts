@@ -47,6 +47,8 @@ export interface ExtendedPlaylist extends KalturaPlaylist {
     tooltip?: string;
     isRapt?: boolean;
     isPath?: boolean;
+    isManual?: boolean;
+    isRuleBased?: boolean;
 }
 
 const localStoragePageSizeKey = 'playlists.list.pageSize';
@@ -150,6 +152,8 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
           const tags = playlist.tags ? playlist.tags.split(',').filter(item => !!item).map(item => item.trim()).join('\n') : null;
           playlist.isRapt = this._playlistsUtilsService.isRapt(playlist);
           playlist.isPath = this._playlistsUtilsService.isPath(playlist);
+          playlist.isManual = this._playlistsUtilsService.isManual(playlist);
+          playlist.isRuleBased = this._playlistsUtilsService.isRuleBased(playlist);
           playlist.tooltip = tags
               ? this._appLocalization.get('applications.content.table.nameTooltip', [playlist.name, tags])
               : playlist.name;

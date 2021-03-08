@@ -23,7 +23,8 @@ export interface ExternalApplications {
         uri: string,
         html5_version: string,
         html5lib: string,
-        playerVersionsMap?: string
+        playerVersionsMap?: string,
+        playerConfVars?: string
     };
     liveDashboard?: {
         uri: string,
@@ -151,7 +152,6 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
             result = !!configuration.uri &&
                 !configuration.uri.match(/\s/g) && // not contains white spaces
                 !!configuration.html5_version &&
-                !!configuration.playerVersionsMap &&
                 !!configuration.html5lib;
 
             if (result) {

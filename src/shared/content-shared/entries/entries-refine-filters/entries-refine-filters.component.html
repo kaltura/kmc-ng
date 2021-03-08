@@ -4,7 +4,7 @@
         <div class="kFiltersGroupTitle">
           <span>{{'applications.content.filters.additionalFilters' | translate | uppercase}}</span>
         </div>
-        <p>{{'applications.content.filters.createdBetween' | translate}}</p>
+        <span class="kFilterLabel">{{'applications.content.filters.createdBetween' | translate}}</span>
         <div class="kDateRange">
 
           <p-calendar class="kDateRangeFirst" [(ngModel)]="_createdAfter" [readonlyInput]="true" [showIcon]="true"
@@ -18,7 +18,7 @@
           {{'applications.content.filters.clearDates' |
           translate}}</a>
         <span *ngIf="_createdFilterError" class="kError">{{_createdFilterError}}</span>
-        <div *ngFor="let group of _primeListsGroups">
+        <div *ngFor="let group of _primeListsGroups; index as i">
           <div *ngIf="group.label" class="kFiltersGroupTitle">
             <span>{{group.label | uppercase}}</span>
           </div>
@@ -57,7 +57,17 @@
               </ng-template>
             </p-tree>
           </div>
-
+            <div *ngIf="i===0" class="kPlayedUntil">
+                <span class="kFilterLabel">{{'applications.content.filters.lastPlayedAt' | translate}}</span>
+                <div class="kDateRange">
+                    <p-calendar class="kDateRangeFirst" [(ngModel)]="_lastPlayedAt" [readonlyInput]="true" [showIcon]="true"
+                                [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange" [dateFormat]="_calendarFormat"
+                                icon="kIconcalendar" (onSelect)="_onLastPlayedAtChanged()"></p-calendar>
+                </div>
+                <a class="kClearAll" (click)="_clearLastPlayedAtComponents()" [class.kDisabledLink]="!_lastPlayedAt">
+                    {{'applications.content.filters.clearDate' |
+                    translate}}</a>
+            </div>
         </div>
     </kScrollToTopContainer>
 

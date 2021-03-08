@@ -65,7 +65,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
             this._actions.splice(1,1);
         }
         if (this._requestCaptionsAvailable && this._actions[1].id === 'editor') {
-            if (caption.format !== KalturaCaptionType.srt && caption.format !== KalturaCaptionType.dfxp) {
+            if (caption.format !== KalturaCaptionType.srt && caption.format !== KalturaCaptionType.dfxp && caption.format !== KalturaCaptionType.webvtt) {
                 this._actions[1].disabled = true;
                 this._actions[1].title = this._appLocalization.get('applications.content.entryDetails.captions.editorDisabled');
             } else {

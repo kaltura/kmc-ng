@@ -42,6 +42,8 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   public isValid = true;
   public isDirty = true;
   public _isRapt = false;
+  public _isManual = false;
+  public _isRuleBased = false;
   public _isPath = false;
   public _analyticsAllowed = false;
   public _enablePrevButton: boolean;
@@ -119,6 +121,8 @@ export class PlaylistComponent implements OnInit, OnDestroy {
                 this._playlistName = this._playlistStore.playlist.name;
                 this._isRapt = this._playlistsUtilsService.isRapt(this._playlistStore.playlist);
                 this._isPath = this._playlistsUtilsService.isPath(this._playlistStore.playlist);
+                this._isManual = this._playlistsUtilsService.isManual(this._playlistStore.playlist);
+                this._isRuleBased = this._playlistsUtilsService.isRuleBased(this._playlistStore.playlist);
                 this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable(); // new analytics app is available
                 this._playlistTypeIcon = this._playlistStore.playlist.playlistType === KalturaPlaylistType.staticList
                   ? 'kIconPlaylist_Manual'

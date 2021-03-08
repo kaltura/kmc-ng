@@ -8,7 +8,7 @@
 						<div class="kTitle">{{ _playlistName }}</div>
                         <div class="kEntryActionsWrapper">
                             <button pButton icon="kIconstatistic" class="kButtonDefault kAnalytics"
-                                    *ngIf="(_isPath || _isRapt) && _analyticsAllowed"
+                                    *ngIf="(_isPath || _isRapt || _isManual) && _analyticsAllowed"
                                     [label]="'applications.content.entries.viewAnalytics' | translate"
                                     (click)="_openRaptAnalytics()"></button>
                             <button pButton class="kButtonBranded kSaveBtn"

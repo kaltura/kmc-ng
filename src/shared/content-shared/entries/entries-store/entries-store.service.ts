@@ -59,6 +59,7 @@ export interface EntriesFilters {
   sortBy: string;
   sortDirection: SortDirection;
   createdAt: DatesRangeType;
+  lastPlayedAt: number;
   scheduledAt: DatesRangeType;
   mediaTypes: string[];
   timeScheduling: string[];
@@ -257,6 +258,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
       sortBy: new StringTypeAdapter(),
       sortDirection: new EnumTypeAdapter<SortDirection>(),
       createdAt: new DatesRangeAdapter(),
+      lastPlayedAt: new NumberTypeAdapter(),
       scheduledAt: new DatesRangeAdapter(),
       mediaTypes: new ListTypeAdapter<string>(),
       timeScheduling: new ListTypeAdapter<string>(),

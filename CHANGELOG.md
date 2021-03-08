@@ -1,3 +1,43 @@
+<a name="6.5.1"></a>
+## [6.5.1](https://github.com/kaltura/kmc-ng/compare/v6.5.0...v6.5.1) (2021-02-17)
+
+
+### Bug Fixes
+
+* **studio:** Add playerConfVars to studio configuration
+
+
+
+<a name="6.5.0"></a>
+# [6.5.0](https://github.com/kaltura/kmc-ng/compare/v6.4.0...v6.5.0) (2021-02-07)
+
+
+### Bug Fixes
+
+* **entry/live:** remove "Export XML for FMLE" button and ""Live Content Detailed Report" link (KMCNG-2292) ([ef0d844](https://github.com/kaltura/kmc-ng/commit/ef0d844))
+
+
+### Features
+
+* **content/entries:** add "Played Until" filter to entries list ([#926](https://github.com/kaltura/kmc-ng/issues/926)) ([9db8108](https://github.com/kaltura/kmc-ng/commit/9db8108))
+
+
+
+<a name="6.4.0"></a>
+# [6.4.0](https://github.com/kaltura/kmc-ng/compare/v6.3.2...v6.4.0) (2021-01-24)
+
+
+### Bug Fixes
+
+* **entry/captions:** support captions editor for WebVTT ([#925](https://github.com/kaltura/kmc-ng/issues/925)) ([26283af](https://github.com/kaltura/kmc-ng/commit/26283af))
+
+
+### Features
+
+* **settings/reach:** add captions label suffix field ([b1fe1ca](https://github.com/kaltura/kmc-ng/commit/b1fe1ca))
+
+
+
 <a name="6.3.2"></a>
 ## [6.3.2](https://github.com/kaltura/kmc-ng/compare/v6.3.1...v6.3.2) (2021-01-04)
 

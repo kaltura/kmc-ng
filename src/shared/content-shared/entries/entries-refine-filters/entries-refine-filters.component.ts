@@ -3,7 +3,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { RefineGroup } from '../entries-store/entries-refine-filters.service';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import {cancelOnDestroy, KalturaUtils} from '@kaltura-ng/kaltura-common';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { subApplicationsConfig } from 'config/sub-applications';
@@ -12,6 +12,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers';
 
 const listOfFilterNames: (keyof EntriesFilters)[] = [
     'createdAt',
+    'lastPlayedAt',
     'scheduledAt',
     'mediaTypes',
     'ingestionStatuses',
@@ -83,7 +84,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
   public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
   public _createdAfter: Date;
   public _createdBefore: Date;
-    public _calendarFormat = this._browserService.getCurrentDateFormat(true);
+  public _lastPlayedAt: Date;
+  public _calendarFormat = this._browserService.getCurrentDateFormat(true);
 
   constructor(private _entriesStore: EntriesStore,
               private _browserService: BrowserService,
@@ -127,6 +129,10 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
       if (typeof updates.scheduledAt  !== 'undefined') {
           this._scheduledAfter = updates.scheduledAt.fromDate || null;
           this._scheduledBefore = updates.scheduledAt.toDate || null;
+      }
+
+      if (updates.lastPlayedAt) {
+          this._lastPlayedAt = new Date(updates.lastPlayedAt * 1000) || null;
       }
 
       const customMetadataFilter = updates['customMetadata'];
@@ -342,6 +348,13 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
       });
   }
 
+  public _clearLastPlayedAtComponents(): void {
+      this._lastPlayedAt = null;
+      this._entriesStore.filter({
+          lastPlayedAt: null
+      });
+  }
+
   /**
    * Clear all content components and sync filters accordingly.
    *
@@ -351,7 +364,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
       this._closeCalendar(this.scheduledFrom);
       this._closeCalendar(this.scheduledTo);
       this._entriesStore.resetFilters(listOfFilterNames);
-
+      this._lastPlayedAt = null;
       if (this.enforcedFilters) {
           this._entriesStore.filter(this.enforcedFilters);
       }
@@ -377,6 +390,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, OnChan
       } else {
           this._createdFilterError = null;
       }
+  }
+  public _onLastPlayedAtChanged(): void {
+      const updateResult = this._entriesStore.filter({
+          lastPlayedAt: KalturaUtils.toServerDate(this._lastPlayedAt)
+      });
   }
 
   /**
