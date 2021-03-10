@@ -42,6 +42,15 @@
                 &.kHasError {
                     border-color: $kDandger
                 }
+                &.label {
+                    width: 200px;
+                    margin-left: 16px;
+                }
+                &.disabled {
+                    opacity: 0.35;
+                    pointer-events: none;
+                    cursor: default;
+                }
             }
 
             kmultiselect{

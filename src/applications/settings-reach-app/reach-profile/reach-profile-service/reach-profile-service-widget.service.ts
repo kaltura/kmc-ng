@@ -27,6 +27,10 @@ export class ReachProfileServiceWidget extends ReachProfileWidget implements OnD
     public speakerField: AbstractControl;
     public audioField: AbstractControl;
     public removalField: AbstractControl;
+    public useMachineCaptionsLabelField: AbstractControl;
+    public machineCaptionsLabelField: AbstractControl;
+    public useHumanCaptionsLabelField: AbstractControl;
+    public humanCaptionsLabelField: AbstractControl;
 
     constructor(logger: KalturaLogger,
                 private _permissionsService: KMCPermissionsService,
@@ -47,7 +51,11 @@ export class ReachProfileServiceWidget extends ReachProfileWidget implements OnD
             metadata: '',
             speaker: '',
             audio: '',
-            removal: ''
+            removal: '',
+            useMachineCaptionsLabel: '',
+            machineCaptionsLabel: '',
+            useHumanCaptionsLabel: '',
+            humanCaptionsLabel: ''
         });
 
         this.formatField = this.serviceForm.controls['format'];
@@ -58,6 +66,10 @@ export class ReachProfileServiceWidget extends ReachProfileWidget implements OnD
         this.speakerField = this.serviceForm.controls['speaker'];
         this.audioField = this.serviceForm.controls['audio'];
         this.removalField = this.serviceForm.controls['removal'];
+        this.useMachineCaptionsLabelField = this.serviceForm.controls['useMachineCaptionsLabel'];
+        this.machineCaptionsLabelField = this.serviceForm.controls['machineCaptionsLabel'];
+        this.useHumanCaptionsLabelField = this.serviceForm.controls['useHumanCaptionsLabel'];
+        this.humanCaptionsLabelField = this.serviceForm.controls['humanCaptionsLabel'];
     }
 
     private _monitorFormChanges(): void {
@@ -93,6 +105,16 @@ export class ReachProfileServiceWidget extends ReachProfileWidget implements OnD
         newData.enableSpeakerChangeIndication = formData.speaker;
         newData.enableAudioTags = formData.audio;
         newData.enableProfanityRemoval = formData.removal;
+        if (formData.useMachineCaptionsLabel) {
+            newData.labelAdditionForMachineServiceType = formData.machineCaptionsLabel;
+        } else {
+            newData.labelAdditionForMachineServiceType = '';
+        }
+        if (formData.useHumanCaptionsLabel) {
+            newData.labelAdditionForHumanServiceType = formData.humanCaptionsLabel;
+        } else {
+            newData.labelAdditionForHumanServiceType = '';
+        }
     }
 
     /**
@@ -122,7 +144,11 @@ export class ReachProfileServiceWidget extends ReachProfileWidget implements OnD
             metadata: this.data.enableMetadataExtraction,
             speaker: this.data.enableSpeakerChangeIndication,
             audio: this.data.enableAudioTags,
-            removal: this.data.enableProfanityRemoval
+            removal: this.data.enableProfanityRemoval,
+            useMachineCaptionsLabel: this.data.labelAdditionForMachineServiceType && this.data.labelAdditionForMachineServiceType.length,
+            machineCaptionsLabel: this.data.labelAdditionForMachineServiceType || this._appLocalization.get('applications.settings.reach.settings.defaultMachineCaptionsLabel'),
+            useHumanCaptionsLabel: this.data.labelAdditionForHumanServiceType && this.data.labelAdditionForHumanServiceType.length,
+            humanCaptionsLabel: this.data.labelAdditionForHumanServiceType
         });
     }
 
