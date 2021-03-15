@@ -64,7 +64,7 @@
     "@kaltura-ng/kaltura-primeng-ui": "~5.0.2",
     "@kaltura-ng/kaltura-ui": "~9.0.2",
     "@kaltura-ng/mc-shared": "~7.0.4",
-    "@kaltura-ng/mc-theme": "~5.0.1",
+    "@kaltura-ng/mc-theme": "~5.0.2",
     "@ngx-translate/core": "~13.0.0",
     "@ngx-translate/http-loader": "~6.0.0",
     "ajv": "~6.1.1",
