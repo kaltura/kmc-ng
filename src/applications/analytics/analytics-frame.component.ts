@@ -117,6 +117,9 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             multiAccount: multiAccountAnalyticsFlag === 'allAccounts',
             permissions: {
                 lazyLoadCategories: this._permissions.hasPermission(KMCPermissions.DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD)
+            },
+            previewPlayer: {
+                loadJquery: false
             }
         };
 
