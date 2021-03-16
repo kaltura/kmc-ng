@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
-import {KalturaClient} from 'kaltura-ngx-client';
+import {KalturaClient, KalturaEntryApplication} from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {MediaAddAction} from 'kaltura-ngx-client';
 import {KalturaMediaEntry} from 'kaltura-ngx-client';
 import {KalturaMediaType} from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {globalConfig} from "config/global";
 
 
 export interface DraftEntry {
@@ -23,7 +24,10 @@ export class PrepareEntryService {
 
     const entry: KalturaMediaEntry = new KalturaMediaEntry({
       name: this._appLocalization.get('applications.upload.uploadMenu.createDraft.draftEntry'),
-      mediaType
+      mediaType,
+      application: KalturaEntryApplication.kmc,
+      applicationVersion: globalConfig.client.appVersion,
+      sourceVersion: mediaType === KalturaMediaType.video ? 'create_video' : 'create_audio',
     });
 
     if (conversionProfileId) {

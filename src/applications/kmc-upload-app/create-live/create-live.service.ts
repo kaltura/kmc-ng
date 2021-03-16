@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {KalturaRecordStatus} from 'kaltura-ngx-client';
+import {KalturaEntryApplication, KalturaRecordStatus} from 'kaltura-ngx-client';
 import {KalturaLiveStreamEntry} from 'kaltura-ngx-client';
 import {KalturaMediaType} from 'kaltura-ngx-client';
 import {KalturaDVRStatus} from 'kaltura-ngx-client';
@@ -13,6 +13,7 @@ import {KalturaLive} from './kaltura-live-stream/kaltura-live-stream.interface';
 import {ManualLive} from './manual-live/manual-live.interface';
 import {UniversalLive} from './universal-live/universal-live.interface';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client';
+import {globalConfig} from "config/global";
 
 @Injectable()
 export class CreateLiveService {
@@ -28,6 +29,9 @@ export class CreateLiveService {
     const stream = new KalturaLiveStreamEntry({
       mediaType: KalturaMediaType.liveStreamFlash,
       name: data.name,
+      application: KalturaEntryApplication.kmc,
+      applicationVersion: globalConfig.client.appVersion,
+      sourceVersion: 'create_live',
       description: data.description,
       recordStatus: data.enableRecording ? data.enableRecordingSelectedOption : KalturaRecordStatus.disabled,
       conversionProfileId: data.transcodingProfile,
@@ -47,6 +51,9 @@ export class CreateLiveService {
     const stream = new KalturaLiveStreamEntry({
       mediaType: KalturaMediaType.liveStreamFlash,
       name: data.name,
+      application: KalturaEntryApplication.kmc,
+      applicationVersion: globalConfig.client.appVersion,
+      sourceVersion: 'create_live',
       description: data.description,
       liveStreamConfigurations: new Array(),
       hlsStreamUrl: data.hlsStreamUrl || ''
@@ -78,6 +85,9 @@ export class CreateLiveService {
     const stream = new KalturaLiveStreamEntry({
       mediaType: KalturaMediaType.liveStreamFlash,
       name: data.name,
+      application: KalturaEntryApplication.kmc,
+      applicationVersion: globalConfig.client.appVersion,
+      sourceVersion: 'create_live',
       description: data.description,
       encodingIP1: data.primaryEncoderIp,
       encodingIP2: data.secondaryEncoderIp,

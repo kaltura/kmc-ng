@@ -1,8 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {
-    KalturaAssetParamsResourceContainer,
-    KalturaAssetsParamsResourceContainers,
     KalturaClient,
+    KalturaEntryApplication,
     KalturaMediaEntry,
     KalturaMediaType,
     KalturaMultiRequest,
@@ -12,6 +11,7 @@ import {
 } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { globalConfig } from "config/global";
 
 
 export interface KmcNewEntryUpload {
@@ -69,7 +69,14 @@ export class NewEntryCreateFromUrlService implements OnDestroy {
         let name = url.substr(url.lastIndexOf("/")+1);
         name = name.lastIndexOf(".") !== -1 ? name.substr(0, name.lastIndexOf(".")) : name;
         return new MediaAddAction({
-            entry: new KalturaMediaEntry({ conversionProfileId, name, mediaType: this._getMediaTypeFromExtension(extension) })
+            entry: new KalturaMediaEntry({
+                application: KalturaEntryApplication.kmc,
+                applicationVersion: globalConfig.client.appVersion,
+                sourceVersion: 'url',
+                conversionProfileId,
+                name,
+                mediaType: this._getMediaTypeFromExtension(extension)
+            })
         });
     }
 
