@@ -161,7 +161,7 @@ kWidget.thumbEmbed({
                 }
                 break;
             case 'iframe':
-                code = `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px;height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>`;
+                code = `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"></iframe>`;
                 break;
             case 'auto':
                 code = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>

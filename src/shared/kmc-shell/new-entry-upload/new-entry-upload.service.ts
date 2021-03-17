@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
-import { KalturaMediaType } from 'kaltura-ngx-client';
+import { KalturaMediaType, KalturaEntryApplication } from 'kaltura-ngx-client';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryUploadFile } from './new-entry-upload-file';
 import { MediaAddAction } from 'kaltura-ngx-client';
@@ -15,6 +15,7 @@ import { TrackedFileData } from '@kaltura-ng/kaltura-common';
 import { Subject } from 'rxjs';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { filter, switchMap, tap } from 'rxjs/operators';
+import { globalConfig } from 'config/global';
 
 export interface KmcNewEntryUpload {
   file: File;
@@ -112,6 +113,9 @@ export class NewEntryUploadService implements OnDestroy {
   private _createMediaEntry(file: NewEntryUploadFile): Observable<KalturaMediaEntry> {
     return this._kalturaServerClient.request(new MediaAddAction({
       entry: new KalturaMediaEntry({
+        application: KalturaEntryApplication.kmc,
+        applicationVersion: globalConfig.client.appVersion,
+        sourceVersion: 'desktop',
         mediaType: file.mediaType,
         name: file.entryName,
         conversionProfileId: file.transcodingProfileId
