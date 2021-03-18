@@ -7,6 +7,7 @@
 * **administation/user:** update role description when a new role is selected KMCNG-2305 ([050128b](https://github.com/kaltura/kmc-ng/commit/050128b))
 * **analytics:** Prevent loading jQuery with Analytics KMCNG-2307 ([6890d9d](https://github.com/kaltura/kmc-ng/commit/6890d9d))
 * **share-and-embed:** V7 iFrame embed - support encrypted-media SUP-26849 ([48f5a93](https://github.com/kaltura/kmc-ng/commit/48f5a93))
+* **upload:** fill additional entry fields upon upload KMCNG-2308 ([33acb00](https://github.com/kaltura/kmc-ng/commit/33acb00))
 
 
 
