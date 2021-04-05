@@ -1,3 +1,13 @@
+<a name="6.5.3"></a>
+## [6.5.3](https://github.com/kaltura/kmc-ng/compare/v6.5.2...v6.5.3) (2021-04-05)
+
+
+### Bug Fixes
+
+* **studio:** support beta player versions map and conf vars KMCNG-2310 ([77bf525](https://github.com/kaltura/kmc-ng/commit/77bf525))
+
+
+
 <a name="6.5.2"></a>
 ## [6.5.2](https://github.com/kaltura/kmc-ng/compare/v6.5.1...v6.5.2) (2021-03-18)
 
