@@ -1,8 +1,8 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import {AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import {AppEventsService} from 'app-shared/kmc-shared';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
+import { AppEventsService } from 'app-shared/kmc-shared';
 import { buildCDNUrl, getKalturaServerUri, serverConfig } from 'config/server';
-import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { PlayersUpdatedEvent } from 'app-shared/kmc-shared/events';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { StudioV3MainViewService } from 'app-shared/kmc-shared/kmc-views';
