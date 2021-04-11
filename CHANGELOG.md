@@ -1,3 +1,26 @@
+<a name="6.5.3"></a>
+## [6.5.3](https://github.com/kaltura/kmc-ng/compare/v6.5.2...v6.5.3) (2021-04-05)
+
+
+### Bug Fixes
+
+* **studio:** support beta player versions map and conf vars KMCNG-2310 ([77bf525](https://github.com/kaltura/kmc-ng/commit/77bf525))
+
+
+
+<a name="6.5.2"></a>
+## [6.5.2](https://github.com/kaltura/kmc-ng/compare/v6.5.1...v6.5.2) (2021-03-18)
+
+
+### Bug Fixes
+
+* **administation/user:** update role description when a new role is selected KMCNG-2305 ([050128b](https://github.com/kaltura/kmc-ng/commit/050128b))
+* **analytics:** Prevent loading jQuery with Analytics KMCNG-2307 ([6890d9d](https://github.com/kaltura/kmc-ng/commit/6890d9d))
+* **share-and-embed:** V7 iFrame embed - support encrypted-media SUP-26849 ([48f5a93](https://github.com/kaltura/kmc-ng/commit/48f5a93))
+* **upload:** fill additional entry fields upon upload KMCNG-2308 ([33acb00](https://github.com/kaltura/kmc-ng/commit/33acb00))
+
+
+
 <a name="6.5.1"></a>
 ## [6.5.1](https://github.com/kaltura/kmc-ng/compare/v6.5.0...v6.5.1) (2021-02-17)
 

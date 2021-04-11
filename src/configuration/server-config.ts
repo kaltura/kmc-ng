@@ -24,7 +24,9 @@ export interface ExternalApplications {
         html5_version: string,
         html5lib: string,
         playerVersionsMap?: string,
-        playerConfVars?: string
+        playerConfVars?: string,
+        playerBetaVersionsMap?: string,
+        playerBetaConfVars?: string
     };
     liveDashboard?: {
         uri: string,

@@ -1,8 +1,8 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import {AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import {AppEventsService} from 'app-shared/kmc-shared';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
+import { AppEventsService } from 'app-shared/kmc-shared';
 import { buildCDNUrl, getKalturaServerUri, serverConfig } from 'config/server';
-import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { PlayersUpdatedEvent } from 'app-shared/kmc-shared/events';
 import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { StudioV3MainViewService } from 'app-shared/kmc-shared/kmc-views';
@@ -49,7 +49,9 @@ export class StudioV3Component implements OnInit, AfterViewInit, OnDestroy {
                        'showFlashStudio': false,
                        'showHTMLStudio': false,
                        'playerVersionsMap': serverConfig.externalApps.studioV3.playerVersionsMap,
-                       'playerConfVars': serverConfig.externalApps.studioV3.playerConfVars
+                       'playerConfVars': serverConfig.externalApps.studioV3.playerConfVars,
+                       'playerBetaVersionsMap': serverConfig.externalApps.studioV3.playerBetaVersionsMap,
+                       'playerBetaConfVars': serverConfig.externalApps.studioV3.playerBetaConfVars
                    }
                },
                'functions': {}

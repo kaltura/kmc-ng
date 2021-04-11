@@ -5,7 +5,6 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client';
-import { PlaylistExecuteAction } from 'kaltura-ngx-client';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { KalturaBaseEntry } from 'kaltura-ngx-client';
@@ -89,7 +88,8 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
     return this._getEntriesRequest()
       .pipe(cancelOnDestroy(this, this.widgetReset$))
       .pipe(map((entries: KalturaMediaEntry[]) => {
-        this.entries = this._extendWithSelectionId(entries);
+        this.entries = this._sortAndHandleDuplicates(entries);
+        this.entries = this._extendWithSelectionId(this.entries);
         this._recalculateCountAndDuration();
         super._hideLoader();
         return { failed: false };
@@ -103,47 +103,45 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
 
   private _getEntriesRequest(): Observable<KalturaBaseEntry[]> {
 
-    const responseProfile = new KalturaDetachedResponseProfile({
-      type: KalturaResponseProfileType.includeFields,
-      fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration,externalSourceType,capabilities'
-    });
-    if (this.isNewData) {
+      const responseProfile = new KalturaDetachedResponseProfile({
+          type: KalturaResponseProfileType.includeFields,
+          fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration,externalSourceType,capabilities'
+      });
+
       if (this.data.playlistContent) {
-        return this._kalturaClient.request(new BaseEntryListAction({
-          filter: new KalturaBaseEntryFilter({ idIn: this.data.playlistContent }),
+          return this._kalturaClient.request(new BaseEntryListAction({
+              filter: new KalturaBaseEntryFilter({idIn: this.data.playlistContent, statusIn: '1,2,7,5,6'}),
+              pager: new KalturaFilterPager({pageSize: 500})
+          }).setRequestOptions({
+              acceptedTypes: [KalturaMediaEntry],
+              responseProfile
+          }))
+              .pipe(map(response => {
+                  return response.objects.map(entry => {
+                      if ((entry.capabilities || '').indexOf('quiz.quiz') !== -1) {
+                          entry['isQuizEntry'] = true;
+                      }
 
-          pager: new KalturaFilterPager({ pageSize: 500 })
-        }).setRequestOptions({
-            responseProfile
-        }))
-          .pipe(map(response => {
-              return response.objects.map(entry => {
-                  if ((entry.capabilities || '').indexOf('quiz.quiz') !== -1) {
-                      entry['isQuizEntry'] = true;
-                  }
-
-                  return entry;
-              });
-          }));
+                      return entry;
+                  });
+              }));
       } else {
-        return of([]);
+          return of([]);
       }
-    } else {
-      return this._kalturaClient.request(new PlaylistExecuteAction({
-        id: this.data.id
-      }).setRequestOptions({
-          acceptedTypes: [KalturaMediaEntry],
-          responseProfile
-      })).pipe(map(entries => {
-          return entries.map(entry => {
-              if ((entry.capabilities || '').indexOf('quiz.quiz') !== -1) {
-                  entry['isQuizEntry'] = true;
-              }
+  }
 
-              return entry;
-          });
-      }));
-    }
+  private _sortAndHandleDuplicates(entries: KalturaMediaEntry[]): KalturaMediaEntry[] {
+    let result = [];
+    const entryIds = this.data.playlistContent ? this.data.playlistContent.split(",") : [];
+    entryIds.forEach(id => {
+        const entry = entries.find(entry => entry.id === id);
+        if (entry) {
+            // clone the entry to be able to extend duplicated entries with unique selectedId
+            const clonedEntry = <PlaylistContentMediaEntry>Object.assign(KalturaObjectBaseFactory.createObject(entry), entry);
+            result.push(clonedEntry);
+        }
+    }));
+    return result;
   }
 
   private _extendWithSelectionId(entries: KalturaMediaEntry[]): PlaylistContentMediaEntry[] {
@@ -178,7 +176,7 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
     const entryIndex = this.entries.indexOf(entry);
 
     if (entryIndex !== -1) {
-      const clonedEntry = <PlaylistContentMediaEntry>Object.assign(KalturaObjectBaseFactory.createObject(entry), entry);
+      const clonedEntry = new KalturaMediaEntry(entry);
       this._extendWithSelectionId([clonedEntry]);
       this.entries.splice(entryIndex, 0, clonedEntry);
       this._recalculateCountAndDuration();

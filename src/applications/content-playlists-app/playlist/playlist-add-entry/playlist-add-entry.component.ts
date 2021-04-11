@@ -25,6 +25,7 @@ export class PlaylistAddEntryComponent {
     'ingestionStatuses': [
       KalturaEntryStatus.preconvert.toString(),
       KalturaEntryStatus.ready.toString(),
+      KalturaEntryStatus.noContent.toString(),
       KalturaEntryStatus.moderate.toString(),
       KalturaEntryStatus.blocked.toString()
     ]
