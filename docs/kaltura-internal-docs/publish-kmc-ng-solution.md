@@ -170,29 +170,19 @@ git merge <branchName>
 npm run standalone:update
 ```
 
-## Step 3: deploy kaltura to the dev server
+## Step 3: deploy KMCng to the required environment
 
-If you want to setup a version that was deployed to kmc-ng github repository and the [version release notes](https://github.com/kaltura/kmc-ng/releases) has an attached zip file named `kmc-ng-vX.X.X.zip`, do the following:
-```
-ssh {kaltura-user-name}@{kaltura-server-name}
-cd /opt/kaltura/kmcng
-sudo ./get-app vX.X.X
-```
-- replace `X.X.X` with actual version. ie `./get-app 3.5.0`
+If you want to deply a version that was released to kmc-ng github repository and the [version release notes](https://github.com/kaltura/kmc-ng/releases) has an attached zip file named `kmc-ng-vX.X.X.zip`, do the following:
 
-If you want to deploy a version manually do the following:
-```
-scp kmc-ng-vX.X.X.zip {kaltura-user-name}@{kaltura-server-name}:/opt/kaltura/kmcng
-ssh {kaltura-user-name}@{kaltura-server-name}
-cd /var/www/html
-mkdir vX.X.X
-cd vX.X.X
-cp /opt/kaltura/kmcng/kmc-ng-vX.X.X.zip .
-unzip kmc-ng-vX.X.X.zip
-rm kmc-ng-vX.X.X.zip
-cd /var/www/html
-rm next
-ln -s ./vX.X.X ./next
-cd /var/www/html/vX.X.X
-chmod 777 -R .
-```
+1. Go to https://jenkins-central.prod.ovp.kaltura.com (you need Okta permissions)
+2. Select `apps-folder-deployment`
+3. Select `deploy-app`
+4. Click `Build with Parameters`:
+    1. For KMC, in order to deploy UIConfs: check `DEPLOY_UICONF`
+    2. For staging deployment, check `STAGING`
+    3. For production deployment, check: `NY, PA, NVP1`
+5. Click `build`, click the job running and select `console output`
+6. Enter app name by clicking the `Input requested` link and select from the dropdown `kmcng`. Then click `Proceed`
+7. Enter app version by clicking the `Input requested` link and select from the dropdown the required version. Then click `Proceed`
+8. Once base.ini is updated and synced to the new version - it should load on the deployed environment
+- For more information on the deployment process visit [this page](https://kaltura.atlassian.net/wiki/spaces/PRODIT/pages/2727054180/Apps+Folder+Deployment+Automation).
