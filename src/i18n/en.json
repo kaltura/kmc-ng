@@ -2745,6 +2745,25 @@
                     "token": "Authorize YouTube API Access",
                     "tokenText": "Click or copy the link above and login using your KMC credentials, then authenticate at Google using your Google Account that is linked with your YouTube channel."
                 },
+                "zoom": {
+                    "title": "Zoom Integration",
+                    "explanation": "Zoom integrated accounts",
+                    "generate": " Generate Integration Code",
+                    "loadError": "An error occurred while loading zoom integration profiles.",
+                    "empty": "No zoom integration profiles found",
+                    "edit": "Edit",
+                    "name": "Name",
+                    "accountId": "Zoom Account ID",
+                    "created": "Creation Date",
+                    "updated": "Updated At",
+                    "codeTitle": "Integration Code",
+                    "code": "Zoom integration code",
+                    "codeFailed": "An error occurred during integration code generation.",
+                    "updateError": "An error occurred during zoom integration update.",
+                    "copy": "Copy and Close",
+                    "enable": "Enable",
+                    "disable": "Disable"
+                },
                 "entitlement": {
                     "title": "Entitlement",
                     "helpTip": "",

@@ -1,0 +1,24 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+    <div class="kContainer">
+        <div class="kTitle">
+            <span>{{'applications.settings.integrationSettings.zoom.title' | translate}}</span>
+        </div>
+        <div class="kGenerateCode">
+            <button type="button" class="kButtonDefault" (click)="integrationCodePopup.open()" pButton
+                    label="{{'applications.settings.integrationSettings.zoom.generate' | translate}}"></button>
+        </div>
+        <div class="kExplanation">{{'applications.settings.integrationSettings.zoom.explanation' | translate}}</div>
+      <div class="tableHolder">
+          <kZoomProfilesTable [_profiles]="_profiles" (onActionSelected)="_onActionSelected($event)"></kZoomProfilesTable>
+      </div>
+    </div>
+</k-area-blocker>
+
+<kPopupWidget #integrationCodePopup data-aid="integrationCodePopup" [popupWidth]="380" [popupHeight]="320" [modal]="true" [preventPageScroll]="true" [closeOnClickOutside]="false">
+    <ng-template>
+        <kGenerateCode (onClose)="integrationCodePopup.close()"></kGenerateCode>
+    </ng-template>
+</kPopupWidget>
+
+
+
