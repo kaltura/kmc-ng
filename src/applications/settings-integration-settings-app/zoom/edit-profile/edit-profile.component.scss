@@ -58,6 +58,12 @@
                 opacity: 1;
                 padding-left: 8px;
             }
+            kAutoComplete {
+                width: 100%;
+                ::ng-deep .ui-autocomplete {
+                    width: 100%;
+                }
+            }
             p-radioButton {
                 margin-right: 24px;
                 color: $kGrayscale1;

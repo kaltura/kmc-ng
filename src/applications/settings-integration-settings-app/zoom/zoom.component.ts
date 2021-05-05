@@ -49,6 +49,10 @@ export class ZoomComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
+  public saveProfile(profile: KalturaZoomIntegrationSetting): void {
+      this.updateProfile(profile);
+  }
+
   public _onActionSelected({action, profile}: { action: string, profile: KalturaZoomIntegrationSetting }) {
     switch (action) {
       case 'edit':

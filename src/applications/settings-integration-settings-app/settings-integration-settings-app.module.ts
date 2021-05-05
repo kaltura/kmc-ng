@@ -28,6 +28,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { EditZoomProfileComponent } from "./zoom/edit-profile/edit-profile.component";
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 
 @NgModule({
   imports: [
@@ -41,6 +42,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     ButtonModule,
     AreaBlockerModule,
     TranslateModule,
+    AutoCompleteModule,
     TooltipModule,
     MenuModule,
     InputTextareaModule,

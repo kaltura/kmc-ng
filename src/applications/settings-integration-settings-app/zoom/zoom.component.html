@@ -22,7 +22,7 @@
 
 <kPopupWidget #editProfile data-aid="editProfile" [popupWidth]="995" [slider]="true">
     <ng-template>
-        <kZoomEditProfile [profile]="_currentProfile" [parentPopup]="editProfile"></kZoomEditProfile>
+        <kZoomEditProfile [profile]="_currentProfile" [parentPopup]="editProfile" (onSave)="saveProfile($event)"></kZoomEditProfile>
     </ng-template>
 </kPopupWidget>
 

@@ -2769,6 +2769,7 @@
                     "editAccount": "Edit Zoom Account",
                     "recordingUpload": "Recording Upload",
                     "description": "Zoom Account Description",
+                    "category": "Category",
                     "delete": "Delete content from Zoom after upload",
                     "transcription": "Zoom Transcription",
                     "zoom": "Zoom",
