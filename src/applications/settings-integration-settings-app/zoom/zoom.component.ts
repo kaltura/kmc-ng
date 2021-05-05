@@ -1,5 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { KalturaZoomIntegrationSettingResponse, KalturaZoomIntegrationSetting } from 'kaltura-ngx-client';
+import {
+    KalturaZoomIntegrationSettingResponse,
+    KalturaZoomIntegrationSetting,
+    KalturaNullableBoolean
+} from 'kaltura-ngx-client';
 import { ZoomService } from './zoom.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
@@ -27,7 +31,7 @@ export class ZoomComponent implements OnInit, OnDestroy {
   public _isBusy = false;
   public _kmcPermissions = KMCPermissions;
 
-  @ViewChild('regenerateTokenPopup', { static: true }) regenerateTokenPopup: PopupWidgetComponent;
+  @ViewChild('editProfile', { static: true }) editProfile: PopupWidgetComponent;
 
   constructor(private _zoomService: ZoomService,
               private _appLocalization: AppLocalization,
@@ -50,15 +54,17 @@ export class ZoomComponent implements OnInit, OnDestroy {
       case 'edit':
         this._logger.info(`handle edit profile action by user`, { userId: profile.defaultUserId, accountId: profile.accountId });
         this._currentProfile = profile;
-        this.regenerateTokenPopup.open();
+        this.editProfile.open();
         break;
       case 'enable':
         this._logger.info(`handle enable profile action by user`, { userId: profile.defaultUserId, accountId: profile.accountId });
-        this.enableDisableProfile(profile, true);
+        profile.enableRecordingUpload = KalturaNullableBoolean.trueValue;
+        this.updateProfile(profile);
         break;
       case 'disable':
         this._logger.info(`handle disable profile action by user`, { userId: profile.defaultUserId, accountId: profile.accountId });
-        this.enableDisableProfile(profile, false);
+          profile.enableRecordingUpload = KalturaNullableBoolean.falseValue;
+        this.updateProfile(profile);
         break;
       default:
         break;
@@ -95,14 +101,14 @@ export class ZoomComponent implements OnInit, OnDestroy {
       );
   }
 
-  private enableDisableProfile(profile: KalturaZoomIntegrationSetting, enable: boolean): void {
+  private updateProfile(profile: KalturaZoomIntegrationSetting): void {
       this._logger.info(`handle update integration profile`);
       this._updateAreaBlockerState(true, null);
-      this._zoomService.enableDisableProfile(profile, enable)
+      this._zoomService.updateProfile(profile)
           .pipe(cancelOnDestroy(this))
           .subscribe(
               (response: string) => {
-                  this._logger.info(`handle successful loading zoom integration profiles`);
+                  this._logger.info(`handle successful update zoom integration profiles`);
                   this._loadZoomIntegrationProfiles();
               },
               error => {
@@ -114,7 +120,7 @@ export class ZoomComponent implements OnInit, OnDestroy {
                               label: this._appLocalization.get('app.common.retry'),
                               action: () => {
                                   this._logger.info(`user selected retry, retry action`);
-                                  this.enableDisableProfile(profile, enable);
+                                  this.updateProfile(profile);
                               }
                           }
                       ]

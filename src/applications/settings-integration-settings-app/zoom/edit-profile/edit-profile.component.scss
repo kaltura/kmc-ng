@@ -1,0 +1,237 @@
+@import 'app-theme/_variables.scss';
+
+.kEditAccessControlProfile {
+  .kHeader {
+    height: 72px;
+    width: 100%;
+    padding: 0 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+
+    .kTitle {
+      color: $kGrayscale1;
+      font-size: 15px;
+    }
+
+    .kButtons {
+      display: flex;
+      margin-left: auto;
+
+      .kCancel {
+        font-size: 15px;
+        color: $kGrayscale1;
+        align-self: center;
+        margin-right: 24px;
+      }
+
+      .kSaveButton {
+        width: 100px;
+        height: 34px;
+      }
+    }
+  }
+
+  .kContainer {
+    flex: 1 1 auto;
+    height: calc(100vh - 152px);
+    overflow: auto;
+
+    .kFormSection {
+      font-size: 15px;
+      padding: 32px 28px;
+
+      &.kMainInfo {
+        border-bottom: 1px solid $kGrayscale4;
+      }
+
+      .kTitle {
+        margin-bottom: 24px;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 0 4px;
+
+        .kAdvancedSecurityIcon {
+          color: $kGrayscale3;
+          font-size: 16px;
+          margin-left: .125em;
+        }
+      }
+      .kRow {
+        display: flex;
+        margin-bottom: 35px;
+        &:last-child {
+          margin-bottom: 0;
+        }
+        &.kHasError {
+          .kRequired {
+            color: $kDandger;
+            font-weight: bold;
+          }
+          .kControl {
+            border: 1px solid $kDandger;
+            background: initial;
+          }
+        }
+
+        span.kHasError {
+          color: $kDandger;
+          margin-top: 10px;
+          margin-bottom: -25px;
+        }
+
+        .kLabel {
+          width: 269px;
+          flex: 0 0 auto;
+          height: 18px;
+          color: $kGrayscale1;
+          font-size: 15px;
+          line-height: 18px;
+
+          .kSecureVideoLabel {
+            max-width: 200px;
+            display: block;
+          }
+        }
+
+        .kRequired {
+          width: 20px;
+          margin-left: -28px;
+          font-size: 24px;
+        }
+        .kRequired, .kLabel {
+          padding: 8px 4px;
+          height: 18px;
+        }
+        .kControlWrapper {
+          display: flex;
+          flex-direction: column;
+        }
+        .kControl {
+          color: $kGrayscale2;
+          height: 34px;
+          width: 500px;
+          border-radius: 3px;
+          &.kAutoComplete {
+            height: 60px;
+          }
+          kAutoComplete {
+            height: 60px;
+          }
+          .kInputError {
+            color: $kDandger;
+          }
+        }
+        .kCountryList, .kFlavorList {
+          vertical-align: middle;
+          display: inline-block;
+          max-width: 275px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          .kCountryListFlag {
+            margin: 0 .125em 0 .5em;
+          }
+        }
+        p-inputSwitch.kControl {
+          padding: .5em 0;
+          width: 42px;
+        }
+        textarea.kControl {
+          height: 60px;
+        }
+        .kSwitchValue {
+          padding: .5em;
+          margin-left: .5em;
+          vertical-align: middle;
+          line-height: 23px;
+        }
+        .kFollowedByPrompt {
+          line-height: 34px;
+          vertical-align: middle;
+          margin-left: 16px;
+        }
+      }
+    }
+  }
+}
+
+:host ::ng-deep .kEditAccessControlProfile {
+  .ui-multiselect-panel {
+    width: 320px;
+    height: 262px;
+  }
+
+  .ui-radiobutton-label {
+    font-weight: normal;
+    font-size: 15px;
+    margin-left: 5px;
+  }
+
+  .ui-multiselect-label {
+    font-weight: normal;
+    padding: .5em;
+  }
+
+  .ui-multiselect-trigger {
+    padding: .5em 1em;
+
+    .pi-caret-down {
+      margin-left: -.25em;
+    }
+  }
+
+  .ui-multiselect-items-wrapper {
+    overflow-x: hidden;
+  }
+
+  kautocomplete {
+    &.hasError {
+      .ui-autocomplete-multiple-container {
+        border-color: $kDandger;
+      }
+    }
+    input {
+      height: auto !important;
+    }
+
+    .ui-autocomplete.ui-widget {
+      width: 100%;
+      input {
+        width: 100%;
+      }
+    }
+
+    .ui-autocomplete-multiple-container {
+      display: flex;
+      height: 71px !important;
+      flex-wrap: wrap;
+      overflow-y: auto;
+
+      .ui-autocomplete-token {
+        flex: 0 auto;
+      }
+
+      .ui-autocomplete-input-token {
+        flex: 1;
+        width: 100%;
+        min-width: 175px;
+      }
+    }
+  }
+
+  p-checkbox {
+    .ui-chkbox-label {
+      font-size: 15px;
+      font-weight: normal;
+      line-height: 18px;
+      margin-left: 10px;
+    }
+
+    .ui-chkbox {
+      margin-right: 0;
+    }
+  }
+}

@@ -37,7 +37,7 @@ export class ZoomProfilesTableComponent {
       {
         label: this._appLocalization.get('applications.settings.integrationSettings.zoom.edit'),
         command: () => {
-          this.onActionSelected.emit({action: 'edit', profile});
+          this.openEditScreen(profile);
         }
       }
     ];
@@ -58,6 +58,10 @@ export class ZoomProfilesTableComponent {
             }
         });
     }
+  }
+
+  public openEditScreen(profile: KalturaZoomIntegrationSetting): void {
+      this.onActionSelected.emit({action: 'edit', profile});
   }
 
 }

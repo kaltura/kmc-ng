@@ -25,6 +25,7 @@ import { ZoomComponent } from "./zoom/zoom.component";
 import { ZoomProfilesTableComponent } from "./zoom/profiles-table/profiles-table.component";
 import { GenerateCodeComponent } from "./zoom/generate-code/generate-code.component";
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import {EditZoomProfileComponent} from "./zoom/edit-profile/edit-profile.component";
 
 @NgModule({
   imports: [
@@ -58,7 +59,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     ZoomComponent,
     ProfilesTableComponent,
     ZoomProfilesTableComponent,
-    GenerateCodeComponent
+    GenerateCodeComponent,
+    EditZoomProfileComponent
   ]
 })
 export class SettingsIntegrationSettingsAppModule {

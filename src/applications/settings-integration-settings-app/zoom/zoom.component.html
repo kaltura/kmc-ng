@@ -20,5 +20,10 @@
     </ng-template>
 </kPopupWidget>
 
+<kPopupWidget #editProfile data-aid="editProfile" [popupWidth]="995" [slider]="true">
+    <ng-template>
+        <kZoomEditProfile [profile]="_currentProfile" [parentPopup]="editProfile"></kZoomEditProfile>
+    </ng-template>
+</kPopupWidget>
 
 

@@ -21,8 +21,7 @@ export class ZoomService implements OnDestroy{
     return this._kalturaServerClient.request(request).pipe(cancelOnDestroy(this));
   }
 
-  public enableDisableProfile(profile: KalturaZoomIntegrationSetting, enable: boolean): Observable<string> {
-      profile.enableRecordingUpload = enable ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
+  public updateProfile(profile: KalturaZoomIntegrationSetting): Observable<string> {
       const request = new ZoomVendorSubmitRegistrationAction({accountId: profile.accountId, integrationSetting: profile});
       return this._kalturaServerClient.request(request).pipe(cancelOnDestroy(this));
   }

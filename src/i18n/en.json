@@ -2752,17 +2752,21 @@
                     "loadError": "An error occurred while loading zoom integration profiles.",
                     "empty": "No zoom integration profiles found",
                     "edit": "Edit",
-                    "name": "Name",
+                    "name": "User ID",
                     "accountId": "Zoom Account ID",
                     "created": "Creation Date",
                     "updated": "Updated At",
+                    "status": "Status",
                     "codeTitle": "Integration Code",
                     "code": "Zoom integration code",
                     "codeFailed": "An error occurred during integration code generation.",
                     "updateError": "An error occurred during zoom integration update.",
                     "copy": "Copy and Close",
+                    "enabled": "Enabled",
+                    "disabled": "Disabled",
                     "enable": "Enable",
-                    "disable": "Disable"
+                    "disable": "Disable",
+                    "editAccount": "Edit Zoom Account"
                 },
                 "entitlement": {
                     "title": "Entitlement",

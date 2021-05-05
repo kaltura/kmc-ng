@@ -8,10 +8,10 @@
         <ng-template pTemplate="header">
             <tr>
                 <th class="kApplicationRootCategory">
-                    {{'applications.settings.integrationSettings.zoom.name' | translate}}
+                    {{'applications.settings.integrationSettings.zoom.accountId' | translate}}
                 </th>
                 <th class="kPrivacyContextLabel">
-                    {{'applications.settings.integrationSettings.zoom.accountId' | translate}}
+                    {{'applications.settings.integrationSettings.zoom.name' | translate}}
                 </th>
                 <th class="kPrivacyContextLabel">
                     {{'applications.settings.integrationSettings.zoom.created' | translate}}
@@ -19,19 +19,27 @@
                 <th class="kPrivacyContextLabel">
                     {{'applications.settings.integrationSettings.zoom.updated' | translate}}
                 </th>
+                <th class="kPrivacyContextLabel">
+                    {{'applications.settings.integrationSettings.zoom.status' | translate}}
+                </th>
                 <th class="kActionsColumn"></th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-profile>
             <tr>
                 <td class="kApplicationRootCategory">
-                    <div class="kApplicationRootCategoryLabel kTableColumn" [kTooltip]="profile.defaultUserId">
-                        {{profile.defaultUserId}}
+                    <div class="kApplicationRootCategoryLabel kTableColumn" [kTooltip]="profile.accountId" (click)="openEditScreen(profile)">
+                        {{profile.accountId}}
                     </div>
                 </td>
                 <td class="kPrivacyContextLabel">
-                        <span class="kTableColumn" [kTooltip]="profile.accountId">
-                            {{profile.accountId}}
+                        <span class="kTableColumn" [kTooltip]="profile.defaultUserId">
+                            {{profile.defaultUserId}}
+                        </span>
+                </td>
+                <td class="kPrivacyContextLabel">
+                        <span class="kTableColumn" [kTooltip]="profile.createdAt | date">
+                            {{profile.createdAt | date}}
                         </span>
                 </td>
                 <td class="kPrivacyContextLabel">
@@ -40,8 +48,8 @@
                         </span>
                 </td>
                 <td class="kPrivacyContextLabel">
-                        <span class="kTableColumn" [kTooltip]="profile.username">
-                            {{profile.username}}
+                        <span class="kTableColumn">
+                            {{profile.enableRecordingUpload ? ('applications.settings.integrationSettings.zoom.enabled' | translate) : ('applications.settings.integrationSettings.zoom.disabled' | translate)}}
                         </span>
                 </td>
 

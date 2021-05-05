@@ -1,0 +1,305 @@
+<div class="kEditAccessControlProfile">
+  <div class="kHeader">
+    <span class="kTitle">{{'applications.settings.integrationSettings.zoom.editAccount' | translate}}</span>
+    <div class="kButtons">
+      <a class="kCancel" (click)="parentPopup.close()">
+        {{'applications.settings.accessControl.cancel' | translate}}
+      </a>
+      <button pButton type="button" class="kButtonBranded kSaveButton"
+              [label]="'applications.settings.accessControl.save' | translate"
+              (click)="_save()"></button>
+    </div>
+  </div>
+  <!--form class="kContainer" [formGroup]="_profileForm">
+    <div class="kFormSection kMainInfo">
+      <div class="kRow" [class.kHasError]="_nameField.touched && _nameField.invalid">
+        <span class="kLabel">{{'applications.settings.accessControl.editForm.profileName' | translate}}</span>
+        <div class="kRequired">*</div>
+        <div class="kControlWrapper">
+          <input class="kControl" pInputText [formControl]="_nameField">
+          <span class="kHasError" *ngIf="_nameField.touched && _nameField.invalid">
+            {{'applications.settings.accessControl.editForm.validationMessage.profileNameRequired' | translate}}
+          </span>
+        </div>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">{{'applications.settings.accessControl.editForm.description' | translate}}</span>
+        <textarea class="kControl" pInputText [formControl]="_descriptionField"></textarea>
+      </div>
+    </div>
+
+    <div class="kFormSection">
+      <div class="kTitle">{{'applications.settings.accessControl.editForm.authorizedDomains' | translate}}</div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedDomains"
+                         [value]="null"
+                         [formControl]="_domainsTypeField"
+                         [label]="'applications.settings.accessControl.editForm.allDomains' | translate"></p-radioButton>
+        </span>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedDomains"
+                         [value]="_siteRestrictionType.allowSiteList"
+                         [formControl]="_domainsTypeField"
+                         [label]="'applications.settings.accessControl.editForm.selectedDomainsOnly' | translate"></p-radioButton>
+        </span>
+        <div class="kControl kAutoComplete">
+          <kAutoComplete suggestionItemField="item"
+                         suggestionSelectableField="isSelectable"
+                         [formControl]="_allowedDomainsField"
+                         [multiple]="true"
+                         [class.hasError]="_allowedDomainsField.enabled && _domainsFormatError"
+                         [limitToSuggestions]="false"
+                         [minLength]="3"
+                         field="value"
+                         [tooltipResolver]="'__tooltip'"
+                         [classField]="'__class'"
+                         [onItemAdding]="_convertDomainsUserInputToValidValue"
+                         [placeholder]="'applications.settings.accessControl.editForm.domainsPlaceholder' | translate">
+          </kAutoComplete>
+          <span class="kInputError" *ngIf="_allowedDomainsField.enabled && _domainsFormatError">
+            {{'applications.settings.accessControl.editForm.invalidValue' | translate}}
+          </span>
+        </div>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedDomains"
+                         [value]="_siteRestrictionType.restrictSiteList"
+                         [formControl]="_domainsTypeField"
+                         [label]="'applications.settings.accessControl.editForm.blockSelectedDomains' | translate"></p-radioButton>
+        </span>
+        <div class="kControl kAutoComplete">
+          <kAutoComplete suggestionItemField="item"
+                         suggestionSelectableField="isSelectable"
+                         [class.hasError]="_restrictedDomainsField.enabled && _domainsFormatError"
+                         [multiple]="true"
+                         [formControl]="_restrictedDomainsField"
+                         [limitToSuggestions]="false"
+                         [minLength]="3"
+                         field="value"
+                         [tooltipResolver]="'__tooltip'"
+                         [classField]="'__class'"
+                         [onItemAdding]="_convertDomainsUserInputToValidValue"
+                         [placeholder]="'applications.settings.accessControl.editForm.domainsPlaceholder' | translate">
+          </kAutoComplete>
+          <span class="kInputError" *ngIf="_restrictedDomainsField.enabled && _domainsFormatError">
+            {{'applications.settings.accessControl.editForm.invalidValue' | translate}}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="kFormSection">
+      <div class="kTitle">{{'applications.settings.accessControl.editForm.authorizedCountries' | translate}}</div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedCountries"
+                         [value]="null"
+                         [formControl]="_countriesTypeField"
+                         [label]="'applications.settings.accessControl.editForm.allCountries' | translate"></p-radioButton>
+        </span>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedCountries"
+                         [value]="_countryRestrictionType.allowCountryList"
+                         [formControl]="_countriesTypeField"
+                         [label]="'applications.settings.accessControl.editForm.selectedCountriesOnly' | translate"></p-radioButton>
+        </span>
+        <p-multiSelect class="kControl"
+                       [options]="_countryCodes"
+                       [showToggleAll]="false"
+                       [maxSelectedLabels]="0"
+                       [resetFilterOnHide]="true"
+                       [filterPlaceHolder]="'applications.settings.accessControl.editForm.findCountry' | translate"
+                       [selectedItemsLabel]="'applications.settings.accessControl.editForm.countriesSelected' | translate"
+                       [formControl]="_allowedCountriesField"
+                       [defaultLabel]="'applications.settings.accessControl.editForm.selectCountry' | translate">
+          <ng-template let-country pTemplate="item">
+            <span class="kCountryList">
+                <i class="kFlag" [ngClass]="country.value | kCountryFromCode:'icon'"></i>
+              {{country.label}}
+              </span>
+          </ng-template>
+        </p-multiSelect>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedCountries"
+                         [value]="_countryRestrictionType.restrictCountryList"
+                         [formControl]="_countriesTypeField"
+                         [label]="'applications.settings.accessControl.editForm.blockSelectedCountries' | translate"></p-radioButton>
+        </span>
+        <p-multiSelect class="kControl"
+                       [options]="_countryCodes"
+                       [maxSelectedLabels]="0"
+                       [selectedItemsLabel]="'applications.settings.accessControl.editForm.countriesSelected' | translate"
+                       [filterPlaceHolder]="'applications.settings.accessControl.editForm.findCountry' | translate"
+                       [showToggleAll]="false"
+                       [resetFilterOnHide]="true"
+                       [formControl]="_restrictedCountriesField"
+                       [defaultLabel]="'applications.settings.accessControl.editForm.selectCountry' | translate">
+          <ng-template let-country pTemplate="item">
+            <span class="kCountryList">
+                <i class="kFlag" [ngClass]="country.value | kCountryFromCode:'icon'"></i>
+              {{country.value | kCountryFromCode:'label'}}
+              </span>
+          </ng-template>
+        </p-multiSelect>
+      </div>
+    </div>
+
+    <div class="kFormSection">
+      <div class="kTitle">{{'applications.settings.accessControl.editForm.authorizedIps' | translate}}</div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedIps"
+                         [value]="null"
+                         [formControl]="_ipsTypeField"
+                         [label]="'applications.settings.accessControl.editForm.allIps' | translate"></p-radioButton>
+        </span>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedIps"
+                         [value]="_ipAddressRestrictionType.allowList"
+                         [formControl]="_ipsTypeField"
+                         [label]="'applications.settings.accessControl.editForm.selectedIpsOnly' | translate"></p-radioButton>
+        </span>
+        <div class="kControl kAutoComplete">
+          <kAutoComplete suggestionItemField="item"
+                         suggestionSelectableField="isSelectable"
+                         [multiple]="true"
+                         [limitToSuggestions]="false"
+                         [formControl]="_allowedIpsField"
+                         [class.hasError]="_allowedIpsField.enabled && _ipsFormatError"
+                         [minLength]="3"
+                         field="value"
+                         [tooltipResolver]="'__tooltip'"
+                         [classField]="'__class'"
+                         [onItemAdding]="_convertIpsUserInputToValidValue"
+                         [placeholder]="'applications.settings.accessControl.editForm.ipsPlaceholder' | translate">
+          </kAutoComplete>
+          <span class="kInputError" *ngIf="_allowedIpsField.enabled && _ipsFormatError">
+            {{'applications.settings.accessControl.editForm.invalidValue' | translate}}
+          </span>
+        </div>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedIps"
+                         [value]="_ipAddressRestrictionType.restrictList"
+                         [formControl]="_ipsTypeField"
+                         [label]="'applications.settings.accessControl.editForm.blockSelectedIps' | translate"></p-radioButton>
+        </span>
+        <div class="kControl kAutoComplete">
+          <kAutoComplete suggestionItemField="item"
+                         suggestionSelectableField="isSelectable"
+                         [multiple]="true"
+                         [limitToSuggestions]="false"
+                         [class.hasError]="_restrictedIpsField.enabled && _ipsFormatError"
+                         [formControl]="_restrictedIpsField"
+                         [minLength]="3"
+                         field="value"
+                         [tooltipResolver]="'__tooltip'"
+                         [classField]="'__class'"
+                         [onItemAdding]="_convertIpsUserInputToValidValue"
+                         [placeholder]="'applications.settings.accessControl.editForm.ipsPlaceholder' | translate">
+          </kAutoComplete>
+          <span class="kInputError" *ngIf="_restrictedIpsField.enabled && _ipsFormatError">
+            {{'applications.settings.accessControl.editForm.invalidValue' | translate}}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="kFormSection">
+      <div class="kTitle">{{'applications.settings.accessControl.editForm.authorizedFlavors' | translate}}</div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedFlavors"
+                         [value]="null"
+                         [formControl]="_flavorsTypeField"
+                         [label]="'applications.settings.accessControl.editForm.allFlavors' | translate"></p-radioButton>
+        </span>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedFlavors"
+                         [value]="_flavorsRestrictionType.allowList"
+                         [formControl]="_flavorsTypeField"
+                         [label]="'applications.settings.accessControl.editForm.selectedFlavorsOnly' | translate"></p-radioButton>
+        </span>
+        <p-multiSelect [options]="_store.flavors"
+                       [maxSelectedLabels]="0"
+                       [formControl]="_allowedFlavorsField"
+                       [resetFilterOnHide]="true"
+                       [filterPlaceHolder]="'applications.settings.accessControl.editForm.findFlavor' | translate"
+                       [selectedItemsLabel]="'applications.settings.accessControl.editForm.flavorsSelected' | translate"
+                       [showToggleAll]="false"
+                       [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate">
+          <ng-template let-flavor pTemplate="item">
+            <span class="kFlavorList">
+              {{flavor.label}}
+              </span>
+          </ng-template>
+        </p-multiSelect>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-radioButton name="authorizedFlavors"
+                         [value]="_flavorsRestrictionType.restrictList"
+                         [formControl]="_flavorsTypeField"
+                         [label]="'applications.settings.accessControl.editForm.blockSelectedFlavors' | translate"></p-radioButton>
+        </span>
+        <p-multiSelect [options]="_store.flavors"
+                       [maxSelectedLabels]="0"
+                       [selectedItemsLabel]="'applications.settings.accessControl.editForm.flavorsSelected' | translate"
+                       [showToggleAll]="false"
+                       [resetFilterOnHide]="true"
+                       [filterPlaceHolder]="'applications.settings.accessControl.editForm.findFlavor' | translate"
+                       [formControl]="_restrictedFlavorsField"
+                       [defaultLabel]="'applications.settings.accessControl.editForm.selectFlavors' | translate">
+          <ng-template let-flavor pTemplate="item">
+            <span class="kFlavorList">
+              {{flavor.label}}
+              </span>
+          </ng-template>
+        </p-multiSelect>
+      </div>
+    </div>
+
+    <div class="kFormSection">
+      <div class="kTitle">
+        {{'applications.settings.accessControl.editForm.advancedSecurity' | translate}}
+        <i class="kIconhelp_full kAdvancedSecurityIcon"
+           [kTooltip]="'applications.settings.accessControl.editForm.advancedSecurityHelp' | translate"></i>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <span class="kSecureVideoLabel">
+            {{'applications.settings.accessControl.editForm.secureVideo' | translate}}
+          </span>
+        </span>
+        <p-inputSwitch class="kControl" [formControl]="_secureVideoField"></p-inputSwitch>
+        <span *ngIf="_secureVideoField.value" class="kSwitchValue">
+          {{'applications.settings.accessControl.editForm.yes' | translate}}
+        </span>
+        <span *ngIf="!_secureVideoField.value" class="kSwitchValue">{{'applications.settings.accessControl.editForm.no' | translate}}</span>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">
+          <p-checkbox [binary]="true"
+                      [formControl]="_allowPreviewField"
+                      [label]="'applications.settings.accessControl.editForm.allowFreePreviewOf' | translate"></p-checkbox>
+        </span>
+        <kTimeSpinner [formControl]="_previewField"></kTimeSpinner>
+        <span
+          class="kFollowedByPrompt">{{'applications.settings.accessControl.editForm.followedByPrompt' | translate}}</span>
+      </div>
+    </div>
+  </form-->
+</div>
