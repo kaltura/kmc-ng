@@ -25,7 +25,9 @@ import { ZoomComponent } from "./zoom/zoom.component";
 import { ZoomProfilesTableComponent } from "./zoom/profiles-table/profiles-table.component";
 import { GenerateCodeComponent } from "./zoom/generate-code/generate-code.component";
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import {EditZoomProfileComponent} from "./zoom/edit-profile/edit-profile.component";
+import { EditZoomProfileComponent } from "./zoom/edit-profile/edit-profile.component";
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @NgModule({
   imports: [
@@ -34,6 +36,8 @@ import {EditZoomProfileComponent} from "./zoom/edit-profile/edit-profile.compone
     ReactiveFormsModule,
     DropdownModule,
     InputTextModule,
+    InputSwitchModule,
+    RadioButtonModule,
     ButtonModule,
     AreaBlockerModule,
     TranslateModule,

@@ -2766,7 +2766,21 @@
                     "disabled": "Disabled",
                     "enable": "Enable",
                     "disable": "Disable",
-                    "editAccount": "Edit Zoom Account"
+                    "editAccount": "Edit Zoom Account",
+                    "recordingUpload": "Recording Upload",
+                    "description": "Zoom Account Description",
+                    "delete": "Delete content from Zoom after upload",
+                    "transcription": "Zoom Transcription",
+                    "zoom": "Zoom",
+                    "cms": "CMS ID",
+                    "postfix": "Email Postfix",
+                    "postfix1": "Do no Modify",
+                    "postfix2": "Remove  Postfix",
+                    "postfix3": "Add  Postfix",
+                    "participation": "Meeting Participations",
+                    "participation1": "Ignore Participants",
+                    "participation2": "Add as Co-Viewer",
+                    "participation3": "Add as Co- Publishers"
                 },
                 "entitlement": {
                     "title": "Entitlement",

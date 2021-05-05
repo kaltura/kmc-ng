@@ -1,23 +1,12 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {KalturaSiteRestrictionType, KalturaZoomIntegrationSetting} from 'kaltura-ngx-client';
-import { KalturaCountryRestrictionType } from 'kaltura-ngx-client';
-import { KalturaIpAddressRestrictionType } from 'kaltura-ngx-client';
-import { KalturaLimitFlavorsRestrictionType } from 'kaltura-ngx-client';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { BrowserService } from 'app-shared/kmc-shell/providers';
-import { KalturaAccessControl } from 'kaltura-ngx-client';
-import { globalConfig } from 'config/global';
-import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
+import {KalturaAccessControl, KalturaNullableBoolean, KalturaZoomIntegrationSetting, KalturaZoomUsersMatching} from 'kaltura-ngx-client';
+import {BrowserService} from 'app-shared/kmc-shell/providers';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
 
-export interface AccessControlAutocompleteItem {
-  value: string;
-  __tooltip: any;
-  __class?: string;
-}
 
 @Component({
   selector: 'kZoomEditProfile',
@@ -32,69 +21,47 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
 
   @Output() onSave = new EventEmitter<KalturaAccessControl>();
 
-  private _profile: KalturaZoomIntegrationSetting = null;
-
-  public _ipsFormatError = false;
-  public _domainsFormatError = false;
-  public _kmcPermissions = KMCPermissions;
-
-  public get _saveBtnDisabled(): boolean {
-    return this._domainsFormatError || this._ipsFormatError || this._nameField.invalid;
-  }
-
-  public _countryCodes: { value: string }[] = globalConfig.client.countriesList.map(code => {
-    return {
-      value: code, label: this._appLocalization.get(`countries.${code}`)
-    };
-  });
-
   public _profileForm: FormGroup;
-  public _nameField: AbstractControl;
-  public _descriptionField: AbstractControl;
-  public _domainsTypeField: AbstractControl;
-  public _allowedDomainsField: AbstractControl;
-  public _restrictedDomainsField: AbstractControl;
-  public _countriesTypeField: AbstractControl;
-  public _allowedCountriesField: AbstractControl;
-  public _restrictedCountriesField: AbstractControl;
-  public _ipsTypeField: AbstractControl;
-  public _allowedIpsField: AbstractControl;
-  public _restrictedIpsField: AbstractControl;
-  public _flavorsTypeField: AbstractControl;
-  public _allowedFlavorsField: AbstractControl;
-  public _restrictedFlavorsField: AbstractControl;
-  public _secureVideoField: AbstractControl;
-  public _allowPreviewField: AbstractControl;
-  public _previewField: AbstractControl;
 
-  public _siteRestrictionType = KalturaSiteRestrictionType;
-  public _countryRestrictionType = KalturaCountryRestrictionType;
-  public _ipAddressRestrictionType = KalturaIpAddressRestrictionType;
-  public _flavorsRestrictionType = KalturaLimitFlavorsRestrictionType;
+  public _recordingUpload: AbstractControl;
+  public _accountId: AbstractControl;
+  public _description: AbstractControl;
+  public _deleteContent: AbstractControl;
+  public _transcription: AbstractControl;
+  public _userId: AbstractControl;
+  public _postfix: AbstractControl;
+  public _userPostfix: AbstractControl;
+  public _participation: AbstractControl;
 
   constructor(private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               private _fb: FormBuilder,
-              private _permissionsService: KMCPermissionsService,
               private _logger: KalturaLogger) {
     this._buildForm();
   }
 
   ngOnInit() {
-    this._prepare();
+      if (this.profile) {
+          this._setInitialValue(this.profile);
+      }
   }
 
   ngOnDestroy() {
 
   }
 
-  private _prepare(): void {
-    if (this.profile) {
-      this._setInitialValue(this._profile);
-    }
-  }
-
   private _setInitialValue(profile: KalturaZoomIntegrationSetting): void {
+      this._profileForm.setValue({
+          enabled: profile.enableRecordingUpload === KalturaNullableBoolean.trueValue,
+          accountId: profile.accountId || '',
+          description: profile.zoomAccountDescription || '',
+          deleteContent: profile.deletionPolicy === KalturaNullableBoolean.trueValue,
+          transcription: profile.enableZoomTranscription === KalturaNullableBoolean.trueValue,
+          userId: profile.zoomUserMatchingMode !== KalturaZoomUsersMatching.cmsMatching,
+          postfix: profile.zoomUserMatchingMode,
+          userPostfix: profile.zoomUserPostfix,
+          participation: profile.handleParticipantsMode
+      });
       /*
     let domainsType = null;
     let allowedDomains = [];
@@ -185,7 +152,16 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
 
   private _buildForm(): void {
     this._profileForm = this._fb.group({
-      name: ['', Validators.required],
+      enabled: false,
+      accountId: [''],
+      description: [''],
+      deleteContent: false,
+      transcription: false,
+      userId: false,
+      postfix: null,
+      userPostfix: [''],
+      participation: null,
+      /*name: ['', Validators.required],
       description: '',
       domainsType: null,
       allowedDomains: [],
@@ -201,9 +177,61 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
       restrictedFlavors: [],
       secureVideo: false,
       allowPreview: false,
-      preview: 0
+      preview: 0*/
     });
+    this._recordingUpload = this._profileForm.controls['enabled'];
+    this._accountId = this._profileForm.controls['accountId'];
+    this._accountId.disable();
+    this._description = this._profileForm.controls['description'];
+    this._deleteContent = this._profileForm.controls['deleteContent'];
+    this._transcription = this._profileForm.controls['transcription'];
+    this._userId = this._profileForm.controls['userId'];
+    this._postfix = this._profileForm.controls['postfix'];
+    this._userPostfix = this._profileForm.controls['userPostfix'];
+    this._participation = this._profileForm.controls['participation'];
 
+      this._recordingUpload.valueChanges
+          .pipe(cancelOnDestroy(this))
+          .subscribe(value => {
+              if (value) {
+                  this._description.enable();
+                  this._deleteContent.enable();
+                  this._transcription.enable();
+                  this._userId.enable();
+                  this._postfix.enable();
+                  this._userPostfix.enable();
+                  this._participation.enable();
+              } else {
+                  this._description.disable();
+                  this._deleteContent.disable();
+                  this._transcription.disable();
+                  this._userId.disable();
+                  this._postfix.disable();
+                  this._userPostfix.disable();
+                  this._participation.disable();
+              }
+          });
+      this._userId.valueChanges
+          .pipe(cancelOnDestroy(this))
+          .subscribe(value => {
+              if (value === false) {
+                  this._postfix.disable();
+                  this._userPostfix.disable();
+              } else {
+                  this._postfix.enable();
+                  this._userPostfix.disable();
+              }
+          });
+      this._postfix.valueChanges
+          .pipe(cancelOnDestroy(this))
+          .subscribe(value => {
+              if (value === KalturaZoomUsersMatching.addPostfix) {
+                  this._userPostfix.enable();
+              } else {
+                  this._userPostfix.disable();
+              }
+          });
+/*
     this._nameField = this._profileForm.controls['name'];
     this._descriptionField = this._profileForm.controls['description'];
     this._domainsTypeField = this._profileForm.controls['domainsType'];
@@ -351,51 +379,9 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
       .filter(value => value && this._restrictedDomainsField.enabled)
       .subscribe(value => {
         this._domainsFormatError = value.some(domain => domain && domain.__class === 'invalid');
-      });
+      });*/
   }
 
-  private _getConfirmationMessage(): string {
-    const formValue = this._profileForm.getRawValue();
-    let message = '';
-
-    const { domainsType, allowedDomains, restrictedDomains } = formValue;
-    if (domainsType === KalturaSiteRestrictionType.allowSiteList && (!allowedDomains || !allowedDomains.length)
-      || domainsType === KalturaSiteRestrictionType.restrictSiteList && (!restrictedDomains || !restrictedDomains.length)) {
-      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.authorizedDomains') + '\n';
-    }
-
-    const { countriesType, allowedCountries, restrictedCountries } = formValue;
-    if (countriesType === KalturaCountryRestrictionType.allowCountryList && (!allowedCountries || !allowedCountries.length)
-      || countriesType === KalturaCountryRestrictionType.restrictCountryList && (!restrictedCountries || !restrictedCountries.length)) {
-      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.authorizedCountries') + '\n';
-    }
-
-    const { ipsType, allowedIps, restrictedIps } = formValue;
-    if (ipsType === KalturaIpAddressRestrictionType.allowList && (!allowedIps || !allowedIps.length)
-      || ipsType === KalturaIpAddressRestrictionType.restrictList && (!restrictedIps || !restrictedIps.length)) {
-      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.authorizedIps') + '\n';
-    }
-
-    const { flavorsType, allowedFlavors, restrictedFlavors } = formValue;
-    if (flavorsType === KalturaLimitFlavorsRestrictionType.allowList && (!allowedFlavors || !allowedFlavors.length)
-      || flavorsType === KalturaLimitFlavorsRestrictionType.restrictList && (!restrictedFlavors || !restrictedFlavors.length)) {
-      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.authorizedFlavors') + '\n';
-    }
-
-    if (message) {
-      message += this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.confirmSaving');
-    }
-
-    return message;
-  }
-
-  private _getAutocompleteList(items: AccessControlAutocompleteItem[]): string {
-      return Array.isArray(items) ? items.map(({value}) => value).join(',') : '';
-  }
-
-  private _getList(items: string[]): string {
-      return Array.isArray(items) ? items.join(',') : '';
-  }
   private _proceedSave(): void {
       /*
     const formValue = this._profileForm.getRawValue();
@@ -470,39 +456,10 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
     this.onSave.emit(accessControlProfile);*/
   }
 
-  private _validateDomain(item: string): boolean {
-    if (typeof item === 'string') {
-      return item
-        && !(item.lastIndexOf('.') === -1
-          || item.lastIndexOf('..') !== -1
-          || item.charAt(0) === '.'
-          || item.charAt(item.length - 1) === '.')
-    }
-    return false;
-  }
-
-  private _validateIp(item: string): boolean {
-    const ipRegExp = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-    if (typeof item === 'string') {
-      const cidrOrMask = item.split('/');
-      if (cidrOrMask.length === 2) { // x.x.x.x/x or x.x.x.x/m.m.m.m
-        return ipRegExp.test(cidrOrMask[0]) && (ipRegExp.test(cidrOrMask[1]) || /^\d+$/.test(cidrOrMask[1]));
-      }
-
-      const range = item.split('-');
-      if (range.length === 2) { // x.x.x.x-x.x.x.x
-        return ipRegExp.test(range[0]) && (ipRegExp.test(range[1]));
-      }
-
-      return ipRegExp.test(item); // x.x.x.x
-    }
-
-
-    return false;
-  }
 
   public _save(): void {
     this._logger.info(`handle 'save' action by the user`);
+    /*
     if (!this._nameField.value.trim()) {
       this._browserService.alert({
         header: this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.validationFailed'),
@@ -523,25 +480,8 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
       });
     } else {
       this._proceedSave();
-    }
+    }*/
   }
 
-  public _convertDomainsUserInputToValidValue(value: string): any {
-    const isValid = this._validateDomain(value);
-    const __tooltip = isValid
-      ? value
-      : this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.invalidDomainName');
-    const __class = isValid ? '' : 'invalid';
-    return { value, __tooltip, __class };
-  }
-
-  public _convertIpsUserInputToValidValue(value: string): any {
-    const isValid = this._validateIp(value);
-    const __tooltip = isValid
-      ? value
-      : this._appLocalization.get('applications.settings.accessControl.editForm.validationMessage.invalidIp');
-    const __class = isValid ? '' : 'invalid';
-    return { value, __tooltip, __class };
-  }
 }
 
