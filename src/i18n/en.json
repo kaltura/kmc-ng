@@ -2750,7 +2750,7 @@
                     "explanation": "Zoom integrated accounts",
                     "generate": " Generate Integration Code",
                     "loadError": "An error occurred while loading zoom integration profiles.",
-                    "empty": "No active zoom accounts exist",
+                    "empty": "There are no active Zoom accounts.",
                     "edit": "Edit",
                     "name": "User ID",
                     "user": "User ID Modifications",
@@ -2785,7 +2785,7 @@
                     "participation1": "Ignore Participants",
                     "participation2": "Add as Co-Viewer",
                     "participation3": "Add as Co- Publishers",
-                    "note": "* The number of zoom accounts integration supported is limited. Above you can see most recently updated accounts."
+                    "note": "* The number of Zoom accounts for Kaltura integration is limited to three accounts. The most recently updated accounts are displayed."
                 },
                 "entitlement": {
                     "title": "Entitlement",
