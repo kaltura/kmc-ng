@@ -2750,9 +2750,12 @@
                     "explanation": "Zoom integrated accounts",
                     "generate": " Generate Integration Code",
                     "loadError": "An error occurred while loading zoom integration profiles.",
-                    "empty": "No zoom integration profiles found",
+                    "empty": "No active zoom accounts exist",
                     "edit": "Edit",
                     "name": "User ID",
+                    "user": "User ID Modifications",
+                    "userHelp": "The user ID can be derived from the CMS ID. To see how that works, search for the field 'cms_user_id' in the API documented",
+                    "here": "here.",
                     "accountId": "Zoom Account ID",
                     "created": "Creation Date",
                     "updated": "Updated At",
@@ -2781,7 +2784,8 @@
                     "participation": "Meeting Participations",
                     "participation1": "Ignore Participants",
                     "participation2": "Add as Co-Viewer",
-                    "participation3": "Add as Co- Publishers"
+                    "participation3": "Add as Co- Publishers",
+                    "note": "* The number of zoom accounts integration supported is limited. Above you can see most recently updated accounts."
                 },
                 "entitlement": {
                     "title": "Entitlement",

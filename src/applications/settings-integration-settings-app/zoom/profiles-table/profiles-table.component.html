@@ -7,19 +7,19 @@
              [rowTrackBy]="rowTrackBy">
         <ng-template pTemplate="header">
             <tr>
-                <th class="kApplicationRootCategory" [ngStyle]="{'width': '220px'}">
+                <th class="kApplicationRootCategory">
                     {{'applications.settings.integrationSettings.zoom.accountId' | translate}}
                 </th>
-                <th class="kPrivacyContextLabel" [ngStyle]="{'width': '220px'}">
+                <th class="kPrivacyContextLabel">
                     {{'applications.settings.integrationSettings.zoom.name' | translate}}
                 </th>
-                <th class="kPrivacyContextLabel">
+                <th class="kPrivacyContextLabel" [ngStyle]="{'width': '15%'}">
                     {{'applications.settings.integrationSettings.zoom.created' | translate}}
                 </th>
-                <th class="kPrivacyContextLabel">
+                <th class="kPrivacyContextLabel" [ngStyle]="{'width': '15%'}">
                     {{'applications.settings.integrationSettings.zoom.updated' | translate}}
                 </th>
-                <th class="kPrivacyContextLabel" [ngStyle]="{'width': '90px'}">
+                <th class="kPrivacyContextLabel" [ngStyle]="{'width': '10%'}">
                     {{'applications.settings.integrationSettings.zoom.status' | translate}}
                 </th>
                 <th class="kActionsColumn"></th>
@@ -27,27 +27,27 @@
         </ng-template>
         <ng-template pTemplate="body" let-profile>
             <tr>
-                <td class="kApplicationRootCategory" [ngStyle]="{'width': '220px'}">
+                <td class="kApplicationRootCategory">
                     <div class="kApplicationRootCategoryLabel kTableColumn" [kTooltip]="profile.accountId" [showOnEllipsis]="true" (click)="openEditScreen(profile)">
                         {{profile.accountId}}
                     </div>
                 </td>
-                <td class="kPrivacyContextLabel" [ngStyle]="{'width': '220px'}">
+                <td class="kPrivacyContextLabel">
                         <span class="kTableColumn" [kTooltip]="profile.defaultUserId" [showOnEllipsis]="true">
                             {{profile.defaultUserId}}
                         </span>
                 </td>
-                <td class="kPrivacyContextLabel">
+                <td class="kPrivacyContextLabel" [ngStyle]="{'width': '15%'}">
                         <span class="kTableColumn">
                             {{profile.createdAt | date}}
                         </span>
                 </td>
-                <td class="kPrivacyContextLabel">
+                <td class="kPrivacyContextLabel" [ngStyle]="{'width': '15%'}">
                         <span class="kTableColumn">
                             {{profile.updatedAt | date}}
                         </span>
                 </td>
-                <td class="kPrivacyContextLabel" [ngStyle]="{'width': '90px'}">
+                <td class="kPrivacyContextLabel" [ngStyle]="{'width': '10%'}">
                         <span class="kTableColumn">
                             {{profile.enableRecordingUpload ? ('applications.settings.integrationSettings.zoom.enabled' | translate) : ('applications.settings.integrationSettings.zoom.disabled' | translate)}}
                         </span>

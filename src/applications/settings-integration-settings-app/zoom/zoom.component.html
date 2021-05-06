@@ -11,6 +11,7 @@
       <div class="tableHolder">
           <kZoomProfilesTable [_profiles]="_profiles" (onActionSelected)="_onActionSelected($event)"></kZoomProfilesTable>
       </div>
+      <span *ngIf="totalCount > 3" class="kNote">{{'applications.settings.integrationSettings.zoom.note' | translate}}</span>
     </div>
 </k-area-blocker>
 

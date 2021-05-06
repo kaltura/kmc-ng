@@ -12,7 +12,7 @@ import { BrowserService } from "app-shared/kmc-shell";
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { SettingsIntegrationSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { cancelOnDestroy, KalturaUtils } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kZoomIntegration',
@@ -23,6 +23,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
     KalturaLogger.createLogger('ZoomIntegrationComponent')
   ]
 })
+
 export class ZoomComponent implements OnInit, OnDestroy {
 
   public _currentProfile: KalturaZoomIntegrationSetting = null;
@@ -30,6 +31,7 @@ export class ZoomComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
   public _kmcPermissions = KMCPermissions;
+  public totalCount = 0;
 
   @ViewChild('editProfile', { static: true }) editProfile: PopupWidgetComponent;
 
@@ -84,7 +86,15 @@ export class ZoomComponent implements OnInit, OnDestroy {
         (response: KalturaZoomIntegrationSettingResponse) => {
           this._logger.info(`handle successful loading zoom integration profiles`);
           this._updateAreaBlockerState(false, null);
-          this._profiles = response.objects ? response.objects.sort((a,b) => (a.defaultUserId > b.defaultUserId) ? 1 : ((b.defaultUserId > a.defaultUserId) ? -1 : 0)) : [];
+          this._profiles = response.objects ? response.objects.sort((a,b) => (a.updatedAt > b.updatedAt) ? -1 : ((b.updatedAt > a.updatedAt) ? 1 : 0)) : [];
+          this._profiles.forEach(profile => {
+              profile.createdAt = (parseInt(profile.createdAt) * 1000).toString();
+              profile.updatedAt = (parseInt(profile.updatedAt) * 1000).toString();
+          });
+          this.totalCount = this._profiles.length;
+          if (this.totalCount > 3) {
+              this._profiles.splice(3, this.totalCount -3);
+          }
         },
         error => {
           this._logger.warn(`handle failed loading zoom integration profiles, show alert`, { errorMessage: error.message });

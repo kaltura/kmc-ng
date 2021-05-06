@@ -10,7 +10,7 @@ import { SuggestionsProviderData } from "@kaltura-ng/kaltura-primeng-ui";
 import { ISubscription } from "rxjs/Subscription";
 import { Observable } from "rxjs";
 import { CategoriesSearchService } from "app-shared/content-shared/categories/categories-search.service";
-
+import { BrowserService } from "app-shared/kmc-shell";
 
 @Component({
     selector: 'kZoomEditProfile',
@@ -31,6 +31,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
     public _description: AbstractControl;
     public _deleteContent: AbstractControl;
     public _transcription: AbstractControl;
+    public _defaultUserId: AbstractControl;
     public _userId: AbstractControl;
     public _postfix: AbstractControl;
     public _userPostfix: AbstractControl;
@@ -42,6 +43,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
 
     constructor(private _appLocalization: AppLocalization,
                 private _fb: FormBuilder,
+                private _browserService: BrowserService,
                 private _categoriesSearchService: CategoriesSearchService,
                 private _logger: KalturaLogger) {
         this._buildForm();
@@ -61,6 +63,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         this._profileForm.setValue({
             enabled: profile.enableRecordingUpload === KalturaNullableBoolean.trueValue,
             accountId: profile.accountId || '',
+            defaultUserId: profile.defaultUserId || '',
             description: profile.zoomAccountDescription || '',
             deleteContent: profile.deletionPolicy === KalturaNullableBoolean.trueValue,
             transcription: profile.enableZoomTranscription === KalturaNullableBoolean.trueValue,
@@ -76,6 +79,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         this._profileForm = this._fb.group({
             enabled: false,
             accountId: [''],
+            defaultUserId: [''],
             description: [''],
             deleteContent: false,
             transcription: false,
@@ -89,6 +93,8 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         this._recordingUpload = this._profileForm.controls['enabled'];
         this._accountId = this._profileForm.controls['accountId'];
         this._accountId.disable();
+        this._defaultUserId = this._profileForm.controls['defaultUserId'];
+        this._defaultUserId.disable();
         this._description = this._profileForm.controls['description'];
         this._deleteContent = this._profileForm.controls['deleteContent'];
         this._transcription = this._profileForm.controls['transcription'];
@@ -144,6 +150,10 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                     this._userPostfix.disable();
                 }
             });
+    }
+
+    public openHelpLink(): void {
+        this._browserService.openLink('https://marketplace.zoom.us/docs/api-reference/zoom-api/users/user');
     }
 
     public _save(): void {

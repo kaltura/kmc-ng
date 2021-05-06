@@ -76,14 +76,25 @@
             <div class="kLabel">
                 <span>{{'applications.settings.integrationSettings.zoom.name' | translate}}</span>
             </div>
+            <input [formControl]="_defaultUserId" pInputText>
+        </div>
+
+        <div class="kRow">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.user' | translate}}</span>
+            </div>
             <p-radioButton name="zoom"
                            [value]="true"
                            [formControl]="_userId"
                            [label]="'applications.settings.integrationSettings.zoom.zoom' | translate"></p-radioButton>
-            <p-radioButton name="zoom"
+            <p-radioButton name="zoom" style="margin-right: 4px"
                            [value]="false"
                            [formControl]="_userId"
                            [label]="'applications.settings.integrationSettings.zoom.cms' | translate"></p-radioButton>
+            <kInputHelper class="kHelp" trigger="click">
+                <span>{{'applications.settings.integrationSettings.zoom.userHelp' | translate}}</span>
+                <a style="margin-left: 4px" (click)="openHelpLink()">{{'applications.settings.integrationSettings.zoom.here' | translate}}</a>
+            </kInputHelper>
         </div>
 
         <div class="kRow" style="align-items: flex-start">

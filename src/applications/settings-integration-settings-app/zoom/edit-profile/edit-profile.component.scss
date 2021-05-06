@@ -44,6 +44,8 @@
             color: $kGrayscale1;
             .kLabel {
                 width: 200px;
+                padding-right: 12px;
+                box-sizing: border-box;
                 flex: 0 0 auto;
                 display: flex;
                 align-items: center;
