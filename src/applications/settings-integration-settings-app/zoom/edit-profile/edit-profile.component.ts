@@ -37,6 +37,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
     public _userPostfix: AbstractControl;
     public _participation: AbstractControl;
     public _categories: AbstractControl;
+    public _createUser: AbstractControl;
 
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
     private _searchCategoriesSubscription: ISubscription;
@@ -68,6 +69,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             deleteContent: profile.deletionPolicy === KalturaNullableBoolean.trueValue,
             transcription: profile.enableZoomTranscription === KalturaNullableBoolean.trueValue,
             userId: profile.zoomUserMatchingMode !== KalturaZoomUsersMatching.cmsMatching,
+            createUser: profile.createUserIfNotExist === KalturaNullableBoolean.trueValue,
             postfix: profile.zoomUserMatchingMode,
             userPostfix: profile.zoomUserPostfix,
             participation: profile.handleParticipantsMode,
@@ -83,6 +85,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             description: [''],
             deleteContent: false,
             transcription: false,
+            createUser: false,
             userId: false,
             postfix: null,
             userPostfix: [''],
@@ -99,6 +102,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         this._deleteContent = this._profileForm.controls['deleteContent'];
         this._transcription = this._profileForm.controls['transcription'];
         this._userId = this._profileForm.controls['userId'];
+        this._createUser = this._profileForm.controls['createUser'];
         this._postfix = this._profileForm.controls['postfix'];
         this._userPostfix = this._profileForm.controls['userPostfix'];
         this._participation = this._profileForm.controls['participation'];
@@ -112,6 +116,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                     this._deleteContent.enable();
                     this._transcription.enable();
                     this._userId.enable();
+                    this._createUser.enable();
                     this._postfix.enable();
                     this._userPostfix.enable();
                     this._participation.enable();
@@ -121,6 +126,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                     this._deleteContent.disable();
                     this._transcription.disable();
                     this._userId.disable();
+                    this._createUser.disable();
                     this._postfix.disable();
                     this._userPostfix.disable();
                     this._participation.disable();
@@ -163,6 +169,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         this.profile.zoomAccountDescription = formValue.description;
         this.profile.zoomCategory = formValue.categories.length ? formValue.categories[0].name : '';
         this.profile.deletionPolicy = formValue.deleteContent ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
+        this.profile.createUserIfNotExist = formValue.createUser ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
         this.profile.enableZoomTranscription = formValue.transcription ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
         if (formValue.userId) {
             this.profile.zoomUserMatchingMode = formValue.postfix;

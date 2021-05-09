@@ -81,20 +81,30 @@
 
         <div class="kRow">
             <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.create' | translate}}</span>
+            </div>
+            <p-inputSwitch class="kControl" [formControl]="_createUser"></p-inputSwitch>
+            <span class="kSwitchValue">
+              {{_createUser.value ? ('app.common.yes' | translate) : ('app.common.no' | translate)}}
+            </span>
+        </div>
+
+        <div class="kRow">
+            <div class="kLabel">
                 <span>{{'applications.settings.integrationSettings.zoom.user' | translate}}</span>
+                <kInputHelper class="kHelp" trigger="click">
+                    <span>{{'applications.settings.integrationSettings.zoom.userHelp' | translate}}</span>
+                    <a style="margin-left: 4px" (click)="openHelpLink()">{{'applications.settings.integrationSettings.zoom.here' | translate}}</a>
+                </kInputHelper>
             </div>
             <p-radioButton name="zoom"
                            [value]="true"
                            [formControl]="_userId"
                            [label]="'applications.settings.integrationSettings.zoom.zoom' | translate"></p-radioButton>
-            <p-radioButton name="zoom" style="margin-right: 4px"
+            <p-radioButton name="zoom"
                            [value]="false"
                            [formControl]="_userId"
                            [label]="'applications.settings.integrationSettings.zoom.cms' | translate"></p-radioButton>
-            <kInputHelper class="kHelp" trigger="click">
-                <span>{{'applications.settings.integrationSettings.zoom.userHelp' | translate}}</span>
-                <a style="margin-left: 4px" (click)="openHelpLink()">{{'applications.settings.integrationSettings.zoom.here' | translate}}</a>
-            </kInputHelper>
         </div>
 
         <div class="kRow" style="align-items: flex-start">
