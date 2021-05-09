@@ -2789,7 +2789,8 @@
                     "participation3": "Add as Co- Publishers",
                     "user1": "Create new user based on zoom user",
                     "user2": "Use default user",
-                    "note": "* The number of Zoom accounts for Kaltura integration is limited to three accounts. The most recently updated accounts are displayed."
+                    "note": "* The number of Zoom accounts for Kaltura integration is limited to three accounts. The most recently updated accounts are displayed.",
+                    "invalid": "Default user is required."
                 },
                 "entitlement": {
                     "title": "Entitlement",

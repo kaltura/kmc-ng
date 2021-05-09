@@ -33,6 +33,12 @@
       }
     }
   }
+
+    form {
+        height: calc(100vh - 200px);
+        overflow-y: auto;
+    }
+
     .kContainer {
         display: flex;
         flex-direction: column;
@@ -43,6 +49,11 @@
             font-weight: bold;
             line-height: 48px;
             margin-bottom: 16px;
+        }
+        .kInvalid {
+            color: $kDandger;
+            font-size: 14px;
+            margin-top: 8px;
         }
         .kRow {
             display: flex;

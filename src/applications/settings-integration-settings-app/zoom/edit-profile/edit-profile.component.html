@@ -6,6 +6,7 @@
                 {{'applications.settings.accessControl.cancel' | translate}}
             </a>
             <button pButton type="button" class="kButtonBranded kSaveButton"
+                    [disabled]="!formValid"
                     [label]="'applications.settings.accessControl.save' | translate"
                     (click)="_save()"></button>
         </div>
@@ -139,12 +140,24 @@
                            [value]="true"
                            [formControl]="_createUser"
                            [label]="'applications.settings.integrationSettings.zoom.user1' | translate"></p-radioButton>
-                <div class="kRow" style="margin-bottom: 0px">
+                <div class="kRow" style="margin-bottom: 0px; align-items: flex-start">
                     <p-radioButton name="user" [ngStyle]="{'marginRight': '8px'}"
                                    [value]="false"
                                    [formControl]="_createUser"
                                    [label]="'applications.settings.integrationSettings.zoom.user2' | translate"></p-radioButton>
-                    <input [formControl]="_defaultUserId" pInputText>
+                    <div class="kRadios">
+                        <kAutoComplete [formControl]="_defaultUserId"
+                                       field="screenName"
+                                       [tooltipResolver]="_usersTooltipResolver"
+                                       suggestionItemField="item"
+                                       suggestionLabelField="name"
+                                       [multiple]="false"
+                                       [minLength]="3"
+                                       [suggestionsProvider]="_usersProvider"
+                                       (completeMethod)="_searchUsers($event)">
+                        </kAutoComplete>
+                        <span *ngIf="!formValid" class="kInvalid">{{'applications.settings.integrationSettings.zoom.invalid' | translate}}</span>
+                    </div>
                 </div>
             </div>
         </div>

@@ -2,7 +2,14 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
-import { KalturaNullableBoolean, KalturaZoomIntegrationSetting, KalturaZoomUsersMatching } from 'kaltura-ngx-client';
+import {
+    KalturaClient,
+    KalturaFilterPager,
+    KalturaNullableBoolean, KalturaUser, KalturaUserFilter,
+    KalturaZoomIntegrationSetting,
+    KalturaZoomUsersMatching,
+    UserListAction
+} from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
 import { Subject } from "rxjs/Subject";
@@ -25,6 +32,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
     @Output() onSave = new EventEmitter<KalturaZoomIntegrationSetting>();
 
     public _profileForm: FormGroup;
+    public formValid = true;
 
     public _recordingUpload: AbstractControl;
     public _accountId: AbstractControl;
@@ -41,10 +49,13 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
 
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
     private _searchCategoriesSubscription: ISubscription;
+    public _usersProvider = new Subject<SuggestionsProviderData>();
+    private _searchUsersSubscription: ISubscription;
 
     constructor(private _appLocalization: AppLocalization,
                 private _fb: FormBuilder,
                 private _browserService: BrowserService,
+                private _kalturaServerClient: KalturaClient,
                 private _categoriesSearchService: CategoriesSearchService,
                 private _logger: KalturaLogger) {
         this._buildForm();
@@ -58,13 +69,14 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this._categoriesProvider.complete();
+        this._usersProvider.complete();
     }
 
     private _setInitialValue(profile: KalturaZoomIntegrationSetting): void {
         this._profileForm.setValue({
             enabled: profile.enableRecordingUpload === KalturaNullableBoolean.trueValue,
             accountId: profile.accountId || '',
-            defaultUserId: profile.defaultUserId || '',
+            defaultUserId: profile.defaultUserId ? [{screenName: profile.defaultUserId}] : [],
             description: profile.zoomAccountDescription || '',
             deleteContent: profile.deletionPolicy === KalturaNullableBoolean.trueValue,
             transcription: profile.enableZoomTranscription === KalturaNullableBoolean.trueValue,
@@ -75,13 +87,14 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             participation: profile.handleParticipantsMode,
             categories: profile.zoomCategory ? [{name: profile.zoomCategory}] : []
         });
+        this.validate();
     }
 
     private _buildForm(): void {
         this._profileForm = this._fb.group({
             enabled: false,
             accountId: [''],
-            defaultUserId: [''],
+            defaultUserId: [[]],
             description: [''],
             deleteContent: false,
             transcription: false,
@@ -165,7 +178,18 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                 } else {
                     this._defaultUserId.enable();
                 }
+                this.validate();
             });
+        this._defaultUserId.valueChanges
+            .pipe(cancelOnDestroy(this))
+            .subscribe(value => {
+                this.validate();
+            });
+    }
+
+    private validate(): void {
+        const formValue = this._profileForm.getRawValue();
+        this.formValid = formValue.defaultUserId.length || (!formValue.defaultUserId.length && formValue.createUser);
     }
 
     public openHelpLink(): void {
@@ -177,7 +201,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         const formValue = this._profileForm.getRawValue();
         this.profile.enableRecordingUpload = formValue.enabled ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
         this.profile.zoomAccountDescription = formValue.description;
-        this.profile.defaultUserId = formValue.defaultUserId;
+        this.profile.defaultUserId = formValue.defaultUserId.length ? formValue.defaultUserId[0].screenName : '';
         this.profile.zoomCategory = formValue.categories.length ? formValue.categories[0].name : '';
         this.profile.deletionPolicy = formValue.deleteContent ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
         this.profile.createUserIfNotExist = formValue.createUser ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
@@ -192,6 +216,8 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         this.onSave.emit(this.profile);
         this.parentPopup.close();
     }
+
+    /* ---------------------------- categories auto complete code starts ------------------------- */
 
     public _searchCategories(event): void {
         this._categoriesProvider.next({suggestions: [], isLoading: true});
@@ -245,6 +271,62 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
     public _categoriesTooltipResolver = (value: any) => {
         return value.name;
     };
+
+    /* ---------------------------- categories auto complete code ends ------------------------- */
+
+
+    /* ---------------------------- users auto complete code start ------------------------- */
+
+    public _searchUsers(event): void {
+        this._logger.info(`handle search users action`, { query: event.query });
+        this._usersProvider.next({suggestions: [], isLoading: true});
+
+        if (this._searchUsersSubscription) {
+            // abort previous request
+            this._searchUsersSubscription.unsubscribe();
+            this._searchUsersSubscription = null;
+        }
+
+        this._searchUsersSubscription = this._kalturaServerClient.request(
+            new UserListAction(
+                {
+                    filter: new KalturaUserFilter({
+                        idOrScreenNameStartsWith: event.query
+                    }),
+                    pager: new KalturaFilterPager({
+                        pageIndex: 0,
+                        pageSize: 30
+                    })
+                }
+            )
+        )
+            .pipe(cancelOnDestroy(this))
+            .subscribe(
+                data => {
+                    this._logger.info(`handle successful search users action`);
+                    const suggestions = [];
+                    (data.objects || []).forEach((suggestedUser: KalturaUser) => {
+                        suggestions.push({
+                            name: suggestedUser.screenName + '(' + suggestedUser.id + ')',
+                            item: suggestedUser,
+                            isSelectable: true
+                        });
+                    });
+                    this._usersProvider.next({suggestions: suggestions, isLoading: false});
+                },
+                err => {
+                    this._logger.warn(`handle successful search users action`, { errorMessage: err.message });
+                    this._usersProvider.next({suggestions: [], isLoading: false, errorMessage: <any>(err.message || err)});
+                }
+            );
+    }
+
+    public _usersTooltipResolver = (value: any) => {
+        return value.screenName;
+    };
+
+    /* ---------------------------- users auto complete code ends ------------------------- */
+
 
 }
 
