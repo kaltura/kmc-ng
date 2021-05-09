@@ -153,7 +153,10 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                 if (value === false) {
                     this._postfix.disable();
                     this._userPostfix.disable();
-                } else {
+                    this._profileForm.patchValue({
+                        postfix: KalturaZoomUsersMatching.cmsMatching
+                    });
+                } else if (this._profileForm.controls['enabled'].value){
                     this._postfix.enable();
                     this._profileForm.patchValue({
                         postfix: KalturaZoomUsersMatching.doNotModify
@@ -164,7 +167,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         this._postfix.valueChanges
             .pipe(cancelOnDestroy(this))
             .subscribe(value => {
-                if (value === KalturaZoomUsersMatching.addPostfix) {
+                if (value === KalturaZoomUsersMatching.addPostfix && (this._profileForm.controls['enabled'].value)) {
                     this._userPostfix.enable();
                 } else {
                     this._userPostfix.disable();
@@ -175,7 +178,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             .subscribe(value => {
                 if (value) {
                     this._defaultUserId.disable();
-                } else {
+                } else if (this._profileForm.controls['enabled'].value) {
                     this._defaultUserId.enable();
                 }
                 this.validate();
