@@ -74,64 +74,6 @@
 
         <div class="kRow">
             <div class="kLabel">
-                <span>{{'applications.settings.integrationSettings.zoom.name' | translate}}</span>
-            </div>
-            <input [formControl]="_defaultUserId" pInputText>
-        </div>
-
-        <div class="kRow">
-            <div class="kLabel">
-                <span>{{'applications.settings.integrationSettings.zoom.create' | translate}}</span>
-            </div>
-            <p-inputSwitch class="kControl" [formControl]="_createUser"></p-inputSwitch>
-            <span class="kSwitchValue">
-              {{_createUser.value ? ('app.common.yes' | translate) : ('app.common.no' | translate)}}
-            </span>
-        </div>
-
-        <div class="kRow">
-            <div class="kLabel">
-                <span>{{'applications.settings.integrationSettings.zoom.user' | translate}}</span>
-                <kInputHelper class="kHelp" trigger="click">
-                    <span>{{'applications.settings.integrationSettings.zoom.userHelp' | translate}}</span>
-                    <a style="margin-left: 4px" (click)="openHelpLink()">{{'applications.settings.integrationSettings.zoom.here' | translate}}</a>
-                </kInputHelper>
-            </div>
-            <p-radioButton name="zoom"
-                           [value]="true"
-                           [formControl]="_userId"
-                           [label]="'applications.settings.integrationSettings.zoom.zoom' | translate"></p-radioButton>
-            <p-radioButton name="zoom"
-                           [value]="false"
-                           [formControl]="_userId"
-                           [label]="'applications.settings.integrationSettings.zoom.cms' | translate"></p-radioButton>
-        </div>
-
-        <div class="kRow" style="align-items: flex-start">
-            <div class="kLabel">
-                <span>{{'applications.settings.integrationSettings.zoom.postfix' | translate}}</span>
-            </div>
-            <div class="kRadios">
-                <p-radioButton name="postfix"
-                               [value]="0"
-                               [formControl]="_postfix"
-                               [label]="'applications.settings.integrationSettings.zoom.postfix1' | translate"></p-radioButton>
-                <p-radioButton name="postfix"
-                               [value]="2"
-                               [formControl]="_postfix"
-                               [label]="'applications.settings.integrationSettings.zoom.postfix2' | translate"></p-radioButton>
-                <div class="kRow" style="margin-bottom: 0px">
-                    <p-radioButton name="postfix"
-                                   [value]="1"
-                                   [formControl]="_postfix"
-                                   [label]="'applications.settings.integrationSettings.zoom.postfix3' | translate"></p-radioButton>
-                    <input [formControl]="_userPostfix" placeholder="@kaltura.com" pInputText>
-                </div>
-            </div>
-        </div>
-
-        <div class="kRow">
-            <div class="kLabel">
                 <span>{{'applications.settings.integrationSettings.zoom.participation' | translate}}</span>
             </div>
             <p-radioButton name="participation"
@@ -147,5 +89,65 @@
                            [formControl]="_participation"
                            [label]="'applications.settings.integrationSettings.zoom.participation3' | translate"></p-radioButton>
         </div>
+
+        <span class="kSubTitle">{{'applications.settings.integrationSettings.zoom.owner' | translate}}</span>
+
+
+        <div class="kRow" style="align-items: flex-start">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.user' | translate}}</span>
+            </div>
+            <div class="kRadios">
+                <p-radioButton name="zoom"
+                               [value]="true"
+                               [formControl]="_userId"
+                               [label]="'applications.settings.integrationSettings.zoom.zoom' | translate"></p-radioButton>
+                <p-radioButton name="postfix" [ngStyle]="{'marginLeft': '24px'}"
+                               [value]="0"
+                               [formControl]="_postfix"
+                               [label]="'applications.settings.integrationSettings.zoom.postfix1' | translate"></p-radioButton>
+                <p-radioButton name="postfix" [ngStyle]="{'marginLeft': '24px'}"
+                               [value]="2"
+                               [formControl]="_postfix"
+                               [label]="'applications.settings.integrationSettings.zoom.postfix2' | translate"></p-radioButton>
+                <div class="kRow" style="margin-bottom: 0px">
+                    <p-radioButton name="postfix" [ngStyle]="{'marginLeft': '24px'}"
+                                   [value]="1"
+                                   [formControl]="_postfix"
+                                   [label]="'applications.settings.integrationSettings.zoom.postfix3' | translate"></p-radioButton>
+                    <input [formControl]="_userPostfix" placeholder="@kaltura.com" pInputText>
+                </div>
+                <div class="kRow" style="align-items: flex-start; margin-bottom: 0px">
+                    <p-radioButton name="zoom" [ngStyle]="{'marginRight': '0px'}"
+                                   [value]="false"
+                                   [formControl]="_userId"
+                                   [label]="'applications.settings.integrationSettings.zoom.cms' | translate"></p-radioButton>
+                    <kInputHelper class="kHelp" trigger="click">
+                        <span>{{'applications.settings.integrationSettings.zoom.userHelp' | translate}}</span>
+                        <a style="margin-left: 4px" (click)="openHelpLink()">{{'applications.settings.integrationSettings.zoom.here' | translate}}</a>
+                    </kInputHelper>
+                </div>
+            </div>
+        </div>
+
+        <div class="kRow" style="align-items: flex-start">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.create' | translate}}</span>
+            </div>
+            <div class="kRadios">
+                <p-radioButton name="user"
+                           [value]="true"
+                           [formControl]="_createUser"
+                           [label]="'applications.settings.integrationSettings.zoom.user1' | translate"></p-radioButton>
+                <div class="kRow" style="margin-bottom: 0px">
+                    <p-radioButton name="user" [ngStyle]="{'marginRight': '8px'}"
+                                   [value]="false"
+                                   [formControl]="_createUser"
+                                   [label]="'applications.settings.integrationSettings.zoom.user2' | translate"></p-radioButton>
+                    <input [formControl]="_defaultUserId" pInputText>
+                </div>
+            </div>
+        </div>
+
     </form>
 </div>

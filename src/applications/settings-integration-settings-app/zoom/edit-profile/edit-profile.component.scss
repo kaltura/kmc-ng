@@ -37,9 +37,16 @@
         display: flex;
         flex-direction: column;
         padding: 24px 220px 24px 24px;
+        .kSubTitle{
+            color: $kGrayscale1;
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 48px;
+            margin-bottom: 16px;
+        }
         .kRow {
             display: flex;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
             align-items: center;
             color: $kGrayscale1;
             .kLabel {
@@ -81,7 +88,7 @@
                 flex-direction: column;
                 width: 100%;
                 p-radioButton {
-                    margin-bottom: 24px;
+                    margin-bottom: 16px;
                 }
                 input {
                     margin-top: -20px;

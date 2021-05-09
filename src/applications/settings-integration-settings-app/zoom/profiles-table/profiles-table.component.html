@@ -10,13 +10,13 @@
                 <th class="kApplicationRootCategory">
                     {{'applications.settings.integrationSettings.zoom.accountId' | translate}}
                 </th>
-                <th class="kPrivacyContextLabel">
+                <!--th class="kPrivacyContextLabel">
                     {{'applications.settings.integrationSettings.zoom.name' | translate}}
-                </th>
-                <th class="kPrivacyContextLabel" [ngStyle]="{'width': '15%'}">
+                </th-->
+                <th class="kPrivacyContextLabel" [ngStyle]="{'width': '20%'}">
                     {{'applications.settings.integrationSettings.zoom.created' | translate}}
                 </th>
-                <th class="kPrivacyContextLabel" [ngStyle]="{'width': '15%'}">
+                <th class="kPrivacyContextLabel" [ngStyle]="{'width': '20%'}">
                     {{'applications.settings.integrationSettings.zoom.updated' | translate}}
                 </th>
                 <th class="kPrivacyContextLabel" [ngStyle]="{'width': '10%'}">
@@ -32,17 +32,17 @@
                         {{profile.accountId}}
                     </div>
                 </td>
-                <td class="kPrivacyContextLabel">
+                <!--td class="kPrivacyContextLabel">
                         <span class="kTableColumn" [kTooltip]="profile.defaultUserId" [showOnEllipsis]="true">
                             {{profile.defaultUserId}}
                         </span>
-                </td>
-                <td class="kPrivacyContextLabel" [ngStyle]="{'width': '15%'}">
+                </td-->
+                <td class="kPrivacyContextLabel" [ngStyle]="{'width': '20%'}">
                         <span class="kTableColumn">
                             {{profile.createdAt | date}}
                         </span>
                 </td>
-                <td class="kPrivacyContextLabel" [ngStyle]="{'width': '15%'}">
+                <td class="kPrivacyContextLabel" [ngStyle]="{'width': '20%'}">
                         <span class="kTableColumn">
                             {{profile.updatedAt | date}}
                         </span>

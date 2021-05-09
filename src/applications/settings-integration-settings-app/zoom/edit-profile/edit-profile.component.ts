@@ -97,7 +97,6 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         this._accountId = this._profileForm.controls['accountId'];
         this._accountId.disable();
         this._defaultUserId = this._profileForm.controls['defaultUserId'];
-        this._defaultUserId.disable();
         this._description = this._profileForm.controls['description'];
         this._deleteContent = this._profileForm.controls['deleteContent'];
         this._transcription = this._profileForm.controls['transcription'];
@@ -116,6 +115,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                     this._deleteContent.enable();
                     this._transcription.enable();
                     this._userId.enable();
+                    this._defaultUserId.enable();
                     this._createUser.enable();
                     this._postfix.enable();
                     this._userPostfix.enable();
@@ -131,6 +131,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                     this._userPostfix.disable();
                     this._participation.disable();
                     this._categories.disable();
+                    this._defaultUserId.disable();
                 }
             });
         this._userId.valueChanges
@@ -156,6 +157,15 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                     this._userPostfix.disable();
                 }
             });
+        this._createUser.valueChanges
+            .pipe(cancelOnDestroy(this))
+            .subscribe(value => {
+                if (value) {
+                    this._defaultUserId.disable();
+                } else {
+                    this._defaultUserId.enable();
+                }
+            });
     }
 
     public openHelpLink(): void {
@@ -167,6 +177,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         const formValue = this._profileForm.getRawValue();
         this.profile.enableRecordingUpload = formValue.enabled ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
         this.profile.zoomAccountDescription = formValue.description;
+        this.profile.defaultUserId = formValue.defaultUserId;
         this.profile.zoomCategory = formValue.categories.length ? formValue.categories[0].name : '';
         this.profile.deletionPolicy = formValue.deleteContent ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
         this.profile.createUserIfNotExist = formValue.createUser ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
