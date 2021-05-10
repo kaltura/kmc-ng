@@ -1,0 +1,48 @@
+@import 'app-theme/_variables.scss';
+.kContainer {
+    background-color: white;
+    box-sizing: border-box;
+    padding: 28px 28px 28px 30px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    .kTitle {
+        color: $kGrayscale1;
+        padding-bottom: 32px;
+        width: 100%;
+        font-family: Lato;
+        font-size: 20px;
+        font-weight: bold;
+        line-height: 24px;
+        flex: 0 0 auto;
+    }
+    .kExplanation {
+        color: $kGrayscale1;
+        font-family: Lato;
+        font-size: 15px;
+        line-height: 22px;
+        padding-bottom: 20px;
+        flex: 0 0 auto;
+    }
+    .kNote {
+        margin-top: 12px;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    .kGenerateCode{
+        padding-bottom: 16px;
+        flex: 0 0 auto;
+
+        button {
+            font-weight: bold;
+            height: 34px;
+            font-size: 14px;
+        }
+    }
+    .tableHolder{
+        height: 100%;
+        overflow-y: auto;
+    }
+}
+

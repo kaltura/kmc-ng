@@ -2,53 +2,50 @@
 
 .kContainer {
   display: flex;
+  flex-direction: column;
   padding-top: 32px;
-  height: $minTableHeight;
   box-sizing: border-box;
-  .kRightColumn{
-    margin-left: 30px;
-  }
-  .kColumn {
-    flex: 0 0 auto;
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-      &.fillWidth {
-          width: 100%;
-      }
-    .kAccountInfoContainer {
-      background-color: white;
-      flex: 0 0 auto;
-      margin-bottom: 30px;
-      height: 200px;
-      padding: 30px 28px;
-    }
 
-    .kNotifications {
-      display: flex;
-      flex-direction: column;
-      background-color: white;
-      flex: 1 1 auto;
-      padding-left: 30px;
-      padding-top: 28px;
-      height: 100%;
-      overflow: hidden;
-      .kTitle {
-        color: $kGrayscale1;
-        padding-bottom: 30px;
-        width: 100%;
-        font-family: Lato;
-        font-size: 20px;
-        font-weight: bold;
-        line-height: 24px;
-      }
-      .profiles {
-        padding-bottom: 28px;
-        padding-top: 12px;
-        height: 100%;
-        flex: 1 1 auto;
-        overflow: hidden;
-      }
+    .kAccountInfoContainer {
+        background-color: white;
+        flex: 0 0 auto;
+        margin-bottom: 30px;
+        height: 200px;
+        padding: 30px 28px;
     }
-  }
+    .kEntitlement {
+        margin-bottom: 30px;
+    }
+    .kNotifications {
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        flex: 0 0 auto;
+        padding-left: 30px;
+        padding-top: 28px;
+        height: auto;
+        overflow: hidden;
+        margin-bottom: 30px;
+        .kTitle {
+            color: $kGrayscale1;
+            padding-bottom: 30px;
+            width: 100%;
+            font-family: Lato;
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 24px;
+        }
+        .kSubTitle {
+            font-size: 15px;
+            margin-bottom: 12px;
+            color: $kGrayscale1;
+        }
+        .profiles {
+            padding-bottom: 28px;
+            padding-top: 12px;
+            height: 100%;
+            flex: 1 1 auto;
+            overflow: hidden;
+        }
+    }
 }

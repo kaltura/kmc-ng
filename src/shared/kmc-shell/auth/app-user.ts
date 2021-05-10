@@ -3,6 +3,7 @@ import { KalturaPartnerAuthenticationType } from "kaltura-ngx-client";
 export interface PartnerInfo {
     partnerId: number;
     name: string;
+    adminSecret: string;
     partnerPackage: PartnerPackageTypes;
     landingPage: string;
     adultContent: boolean;

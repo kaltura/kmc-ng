@@ -1,15 +1,16 @@
 <div class="kContainer kContent">
-  <div class="kColumn" [class.fillWidth]="!_kmcPermissions.FEATURE_ENTITLEMENT | kNgIfPermitted">
     <div class="kAccountInfoContainer">
       <kAccountInfo></kAccountInfo>
     </div>
+
+    <kEntitlement class="kEntitlement"></kEntitlement>
+
     <div class="kNotifications">
       <div class="kTitle">{{'applications.settings.integrationSettings.accountInfo.distribution.title' | translate}}</div>
-      <div>{{'applications.settings.integrationSettings.accountInfo.distribution.text' | translate}}</div>
+      <div class="kSubTitle">{{'applications.settings.integrationSettings.accountInfo.distribution.text' | translate}}</div>
       <kDistributionProfiles class="profiles"></kDistributionProfiles>
     </div>
-  </div>
-  <div class="kColumn kRightColumn" *ngIf="_kmcPermissions.FEATURE_ENTITLEMENT | kNgIfPermitted">
-      <kEntitlement></kEntitlement>
-  </div>
+
+    <kZoomIntegration class="kEntitlement"></kZoomIntegration>
+
 </div>
