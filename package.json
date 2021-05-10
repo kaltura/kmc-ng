@@ -1,6 +1,6 @@
 {
   "name": "kmc-ng",
-  "version": "6.5.3",
+  "version": "6.6.0",
   "license": "AGPL-3.0",
   "private": true,
   "repository": {
@@ -73,7 +73,7 @@
     "intl": "^1.2.5",
     "jquery": "~3.5.0",
     "jsnlog": "~2.26.2",
-    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-12.0.0-v20210117-152130.tgz",
+    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-12.0.0-v20210506-084512.tgz",
     "moment": "~2.22.2",
     "ngx-page-scroll": "~5.0.1",
     "ngx-webstorage": "~5.0.0",

@@ -1,0 +1,30 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+    <div class="kContainer">
+        <div class="kTitle">
+            <span>{{'applications.settings.integrationSettings.zoom.title' | translate}}</span>
+        </div>
+        <div class="kGenerateCode">
+            <button type="button" class="kButtonDefault" (click)="integrationCodePopup.open()" pButton
+                    label="{{'applications.settings.integrationSettings.zoom.generate' | translate}}"></button>
+        </div>
+        <div class="kExplanation">{{'applications.settings.integrationSettings.zoom.explanation' | translate}}</div>
+      <div class="tableHolder">
+          <kZoomProfilesTable [_profiles]="_profiles" (onActionSelected)="_onActionSelected($event)"></kZoomProfilesTable>
+      </div>
+      <span *ngIf="totalCount > 3" class="kNote">{{'applications.settings.integrationSettings.zoom.note' | translate}}</span>
+    </div>
+</k-area-blocker>
+
+<kPopupWidget #integrationCodePopup data-aid="integrationCodePopup" [popupWidth]="380" [popupHeight]="320" [modal]="true" [preventPageScroll]="true" [closeOnClickOutside]="false">
+    <ng-template>
+        <kGenerateCode (onClose)="integrationCodePopup.close()"></kGenerateCode>
+    </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #editProfile data-aid="editProfile" [popupWidth]="995" [slider]="true">
+    <ng-template>
+        <kZoomEditProfile [profile]="_currentProfile" [parentPopup]="editProfile" (onSave)="saveProfile($event)"></kZoomEditProfile>
+    </ng-template>
+</kPopupWidget>
+
+

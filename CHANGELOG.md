@@ -1,3 +1,13 @@
+<a name="6.6.0"></a>
+# [6.6.0](https://github.com/kaltura/kmc-ng/compare/v6.5.3...v6.6.0) (2021-05-10)
+
+
+### Features
+
+* **settings/integration:** Zoom Integration KMCNG-2347, KMCNG-2352, KMCNG-2345 ([#934](https://github.com/kaltura/kmc-ng/issues/934)) ([dbe2d5e](https://github.com/kaltura/kmc-ng/commit/dbe2d5e))
+
+
+
 <a name="6.5.3"></a>
 ## [6.5.3](https://github.com/kaltura/kmc-ng/compare/v6.5.2...v6.5.3) (2021-04-05)
 

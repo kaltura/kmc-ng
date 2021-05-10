@@ -1,0 +1,166 @@
+<div class="kEditAccessControlProfile">
+    <div class="kHeader">
+        <span class="kTitle">{{'applications.settings.integrationSettings.zoom.editAccount' | translate}}</span>
+        <div class="kButtons">
+            <a class="kCancel" (click)="parentPopup.close()">
+                {{'applications.settings.accessControl.cancel' | translate}}
+            </a>
+            <button pButton type="button" class="kButtonBranded kSaveButton"
+                    [disabled]="!formValid"
+                    [label]="'applications.settings.accessControl.save' | translate"
+                    (click)="_save()"></button>
+        </div>
+    </div>
+    <form class="kContainer" [formGroup]="_profileForm">
+        <div class="kRow">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.recordingUpload' | translate}}</span>
+            </div>
+            <p-inputSwitch class="kControl" [formControl]="_recordingUpload"></p-inputSwitch>
+            <span class="kSwitchValue">
+              {{_recordingUpload.value ? ('app.common.yes' | translate) : ('app.common.no' | translate)}}
+            </span>
+        </div>
+
+        <div class="kRow">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.accountId' | translate}}</span>
+            </div>
+            <input [formControl]="_accountId" pInputText>
+        </div>
+
+        <div class="kRow">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.description' | translate}}</span>
+            </div>
+            <input [formControl]="_description" pInputText>
+        </div>
+
+        <div class="kRow">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.category' | translate}}</span>
+            </div>
+            <kAutoComplete [formControl]="_categories"
+                           field="name"
+                           [tooltipResolver]="_categoriesTooltipResolver"
+                           suggestionItemField="item"
+                           suggestionLabelField="name"
+                           suggestionSelectableField="isSelectable"
+                           [multiple]="false"
+                           [minLength]="3"
+                           [suggestionsProvider]="_categoriesProvider"
+                           (completeMethod)="_searchCategories($event)">
+            </kAutoComplete>
+        </div>
+
+        <div class="kRow">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.delete' | translate}}</span>
+            </div>
+            <p-inputSwitch class="kControl" [formControl]="_deleteContent"></p-inputSwitch>
+            <span class="kSwitchValue">
+              {{_deleteContent.value ? ('app.common.yes' | translate) : ('app.common.no' | translate)}}
+            </span>
+        </div>
+
+        <div class="kRow">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.transcription' | translate}}</span>
+            </div>
+            <p-inputSwitch class="kControl" [formControl]="_transcription"></p-inputSwitch>
+            <span class="kSwitchValue">
+              {{_transcription.value ? ('app.common.yes' | translate) : ('app.common.no' | translate)}}
+            </span>
+        </div>
+
+        <div class="kRow">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.participation' | translate}}</span>
+            </div>
+            <p-radioButton name="participation"
+                           [value]="2"
+                           [formControl]="_participation"
+                           [label]="'applications.settings.integrationSettings.zoom.participation1' | translate"></p-radioButton>
+            <p-radioButton name="participation"
+                           [value]="1"
+                           [formControl]="_participation"
+                           [label]="'applications.settings.integrationSettings.zoom.participation2' | translate"></p-radioButton>
+            <p-radioButton name="participation"
+                           [value]="0"
+                           [formControl]="_participation"
+                           [label]="'applications.settings.integrationSettings.zoom.participation3' | translate"></p-radioButton>
+        </div>
+
+        <span class="kSubTitle">{{'applications.settings.integrationSettings.zoom.owner' | translate}}</span>
+
+
+        <div class="kRow" style="align-items: flex-start">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.user' | translate}}</span>
+            </div>
+            <div class="kRadios">
+                <p-radioButton name="zoom"
+                               [value]="true"
+                               [formControl]="_userId"
+                               [label]="'applications.settings.integrationSettings.zoom.zoom' | translate"></p-radioButton>
+                <p-radioButton name="postfix" [ngStyle]="{'marginLeft': '24px'}"
+                               [value]="0"
+                               [formControl]="_postfix"
+                               [label]="'applications.settings.integrationSettings.zoom.postfix1' | translate"></p-radioButton>
+                <p-radioButton name="postfix" [ngStyle]="{'marginLeft': '24px'}"
+                               [value]="2"
+                               [formControl]="_postfix"
+                               [label]="'applications.settings.integrationSettings.zoom.postfix2' | translate"></p-radioButton>
+                <div class="kRow" style="margin-bottom: 0px">
+                    <p-radioButton name="postfix" [ngStyle]="{'marginLeft': '24px'}"
+                                   [value]="1"
+                                   [formControl]="_postfix"
+                                   [label]="'applications.settings.integrationSettings.zoom.postfix3' | translate"></p-radioButton>
+                    <input [formControl]="_userPostfix" placeholder="@kaltura.com" pInputText>
+                </div>
+                <div class="kRow" style="align-items: flex-start; margin-bottom: 0px">
+                    <p-radioButton name="zoom" [ngStyle]="{'marginRight': '0px'}"
+                                   [value]="false"
+                                   [formControl]="_userId"
+                                   [label]="'applications.settings.integrationSettings.zoom.cms' | translate"></p-radioButton>
+                    <kInputHelper class="kHelp" trigger="click">
+                        <span>{{'applications.settings.integrationSettings.zoom.userHelp' | translate}}</span>
+                        <a style="margin-left: 4px" (click)="openHelpLink()">{{'applications.settings.integrationSettings.zoom.here' | translate}}</a>
+                    </kInputHelper>
+                </div>
+            </div>
+        </div>
+
+        <div class="kRow" style="align-items: flex-start">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.create' | translate}}</span>
+            </div>
+            <div class="kRadios">
+                <p-radioButton name="user"
+                           [value]="true"
+                           [formControl]="_createUser"
+                           [label]="'applications.settings.integrationSettings.zoom.user1' | translate"></p-radioButton>
+                <div class="kRow" style="margin-bottom: 0px; align-items: flex-start">
+                    <p-radioButton name="user" [ngStyle]="{'marginRight': '8px'}"
+                                   [value]="false"
+                                   [formControl]="_createUser"
+                                   [label]="'applications.settings.integrationSettings.zoom.user2' | translate"></p-radioButton>
+                    <div class="kRadios">
+                        <kAutoComplete [formControl]="_defaultUserId"
+                                       field="screenName"
+                                       [tooltipResolver]="_usersTooltipResolver"
+                                       suggestionItemField="item"
+                                       suggestionLabelField="name"
+                                       [multiple]="false"
+                                       [minLength]="3"
+                                       [suggestionsProvider]="_usersProvider"
+                                       (completeMethod)="_searchUsers($event)">
+                        </kAutoComplete>
+                        <span *ngIf="!formValid" class="kInvalid">{{'applications.settings.integrationSettings.zoom.invalid' | translate}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>

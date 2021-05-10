@@ -1,0 +1,59 @@
+@import 'app-theme/_variables.scss';
+
+.kContainer {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    .kTitle {
+        color: $kGrayscale1;
+        height: 70px;
+        border-bottom: 1px solid $kGrayscale4;
+        width: 100%;
+        font-family: Lato;
+        font-size: 24px;
+        font-weight: bold;
+        line-height: 70px;
+        text-align: center;
+    }
+
+    .kCode {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+
+        span {
+            font-size: 15px;
+            color: $kGrayscale1;
+            margin-bottom: 12px;
+            margin-top: 4px;
+        }
+
+        .kCodeText {
+            width: 100%;
+            height: 92px;
+            opacity: 1;
+            margin-bottom: 8px;
+        }
+    }
+
+    .kFooter {
+        width: 100%;
+        height: 66px;
+        border-top: 1px solid $kGrayscale4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        button {
+            width: 130px;
+            margin-left: 6px;
+            margin-right: 6px;
+        }
+    }
+
+}
+
+

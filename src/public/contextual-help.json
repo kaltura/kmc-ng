@@ -3,19 +3,19 @@
         "viewKey": "admin-roles",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2113",
+                "value": "https://knowledge.kaltura.com/help/administration-pages",
                 "label": "Administration Menu"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2113#roles_tab",
+                "value": "https://knowledge.kaltura.com/help/administration-pages#roles_tab",
                 "label": "The Roles Tab"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2113#create_custom_role",
+                "value": "https://knowledge.kaltura.com/help/administration-pages#create_custom_role",
                 "label": "Create or Edit Custom Roles"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2113#role_management",
+                "value": "https://knowledge.kaltura.com/help/administration-pages#role_management",
                 "label": "Role Management"
             }
         ]
@@ -24,23 +24,23 @@
         "viewKey": "admin-users",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2113",
+                "value": "https://knowledge.kaltura.com/help/administration-pages",
                 "label": "Administration Menu"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2113#users_tab",
+                "value": "https://knowledge.kaltura.com/help/administration-pages#users_tab",
                 "label": "The Users Tab"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2113#add_user",
+                "value": "https://knowledge.kaltura.com/help/administration-pages#add_user",
                 "label": "Adding a KMC User"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2113#edit_user",
+                "value": "https://knowledge.kaltura.com/help/administration-pages#edit_user",
                 "label": "Editing a User"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2113#request",
+                "value": "https://knowledge.kaltura.com/help/administration-pages#request",
                 "label": "Purchasing License for Additional Users"
             }
         ]
@@ -49,11 +49,11 @@
         "viewKey": "admin-multi-account",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2113#multi_account",
+                "value": "https://knowledge.kaltura.com/help/administration-pages#multi_account",
                 "label": "Multi Account Management"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2113#getting_started",
+                "value": "https://knowledge.kaltura.com/help/administration-pages#getting_started",
                 "label": "Getting Started"
             }
         ]
@@ -62,11 +62,11 @@
         "viewKey": "content-bulk-uploads",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2121#bulk_upload_log_Page",
+                "value": "https://knowledge.kaltura.com/help/uploading-and-ingestion#bulk_upload_log_Page",
                 "label": "Bulk Upload Log Page"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2120#refine_bulk",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#refine_bulk",
                 "label": "Refining Options for Bulk Uploads"
             }
         ]
@@ -75,15 +75,15 @@
         "viewKey": "content-categories",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2132#add_category_name",
+                "value": "https://knowledge.kaltura.com/help/managing-categories#add_category_name",
                 "label": "Add a Category"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2120#searching_filtering",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#searching_filtering",
                 "label": "Search and Refine Categories"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2132#cat_actions",
+                "value": "https://knowledge.kaltura.com/help/managing-categories#cat_actions",
                 "label": "Category Table Actions"
             }
         ]
@@ -92,15 +92,15 @@
         "viewKey": "content-drop-folders",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2121#whatis_drop_folder",
+                "value": "https://knowledge.kaltura.com/help/uploading-and-ingestion#whatis_drop_folder",
                 "label": "What is a Drop Folder"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2121#drop_folder_table",
+                "value": "https://knowledge.kaltura.com/help/uploading-and-ingestion#drop_folder_table",
                 "label": "Drop Folder Table"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2121#drop_folder_statuses",
+                "value": "https://knowledge.kaltura.com/help/uploading-and-ingestion#drop_folder_statuses",
                 "label": "Drop Folder Statuses"
             }
         ]
@@ -109,31 +109,31 @@
         "viewKey": "content-entries",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2121",
+                "value": "https://knowledge.kaltura.com/help/uploading-and-ingestion",
                 "label": "Uploading and Ingestion"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2121#upload_media",
+                "value": "https://knowledge.kaltura.com/help/uploading-and-ingestion#upload_media",
                 "label": "Upload Media"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2120#entries_table",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#entries_table",
                 "label": "The Entries Table"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2120#searching_filtering",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#searching_filtering",
                 "label": "Search and Filter Through Media"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2120#share_embed",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#share_embed",
                 "label": "Share and Embed"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2120#upload_control",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#upload_control",
                 "label": "Upload Control"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2120#additional_actions",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#additional_actions",
                 "label": "More (Bulk) Actions"
             }
         ]
@@ -142,19 +142,19 @@
         "viewKey": "content-moderation",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2123",
+                "value": "https://knowledge.kaltura.com/help/moderating-content",
                 "label": "Moderate Content"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2123#setting_moderation_flags",
+                "value": "https://knowledge.kaltura.com/help/moderating-content#setting_moderation_flags",
                 "label": "Set Moderation Flags"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2123#set_mod_options",
+                "value": "https://knowledge.kaltura.com/help/moderating-content#set_mod_options",
                 "label": "Setting Moderation Options"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2123#applying_bulk_actions",
+                "value": "https://knowledge.kaltura.com/help/moderating-content#applying_bulk_actions",
                 "label": "Apply Bulk Actions"
             }
         ]
@@ -163,23 +163,23 @@
         "viewKey": "content-playlists",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2130#playlists_tab",
+                "value": "https://knowledge.kaltura.com/help/creating-and-configuring-playlists#playlists_tab",
                 "label": "The Playlists Tab"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2130#create_man_playlist",
+                "value": "https://knowledge.kaltura.com/help/creating-and-configuring-playlists#create_man_playlist",
                 "label": "Create a Manual Playlist"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2130#create_rule_playlist",
+                "value": "https://knowledge.kaltura.com/help/creating-and-configuring-playlists#create_rule_playlist",
                 "label": "Create a Rule Based Playlist"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2130#add_edit_metadata",
+                "value": "https://knowledge.kaltura.com/help/creating-and-configuring-playlists#add_edit_metadata",
                 "label": "Adding/Editing Metadata to a Playlist"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2130#apply_bulk_actions",
+                "value": "https://knowledge.kaltura.com/help/creating-and-configuring-playlists#apply_bulk_actions",
                 "label": "Apply Bulk Actions to Playlists"
             }
         ]
@@ -188,15 +188,15 @@
         "viewKey": "content-syndication",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2134#content_syndication",
+                "value": "https://knowledge.kaltura.com/help/content-distribution-and-syndication#content_syndication",
                 "label": "Content Syndication"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2134#syn_to_rss",
+                "value": "https://knowledge.kaltura.com/help/content-distribution-and-syndication#syn_to_rss",
                 "label": "Syndicating to a Standard MRSS Feed"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2134#setup_syn",
+                "value": "https://knowledge.kaltura.com/help/content-distribution-and-syndication#setup_syn",
                 "label": "Setting Up Syndication"
             }
         ]
@@ -205,7 +205,7 @@
         "viewKey": "content-uploads",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2120#upload_control",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#upload_control",
                 "label": "Tracking Your Uploads"
             }
         ]
@@ -218,19 +218,19 @@
         "viewKey": "analytics-live",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2118",
+                "value": "https://knowledge.kaltura.com/help/real-time-analytics",
                 "label": "Live Analytics"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2118#live_content",
+                "value": "https://knowledge.kaltura.com/help/real-time-analytics-dashboard",
                 "label": "Live Content Dashboard Report"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2118#specific_entry",
+                "value": "https://knowledge.kaltura.com/help/real-time-analytics#accessing-the-real-time-home-page-and-dashboard",
                 "label": "Live Report v for Specific Entry"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2118#exporting",
+                "value": "https://knowledge.kaltura.com/help/working-with-the-real-time-dashboard#export",
                 "label": "Export Analytics to CSV"
             }
         ]
@@ -239,23 +239,23 @@
         "viewKey": "analytics",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2235",
+                "value": "https://knowledge.kaltura.com/help/kaltura-analytics",
                 "label": "Analytics"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2237",
+                "value": "https://knowledge.kaltura.com/help/audience-analytics-kmcng",
                 "label": "Audience Analytics"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2238",
+                "value": "https://knowledge.kaltura.com/help/contributors-analytics-kmc",
                 "label": "Contributors Analytics"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2239",
+                "value": "https://knowledge.kaltura.com/help/usage-analytics",
                 "label": "Usage Analytics"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2240",
+                "value": "https://knowledge.kaltura.com/help/entry-level-analytics",
                 "label": "Entry Level Analytics"
             },
             {
@@ -268,11 +268,11 @@
         "viewKey": "settings-access-control",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2128",
+                "value": "https://knowledge.kaltura.com/help/access-control",
                 "label": "Access Control Overview"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2129#create_access_profile",
+                "value": "https://knowledge.kaltura.com/help/managing-access-profiles#create_access_profile",
                 "label": "Create an Access Profile"
             }
         ]
@@ -281,19 +281,19 @@
         "viewKey": "settings-account-info",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2126",
+                "value": "https://knowledge.kaltura.com/help/account-information",
                 "label": "Monthly Bandwith/Storage Usage"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2126",
+                "value": "https://knowledge.kaltura.com/help/account-information",
                 "label": "Upgrade Account"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/1994",
+                "value": "https://knowledge.kaltura.com/help/kaltura-management-console-settings-pages",
                 "label": "Settings Pages"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/1993",
+                "value": "https://knowledge.kaltura.com/help/account-settings",
                 "label": "Upgrade Account"
             }
         ]
@@ -302,7 +302,7 @@
         "viewKey": "settings-account",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/1993",
+                "value": "https://knowledge.kaltura.com/help/account-settings",
                 "label": "View Account Information"
             }
         ]
@@ -311,11 +311,11 @@
         "viewKey": "settings-integration",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/1996",
+                "value": "https://knowledge.kaltura.com/help/integration-settings",
                 "label": "Account Info Notifications"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/1996#entitlement_settings",
+                "value": "https://knowledge.kaltura.com/help/integration-settings#entitlement_settings",
                 "label": "Add Entitlements"
             }
         ]
@@ -324,19 +324,19 @@
         "viewKey": "settings-metadata",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/1998",
+                "value": "https://knowledge.kaltura.com/help/custom-data",
                 "label": "Custom Data"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/1998#custom_metadata_functionality",
+                "value": "https://knowledge.kaltura.com/help/custom-data#custom_metadata_functionality",
                 "label": "Custom Metadata Functionality"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/1998#add_schema",
+                "value": "https://knowledge.kaltura.com/help/custom-data#add_schema",
                 "label": "Add a Schema"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/1998#related_entries",
+                "value": "https://knowledge.kaltura.com/help/custom-data#related_entries",
                 "label": "Related Entries"
             }
         ]
@@ -345,7 +345,7 @@
         "viewKey": "settings-my-user-settings",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/1997",
+                "value": "https://knowledge.kaltura.com/help/my-user-settings-kmc-ng",
                 "label": "Change User Details"
             }
         ]
@@ -354,7 +354,7 @@
         "viewKey": "settings-transcoding",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2127",
+                "value": "https://knowledge.kaltura.com/help/transcoding-and-processing",
                 "label": "Transcoding Settings"
             }
         ]
@@ -363,7 +363,7 @@
         "viewKey": "studio-v2",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/1148",
+                "value": "https://knowledge.kaltura.com/help/universal-studio-information-guide",
                 "label": "Universal Studio Guide v2 Player"
             }
         ]
@@ -372,7 +372,7 @@
         "viewKey": "studio-v3",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/1971",
+                "value": "https://knowledge.kaltura.com/help/kaltura-tv-platform-studio-information-guide   (unavailable now)",
                 "label": "Kaltura TV Platform Studio Information Guide"
             }
         ]
@@ -381,7 +381,7 @@
         "viewKey": "usage-dashboard",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2103",
+                "value": "https://knowledge.kaltura.com/help/usage-dashboard-information-guide-for-vpaas-customers",
                 "label": "The Usage Dashboard"
             }
         ]
@@ -390,7 +390,7 @@
         "viewKey": "content-category-subcategories",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2132#reordering_sub_cats",
+                "value": "https://knowledge.kaltura.com/help/managing-categories#reordering_sub_cats",
                 "label": "Reordering/Deleting Sub Categories"
             }
         ]
@@ -399,15 +399,11 @@
         "viewKey": "content-category-entitlements",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/629",
+                "value": "https://knowledge.kaltura.com/help/what-is-kalturas-entitlement-model",
                 "label": "Entitlements Model"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2133#set_entitlement_settings",
-                "label": "Setting the Entitlement Settings"
-            },
-            {
-                "value": "https://knowledge.kaltura.com/node/1996#add_entitlement_to_cat",
+                "value": "https://knowledge.kaltura.com/help/integration-settings#add_entitlement_to_cat",
                 "label": "Add Entitlements to Categories"
             }
         ]
@@ -425,7 +421,7 @@
         "viewKey": "content-entry-metadata",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2120#metadata_tab",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#metadata_tab",
                 "label": "Metadata Tab"
             }
         ]
@@ -434,11 +430,11 @@
         "viewKey": "content-entry-thumbnails",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2120#thumbnails_tab",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#thumbnails_tab",
                 "label": "Thumbnails Tab"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2120#choosing_thumbnail",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#choosing_thumbnail",
                 "label": "Choosing a Thumbnail for your Video"
             }
         ]
@@ -447,11 +443,11 @@
         "viewKey": "content-entry-accesscontrol",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2129#assign",
+                "value": "https://knowledge.kaltura.com/help/managing-access-profiles#assign",
                 "label": "Assign Access Control Profile to Entry"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2129#assign_ac_bulk",
+                "value": "https://knowledge.kaltura.com/help/managing-access-profiles#assign_ac_bulk",
                 "label": "Assign Access Control Profile (Bulk)"
             }
         ]
@@ -460,7 +456,7 @@
         "viewKey": "content-entry-scheduling",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2120#set_scheduling",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#set_scheduling",
                 "label": "Set Scheduling"
             }
         ]
@@ -469,27 +465,27 @@
         "viewKey": "content-entry-flavours",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2120#flavors_tab",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#flavors_tab",
                 "label": "Flavors Tab"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2120#add_video_audio",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#add_video_audio",
                 "label": "Add Video/Audio"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2120#upload_from_desktop",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#upload_from_desktop",
                 "label": "Upload from Desktop"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2120#import_files",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#import_files",
                 "label": "Import Files"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2120#link_to_remote_storage",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#link_to_remote_storage",
                 "label": "Link to Remote Storage"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2120#replacing_media",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#replacing_media",
                 "label": "Replace Media"
             }
         ]
@@ -498,7 +494,7 @@
         "viewKey": "content-entry-captions",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2120#captions_edit",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#captions_edit",
                 "label": "The Captions Tab"
             }
         ]
@@ -507,11 +503,11 @@
         "viewKey": "content-entry-live",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2052",
+                "value": "https://knowledge.kaltura.com/help/creating-a-live-stream-entry-in-kaltura-using-the-kmc-ng",
                 "label": "Create a Live Stream Entry in Kaltura Using the KMC NG"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2054",
+                "value": "https://knowledge.kaltura.com/help/rtmp-endpoints-for-kaltura-live-streaming",
                 "label": "RTMP Endpoints for Kaltura Live Streaming - KMC-NG"
             }
         ]
@@ -520,7 +516,7 @@
         "viewKey": "content-entry-related",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2121#uploading_modifying_related_files",
+                "value": "https://knowledge.kaltura.com/help/uploading-and-ingestion#uploading_modifying_related_files",
                 "label": "Uploading and Modifying Related Files"
             }
         ]
@@ -529,7 +525,7 @@
         "viewKey": "content-entry-clips",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2120#clips_edit",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#clips_edit",
                 "label": "Create and Edit Media Clips"
             }
         ]
@@ -538,15 +534,15 @@
         "viewKey": "content-entry-advertisements",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2120#advertisements_edit",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#advertisements_edit",
                 "label": "Creating Advertisements"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2124",
+                "value": "https://knowledge.kaltura.com/help/advertising-and-ad-networks",
                 "label": "Advertising and Ad Networks"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2124#cfg_vast_ads",
+                "value": "https://knowledge.kaltura.com/help/advertising-and-ad-networks#cfg_vast_ads",
                 "label": "Configure VAST Ads"
             }
         ]
@@ -555,7 +551,7 @@
         "viewKey": "content-entry-users",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2120#users_edit",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#users_edit",
                 "label": "Modify Editing and Publishing Rights"
             }
         ]
@@ -564,11 +560,11 @@
         "viewKey": "content-entry-distribution",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2134#distribute_entry",
+                "value": "https://knowledge.kaltura.com/help/content-distribution-and-syndication#distribute_entry",
                 "label": "Distributing an Entry"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2120#distribution_edit",
+                "value": "https://knowledge.kaltura.com/help/the-content-menu#distribution_edit",
                 "label": "Distribution"
             }
         ]
@@ -577,11 +573,11 @@
         "viewKey": "content-playlist-metadata",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2130#playlists_tab",
+                "value": "https://knowledge.kaltura.com/help/creating-and-configuring-playlists#playlists_tab",
                 "label": "The Playlists Tab -Add a Playlist"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2130#add_edit_metadata",
+                "value": "https://knowledge.kaltura.com/help/creating-and-configuring-playlists#add_edit_metadata",
                 "label": "Add/Edit Metdata to Playlist"
             }
         ]
@@ -590,7 +586,7 @@
         "viewKey": "content-playlist-content",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2130#create_man_playlist",
+                "value": "https://knowledge.kaltura.com/help/creating-and-configuring-playlists#create_man_playlist",
                 "label": "Create Manual Playlist"
             }
         ]
@@ -599,7 +595,7 @@
         "viewKey": "content-playlist-contentrulebased",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2130#create_rule_playlist",
+                "value": "https://knowledge.kaltura.com/help/creating-and-configuring-playlists#create_rule_playlist",
                 "label": "Create Rule-based Playlist"
             }
         ]
@@ -608,7 +604,7 @@
         "viewKey": "settings-transcoding-profile-metadata",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2122#useful_tips",
+                "value": "https://knowledge.kaltura.com/help/transcoding-and-processing#useful_tips",
                 "label": "Useful Tips"
             }
         ]
@@ -617,19 +613,19 @@
         "viewKey": "settings-transcoding-profile-flavors",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/node/2122#edit_flavors",
+                "value": "https://knowledge.kaltura.com/help/transcoding-and-processing#edit_flavors",
                 "label": "Transcoding Profiles - Edit Flavors"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2122#edit_flavors_live",
+                "value": "https://knowledge.kaltura.com/help/transcoding-and-processing#edit_flavors_live",
                 "label": "Trasncoding Profiles - Edit Live Flavors"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2122#transcoding_profiles_for_live",
+                "value": "https://knowledge.kaltura.com/help/transcoding-and-processing#transcoding_profiles_for_live",
                 "label": "Trasncoding Profiles for Live Streaming"
             },
             {
-                "value": "https://knowledge.kaltura.com/node/2122#assigning_bulk",
+                "value": "https://knowledge.kaltura.com/help/transcoding-and-processing#assigning_bulk",
                 "label": "Assign Bulk Transcoding Profiles"
             }
         ]

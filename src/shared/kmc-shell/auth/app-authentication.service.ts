@@ -331,6 +331,7 @@ export class AppAuthentication {
             partnerInfo: {
                 partnerId: user.partnerId,
                 name: partner.name,
+                adminSecret: partner.adminSecret,
                 partnerPackage: partner.partnerPackage,
                 landingPage: partner.landingPage,
                 logoutUrl: partner.logoutUrl,

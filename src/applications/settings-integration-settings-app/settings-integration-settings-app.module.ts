@@ -21,6 +21,14 @@ import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 import { DistributionComponent } from "./distribution/distribution.component";
 import { ProfilesTableComponent } from "./distribution/profiles-table/profiles-table.component";
+import { ZoomComponent } from "./zoom/zoom.component";
+import { ZoomProfilesTableComponent } from "./zoom/profiles-table/profiles-table.component";
+import { GenerateCodeComponent } from "./zoom/generate-code/generate-code.component";
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { EditZoomProfileComponent } from "./zoom/edit-profile/edit-profile.component";
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 
 @NgModule({
   imports: [
@@ -29,18 +37,22 @@ import { ProfilesTableComponent } from "./distribution/profiles-table/profiles-t
     ReactiveFormsModule,
     DropdownModule,
     InputTextModule,
+    InputSwitchModule,
+    RadioButtonModule,
     ButtonModule,
     AreaBlockerModule,
     TranslateModule,
+    AutoCompleteModule,
     TooltipModule,
     MenuModule,
+    InputTextareaModule,
     PopupWidgetModule,
     StickyModule,
     CategoriesModule,
     KMCPermissionsModule,
     InputHelperModule,
     KMCPermissionsModule,
-      TableModule
+    TableModule
   ],
   declarations: [
     SettingsIntegrationSettingsComponent,
@@ -50,7 +62,11 @@ import { ProfilesTableComponent } from "./distribution/profiles-table/profiles-t
     NewEntitlementComponent,
     EditEntitlementComponent,
     DistributionComponent,
-    ProfilesTableComponent
+    ZoomComponent,
+    ProfilesTableComponent,
+    ZoomProfilesTableComponent,
+    GenerateCodeComponent,
+    EditZoomProfileComponent
   ]
 })
 export class SettingsIntegrationSettingsAppModule {
