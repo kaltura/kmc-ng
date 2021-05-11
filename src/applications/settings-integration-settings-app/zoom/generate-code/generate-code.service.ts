@@ -17,7 +17,7 @@ export class GenerateCodeService {
         secret,
         partnerId,
         type: KalturaSessionType.admin,
-        privileges: 'urirestrict:*fetchRegistrationPage'
+        privileges: 'urirestrict:/api_v3/service/vendor_zoomvendor/action/*'
     }));
   }
 }
