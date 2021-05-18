@@ -46,10 +46,18 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
     public _participation: AbstractControl;
     public _categories: AbstractControl;
     public _createUser: AbstractControl;
+    public _uploadMeeting: AbstractControl;
+    public _uploadWebinar: AbstractControl;
+    public _webinarCategory: AbstractControl;
 
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
     private _searchCategoriesSubscription: ISubscription;
     public _usersProvider = new Subject<SuggestionsProviderData>();
+
+    public _showDeleteContent = true;
+    public _showTranscription = true;
+    public _enableMeetingUpload = false;
+
     private _searchUsersSubscription: ISubscription;
 
     constructor(private _appLocalization: AppLocalization,
@@ -63,6 +71,9 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         if (this.profile) {
+            this._showDeleteContent = typeof this.profile.deletionPolicy !== "undefined";
+            this._showTranscription = typeof this.profile.enableZoomTranscription !== "undefined";
+            this._enableMeetingUpload = typeof this.profile.enableMeetingUpload !== "undefined";
             this._setInitialValue(this.profile);
         }
     }
@@ -85,7 +96,10 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             postfix: profile.zoomUserMatchingMode,
             userPostfix: profile.zoomUserPostfix,
             participation: profile.handleParticipantsMode,
-            categories: profile.zoomCategory ? [{name: profile.zoomCategory}] : []
+            categories: profile.zoomCategory ? [{name: profile.zoomCategory}] : [],
+            webinarCategory: profile.zoomWebinarCategory ? [{name: profile.zoomWebinarCategory}] : [],
+            uploadMeeting: typeof profile.enableMeetingUpload === "undefined" || profile.enableMeetingUpload === KalturaNullableBoolean.trueValue,
+            uploadWebinar: profile.enableWebinarUploads === KalturaNullableBoolean.trueValue
         });
         this.validate();
     }
@@ -103,7 +117,10 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             postfix: null,
             userPostfix: [''],
             participation: null,
-            categories: [[]]
+            categories: [[]],
+            webinarCategory: [[]],
+            uploadMeeting: false,
+            uploadWebinar: false
         });
 
         this._recordingUpload = this._profileForm.controls['enabled'];
@@ -119,6 +136,12 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         this._userPostfix = this._profileForm.controls['userPostfix'];
         this._participation = this._profileForm.controls['participation'];
         this._categories = this._profileForm.controls['categories'];
+        this._webinarCategory = this._profileForm.controls['webinarCategory'];
+        this._uploadMeeting = this._profileForm.controls['uploadMeeting'];
+        this._uploadWebinar = this._profileForm.controls['uploadWebinar'];
+        if (!this._enableMeetingUpload) {
+            this._uploadMeeting.disable();
+        }
 
         this._recordingUpload.valueChanges
             .pipe(cancelOnDestroy(this))
@@ -134,6 +157,11 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                     this._userPostfix.enable();
                     this._participation.enable();
                     this._categories.enable();
+                    this._webinarCategory.enable();
+                    if (this._enableMeetingUpload) {
+                        this._uploadMeeting.enable();
+                    }
+                    this._uploadWebinar.enable();
                 } else {
                     this._description.disable();
                     this._deleteContent.disable();
@@ -145,6 +173,9 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                     this._participation.disable();
                     this._categories.disable();
                     this._defaultUserId.disable();
+                    this._webinarCategory.disable();
+                    this._uploadMeeting.disable();
+                    this._uploadWebinar.disable();
                 }
             });
         this._userId.valueChanges
@@ -206,9 +237,18 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         this.profile.zoomAccountDescription = formValue.description;
         this.profile.defaultUserId = formValue.defaultUserId.length ? formValue.defaultUserId[0].screenName : '';
         this.profile.zoomCategory = formValue.categories.length ? formValue.categories[0].name : '';
-        this.profile.deletionPolicy = formValue.deleteContent ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
+        this.profile.zoomWebinarCategory = formValue.webinarCategory.length ? formValue.webinarCategory[0].name : '';
+        if (this._showDeleteContent) {
+            this.profile.deletionPolicy = formValue.deleteContent ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
+        }
         this.profile.createUserIfNotExist = formValue.createUser ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
-        this.profile.enableZoomTranscription = formValue.transcription ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
+        if (this._showTranscription) {
+            this.profile.enableZoomTranscription = formValue.transcription ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
+        }
+        if (this._enableMeetingUpload) {
+            this.profile.enableMeetingUpload = formValue.uploadMeeting ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
+        }
+        this.profile.enableWebinarUploads = formValue.uploadWebinar ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
         if (formValue.userId) {
             this.profile.zoomUserMatchingMode = formValue.postfix;
         } else {
