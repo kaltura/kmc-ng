@@ -14,7 +14,7 @@
     <form class="kContainer" [formGroup]="_profileForm">
         <div class="kRow">
             <div class="kLabel">
-                <span>{{'applications.settings.integrationSettings.zoom.recordingUpload' | translate}}</span>
+                <span>{{'applications.settings.integrationSettings.zoom.enableIntegration' | translate}}</span>
             </div>
             <p-inputSwitch class="kControl" [formControl]="_recordingUpload"></p-inputSwitch>
             <span class="kSwitchValue">
@@ -38,6 +38,17 @@
 
         <div class="kRow">
             <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.uploadMeetings' | translate}}</span>
+            </div>
+            <p-inputSwitch class="kControl" [formControl]="_uploadMeeting"></p-inputSwitch>
+            <span class="kSwitchValue">
+              {{_uploadMeeting.value ? ('applications.settings.integrationSettings.zoom.enabled' | translate) : ('applications.settings.integrationSettings.zoom.disabled' | translate)}}
+            </span>
+        </div>
+
+        <div class="kRow">
+            <div class="kLabel"></div>
+            <div class="kLabel" style="width: 150px">
                 <span>{{'applications.settings.integrationSettings.zoom.category' | translate}}</span>
             </div>
             <kAutoComplete [formControl]="_categories"
@@ -55,6 +66,34 @@
 
         <div class="kRow">
             <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.uploadWebinars' | translate}}</span>
+            </div>
+            <p-inputSwitch class="kControl" [formControl]="_uploadWebinar"></p-inputSwitch>
+            <span class="kSwitchValue">
+              {{_uploadWebinar.value ? ('applications.settings.integrationSettings.zoom.enabled' | translate) : ('applications.settings.integrationSettings.zoom.disabled' | translate)}}
+            </span>
+        </div>
+
+        <div class="kRow">
+            <div class="kLabel"></div>
+            <div class="kLabel" style="width: 150px">
+                <span>{{'applications.settings.integrationSettings.zoom.webinarCategory' | translate}}</span>
+            </div>
+            <kAutoComplete [formControl]="_webinarCategory"
+                           field="name"
+                           [tooltipResolver]="_categoriesTooltipResolver"
+                           suggestionItemField="item"
+                           suggestionLabelField="name"
+                           suggestionSelectableField="isSelectable"
+                           [multiple]="false"
+                           [minLength]="3"
+                           [suggestionsProvider]="_categoriesProvider"
+                           (completeMethod)="_searchCategories($event)">
+            </kAutoComplete>
+        </div>
+
+        <div class="kRow" *ngIf="_showDeleteContent">
+            <div class="kLabel">
                 <span>{{'applications.settings.integrationSettings.zoom.delete' | translate}}</span>
             </div>
             <p-inputSwitch class="kControl" [formControl]="_deleteContent"></p-inputSwitch>
@@ -63,7 +102,7 @@
             </span>
         </div>
 
-        <div class="kRow">
+        <div class="kRow" *ngIf="_showTranscription">
             <div class="kLabel">
                 <span>{{'applications.settings.integrationSettings.zoom.transcription' | translate}}</span>
             </div>
