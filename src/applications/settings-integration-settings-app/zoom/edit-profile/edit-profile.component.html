@@ -142,19 +142,24 @@
                                [value]="true"
                                [formControl]="_userId"
                                [label]="'applications.settings.integrationSettings.zoom.zoom' | translate"></p-radioButton>
-                <p-radioButton name="postfix" [ngStyle]="{'marginLeft': '24px'}"
-                               [value]="0"
-                               [formControl]="_postfix"
-                               [label]="'applications.settings.integrationSettings.zoom.postfix1' | translate"></p-radioButton>
-                <p-radioButton name="postfix" [ngStyle]="{'marginLeft': '24px'}"
-                               [value]="2"
-                               [formControl]="_postfix"
-                               [label]="'applications.settings.integrationSettings.zoom.postfix2' | translate"></p-radioButton>
-                <div class="kRow" style="margin-bottom: 0px">
+                <div class="kRow" style="margin-left: 36px; margin-bottom: 0px">
+                    <p-radioButton name="postfix"
+                                   [value]="0"
+                                   [formControl]="_postfix"
+                                   [label]="'applications.settings.integrationSettings.zoom.postfix1' | translate"></p-radioButton>
+                    <p-radioButton name="postfix" [ngStyle]="{'marginLeft': '24px'}"
+                                   [value]="2"
+                                   [formControl]="_postfix"
+                                   [label]="'applications.settings.integrationSettings.zoom.postfix2' | translate"></p-radioButton>
                     <p-radioButton name="postfix" [ngStyle]="{'marginLeft': '24px'}"
                                    [value]="1"
                                    [formControl]="_postfix"
                                    [label]="'applications.settings.integrationSettings.zoom.postfix3' | translate"></p-radioButton>
+                </div>
+                <div class="kRow" style="margin-left: 36px; margin-bottom: 24px">
+                    <div class="kLabel" style="width: auto">
+                        <span>{{'applications.settings.integrationSettings.zoom.post' | translate}}</span>
+                    </div>
                     <input [formControl]="_userPostfix" placeholder="@kaltura.com" pInputText>
                 </div>
                 <div class="kRow" style="align-items: flex-start; margin-bottom: 0px">

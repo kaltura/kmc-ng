@@ -172,8 +172,15 @@ npm run standalone:update
 
 ## Step 3: deploy KMCng to the required environment
 
-If you want to deply a version that was released to kmc-ng github repository and the [version release notes](https://github.com/kaltura/kmc-ng/releases) has an attached zip file named `kmc-ng-vX.X.X.zip`, do the following:
+If you want to deploy a version that was released to kmc-ng github repository and the [version release notes](https://github.com/kaltura/kmc-ng/releases) has an attached zip file named `kmc-ng-vX.X.X.zip`, do the following:
 
+### When re-tagging an existing version, these prerequisites are needed:
+1. Go to https://jenkins-central.prod.ovp.kaltura.com (you need Okta permissions)
+2. Select `apps-folder-deployment`
+3. Select `repos`
+4. Click the black arrow to the right of the `kmc-ng` repo and select `build now`
+
+### Continue with the deployment:
 1. Go to https://jenkins-central.prod.ovp.kaltura.com (you need Okta permissions)
 2. Select `apps-folder-deployment`
 3. Select `deploy-app`
