@@ -22,6 +22,9 @@
                 <th class="kPrivacyContextLabel" [ngStyle]="{'width': '10%'}">
                     {{'applications.settings.integrationSettings.zoom.status' | translate}}
                 </th>
+                <th class="kPrivacyContextLabel" [ngStyle]="{'width': '20%'}">
+                    {{'applications.settings.integrationSettings.zoom.accountDescription' | translate}}
+                </th>
                 <th class="kActionsColumn"></th>
             </tr>
         </ng-template>
@@ -37,7 +40,7 @@
                             {{profile.defaultUserId}}
                         </span>
                 </td-->
-                <td class="kPrivacyContextLabel" [ngStyle]="{'width': '20%'}">
+                <td class="'kPrivacyContextLabel'" [ngStyle]="{'width': '20%'}">
                         <span class="kTableColumn">
                             {{profile.createdAt | date}}
                         </span>
@@ -50,6 +53,11 @@
                 <td class="kPrivacyContextLabel" [ngStyle]="{'width': '10%'}">
                         <span class="kTableColumn">
                             {{profile.enableRecordingUpload ? ('applications.settings.integrationSettings.zoom.enabled' | translate) : ('applications.settings.integrationSettings.zoom.disabled' | translate)}}
+                        </span>
+                </td>
+                <td class="kPrivacyContextLabel" [ngStyle]="{'width': '20%'}">
+                        <span class="kTableColumn" [kTooltip]="profile.zoomAccountDescription" [showOnEllipsis]="true">
+                            {{profile.zoomAccountDescription}}
                         </span>
                 </td>
 
