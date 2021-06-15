@@ -286,8 +286,8 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
 
   &.p-multiselect-panel {
     .pi-minus {
-      background-color: #00a784;
-      border: 1px solid #00a784;
+      background-color: $kPrimary;
+      border: 1px solid $kPrimary;
       color: #ffffff;
       width: 100%;
       height: 100%;
