@@ -14,6 +14,9 @@
                     {{'applications.settings.integrationSettings.zoom.name' | translate}}
                 </th-->
                 <th class="kPrivacyContextLabel" [ngStyle]="{'width': '20%'}">
+                    {{'applications.settings.integrationSettings.zoom.accountDescription' | translate}}
+                </th>
+                <th class="kPrivacyContextLabel" [ngStyle]="{'width': '20%'}">
                     {{'applications.settings.integrationSettings.zoom.created' | translate}}
                 </th>
                 <th class="kPrivacyContextLabel" [ngStyle]="{'width': '20%'}">
@@ -21,9 +24,6 @@
                 </th>
                 <th class="kPrivacyContextLabel" [ngStyle]="{'width': '10%'}">
                     {{'applications.settings.integrationSettings.zoom.status' | translate}}
-                </th>
-                <th class="kPrivacyContextLabel" [ngStyle]="{'width': '20%'}">
-                    {{'applications.settings.integrationSettings.zoom.accountDescription' | translate}}
                 </th>
                 <th class="kActionsColumn"></th>
             </tr>
@@ -40,6 +40,11 @@
                             {{profile.defaultUserId}}
                         </span>
                 </td-->
+                <td class="kPrivacyContextLabel" [ngStyle]="{'width': '20%'}">
+                        <span class="kTableColumn" [kTooltip]="profile.zoomAccountDescription" [showOnEllipsis]="true">
+                            {{profile.zoomAccountDescription}}
+                        </span>
+                </td>
                 <td class="'kPrivacyContextLabel'" [ngStyle]="{'width': '20%'}">
                         <span class="kTableColumn">
                             {{profile.createdAt | date}}
@@ -53,11 +58,6 @@
                 <td class="kPrivacyContextLabel" [ngStyle]="{'width': '10%'}">
                         <span class="kTableColumn">
                             {{profile.enableRecordingUpload ? ('applications.settings.integrationSettings.zoom.enabled' | translate) : ('applications.settings.integrationSettings.zoom.disabled' | translate)}}
-                        </span>
-                </td>
-                <td class="kPrivacyContextLabel" [ngStyle]="{'width': '20%'}">
-                        <span class="kTableColumn" [kTooltip]="profile.zoomAccountDescription" [showOnEllipsis]="true">
-                            {{profile.zoomAccountDescription}}
                         </span>
                 </td>
 
