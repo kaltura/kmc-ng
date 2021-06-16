@@ -112,13 +112,13 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
 
   // Create empty structured form on loading
   private _createForm(): void {
-    const canLiveRecord = this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM_RECORD);
+    const canRecordLive = this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM_RECORD);
     this._form = this._fb.group({
       name: ['', Validators.required],
       description: [''],
       transcodingProfile: [''],
       liveDVR: false,
-      enableRecording: [{value: false, disabled: !canLiveRecord}],
+      enableRecording: [{value: false, disabled: !canRecordLive}],
       enableRecordingSelectedOption: [{value: '', disabled: true}],
       previewMode: false
     });
