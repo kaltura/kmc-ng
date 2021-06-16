@@ -7,6 +7,7 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {KalturaLive} from './kaltura-live-stream.interface';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
   selector: 'kKalturaLiveStream',
@@ -31,7 +32,8 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
   constructor(private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
               private _kalturaLiveStreamService: KalturaLiveStreamService,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _permissionsService: KMCPermissionsService) {
   }
 
   ngOnInit(): void {
@@ -67,7 +69,9 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
         this.data.transcodingProfile = this._getSelectedTranscodingProfile(transcodingProfilesList);
 
         this._form.reset(this.data);
-        this._toggleRecordingSelectedOption(this.data.enableRecording);
+        if (this._form.get('enableRecording').enabled) {
+            this._toggleRecordingSelectedOption(this.data.enableRecording);
+        }
         this._updateAreaBlockerState(false, null);
 
       }, error => {
@@ -108,12 +112,13 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
 
   // Create empty structured form on loading
   private _createForm(): void {
+    const canLiveRecord = this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM_RECORD);
     this._form = this._fb.group({
       name: ['', Validators.required],
       description: [''],
       transcodingProfile: [''],
       liveDVR: false,
-      enableRecording: false,
+      enableRecording: [{value: false, disabled: !canLiveRecord}],
       enableRecordingSelectedOption: [{value: '', disabled: true}],
       previewMode: false
     });
