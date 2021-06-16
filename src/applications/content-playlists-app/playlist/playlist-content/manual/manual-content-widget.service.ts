@@ -140,7 +140,7 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
             const clonedEntry = <PlaylistContentMediaEntry>Object.assign(KalturaObjectBaseFactory.createObject(entry), entry);
             result.push(clonedEntry);
         }
-    }));
+    });
     return result;
   }
 
