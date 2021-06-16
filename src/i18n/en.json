@@ -2755,7 +2755,7 @@
                     "edit": "Edit",
                     "name": "User ID",
                     "user": "Set user based on",
-                    "userHelp": "Choose this when you like to map user_id with a specific field like SSO. For more details on CMS ID, look for 'cms_user_id' in the following",
+                    "userHelp": "Choose this option when you like to map 'user_id' with a specific field such as SSO. For more details on CMS ID, look for 'cms_user_id' in the following",
                     "here": "link.",
                     "accountId": "Zoom Account ID",
                     "accountDescription": "Account Description",
