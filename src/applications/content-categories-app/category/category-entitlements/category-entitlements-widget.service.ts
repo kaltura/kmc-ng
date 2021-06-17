@@ -93,33 +93,35 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
 
       if (multiRequest.requests.length) {
           return this._kalturaClient.multiRequest(multiRequest)
-              .map(
-                  data => {
-                      if (data.hasErrors()) {
-                          // check for missing user error, in which case we can continue
-                          let missingUserError = false;
+              .pipe(
+                  map(
+                      data => {
+                          if (data.hasErrors()) {
+                              // check for missing user error, in which case we can continue
+                              let missingUserError = false;
+                              data.forEach(response => {
+                                  if (response.error && response.error.code === "INVALID_USER_ID") {
+                                      missingUserError = true;
+                                      super._showUserError();
+                                  }
+                              });
+                              if (!missingUserError) {
+                                  throw new Error('error occurred in action \'_fetchAdditionalData\'');
+                              }
+                          }
+
+                          let owner: KalturaUser = null;
+                          let parentCategory = null;
                           data.forEach(response => {
-                              if (response.error && response.error.code === "INVALID_USER_ID") {
-                                  missingUserError = true;
-                                  super._showUserError();
+                              if (response.result instanceof KalturaCategory) {
+                                  parentCategory = response.result;
+                              } else if (response.result instanceof KalturaUser) {
+                                  owner = response.result;
                               }
                           });
-                          if (!missingUserError) {
-                              throw new Error('error occurred in action \'_fetchAdditionalData\'');
-                          }
-                      }
-
-                      let owner: KalturaUser = null;
-                      let parentCategory = null;
-                      data.forEach(response => {
-                          if (response.result instanceof KalturaCategory) {
-                              parentCategory = response.result;
-                          } else if (response.result instanceof KalturaUser) {
-                              owner = response.result;
-                          }
-                      });
-                      return {owner, parentCategory};
-                  });
+                          return {owner, parentCategory};
+                      })
+              );
       }else
       {
           return of({ owner: null, parentCategory: null});
