@@ -4,6 +4,7 @@ import { subApplicationsConfig } from 'config/sub-applications';
 import {HttpClient} from '@angular/common/http';
 import { serverConfig } from 'config/server';
 import { throwError } from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Injectable()
 export class UniversalLiveService {
@@ -23,13 +24,15 @@ export class UniversalLiveService {
     }
 
     return this._http.get(akamaiEdgeServerIpURL, { responseType: 'text' })
-      .map(res => {
-        const defaultIP = res;
-        const match = defaultIP.match(/<serverip>(.*)<\/serverip>/);
-        if (match.length > 1) {
-          return match[1];
-        }
-        return '';
-      });
+      .pipe(
+          map(res => {
+              const defaultIP = res;
+              const match = defaultIP.match(/<serverip>(.*)<\/serverip>/);
+              if (match.length > 1) {
+                  return match[1];
+              }
+              return '';
+          })
+      );
   }
 }
