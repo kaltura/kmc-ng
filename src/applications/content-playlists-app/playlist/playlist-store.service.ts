@@ -352,8 +352,10 @@ export class PlaylistStore implements OnDestroy {
   public openPlaylist(playlist: KalturaPlaylist) {
     if (this.playlistId !== playlist.id) {
       this.canLeaveWithoutSaving()
-            .filter(({ allowed }) => allowed)
-            .pipe(cancelOnDestroy(this))
+            .pipe(
+                filter(({ allowed }) => allowed),
+                cancelOnDestroy(this)
+            )
             .subscribe(() => {
                 this._contentPlaylistView.open({ playlist, section: ContentPlaylistViewSections.Metadata });
             });
