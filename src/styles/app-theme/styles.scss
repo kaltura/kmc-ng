@@ -93,13 +93,13 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
       .kBackBtn{
         margin-top: 4px;
         margin-left: -46px;
-        margin-right: 28px;
+        margin-right: 0;
         border: none;
         outline: none;
         background-color: transparent;
         color: $kGrayscale3;
         height: 20px;
-        width: 18px;
+        width: 52px;
         font-size: 24px;
         &:active{
           box-shadow: none;
