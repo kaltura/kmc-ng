@@ -245,8 +245,10 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
         const dropFolderFilesListAction = new DropFolderFileListAction({ filter });
         return this._kalturaClient
             .request(dropFolderFilesListAction)
-            .map(response =>
-                this.flavor ? this._mapDropFolderFilesForFlavor(response) : this._mapDropFolderFiles(response)
+            .pipe(
+                map(response =>
+                    this.flavor ? this._mapDropFolderFilesForFlavor(response) : this._mapDropFolderFiles(response)
+                )
             );
     }
 
@@ -318,7 +320,9 @@ export class MatchDropFolderComponent implements OnInit, OnDestroy {
 
         return this._kalturaClient
             .request(conversionProfileAssetParamsListAction)
-            .map(res => res.objects);
+            .pipe(
+                map(res => res.objects)
+            );
     }
 
     private _loadConversionProfilesWithAssets(): Observable<ConversionProfileWithAssets[]> {
