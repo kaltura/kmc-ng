@@ -21,9 +21,7 @@
       outline: 0;
       color: $kGrayscale3;
       margin-right: -5px;
-      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-          width: 38px;
-      }
+      padding: 0px;
       &:active {
         box-shadow: none;
         top: 2px;
