@@ -182,7 +182,7 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
                       background-color: $kGrayscale7;
                   }
                   &.active {
-                      color: $kTertiary;
+                      color: $kPrimary;
                       cursor: default;
                   }
               }
@@ -336,7 +336,7 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
         border: 1px solid $kPrimary;
     }
     &:active{
-        box-shadow: 0 0 0 3px rgba(0,167,132,0.4);
+        box-shadow: 0 0 0 3px rgba($kPrimary,0.4);
     }
     -webkit-transition: all 100ms ease-in-out;
     -moz-transition: all 100ms ease-in-out;
