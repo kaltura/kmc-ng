@@ -86,7 +86,9 @@ export class AppMenuComponent implements OnInit, OnDestroy {
         }
 
         this._powerUser = this._browserService.getInitialQueryParam('mode') === 'poweruser';
-        this.userInitials = this._userAuthentication.appUser.fullName.toUpperCase().split(' ').slice(0, 2).map(s => s[0]).join('');
+        if (this._userAuthentication.appUser?.fullName) {
+            this.userInitials = this._userAuthentication.appUser.fullName.toUpperCase().split(' ').slice(0, 2).map(s => s[0]).join('');
+        }
     }
 
     ngOnInit() {

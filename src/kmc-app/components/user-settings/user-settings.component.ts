@@ -37,8 +37,12 @@ export class UserSettingsComponent {
       }
     }
 
-    this.userInitials = this._userAuthentication.appUser.fullName.toUpperCase().split(' ').slice(0, 2).map(s => s[0]).join('');
-    this.partnerInfo = this._userAuthentication.appUser.partnerInfo.name.split('-').slice(0, 2);
+    if (this._userAuthentication.appUser?.fullName) {
+        this.userInitials = this._userAuthentication.appUser.fullName.toUpperCase().split(' ').slice(0, 2).map(s => s[0]).join('');
+    }
+    if (this._userAuthentication.appUser?.partnerInfo?.name) {
+        this.partnerInfo = this._userAuthentication.appUser.partnerInfo.name.split('-').slice(0, 2);
+    }
   }
 
   logout() {
