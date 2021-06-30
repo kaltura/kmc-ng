@@ -183,7 +183,7 @@ $app-styles-path: '../../../styles';
   }
 
   .kDateControl .p-inputtext {
-    width: 176px;
+    width: 176px !important;
   }
 
   .p-inputtext:disabled {
