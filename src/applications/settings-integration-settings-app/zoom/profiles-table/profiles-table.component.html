@@ -7,12 +7,15 @@
              [rowTrackBy]="rowTrackBy">
         <ng-template pTemplate="header">
             <tr>
-                <th class="kApplicationRootCategory">
+                <th class="kApplicationRootCategory" [ngStyle]="{'width': '20%'}">
                     {{'applications.settings.integrationSettings.zoom.accountId' | translate}}
                 </th>
                 <!--th class="kPrivacyContextLabel">
                     {{'applications.settings.integrationSettings.zoom.name' | translate}}
                 </th-->
+                <th class="kPrivacyContextLabel">
+                    {{'applications.settings.integrationSettings.zoom.accountDescription' | translate}}
+                </th>
                 <th class="kPrivacyContextLabel" [ngStyle]="{'width': '20%'}">
                     {{'applications.settings.integrationSettings.zoom.created' | translate}}
                 </th>
@@ -27,7 +30,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-profile>
             <tr>
-                <td class="kApplicationRootCategory">
+                <td class="kApplicationRootCategory" [ngStyle]="{'width': '20%'}">
                     <div class="kApplicationRootCategoryLabel kTableColumn" [kTooltip]="profile.accountId" [showOnEllipsis]="true" (click)="openEditScreen(profile)">
                         {{profile.accountId}}
                     </div>
@@ -37,7 +40,12 @@
                             {{profile.defaultUserId}}
                         </span>
                 </td-->
-                <td class="kPrivacyContextLabel" [ngStyle]="{'width': '20%'}">
+                <td class="kPrivacyContextLabel">
+                        <span class="kTableColumn" [kTooltip]="profile.zoomAccountDescription" [showOnEllipsis]="true">
+                            {{profile.zoomAccountDescription}}
+                        </span>
+                </td>
+                <td class="'kPrivacyContextLabel'" [ngStyle]="{'width': '20%'}">
                         <span class="kTableColumn">
                             {{profile.createdAt | date}}
                         </span>

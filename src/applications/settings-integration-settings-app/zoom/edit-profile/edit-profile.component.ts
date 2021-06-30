@@ -192,9 +192,10 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                     this._profileForm.patchValue({
                         postfix: KalturaZoomUsersMatching.doNotModify
                     });
-                    this._userPostfix.disable();
+                    this._userPostfix.enable();
                 }
             });
+        /*
         this._postfix.valueChanges
             .pipe(cancelOnDestroy(this))
             .subscribe(value => {
@@ -203,7 +204,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                 } else {
                     this._userPostfix.disable();
                 }
-            });
+            });*/
         this._createUser.valueChanges
             .pipe(cancelOnDestroy(this))
             .subscribe(value => {
