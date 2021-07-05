@@ -75,6 +75,7 @@ hr{
 .kUserInitials {
     height: 34px;
     width: 34px;
+    min-width: 34px;
     background: $kGrayscale6;
     border-radius: 50%;
     color: $kGrayscale1;
@@ -90,6 +91,7 @@ hr{
     font-weight: 700;
     margin-top: 0px;
     margin-left: 16px;
+    word-break: break-word;
     p {
         margin: 3px 0px;
 
