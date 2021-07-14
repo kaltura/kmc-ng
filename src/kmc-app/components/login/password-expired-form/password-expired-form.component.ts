@@ -33,6 +33,10 @@ export class PasswordExpiredFormComponent {
     return (this._repeatPasswordField.touched || this._formSent) && this._showError(this._passwords);
   }
 
+  public get _newPasswordIsOld(): boolean {
+    return (this._newPasswordField.touched || this._formSent) && this._showError(this._passwords);
+  }
+
   public get _oldPasswordWrong(): boolean {
     return 'WRONG_OLD_PASSWORD' === this.errorCode;
   }
@@ -58,9 +62,13 @@ export class PasswordExpiredFormComponent {
     this._resetPasswordForm = this._fb.group({
       oldPassword: ['', Validators.required],
       passwords: this._fb.group({
-        newPassword: ['', Validators.compose([Validators.required, NotEqualFieldsValidator.validate('oldPassword')])],
+        newPassword: ['', Validators.required],
         repeatPassword: ['', Validators.required],
-      }, { validator: EqualFieldsValidator.validate('newPassword', 'repeatPassword') })
+      }, {
+          validator: Validators.compose([
+              NotEqualFieldsValidator.validate(), EqualFieldsValidator.validate('newPassword', 'repeatPassword')
+          ])
+      })
     });
 
     this._oldPasswordField = this._resetPasswordForm.controls['oldPassword'];
@@ -107,9 +115,9 @@ export class PasswordExpiredFormComponent {
 }
 
 class NotEqualFieldsValidator {
-    public static validate(compareControl: string) {
+    public static validate() {
         return (c: AbstractControl) => {
-            return (c && c.parent?.parent && c.value !== c.parent.parent.get(compareControl).value) ? null : {
+            return (c.get('newPassword') && c.parent && c.get('newPassword').value !== c.parent.get('oldPassword').value) ? null : {
                 fieldsNotEqual: {
                     valid: false
                 }
