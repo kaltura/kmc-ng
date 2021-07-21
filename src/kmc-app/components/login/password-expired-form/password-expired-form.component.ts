@@ -33,6 +33,10 @@ export class PasswordExpiredFormComponent {
     return (this._repeatPasswordField.touched || this._formSent) && this._showError(this._passwords);
   }
 
+  public get _newPasswordIsOld(): boolean {
+    return (this._newPasswordField.touched || this._formSent) && this._showError(this._passwords);
+  }
+
   public get _oldPasswordWrong(): boolean {
     return 'WRONG_OLD_PASSWORD' === this.errorCode;
   }
@@ -60,7 +64,11 @@ export class PasswordExpiredFormComponent {
       passwords: this._fb.group({
         newPassword: ['', Validators.required],
         repeatPassword: ['', Validators.required],
-      }, { validator: EqualFieldsValidator.validate('newPassword', 'repeatPassword') })
+      }, {
+          validator: Validators.compose([
+              NotEqualFieldsValidator.validate(), EqualFieldsValidator.validate('newPassword', 'repeatPassword')
+          ])
+      })
     });
 
     this._oldPasswordField = this._resetPasswordForm.controls['oldPassword'];
@@ -75,9 +83,16 @@ export class PasswordExpiredFormComponent {
 
   public _getClientValidationMessage(control: AbstractControl): string {
     const invalid = this._showError(control);
-    const message = control.hasError('fieldsEqual')
-      ? 'app.login.passwordExpired.error.equal'
-      : 'app.login.passwordExpired.error.required';
+    let message = '';
+    if (control.hasError('fieldsEqual')) {
+        message = 'app.login.passwordExpired.error.equal';
+    }
+    if (control.hasError('fieldsNotEqual')) {
+        message = 'app.login.passwordExpired.error.notEqual';
+    }
+    if (control.hasError('required')) {
+        message = 'app.login.passwordExpired.error.required';
+    }
     return invalid ? message : '';
   }
 
@@ -96,5 +111,17 @@ export class PasswordExpiredFormComponent {
   }
     public _contactSupport(): void {
         this._browserService.openSupport();
+    }
+}
+
+class NotEqualFieldsValidator {
+    public static validate() {
+        return (c: AbstractControl) => {
+            return (c.get('newPassword') && c.parent && c.get('newPassword').value !== c.parent.get('oldPassword').value) ? null : {
+                fieldsNotEqual: {
+                    valid: false
+                }
+            };
+        };
     }
 }
