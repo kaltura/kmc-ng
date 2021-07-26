@@ -1,3 +1,15 @@
+<a name="6.6.1"></a>
+# [6.6.1](https://github.com/kaltura/kmc-ng/compare/v6.6.0...v6.6.1) (2021-05-10)
+
+
+### Bug Fixes
+
+* **create/live:** disable record option if no permission for recording live stream KMCNG-2369
+* **settings/integration:** Zoom Integration - Display account description KMCNG-2362
+* **entry/live:** Ignore missing backup URL
+
+
+
 <a name="6.6.0"></a>
 # [6.6.0](https://github.com/kaltura/kmc-ng/compare/v6.5.3...v6.6.0) (2021-05-10)
 
