@@ -457,7 +457,7 @@
                     "useAkamaiHdProtocol": "Le protocole HD Akamai est utilisé sur cette URL HDS.",
                     "errors": {
                         "required": "Ce champ est requis.",
-                        "enterUrl": "Vous devez saisir au moins l'une des URL de flux HDS/HLS",
+                        "enterUrl": "Vous devez saisir au moins l'une des URL de flux HDS/HLS/DASH",
                         "invalidUrl": "Vous devez saisir une URL valide"
                     }
                 },
