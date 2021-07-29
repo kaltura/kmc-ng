@@ -457,7 +457,7 @@
                     "useAkamaiHdProtocol": "En esta URL para HDS, se usa un protocolo HD de Akamai.",
                     "errors": {
                         "required": "Este campo es obligatorio.",
-                        "enterUrl": "Debe ingresar al menos una de las URL de retransmisión HDS/HLS.",
+                        "enterUrl": "Debe ingresar al menos una de las URL de retransmisión HDS/HLS/DASH.",
                         "invalidUrl": "Debe ingresar una URL válida."
                     }
                 },
