@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import { Menu } from 'primeng/menu';
 import { ISubscription } from 'rxjs/Subscription';
@@ -28,11 +28,19 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 
     public _actions: MenuItem[] = [];
     public _captionStatusReady = KalturaCaptionAssetStatus.ready;
+    public _captionStatusError = KalturaCaptionAssetStatus.error;
     public _requestCaptionsAvailable = false;
 
     @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
     @ViewChild('editPopup', { static: true }) public editPopup: PopupWidgetComponent;
 
+    public get actions() {
+        if (this._widgetService.currentCaption?.status === KalturaCaptionAssetStatus.error) {
+            return this._actions.filter(action => action.id === 'delete');
+        } else {
+            return this._actions;
+        }
+    }
 
     private _popupStateChangeSubscribe: ISubscription;
     constructor(public _widgetService: EntryCaptionsWidget,
