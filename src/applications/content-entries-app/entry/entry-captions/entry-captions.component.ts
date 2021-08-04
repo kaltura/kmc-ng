@@ -27,20 +27,13 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
     public _kmcPermissions = KMCPermissions;
 
     public _actions: MenuItem[] = [];
+    public actions: MenuItem[] = [];
     public _captionStatusReady = KalturaCaptionAssetStatus.ready;
     public _captionStatusError = KalturaCaptionAssetStatus.error;
     public _requestCaptionsAvailable = false;
 
     @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
     @ViewChild('editPopup', { static: true }) public editPopup: PopupWidgetComponent;
-
-    public get actions() {
-        if (this._widgetService.currentCaption?.status === KalturaCaptionAssetStatus.error) {
-            return this._actions.filter(action => action.id === 'delete');
-        } else {
-            return this._actions;
-        }
-    }
 
     private _popupStateChangeSubscribe: ISubscription;
     constructor(public _widgetService: EntryCaptionsWidget,
@@ -84,7 +77,17 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
         if (this.actionsMenu){
             // save the selected caption for usage in the actions menu
             this._widgetService.currentCaption = caption;
+            this.actions = this.filterActions();
             this.actionsMenu.toggle(event);
+        }
+    }
+
+
+    private filterActions() {
+        if (this._widgetService.currentCaption?.status === KalturaCaptionAssetStatus.error) {
+            return this._actions.filter(action => action.id === 'delete');
+        } else {
+            return this._actions;
         }
     }
 
