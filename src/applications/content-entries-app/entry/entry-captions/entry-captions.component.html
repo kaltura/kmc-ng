@@ -80,7 +80,7 @@
                             </a>
                         </td>
                         <td [ngStyle]="{'width':'80px'}">
-                            <div class="kCaptionsTableActions" *ngIf="caption.status === _captionStatusReady">
+                            <div class="kCaptionsTableActions" *ngIf="caption.status === _captionStatusReady || caption.status === _captionStatusError ">
                                 <button type="button" class="kMoreActionsButton" pButton icon="kIconmore"
                                         (click)="openActionsMenu($event, caption)"></button>
                             </div>
@@ -114,7 +114,7 @@
         </div>
     </div>
 
-    <p-menu #actionsmenu [popup]="true" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+    <p-menu #actionsmenu [popup]="true" [model]="actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 
     <kPopupWidget #editPopup data-aid="editCaptionPopup" [popupWidth]="586" [modal]="true">
         <ng-template>
