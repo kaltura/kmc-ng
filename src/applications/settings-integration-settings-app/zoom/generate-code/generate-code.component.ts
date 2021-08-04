@@ -82,7 +82,7 @@ export class GenerateCodeComponent implements OnInit, OnDestroy {
   }
 
     public copyCode(el):void{
-        this._browserService.copyElementToClipboard(el);
+        this._browserService.copyToClipboard(el.value);
         this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('app.common.copySuccess')});
         this.close();
     }
