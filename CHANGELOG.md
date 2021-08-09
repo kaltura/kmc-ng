@@ -1,3 +1,13 @@
+<a name="6.6.2"></a>
+## [6.6.2](https://github.com/kaltura/kmc-ng/compare/v6.6.1...v6.6.2) (2021-08-09)
+
+
+### Bug Fixes
+
+* **settings/integration:** fix creation / update date change upon zoom profile update KMCNG-2384 ([b0262e8](https://github.com/kaltura/kmc-ng/commit/b0262e8))
+
+
+
 <a name="6.6.1"></a>
 # [6.6.1](https://github.com/kaltura/kmc-ng/compare/v6.6.0...v6.6.1) (2021-05-10)
 
