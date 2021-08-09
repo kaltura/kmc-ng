@@ -1,7 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {
     KalturaClient,
-    KalturaNullableBoolean,
     KalturaZoomIntegrationSetting,
     KalturaZoomIntegrationSettingResponse,
     ZoomVendorListAction,

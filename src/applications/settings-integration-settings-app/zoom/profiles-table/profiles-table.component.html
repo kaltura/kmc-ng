@@ -47,12 +47,12 @@
                 </td>
                 <td class="'kPrivacyContextLabel'" [ngStyle]="{'width': '20%'}">
                         <span class="kTableColumn">
-                            {{profile.createdAt | date}}
+                            {{(profile.createdAt * 1000) | date}}
                         </span>
                 </td>
                 <td class="kPrivacyContextLabel" [ngStyle]="{'width': '20%'}">
                         <span class="kTableColumn">
-                            {{profile.updatedAt | date}}
+                            {{(profile.updatedAt * 1000) | date}}
                         </span>
                 </td>
                 <td class="kPrivacyContextLabel" [ngStyle]="{'width': '10%'}">

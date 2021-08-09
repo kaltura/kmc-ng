@@ -87,10 +87,6 @@ export class ZoomComponent implements OnInit, OnDestroy {
           this._logger.info(`handle successful loading zoom integration profiles`);
           this._updateAreaBlockerState(false, null);
           this._profiles = response.objects ? response.objects.sort((a,b) => (a.updatedAt > b.updatedAt) ? -1 : ((b.updatedAt > a.updatedAt) ? 1 : 0)) : [];
-          this._profiles.forEach(profile => {
-              profile.createdAt = (parseInt(profile.createdAt) * 1000).toString();
-              profile.updatedAt = (parseInt(profile.updatedAt) * 1000).toString();
-          });
           this.totalCount = this._profiles.length;
           if (this.totalCount > 3) {
               this._profiles.splice(3, this.totalCount -3);
