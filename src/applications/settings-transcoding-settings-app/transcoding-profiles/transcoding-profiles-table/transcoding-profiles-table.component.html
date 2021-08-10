@@ -44,13 +44,17 @@
         <ng-template pTemplate="body" let-profile>
             <tr [pSelectableRow]="profile">
                 <td [ngStyle]="{'width':'44px', 'padding-left': '14px'}">
-                    <p-tableCheckbox [value]="profile"></p-tableCheckbox>
+                    <p-tableCheckbox [value]="profile" [disabled]="profile.partnerId === 0"></p-tableCheckbox>
                 </td>
                 <td class="ui-resizable-column">
                     <div class="kTranscodingProfileNameWrapper">
-                        <div class="kTranscodingProfileName kTableColumn"
+                        <div *ngIf="profile.partnerId !== 0" class="kTableColumn kTranscodingProfileName"
                              [kTooltip]="profile.name"
                              (click)="_onActionSelected('edit', profile)">
+                            {{profile.name}}
+                        </div>
+                        <div *ngIf="profile.partnerId === 0" class="kTableColumn"
+                             [kTooltip]="systemProfileTooltip">
                             {{profile.name}}
                         </div>
                         <span *ngIf="profile?.isDefault" class="kTranscodingProfileNameDefault">
