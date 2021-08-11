@@ -37,6 +37,10 @@ export class TranscodingProfileFlavorsWidget extends TranscodingProfileWidget im
   ngOnDestroy() {
   }
 
+  public get isSystemProfile() {
+      return this.data.partnerId === 0;
+  }
+
   protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
     return of({ isValid: true });
   }

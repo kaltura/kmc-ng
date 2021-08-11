@@ -144,7 +144,7 @@ export class TranscodingProfileMetadataWidget extends TranscodingProfileWidget i
         storageProfileId: this.data.storageProfileId || null
       });
 
-      if (!this.isNewData && !this._permissionsService.hasPermission(KMCPermissions.TRANSCODING_UPDATE)) {
+      if (this.data.partnerId === 0 || (!this.isNewData && !this._permissionsService.hasPermission(KMCPermissions.TRANSCODING_UPDATE))) {
 
         this.metadataForm.disable();
         this.metadataForm.markAsUntouched();

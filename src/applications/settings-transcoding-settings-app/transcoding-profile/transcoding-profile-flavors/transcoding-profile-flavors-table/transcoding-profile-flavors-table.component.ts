@@ -10,6 +10,7 @@ import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc
 })
 export class TranscodingProfileFlavorsTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() isNewProfile: boolean;
+  @Input() isSystemProfile: boolean;
   @Input() selectedFlavors: KalturaFlavorParams[] = [];
 
   @Input()
@@ -33,7 +34,7 @@ export class TranscodingProfileFlavorsTableComponent implements AfterViewInit, O
   public _deferredLoading = true;
 
   public get _isEditAllowed(): boolean {
-    return this.isNewProfile || this._permissionsService.hasPermission(KMCPermissions.TRANSCODING_UPDATE);
+    return !this.isSystemProfile && (this.isNewProfile || this._permissionsService.hasPermission(KMCPermissions.TRANSCODING_UPDATE));
   }
 
   constructor(private _appLocalization: AppLocalization,
