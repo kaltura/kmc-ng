@@ -3133,6 +3133,7 @@
                 "setAsDefault": "Set As Default",
                 "edit": "Edit",
                 "delete": "Delete",
+                "view": "View",
                 "addTranscodingProfile": "Add Transcoding Profile",
                 "profileName": "Profile Name",
                 "description": "Description",
@@ -3169,6 +3170,7 @@
                     "systemName": "System Name:\n(Optional)",
                     "flavorGenerationPolicy": "Flavor Generation Policy",
                     "intermediateFlavorHandling": "Intermediate Flavor Handling",
+                    "systemProfileTooltip": "Transcoding profile was set up by Kaltura, Please reach out to account manager / customer care for update",
                     "table": {
                         "flavor": "Flavor",
                         "flavors": "{{0}} Flavors",
