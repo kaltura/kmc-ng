@@ -5,6 +5,7 @@
 ### Bug Fixes
 
 * **settings/integration:** fix creation / update date change upon zoom profile update KMCNG-2384 ([b0262e8](https://github.com/kaltura/kmc-ng/commit/b0262e8))
+* **settings/transcoding:** list Zoom transcoding profiles KMCNG-2383 
 
 
 
