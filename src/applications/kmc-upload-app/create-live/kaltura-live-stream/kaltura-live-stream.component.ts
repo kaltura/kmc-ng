@@ -7,143 +7,138 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {KalturaLive} from './kaltura-live-stream.interface';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
-  selector: 'kKalturaLiveStream',
-  templateUrl: './kaltura-live-stream.component.html',
-  styleUrls: ['./kaltura-live-stream.component.scss'],
-  providers: [KalturaLiveStreamService]
+    selector: 'kKalturaLiveStream',
+    templateUrl: './kaltura-live-stream.component.html',
+    styleUrls: ['./kaltura-live-stream.component.scss'],
+    providers: [KalturaLiveStreamService]
 })
 export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
 
-  public _form: FormGroup;
-  public _availableTranscodingProfiles: Array<{ value: number, label: string }>;
-  public _enableRecordingOptions: Array<{ value: KalturaRecordStatus, label: string }>;
-  public _blockerMessage: AreaBlockerMessage = null;
-  public _isBusy = false;
+    public _form: FormGroup;
+    public _availableTranscodingProfiles: Array<{ value: number, label: string }>;
+    public _enableRecordingOptions: Array<{ value: KalturaRecordStatus, label: string }>;
+    public _blockerMessage: AreaBlockerMessage = null;
+    public _isBusy = false;
 
-  @Input()
-  data: KalturaLive;
+    @Input()
+    data: KalturaLive;
 
-  @Output()
-  dataChange = new EventEmitter<KalturaLive>();
+    @Output()
+    dataChange = new EventEmitter<KalturaLive>();
 
-  constructor(private _appLocalization: AppLocalization,
-              private _fb: FormBuilder,
-              private _kalturaLiveStreamService: KalturaLiveStreamService,
-              private _browserService: BrowserService,
-              private _permissionsService: KMCPermissionsService) {
-  }
-
-  ngOnInit(): void {
-    this._createForm();
-    this._fillEnableRecordingOptions();
-    this._loadTranscodingProfiles()
-  }
-
-  ngOnDestroy(): void {
-  }
-
-  public validate(): boolean {
-    if (!this._form.valid) {
-      this.markFormFieldsAsTouched();
+    constructor(private _appLocalization: AppLocalization,
+                private _fb: FormBuilder,
+                private _kalturaLiveStreamService: KalturaLiveStreamService,
+                private _browserService: BrowserService) {
     }
-    return this._form.valid;
-  }
 
-  public isFormDirty(): boolean {
-    return this._form.dirty;
-  }
+    ngOnInit(): void {
+        this._createForm();
+        this._fillEnableRecordingOptions();
+        this._loadTranscodingProfiles()
+    }
 
-  private _loadTranscodingProfiles(): void {
-    this._updateAreaBlockerState(true, null);
-    this._kalturaLiveStreamService.getKalturaConversionProfiles()
-      .pipe(cancelOnDestroy(this))
-      .subscribe(transcodingProfilesList => {
-        this._availableTranscodingProfiles = transcodingProfilesList.map(transcodingProfile => ({
-          value: transcodingProfile.id,
-          label: transcodingProfile.name
-        }));
+    ngOnDestroy(): void {
+    }
 
-        this.data.transcodingProfile = this._getSelectedTranscodingProfile(transcodingProfilesList);
-
-        this._form.reset(this.data);
-        if (this._form.get('enableRecording').enabled) {
-            this._toggleRecordingSelectedOption(this.data.enableRecording);
+    public validate(): boolean {
+        if (!this._form.valid) {
+            this.markFormFieldsAsTouched();
         }
-        this._updateAreaBlockerState(false, null);
-
-      }, error => {
-        this._updateAreaBlockerState(false,  error.message);
-      });
-  }
-
-  private _getSelectedTranscodingProfile(transcodingProfilesList): number {
-    if (!transcodingProfilesList || !transcodingProfilesList.length) {
-      return null;
+        return this._form.valid;
     }
 
-    const profileIdFromCache = this._browserService.getFromLocalStorage('kalturaStreamType.selectedTranscodingProfile');
-    const profileExistsInList = transcodingProfilesList
-      .findIndex((profile) => (profile.id === profileIdFromCache)) > -1;
-
-    // if selected profile id exists in the list return it ; else return first option
-    if (profileIdFromCache && profileExistsInList) {
-      return profileIdFromCache;
-    } else {
-      this._browserService.setInLocalStorage('kalturaStreamType.selectedTranscodingProfile', transcodingProfilesList[0].id);
-      return transcodingProfilesList[0].id;
+    public isFormDirty(): boolean {
+        return this._form.dirty;
     }
-  }
 
-  private _fillEnableRecordingOptions() {
-    this._enableRecordingOptions = [
-      {
-        value: KalturaRecordStatus.perSession,
-        label: this._appLocalization.get('applications.upload.prepareLive.kalturaStreamType.enableRecordingOptions.perSession')
-      },
-      {
-        value: KalturaRecordStatus.appended,
-        label: this._appLocalization.get('applications.upload.prepareLive.kalturaStreamType.enableRecordingOptions.appended')
-      },
-    ];
-  }
+    private _loadTranscodingProfiles(): void {
+        this._updateAreaBlockerState(true, null);
+        this._kalturaLiveStreamService.getKalturaConversionProfiles()
+            .pipe(cancelOnDestroy(this))
+            .subscribe(transcodingProfilesList => {
+                this._availableTranscodingProfiles = transcodingProfilesList.map(transcodingProfile => ({
+                    value: transcodingProfile.id,
+                    label: transcodingProfile.name
+                }));
 
-  // Create empty structured form on loading
-  private _createForm(): void {
-    const canRecordLive = this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM_RECORD);
-    this._form = this._fb.group({
-      name: ['', Validators.required],
-      description: [''],
-      transcodingProfile: [''],
-      liveDVR: false,
-      enableRecording: [{value: false, disabled: !canRecordLive}],
-      enableRecordingSelectedOption: [{value: '', disabled: true}],
-      previewMode: false
-    });
+                this.data.transcodingProfile = this._getSelectedTranscodingProfile(transcodingProfilesList);
 
-    this._form
-      .valueChanges
-      .pipe(cancelOnDestroy(this))
-      .subscribe(data => {
-        this.dataChange.emit(data);
-      });
-  }
+                this._form.reset(this.data);
+                this._toggleRecordingSelectedOption(this.data.enableRecording);
+                this._updateAreaBlockerState(false, null);
 
-  public _toggleRecordingSelectedOption(enable: boolean) {
-    enable ? this._form.get('enableRecordingSelectedOption').enable() : this._form.get('enableRecordingSelectedOption').disable();
-  }
-
-  private markFormFieldsAsTouched(): void {
-    for (const inner in this._form.controls) {
-      this._form.get(inner).markAsTouched();
-      this._form.get(inner).updateValueAndValidity();
+            }, error => {
+                this._updateAreaBlockerState(false,  error.message);
+            });
     }
-  }
 
-  private _updateAreaBlockerState(isBusy: boolean, message: AreaBlockerMessage): void {
-    this._isBusy = isBusy;
-    this._blockerMessage = message;
-  }
+    private _getSelectedTranscodingProfile(transcodingProfilesList): number {
+        if (!transcodingProfilesList || !transcodingProfilesList.length) {
+            return null;
+        }
+
+        const profileIdFromCache = this._browserService.getFromLocalStorage('kalturaStreamType.selectedTranscodingProfile');
+        const profileExistsInList = transcodingProfilesList
+            .findIndex((profile) => (profile.id === profileIdFromCache)) > -1;
+
+        // if selected profile id exists in the list return it ; else return first option
+        if (profileIdFromCache && profileExistsInList) {
+            return profileIdFromCache;
+        } else {
+            this._browserService.setInLocalStorage('kalturaStreamType.selectedTranscodingProfile', transcodingProfilesList[0].id);
+            return transcodingProfilesList[0].id;
+        }
+    }
+
+    private _fillEnableRecordingOptions() {
+        this._enableRecordingOptions = [
+            {
+                value: KalturaRecordStatus.perSession,
+                label: this._appLocalization.get('applications.upload.prepareLive.kalturaStreamType.enableRecordingOptions.perSession')
+            },
+            {
+                value: KalturaRecordStatus.appended,
+                label: this._appLocalization.get('applications.upload.prepareLive.kalturaStreamType.enableRecordingOptions.appended')
+            },
+        ];
+    }
+
+    // Create empty structured form on loading
+    private _createForm(): void {
+        this._form = this._fb.group({
+            name: ['', Validators.required],
+            description: [''],
+            transcodingProfile: [''],
+            liveDVR: false,
+            enableRecording: false,
+            enableRecordingSelectedOption: [{value: '', disabled: true}],
+            previewMode: false
+        });
+
+        this._form
+            .valueChanges
+            .pipe(cancelOnDestroy(this))
+            .subscribe(data => {
+                this.dataChange.emit(data);
+            });
+    }
+
+    public _toggleRecordingSelectedOption(enable: boolean) {
+        enable ? this._form.get('enableRecordingSelectedOption').enable() : this._form.get('enableRecordingSelectedOption').disable();
+    }
+
+    private markFormFieldsAsTouched(): void {
+        for (const inner in this._form.controls) {
+            this._form.get(inner).markAsTouched();
+            this._form.get(inner).updateValueAndValidity();
+        }
+    }
+
+    private _updateAreaBlockerState(isBusy: boolean, message: AreaBlockerMessage): void {
+        this._isBusy = isBusy;
+        this._blockerMessage = message;
+    }
 }
