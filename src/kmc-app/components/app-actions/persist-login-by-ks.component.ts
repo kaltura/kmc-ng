@@ -20,17 +20,21 @@ export class PersistLoginByKsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this._logger.info(`handle 'persist-login-by-ks' action`);
         const ks = serverConfig.ks ? serverConfig.ks : (this._route.snapshot.params['ks'] || '').trim();
+        const path = this._route.snapshot.params['path'] || '';
         if (!ks) {
             this._logger.info(`missing 'ks' value, navigating to default page`);
             this._browserService.navigateToDefault();
             return;
         }
-
         const replaceBrowserHistory = true;
         this._logger.info(`handle persist-login-by-ks by the user, navigating to default page`, { replaceBrowserHistory });
 
         this._appAuth.setAutomaticLoginCredentials(ks, true);
-        this._browserService.navigateToDefault(replaceBrowserHistory);
+        if (path.length) {
+            this._browserService.navigate(decodeURIComponent(path));
+        } else {
+            this._browserService.navigateToDefault(replaceBrowserHistory);
+        }
     }
 
     ngOnDestroy() {
