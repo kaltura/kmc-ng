@@ -193,6 +193,7 @@
                 "title": "Your password has expired. To continue using the system you need to change your password now.",
                 "error": {
                     "equal": "Passwords do not match",
+                    "notEqual": "New password cannot be the same as old password",
                     "required": "Field is required"
                 },
                 "placeholder": {
@@ -478,10 +479,11 @@
                     "description": "Description",
                     "flashHDSURL": "Live Flash HDS stream URL",
                     "hlsStreamUrl": "Live Mobile HLS stream URL",
+                    "dashStreamUrl": "DASH stream URL",
                     "useAkamaiHdProtocol": "Akamai HD protocol is used on this HDS URL.",
                     "errors": {
                         "required": "This field is required",
-                        "enterUrl": "You must enter at least one of HDS/HLS stream URLs",
+                        "enterUrl": "You must enter at least one of HDS/HLS/DASH stream URLs",
                         "invalidUrl": "You must enter a valid URL"
                     }
                 },
