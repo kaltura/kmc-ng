@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
+import {KalturaAPIException, KalturaClient, KalturaMediaType, KalturaMultiRequest, KalturaObjectBaseFactory} from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { EntryWidget } from '../entry-widget';
@@ -294,9 +294,15 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
         return {
           flavors,
           thumbnails,
-          distributedProfiles,
-          undistributedProfiles,
-          partnerDistributionProfiles
+          distributedProfiles: this.data.mediaType === KalturaMediaType.image ?
+              distributedProfiles.filter(profile => profile.supportImageEntry) :
+              distributedProfiles.filter(profile => !profile.supportImageEntry),
+          undistributedProfiles: this.data.mediaType === KalturaMediaType.image ?
+              undistributedProfiles.filter(profile => profile.supportImageEntry) :
+              undistributedProfiles.filter(profile => !profile.supportImageEntry),
+          partnerDistributionProfiles: this.data.mediaType === KalturaMediaType.image ?
+              partnerDistributionProfiles.filter(profile => profile.supportImageEntry) :
+              partnerDistributionProfiles.filter(profile => !profile.supportImageEntry)
         };
       }));
   }
