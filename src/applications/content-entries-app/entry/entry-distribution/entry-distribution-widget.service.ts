@@ -293,11 +293,11 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
 
         const isImageEntry = this.data.mediaType === KalturaMediaType.image;
         const filteredDistributedProfiles = distributedProfiles.filter(
-            profile => isImageEntry ? profile.supportImageEntry : profile.supportImageEntry);
+            profile => isImageEntry ? profile.supportImageEntry : !profile.supportImageEntry);
         const filteredUndistributedProfiles = undistributedProfiles.filter(
-            profile => isImageEntry ? profile.supportImageEntry : profile.supportImageEntry);
+            profile => isImageEntry ? profile.supportImageEntry : !profile.supportImageEntry);
         const filteredPartnerDistributionProfiles = partnerDistributionProfiles.filter(
-            profile => isImageEntry ? profile.supportImageEntry : profile.supportImageEntry);
+            profile => isImageEntry ? profile.supportImageEntry : !profile.supportImageEntry);
 
         return {
           flavors,
