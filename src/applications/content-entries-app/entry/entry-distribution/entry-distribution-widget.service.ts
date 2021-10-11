@@ -291,18 +291,20 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
           }
         });
 
+        const isImageEntry = this.data.mediaType === KalturaMediaType.image;
+        const filteredDistributedProfiles = distributedProfiles.filter(
+            profile => isImageEntry ? profile.supportImageEntry : profile.supportImageEntry);
+        const filteredUndistributedProfiles = undistributedProfiles.filter(
+            profile => isImageEntry ? profile.supportImageEntry : profile.supportImageEntry);
+        const filteredPartnerDistributionProfiles = partnerDistributionProfiles.filter(
+            profile => isImageEntry ? profile.supportImageEntry : profile.supportImageEntry);
+
         return {
           flavors,
           thumbnails,
-          distributedProfiles: this.data.mediaType === KalturaMediaType.image ?
-              distributedProfiles.filter(profile => profile.supportImageEntry) :
-              distributedProfiles.filter(profile => !profile.supportImageEntry),
-          undistributedProfiles: this.data.mediaType === KalturaMediaType.image ?
-              undistributedProfiles.filter(profile => profile.supportImageEntry) :
-              undistributedProfiles.filter(profile => !profile.supportImageEntry),
-          partnerDistributionProfiles: this.data.mediaType === KalturaMediaType.image ?
-              partnerDistributionProfiles.filter(profile => profile.supportImageEntry) :
-              partnerDistributionProfiles.filter(profile => !profile.supportImageEntry)
+          distributedProfiles: filteredDistributedProfiles,
+          undistributedProfiles: filteredUndistributedProfiles,
+          partnerDistributionProfiles: filteredPartnerDistributionProfiles
         };
       }));
   }
