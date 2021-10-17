@@ -198,9 +198,6 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
         const externalMedia = entry instanceof KalturaExternalMediaEntry;
         let result = false;
         switch (section) {
-            case ContentEntryViewSections.Thumbnails:
-                result = mediaType !== KalturaMediaType.image;
-                break;
             case ContentEntryViewSections.Flavours:
                 result = mediaType !== KalturaMediaType.image && !this._isLiveMediaEntry(entry.mediaType) && !externalMedia;
                 break;
@@ -217,6 +214,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
             case ContentEntryViewSections.Distribution:
                 result = !this._isLiveMediaEntry(entry.mediaType) && mediaType !== KalturaMediaType.audio;
                 break;
+            case ContentEntryViewSections.Thumbnails:
             case ContentEntryViewSections.AccessControl:
             case ContentEntryViewSections.Scheduling:
             case ContentEntryViewSections.Related:

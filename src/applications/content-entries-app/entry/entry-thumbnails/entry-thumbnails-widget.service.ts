@@ -136,37 +136,40 @@ export class EntryThumbnailsWidget extends EntryWidget {
             }
         });
         // create an empty ThumbnailRow data for each missing thumbnail dimension specified in any response profile
+        const isImageEntry = this.data.mediaType === KalturaMediaType.image;
         this._distributionProfiles.forEach((profile: KalturaDistributionProfile) => {
-            const requiredThumbDimensions: KalturaDistributionThumbDimensions[] = profile.requiredThumbDimensions;
-            requiredThumbDimensions.forEach((dimensions: KalturaDistributionThumbDimensions) => {
-                const requiredWidth = dimensions.width;
-                const requiredHeight = dimensions.height;
-                let foundCorrespondingThumbnail = false;
-                thumbs.forEach((thumbnail: ThumbnailRow) => {
-                    // found thumbnail with the required dimensions - add the distrubution name to the thumbnail distributors
-                    if (thumbnail.width === requiredWidth && thumbnail.height === requiredHeight) {
-                        foundCorrespondingThumbnail = true;
-                        thumbnail.distributors = thumbnail.distributors.length > 0 ? thumbnail.distributors + ", " + profile.name : profile.name;
+            if (!isImageEntry || (isImageEntry && profile.supportImageEntry)) {
+                const requiredThumbDimensions: KalturaDistributionThumbDimensions[] = profile.requiredThumbDimensions;
+                requiredThumbDimensions.forEach((dimensions: KalturaDistributionThumbDimensions) => {
+                    const requiredWidth = dimensions.width;
+                    const requiredHeight = dimensions.height;
+                    let foundCorrespondingThumbnail = false;
+                    thumbs.forEach((thumbnail: ThumbnailRow) => {
+                        // found thumbnail with the required dimensions - add the distrubution name to the thumbnail distributors
+                        if (thumbnail.width === requiredWidth && thumbnail.height === requiredHeight) {
+                            foundCorrespondingThumbnail = true;
+                            thumbnail.distributors = thumbnail.distributors.length > 0 ? thumbnail.distributors + ", " + profile.name : profile.name;
+                        }
+                    });
+                    if (!foundCorrespondingThumbnail) {
+                        // create a new missing thumb placeholder and append it to the thumbnails array
+                        let missingThumb: ThumbnailRow = {
+                            id: "",
+                            status: KalturaThumbAssetStatus.error,
+                            width: requiredWidth,
+                            height: requiredHeight,
+                            size: NaN,
+                            isDefault: false,
+                            distributors: profile.name,
+                            url: '',
+                            uploadStatus: false,
+                            fileExt: '',
+                            tags: ''
+                        };
+                        thumbs.push(missingThumb);
                     }
                 });
-                if (!foundCorrespondingThumbnail) {
-                    // create a new missing thumb placeholder and append it to the thumbnails array
-                    let missingThumb: ThumbnailRow = {
-                        id: "",
-                        status: KalturaThumbAssetStatus.error,
-                        width: requiredWidth,
-                        height: requiredHeight,
-                        size: NaN,
-                        isDefault: false,
-                        distributors: profile.name,
-                        url: '',
-                        uploadStatus: false,
-                        fileExt: '',
-                        tags: ''
-                    };
-                    thumbs.push(missingThumb);
-                }
-            });
+            }
         });
         this._thumbnails.next({items: thumbs});
     }
