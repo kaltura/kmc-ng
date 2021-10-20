@@ -1,3 +1,13 @@
+<a name="7.0.1"></a>
+## [7.0.1](https://github.com/kaltura/kmc-ng/compare/v7.0.0...v7.0.1) (2021-10-20)
+
+
+### Bug Fixes
+
+* **entry/distribution:** add distribution and thumbnails to image entry  KMCNG-2378 ([#970](https://github.com/kaltura/kmc-ng/issues/970)) ([bfc7b7b](https://github.com/kaltura/kmc-ng/commit/bfc7b7b))
+
+
+
 <a name="7.0.0"></a>
 # [7.0.0](https://github.com/kaltura/kmc-ng/compare/v6.6.2...v7.0.0) (2021-10-05)
 
