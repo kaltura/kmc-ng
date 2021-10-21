@@ -283,6 +283,7 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
               profile,
               {
                 autoDistribution,
+                supportImageEntry: relevantPartnerProfile.supportImageEntry,
                 name: relevantPartnerProfile.name
               }
             );
@@ -292,19 +293,13 @@ export class EntryDistributionWidget extends EntryWidget implements OnDestroy {
         });
 
         const isImageEntry = this.data.mediaType === KalturaMediaType.image;
-        const filteredDistributedProfiles = distributedProfiles.filter(
-            profile => isImageEntry ? profile.supportImageEntry : !profile.supportImageEntry);
-        const filteredUndistributedProfiles = undistributedProfiles.filter(
-            profile => isImageEntry ? profile.supportImageEntry : !profile.supportImageEntry);
-        const filteredPartnerDistributionProfiles = partnerDistributionProfiles.filter(
-            profile => isImageEntry ? profile.supportImageEntry : !profile.supportImageEntry);
 
         return {
           flavors,
           thumbnails,
-          distributedProfiles: filteredDistributedProfiles,
-          undistributedProfiles: filteredUndistributedProfiles,
-          partnerDistributionProfiles: filteredPartnerDistributionProfiles
+          distributedProfiles: isImageEntry ? distributedProfiles.filter(profile => profile.supportImageEntry) : distributedProfiles,
+          undistributedProfiles: isImageEntry ?  undistributedProfiles.filter(profile => profile.supportImageEntry) : undistributedProfiles,
+          partnerDistributionProfiles: isImageEntry ?  partnerDistributionProfiles.filter(profile => profile.supportImageEntry) : partnerDistributionProfiles
         };
       }));
   }
