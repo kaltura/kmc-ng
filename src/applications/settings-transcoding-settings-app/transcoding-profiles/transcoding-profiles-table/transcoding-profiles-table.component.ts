@@ -30,6 +30,7 @@ export abstract class TranscodingProfilesTableComponent implements OnInit, After
 
   public _profiles = [];
   public _emptyMessage = '';
+  public systemProfileTooltip = '';
   public _items: MenuItem[];
   public _deferredLoading = true;
   public _deferredProfiles = [];
@@ -45,6 +46,7 @@ export abstract class TranscodingProfilesTableComponent implements OnInit, After
 
   ngOnInit() {
     this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
+    this.systemProfileTooltip = this._appLocalization.get('applications.settings.transcoding.profile.systemProfileTooltip');
   }
 
   ngAfterViewInit() {
@@ -64,34 +66,44 @@ export abstract class TranscodingProfilesTableComponent implements OnInit, After
   }
 
   private _buildMenu(profile: KalturaConversionProfileWithAsset): void {
-    if (profile.isDefault) {
-      this._items = [
-        {
-          id: 'edit',
-          label: this._appLocalization.get('applications.settings.transcoding.edit'),
-          command: () => this._onActionSelected('edit', profile)
-        }
-      ];
-    } else {
-      this._items = [
-        {
-          id: 'setAsDefault',
-          label: this._appLocalization.get('applications.settings.transcoding.setAsDefault'),
-          command: () => this._onActionSelected('setAsDefault', profile)
-        },
-        {
-          id: 'edit',
-          label: this._appLocalization.get('applications.settings.transcoding.edit'),
-          command: () => this._onActionSelected('edit', profile)
-        },
-        {
-          id: 'delete',
-          label: this._appLocalization.get('applications.settings.transcoding.delete'),
-          styleClass: 'kDanger',
-          command: () => this._onActionSelected('delete', profile)
-        }
-      ];
-    }
+      if (profile.partnerId === 0) {
+          this._items = [
+              {
+                  id: 'edit',
+                  label: this._appLocalization.get('applications.settings.transcoding.view'),
+                  command: () => this._onActionSelected('edit', profile)
+              }
+          ];
+      } else {
+          if (profile.isDefault) {
+              this._items = [
+                  {
+                      id: 'edit',
+                      label: this._appLocalization.get('applications.settings.transcoding.edit'),
+                      command: () => this._onActionSelected('edit', profile)
+                  }
+              ];
+          } else {
+              this._items = [
+                  {
+                      id: 'setAsDefault',
+                      label: this._appLocalization.get('applications.settings.transcoding.setAsDefault'),
+                      command: () => this._onActionSelected('setAsDefault', profile)
+                  },
+                  {
+                      id: 'edit',
+                      label: this._appLocalization.get('applications.settings.transcoding.edit'),
+                      command: () => this._onActionSelected('edit', profile)
+                  },
+                  {
+                      id: 'delete',
+                      label: this._appLocalization.get('applications.settings.transcoding.delete'),
+                      styleClass: 'kDanger',
+                      command: () => this._onActionSelected('delete', profile)
+                  }
+              ];
+          }
+      }
 
     this._permissionsService.filterList(<{ id: string }[]>this._items, { 'delete': KMCPermissions.TRANSCODING_DELETE });
   }

@@ -1,3 +1,46 @@
+<a name="7.0.1"></a>
+## [7.0.1](https://github.com/kaltura/kmc-ng/compare/v7.0.0...v7.0.1) (2021-10-20)
+
+
+### Bug Fixes
+
+* **entry/distribution:** add distribution and thumbnails to image entry  KMCNG-2378 ([#970](https://github.com/kaltura/kmc-ng/issues/970)) ([bfc7b7b](https://github.com/kaltura/kmc-ng/commit/bfc7b7b))
+
+
+
+<a name="7.0.0"></a>
+# [7.0.0](https://github.com/kaltura/kmc-ng/compare/v6.6.2...v7.0.0) (2021-10-05)
+
+
+### Features
+
+* **core:** Upgrade to Angular11  ([#928](https://github.com/kaltura/kmc-ng/issues/928)) ([26b22ae](https://github.com/kaltura/kmc-ng/commit/26b22ae)), closes [#945](https://github.com/kaltura/kmc-ng/issues/945) [#946](https://github.com/kaltura/kmc-ng/issues/946) [#949](https://github.com/kaltura/kmc-ng/issues/949) [#950](https://github.com/kaltura/kmc-ng/issues/950) [#947](https://github.com/kaltura/kmc-ng/issues/947) [#952](https://github.com/kaltura/kmc-ng/issues/952) [#948](https://github.com/kaltura/kmc-ng/issues/948) [#951](https://github.com/kaltura/kmc-ng/issues/951) [#953](https://github.com/kaltura/kmc-ng/issues/953) [#954](https://github.com/kaltura/kmc-ng/issues/954) [#956](https://github.com/kaltura/kmc-ng/issues/956) [#958](https://github.com/kaltura/kmc-ng/issues/958) [#957](https://github.com/kaltura/kmc-ng/issues/957) [#961](https://github.com/kaltura/kmc-ng/issues/961) [#960](https://github.com/kaltura/kmc-ng/issues/960)
+
+
+
+<a name="6.6.2"></a>
+## [6.6.2](https://github.com/kaltura/kmc-ng/compare/v6.6.1...v6.6.2) (2021-08-09)
+
+
+### Bug Fixes
+
+* **settings/integration:** fix creation / update date change upon zoom profile update KMCNG-2384 ([b0262e8](https://github.com/kaltura/kmc-ng/commit/b0262e8))
+* **settings/transcoding:** list Zoom transcoding profiles KMCNG-2383 
+
+
+
+<a name="6.6.1"></a>
+# [6.6.1](https://github.com/kaltura/kmc-ng/compare/v6.6.0...v6.6.1) (2021-05-10)
+
+
+### Bug Fixes
+
+* **create/live:** disable record option if no permission for recording live stream KMCNG-2369
+* **settings/integration:** Zoom Integration - Display account description KMCNG-2362
+* **entry/live:** Ignore missing backup URL
+
+
+
 <a name="6.6.0"></a>
 # [6.6.0](https://github.com/kaltura/kmc-ng/compare/v6.5.3...v6.6.0) (2021-05-10)
 

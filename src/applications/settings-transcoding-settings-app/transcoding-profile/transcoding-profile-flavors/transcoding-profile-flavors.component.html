@@ -16,6 +16,7 @@
       class="kTranscodingProfilesFlavorsTable"
       [flavors]="_widgetService.flavors"
       [isNewProfile]="_widgetService.isNewData"
+      [isSystemProfile]="_widgetService.isSystemProfile"
       (selectedFlavorsChange)="_widgetService.updateSelectionState()"
       (editFlavor)="_editFlavor($event)"
       [(selectedFlavors)]="_widgetService.selectedFlavors">

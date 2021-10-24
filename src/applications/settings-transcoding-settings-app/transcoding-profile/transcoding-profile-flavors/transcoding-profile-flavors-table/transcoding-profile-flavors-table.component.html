@@ -10,7 +10,7 @@
         <ng-template pTemplate="header">
             <tr>
                 <th [ngStyle]="{'width':'44px', 'padding-left': '16px'}">
-                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    <p-tableHeaderCheckbox [disabled]="!_isEditAllowed"></p-tableHeaderCheckbox>
                 </th>
                 <th [ngStyle]="{'padding-left': _isEditAllowed ? '6.5px' : '16px'}">
                     {{'applications.settings.transcoding.flavors.table.name' | translate}}
@@ -37,7 +37,7 @@
         <ng-template pTemplate="body" let-flavor>
             <tr [pSelectableRow]="flavor">
                 <td [ngStyle]="{'width':'44px', 'padding-left': '16px'}">
-                    <p-tableCheckbox [value]="flavor"></p-tableCheckbox>
+                    <p-tableCheckbox [value]="flavor" [disabled]="!_isEditAllowed"></p-tableCheckbox>
                 </td>
                 <td [ngStyle]="{'padding-left': _isEditAllowed ? '6.5px' : '16px'}">
                     <div class="kTitle kTableColumn" [kTooltip]="flavor.name"

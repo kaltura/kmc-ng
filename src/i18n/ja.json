@@ -457,7 +457,7 @@
                     "useAkamaiHdProtocol": "このHDS URLではAkamai HDプロトコルが使用されています。",
                     "errors": {
                         "required": "このフィールドは必須です",
-                        "enterUrl": "少なくとも1つのHDS/HLSストリームURLを入力する必要があります",
+                        "enterUrl": "少なくとも1つのHDS/HLS/DASHストリームURLを入力する必要があります",
                         "invalidUrl": "有効なURLを入力する必要があります"
                     }
                 },
