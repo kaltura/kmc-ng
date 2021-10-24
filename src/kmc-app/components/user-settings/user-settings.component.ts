@@ -3,7 +3,6 @@ import {BrowserService} from 'app-shared/kmc-shell';
 import {AppAuthentication, AppUser} from 'app-shared/kmc-shell';
 import { kmcAppConfig } from '../../kmc-app-config';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'kKMCUserSettings',
@@ -22,7 +21,7 @@ export class UserSettingsComponent {
   public userInitials: string;
   public partnerInfo: string[];
 
-  constructor(public _userAuthentication: AppAuthentication, private browserService: BrowserService, private _router: Router) {
+  constructor(public _userAuthentication: AppAuthentication, private browserService: BrowserService) {
       kmcAppConfig.locales.forEach(locale => {
       this._languages.push({label: locale.label, value: locale.id});
     });
@@ -58,9 +57,5 @@ export class UserSettingsComponent {
       this.browserService.setInLocalStorage('kmc_date_format', event.value);
       this._userAuthentication.reload();
   }
-
-    egg(){
-        this._router.navigateByUrl(kmcAppConfig.routing.errorRoute, { replaceUrl: true });
-    }
 
 }

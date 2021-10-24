@@ -1,12 +1,6 @@
 <div class="kUserSettings">
     <ul>
-        <!--li class="kMenuItemLabel"><span class="kIcon kIconuser_small"></span>
-            <div class="kMenuItem">
-                <div>{{_userAuthentication.appUser?.fullName}}</div>
-            </div>
-        </li-->
         <li class="kMenuItemLabel">
-<!--            <span (dblclick)="egg()" class="kIcon kIconhouse"></span>-->
             <div class="kUserInitials">{{userInitials}}</div>
             <div class="kMenuItem partner-info">
                 <p *ngFor="let info of partnerInfo">{{info}}</p>
@@ -15,9 +9,6 @@
     </ul>
 
     <hr>
-    <!--div class="kMenuItemLabel">
-        <span>{{'app.languageMenu.selectLang' | translate}}</span>
-    </div-->
 
     <ul class="kLanguages kOverrideFAIcons">
         <p-dropdown [options]="_languages" [(ngModel)]="_selectedLanguage" [scrollHeight]="300"
@@ -30,12 +21,14 @@
     </ul>
 
     <hr>
+
     <div class="kLinks">
         <a (click)="changeAccountPopup.open();parentPopup.close()">{{'app.userSettings.changeAccount' | translate}}</a>
         <a (click)="logout()">{{'app.userSettings.logout' | translate}}</a>
     </div>
 
 </div>
+
 <kPopupWidget #changeAccountPopup data-aid="changeAccountPopup" [popupWidth]="500" [popupHeight]="370" [modal]="true">
     <ng-template>
         <kChangeAccount></kChangeAccount>
