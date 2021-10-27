@@ -101,11 +101,19 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
             {
                 menuTitle: this._appLocalization.get('app.titles.analyticsBW'),
                 isAvailable: true,
-                isActiveView: (activePath: string) => (activePath.indexOf(`/analytics/publisher`) !== -1 || activePath.indexOf(`/analytics/enduser`) !== -1 ),
+                isActiveView: (activePath: string) => (activePath.indexOf(`/analytics/overview`) !== -1 || activePath.indexOf(`/analytics/publisher`) !== -1 || activePath.indexOf(`/analytics/enduser`) !== -1 ),
                 open: () => {
-                    this._router.navigateByUrl('/analytics/publisher');
+                    this._router.navigateByUrl('/analytics/overview');
                 },
                 children: [
+                    {
+                        isAvailable: true,
+                        isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/overview`) !== -1),
+                        open: () => {
+                            this._router.navigateByUrl('/analytics/overview');
+                        },
+                        menuTitle: this._appLocalization.get('app.titles.analyticsOverview')
+                    },
                     {
                         isAvailable: true,
                         isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/publisher`) !== -1),
