@@ -1,8 +1,10 @@
 import { KalturaPartnerAuthenticationType } from "kaltura-ngx-client";
+import {KalturaPartnerStatus} from "kaltura-ngx-client/lib/api/types/KalturaPartnerStatus";
 
 export interface PartnerInfo {
     partnerId: number;
     name: string;
+    status: KalturaPartnerStatus,
     adminSecret: string;
     partnerPackage: PartnerPackageTypes;
     landingPage: string;
