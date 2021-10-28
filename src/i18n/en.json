@@ -259,6 +259,20 @@
             "messageNav": "This view cannot be loaded.\nIf the problem persists - contact Kaltura support.\nClick OK to navigate to the main view."
         }
     },
+    "selfServe": {
+        "unMute": "Unmute",
+        "getStarted": "Get Started",
+        "startPlan": "Start Plan",
+        "trial": "Free Trial Plan",
+        "credits": "{{0}} Credits Left",
+        "balance": "Credit Balance",
+        "buy": "Buy Credit",
+        "manage": "Manage Subscription",
+        "trialExpired": "Your free trial expired",
+        "dunning": "Your account is about to be deactivated.",
+        "deactivated": "Your account is currently deactivated.",
+        "update": "Update Payment Method"
+    },
     "applications": {
         "embed":{
             "previewShare": "Share & Embed",

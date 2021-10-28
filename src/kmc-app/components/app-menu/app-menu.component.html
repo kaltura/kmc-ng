@@ -29,6 +29,9 @@
                 <k-logs-record mode="button"
                                *ngIf="(_kmcLogs.logsRecordMode | async).enabled"
                                [logLevel]="(_kmcLogs.logsRecordMode | async).logLevel"></k-logs-record>
+
+                <button *ngIf="_showStartPlan" (click)="startPlan()" class="kButtonBranded kStartPlan" pButton [label]="'selfServe.startPlan' | translate"></button>
+
                 <kUploadMonitor [appmenu]="appmenu"></kUploadMonitor>
 
                 <i *ngFor="let item of rightMenuConfig" (click)="item.open()" [ngClass]="item.icon" [class.open]="item === selectedMenuItem" [kTooltip]="item.menuTitle" [placement]="'bottom'"></i>

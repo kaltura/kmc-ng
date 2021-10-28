@@ -218,7 +218,13 @@
         display: flex;
     }
 }
-
+.kStartPlan {
+    margin-right: 8px;
+    background: rgba(0,0,0,0.5);
+    &:hover {
+        background: rgba(0,0,0,0.3);
+    }
+}
 .kHeader {
     height: 78px;
     width: 100%;

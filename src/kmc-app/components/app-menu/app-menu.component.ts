@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
+import {AppAuthentication, BrowserService, PartnerPackageTypes} from 'app-shared/kmc-shell';
 import {buildBaseUri, serverConfig} from 'config/server';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {KmcLoggerConfigurator} from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
@@ -11,6 +11,7 @@ import {globalConfig} from 'config/global';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {ResetMenuEvent, UpdateMenuEvent} from 'app-shared/kmc-shared/events';
+import {KalturaPartnerStatus} from "kaltura-ngx-client";
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -36,6 +37,7 @@ export class AppMenuComponent implements OnInit, OnDestroy {
     public _mediaManagementLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.mediaManagement;
     public _supportLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.customerCare && !!serverConfig.externalLinks.kaltura.customerPortal;
     public _supportLegacyExists = false;
+    public _showStartPlan = false;
     public _contextualHelp: ContextualHelpLink[] = [];
     public menuID = 'kmc'; // used when switching menus to Analytics menu or future application menus
     public _isMultiAccount = false;
@@ -89,6 +91,9 @@ export class AppMenuComponent implements OnInit, OnDestroy {
         if (this._userAuthentication.appUser?.fullName) {
             this.userInitials = this._userAuthentication.appUser.fullName.toUpperCase().split(' ').slice(0, 2).map(s => s[0]).join('');
         }
+
+        const partnerInfo = this._userAuthentication.appUser.partnerInfo;
+        this._showStartPlan = partnerInfo.partnerPackage ===  PartnerPackageTypes.PartnerPackageFree && partnerInfo.status === KalturaPartnerStatus.active;
     }
 
     ngOnInit() {
@@ -176,5 +181,9 @@ export class AppMenuComponent implements OnInit, OnDestroy {
     public _changelogPopupOpened(): void {
         this._showChangelog = false;
         this._browserService.setInLocalStorage(this._appCachedVersionToken, globalConfig.client.appVersion);
+    }
+
+    public startPlan(): void {
+        // TODO - add start plan logic
     }
 }
