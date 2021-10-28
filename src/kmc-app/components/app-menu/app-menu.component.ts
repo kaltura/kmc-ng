@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {AppAuthentication, BrowserService, PartnerPackageTypes} from 'app-shared/kmc-shell';
+import {AppAuthentication, AppUserStatus, BrowserService, PartnerPackageTypes} from 'app-shared/kmc-shell';
 import {buildBaseUri, serverConfig} from 'config/server';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {KmcLoggerConfigurator} from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
@@ -38,9 +38,12 @@ export class AppMenuComponent implements OnInit, OnDestroy {
     public _supportLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.customerCare && !!serverConfig.externalLinks.kaltura.customerPortal;
     public _supportLegacyExists = false;
     public _showStartPlan = false;
+    public _isFreeTrial = false;
+    public _showNotificationsBar = false;
     public _contextualHelp: ContextualHelpLink[] = [];
     public menuID = 'kmc'; // used when switching menus to Analytics menu or future application menus
     public _isMultiAccount = false;
+    public _appUserStatus: AppUserStatus = null;
 
     menuConfig: KMCAppMenuItem[];
     leftMenuConfig: KMCAppMenuItem[];
@@ -93,7 +96,14 @@ export class AppMenuComponent implements OnInit, OnDestroy {
         }
 
         const partnerInfo = this._userAuthentication.appUser.partnerInfo;
-        this._showStartPlan = partnerInfo.partnerPackage ===  PartnerPackageTypes.PartnerPackageFree && partnerInfo.status === KalturaPartnerStatus.active;
+        if (partnerInfo.partnerPackage ===  PartnerPackageTypes.PartnerPackageFree) {
+            this._isFreeTrial = true;
+            this._appUserStatus = partnerInfo.status === KalturaPartnerStatus.active ? AppUserStatus.FreeTrialActive : AppUserStatus.FreeTrialBlocked;
+        } else if (partnerInfo.partnerPackage ===  PartnerPackageTypes.PartnerPackagePaid) {
+            this._appUserStatus = partnerInfo.status === KalturaPartnerStatus.active ? AppUserStatus.PaidActive : AppUserStatus.PaidBlocked;
+        }
+        this._showStartPlan = this._appUserStatus ===  AppUserStatus.FreeTrialActive;
+        this._showNotificationsBar = this._appUserStatus ===  AppUserStatus.FreeTrialBlocked || this._appUserStatus ===  AppUserStatus.PaidBlocked;
     }
 
     ngOnInit() {
@@ -185,5 +195,9 @@ export class AppMenuComponent implements OnInit, OnDestroy {
 
     public startPlan(): void {
         // TODO - add start plan logic
+    }
+
+    public updatePayment(): void {
+        // TODO - add update payment logic
     }
 }

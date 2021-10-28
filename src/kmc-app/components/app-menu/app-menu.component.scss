@@ -218,6 +218,35 @@
         display: flex;
     }
 }
+.kNotificationsBar {
+    background-color: $kDandger;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .notification {
+        color: white;
+        font-size: 14px;
+        font-weight: 700;
+        margin-right: 8px;
+    }
+    .kNotificationBtn {
+        font-size: 13px;
+        color: white;
+        font-weight: 700;
+        height: 24px;
+        background: rgba(255, 255, 255, 0.2);
+        margin-left: 8px;
+        &:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        &:active {
+            box-shadow: 0 0 0 1px rgb(255 255 255 / 60%);
+        }
+    }
+}
+
 .kStartPlan {
     margin-right: 8px;
     background: rgba(0,0,0,0.5);

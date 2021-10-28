@@ -1,4 +1,10 @@
 <kSticky stickyId="header" [stickyClass]="'kStickyClass'">
+    <div *ngIf="_showNotificationsBar" class="kNotificationsBar">
+        <span class="notification" *ngIf="_isFreeTrial">{{'selfServe.trialExpired' | translate}}</span>
+        <button *ngIf="_isFreeTrial" (click)="startPlan()" class="kButtonBranded kNotificationBtn" pButton [label]="'selfServe.startPlan' | translate"></button>
+        <span class="notification" *ngIf="!_isFreeTrial">{{'selfServe.deactivated' | translate}}</span>
+        <button *ngIf="!_isFreeTrial" (click)="updatePayment()" class="kButtonBranded kNotificationBtn" pButton [label]="'selfServe.update' | translate"></button>
+    </div>
     <div class="kMainMenuWrapper">
         <kLazyModuleLoadingProgressBar></kLazyModuleLoadingProgressBar>
         <div #appmenu class="appMenu">
