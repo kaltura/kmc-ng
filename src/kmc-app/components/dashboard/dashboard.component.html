@@ -7,18 +7,14 @@
   <kScrollToTop [scrollOffset]="50"></kScrollToTop>
 </div>
 
-<kPopupWidget #whatsNew data-aid="whatsNew" [popupWidth]="644" [popupHeight]="617" [modal]="true" [closeBtn]="true">
-    <div class="whatsNew">
-        <img width="644" height="284" [src]="_bannerUri"/>
-        <div class="kHeader">
-            <span class="kTitle">Welcome to Connect</span>
+<kPopupWidget #whatsNew data-aid="whatsNew" [popupWidth]="586" [popupHeight]="511" [modal]="true" [closeBtn]="false">
+    <ng-template>
+        <div class="getStarted">
+            <app-k-player-v7 [width]="586" [height]="441" [autoPlay]="true" [muted]="true" [cdnUrl]="_cdnUrl" [pid]="_pid" [uiconfid]="_uiconf" [entryid]="_entryId" [ks]="_ks"></app-k-player-v7>
+            <button *ngIf="_showUnmuteBtn" icon="kMute" class="kButtonBranded kUnmuteBtn" type="button" pButton label="{{'selfServe.unMute' | translate}}" (click)="unmute()"></button>
+            <div class="kFooter">
+                <button class="kButtonBranded" type="button" pButton label="{{'selfServe.getStarted' | translate}}" (click)="closeWin()"></button>
+            </div>
         </div>
-        <div class="kWelcomeContent">
-            <span>Join us for our user conference, for speakers from across the video ecosystem, roadmap sessions for Kaltura products, exhibitors, opportunities to speak to the Kaltura product team, and an optional training day.</span>
-        </div>
-
-        <div class="kFooter">
-            <button class="kButtonBranded" type="button" pButton label="Register Now" (click)="register()"></button>
-        </div>
-    </div>
+    </ng-template>
 </kPopupWidget>

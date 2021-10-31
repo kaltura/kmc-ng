@@ -15,6 +15,7 @@ import {CategoriesStatusModule} from 'app-shared/content-shared/categories-statu
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { LocalizationModule } from '@kaltura-ng/mc-shared';
 import { KalturaLoggerInjectionToken } from '@kaltura-ng/kaltura-common';
+import { KalturaPlayerV7Component } from 'app-shared/kmc-shared/player-v7';
 
 export function createTranslateLoader(http: HttpClient) {
     return new TranslateHttpLoader(http, './i18n/', '.json');
@@ -217,6 +218,7 @@ export function kalturaClientDefaultOptionsFactory(): KalturaRequestOptionsArgs 
       InvalidRestorePasswordHashFormComponent,
       ProgressBarComponent,
       PersistLoginByKsComponent,
+      KalturaPlayerV7Component,
   ],
   bootstrap: [
     AppComponent

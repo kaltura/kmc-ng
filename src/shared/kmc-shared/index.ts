@@ -8,3 +8,4 @@ export * from './dynamic-metadata-form';
 export * from './server-polls';
 export * from './kedit-hoster';
 export * from './reach-frame';
+export * from './player-v7';
