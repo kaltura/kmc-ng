@@ -4,6 +4,7 @@
 
 ### Bug Fixes
 
+* **content/category:** chore(create/live): disable live recording according to permissions KMCNG-2369 ([d297daa](https://github.com/kaltura/kmc-ng/commit/d297daa))
 * **content/category:** fix link to parent category ([16809cc](https://github.com/kaltura/kmc-ng/commit/16809cc))
 * **content/playlist:** fix filter change detection SUP-27709 ([03cd11a](https://github.com/kaltura/kmc-ng/commit/03cd11a))
 * **entry/metadata:** fix date input width for entry and category custom metadata SUP-29730 ([332ebaa](https://github.com/kaltura/kmc-ng/commit/332ebaa))
