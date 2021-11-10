@@ -1,15 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-    AnalyticsNewMainViewService,
-    KMCAppMenuItem,
-    LiveAnalyticsMainViewService
-} from 'app-shared/kmc-shared/kmc-views';
+import { AnalyticsNewMainViewService, KMCAppMenuItem, LiveAnalyticsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ResetMenuEvent, UpdateMenuEvent } from 'app-shared/kmc-shared/events';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
-import {KMCPermissions, KMCPermissionsService} from "app-shared/kmc-shared/kmc-permissions";
+import { KMCPermissionsService } from "app-shared/kmc-shared/kmc-permissions";
+import { AppAuthentication } from "app-shared/kmc-shell";
 
 @Component({
     selector: 'kAnalytics',
@@ -23,6 +20,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
 
     constructor(private _appLocalization: AppLocalization,
                 private _appEvents: AppEventsService,
+                private _appAuthentication: AppAuthentication,
                 private _router: Router,
                 private _browserService: BrowserService,
                 private _permissions: KMCPermissionsService,
@@ -36,6 +34,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
             }
             return;
         }
+        const isSelfserve = this._appAuthentication.appUser.partnerInfo.isSelfServe;
 
         this.menuConfig = [
             {
@@ -103,9 +102,9 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                 isAvailable: true,
                 isActiveView: (activePath: string) => (activePath.indexOf(`/analytics/overview`) !== -1 || activePath.indexOf(`/analytics/publisher`) !== -1 || activePath.indexOf(`/analytics/enduser`) !== -1 ),
                 open: () => {
-                    this._router.navigateByUrl('/analytics/overview');
+                    isSelfserve ? this._router.navigateByUrl('/analytics/overview') : this._router.navigateByUrl('/analytics/publisher');
                 },
-                children: [
+                children: isSelfserve ? [
                     {
                         isAvailable: true,
                         isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/overview`) !== -1),
@@ -114,6 +113,23 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                         },
                         menuTitle: this._appLocalization.get('app.titles.analyticsOverview')
                     },
+                    {
+                        isAvailable: true,
+                        isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/publisher`) !== -1),
+                        open: () => {
+                            this._router.navigateByUrl('/analytics/publisher');
+                        },
+                        menuTitle: this._appLocalization.get('app.titles.analyticsPublisher')
+                    },
+                    {
+                        isAvailable: true,
+                        isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/enduser`) !== -1),
+                        open: () => {
+                            this._router.navigateByUrl('/analytics/enduser');
+                        },
+                        menuTitle: this._appLocalization.get('app.titles.analyticsEndUser')
+                    }
+                ] : [
                     {
                         isAvailable: true,
                         isActiveView:  (activePath: string) => (activePath.indexOf(`/analytics/publisher`) !== -1),
