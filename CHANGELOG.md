@@ -1,3 +1,11 @@
+<a name="7.0.3"></a>
+## [7.0.3](https://github.com/kaltura/kmc-ng/compare/v7.0.2...v7.0.3) (2021-11-17)
+
+### Bug Fixes
+
+* **analytics:** add support for Usage Dashboard
+
+
 <a name="7.0.2"></a>
 ## [7.0.2](https://github.com/kaltura/kmc-ng/compare/v7.0.1...v7.0.2) (2021-11-03)
 
