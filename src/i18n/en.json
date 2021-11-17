@@ -66,6 +66,7 @@
             "allAccounts": "All Accounts",
             "parentOnly": "Parent Only",
             "analyticsBW": "Usage",
+            "analyticsOverview": "Overview",
             "analyticsPublisher": "Publishers Bandwidth & Storage",
             "analyticsEndUser": "End Users Storage",
             "analyticsTopContributors": "Top Contributors",

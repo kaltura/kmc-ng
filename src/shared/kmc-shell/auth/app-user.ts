@@ -9,6 +9,7 @@ export interface PartnerInfo {
     adultContent: boolean;
     blockDirectLogin: boolean;
     publisherEnvironmentType: number;
+    isSelfServe: boolean;
     authenticationType: KalturaPartnerAuthenticationType;
 }
 
