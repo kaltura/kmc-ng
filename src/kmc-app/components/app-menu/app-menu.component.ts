@@ -103,7 +103,7 @@ export class AppMenuComponent implements OnInit, OnDestroy {
             this._appUserStatus = partnerInfo.status === KalturaPartnerStatus.active ? AppUserStatus.PaidActive : AppUserStatus.PaidBlocked;
         }
         this._showStartPlan = this._appUserStatus ===  AppUserStatus.FreeTrialActive;
-        this._showNotificationsBar = this._appUserStatus ===  AppUserStatus.FreeTrialBlocked || this._appUserStatus ===  AppUserStatus.PaidBlocked;
+        this._showNotificationsBar = partnerInfo.isSelfServe && (this._appUserStatus ===  AppUserStatus.FreeTrialBlocked || this._appUserStatus ===  AppUserStatus.PaidBlocked);
     }
 
     ngOnInit() {
