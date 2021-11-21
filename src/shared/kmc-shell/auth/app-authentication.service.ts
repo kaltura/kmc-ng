@@ -340,7 +340,8 @@ export class AppAuthentication {
                 adultContent: partner.adultContent,
                 publisherEnvironmentType: partner.publisherEnvironmentType,
                 publishersQuota: partner.publishersQuota,
-                authenticationType: partner.authenticationType
+                authenticationType: partner.authenticationType,
+                isSelfServe: partner.isSelfServe
             }
         });
 

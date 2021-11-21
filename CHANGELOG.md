@@ -1,3 +1,24 @@
+<a name="7.0.3"></a>
+## [7.0.3](https://github.com/kaltura/kmc-ng/compare/v7.0.2...v7.0.3) (2021-11-17)
+
+### Bug Fixes
+
+* **analytics:** add support for Usage Dashboard
+
+
+<a name="7.0.2"></a>
+## [7.0.2](https://github.com/kaltura/kmc-ng/compare/v7.0.1...v7.0.2) (2021-11-03)
+
+
+### Bug Fixes
+
+* **create/live:** disable live recording according to permissions KMCNG-2369 ([d297daa](https://github.com/kaltura/kmc-ng/commit/d297daa))
+* **content/category:** fix link to parent category ([16809cc](https://github.com/kaltura/kmc-ng/commit/16809cc))
+* **content/playlist:** fix filter change detection SUP-27709 ([03cd11a](https://github.com/kaltura/kmc-ng/commit/03cd11a))
+* **entry/metadata:** fix date input width for entry and category custom metadata SUP-29730 ([332ebaa](https://github.com/kaltura/kmc-ng/commit/332ebaa))
+
+
+
 <a name="7.0.1"></a>
 ## [7.0.1](https://github.com/kaltura/kmc-ng/compare/v7.0.0...v7.0.1) (2021-10-20)
 

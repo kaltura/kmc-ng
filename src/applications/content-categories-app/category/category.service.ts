@@ -437,8 +437,9 @@ export class CategoryService implements OnDestroy {
 
         if (this.categoryId !== categoryId) {
             this.canLeaveWithoutSaving()
-                .filter(({ allowed }) => allowed)
-                .pipe(cancelOnDestroy(this))
+                .pipe(
+                    filter(({ allowed }) => allowed),
+                    cancelOnDestroy(this))
                 .subscribe(() => {
                     if (category instanceof KalturaCategory) {
                         this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });
