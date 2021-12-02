@@ -10,6 +10,36 @@
 
     <hr>
 
+    <div *ngIf="isSelfServe && isFreeTrial">
+        <div class="kPlan">
+            <div class="kLinks">
+                <span class="kTitle">{{'selfServe.trial' | translate}}</span>
+                <span class="kTitle kCredit">{{'selfServe.credits' | translate: {'0': creditLeft } }}</span>
+            </div>
+            <button type="button" class="kButtonBranded" pButton label="{{'selfServe.startPlan' | translate}}" (click)="startPlan()"></button>
+        </div>
+        <hr>
+    </div>
+
+    <div *ngIf="isSelfServe && isPayingCustomer">
+        <div class="kPlan">
+            <div class="kLinks">
+                <span class="kTitle">{{'selfServe.balance' | translate}}</span>
+                <span class="kTitle kCredit">{{'selfServe.creditsBalance' | translate: {'0': creditBalance } }}</span>
+            </div>
+            <button type="button" class="kButtonBranded" pButton label="{{'selfServe.buy' | translate}}" (click)="buyCredit()"></button>
+        </div>
+        <hr>
+    </div>
+
+    <div *ngIf="isSelfServe">
+        <div class="kLinks">
+            <a *ngIf="isPayingCustomer" (click)="openKPF()">{{'selfServe.manage' | translate}}</a>
+            <a (click)="openUsageDashboard()">{{'app.titles.usageDashboardPageTitle' | translate}}</a>
+        </div>
+        <hr>
+    </div>
+
     <ul class="kLanguages kOverrideFAIcons">
         <p-dropdown [options]="_languages" [(ngModel)]="_selectedLanguage" [scrollHeight]="300"
                     (onChange)="onLangSelected($event)"></p-dropdown>

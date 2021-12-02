@@ -5,10 +5,26 @@
     padding-right: 16px;
     padding-top: 3px;
     padding-bottom: 8px;
+    .kPlan {
+        display: flex;
+        align-items: center;
+        .kTitle {
+            color: $kGrayscale1;
+            font-size: 14px;
+            font-weight: 700;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+        .kCredit {
+            color: $kGrayscale3;
+        }
+        button {
+            margin-left: auto;
+        }
+    }
     .kLinks {
         display: flex;
         flex-direction: column;
-        padding-bottom: 4px;
     }
     a {
         margin-top: 4px;
@@ -68,8 +84,8 @@ hr{
 }
 
 :host ::ng-deep .p-dropdown {
-    min-width: 208px;
-    width: 208px !important;
+    min-width: 228px;
+    width: 228px !important;
 }
 
 .kUserInitials {

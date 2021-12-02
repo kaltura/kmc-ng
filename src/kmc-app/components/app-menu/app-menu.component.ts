@@ -194,10 +194,10 @@ export class AppMenuComponent implements OnInit, OnDestroy {
     }
 
     public startPlan(): void {
-        // TODO - add start plan logic
+        // TODO [selfServe] - add start plan logic
     }
 
     public updatePayment(): void {
-        // TODO - add update payment logic
+        // TODO [selfServe] - add update payment logic
     }
 }
