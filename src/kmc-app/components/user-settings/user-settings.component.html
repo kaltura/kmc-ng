@@ -14,7 +14,7 @@
         <div class="kPlan">
             <div class="kLinks">
                 <span class="kTitle">{{'selfServe.trial' | translate}}</span>
-                <span class="kTitle kCredit">{{'selfServe.credits' | translate: {'0': creditLeft } }}</span>
+                <span *ngIf="credits.length" class="kTitle kCredit">{{'selfServe.credits' | translate: {'0': credits } }}</span>
             </div>
             <button type="button" class="kButtonBranded" pButton label="{{'selfServe.startPlan' | translate}}" (click)="startPlan()"></button>
         </div>
@@ -25,7 +25,8 @@
         <div class="kPlan">
             <div class="kLinks">
                 <span class="kTitle">{{'selfServe.balance' | translate}}</span>
-                <span class="kTitle kCredit">{{'selfServe.creditsBalance' | translate: {'0': creditBalance } }}</span>
+                <span *ngIf="credits.length" class="kTitle kCredit">{{'selfServe.creditsBalance' | translate: {'0': credits } }}</span>
+                <span *ngIf="!credits.length" class="kTitle kCredit">{{'app.common.n_a' | translate: {'0': credits } }}</span>
             </div>
             <button type="button" class="kButtonBranded" pButton label="{{'selfServe.buy' | translate}}" (click)="buyCredit()"></button>
         </div>
@@ -34,7 +35,7 @@
 
     <div *ngIf="isSelfServe">
         <div class="kLinks">
-            <a *ngIf="isPayingCustomer" (click)="openKPF()">{{'selfServe.manage' | translate}}</a>
+            <a *ngIf="isPayingCustomer" (click)="startPlan()">{{'selfServe.manage' | translate}}</a>
             <a (click)="openUsageDashboard()">{{'app.titles.usageDashboardPageTitle' | translate}}</a>
         </div>
         <hr>

@@ -18,7 +18,8 @@ export interface PartnerInfo {
 export enum PartnerPackageTypes {
     PartnerPackageFree = 1,
     PartnerPackagePaid = 2,
-    PartnerPackageDeveloper = 100
+    PartnerPackageDeveloper = 100,
+    PartnerPackagePAYG = 101
 }
 
 export interface AppUser {

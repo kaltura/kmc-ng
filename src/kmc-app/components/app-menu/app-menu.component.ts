@@ -12,6 +12,8 @@ import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {ResetMenuEvent, UpdateMenuEvent} from 'app-shared/kmc-shared/events';
 import {KalturaPartnerStatus} from "kaltura-ngx-client";
+import { KPFLoginRedirects, KPFService } from "app-shared/kmc-shell/providers/kpf.service";
+import {AppLocalization} from "@kaltura-ng/mc-shared";
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -44,6 +46,7 @@ export class AppMenuComponent implements OnInit, OnDestroy {
     public menuID = 'kmc'; // used when switching menus to Analytics menu or future application menus
     public _isMultiAccount = false;
     public _appUserStatus: AppUserStatus = null;
+    public _connectingToKPF = false;
 
     menuConfig: KMCAppMenuItem[];
     leftMenuConfig: KMCAppMenuItem[];
@@ -59,10 +62,12 @@ export class AppMenuComponent implements OnInit, OnDestroy {
                 private _contextualHelpService: ContextualHelpService,
                 public _userAuthentication: AppAuthentication,
                 private _kmcMainViews: KmcMainViewsService,
+                private _appLocalization: AppLocalization,
                 private router: Router,
                 private renderer: Renderer2,
                 private _appEvents: AppEventsService,
                 private _browserService: BrowserService,
+                private _kpfService: KPFService,
                 private _analyticsNewMainViewService: AnalyticsNewMainViewService) {
 
         _contextualHelpService.contextualHelpData$
@@ -99,7 +104,7 @@ export class AppMenuComponent implements OnInit, OnDestroy {
         if (partnerInfo.partnerPackage ===  PartnerPackageTypes.PartnerPackageFree) {
             this._isFreeTrial = true;
             this._appUserStatus = partnerInfo.status === KalturaPartnerStatus.active ? AppUserStatus.FreeTrialActive : AppUserStatus.FreeTrialBlocked;
-        } else if (partnerInfo.partnerPackage ===  PartnerPackageTypes.PartnerPackagePaid) {
+        } else if (partnerInfo.partnerPackage ===  PartnerPackageTypes.PartnerPackagePaid || partnerInfo.partnerPackage ===  PartnerPackageTypes.PartnerPackagePAYG) {
             this._appUserStatus = partnerInfo.status === KalturaPartnerStatus.active ? AppUserStatus.PaidActive : AppUserStatus.PaidBlocked;
         }
         this._showStartPlan = this._appUserStatus ===  AppUserStatus.FreeTrialActive;
@@ -194,10 +199,35 @@ export class AppMenuComponent implements OnInit, OnDestroy {
     }
 
     public startPlan(): void {
-        // TODO [selfServe] - add start plan logic
+        this._connectingToKPF = true;
+        this._kpfService.openKPF().subscribe(success => {
+            this._handleKPFOpenResult(success);
+        }, error => {
+            this._handleKPFConnectionError(error);
+        });
     }
 
     public updatePayment(): void {
-        // TODO [selfServe] - add update payment logic
+        this._connectingToKPF = true;
+        this._kpfService.openKPF(KPFLoginRedirects.billing).subscribe(success => {
+            this._handleKPFOpenResult(success);
+        }, error => {
+            this._handleKPFConnectionError(error);
+        });
+    }
+
+    private _handleKPFOpenResult(openedSuccessfully): void {
+        this._connectingToKPF = false;
+        if (!openedSuccessfully) {
+            this._handleKPFConnectionError();
+        };
+    }
+
+    private _handleKPFConnectionError(error = null): void {
+        this._connectingToKPF = false;
+        this._browserService.showToastMessage({
+            severity: 'error',
+            detail: this._appLocalization.get('selfServe.error')
+        });
     }
 }

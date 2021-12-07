@@ -273,7 +273,9 @@
         "trialExpired": "Your free trial expired.",
         "dunning": "Your account is about to be deactivated.",
         "deactivated": "Your account is currently deactivated.",
-        "update": "Update Payment Method"
+        "update": "Update Payment Method",
+        "connecting": "Connecting...",
+        "error": "Error connecting to server"
     },
     "applications": {
         "embed":{

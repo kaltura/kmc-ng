@@ -12,6 +12,7 @@ import { PreventPasswordAutofillDirective } from 'app-shared/kmc-shell/directive
 import { CheckboxModule } from 'primeng/checkbox';
 import { SharedModule } from 'primeng/api';
 import { MessageService } from 'primeng/api';
+import { KPFService } from "app-shared/kmc-shell/providers/kpf.service";
 
 @NgModule({
     imports: [
@@ -53,6 +54,7 @@ export class KMCShellModule {
             ngModule: KMCShellModule,
             providers: [
                 BrowserService,
+                KPFService,
                 AppShellService,
                 PageExitVerificationService,
                 UploadPageExitVerificationService

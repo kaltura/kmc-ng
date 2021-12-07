@@ -1,16 +1,18 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {AppAuthentication, BrowserService, PartnerPackageTypes} from 'app-shared/kmc-shell';
 import {kmcAppConfig} from '../../kmc-app-config';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {AnalyticsNewMainViewService} from "app-shared/kmc-shared/kmc-views";
 import {Router} from "@angular/router";
+import {KPFLoginRedirects, KPFService} from "app-shared/kmc-shell/providers/kpf.service";
+import {AppLocalization} from "@kaltura-ng/mc-shared";
 
 @Component({
     selector: 'kKMCUserSettings',
     templateUrl: './user-settings.component.html',
     styleUrls: ['./user-settings.component.scss']
 })
-export class UserSettingsComponent {
+export class UserSettingsComponent implements OnInit{
     @Input() parentPopup: PopupWidgetComponent;
     public _languages = [];
     public _dateFormats = [
@@ -25,12 +27,13 @@ export class UserSettingsComponent {
     public isSelfServe = false;
     public isFreeTrial = false;
     public isPayingCustomer = false;
-    public creditLeft = 0; // TODO [selfServe]: get credit value on load for free trial
-    public creditBalance = 0; // TODO [selfServe]: get credit balance value on load for paying customers
+    public credits = '';
 
     constructor(public _userAuthentication: AppAuthentication,
                 private _analyticsNewMainViewService: AnalyticsNewMainViewService,
+                private _appLocalization: AppLocalization,
                 private browserService: BrowserService,
+                private _kpfService: KPFService,
                 private _router: Router) {
         kmcAppConfig.locales.forEach(locale => {
             this._languages.push({label: locale.label, value: locale.id});
@@ -49,7 +52,7 @@ export class UserSettingsComponent {
         const info = this._userAuthentication.appUser.partnerInfo;
         this.isSelfServe = info.isSelfServe;
         this.isFreeTrial = info.partnerPackage ===  PartnerPackageTypes.PartnerPackageFree;
-        this.isPayingCustomer = true;//info.partnerPackage ===  PartnerPackageTypes.PartnerPackagePaid;
+        this.isPayingCustomer = info.partnerPackage ===  PartnerPackageTypes.PartnerPackagePaid || info.partnerPackage ===  PartnerPackageTypes.PartnerPackagePAYG;
 
         if (this._userAuthentication.appUser?.fullName) {
             this.userInitials = this._userAuthentication.appUser.fullName.toUpperCase().split(' ').slice(0, 2).map(s => s[0]).join('');
@@ -59,26 +62,54 @@ export class UserSettingsComponent {
         }
     }
 
-    openUsageDashboard(): void {
+    ngOnInit(): void {
+        this._kpfService.getCredits().subscribe(credit => {
+            this.credits = credit;
+        });
+    }
+
+    public openUsageDashboard(): void {
         if (this.isSelfServe && this._analyticsNewMainViewService.isAvailable()) {
             this._router.navigate(['analytics/overview']);
             this.parentPopup.close();
         }
     }
 
-    openKPF(): void {
-        // TODO [selfServe]: get KPF URL from config and open in a new tab
-        alert("openKPF");
+    public startPlan(): void {
+        this._kpfService.openKPF().subscribe(success => {
+            this._handleKPFOpenResult(success);
+        }, error => {
+            this._handleKPFConnectionError(error);
+        });
     }
 
-    startPlan(): void {
-        // TODO [selfServe]:  open start plan link in a new tab
-        alert("startPlan");
+    public buyCredit(): void {
+        this._kpfService.openKPF(KPFLoginRedirects.upgrade).subscribe(success => {
+            this._handleKPFOpenResult(success);
+        }, error => {
+            this._handleKPFConnectionError(error);
+        });
     }
 
-    buyCredit(): void {
-        // TODO [selfServe]:  open buy credit link in a new tab
-        alert("buyCredit");
+    public updatePayment(): void {
+        this._kpfService.openKPF(KPFLoginRedirects.billing).subscribe(success => {
+            this._handleKPFOpenResult(success);
+        }, error => {
+            this._handleKPFConnectionError(error);
+        });
+    }
+
+    private _handleKPFOpenResult(openedSuccessfully): void {
+        if (!openedSuccessfully) {
+            this._handleKPFConnectionError();
+        };
+    }
+
+    private _handleKPFConnectionError(error = null): void {
+        this.browserService.showToastMessage({
+            severity: 'error',
+            detail: this._appLocalization.get('selfServe.error')
+        });
     }
 
     logout() {
