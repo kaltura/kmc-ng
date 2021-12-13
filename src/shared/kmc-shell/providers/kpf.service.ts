@@ -10,7 +10,7 @@ export enum KPFLoginRedirects {
     login = "login",
     overview = "overview",
     billing = "billing",
-    upgrade = "upgrade",
+    upgrade = "upgrade_vpaas",
 }
 
 @Injectable()
