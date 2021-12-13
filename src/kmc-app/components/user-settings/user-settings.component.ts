@@ -76,6 +76,14 @@ export class UserSettingsComponent implements OnInit{
     }
 
     public startPlan(): void {
+        this._kpfService.openKPF(KPFLoginRedirects.upgrade).subscribe(success => {
+            this._handleKPFOpenResult(success);
+        }, error => {
+            this._handleKPFConnectionError(error);
+        });
+    }
+
+    public manageSubscription(): void {
         this._kpfService.openKPF().subscribe(success => {
             this._handleKPFOpenResult(success);
         }, error => {

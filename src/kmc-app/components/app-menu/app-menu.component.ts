@@ -200,7 +200,7 @@ export class AppMenuComponent implements OnInit, OnDestroy {
 
     public startPlan(): void {
         this._connectingToKPF = true;
-        this._kpfService.openKPF().subscribe(success => {
+        this._kpfService.openKPF(KPFLoginRedirects.upgrade).subscribe(success => {
             this._handleKPFOpenResult(success);
         }, error => {
             this._handleKPFConnectionError(error);
