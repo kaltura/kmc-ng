@@ -5,7 +5,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ResetMenuEvent, UpdateMenuEvent } from 'app-shared/kmc-shared/events';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
-import { KMCPermissionsService } from "app-shared/kmc-shared/kmc-permissions";
+import {KMCPermissions, KMCPermissionsService} from "app-shared/kmc-shared/kmc-permissions";
 import { AppAuthentication } from "app-shared/kmc-shell";
 
 @Component({
@@ -34,7 +34,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
             }
             return;
         }
-        const isSelfserve = this._appAuthentication.appUser.partnerInfo.isSelfServe;
+        const isSelfserve = this._appAuthentication.appUser.partnerInfo.isSelfServe && this._permissions.hasPermission(KMCPermissions.FEATURE_ENABLE_USAGE_DASHBOARD);
 
         this.menuConfig = [
             {
