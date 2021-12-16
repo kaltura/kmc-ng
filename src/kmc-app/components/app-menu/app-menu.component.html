@@ -1,4 +1,10 @@
 <kSticky stickyId="header" [stickyClass]="'kStickyClass'">
+    <div *ngIf="_showNotificationsBar" class="kNotificationsBar">
+        <span class="notification" *ngIf="_isFreeTrial">{{'selfServe.trialExpired' | translate}}</span>
+        <button *ngIf="_isFreeTrial" (click)="startPlan()" class="kButtonBranded kNotificationBtn" [disabled]="_connectingToKPF" pButton [label]="_connectingToKPF ? (('selfServe.connecting' | translate)) : ('selfServe.startPlan' | translate)"></button>
+        <span class="notification" *ngIf="!_isFreeTrial">{{'selfServe.deactivated' | translate}}</span>
+        <button *ngIf="!_isFreeTrial" (click)="updatePayment()" class="kButtonBranded kNotificationBtn" [disabled]="_connectingToKPF" pButton [label]="_connectingToKPF ? (('selfServe.connecting' | translate)) : ('selfServe.update' | translate)"></button>
+    </div>
     <div class="kMainMenuWrapper">
         <kLazyModuleLoadingProgressBar></kLazyModuleLoadingProgressBar>
         <div #appmenu class="appMenu">
@@ -21,20 +27,24 @@
                             {{item.menuTitle | uppercase}}
                     </a>
                 </div>
+
+                <kUploadButton></kUploadButton>
             </div>
 
             <div class="kMenu-right">
                 <k-logs-record mode="button"
                                *ngIf="(_kmcLogs.logsRecordMode | async).enabled"
                                [logLevel]="(_kmcLogs.logsRecordMode | async).logLevel"></k-logs-record>
-                <kUploadButton></kUploadButton>
+
+                <button *ngIf="_showStartPlan" (click)="startPlan()" class="kButtonBranded kStartPlan" pButton [label]="'selfServe.startPlan' | translate"></button>
+
                 <kUploadMonitor [appmenu]="appmenu"></kUploadMonitor>
 
                 <i *ngFor="let item of rightMenuConfig" (click)="item.open()" [ngClass]="item.icon" [class.open]="item === selectedMenuItem" [kTooltip]="item.menuTitle" [placement]="'bottom'"></i>
 
                 <i #help class="kIconhelp" [class.has-notification]="_showChangelog" [class.open]="_helpMenuOpened"></i>
                 <div #username class="kUserName">
-                    <span>{{_userAuthentication.appUser?.fullName}}</span>
+                    <div class="kUserInitials">{{userInitials}}</div>
                     <i class="kIcondropdown_arrow_bottom"></i>
                 </div>
             </div>
@@ -56,16 +66,16 @@
 
 <kPopupWidget #usersettings [appendTo]="appmenu"
               data-aid="usersettings"
-              [popupWidth]="240"
+              [popupWidth]="260"
               [closeBtn]="false"
               [targetRef]="username"
-              [targetOffset]="{'x': 8, 'y': 30}"
+              [targetOffset]="{'x': 8, 'y': 37}"
               (onOpen)="username.className='kUserName open'"
               (onClose)="username.className='kUserName'">
     <kKMCUserSettings [parentPopup]="usersettings"></kKMCUserSettings>
 </kPopupWidget>
 
-<kPopupWidget #helpmenu data-aid="helpmenu" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="_helpMenuOpened = true" (onClose)="_helpMenuOpened = false">
+<kPopupWidget #helpmenu data-aid="helpmenu" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-140, 'y': 35}" (onOpen)="_helpMenuOpened = true" (onClose)="_helpMenuOpened = false">
     <ng-template>
         <div class="kHelpMenu">
             <!--p *ngIf="_kmcOverviewLinkExists || _mediaManagementLinkExists" class="kHelpTitle">{{'app.helpMenu.gettingStarted' | translate | uppercase}}</p>

@@ -4,7 +4,11 @@
 .kMainMenuWrapper{
     height: 54px;
 }
-
+.kDisabled {
+    opacity: 0.3;
+    cursor: default;
+    pointer-events: none;
+}
 .appMenu {
     background: $menuBkgColor; /* Old browsers */
     background: -moz-linear-gradient(left, #004194 0%, #006EFA 100%); /* FF3.6-15 */
@@ -103,24 +107,27 @@
     .kUserName {
         display: flex;
         align-items: center;
-        opacity: 0.6;
-        color: $headerTextColor;
+        color: #fff;
         cursor: pointer;
         font-weight: 400;
         margin-left: 12px;
         font-size: 14px;
-        &:hover, &.open {
-            opacity: 1;
-            color: $mainLinkHoverColor;
-            i {
-                color: $mainLinkHoverColor;
-                opacity: 1;
-            }
-        }
         i {
             font-size: 10px;
             margin-left: 6px;
             margin-top: 2px;
+        }
+
+        .kUserInitials {
+            height: 34px;
+            width: 34px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            color: #fff;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     }
     .kLogo {
@@ -215,7 +222,42 @@
         display: flex;
     }
 }
+.kNotificationsBar {
+    background-color: $kDandger;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .notification {
+        color: white;
+        font-size: 14px;
+        font-weight: 700;
+        margin-right: 8px;
+    }
+    .kNotificationBtn {
+        font-size: 13px;
+        color: white;
+        font-weight: 700;
+        height: 24px;
+        background: rgba(255, 255, 255, 0.2);
+        margin-left: 8px;
+        &:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        &:active {
+            box-shadow: 0 0 0 1px rgb(255 255 255 / 60%);
+        }
+    }
+}
 
+.kStartPlan {
+    margin-right: 8px;
+    background: rgba(0,0,0,0.5);
+    &:hover {
+        background: rgba(0,0,0,0.3);
+    }
+}
 .kHeader {
     height: 78px;
     width: 100%;

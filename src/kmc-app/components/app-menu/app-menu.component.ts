@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
+import {AppAuthentication, AppUserStatus, BrowserService, PartnerPackageTypes} from 'app-shared/kmc-shell';
 import {buildBaseUri, serverConfig} from 'config/server';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {KmcLoggerConfigurator} from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
@@ -11,6 +11,9 @@ import {globalConfig} from 'config/global';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {ResetMenuEvent, UpdateMenuEvent} from 'app-shared/kmc-shared/events';
+import {KalturaPartnerStatus} from "kaltura-ngx-client";
+import { KPFLoginRedirects, KPFService } from "app-shared/kmc-shell/providers/kpf.service";
+import {AppLocalization} from "@kaltura-ng/mc-shared";
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -21,11 +24,11 @@ import {ResetMenuEvent, UpdateMenuEvent} from 'app-shared/kmc-shared/events';
     ]
 
 })
-export class AppMenuComponent implements OnInit, OnDestroy{
+export class AppMenuComponent implements OnInit, OnDestroy {
 
-    @ViewChild('helpmenu', { static: true }) private _helpmenu: PopupWidgetComponent;
-    @ViewChild('supportPopup', { static: true }) private _supportPopup: PopupWidgetComponent;
-    @ViewChild('leftMenu', { static: true }) private leftMenu: ElementRef;
+    @ViewChild('helpmenu', {static: true}) private _helpmenu: PopupWidgetComponent;
+    @ViewChild('supportPopup', {static: true}) private _supportPopup: PopupWidgetComponent;
+    @ViewChild('leftMenu', {static: true}) private leftMenu: ElementRef;
     private _appCachedVersionToken = 'kmc-cached-app-version';
 
     public _showChangelog = false;
@@ -36,9 +39,14 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     public _mediaManagementLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.mediaManagement;
     public _supportLinkExists = !!serverConfig.externalLinks.kaltura && !!serverConfig.externalLinks.kaltura.customerCare && !!serverConfig.externalLinks.kaltura.customerPortal;
     public _supportLegacyExists = false;
+    public _showStartPlan = false;
+    public _isFreeTrial = false;
+    public _showNotificationsBar = false;
     public _contextualHelp: ContextualHelpLink[] = [];
     public menuID = 'kmc'; // used when switching menus to Analytics menu or future application menus
     public _isMultiAccount = false;
+    public _appUserStatus: AppUserStatus = null;
+    public _connectingToKPF = false;
 
     menuConfig: KMCAppMenuItem[];
     leftMenuConfig: KMCAppMenuItem[];
@@ -46,17 +54,20 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     selectedMenuItem: KMCAppMenuItem;
     showSubMenu = true;
 
-    public _customerCareLink = this._supportLinkExists ? serverConfig.externalLinks.kaltura.customerCare : "";
-    public _customerPortalLink = this._supportLinkExists ? serverConfig.externalLinks.kaltura.customerPortal : "";
+    public _customerCareLink = this._supportLinkExists ? serverConfig.externalLinks.kaltura.customerCare : '';
+    public _customerPortalLink = this._supportLinkExists ? serverConfig.externalLinks.kaltura.customerPortal : '';
+    public userInitials: string;
 
     constructor(public _kmcLogs: KmcLoggerConfigurator,
                 private _contextualHelpService: ContextualHelpService,
                 public _userAuthentication: AppAuthentication,
                 private _kmcMainViews: KmcMainViewsService,
+                private _appLocalization: AppLocalization,
                 private router: Router,
                 private renderer: Renderer2,
                 private _appEvents: AppEventsService,
                 private _browserService: BrowserService,
+                private _kpfService: KPFService,
                 private _analyticsNewMainViewService: AnalyticsNewMainViewService) {
 
         _contextualHelpService.contextualHelpData$
@@ -85,9 +96,22 @@ export class AppMenuComponent implements OnInit, OnDestroy{
         }
 
         this._powerUser = this._browserService.getInitialQueryParam('mode') === 'poweruser';
+        if (this._userAuthentication.appUser?.fullName) {
+            this.userInitials = this._userAuthentication.appUser.fullName.toUpperCase().split(' ').slice(0, 2).map(s => s[0]).join('');
+        }
+
+        const partnerInfo = this._userAuthentication.appUser.partnerInfo;
+        if (partnerInfo.partnerPackage ===  PartnerPackageTypes.PartnerPackageFree) {
+            this._isFreeTrial = true;
+            this._appUserStatus = partnerInfo.status === KalturaPartnerStatus.active ? AppUserStatus.FreeTrialActive : AppUserStatus.FreeTrialBlocked;
+        } else if (partnerInfo.partnerPackage ===  PartnerPackageTypes.PartnerPackagePaid || partnerInfo.partnerPackage ===  PartnerPackageTypes.PartnerPackagePAYG) {
+            this._appUserStatus = partnerInfo.status === KalturaPartnerStatus.active ? AppUserStatus.PaidActive : AppUserStatus.PaidBlocked;
+        }
+        this._showStartPlan = this._appUserStatus ===  AppUserStatus.FreeTrialActive;
+        this._showNotificationsBar = partnerInfo.isSelfServe && (this._appUserStatus ===  AppUserStatus.FreeTrialBlocked || this._appUserStatus ===  AppUserStatus.PaidBlocked);
     }
 
-    ngOnInit(){
+    ngOnInit() {
         const cachedVersion = this._browserService.getFromLocalStorage(this._appCachedVersionToken);
         this._showChangelog = cachedVersion !== globalConfig.client.appVersion;
         this._appEvents.event(UpdateMenuEvent)
@@ -109,22 +133,22 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
     }
 
-    private replaceMenu(menuID: string,  menu: KMCAppMenuItem[]): void{
+    private replaceMenu(menuID: string, menu: KMCAppMenuItem[]): void {
         this.renderer.setStyle(this.leftMenu.nativeElement, 'opacity', 0);
         this.renderer.setStyle(this.leftMenu.nativeElement, 'marginLeft', '100px');
-        setTimeout( ()=> {
+        setTimeout(() => {
             this.leftMenuConfig = menu;
             this.renderer.setStyle(this.leftMenu.nativeElement, 'opacity', 1);
             this.renderer.setStyle(this.leftMenu.nativeElement, 'marginLeft', '0px');
             this.setSelectedRoute(this.router.routerState.snapshot.url);
             this.menuID = menuID;
-        },300);
+        }, 300);
     }
 
     setSelectedRoute(path) {
         if (this.menuConfig) {
             this.selectedMenuItem = this.leftMenuConfig.find(item => item.isActiveView(path));
-            if (!this.selectedMenuItem){
+            if (!this.selectedMenuItem) {
                 this.selectedMenuItem = this.rightMenuConfig.find(item => item.isActiveView(path));
             }
             this.showSubMenu = this.selectedMenuItem && this.selectedMenuItem.children && this.selectedMenuItem.children.length > 0;
@@ -136,7 +160,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
     openHelpLink(key) {
         let link = '';
-        switch (key){
+        switch (key) {
             case 'manual':
                 link = serverConfig.externalLinks.kaltura.userManual;
                 break;
@@ -172,5 +196,38 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     public _changelogPopupOpened(): void {
         this._showChangelog = false;
         this._browserService.setInLocalStorage(this._appCachedVersionToken, globalConfig.client.appVersion);
+    }
+
+    public startPlan(): void {
+        this._connectingToKPF = true;
+        this._kpfService.openKPF(KPFLoginRedirects.upgrade).subscribe(success => {
+            this._handleKPFOpenResult(success);
+        }, error => {
+            this._handleKPFConnectionError(error);
+        });
+    }
+
+    public updatePayment(): void {
+        this._connectingToKPF = true;
+        this._kpfService.openKPF(KPFLoginRedirects.billing).subscribe(success => {
+            this._handleKPFOpenResult(success);
+        }, error => {
+            this._handleKPFConnectionError(error);
+        });
+    }
+
+    private _handleKPFOpenResult(openedSuccessfully): void {
+        this._connectingToKPF = false;
+        if (!openedSuccessfully) {
+            this._handleKPFConnectionError();
+        };
+    }
+
+    private _handleKPFConnectionError(error = null): void {
+        this._connectingToKPF = false;
+        this._browserService.showToastMessage({
+            severity: 'error',
+            detail: this._appLocalization.get('selfServe.error')
+        });
     }
 }

@@ -1,8 +1,10 @@
 import { KalturaPartnerAuthenticationType } from "kaltura-ngx-client";
+import {KalturaPartnerStatus} from "kaltura-ngx-client/lib/api/types/KalturaPartnerStatus";
 
 export interface PartnerInfo {
     partnerId: number;
     name: string;
+    status: KalturaPartnerStatus,
     adminSecret: string;
     partnerPackage: PartnerPackageTypes;
     landingPage: string;
@@ -16,9 +18,9 @@ export interface PartnerInfo {
 export enum PartnerPackageTypes {
     PartnerPackageFree = 1,
     PartnerPackagePaid = 2,
-    PartnerPackageDeveloper = 100
+    PartnerPackageDeveloper = 100,
+    PartnerPackagePAYG = 101
 }
-
 
 export interface AppUser {
     ks: string;
@@ -30,5 +32,12 @@ export interface AppUser {
     partnerInfo: PartnerInfo;
     createdAt: Date;
     publishersQuota: number;
+}
+
+export enum AppUserStatus {
+    FreeTrialActive = 1,
+    FreeTrialBlocked = 2,
+    PaidActive= 3,
+    PaidBlocked = 4
 }
 

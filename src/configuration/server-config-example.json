@@ -8,6 +8,10 @@
         "serverUri": "http://cdnapi.kaltura.com",
         "securedServerUri": "https://cdnapisec.kaltura.com"
     },
+    "kpfServer": {
+        "kpfPackageManagerBaseUrl": "https://kpf-dev.kaltura.com/package-manager",
+        "kpfPurchaseManagerBaseUrl": "https://kpf-dev.kaltura.com/purchase-manager"
+    },
     "externalApps": {
     },
     "externalLinks": {

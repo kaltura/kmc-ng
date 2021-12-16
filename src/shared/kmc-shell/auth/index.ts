@@ -1,4 +1,4 @@
-export { AppUser, PartnerInfo, PartnerPackageTypes } from './app-user';
+export { AppUser, PartnerInfo, PartnerPackageTypes, AppUserStatus } from './app-user';
 export * from './app-authentication.service';
 export * from './auth-can-activate.service';
 export * from './app-bootstrap.service';

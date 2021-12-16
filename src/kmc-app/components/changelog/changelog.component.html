@@ -7,7 +7,7 @@
   <ng-template>
     <div class="kChangelogPopup">
       <div class="kChangelogHeader">
-        <h1>{{ 'app.changelog.header' | translate }}</h1>
+        <h1 (dblclick)="_error()">{{ 'app.changelog.header' | translate }}</h1>
       </div>
       <div class="kChangelogContent">
         <kChangelogContent></kChangelogContent>

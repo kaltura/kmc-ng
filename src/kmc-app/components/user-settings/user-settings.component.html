@@ -1,21 +1,45 @@
 <div class="kUserSettings">
     <ul>
-        <!--li class="kMenuItemLabel"><span class="kIcon kIconuser_small"></span>
-            <div class="kMenuItem">
-                <div>{{_userAuthentication.appUser?.fullName}}</div>
-            </div>
-        </li-->
-        <li class="kMenuItemLabel"><span (dblclick)="egg()" class="kIcon kIconhouse"></span>
-            <div class="kMenuItem">
-                <div>{{_userAuthentication.appUser?.partnerInfo?.name}}</div>
+        <li class="kMenuItemLabel">
+            <div class="kUserInitials">{{userInitials}}</div>
+            <div class="kMenuItem partner-info">
+                <p *ngFor="let info of partnerInfo">{{info}}</p>
             </div>
         </li>
     </ul>
 
     <hr>
-    <!--div class="kMenuItemLabel">
-        <span>{{'app.languageMenu.selectLang' | translate}}</span>
-    </div-->
+
+    <div *ngIf="isSelfServe && isFreeTrial">
+        <div class="kPlan">
+            <div class="kLinks">
+                <span class="kTitle">{{'selfServe.trial' | translate}}</span>
+                <span *ngIf="credits.length" class="kTitle kCredit">{{'selfServe.credits' | translate: {'0': credits } }}</span>
+            </div>
+            <button type="button" class="kButtonBranded" pButton label="{{'selfServe.startPlan' | translate}}" (click)="startPlan()"></button>
+        </div>
+        <hr>
+    </div>
+
+    <div *ngIf="isSelfServe && isPayingCustomer">
+        <div class="kPlan">
+            <div class="kLinks">
+                <span class="kTitle">{{'selfServe.balance' | translate}}</span>
+                <span *ngIf="credits.length" class="kTitle kCredit">{{'selfServe.creditsBalance' | translate: {'0': credits } }}</span>
+                <span *ngIf="!credits.length" class="kTitle kCredit">{{'app.common.n_a' | translate: {'0': credits } }}</span>
+            </div>
+            <button type="button" class="kButtonBranded" pButton label="{{'selfServe.buy' | translate}}" (click)="buyCredit()"></button>
+        </div>
+        <hr>
+    </div>
+
+    <div *ngIf="isSelfServe">
+        <div class="kLinks">
+            <a *ngIf="isPayingCustomer" (click)="manageSubscription()">{{'selfServe.manage' | translate}}</a>
+            <a (click)="openUsageDashboard()">{{'app.titles.usageDashboardPageTitle' | translate}}</a>
+        </div>
+        <hr>
+    </div>
 
     <ul class="kLanguages kOverrideFAIcons">
         <p-dropdown [options]="_languages" [(ngModel)]="_selectedLanguage" [scrollHeight]="300"
@@ -28,12 +52,14 @@
     </ul>
 
     <hr>
+
     <div class="kLinks">
         <a (click)="changeAccountPopup.open();parentPopup.close()">{{'app.userSettings.changeAccount' | translate}}</a>
         <a (click)="logout()">{{'app.userSettings.logout' | translate}}</a>
     </div>
 
 </div>
+
 <kPopupWidget #changeAccountPopup data-aid="changeAccountPopup" [popupWidth]="500" [popupHeight]="370" [modal]="true">
     <ng-template>
         <kChangeAccount></kChangeAccount>

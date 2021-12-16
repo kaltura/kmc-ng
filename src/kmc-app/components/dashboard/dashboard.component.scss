@@ -1,48 +1,26 @@
 @import 'app-theme/_variables.scss';
 
-.whatsNew{
+.getStarted {
+    display: flex;
     position: relative;
-    text-align: center;
-    height: 644px;
-    width: 644px;
-    border-radius: 4px;
-    .kHeader{
+    flex-direction: column;
+    height: 511px;
+    .kFooter {
+        height: 72px;
         position: absolute;
-        margin-top: 38px;
-        width: 100%;
-        .kTitle{
-            color: $kGrayscale2;
-            text-align: center;
-            font-size: 28px;
-            font-weight: 700;
-            display: inline-block;
-        }
+        bottom: 0px;
+        width: 586px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-    .kWelcomeContent{
-        width: 100%;
-        font-size: 19px;
-        line-height: 24px;
-        text-align: center;
+    .kUnmuteBtn {
         position: absolute;
-        margin-top: 86px;
-        color: $kGrayscale3;
-        span{
-            width: 500px;
-            display: inline-block;
-        }
-        .enjoy{
-            font-weight: 700;
-        }
-    }
-    .kFooter{
-        position: absolute;
-        margin-top: 236px;
-        width: 100%;
-        button{
-            width: 180px;
-            height: 48px;
-            font-size: 16px;
-            font-weight: bold;
+        top: 8px;
+        left: 8px;
+        background: rgba(0,0,0,0.5);
+        &:hover {
+            background: rgba(0,0,0,0.3);
         }
     }
 }
@@ -50,7 +28,11 @@
 .kMenuCover {
     display: none;
 }
-
+button ::ng-deep .kMute {
+    width: 20px;
+    height: 14px;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADKSURBVHgBpZSBDcIgEEUPwwCOgBt0BN3AUdygsIEb4CZ2A0ewTuAI+M98EkJiJfCTH+jleDkoh8gfpZQcfIcfMiIA9vCcCkmPCtCbnCvdBkTemVvKziCdT8zxrUAL66IjvBTxxRhzku1CIoYVeYHfMwZnc0IGaGXSphfsi8I9HKx0CgVkmGcoaGwnY0r1vLtCnpmHA0Pfim2RkM9Of9LawDwIt8n1OjidTNW1efLaRO0SJjdfm1/buVTgOAQkVHv4lkZbbwPc9Dh8ANps39xJmnwYAAAAAElFTkSuQmCC');
+}
 :host {
   width: 100%;
   height: 100%;
