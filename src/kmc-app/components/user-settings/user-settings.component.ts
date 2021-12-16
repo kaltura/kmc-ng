@@ -63,9 +63,11 @@ export class UserSettingsComponent implements OnInit{
     }
 
     ngOnInit(): void {
-        this._kpfService.getCredits().subscribe(credit => {
-            this.credits = credit;
-        });
+        if (this.isSelfServe) {
+            this._kpfService.getCredits().subscribe(credit => {
+                this.credits = credit;
+            });
+        }
     }
 
     public openUsageDashboard(): void {
