@@ -34,7 +34,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
             }
             return;
         }
-        const isSelfserve = this._appAuthentication.appUser.partnerInfo.isSelfServe || (this._permissions.hasPermission(KMCPermissions.FEATURE_ENABLE_USAGE_DASHBOARD) && this._permissions.hasPermission(KMCPermissions.ANALYTICS_BASE));
+        const isSelfserve = this._appAuthentication.appUser.partnerInfo.isSelfServe;
 
         this.menuConfig = [
             {
