@@ -12,7 +12,7 @@ import { BrowserService } from "app-shared/kmc-shell";
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { SettingsIntegrationSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
-import { cancelOnDestroy, KalturaUtils } from '@kaltura-ng/kaltura-common';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kZoomIntegration',
@@ -31,6 +31,7 @@ export class ZoomComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
   public _kmcPermissions = KMCPermissions;
+  public maxAccountsAllowed = 6;
   public totalCount = 0;
 
   @ViewChild('editProfile', { static: true }) editProfile: PopupWidgetComponent;
@@ -88,8 +89,8 @@ export class ZoomComponent implements OnInit, OnDestroy {
           this._updateAreaBlockerState(false, null);
           this._profiles = response.objects ? response.objects.sort((a,b) => (a.updatedAt > b.updatedAt) ? -1 : ((b.updatedAt > a.updatedAt) ? 1 : 0)) : [];
           this.totalCount = this._profiles.length;
-          if (this.totalCount > 3) {
-              this._profiles.splice(3, this.totalCount -3);
+          if (this.totalCount > this.maxAccountsAllowed) {
+              this._profiles.splice(this.maxAccountsAllowed, this.totalCount -this.maxAccountsAllowed);
           }
         },
         error => {
