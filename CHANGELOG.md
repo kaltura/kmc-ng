@@ -4,7 +4,6 @@
 
 ### Bug Fixes
 
-* **create/live:** fix recording options disabling logic KMCNG-2398 ([527ee4a](https://github.com/kaltura/kmc-ng/commit/527ee4a))
 * **settings/integration:** allow up to six zoom accounts KMCNG-2399 ([#975](https://github.com/kaltura/kmc-ng/issues/975)) ([1fbe14f](https://github.com/kaltura/kmc-ng/commit/1fbe14f))
 
 
