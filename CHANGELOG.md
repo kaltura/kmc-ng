@@ -1,3 +1,19 @@
+<a name="7.1.0"></a>
+# [7.1.0](https://github.com/kaltura/kmc-ng/compare/v7.0.3...v7.1.0) (2021-12-16)
+
+
+### Bug Fixes
+
+* **create/live:** fix recording options disabling logic KMCNG-2398 ([527ee4a](https://github.com/kaltura/kmc-ng/commit/527ee4a))
+* **settings/integration:** allow up to six zoom accounts KMCNG-2399 ([#975](https://github.com/kaltura/kmc-ng/issues/975)) ([1fbe14f](https://github.com/kaltura/kmc-ng/commit/1fbe14f))
+
+
+### Features
+
+* self serve implementation PLAT-22825 ([#976](https://github.com/kaltura/kmc-ng/issues/976)) ([035f9ac](https://github.com/kaltura/kmc-ng/commit/035f9ac)), closes [#955](https://github.com/kaltura/kmc-ng/issues/955) [#945](https://github.com/kaltura/kmc-ng/issues/945) [#946](https://github.com/kaltura/kmc-ng/issues/946) [#949](https://github.com/kaltura/kmc-ng/issues/949) [#950](https://github.com/kaltura/kmc-ng/issues/950) [#947](https://github.com/kaltura/kmc-ng/issues/947) [#952](https://github.com/kaltura/kmc-ng/issues/952) [#948](https://github.com/kaltura/kmc-ng/issues/948) [#951](https://github.com/kaltura/kmc-ng/issues/951) [#953](https://github.com/kaltura/kmc-ng/issues/953) [#954](https://github.com/kaltura/kmc-ng/issues/954)
+
+
+
 <a name="7.0.3"></a>
 ## [7.0.3](https://github.com/kaltura/kmc-ng/compare/v7.0.2...v7.0.3) (2021-11-17)
 
