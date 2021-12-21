@@ -53,7 +53,7 @@ export class KPFService {
       {
           const ks = this._appAuthentication.appUser.ks;
           const partnerInfo = this._appAuthentication.appUser.partnerInfo;
-          this._http.get(`${this._kpfPurchaseManagerBaseUrl}/partner/credit/${partnerInfo.partnerId}/${ks}`).subscribe((response: any) => {
+          this._http.post(`${this._kpfPurchaseManagerBaseUrl}/partner/credit/${partnerInfo.partnerId}`, {ks}).subscribe((response: any) => {
               if (typeof response.credit !== "undefined") {
                   observer.next(response.credit.toString());
               } else {
