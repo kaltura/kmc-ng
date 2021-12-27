@@ -7,11 +7,10 @@
   <kScrollToTop [scrollOffset]="50"></kScrollToTop>
 </div>
 
-<kPopupWidget #whatsNew data-aid="whatsNew" [popupWidth]="586" [popupHeight]="511" [modal]="true" [closeBtn]="false">
+<kPopupWidget #whatsNew data-aid="whatsNew" [popupWidth]="686" [popupHeight]="456" [modal]="true" [closeBtn]="false">
     <ng-template>
         <div class="getStarted">
-            <app-k-player-v7 [width]="586" [height]="441" [autoPlay]="true" [muted]="true" [cdnUrl]="_cdnUrl" [pid]="_pid" [uiconfid]="_uiconf" [entryid]="_entryId" [ks]="_ks"></app-k-player-v7>
-            <button *ngIf="_showUnmuteBtn" icon="kMute" class="kButtonBranded kUnmuteBtn" type="button" pButton label="{{'selfServe.unMute' | translate}}" (click)="unmute()"></button>
+            <app-k-player-v7 [width]="686" [height]="386" [cdnUrl]="_cdnUrl" [pid]="_pid" [uiconfid]="_uiconf" [entryid]="_entryId"></app-k-player-v7>
             <div class="kFooter">
                 <button class="kButtonBranded" type="button" pButton label="{{'selfServe.getStarted' | translate}}" (click)="closeWin()"></button>
             </div>
