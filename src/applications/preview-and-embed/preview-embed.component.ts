@@ -250,7 +250,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           serverUri: '',
           playerConfig: ''
       }
-      let config = '';
+      let config = 'config[sources].poster=';
       let serverUri = this._previewForm.controls['secured'].value ?  serverConfig.cdnServers.securedServerUri : serverConfig.cdnServers.serverUri;
       if (isPreview){
           // build CDN URL according to current protocol
@@ -327,6 +327,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     try {
       if (isPreview) {
         flashVars['ks'] = this._appAuthentication.appUser.ks;
+        flashVars['thumbnailUrl'] = `${this.media.thumbnailUrl}/ks/${this._appAuthentication.appUser.ks}`;
         if (this.media instanceof KalturaMediaEntry) {
           const sourceType = this.media.sourceType.toString();
           const isLive = (sourceType === KalturaSourceType.liveStream.toString() ||

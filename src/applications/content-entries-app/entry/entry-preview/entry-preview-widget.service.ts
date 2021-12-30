@@ -58,9 +58,10 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy {
             const UIConfID = serverConfig.kalturaServer.previewUIConf;
             const partnerID = this.appAuthentication.appUser.partnerId;
             const ks = this.appAuthentication.appUser.ks || "";
+            const thumbnailUrl = `${this.data.thumbnailUrl}/ks/${ks}`;
             const serverUri = getKalturaServerUri();
 
-            let flashVars = `flashvars[kAnalony.plugin]=false&flashvars[closedCaptions.plugin]=true&flashvars[closedCaptions.hideWhenEmpty]=true&flashvars[ks]=${ks}`;
+            let flashVars = `flashvars[kAnalony.plugin]=false&flashvars[closedCaptions.plugin]=true&flashvars[closedCaptions.hideWhenEmpty]=true&flashvars[ks]=${ks}&flashvars[thumbnailUrl]=${thumbnailUrl}`;
             if (isLive) {
                 flashVars += '&flashvars[disableEntryRedirect]=true&flashvars[SkipKSOnIsLiveRequest]=false';
             }

@@ -341,7 +341,8 @@ export class AppAuthentication {
                 publisherEnvironmentType: partner.publisherEnvironmentType,
                 publishersQuota: partner.publishersQuota,
                 authenticationType: partner.authenticationType,
-                isSelfServe: partner.isSelfServe
+                isSelfServe: partner.isSelfServe,
+                isChildAccount: typeof partner.partnerParentId !== "undefined" && partner.partnerParentId > 0
             }
         });
 
