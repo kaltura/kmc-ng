@@ -25,6 +25,7 @@ export class UserSettingsComponent implements OnInit{
     public partnerInfo: string[];
 
     public isSelfServe = false;
+    public isChildAccount = false;
     public isFreeTrial = false;
     public isPayingCustomer = false;
     public credits = '';
@@ -51,6 +52,7 @@ export class UserSettingsComponent implements OnInit{
 
         const info = this._userAuthentication.appUser.partnerInfo;
         this.isSelfServe = info.isSelfServe;
+        this.isChildAccount = info.isChildAccount;
         this.isFreeTrial = info.partnerPackage ===  PartnerPackageTypes.PartnerPackageFree;
         this.isPayingCustomer = info.partnerPackage ===  PartnerPackageTypes.PartnerPackagePaid || info.partnerPackage ===  PartnerPackageTypes.PartnerPackagePAYG;
 
@@ -63,7 +65,7 @@ export class UserSettingsComponent implements OnInit{
     }
 
     ngOnInit(): void {
-        if (this.isSelfServe) {
+        if (this.isSelfServe && !this.isChildAccount) {
             this._kpfService.getCredits().subscribe(credit => {
                 this.credits = credit;
             });

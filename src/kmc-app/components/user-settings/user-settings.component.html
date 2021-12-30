@@ -10,7 +10,7 @@
 
     <hr>
 
-    <div *ngIf="isSelfServe && isFreeTrial">
+    <div *ngIf="isSelfServe && !isChildAccount && isFreeTrial">
         <div class="kPlan">
             <div class="kLinks">
                 <span class="kTitle">{{'selfServe.trial' | translate}}</span>
@@ -21,7 +21,7 @@
         <hr>
     </div>
 
-    <div *ngIf="isSelfServe && isPayingCustomer">
+    <div *ngIf="isSelfServe && !isChildAccount && isPayingCustomer">
         <div class="kPlan">
             <div class="kLinks">
                 <span class="kTitle">{{'selfServe.balance' | translate}}</span>
@@ -35,7 +35,7 @@
 
     <div *ngIf="isSelfServe">
         <div class="kLinks">
-            <a *ngIf="isPayingCustomer" (click)="manageSubscription()">{{'selfServe.manage' | translate}}</a>
+            <a *ngIf="isPayingCustomer && !isChildAccount" (click)="manageSubscription()">{{'selfServe.manage' | translate}}</a>
             <a (click)="openUsageDashboard()">{{'app.titles.usageDashboardPageTitle' | translate}}</a>
         </div>
         <hr>
