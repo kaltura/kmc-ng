@@ -1,3 +1,14 @@
+<a name="7.1.1"></a>
+## [7.1.1](https://github.com/kaltura/kmc-ng/compare/v7.1.0...v7.1.1) (2021-12-30)
+
+
+### Bug Fixes
+
+* display self serve on boarding video the first time the app loads KMCNG-2391 ([#979](https://github.com/kaltura/kmc-ng/issues/979)) ([fb169da](https://github.com/kaltura/kmc-ng/commit/fb169da))
+* handle self serve child accounts PLAT-22956 ([#980](https://github.com/kaltura/kmc-ng/issues/980)) ([663039b](https://github.com/kaltura/kmc-ng/commit/663039b))
+
+
+
 <a name="7.1.0"></a>
 # [7.1.0](https://github.com/kaltura/kmc-ng/compare/v7.0.3...v7.1.0) (2021-12-16)
 
