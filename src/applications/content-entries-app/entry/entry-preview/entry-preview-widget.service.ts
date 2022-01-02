@@ -64,6 +64,10 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy {
             if (isLive) {
                 flashVars += '&flashvars[disableEntryRedirect]=true&flashvars[SkipKSOnIsLiveRequest]=false';
             }
+            // force thumbnail download using ks if needed
+            if (this.appAuthentication.appUser.partnerInfo.loadThumbnailWithKs) {
+                flashVars += `&flashvars[thumbnailUrl]=${this.data.thumbnailUrl}/width/280/ks/${this.appAuthentication.appUser.ks}`;
+            }
             const shouldDisableAlerts = this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_KMC_KDP_ALERTS);
             if (shouldDisableAlerts) {
                 flashVars += '&flashvars[disableAlerts]=true';

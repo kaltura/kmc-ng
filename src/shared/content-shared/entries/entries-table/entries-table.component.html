@@ -129,7 +129,8 @@
                     <div class="kThumbnailHolder" #holder
                          [class.disable]="!_allowDrilldown('view', entry.mediaType,entry.status)"
                          (click)="_onActionSelected('view',entry)">
-                        <img *ngIf="entry.thumbnailUrl" [src]="entry.thumbnailUrl" onError="this.onerror=null;this.style.display='none'" (error)="thumbks.src=entry.thumbnailUrl+'/ks/'+_ks">
+                        <img *ngIf="entry.thumbnailUrl && _loadThumbnailWithKs" [src]="entry.thumbnailUrl+'/ks/'+_ks">
+                        <img *ngIf="entry.thumbnailUrl && !_loadThumbnailWithKs" [src]="entry.thumbnailUrl" onError="this.onerror=null;this.style.display='none'" (error)="thumbks.src=entry.thumbnailUrl+'/ks/'+_ks">
                         <img #thumbks onError="this.onerror=null;this.style.display='none'" (error)="holder.classList.add('error')">
                         <div class="kIcons">
                             <!--i class="kIconwarning"></i-->

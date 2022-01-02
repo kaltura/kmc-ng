@@ -251,6 +251,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           playerConfig: ''
       }
       let config = '';
+      let poster = '';
       let serverUri = this._previewForm.controls['secured'].value ?  serverConfig.cdnServers.securedServerUri : serverConfig.cdnServers.serverUri;
       if (isPreview){
           // build CDN URL according to current protocol
@@ -258,14 +259,22 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           // pass ks to player for preview only
           if (embedType === 'dynamic'){
               config = `ks: '${ks}',`;
+              // force thumbnail download using ks if needed
+              if (this._appAuthentication.appUser.partnerInfo.loadThumbnailWithKs) {
+                  poster = `"${this.media.thumbnailUrl}/width/${uiConf.width}/ks/${this._appAuthentication.appUser.ks}"`;
+              }
           } else {
               config = `&config[provider]={"ks":"${ks}"&config[plugins]={"kava":{"disable":true}}`;
+              // force thumbnail download using ks if needed
+              if (this._appAuthentication.appUser.partnerInfo.loadThumbnailWithKs) {
+                  config += `&config[sources]={"poster": "${this.media.thumbnailUrl}/width/${uiConf.width}/ks/${this._appAuthentication.appUser.ks}"}`;
+              }
           }
       }
       embedConfig.serverUri = serverUri;
       embedConfig.playerConfig = config;
 
-      return this._previewEmbedService.generateV3EmbedCode(embedConfig, isPreview);
+      return this._previewEmbedService.generateV3EmbedCode(embedConfig, isPreview, poster);
   }
 
   /* V3 specific code ends here */
@@ -312,21 +321,26 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       const name = this.media.name ? this.media.name : '';
       const description = this.media.description ? this.media.description : '';
       return `
-<span itemprop="name" content="${name}"></span>
-<span itemprop="description" content="${description}"></span>
-<span itemprop="duration" content="${this.media.duration}"></span>
-<span itemprop="thumbnailUrl" content="${this.media.thumbnailUrl}"></span>
-<span itemprop="uploadDate" content="${this.media.createdAt.toISOString()}"></span>
-<span itemprop="width" content="${this._previewForm.controls['selectedPlayer'].value.uiConf.width}"></span>
-<span itemprop="height" content="${this._previewForm.controls['selectedPlayer'].value.uiConf.height}"></span>
-`;
+                              <span itemprop="name" content="${name}"></span>
+                          <span itemprop="description" content="${description}"></span>
+                          <span itemprop="duration" content="${this.media.duration}"></span>
+                          <span itemprop="thumbnailUrl" content="${this.media.thumbnailUrl}"></span>
+                          <span itemprop="uploadDate" content="${this.media.createdAt.toISOString()}"></span>
+                          <span itemprop="width" content="${this._previewForm.controls['selectedPlayer'].value.uiConf.width}"></span>
+                          <span itemprop="height" content="${this._previewForm.controls['selectedPlayer'].value.uiConf.height}"></span>
+                              `;
   }
 
   private getEmbedFlashVars(isPreview: boolean): any{
+    const uiConf = this._previewForm.controls['selectedPlayer'].value.uiConf;
     let flashVars =  {};
     try {
       if (isPreview) {
         flashVars['ks'] = this._appAuthentication.appUser.ks;
+        // force thumbnail download using ks if needed
+        if (this._appAuthentication.appUser.partnerInfo.loadThumbnailWithKs) {
+          flashVars['thumbnailUrl'] = `${this.media.thumbnailUrl}/width/${uiConf.width}ks/${this._appAuthentication.appUser.ks}`;
+        }
         if (this.media instanceof KalturaMediaEntry) {
           const sourceType = this.media.sourceType.toString();
           const isLive = (sourceType === KalturaSourceType.liveStream.toString() ||
@@ -448,4 +462,5 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   ngOnDestroy(){}
+
 }

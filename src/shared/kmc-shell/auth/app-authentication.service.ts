@@ -342,6 +342,7 @@ export class AppAuthentication {
                 publishersQuota: partner.publishersQuota,
                 authenticationType: partner.authenticationType,
                 isSelfServe: partner.isSelfServe,
+                loadThumbnailWithKs: false,
                 isChildAccount: typeof partner.partnerParentId !== "undefined" && partner.partnerParentId > 0
             }
         });
