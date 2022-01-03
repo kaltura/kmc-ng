@@ -25,7 +25,7 @@ import { KalturaPartner } from 'kaltura-ngx-client';
 import { KalturaUser } from 'kaltura-ngx-client';
 import { AppEventsService } from 'app-shared/kmc-shared/app-events';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { serverConfig } from 'config/server';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { UserLoginByKsAction } from 'kaltura-ngx-client';
@@ -342,7 +342,7 @@ export class AppAuthentication {
                 publishersQuota: partner.publishersQuota,
                 authenticationType: partner.authenticationType,
                 isSelfServe: partner.isSelfServe,
-                loadThumbnailWithKs: false,
+                loadThumbnailWithKs: this._permissionsService.hasPermission(KMCPermissions.FEATURE_LOAD_THUMBNAIL_WITH_KS),
                 isChildAccount: typeof partner.partnerParentId !== "undefined" && partner.partnerParentId > 0
             }
         });

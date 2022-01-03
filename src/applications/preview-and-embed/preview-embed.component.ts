@@ -339,7 +339,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
         flashVars['ks'] = this._appAuthentication.appUser.ks;
         // force thumbnail download using ks if needed
         if (this._appAuthentication.appUser.partnerInfo.loadThumbnailWithKs) {
-          flashVars['thumbnailUrl'] = `${this.media.thumbnailUrl}/width/${uiConf.width}ks/${this._appAuthentication.appUser.ks}`;
+          flashVars['thumbnailUrl'] = `${this.media.thumbnailUrl}/width/${uiConf.width}/ks/${this._appAuthentication.appUser.ks}`;
         }
         if (this.media instanceof KalturaMediaEntry) {
           const sourceType = this.media.sourceType.toString();
