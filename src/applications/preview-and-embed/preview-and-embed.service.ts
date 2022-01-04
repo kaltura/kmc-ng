@@ -111,7 +111,7 @@ kWidget.thumbEmbed({
         return code;
     }
 
-	generateV3EmbedCode(config: any, isPreview: boolean): string {
+	generateV3EmbedCode(config: any, isPreview: boolean, poster = ''): string {
 	    let code = '';
         const rnd = Math.floor(Math.random() * 1000000000);
         console.log(config.playerConfig);
@@ -119,7 +119,34 @@ kWidget.thumbEmbed({
             case 'dynamic':
             case 'thumb':
                 if (isPreview) {
-                    code = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
+                    if (poster.length) {
+                        code = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
+                        <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
+                        <script type="text/javascript">
+                        try {
+                          var kalturaPlayer = KalturaPlayer.setup({
+                            targetId: "kaltura_player_${rnd}",
+                            plugins: {
+                              kava: {
+                                disable: true
+                              }
+                            },
+                            provider: {
+                              ${config.playerConfig}
+                              partnerId: ${config.pid},
+                              uiConfId: ${config.uiConfId}
+                            },
+                            sources: {
+                                poster: ${poster}
+                            }
+                          });
+                          kalturaPlayer.loadMedia({entryId: '${config.entryId}'});
+                        } catch (e) {
+                          console.error(e.message)
+                        }
+                      </script>`;
+                    } else {
+                        code = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
                         <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
                         <script type="text/javascript">
                         try {
@@ -141,6 +168,7 @@ kWidget.thumbEmbed({
                           console.error(e.message)
                         }
                       </script>`;
+                    }
                 } else {
                     code = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
                         <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>

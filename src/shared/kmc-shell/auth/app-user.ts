@@ -12,6 +12,7 @@ export interface PartnerInfo {
     blockDirectLogin: boolean;
     publisherEnvironmentType: number;
     isSelfServe: boolean;
+    loadThumbnailWithKs: boolean;
     isChildAccount: boolean;
     authenticationType: KalturaPartnerAuthenticationType;
 }

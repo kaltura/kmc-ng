@@ -86,6 +86,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit {
   private _deferredLoading = true;
   public _emptyMessage = '';
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
+  public _loadThumbnailWithKs = false;
   public _ks = '';
 
   constructor(public _columnsResizeManager: ColumnsResizeManagerService,
@@ -97,6 +98,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit {
 
   ngOnInit() {
     this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
+    this._loadThumbnailWithKs = this._appAuthentication.appUser.partnerInfo.loadThumbnailWithKs;
     this._ks = this._appAuthentication.appUser.ks;
 
     Object.keys(this._columns).forEach(columnName => {
