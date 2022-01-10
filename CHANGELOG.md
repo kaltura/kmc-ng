@@ -1,3 +1,13 @@
+<a name="7.1.2"></a>
+## [7.1.2](https://github.com/kaltura/kmc-ng/compare/v7.1.1...v7.1.2) (2022-01-10)
+
+
+### Bug Fixes
+
+* end current session when switching account PLAT-23291 ([#982](https://github.com/kaltura/kmc-ng/issues/982)) ([14b4e57](https://github.com/kaltura/kmc-ng/commit/14b4e57))
+
+
+
 <a name="7.1.1"></a>
 ## [7.1.1](https://github.com/kaltura/kmc-ng/compare/v7.1.0...v7.1.1) (2021-12-30)
 
