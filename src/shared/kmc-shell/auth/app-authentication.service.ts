@@ -523,7 +523,13 @@ export class AppAuthentication {
                     result => {
                         this._logger.info(`switch partner account`, { partnerId });
                         this._browserService.setInSessionStorage(ksSessionStorageKey, result.ks);
-                        this._forceReload();
+                        this.kalturaServerClient.request(new SessionEndAction()).subscribe(result => {
+                            this._logger.info(`server session cleared`);
+                            this._forceReload();
+                        }, error => {
+                            this._logger.info(`error clearing server session: ${error.message}`);
+                            this._forceReload();
+                        });
 
                         // DEVELOPER NOTICE: observer next/complete not implemented by design
                         // (since we are breaking the stream by reloading the page)
