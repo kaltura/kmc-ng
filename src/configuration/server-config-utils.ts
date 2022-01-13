@@ -14,9 +14,8 @@ function validateSeverConfig(data: ServerConfig): { isValid: boolean, error?: st
     const result = validate(data, ServerConfigSchema);
     const isValid = result.valid;
     let error = null;
-
     if (!isValid) {
-        error = result.errors && result.errors.length ? JSON.stringify(result.errors[0].instance) + ' ' + result.errors[0].message : null;
+        error = result.errors && result.errors.length ? `Error in ${result.errors[0].property}: ${JSON.stringify(result.errors[0].instance)} ${result.errors[0].message}` : null;
     }
 
     return { isValid, error };

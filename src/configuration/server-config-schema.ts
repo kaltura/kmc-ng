@@ -37,7 +37,7 @@ export const ServerConfigSchema = {
                     additionalProperties: true
                 }
             },
-            required: ['uri', 'previewUIConf'],
+            required: ['uri', 'previewUIConf', 'previewUIConfV7'],
             additionalProperties: true
         },
         cdnServers: {
@@ -50,8 +50,8 @@ export const ServerConfigSchema = {
         },
         kpfServer: {
             properties: {
-                kpfPackageManagerBaseUrl: {type: 'string'},
-                kpfPurchaseManagerBaseUrl: {type: 'string'}
+                kpfPackageManagerBaseUrl: {type: ['string', 'null']},
+                kpfPurchaseManagerBaseUrl: {type: ['string', 'null']}
             },
             required: ['kpfPackageManagerBaseUrl', 'kpfPurchaseManagerBaseUrl'],
             additionalProperties: true
@@ -201,6 +201,6 @@ export const ServerConfigSchema = {
             additionalProperties: true
         }
     },
-    required: ['kalturaServer', 'cdnServers', 'kpfServer', 'externalApps', 'externalLinks'],
+    required: ['kalturaServer', 'cdnServers', 'externalApps', 'externalLinks'],
     additionalProperties: true
 };
