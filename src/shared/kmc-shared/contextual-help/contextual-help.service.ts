@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import * as Ajv from 'ajv';
+import * as jsonschema from 'jsonschema';
 import { ContextualHelpDataSchema } from './contextual-help-data-schema';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { of } from 'rxjs';
@@ -39,13 +39,13 @@ export class ContextualHelpService implements OnDestroy {
     }
 
     private _validateResponse(data: ContextualHelpData[]): { isValid: boolean, error?: string } {
-        const ajv = new Ajv({ allErrors: true, verbose: true });
-        const validate = ajv.compile(ContextualHelpDataSchema);
-        const isValid = !!validate(data);
+        const validate = jsonschema.validate;
+        const result = validate(data, ContextualHelpDataSchema);
+        const isValid = result.valid;
         let error = null;
 
         if (!isValid) {
-            error = ajv.errorsText(validate.errors);
+            error = JSON.stringify(result.errors[0].instance) + ' ' + result.errors[0].message;
         }
 
         return { isValid, error };

@@ -3,20 +3,20 @@ import {globalConfig} from './global-config';
 import { Observable } from 'rxjs';
 import { of } from 'rxjs';
 import {environment} from 'environments/environment';
-import * as Ajv from 'ajv';
+import * as jsonschema from 'jsonschema';
 import { ServerConfigSchema } from './server-config-schema';
 import { takeUntil, tap, delay, map } from 'rxjs/operators';
 
 export type ExternalAppsAdapter<T> = { [K in keyof T]: (configuration: T[K]) => boolean };
 
 function validateSeverConfig(data: ServerConfig): { isValid: boolean, error?: string } {
-    const ajv = new Ajv({allErrors: true, verbose: true});
-    const validate = ajv.compile(ServerConfigSchema);
-    const isValid = !!validate(data);
+    const validate = jsonschema.validate;
+    const result = validate(data, ServerConfigSchema);
+    const isValid = result.valid;
     let error = null;
 
     if (!isValid) {
-        error = ajv.errorsText(validate.errors);
+        error = JSON.stringify(result.errors[0].instance) + ' ' + result.errors[0].message;
     }
 
     return { isValid, error };
