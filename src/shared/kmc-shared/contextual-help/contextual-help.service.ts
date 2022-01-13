@@ -45,7 +45,7 @@ export class ContextualHelpService implements OnDestroy {
         let error = null;
 
         if (!isValid) {
-            error = JSON.stringify(result.errors[0].instance) + ' ' + result.errors[0].message;
+            error = result.errors && result.errors.length ? JSON.stringify(result.errors[0].instance) + ' ' + result.errors[0].message : null;
         }
 
         return { isValid, error };
