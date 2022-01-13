@@ -20,6 +20,7 @@ export const ServerConfigSchema = {
                 defaultPrivileges: {type: ['string', 'null']},
                 deployUrl: {type: ['string', 'null']},
                 previewUIConf: {type: 'number'},
+                previewUIConfV7: {type: 'number'},
                 resetPasswordUri: {type: ['string', 'null']},
                 freeTrialExpiration: {
                     properties: {
@@ -45,6 +46,14 @@ export const ServerConfigSchema = {
                 securedServerUri: {type: 'string'}
             },
             required: ['serverUri', 'securedServerUri'],
+            additionalProperties: true
+        },
+        kpfServer: {
+            properties: {
+                kpfPackageManagerBaseUrl: {type: 'string'},
+                kpfPurchaseManagerBaseUrl: {type: 'string'}
+            },
+            required: ['kpfPackageManagerBaseUrl', 'kpfPurchaseManagerBaseUrl'],
             additionalProperties: true
         },
         externalAPI: {
@@ -192,6 +201,6 @@ export const ServerConfigSchema = {
             additionalProperties: true
         }
     },
-    required: ['kalturaServer', 'cdnServers', 'externalApps', 'externalLinks'],
+    required: ['kalturaServer', 'cdnServers', 'kpfServer', 'externalApps', 'externalLinks'],
     additionalProperties: true
 };
