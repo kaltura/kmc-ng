@@ -22,7 +22,7 @@
                   "seamless-immutable",
                   "jquery",
                   "qrcode",
-                  "ajv"
+                  "jsonschema"
               ],
             "assets": [
               "src/server-config.json",
