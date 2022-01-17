@@ -1650,7 +1650,7 @@
                     "codec": "Codec",
                     "bitrate": "Bitrate (kbps)",
                     "dimensions": "Dimensions",
-                    "size": "Size (kb)",
+                    "size": "Size (KB)",
                     "stat": "Status",
                     "tags": "Tags",
                     "update": "Update Flavor",
