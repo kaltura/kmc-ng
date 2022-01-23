@@ -37,7 +37,7 @@ export const ServerConfigSchema = {
                     additionalProperties: true
                 }
             },
-            required: ['uri', 'previewUIConf', 'previewUIConfV7'],
+            required: ['uri', 'previewUIConf'],
             additionalProperties: true
         },
         cdnServers: {
