@@ -65,13 +65,14 @@ export class PreviewEmbedService {
 
     generateV2EmbedCode(config: any): string {
         let code = '';
+        const nonce = document.querySelectorAll('[nonce]').length ?  document.querySelectorAll('[nonce]')[0]['nonce'] : '';
         switch (config.embedType) {
             case 'dynamic':
                 const dynamicEntryId = !config.entryId.length ? '' : `,
   "entry_id": "${config.entryId}"`;
                 code = `<script src="${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}"></script>
 <div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>
-<script>
+<script nonce="${nonce}">
 kWidget.embed({
   "targetId": "${config.playerId}",
   "wid": "_${config.pid}",
@@ -96,7 +97,7 @@ kWidget.embed({
             case 'thumb':
                 code = `<script src="${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}"></script>
 <div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>
-<script>
+<script nonce="${nonce}">
 kWidget.thumbEmbed({
   "targetId": "${config.playerId}",
   "wid": "_${config.pid}",
@@ -113,6 +114,7 @@ kWidget.thumbEmbed({
 
 	generateV3EmbedCode(config: any, isPreview: boolean, poster = ''): string {
 	    let code = '';
+        const nonce = document.querySelectorAll('[nonce]').length ?  document.querySelectorAll('[nonce]')[0]['nonce'] : '';
         const rnd = Math.floor(Math.random() * 1000000000);
         console.log(config.playerConfig);
         switch (config.embedType) {
@@ -122,7 +124,7 @@ kWidget.thumbEmbed({
                     if (poster.length) {
                         code = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
                         <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
-                        <script type="text/javascript">
+                        <script type="text/javascript" nonce="${nonce}">
                         try {
                           var kalturaPlayer = KalturaPlayer.setup({
                             targetId: "kaltura_player_${rnd}",
@@ -148,7 +150,7 @@ kWidget.thumbEmbed({
                     } else {
                         code = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
                         <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
-                        <script type="text/javascript">
+                        <script type="text/javascript" nonce="${nonce}">
                         try {
                           var kalturaPlayer = KalturaPlayer.setup({
                             targetId: "kaltura_player_${rnd}",
