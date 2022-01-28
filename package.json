@@ -68,7 +68,7 @@
     "@ngx-translate/core": "~13.0.0",
     "@ngx-translate/http-loader": "~6.0.0",
     "angularx-qrcode": "~10.0.11",
-    "core-js": "^3.2.1",
+    "core-js": "^3.20.2",
     "intl": "^1.2.5",
     "jquery": "~3.5.0",
     "jsnlog": "~2.26.2",
