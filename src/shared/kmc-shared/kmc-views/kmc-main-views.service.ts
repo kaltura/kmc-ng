@@ -63,7 +63,6 @@ export class KmcMainViewsService {
         private _contentDropFoldersMain: ContentDropFoldersMainViewService,
         private _studioV2Main: StudioV2MainViewService,
         private _studioV3Main: StudioV3MainViewService,
-        private _usageDashboardMain: UsageDashboardMainViewService,
         private _servicesDashboardMain: ServicesDashboardMainViewService,
         private _analyticsMainViewService: AnalyticsMainViewService,
         private _analyticsNewMainViewService: AnalyticsNewMainViewService,
@@ -189,15 +188,6 @@ export class KmcMainViewsService {
                         menuTitle: this._studioV3Main.getViewMetadata().menu
                     },
                 ]
-            },
-            {
-                isAvailable: this._usageDashboardMain.isAvailable(),
-                isActiveView:  (path) => this._usageDashboardMain.isActiveView(path),
-                open: () => {
-                    this._usageDashboardMain.open();
-                },
-                position: 'left',
-                menuTitle: this._usageDashboardMain.getViewMetadata().menu,
             },
             {
                 isActiveView: (activePath: string) => activePath.indexOf(`/analytics`) !== -1,

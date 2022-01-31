@@ -128,10 +128,6 @@ const routes: Routes = <Routes>[
                     },
                     { path: 'studio', loadChildren: () => import('../applications/studio-app/studio-app.module').then(m => m.StudioAppModule) },
                     {
-                        path: 'usageDashboard',
-                        loadChildren: () => import('../applications/usage-dashboard-app/usage-dashboard-app.module').then(m => m.UsageDashboardAppModule)
-                    },
-                    {
                         path: 'servicesDashboard',
                         loadChildren: () => import('../applications/services-dashboard-app/services-dashboard-app.module').then(m => m.ServicesDashboardAppModule)
                     },
