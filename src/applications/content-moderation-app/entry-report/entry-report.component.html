@@ -25,7 +25,7 @@
 
     <div class="kContainer">
       <div class="kFrame">
-        <k-player #player [cdnUrl]="serverUri" [pid]="_playerConfig.pid" [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid" [flashvars]="_playerConfig.flashvars" [width]="340" [height]="190" [lazy]="true"></k-player>
+          <app-k-player-v7 #player [ks]="_playerConfig.ks" [cdnUrl]="serverUri" [pid]="_playerConfig.pid" [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid" [width]="340" [height]="190" [lazy]="true"></app-k-player-v7>
       </div>
 
       <div class="appSubMenu">

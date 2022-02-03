@@ -1,4 +1,4 @@
-import {Component, Input, AfterViewInit, OnDestroy} from '@angular/core';
+import {Component, Input, Output, AfterViewInit, OnDestroy, EventEmitter} from '@angular/core';
 
 @Component({
     selector: 'app-k-player-v7',
@@ -37,6 +37,11 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
 	@Input()
 	id = "";
 
+	@Input()
+	lazy = false;
+
+    @Output() onPlayerInitialized = new EventEmitter<any>();
+
 	constructor() {
 	  if (!this.id.length) {
 	    this.id = Math.random().toString().split('.')[1];
@@ -44,7 +49,9 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
   }
 
 	ngAfterViewInit() {
-	  this.Embed();
+        if (!this.lazy) {
+            this.Embed();
+        }
 	}
 
 	public Embed(): void {
@@ -93,7 +100,7 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
           muted: this.muted
         }
       });
-      window['loadedKalturaPlayer'] = kalturaPlayer; // for API calls
+      this.onPlayerInitialized.emit(kalturaPlayer); // for API calls
       kalturaPlayer.loadMedia({entryId: this.entryid});
     } catch (e) {
       console.error(e.message);

@@ -36,6 +36,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { SpinnerModule } from 'primeng/spinner';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { TreeModule } from 'primeng/tree';
+import { PlayerV7Module } from "app-shared/kmc-shared/player-v7/player-v7.module";
 
 @NgModule({
   imports: [
@@ -50,7 +51,8 @@ import { TreeModule } from 'primeng/tree';
     MenuModule,
     KalturaPrimeNgUIModule,
     SharedModule,
-      EntriesModule,
+    EntriesModule,
+    PlayerV7Module,
     AccordionModule,
     CalendarModule,
     CheckboxModule,

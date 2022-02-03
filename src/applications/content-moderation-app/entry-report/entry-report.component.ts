@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import { AreaBlockerMessage, KalturaPlayerComponent } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ModerationStore } from '../moderation-store/moderation-store.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Router } from '@angular/router';
@@ -15,10 +15,10 @@ import { KalturaSourceType } from 'kaltura-ngx-client';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { KalturaMediaType } from 'kaltura-ngx-client';
 import { Observer } from 'rxjs/Observer';
-import { serverConfig, getKalturaServerUri } from 'config/server';
+import {serverConfig, buildCDNUrl} from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
-import { ISubscription } from 'rxjs/Subscription';
+import { KalturaPlayerV7Component } from "app-shared/kmc-shared";
 
 export interface Tabs {
   name: string;
@@ -36,7 +36,7 @@ export interface Tabs {
 export class EntryReportComponent implements OnInit, OnDestroy {
 
     public _kmcPermissions = KMCPermissions;
-  @ViewChild('player', { static: true }) player: KalturaPlayerComponent;
+  @ViewChild('player', { static: true }) player: KalturaPlayerV7Component;
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() entryId: string;
@@ -44,7 +44,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   private _isRecordedLive = false;
   private _userId = '';
 
-  public serverUri = getKalturaServerUri();
+  public serverUri = buildCDNUrl("");
   public _areaBlockerMessage: AreaBlockerMessage = null;
   public _tabs: Tabs[] = [];
   public _flags: KalturaModerationFlag[] = null;
@@ -72,16 +72,11 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._loadEntryModerationDetails();
     this._playerConfig = {
-      uiconfid: serverConfig.kalturaServer.previewUIConf,
+      uiconfid: serverConfig.kalturaServer.previewUIConfV7,
       pid: this.appAuthentication.appUser.partnerId,
       entryid: this.entryId,
-      flashvars: {'closedCaptions': { 'plugin': true }, 'ks': this.appAuthentication.appUser.ks}
+      ks: this.appAuthentication.appUser.ks
     };
-
-    const shouldDisableAlerts = this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_KMC_KDP_ALERTS);
-    if (shouldDisableAlerts) {
-      this._playerConfig.flashvars['disableAlerts'] = true;
-    }
   }
 
   ngOnDestroy() {

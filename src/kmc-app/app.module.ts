@@ -15,7 +15,6 @@ import {CategoriesStatusModule} from 'app-shared/content-shared/categories-statu
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { LocalizationModule } from '@kaltura-ng/mc-shared';
 import { KalturaLoggerInjectionToken } from '@kaltura-ng/kaltura-common';
-import { KalturaPlayerV7Component } from 'app-shared/kmc-shared/player-v7';
 
 export function createTranslateLoader(http: HttpClient) {
     return new TranslateHttpLoader(http, './i18n/', '.json');
@@ -110,6 +109,7 @@ import { ToastModule } from 'primeng/toast';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { MenuModule } from 'primeng/menu';
 import { KalturaRequestOptionsArgs } from "kaltura-ngx-client/lib/api/kaltura-request-options";
+import {PlayerV7Module} from "app-shared/kmc-shared/player-v7/player-v7.module";
 
 const partnerProviders: any[] = [AccessControlProfileStore, FlavoursStore, PlayersStore, StorageProfilesStore];
 
@@ -140,6 +140,7 @@ export function kalturaClientDefaultOptionsFactory(): KalturaRequestOptionsArgs 
     InputTextModule,
     MetadataProfileModule.forRoot(),
     NgxPageScrollModule,
+    PlayerV7Module.forRoot(),
     AppEventsModule.forRoot(),
     KMCShellModule.forRoot(),
     KalturaCommonModule.forRoot(),
@@ -192,7 +193,7 @@ export function kalturaClientDefaultOptionsFactory(): KalturaRequestOptionsArgs 
   ],
   declarations: [
     AppComponent,
-      AppDefaultViewComponent,
+    AppDefaultViewComponent,
     DashboardComponent,
     AppMenuComponent,
     MultiAccountComponent,
@@ -218,7 +219,6 @@ export function kalturaClientDefaultOptionsFactory(): KalturaRequestOptionsArgs 
       InvalidRestorePasswordHashFormComponent,
       ProgressBarComponent,
       PersistLoginByKsComponent,
-      KalturaPlayerV7Component,
   ],
   bootstrap: [
     AppComponent

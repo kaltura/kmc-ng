@@ -15,31 +15,29 @@ export class EntryThumbnailCapture implements AfterContentInit{
 
     serverUri = getKalturaServerUri();
     playerConfig: any;
-    kdp: any;
+    player: any;
 
     constructor(private _appAuthentication: AppAuthentication) {
     }
 
 	ngAfterContentInit(){
 		this.playerConfig = {
-			uiconfid: serverConfig.kalturaServer.previewUIConf,
+			uiconfid: serverConfig.kalturaServer.previewUIConfV7,
 			pid: this._appAuthentication.appUser.partnerId,
 			entryid: this.entryId,
-            flashvars: {
-			    ks: this._appAuthentication.appUser.ks
-            }
+            ks: this._appAuthentication.appUser.ks
 		};
 
 	}
 
-	onPlayerReady(kdp){
-		this.kdp = kdp;
+    onPlayerInitialized(player){
+		this.player = player;
 	}
 
 	_capture(){
 		// pass current position
 		const context = {
-			currentPosition: this.kdp.evaluate('{video.player.currentTime}')
+			currentPosition: this.player.currentTime
 		};
 		this.parentPopupWidget.close(context);
 	}
