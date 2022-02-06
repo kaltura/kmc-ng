@@ -420,33 +420,26 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   private showPreview(){
       setTimeout(() => { // use a timeout to allow the iframe to render before accessing its native element
-          if (this._selectedPlayerVersion === 2) {
-              const sendMessage = message => {
-                  if (this.previewIframe.nativeElement.contentWindow && this.previewIframe.nativeElement.contentWindow.postMessage) {
-                      this.previewIframe.nativeElement.contentWindow.postMessage(message, window.location.origin);
-                  }
-              };
-              window.addEventListener('message', e => {
-                  if (!e.data) {
-                      return;
-                  }
-                  const postMessageData = e.data;
-                  if (postMessageData.messageType === 'init') {
-                      const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {margin: 0 auto; padding-top: 20px; text-align: center; } object, div { margin: 0 auto; }</style>';
-                      let newDoc = this.previewIframe.nativeElement.contentDocument;
-                      newDoc.open();
-                      newDoc.write('<!doctype html><html><head>' + style + '</head><body><div id="framePlayerContainer">' + this._generatedPreviewCode + '</div></body></html>');
-                      newDoc.close();
-                  }
-              });
-              const uri = serverConfig.externalApps.playerWrapper ? serverConfig.externalApps.playerWrapper.uri : '/public/playerWrapper.html';
-              this.previewIframe.nativeElement.src = uri;
-          } else {
+          const loadPlayer = () => {
               const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {margin: 0 auto; padding-top: 20px; text-align: center; } object, div { margin: 0 auto; }</style>';
               let newDoc = this.previewIframe.nativeElement.contentDocument;
               newDoc.open();
               newDoc.write('<!doctype html><html><head>' + style + '</head><body><div id="framePlayerContainer">' + this._generatedPreviewCode + '</div></body></html>');
               newDoc.close();
+          };
+          if (this._selectedPlayerVersion === 2) {
+              window.addEventListener('message', e => {
+                  if (!e.data) {
+                      return;
+                  }
+                  if (e.origin === window.location.origin && e.data.messageType === 'init') {
+                      loadPlayer();
+                  }
+              });
+              const uri = serverConfig.externalApps.playerWrapper ? serverConfig.externalApps.playerWrapper.uri : '/public/playerWrapper.html';
+              this.previewIframe.nativeElement.src = uri; //'/apps/kmcng/v7.1.2/public/playerWrapper.html';
+          } else {
+              loadPlayer();
           }
       }, 0);
   }
