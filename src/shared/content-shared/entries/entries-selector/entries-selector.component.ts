@@ -86,4 +86,8 @@ export class EntriesSelectorComponent {
 
     this.selectedEntriesChange.emit(this.selectedEntries);
   }
+
+  public _onThumbLoadError(event): void {
+    event.target.style.display = 'none';
+  }
 }

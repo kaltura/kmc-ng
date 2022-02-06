@@ -19,7 +19,7 @@ import { MenuItem } from 'primeng/api';
 })
 export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 
-    public _loadingError = null;
+    public _loadingError = false;
 	@ViewChild('capturePopup', { static: true }) public capturePopup: PopupWidgetComponent;
 	@ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
 	public _actions: MenuItem[] = [];
@@ -109,4 +109,8 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 	    }
     }
 
+    public _onThumbLoadError(event): void {
+        event.target.style.display = 'none';
+        this._loadingError = true;
+    }
 }
