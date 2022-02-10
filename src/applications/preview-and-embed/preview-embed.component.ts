@@ -57,6 +57,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   public _selectedPlayerVersion = 2;
   public _showPlayer = true;
   private _previewLink = null;
+  public renderPlayer = null;
 
   public get _showEmberCode(): boolean {
     const showForPlaylist = this.media instanceof KalturaPlaylist && this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_EMBED_CODE);
@@ -79,6 +80,19 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     this._title = this._showEmberCode
       ? this._appLocalization.get('applications.embed.previewShare')
       : this._appLocalization.get('applications.embed.previewInPlayer');
+
+    this.renderPlayer = (e) => {
+        if (!e.data) {
+            return;
+        }
+        if (e.origin === window.location.origin && e.data.messageType === 'init') {
+            const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {margin: 0 auto; padding-top: 20px; text-align: center; } object, div { margin: 0 auto; }</style>';
+            let newDoc = this.previewIframe.nativeElement.contentDocument;
+            newDoc.open();
+            newDoc.write('<!doctype html><html><head>' + style + '</head><body><div id="framePlayerContainer">' + this._generatedPreviewCode + '</div></body></html>');
+            newDoc.close();
+        }
+    }
   }
 
   ngAfterViewInit(){
@@ -420,20 +434,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   private showPreview(){
       setTimeout(() => { // use a timeout to allow the iframe to render before accessing its native element
-          window.addEventListener('message', e => {
-              if (!e.data) {
-                  return;
-              }
-              if (e.origin === window.location.origin && e.data.messageType === 'init') {
-                  const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {margin: 0 auto; padding-top: 20px; text-align: center; } object, div { margin: 0 auto; }</style>';
-                  let newDoc = this.previewIframe.nativeElement.contentDocument;
-                  newDoc.open();
-                  newDoc.write('<!doctype html><html><head>' + style + '</head><body><div id="framePlayerContainer">' + this._generatedPreviewCode + '</div></body></html>');
-                  newDoc.close();
-              }
-          });
+          window.addEventListener('message', this.renderPlayer);
           const uri = serverConfig.externalApps.playerWrapper ? serverConfig.externalApps.playerWrapper.uri : '/public/playerWrapper.html';
-          this.previewIframe.nativeElement.src = uri; //'/apps/kmcng/v7.1.2/public/playerWrapper.html';
+          this.previewIframe.nativeElement.src = uri;
       }, 0);
   }
 
@@ -467,6 +470,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   public close(): void{
+    window.removeEventListener('message', this.renderPlayer);
     this.closePopup.emit();
   }
 
