@@ -6,7 +6,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { subApplicationsConfig } from 'config/sub-applications';
-import { PreviewEmbedService, EmbedConfig } from './preview-and-embed.service';
+import {PreviewEmbedService, EmbedConfig, EmbedParams} from './preview-and-embed.service';
 
 import { KalturaPlaylist, UiConfListAction } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
@@ -44,8 +44,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   public _playersSortBy: 'name' | 'version' | 'createdAt' | 'updatedAt' = 'updatedAt';
   public _embedTypes: { label: string, value: string }[] = [];
 
-  public _generatedCode = "";
-  public _generatedPreviewCode = "";
+  public _generatedCode: string | EmbedParams = "";
+  public _generatedPreviewCode: string | EmbedParams = "";
   public _shortLink = "";
   public _showEmbedParams = true;
   public _showAdvanced = false;
@@ -86,11 +86,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
             return;
         }
         if (e.origin === window.location.origin && e.data.messageType === 'init') {
-            const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {margin: 0 auto; padding-top: 20px; text-align: center; } object, div { margin: 0 auto; }</style>';
-            let newDoc = this.previewIframe.nativeElement.contentDocument;
-            newDoc.open();
-            newDoc.write('<!doctype html><html><head>' + style + '</head><body><div id="framePlayerContainer">' + this._generatedPreviewCode + '</div></body></html>');
-            newDoc.close();
+            this.previewIframe.nativeElement.contentWindow.postMessage({ 'messageType': 'embed', embedParams: this._generatedPreviewCode }, window.location.origin);
         }
     }
   }
@@ -293,7 +289,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   /* V3 specific code ends here */
 
-  private generateCode(isPreview = false): string{
+  private generateCode(isPreview = false): string | EmbedParams{
     this._previewLink = null;
     this._shortLink = "";
     const cacheStr = Math.floor(new Date().getTime() / 1000) + (15 * 60); // start caching in 15 minutes
@@ -319,7 +315,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       flashVars: JSON.stringify(flashVars, null, 2),
       flashVarsUrl: this.flashVarsToUrl(flashVars).length ? '&' + this.flashVarsToUrl(flashVars) : ''
     };
-    return this._previewEmbedService.generateV2EmbedCode(params);
+    return this._previewEmbedService.generateV2EmbedCode(params, isPreview);
   }
 
   private getProtocol(isPreview: boolean){

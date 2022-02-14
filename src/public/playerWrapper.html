@@ -1,6 +1,56 @@
+<!DOCTYPE html>
 <html>
+<head>
+    <style>
+        div, iframe {
+            display: block;
+            margin: auto;
+        }
+    </style>
+    <script src="./jquery-2.x-git.min.js"></script>
+</head>
   <body>
   <script>
+      window.addEventListener('message', (e) => {
+          if (!e.data) {
+              return;
+          }
+          if (e.origin === window.location.origin && e.data.messageType === 'embed') {
+              const embedParams = e.data.embedParams;
+              let template = document.createElement('template');
+              let script = document.createElement('script');
+              switch (embedParams.embedType) {
+                  case 'dynamic':
+                  case 'thumb':
+                      script.setAttribute('src',embedParams.scriptUrl);
+                      document.head.appendChild(script);
+                      template.innerHTML = embedParams.htmlContent;
+                      document.body.appendChild(template.content.firstChild);
+                      const intervalID = setInterval(() => {
+                          if (typeof window['kWidget'] !== "undefined"){
+                              clearInterval(intervalID);
+                              if (embedParams.embedType === 'dynamic') {
+                                  kWidget.embed(embedParams.embedParameters);
+                              } else {
+                                  kWidget.thumbEmbed(embedParams.embedParameters);
+                              }
+                          }
+                      },50);
+                      break;
+                  case 'iframe':
+                      template.innerHTML = embedParams.htmlContent;
+                      document.body.appendChild(template.content.firstChild);
+                      break;
+                  case 'auto':
+                      const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {margin: 0 auto; text-align: center; } object, div { margin: 0 auto; }</style>';
+                      const seo = embedParams.htmlContent? embedParams.htmlContent : '';
+                      document.open();
+                      document.write('<!doctype html><html><head>' + style + '</head><body><div id="framePlayerContainer">' + seo + '<script src="'+embedParams.scriptUrl +'"></'+'script></div></body></html>');
+                      document.close();
+                      break;
+              }
+          }
+      });
       window.parent.postMessage({ 'messageType': 'init' }, window.location.origin);
   </script>
   </body>

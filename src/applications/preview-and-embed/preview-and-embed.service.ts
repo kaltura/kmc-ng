@@ -22,6 +22,14 @@ export type EmbedConfig = {
     playerConfig: string;
 }
 
+export type EmbedParams = {
+    embedType: string;
+    scriptUrl?: string;
+    htmlContent?: string;
+    embedParameters?: any;
+
+}
+
 @Injectable()
 export class PreviewEmbedService {
 
@@ -63,13 +71,47 @@ export class PreviewEmbedService {
 		return this._kalturaClient.request(new ShortLinkAddAction({shortLink}));
 	}
 
-    generateV2EmbedCode(config: any): string {
-        let code = '';
-        switch (config.embedType) {
-            case 'dynamic':
-                const dynamicEntryId = !config.entryId.length ? '' : `,
+    generateV2EmbedCode(config: any, isPreview = false): string | EmbedParams {
+        if (isPreview) {
+            let scriptUrl = null;
+            let htmlContent = null;
+            let embedParameters = null;
+            switch (config.embedType) {
+                case 'dynamic':
+                    scriptUrl = `${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}`;
+                    htmlContent = `<div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>`;
+                    embedParameters = {targetId: config.playerId, wid: "_"+config.pid, uiconf_id: config.uiConfId, flashvars: JSON.parse(config.flashVars), cache_st: config.cacheSt, entry_id: config.entryId};
+                    break;
+                case 'iframe':
+                    const iframeEntryId = config.entryId.length ? `&entry_id=${config.entryId}` : '';
+                    htmlContent = `<iframe id="${config.playerId}" src="${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}?iframeembed=true&playerId=${config.playerId}${iframeEntryId}${config.flashVarsUrl}" width="${config.width}" height="${config.height}" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"${config.videoMeta}>${config.entryMeta}</iframe>`
+                    break;
+                case 'auto':
+                    const autoEntryId = config.entryId.length ? `&entry_id=${config.entryId}` : '';
+                    scriptUrl = `${config.serverUri}/p/${config.pid}/sp/${config.pid}100/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}?autoembed=true${autoEntryId}&playerId=${config.playerId}&cache_st=${config.cacheSt}&width=${config.width}&height=${config.height}${config.flashVarsUrl}`;
+                    if (config.includeSeoMetadata) {
+                        htmlContent = `<div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>`;
+                    }
+                    break;
+                case 'thumb':
+                    scriptUrl = `${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}`;
+                    htmlContent = `<div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>`;
+                    embedParameters = {targetId: config.playerId, wid: "_"+config.pid, uiconf_id: config.uiConfId, flashvars: JSON.parse(config.flashVars), cache_st: config.cacheSt, entry_id: config.entryId};
+                    break;
+            }
+            return {
+                embedType: config.embedType,
+                scriptUrl,
+                htmlContent,
+                embedParameters
+            }
+        } else {
+            let code = '';
+            switch (config.embedType) {
+                case 'dynamic':
+                    const dynamicEntryId = !config.entryId.length ? '' : `,
   "entry_id": "${config.entryId}"`;
-                code = `<script src="${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}"></script>
+                    code = `<script src="${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}"></script>
 <div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>
 <script>
 kWidget.embed({
@@ -80,21 +122,21 @@ kWidget.embed({
   "cache_st": ${config.cacheSt}${dynamicEntryId}
 });
 </script>`
-                break;
-            case 'iframe':
-                const iframeEntryId = config.entryId.length ? `&entry_id=${config.entryId}` : '';
-                code = `<iframe id="${config.playerId}" src="${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}?iframeembed=true&playerId=${config.playerId}${iframeEntryId}${config.flashVarsUrl}" width="${config.width}" height="${config.height}" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"${config.videoMeta}>${config.entryMeta}</iframe>`
-                break;
-            case 'auto':
-                const autoEntryId = config.entryId.length ? `&entry_id=${config.entryId}` : '';
-                code = `<script src="${config.serverUri}/p/${config.pid}/sp/${config.pid}100/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}?autoembed=true${autoEntryId}&playerId=${config.playerId}&cache_st=${config.cacheSt}&width=${config.width}&height=${config.height}${config.flashVarsUrl}"></script>`
-                if (config.includeSeoMetadata) {
-                    code = `<div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>
+                    break;
+                case 'iframe':
+                    const iframeEntryId = config.entryId.length ? `&entry_id=${config.entryId}` : '';
+                    code = `<iframe id="${config.playerId}" src="${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}?iframeembed=true&playerId=${config.playerId}${iframeEntryId}${config.flashVarsUrl}" width="${config.width}" height="${config.height}" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"${config.videoMeta}>${config.entryMeta}</iframe>`
+                    break;
+                case 'auto':
+                    const autoEntryId = config.entryId.length ? `&entry_id=${config.entryId}` : '';
+                    code = `<script src="${config.serverUri}/p/${config.pid}/sp/${config.pid}100/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}?autoembed=true${autoEntryId}&playerId=${config.playerId}&cache_st=${config.cacheSt}&width=${config.width}&height=${config.height}${config.flashVarsUrl}"></script>`
+                    if (config.includeSeoMetadata) {
+                        code = `<div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>
 ` + code;
-                }
-                break;
-            case 'thumb':
-                code = `<script src="${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}"></script>
+                    }
+                    break;
+                case 'thumb':
+                    code = `<script src="${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}"></script>
 <div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>
 <script>
 kWidget.thumbEmbed({
@@ -106,9 +148,10 @@ kWidget.thumbEmbed({
   "entry_id": "${config.entryId}"
 });
 </script>`;
-                break;
+                    break;
+            }
+            return code;
         }
-        return code;
     }
 
 	generateV3EmbedCode(config: any, isPreview: boolean, poster = ''): string {
