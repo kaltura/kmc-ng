@@ -245,7 +245,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   /* V3 specific code starts here */
 
-  private generateV3code(isPreview: boolean): string {
+  private generateV3code(isPreview: boolean): string | EmbedParams {
       const uiConf = this._previewForm.controls['selectedPlayer'].value.uiConf;
       const embedType = this._previewForm.get('selectedEmbedType').value;
       const ks = this._appAuthentication.appUser.ks;
@@ -271,7 +271,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
               config = `ks: '${ks}',`;
               // force thumbnail download using ks if needed
               if (this._appAuthentication.appUser.partnerInfo.loadThumbnailWithKs) {
-                  poster = `"${this.media.thumbnailUrl}/width/${uiConf.width}/ks/${this._appAuthentication.appUser.ks}"`;
+                  poster = `${this.media.thumbnailUrl}/width/${uiConf.width}/ks/${this._appAuthentication.appUser.ks}`;
               }
           } else {
               config = `&config[provider]={"ks":"${ks}"&config[plugins]={"kava":{"disable":true}}`;

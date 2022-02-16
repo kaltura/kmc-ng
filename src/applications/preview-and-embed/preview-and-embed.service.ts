@@ -23,6 +23,7 @@ export type EmbedConfig = {
 }
 
 export type EmbedParams = {
+    playerVersion: number;
     embedType: string;
     scriptUrl?: string;
     htmlContent?: string;
@@ -100,6 +101,7 @@ export class PreviewEmbedService {
                     break;
             }
             return {
+                playerVersion: 2,
                 embedType: config.embedType,
                 scriptUrl,
                 htmlContent,
@@ -154,94 +156,67 @@ kWidget.thumbEmbed({
         }
     }
 
-	generateV3EmbedCode(config: any, isPreview: boolean, poster = ''): string {
-	    let code = '';
+	generateV3EmbedCode(config: any, isPreview: boolean, poster = ''): string | EmbedParams {
         const rnd = Math.floor(Math.random() * 1000000000);
-        console.log(config.playerConfig);
-        switch (config.embedType) {
-            case 'dynamic':
-            case 'thumb':
-                if (isPreview) {
-                    if (poster.length) {
-                        code = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
-                        <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
-                        <script type="text/javascript">
-                        try {
-                          var kalturaPlayer = KalturaPlayer.setup({
-                            targetId: "kaltura_player_${rnd}",
-                            plugins: {
-                              kava: {
-                                disable: true
-                              }
-                            },
-                            provider: {
-                              ${config.playerConfig}
-                              partnerId: ${config.pid},
-                              uiConfId: ${config.uiConfId}
-                            },
-                            sources: {
-                                poster: ${poster}
-                            }
-                          });
-                          kalturaPlayer.loadMedia({entryId: '${config.entryId}'});
-                        } catch (e) {
-                          console.error(e.message)
-                        }
-                      </script>`;
-                    } else {
-                        code = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
-                        <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
-                        <script type="text/javascript">
-                        try {
-                          var kalturaPlayer = KalturaPlayer.setup({
-                            targetId: "kaltura_player_${rnd}",
-                            plugins: {
-                              kava: {
-                                disable: true
-                              }
-                            },
-                            provider: {
-                              ${config.playerConfig}
-                              partnerId: ${config.pid},
-                              uiConfId: ${config.uiConfId}
-                            }
-                          });
-                          kalturaPlayer.loadMedia({entryId: '${config.entryId}'});
-                        } catch (e) {
-                          console.error(e.message)
-                        }
-                      </script>`;
-                    }
-                } else {
+        if (isPreview) {
+            let scriptUrl = null;
+            let htmlContent = null;
+            let embedParameters = null;
+            switch (config.embedType) {
+                case 'dynamic':
+                    scriptUrl = `${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}`;
+                    htmlContent = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>`;
+                    embedParameters = {targetId: `kaltura_player_${rnd}`, partnerId: config.pid, uiconf_id: config.uiConfId, entry_id: config.entryId, poster, playerConfig: config.playerConfig};
+                    break;
+                case 'iframe':
+                    htmlContent = `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"></iframe>`;
+                    break;
+                case 'auto':
+                    scriptUrl = `${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?autoembed=true&targetId=kaltura_player_${rnd}&entry_id=${config.entryId}${config.playerConfig}`;
+                    htmlContent = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>`;
+                    break;
+            }
+            return {
+                playerVersion: 7,
+                embedType: config.embedType,
+                scriptUrl,
+                htmlContent,
+                embedParameters
+            }
+        } else {
+            let code = '';
+            switch (config.embedType) {
+                case 'dynamic':
+                case 'thumb':
                     code = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
-                        <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
-                        <script type="text/javascript">
-                        try {
-                          var kalturaPlayer = KalturaPlayer.setup({
-                            targetId: "kaltura_player_${rnd}",
-                            provider: {
-                              partnerId: ${config.pid},
-                              uiConfId: ${config.uiConfId}
-                            }
-                          });
-                          kalturaPlayer.loadMedia({entryId: '${config.entryId}'});
-                        } catch (e) {
-                          console.error(e.message)
+                    <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
+                    <script type="text/javascript">
+                    try {
+                      var kalturaPlayer = KalturaPlayer.setup({
+                        targetId: "kaltura_player_${rnd}",
+                        provider: {
+                          partnerId: ${config.pid},
+                          uiConfId: ${config.uiConfId}
                         }
-                      </script>`;
-                }
-                break;
-            case 'iframe':
-                code = `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"></iframe>`;
-                break;
-            case 'auto':
-                code = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
+                      });
+                      kalturaPlayer.loadMedia({entryId: '${config.entryId}'});
+                    } catch (e) {
+                      console.error(e.message)
+                    }
+                  </script>`;
+                    break;
+                case 'iframe':
+                    code = `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"></iframe>`;
+                    break;
+                case 'auto':
+                    code = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
 <script type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?autoembed=true&targetId=kaltura_player_${rnd}&entry_id=${config.entryId}${config.playerConfig}'></script>`
-                break;
-            default:
-                break;
+                    break;
+                default:
+                    break;
+            }
+            return code;
         }
-        return code;
     }
 
 }
