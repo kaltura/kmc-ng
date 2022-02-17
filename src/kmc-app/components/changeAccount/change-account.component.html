@@ -12,7 +12,7 @@
         <div class="kPartnersList">
           <div class="kRow" *ngFor="let partner of partners">
             <p-radioButton name="account" [value]="partner.id" formControlName="account"
-                           label="{{partner.name}}"></p-radioButton>
+                           label="{{partner.name}} ({{partner.id}})"></p-radioButton>
           </div>
         </div>
       </div>
