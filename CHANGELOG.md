@@ -2,11 +2,6 @@
 # [7.2.0](https://github.com/kaltura/kmc-ng/compare/v7.1.3...v7.2.0) (2022-02-23)
 
 
-### Bug Fixes
-
-* **analytics:** remove old usage dashboard and enable Analytics usage overview to all customers AN-22700, AN-22701 ([#992](https://github.com/kaltura/kmc-ng/issues/992)) ([e790eb2](https://github.com/kaltura/kmc-ng/commit/e790eb2))
-
-
 ### Features
 
 * CSP support + upgrade KMC preview players to v7 KMCNG-2409 ([#993](https://github.com/kaltura/kmc-ng/issues/993)) ([6ee5543](https://github.com/kaltura/kmc-ng/commit/6ee5543))
