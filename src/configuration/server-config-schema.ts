@@ -142,6 +142,13 @@ export const ServerConfigSchema = {
                     required: ['uri'],
                     additionalProperties: true
                 },
+                playerWrapper: {
+                    properties: {
+                        uri: {type: 'string'}
+                    },
+                    required: ['uri'],
+                    additionalProperties: true
+                },
             },
             required: [],
             additionalProperties: true

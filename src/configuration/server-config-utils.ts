@@ -85,15 +85,17 @@ export function initializeConfiguration<TExternalApplications>(externalAppsAdapt
             if (validationResult.isValid) {
                 for (const externalAppName of Object.keys(response.externalApps)) {
                     const externalAppAdapter = (<any>externalAppsAdapter)[externalAppName];
-
-                    const externalAppConfiguration = response.externalApps[externalAppName];
-                    if (!externalAppAdapter || !externalAppAdapter(externalAppConfiguration)) {
-                        if (!externalAppAdapter) {
-                            console.warn(`missing external app adapter for '${externalAppName}'. ignoring external app.`);
-                        } else {
-                            console.warn(`external app adapter for '${externalAppName}' resulted with false response. ignoring external app.`);
+                    // no need to validate playerWrapper as its part of the kmc bundle and open to all users
+                    if (externalAppName !== 'playerWrapper') {
+                        const externalAppConfiguration = response.externalApps[externalAppName];
+                        if (!externalAppAdapter || !externalAppAdapter(externalAppConfiguration)) {
+                            if (!externalAppAdapter) {
+                                console.warn(`missing external app adapter for '${externalAppName}'. ignoring external app.`);
+                            } else {
+                                console.warn(`external app adapter for '${externalAppName}' resulted with false response. ignoring external app.`);
+                            }
+                            response.externalApps[externalAppName] = null;
                         }
-                        response.externalApps[externalAppName] = null;
                     }
                 }
 
