@@ -166,5 +166,9 @@ export class EntriesTableComponent implements AfterViewInit, OnInit {
           'text-align': align
       };
   }
+
+  public _onThumbLoadError(event): void {
+      event.target.style.display = 'none';
+  }
 }
 

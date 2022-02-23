@@ -74,4 +74,8 @@ export class LinkedEntriesTableComponent implements OnInit, OnDestroy, AfterView
   public _onSelectionChange(event: KalturaMediaEntry[]): void {
     this.selectedEntriesChange.emit(event);
   }
+
+  public _onThumbLoadError(event): void {
+    event.target.style.display = 'none';
+  }
 }

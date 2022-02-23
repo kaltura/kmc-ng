@@ -137,5 +137,9 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   public assignEmptyMessage(): void {
     this._emptyMessage = this._appLocalization.get('applications.content.playlistDetails.errors.addAtLeastOneMedia');
   }
+
+  public _onThumbLoadError(event): void {
+    event.target.style.display = 'none';
+  }
 }
 

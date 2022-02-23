@@ -6,7 +6,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { subApplicationsConfig } from 'config/sub-applications';
-import { PreviewEmbedService, EmbedConfig } from './preview-and-embed.service';
+import {PreviewEmbedService, EmbedConfig, EmbedParams} from './preview-and-embed.service';
 
 import { KalturaPlaylist, UiConfListAction } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
@@ -44,8 +44,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   public _playersSortBy: 'name' | 'version' | 'createdAt' | 'updatedAt' = 'updatedAt';
   public _embedTypes: { label: string, value: string }[] = [];
 
-  public _generatedCode = "";
-  public _generatedPreviewCode = "";
+  public _generatedCode: string | EmbedParams = "";
+  public _generatedPreviewCode: string | EmbedParams = "";
   public _shortLink = "";
   public _showEmbedParams = true;
   public _showAdvanced = false;
@@ -57,6 +57,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   public _selectedPlayerVersion = 2;
   public _showPlayer = true;
   private _previewLink = null;
+  public renderPlayer = null;
 
   public get _showEmberCode(): boolean {
     const showForPlaylist = this.media instanceof KalturaPlaylist && this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_EMBED_CODE);
@@ -79,6 +80,15 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     this._title = this._showEmberCode
       ? this._appLocalization.get('applications.embed.previewShare')
       : this._appLocalization.get('applications.embed.previewInPlayer');
+
+    this.renderPlayer = (e) => {
+        if (!e.data) {
+            return;
+        }
+        if (e.origin === window.location.origin && e.data.messageType === 'init') {
+            this.previewIframe.nativeElement.contentWindow.postMessage({ 'messageType': 'embed', embedParams: this._generatedPreviewCode }, window.location.origin);
+        }
+    }
   }
 
   ngAfterViewInit(){
@@ -235,7 +245,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   /* V3 specific code starts here */
 
-  private generateV3code(isPreview: boolean): string {
+  private generateV3code(isPreview: boolean): string | EmbedParams {
       const uiConf = this._previewForm.controls['selectedPlayer'].value.uiConf;
       const embedType = this._previewForm.get('selectedEmbedType').value;
       const ks = this._appAuthentication.appUser.ks;
@@ -261,7 +271,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
               config = `ks: '${ks}',`;
               // force thumbnail download using ks if needed
               if (this._appAuthentication.appUser.partnerInfo.loadThumbnailWithKs) {
-                  poster = `"${this.media.thumbnailUrl}/width/${uiConf.width}/ks/${this._appAuthentication.appUser.ks}"`;
+                  poster = `${this.media.thumbnailUrl}/width/${uiConf.width}/ks/${this._appAuthentication.appUser.ks}`;
               }
           } else {
               config = `&config[provider]={"ks":"${ks}"&config[plugins]={"kava":{"disable":true}}`;
@@ -279,7 +289,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   /* V3 specific code ends here */
 
-  private generateCode(isPreview = false): string{
+  private generateCode(isPreview = false): string | EmbedParams{
     this._previewLink = null;
     this._shortLink = "";
     const cacheStr = Math.floor(new Date().getTime() / 1000) + (15 * 60); // start caching in 15 minutes
@@ -305,7 +315,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       flashVars: JSON.stringify(flashVars, null, 2),
       flashVarsUrl: this.flashVarsToUrl(flashVars).length ? '&' + this.flashVarsToUrl(flashVars) : ''
     };
-    return this._previewEmbedService.generateV2EmbedCode(params);
+    return this._previewEmbedService.generateV2EmbedCode(params, isPreview);
   }
 
   private getProtocol(isPreview: boolean){
@@ -420,11 +430,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   private showPreview(){
       setTimeout(() => { // use a timeout to allow the iframe to render before accessing its native element
-          const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {margin: 0 auto; padding-top: 20px; text-align: center; } object, div { margin: 0 auto; }</style>';
-          let newDoc = this.previewIframe.nativeElement.contentDocument;
-          newDoc.open();
-          newDoc.write('<!doctype html><html><head>' + style + '</head><body><div id="framePlayerContainer">' + this._generatedPreviewCode + '</div></body></html>');
-          newDoc.close();
+          window.addEventListener('message', this.renderPlayer);
+          const uri = serverConfig.externalApps.playerWrapper ? serverConfig.externalApps.playerWrapper.uri : '/public/playerWrapper.html';
+          this.previewIframe.nativeElement.src = uri;
       }, 0);
   }
 
@@ -458,6 +466,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   public close(): void{
+    window.removeEventListener('message', this.renderPlayer);
     this.closePopup.emit();
   }
 

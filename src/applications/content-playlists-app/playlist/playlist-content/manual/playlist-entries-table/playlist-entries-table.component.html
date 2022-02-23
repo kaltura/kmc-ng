@@ -51,7 +51,7 @@
                              [class.kShowAsDisabled]="_kmcPermissions.CONTENT_MANAGE_BASE | kDisabledIfNotPermitted"
                              [class.disablePointer]="isRapt"
                              (click)="_goToEntry(entry)">
-                            <img [src]="entry.thumbnailUrl" onError="this.onerror=null;this.style.display='none'">
+                            <img [src]="entry.thumbnailUrl" (error)="_onThumbLoadError($event)">
                             <div class="kIcons">
                                 <i class="kIconyoutube kThumbnailTypeIcon" *ngIf="entry.externalSourceType === _youtubeExternalSourceType"></i>
                                 <i class="kIconquiz kThumbnailTypeIcon" *ngIf="entry.isQuizEntry"></i>

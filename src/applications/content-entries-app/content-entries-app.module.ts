@@ -57,6 +57,7 @@ import { TreeModule } from 'primeng/tree';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ConfirmationService } from 'primeng/api';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { PlayerV7Module } from "app-shared/kmc-shared/player-v7/player-v7.module";
 
 @NgModule({
   imports: [
@@ -102,6 +103,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
     OverlayPanelModule,
     KEditHosterModule,
     StickyModule,
+    PlayerV7Module,
     KMCPermissionsModule,
     TableModule,
     InputSwitchModule,
@@ -115,7 +117,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
     ContentEntriesComponent,
     EntryComponentsList,
     EntriesComponentsList,
-    ToggleLiveComponent,
+    ToggleLiveComponent
   ],
   exports: [],
   providers: [

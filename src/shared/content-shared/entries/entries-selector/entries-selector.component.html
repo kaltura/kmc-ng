@@ -12,7 +12,7 @@
     <div class="KEntrySelectorSelectedItemsWrapper">
       <div class="KEntrySelectorSelectedItem" *ngFor="let entry of selectedEntries">
           <div class="kThumbnailHolder">
-            <img [src]="entry.thumbnailUrl" [alt]="entry.name" onError="this.onerror=null;this.style.display='none'"
+            <img [src]="entry.thumbnailUrl" [alt]="entry.name" (error)="_onThumbLoadError($event)"
                  *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
             <div class="kIcons">
               <i class="kIconyoutube kThumbnailTypeIcon" *ngIf="entry.externalSourceType === _youtubeExternalSourceType"></i>

@@ -33,7 +33,7 @@
         <td [ngStyle]="{'padding-left': allowMultiple && !disabled ? '0' : '14px', 'width': allowMultiple && !disabled ? '100px' : '114px'}"
         *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
           <div class="kThumbnailHolder"><span class="kHelper"></span>
-            <img [src]="entry.thumbnailUrl" onError="this.onerror=null;this.style.display='none'">
+            <img [src]="entry.thumbnailUrl" (error)="_onThumbLoadError($event)">
           </div>
         </td>
 
