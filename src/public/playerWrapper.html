@@ -8,101 +8,101 @@
         }
     </style>
 </head>
-<body>
-<script>
-    window.addEventListener('message', function(e) {
-        if (!e.data) {
-            return;
-        }
-        if (e.origin === window.location.origin && e.data.messageType === 'embed') {
-            const embedParams = e.data.embedParams;
-            var template = document.createElement('template');
-            var script = document.createElement('script');
-            if (embedParams.playerVersion === 2) {
-                switch (embedParams.embedType) {
-                    case 'dynamic':
-                    case 'thumb':
-                        script.setAttribute('src', embedParams.scriptUrl);
-                        document.head.appendChild(script);
-                        template.innerHTML = embedParams.htmlContent;
-                        document.body.appendChild(template.firstChild);
-                        const intervalID = setInterval(function() {
-                            if (typeof window['kWidget'] !== "undefined") {
-                                clearInterval(intervalID);
-                                if (embedParams.embedType === 'dynamic') {
-                                    kWidget.embed(embedParams.embedParameters);
-                                } else {
-                                    kWidget.thumbEmbed(embedParams.embedParameters);
-                                }
-                            }
-                        }, 50);
-                        break;
-                    case 'iframe':
-                        template.innerHTML = embedParams.htmlContent;
-                        document.body.appendChild(template.firstChild);
-                        break;
-                    case 'auto':
-                        const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {margin: 0 auto; text-align: center; } object, div { margin: 0 auto; }</style>';
-                        const seo = embedParams.htmlContent ? embedParams.htmlContent : '';
-                        document.open();
-                        document.write('<!doctype html><html><head>' + style + '</head><body><div id="framePlayerContainer">' + seo + '<script src="' + embedParams.scriptUrl + '"></' + 'script></div></body></html>');
-                        document.close();
-                        break;
-                }
-            } else if (embedParams.playerVersion === 7) {
-                switch (embedParams.embedType) {
-                    case 'dynamic':
-                        script.setAttribute('src', embedParams.scriptUrl);
-                        document.head.appendChild(script);
-                        template.innerHTML = embedParams.htmlContent;
-                        document.body.appendChild(template.firstChild);
-                        const intervalID = setInterval(function() {
-                            if (typeof window['KalturaPlayer'] !== "undefined") {
-                                clearInterval(intervalID);
-                                try {
-                                    var playerOptions = {
-                                        targetId: embedParams.embedParameters.targetId,
-                                        plugins: {
-                                            kava: {
-                                                disable: true
-                                            }
-                                        },
-                                        provider: {
-                                            playerConfig: embedParams.embedParameters.playerConfig,
-                                            partnerId: embedParams.embedParameters.partnerId,
-                                            uiConfId: embedParams.embedParameters.uiconf_id
-                                        }
-                                    };
-                                    if (embedParams.embedParameters.poster.length) {
-                                        Object.assign(playerOptions, {
-                                            sources: {
-                                                poster: embedParams.embedParameters.poster
-                                            }
-                                        })
-                                    }
-                                    const kalturaPlayer = window['KalturaPlayer'].setup(playerOptions);
-                                    kalturaPlayer['loadMedia']({ entryId: embedParams.embedParameters.entry_id });
-                                } catch (e) {
-                                    console.error(e.message)
-                                }
-                            }
-                        }, 50);
-                        break;
-                    case 'iframe':
-                        template.innerHTML = embedParams.htmlContent;
-                        document.body.appendChild(template.firstChild);
-                        break;
-                    case 'auto':
-                        const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {margin: 0 auto; text-align: center; } object, div { margin: 0 auto; }</style>';
-                        document.open();
-                        document.write('<!doctype html><html><head>' + style + '</head><body><div id="framePlayerContainer">' + embedParams.htmlContent + '<script src="' + embedParams.scriptUrl + '"></' + 'script></div></body></html>');
-                        document.close();
-                        break;
-                }
-            }
-        }
-    });
-    window.parent.postMessage({ 'messageType': 'init' }, window.location.origin);
-</script>
-</body>
+  <body>
+  <script>
+      window.addEventListener('message', (e) => {
+          if (!e.data) {
+              return;
+          }
+          if (e.origin === window.location.origin && e.data.messageType === 'embed') {
+              const embedParams = e.data.embedParams;
+              let template = document.createElement('template');
+              let script = document.createElement('script');
+              if (embedParams.playerVersion === 2) {
+                  switch (embedParams.embedType) {
+                      case 'dynamic':
+                      case 'thumb':
+                          script.setAttribute('src', embedParams.scriptUrl);
+                          document.head.appendChild(script);
+                          template.innerHTML = embedParams.htmlContent;
+                          document.body.appendChild(template.content.firstChild);
+                          const intervalID = setInterval(() => {
+                              if (typeof window['kWidget'] !== "undefined") {
+                                  clearInterval(intervalID);
+                                  if (embedParams.embedType === 'dynamic') {
+                                      kWidget.embed(embedParams.embedParameters);
+                                  } else {
+                                      kWidget.thumbEmbed(embedParams.embedParameters);
+                                  }
+                              }
+                          }, 50);
+                          break;
+                      case 'iframe':
+                          template.innerHTML = embedParams.htmlContent;
+                          document.body.appendChild(template.content.firstChild);
+                          break;
+                      case 'auto':
+                          const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {margin: 0 auto; text-align: center; } object, div { margin: 0 auto; }</style>';
+                          const seo = embedParams.htmlContent ? embedParams.htmlContent : '';
+                          document.open();
+                          document.write('<!doctype html><html><head>' + style + '</head><body><div id="framePlayerContainer">' + seo + '<script src="' + embedParams.scriptUrl + '"></' + 'script></div></body></html>');
+                          document.close();
+                          break;
+                  }
+              } else if (embedParams.playerVersion === 7) {
+                  switch (embedParams.embedType) {
+                      case 'dynamic':
+                          script.setAttribute('src', embedParams.scriptUrl);
+                          document.head.appendChild(script);
+                          template.innerHTML = embedParams.htmlContent;
+                          document.body.appendChild(template.content.firstChild);
+                          const intervalID = setInterval(() => {
+                              if (typeof window['KalturaPlayer'] !== "undefined") {
+                                  clearInterval(intervalID);
+                                  try {
+                                      let playerOptions = {
+                                          targetId: embedParams.embedParameters.targetId,
+                                          plugins: {
+                                              kava: {
+                                                  disable: true
+                                              }
+                                          },
+                                          provider: {
+                                              playerConfig: embedParams.embedParameters.playerConfig,
+                                              partnerId: embedParams.embedParameters.partnerId,
+                                              uiConfId: embedParams.embedParameters.uiconf_id
+                                          }
+                                      };
+                                      if (embedParams.embedParameters.poster.length) {
+                                          Object.assign(playerOptions, {
+                                              sources: {
+                                                  poster: embedParams.embedParameters.poster
+                                              }
+                                          })
+                                      }
+                                      const kalturaPlayer = window['KalturaPlayer'].setup(playerOptions);
+                                      kalturaPlayer['loadMedia']({ entryId: embedParams.embedParameters.entry_id });
+                                  } catch (e) {
+                                      console.error(e.message)
+                                  }
+                              }
+                          }, 50);
+                          break;
+                      case 'iframe':
+                          template.innerHTML = embedParams.htmlContent;
+                          document.body.appendChild(template.content.firstChild);
+                          break;
+                      case 'auto':
+                          const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {margin: 0 auto; text-align: center; } object, div { margin: 0 auto; }</style>';
+                          document.open();
+                          document.write('<!doctype html><html><head>' + style + '</head><body><div id="framePlayerContainer">' + embedParams.htmlContent + '<script src="' + embedParams.scriptUrl + '"></' + 'script></div></body></html>');
+                          document.close();
+                          break;
+                  }
+              }
+          }
+      });
+      window.parent.postMessage({ 'messageType': 'init' }, window.location.origin);
+  </script>
+  </body>
 </html>
