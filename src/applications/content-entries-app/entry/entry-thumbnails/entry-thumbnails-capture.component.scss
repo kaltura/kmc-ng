@@ -19,15 +19,15 @@
     height: 276px;
     padding-left: 112px;
     padding-right: 112px;
-    padding-top: 30px;
+    padding-top: 20px;
     .kPlayerTarget{
       width: 340px;
-      height: 190px;
+      height: 210px;
       background-color: black;
-      margin-bottom: 34px;
+      margin-bottom: 14px;
     }
     .kLabel{
-      margin-top: 34px;
+      margin-top: 14px;
       font-size: 15px;
       text-align: center;
       color: $kGrayscale1;
@@ -44,5 +44,8 @@
     }
   }
 
+}
+app-k-player-v7 ::ng-deep .playkit-overlay-contents {
+    overflow-y: hidden;
 }
 
