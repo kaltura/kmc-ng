@@ -114,6 +114,8 @@ export class UserSettingsComponent implements OnInit{
     private _handleKPFOpenResult(openedSuccessfully): void {
         if (!openedSuccessfully) {
             this._handleKPFConnectionError();
+        } else {
+            this.parentPopup.close();
         };
     }
 

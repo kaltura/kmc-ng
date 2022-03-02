@@ -35,8 +35,10 @@ export class KPFService {
       {
           this.getJWTToken().subscribe(response => {
               if (response.access_token && response.access_token.length) {
-                  console.log(`${this._kpfPurchaseManagerBaseUrl}/partner/login/${response.access_token}/${path}`);
-                  this._browserService.openLink(`${this._kpfPurchaseManagerBaseUrl}/partner/login/${response.access_token}/${path}`);
+                  (document.getElementById('kpfForm') as HTMLFormElement).action = this._kpfPurchaseManagerBaseUrl + '/partner/loginWithJwtForm';
+                  (document.getElementById('kpfFormJWT') as HTMLFormElement).value = response.access_token;
+                  (document.getElementById('kpfFormPath') as HTMLFormElement).value = path;
+                  (document.getElementById('kpfForm') as HTMLFormElement).submit();
                   observer.next(true);
               } else {
                   observer.next(false);
