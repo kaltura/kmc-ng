@@ -68,7 +68,7 @@
                                               }
                                           },
                                           provider: {
-                                              playerConfig: embedParams.embedParameters.playerConfig,
+                                              ...JSON.parse(embedParams.embedParameters.playerConfig),
                                               partnerId: embedParams.embedParameters.partnerId,
                                               uiConfId: embedParams.embedParameters.uiconf_id
                                           }
