@@ -1,16 +1,15 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UsersStore } from './users.service';
-import { subApplicationsConfig } from 'config/sub-applications';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { KalturaUser } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Observer } from 'rxjs/Observer';
-import { serverConfig } from 'config/server';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { AdminUsersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import {KPFLoginRedirects, KPFService} from 'app-shared/kmc-shell/providers/kpf.service';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -42,7 +41,8 @@ export class UsersListComponent implements OnInit, OnDestroy {
   constructor(public _usersStore: UsersStore,
               private _appLocalization: AppLocalization,
               private _adminUsersMainViewService: AdminUsersMainViewService,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _kpfService: KPFService) {
   }
 
   ngOnInit() {
@@ -119,7 +119,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   public _upgradeAccount(): void {
-    this._browserService.openLink(serverConfig.externalLinks.kaltura.upgradeAccount, {}, '_blank');
+      this._kpfService.openKPF(KPFLoginRedirects.upgrade).subscribe();
   }
 
   public _onPaginationChanged(state: any): void {
