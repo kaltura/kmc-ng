@@ -58,10 +58,6 @@
         <a (click)="logout()">{{'app.userSettings.logout' | translate}}</a>
     </div>
 
-    <form [ngStyle]="{'width': '0px', 'height': '0px'}" id="kpfForm" method="post" target="_blank">
-        <input id="kpfFormJWT" type="hidden" name="token"/>
-        <input id="kpfFormPath" type="hidden" name="path"/>
-    </form>
 </div>
 
 <kPopupWidget #changeAccountPopup data-aid="changeAccountPopup" [popupWidth]="500" [popupHeight]="370" [modal]="true">
