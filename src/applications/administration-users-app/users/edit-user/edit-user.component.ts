@@ -7,11 +7,12 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { IsUserExistsStatuses } from '../user-exists-statuses';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { KalturaUser } from 'kaltura-ngx-client';
+import { KalturaPartnerAuthenticationType, KalturaUser } from 'kaltura-ngx-client';
 import { KalturaUserRole } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { first } from 'rxjs/operators';
+import { AppAuthentication } from "app-shared/kmc-shell";
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number;
@@ -41,6 +42,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   public _lastNameField: AbstractControl;
   public _idField: AbstractControl;
   public _roleIdsField: AbstractControl;
+  public _ssoUserField: AbstractControl;
   public _isNewUser = true;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
@@ -48,18 +50,24 @@ export class EditUserComponent implements OnInit, OnDestroy {
   public _idServerError = false;
   public _emailServerError = false;
 
+  public _showSsoUser = false;
+  private disableSsoUserCB = false;
+
   constructor(public _usersStore: UsersStore,
               private _formBuilder: FormBuilder,
               private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
-              private _appLocalization: AppLocalization) {
+              private _appLocalization: AppLocalization,
+              _appAuthentication: AppAuthentication) {
+    this._showSsoUser = _appAuthentication.appUser.partnerInfo.authenticationType === KalturaPartnerAuthenticationType.sso;
     // build FormControl group
     this._userForm = _formBuilder.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       id: '',
-      roleIds: ''
+      roleIds: '',
+      ssoUser: {value: true, disabled: this.disableSsoUserCB}
     });
 
     this._emailField = this._userForm.controls['email'];
@@ -67,6 +75,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
     this._lastNameField = this._userForm.controls['lastName'];
     this._idField = this._userForm.controls['id'];
     this._roleIdsField = this._userForm.controls['roleIds'];
+    this._ssoUserField = this._userForm.controls['ssoUser'];
   }
 
 
@@ -93,7 +102,8 @@ export class EditUserComponent implements OnInit, OnDestroy {
             firstName: '',
             lastName: '',
             id: '',
-            roleIds: this._rolesList && this._rolesList.length ? this._rolesList[0].value : null
+            roleIds: this._rolesList && this._rolesList.length ? this._rolesList[0].value : null,
+            ssoUser: {value: true, disabled: this.disableSsoUserCB}
           });
           this._userForm.get('email').enable();
           this._userForm.get('firstName').enable();
@@ -107,8 +117,10 @@ export class EditUserComponent implements OnInit, OnDestroy {
             firstName: this.user.firstName,
             lastName: this.user.lastName,
             id: this.user.id,
-            roleIds: relevantUser.roleIds ? relevantUser.roleIds : this.user.roleIds
+            roleIds: relevantUser.roleIds ? relevantUser.roleIds : this.user.roleIds,
+            ssoUser: {value: !this.user.isSsoExcluded, disabled: this.disableSsoUserCB}
           });
+          this.disableSsoUserCB = !this._saveBtnShown;
           this._userForm.get('email').disable();
           this._userForm.get('firstName').disable();
           this._userForm.get('lastName').disable();
@@ -202,8 +214,9 @@ export class EditUserComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const { roleIds, id, email } = this._userForm.getRawValue();
-    this._usersStore.updateUser({ roleIds, email, id: (id || '').trim() }, this.user.id)
+    const { roleIds, id, email, ssoUser } = this._userForm.getRawValue();
+    const userData = this._showSsoUser ? { roleIds, email, id: (id || '').trim(), ssoUser } : { roleIds, email, id: (id || '').trim() };
+    this._usersStore.updateUser(userData, this.user.id)
       .pipe(tag('block-shell'))
       .pipe(cancelOnDestroy(this))
       .subscribe(
