@@ -214,8 +214,8 @@ export class UsersStore implements OnDestroy {
     return this._kalturaServerClient.request(new UserGetAction({ userId }));
   }
 
-  public addUser(userData: { roleIds: string, id: string, email: string, firstName: string, lastName: string }): Observable<void> {
-    const { roleIds, id, email, firstName, lastName } = userData;
+  public addUser(userData: { roleIds: string, id: string, email: string, firstName: string, lastName: string, ssoUser: boolean }): Observable<void> {
+    const { roleIds, id, email, firstName, lastName, ssoUser } = userData;
 
     if (!email || !firstName || !lastName || !roleIds) {
       return throwError(new Error(this._appLocalization.get('applications.administration.users.addUserError')));
@@ -228,7 +228,8 @@ export class UsersStore implements OnDestroy {
       roleIds: roleIds,
       id: id || email,
       isAdmin: true,
-      loginEnabled: true
+      loginEnabled: true,
+      isSsoExcluded: !ssoUser
     });
 
     return this._kalturaServerClient
@@ -236,7 +237,7 @@ export class UsersStore implements OnDestroy {
         .pipe(map(() => {}));
   }
 
-  public updateUser(userData: { roleIds: string, id: string, email: string}, userId: string): Observable<void> {
+  public updateUser(userData: { roleIds: string, id: string, email: string, ssoUser?: boolean}, userId: string): Observable<void> {
     const { roleIds, id, email } = userData;
 
     if ((!id && !email) || !userId || !roleIds) {
@@ -248,6 +249,9 @@ export class UsersStore implements OnDestroy {
       id: id || email,
         email: email
     });
+    if (userData.ssoUser !== undefined) {
+        user.isSsoExcluded = !userData.ssoUser
+    }
     return this._kalturaServerClient
       .request(new UserUpdateAction({ userId, user }))
       .pipe(map(() => {

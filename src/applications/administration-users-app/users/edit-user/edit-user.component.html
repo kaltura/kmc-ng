@@ -73,7 +73,13 @@
             <div class="kSelectedRole">{{_selectedRoleDescription}}</div>
           </div>
         </div>
+
+          <div class="kRow kValign" *ngIf="_showSsoUser">
+              <p-checkbox label="{{'applications.administration.users.ssoUser' | translate}}" [formControl]="_ssoUserField" [binary]="true"></p-checkbox>
+          </div>
       </form>
+
+
     </div>
 
     <div class="kFooter">

@@ -17,6 +17,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { MenuModule } from 'primeng/menu';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import { DropdownModule } from 'primeng/dropdown';
     PaginatorModule,
     MenuModule,
     ButtonModule,
+    CheckboxModule,
     PopupWidgetModule,
     FormsModule,
     ReactiveFormsModule,
