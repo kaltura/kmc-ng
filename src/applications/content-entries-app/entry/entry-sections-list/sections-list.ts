@@ -22,6 +22,10 @@ export const SectionsList = [
         key : ContentEntryViewSections.Flavours
     },
     {
+        label : 'applications.content.entryDetails.sections.flavoursChildren',
+        key : ContentEntryViewSections.FlavoursChildren
+    },
+    {
         label : 'applications.content.entryDetails.sections.distribution',
         key : ContentEntryViewSections.Distribution
     },

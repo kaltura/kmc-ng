@@ -1521,6 +1521,7 @@
                     "accesscontrol": "Access Control",
                     "scheduling": "Scheduling",
                     "flavours": "Flavors",
+                    "flavoursChildren": "Flavors children",
                     "captions": "Captions",
                     "live": "Live Stream",
                     "related": "Related Files",
@@ -1643,6 +1644,7 @@
                 },
                 "flavours": {
                     "flavours": "Flavors",
+                    "flavoursChildren": "Flavors children",
                     "replace": "Replace Video",
                     "flavour": "Flavor",
                     "assetId": "Asset ID",

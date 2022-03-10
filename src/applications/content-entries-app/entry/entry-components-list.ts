@@ -4,6 +4,7 @@ import {EntryThumbnailCapture} from './entry-thumbnails/entry-thumbnails-capture
 import {EntryAccessControl} from './entry-access-control/entry-access-control.component';
 import {EntryScheduling} from './entry-scheduling/entry-scheduling.component';
 import {EntryFlavours} from './entry-flavours/entry-flavours.component';
+import {EntryFlavoursChildren} from './entry-flavours-children/entry-flavours-children.component';
 import {DRMDetails} from './entry-flavours/drm-details/drm-details.component';
 import {FlavorPreview} from './entry-flavours/flavor-preview/flavor-preview.component';
 import {FlavorImport} from './entry-flavours/flavor-import/flavor-import.component';
@@ -55,6 +56,7 @@ export const EntryComponentsList = [
     EntryAdvertisementsComponent,
     EntryComponent,
     EntryFlavours,
+    EntryFlavoursChildren,
     EntryLive,
     EntryMetadata,
     EntryPreview,

@@ -1,0 +1,112 @@
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage"
+                [bodyScroll]="true">
+    <div class="kFlavours kOverrideFAIcons" #flavors>
+        <p class="kTitle">{{'applications.content.entryDetails.flavours.flavoursChildren' | translate}}</p>
+        <div *ngFor="let entry of childEntries">
+            <div class="kEntryId">
+                <p>Entryid: {{entry.id}}</p>
+                <p>Name: {{entry.name}}</p>
+            </div>
+            <div class="kTable">
+                <p-table
+                    scrollHeight="100%"
+                    [resizableColumns]="true"
+                    [value]="entry.flavors"
+                    [scrollable]="true"
+                    (onColResize)="_columnsResizeManager.onColumnResize($event)">
+                    <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                            <col data-cid="name" [ngStyle]="{'width': '144px', 'padding-left': '24px'}">
+                            <col data-cid="assetId" [hidden]="_documentWidth < 1300" [ngStyle]="{'width': '100px'}">
+                            <col data-cid="format">
+                            <col data-cid="codec">
+                            <col data-cid="bitrate">
+                            <col data-cid="dimensions">
+                            <col data-cid="size">
+                            <col data-cid="stat">
+                            <col [ngStyle]="{'width':'80px'}">
+                        </colgroup>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th data-cid="name" pResizableColumn
+                                [ngStyle]="{'width': '144px', 'padding-left': '24px'}">
+                                {{'applications.content.entryDetails.flavours.flavour' | translate}}
+                            </th>
+                            <th data-cid="assetId" pResizableColumn
+                                [ngStyle]="{'width': '100px'}"
+                                [hidden]="_documentWidth < 1300">
+                                {{'applications.content.entryDetails.flavours.assetId' | translate}}
+                            </th>
+                            <th data-cid="format" pResizableColumn>
+                                {{'applications.content.entryDetails.flavours.format' | translate}}
+                            </th>
+                            <th data-cid="codec" pResizableColumn>
+                                {{'applications.content.entryDetails.flavours.codec' | translate}}
+                            </th>
+                            <th data-cid="bitrate" pResizableColumn>
+                                {{'applications.content.entryDetails.flavours.bitrate' | translate}}
+                            </th>
+                            <th data-cid="dimensions" pResizableColumn>
+                                {{'applications.content.entryDetails.flavours.dimensions' | translate}}
+                            </th>
+                            <th data-cid="size" pResizableColumn>
+                                {{'applications.content.entryDetails.flavours.size' | translate}}
+                            </th>
+                            <th data-cid="stat" pResizableColumn>
+                                {{'applications.content.entryDetails.flavours.stat' | translate}}
+                            </th>
+                            <th [ngStyle]="{'width':'80px'}"></th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-flavor>
+                        <tr [pSelectableRow]="flavor">
+                            <td [ngStyle]="{'padding-left': '24px'}"class="ui-resizable-column">
+                                <span class="kFlavorName kTableColumn"
+                                    [class.kConvertedFlavor]="flavor.status === '2'">{{flavor.name}}</span>
+                            </td>
+                            <td class="ui-resizable-column" [hidden]="_documentWidth < 1300">
+                                <span class="kTableColumn" [kTooltip]="flavor.id" [showOnEllipsis]="true">{{flavor.id}}</span>
+                            </td>
+                            <td class="ui-resizable-column">
+                                <span class="kTableColumn" [kTooltip]="flavor.format" [showOnEllipsis]="true">{{flavor.format}}</span>
+                            </td>
+                            <td class="ui-resizable-column">
+                                <span class="kTableColumn" [kTooltip]="flavor.codec" [showOnEllipsis]="true">{{flavor.codec}}</span>
+                            </td>
+                            <td class="ui-resizable-column">
+                                <span class="kTableColumn" [kTooltip]="flavor.bitrate" [showOnEllipsis]="true">{{flavor.bitrate}}</span>
+                            </td>
+                            <td class="ui-resizable-column">
+                                <span class="kTableColumn" [kTooltip]="flavor.dimensions" [showOnEllipsis]="true">{{flavor.dimensions}}</span>
+                            </td>
+                            <td class="ui-resizable-column">
+                                <span class="kTableColumn" [kTooltip]="flavor.size" [showOnEllipsis]="true">{{flavor.size}}</span>
+                            </td>
+                            <td class="ui-resizable-column">
+                                <span class="kTableColumn" [kTooltip]="flavor.statusTooltip" [class.kFlavorStatusError]="flavor.status === '-1'">{{flavor.statusLabel}}</span>
+                            </td>
+                            <td>
+                                <div
+                                    *ngIf="_widgetService.showFlavorActions && flavor.status !== '1' && flavor.status !== '6' && flavor.status !== '7' && flavor.status !== '8' && flavor.status !== '0'"
+                                    class="kFlavorsTableActions">
+                                    <button type="button" class="kMoreActionsButton" pButton icon="kIconmore"
+                                            (click)="openActionsMenu($event, flavor)"></button>
+                                </div>
+                                <div
+                                    *ngIf="flavor.status === '1' || flavor.status === '6' || flavor.status === '7' || flavor.status === '8' || flavor.status === '0'"
+                                    style="position: relative">
+                                    <div class="k-spinner-background">
+                                        <div class="k-spinner-animation"></div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+    <p-menu #actionsmenu [popup]="true" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+</k-area-blocker>

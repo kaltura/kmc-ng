@@ -25,6 +25,7 @@ export enum ContentEntryViewSections {
     AccessControl = 'AccessControl',
     Scheduling = 'Scheduling',
     Flavours = 'Flavours',
+    FlavoursChildren = 'FlavoursChildren',
     Captions = 'Captions',
     Live = 'Live',
     Related = 'Related',
@@ -104,6 +105,9 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
                     case 'flavours':
                         result = ContentEntryViewSections.Flavours;
                         break;
+                    case 'flavourschildren':
+                        result = ContentEntryViewSections.FlavoursChildren;
+                        break;
                     case 'captions':
                         result = ContentEntryViewSections.Captions;
                         break;
@@ -152,6 +156,9 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
             case ContentEntryViewSections.Flavours:
                 result = 'flavours';
                 break;
+            case ContentEntryViewSections.FlavoursChildren:
+                result = 'flavourschildren';
+                break;
             case ContentEntryViewSections.Captions:
                 result = 'captions';
                 break;
@@ -198,6 +205,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
         const externalMedia = entry instanceof KalturaExternalMediaEntry;
         let result = false;
         switch (section) {
+            case ContentEntryViewSections.FlavoursChildren:
             case ContentEntryViewSections.Flavours:
                 result = mediaType !== KalturaMediaType.image && !this._isLiveMediaEntry(entry.mediaType) && !externalMedia;
                 break;
@@ -255,6 +263,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
                 break;
             case ContentEntryViewSections.Thumbnails:
             case ContentEntryViewSections.Flavours:
+            case ContentEntryViewSections.FlavoursChildren:
             case ContentEntryViewSections.Clips:
             case ContentEntryViewSections.AccessControl:
             case ContentEntryViewSections.Scheduling:

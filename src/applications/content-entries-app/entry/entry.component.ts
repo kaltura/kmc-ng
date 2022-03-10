@@ -33,6 +33,7 @@ import { ContentEntriesAppService } from '../content-entries-app.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { EntryFlavoursChildrenWidget } from './entry-flavours-children/entry-flavours-children-widget.service';
 
 @Component({
 	selector: 'kEntry',
@@ -47,6 +48,7 @@ import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
 		EntrySchedulingWidget,
 		EntryRelatedWidget,
 		EntryFlavoursWidget,
+		EntryFlavoursChildrenWidget,
 		EntryLiveWidget,
 		EntryClipsWidget,
 		EntryCaptionsWidget,

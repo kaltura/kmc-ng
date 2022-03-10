@@ -15,6 +15,7 @@ import {EntryThumbnails} from './entry/entry-thumbnails/entry-thumbnails.compone
 import {EntryCanDeactivate} from './entry/entry-can-deactivate.service';
 import {EntryDistributionComponent} from './entry/entry-distribution/entry-distribution.component';
 import {EntryAdvertisementsComponent} from './entry/entry-advertisements/entry-advertisements.component';
+import {EntryFlavoursChildren} from './entry/entry-flavours-children/entry-flavours-children.component';
 
 export const routing: Route[] = [
   {
@@ -34,6 +35,7 @@ export const routing: Route[] = [
           { path: 'accesscontrol', component: EntryAccessControl },
           { path: 'scheduling', component: EntryScheduling },
           { path: 'flavours', component: EntryFlavours },
+          { path: 'flavourschildren', component: EntryFlavoursChildren },
           { path: 'captions', component: EntryCaptions },
           { path: 'live', component: EntryLive },
           { path: 'related', component: EntryRelated },
