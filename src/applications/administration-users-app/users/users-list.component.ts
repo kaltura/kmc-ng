@@ -1,16 +1,17 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UsersStore } from './users.service';
-import { subApplicationsConfig } from 'config/sub-applications';
+import { KPFLoginRedirects, KPFService } from 'app-shared/kmc-shell/providers/kpf.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import { KalturaUser } from 'kaltura-ngx-client';
+import { KalturaPartnerStatus, KalturaUser } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Observer } from 'rxjs/Observer';
 import { serverConfig } from 'config/server';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { AdminUsersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { AppAuthentication, PartnerPackageTypes } from "app-shared/kmc-shell";
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -41,8 +42,10 @@ export class UsersListComponent implements OnInit, OnDestroy {
 
   constructor(public _usersStore: UsersStore,
               private _appLocalization: AppLocalization,
+              public _userAuthentication: AppAuthentication,
               private _adminUsersMainViewService: AdminUsersMainViewService,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _kpfService: KPFService) {
   }
 
   ngOnInit() {
@@ -119,7 +122,12 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   public _upgradeAccount(): void {
-    this._browserService.openLink(serverConfig.externalLinks.kaltura.upgradeAccount, {}, '_blank');
+    const partnerInfo = this._userAuthentication.appUser.partnerInfo;
+    if (partnerInfo.isSelfServe && partnerInfo.partnerPackage ===  PartnerPackageTypes.PartnerPackageFree && partnerInfo.status === KalturaPartnerStatus.active && !partnerInfo.isChildAccount) {
+        this._kpfService.openKPF(KPFLoginRedirects.upgrade).subscribe();
+    } else {
+        this._browserService.openLink(serverConfig.externalLinks.kaltura.upgradeAccount, {}, '_blank');
+    }
   }
 
   public _onPaginationChanged(state: any): void {

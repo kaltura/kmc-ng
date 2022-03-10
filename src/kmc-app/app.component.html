@@ -33,3 +33,8 @@
 <p-toast></p-toast>
 <kPreviewEmbed></kPreviewEmbed>
 <kCaptionRequest></kCaptionRequest>
+
+<form [ngStyle]="{'width': '0px', 'height': '0px'}" id="kpfForm" method="post" target="_blank">
+    <input id="kpfFormJWT" type="hidden" name="token"/>
+    <input id="kpfFormPath" type="hidden" name="path"/>
+</form>
