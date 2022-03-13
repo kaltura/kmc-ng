@@ -3,7 +3,12 @@ import {BehaviorSubject} from 'rxjs';
 import { Observable, of as ObservableOf } from 'rxjs';
 import { throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
+import {
+    KalturaClient,
+    KalturaMultiRequest,
+    KalturaSipSourceType,
+    PexipGenerateSipUrlAction
+} from 'kaltura-ngx-client';
 import {KalturaSourceType} from 'kaltura-ngx-client';
 import {KalturaLiveStreamBitrate} from 'kaltura-ngx-client';
 import {KalturaRecordStatus} from 'kaltura-ngx-client';
@@ -12,7 +17,7 @@ import {KalturaDVRStatus} from 'kaltura-ngx-client';
 import {KalturaMediaEntry} from 'kaltura-ngx-client';
 import {LiveStreamRegenerateStreamTokenAction} from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
+import {BrowserService} from 'app-shared/kmc-shell';
 import {LiveXMLExporter} from './live-xml-exporter';
 import {AVAIL_BITRATES} from './bitrates';
 import {EntryWidget} from '../entry-widget';
@@ -324,6 +329,15 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 				}
 			);
 	}
+
+    public generateSipToken(sourceType: KalturaSipSourceType, regenerate: boolean): Observable<any> {
+        const request = new PexipGenerateSipUrlAction({
+            entryId: this.data.id,
+            regenerate,
+            sourceType
+        });
+        return this._kalturaServerClient.request(request).pipe(cancelOnDestroy(this, this.widgetReset$));
+    }
 
 	ngOnDestroy()
     {
