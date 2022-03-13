@@ -1900,7 +1900,14 @@
                     "dimensionsError": "Width and height are mandatory for all Bitrates",
                     "videoConferenceIntegration": "Video Conference Integration",
                     "sipUser": "SIP user",
-                    "noSipUser": "SIP user hasn't been generated for this entry"
+                    "noSipUser": "SIP user hasn't been generated for this entry",
+                    "generateSip": "Generate SIP User",
+                    "regenerateSip": "Regenerate SIP User",
+                    "sipSource": "Select stream source",
+                    "sipSource1": "Talking heads",
+                    "sipSource2": "Talking heads + Content share (PIP)",
+                    "sipSource3": "Content share",
+                    "sipError": "Generate Failed. Please try again."
                 },
                 "related": {
                     "related": "Related files",

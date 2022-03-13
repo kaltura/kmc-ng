@@ -7,6 +7,8 @@ import { EntryLiveWidget } from './entry-live-widget.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 
 import { LiveAnalyticsMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { KalturaLiveStreamEntry, KalturaSipSourceType } from 'kaltura-ngx-client';
+import { EntryStore } from "../entry-store.service";
 
 @Component({
     selector: 'kEntryLive',
@@ -20,10 +22,18 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
   public _kmcPermissions = KMCPermissions;
 	public _copyToClipboardTooltips: { success: string, failure: string, idle: string, notSupported: string } = null;
 	public enableLiveAnalytics: boolean = false;
-
+    public _sipSources = [
+        {value: KalturaSipSourceType.talkingHeads, label: this._appLocalization.get('applications.content.entryDetails.live.sipSource1')},
+        {value: KalturaSipSourceType.pictureInPicture, label: this._appLocalization.get('applications.content.entryDetails.live.sipSource2')},
+        {value: KalturaSipSourceType.screenShare, label: this._appLocalization.get('applications.content.entryDetails.live.sipSource3')}
+    ];
+    public _selectedSipSource = null;
+    public _generatingSipToken = false;
+    public _sipTokenError = false;
 
 	constructor(
 	    public _widgetService: EntryLiveWidget,
+        private _entryStore: EntryStore,
         private _appLocalization: AppLocalization,
         private _browserService: BrowserService,
         private _liveAnalyticsView: LiveAnalyticsMainViewService
@@ -74,6 +84,23 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
     public _openLiveAnalytics(): void {
         if (this.enableLiveAnalytics) {
             this._liveAnalytics.open();
+        }
+    }
+
+    public _generateSip(): void {
+        if (this._selectedSipSource) {
+            this._generatingSipToken = true;
+            this._sipTokenError = false;
+            const regenerate = (this._widgetService.data as KalturaLiveStreamEntry).sipToken ? true : false;
+            this._widgetService.generateSipToken(this._selectedSipSource, regenerate).subscribe(
+                result => {
+                    this._generatingSipToken = false;
+                    this._entryStore.reloadEntry();
+                },
+                error => {
+                    this._generatingSipToken = false;
+                    this._sipTokenError = true;
+                });
         }
     }
 }

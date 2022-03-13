@@ -61,6 +61,24 @@
                   </ng-container>
                   <span *ngIf="!_widgetService.data?.sipToken">{{'applications.content.entryDetails.live.noSipUser' | translate}}</span>
               </div>
+              <div class="kRow">
+                  <span class="kLabels"></span>
+                  <div class="sip">
+                      <div class="sipContent">
+                          <p-dropdown [options]="_sipSources" [(ngModel)]="_selectedSipSource" [placeholder]="'applications.content.entryDetails.live.sipSource' | translate"></p-dropdown>
+                          <button *ngIf="!_generatingSipToken" type="button" class="kButtonDefault" pButton [disabled]="!_selectedSipSource"
+                                  [label]="(_widgetService.data?.sipToken ? 'applications.content.entryDetails.live.regenerateSip' : 'applications.content.entryDetails.live.generateSip') | translate"
+                                  (click)="_generateSip()"></button>
+                          <div *ngIf="_generatingSipToken" class="k-spinner-background kSpinnerBkg">
+                              <div class="k-spinner-animation kSpinnerAnim"></div>
+                          </div>
+                      </div>
+                      <div class="sipError" *ngIf="_sipTokenError">
+                          <i class="kIconerror"></i>
+                          <span>{{'applications.content.entryDetails.live.sipError' | translate}}</span>
+                      </div>
+                  </div>
+              </div>
           </div>
 
         <div>

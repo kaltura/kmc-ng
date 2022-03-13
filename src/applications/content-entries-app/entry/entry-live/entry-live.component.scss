@@ -88,6 +88,48 @@
 			flex: 0 0 auto;
 			width: 150px;
 		}
+        .sip {
+            display: flex;
+            flex-direction: column;
+            .sipContent {
+                display: flex;
+                align-items: center;
+                button {
+                    margin-left: 16px;
+                }
+                .kSpinnerBkg{
+                    width: 20px;
+                    height: 20px;
+                    position: relative;
+                    margin-top: 0px;
+                    margin-left: 40px;
+                    .kSpinnerAnim{
+                        width: 12px;
+                        height: 12px;
+                    }
+                    .k-spinner-animation{
+                        border-top: 4px solid rgba(0, 110, 250, 0.2);
+                        border-right: 4px solid rgba(0, 110, 250, 0.2);
+                        border-bottom: 4px solid rgba(0, 110, 250, 0.2);
+                        border-left: 4px solid #006EFA;
+                    }
+                }
+            }
+            .sipError {
+                color: $kDandger;
+                font-size: 14px;
+                margin-top: 8px;
+                display: flex;
+                align-items: center;
+                i {
+                    margin-top: 2px;
+                }
+                span {
+                    margin-left: 6px;
+                }
+            }
+
+        }
 		.kWideLabels{
 			flex: 0 0 auto;
 			width: 225px;
@@ -150,4 +192,9 @@
 
 :host ::ng-deep span.p-button-icon-left.kIconcalendar{
 	padding-top: 2px !important;
+}
+:host ::ng-deep .sip {
+    .p-dropdown-panel {
+        min-width: 280px;
+    }
 }
