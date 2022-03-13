@@ -1,3 +1,14 @@
+<a name="7.3.0"></a>
+# [7.3.0](https://github.com/kaltura/kmc-ng/compare/v7.2.0...v7.3.0) (2022-03-13)
+
+
+### Features
+
+* **administration/users:** allow excluding specific users from SSO login KMCNG-2417 ([#1002](https://github.com/kaltura/kmc-ng/issues/1002)) ([0811a36](https://github.com/kaltura/kmc-ng/commit/0811a36))
+* **entry/live:** allow generating SIP token KMCNG-2237 ([#1004](https://github.com/kaltura/kmc-ng/issues/1004)) ([5cb1022](https://github.com/kaltura/kmc-ng/commit/5cb1022))
+
+
+
 <a name="7.2.0"></a>
 # [7.2.0](https://github.com/kaltura/kmc-ng/compare/v7.1.3...v7.2.0) (2022-02-23)
 
