@@ -51,6 +51,36 @@
           </div>
         </div>
 
+        <div>
+          <span class="kSubTitle">{{'applications.content.entryDetails.live.srt' | translate}}</span>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.entryDetails.live.primary' | translate}}</span>
+            <span>{{_widgetService.data?.primarySrtBroadcastingUrl  ? _widgetService.data?.primarySrtBroadcastingUrl : 'not generated'}}</span>
+            <kCopyToClipboard *ngIf="_widgetService.data?.primarySrtBroadcastingUrl" class="kIcon" [text]="_widgetService.data?.primarySrtBroadcastingUrl" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
+          </div>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.entryDetails.live.primarySRTid' | translate}}</span>
+            <span>{{_widgetService.data?.primarySrtStreamId  ? _widgetService.data?.primarySrtStreamId : 'not generated'}}</span>
+            <kCopyToClipboard *ngIf="_widgetService.data?.primarySrtStreamId" class="kIcon" [text]="_widgetService.data?.primarySrtStreamId" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
+          </div>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.entryDetails.live.secondary' | translate}}</span>
+            <span>{{_widgetService.data?.secondarySrtBroadcastingUrl  ? _widgetService.data?.secondarySrtBroadcastingUrl : 'not generated'}}</span>
+            <kCopyToClipboard *ngIf="_widgetService.data?.secondarySrtBroadcastingUrl" class="kIcon" [text]="_widgetService.data?.secondarySrtBroadcastingUrl" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
+          </div>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.entryDetails.live.secondarySRTid' | translate}}</span>
+            <span>{{_widgetService.data?.secondarySrtStreamId  ? _widgetService.data?.secondarySrtStreamId : 'not generated'}}</span>
+            <kCopyToClipboard *ngIf="_widgetService.data?.secondarySrtStreamId" class="kIcon" [text]="_widgetService.data?.secondarySrtStreamId" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
+          </div>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.entryDetails.live.srtKey' | translate}}</span>
+            <span>{{_widgetService.data?.srtPass  ? _widgetService.data?.srtPass : 'not generated'}}</span>
+            <kCopyToClipboard *ngIf="_widgetService.data?.srtPass" class="kIcon" [text]="_widgetService.data?.srtPass" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
+          </div>
+
+        </div>
+
           <div *ngIf="_kmcPermissions.FEATURE_SIP | kNgIfPermitted">
               <span class="kSubTitle">{{'applications.content.entryDetails.live.videoConferenceIntegration' | translate}}</span>
               <div class="kRow">
