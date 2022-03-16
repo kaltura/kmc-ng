@@ -6,7 +6,7 @@
 
     <div class="kContainer">
         <div class="kPlayerTarget">
-            <app-k-player-v7 (onPlayerInitialized)="onPlayerInitialized($event)" [ks]="playerConfig.ks" [cdnUrl]="serverUri" [pid]="playerConfig.pid" [uiconfid]="playerConfig.uiconfid" [entryid]="playerConfig.entryid" [width]="340" [height]="210"></app-k-player-v7>
+            <iframe #previewIframe *ngIf="_showPlayer" width="340" height="210" frameborder="0" marginheight="0" marginwidth="0" allowFullScreen webkitallowfullscreen mozallowfullscreen></iframe>
         </div>
         <div class="kLabel">{{'applications.content.entryDetails.thumbnails.capture.label' | translate}}</div>
     </div>

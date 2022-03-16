@@ -25,7 +25,8 @@
 
     <div class="kContainer">
       <div class="kFrame">
-          <app-k-player-v7 #player [ks]="_playerConfig.ks" [cdnUrl]="serverUri" [pid]="_playerConfig.pid" [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid" [width]="340" [height]="210" [lazy]="true"></app-k-player-v7>
+          <iframe *ngIf="_iframeSrc.length" [src]="_iframeSrc | safe" width="340" height="210"
+                  allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0" allow="autoplay *; fullscreen *; encrypted-media *"></iframe>
       </div>
 
       <div class="appSubMenu">

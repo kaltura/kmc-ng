@@ -10,9 +10,13 @@
 </head>
   <body>
   <script>
+      let kPlayer = null;
       window.addEventListener('message', (e) => {
           if (!e.data) {
               return;
+          }
+          if (e.origin === window.location.origin && e.data.messageType === 'getCurrentTime') {
+              window.parent.postMessage({ 'messageType': 'currentTime', currentTime:  kPlayer.currentTime}, window.location.origin);
           }
           if (e.origin === window.location.origin && e.data.messageType === 'embed') {
               const embedParams = e.data.embedParams;
@@ -80,8 +84,8 @@
                                               }
                                           })
                                       }
-                                      const kalturaPlayer = window['KalturaPlayer'].setup(playerOptions);
-                                      kalturaPlayer['loadMedia']({ entryId: embedParams.embedParameters.entry_id });
+                                      kPlayer = window['KalturaPlayer'].setup(playerOptions);
+                                      kPlayer['loadMedia']({ entryId: embedParams.embedParameters.entry_id });
                                   } catch (e) {
                                       console.error(e.message)
                                   }
