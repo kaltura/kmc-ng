@@ -197,4 +197,7 @@
     .p-dropdown-panel {
         min-width: 280px;
     }
+    .p-button:disabled {
+        opacity: 1;
+    }
 }
