@@ -88,6 +88,9 @@
 			flex: 0 0 auto;
 			width: 150px;
 		}
+        .noSrtKey {
+            color: $kGrayscale4;
+        }
         .sip {
             display: flex;
             flex-direction: column;
