@@ -15,7 +15,7 @@ import { KalturaSourceType } from 'kaltura-ngx-client';
 import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { KalturaMediaType } from 'kaltura-ngx-client';
 import { Observer } from 'rxjs/Observer';
-import {serverConfig, buildCDNUrl} from 'config/server';
+import {serverConfig, buildCDNUrl, getKalturaServerUri} from 'config/server';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { KalturaPlayerV7Component } from "app-shared/kmc-shared";
@@ -35,8 +35,7 @@ export interface Tabs {
 
 export class EntryReportComponent implements OnInit, OnDestroy {
 
-    public _kmcPermissions = KMCPermissions;
-  @ViewChild('player', { static: true }) player: KalturaPlayerV7Component;
+  public _kmcPermissions = KMCPermissions;
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() entryId: string;
@@ -57,6 +56,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   public _playerConfig : any = {};
   public _isBusy = false;
   public _isEntryLinkAvailable = false;
+  public _iframeSrc = '';
 
   constructor(public _moderationStore: ModerationStore,
               private _appLocalization: AppLocalization,
@@ -172,13 +172,16 @@ export class EntryReportComponent implements OnInit, OnDestroy {
                 && !isLive
                 && this._entry.mediaType.toString() !== KalturaMediaType.image.toString();
               this._isEntryReady = this._entry.status.toString() === KalturaEntryStatus.ready.toString();
-              if (isLive) {
-                this._playerConfig['flashvars']['disableEntryRedirect'] = true;
-              }
               this._isRecordedLive = (sourceType === KalturaSourceType.recordedLive.toString());
               this._isClip = !this._isRecordedLive && (this._entry.id !== this._entry.rootEntryId);
             }
-            this.player.Embed();
+            const serverUri = getKalturaServerUri();
+            let config = `&config[provider]={"ks":"${this._playerConfig.ks}"}&config[plugins]={"kava":{"disable":true}}`;
+            // force thumbnail download using ks if needed
+            if (this.appAuthentication.appUser.partnerInfo.loadThumbnailWithKs) {
+              config += `&config[sources]={"poster": "${this._entry.thumbnailUrl}/width/340/ks/${this.appAuthentication.appUser.ks}"}`;
+            }
+            this._iframeSrc = `${serverUri}/p/${this._playerConfig.pid}/embedPlaykitJs/uiconf_id/${this._playerConfig.uiconfid}?iframeembed=true&entry_id=${this._playerConfig.entryid}${config}`;
           }
         },
         error => {

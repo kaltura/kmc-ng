@@ -90,7 +90,7 @@
 
     <kPopupWidget #capturePopup data-aid="capturePopup" [popupWidth]="586" [popupHeight]="475" [modal]="true">
         <ng-template>
-            <kThumbnailCapture [entryId]="_widgetService.data?.id"
+            <kThumbnailCapture [entryId]="_widgetService.data?.id" [thumbnailUrl]="_widgetService.data?.thumbnailUrl"
                                [parentPopupWidget]="capturePopup"></kThumbnailCapture>
         </ng-template>
     </kPopupWidget>

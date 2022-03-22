@@ -57,6 +57,9 @@
       width: 100%;
       display: flex;
       justify-content: center;
+        iframe {
+            border: 1px solid $kGrayscale4;
+        }
     }
 
     .appSubMenu {
