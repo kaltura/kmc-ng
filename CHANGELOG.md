@@ -1,11 +1,17 @@
 <a name="7.3.0"></a>
 # [7.3.0](https://github.com/kaltura/kmc-ng/compare/v7.2.0...v7.3.0) (2022-03-13)
 
+### Bug Fixes
+
+* **settings/reach:** use the real length of data to avoid mistmatch when exceedeing the char limit SUP-28797 ([#1005](https://github.com/kaltura/kmc-ng/issues/1005)) ([fcc4b2a](https://github.com/kaltura/kmc-ng/commit/fcc4b2a))
+
 
 ### Features
 
 * **administration/users:** allow excluding specific users from SSO login KMCNG-2417 ([#1002](https://github.com/kaltura/kmc-ng/issues/1002)) ([0811a36](https://github.com/kaltura/kmc-ng/commit/0811a36))
 * **entry/live:** allow generating SIP token KMCNG-2237 ([#1004](https://github.com/kaltura/kmc-ng/issues/1004)) ([5cb1022](https://github.com/kaltura/kmc-ng/commit/5cb1022))
+* **entry/live:** live stream details for SRT protocol KMCNG-2408 ([#1007](https://github.com/kaltura/kmc-ng/issues/1007)) ([16d9f25](https://github.com/kaltura/kmc-ng/commit/16d9f25))
+
 
 
 
