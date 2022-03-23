@@ -267,18 +267,23 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           // build CDN URL according to current protocol
           serverUri = buildCDNUrl('');
           // pass ks to player for preview only
-          if (embedType === 'dynamic'){
-              config = `{"ks": "${ks}"}`;
-              // force thumbnail download using ks if needed
-              if (this._appAuthentication.appUser.partnerInfo.loadThumbnailWithKs) {
-                  poster = `${this.media.thumbnailUrl}/width/${uiConf.width}/ks/${this._appAuthentication.appUser.ks}`;
-              }
-          } else {
-              config = `&config[provider]={"ks":"${ks}"}&config[plugins]={"kava":{"disable":true}}`;
-              // force thumbnail download using ks if needed
-              if (this._appAuthentication.appUser.partnerInfo.loadThumbnailWithKs) {
-                  config += `&config[sources]={"poster": "${this.media.thumbnailUrl}/width/${uiConf.width}/ks/${this._appAuthentication.appUser.ks}"}`;
-              }
+          switch (embedType) {
+              case 'dynamic':
+                  config = `{"ks": "${ks}"}`;
+                  // force thumbnail download using ks if needed
+                  if (this._appAuthentication.appUser.partnerInfo.loadThumbnailWithKs) {
+                      poster = `${this.media.thumbnailUrl}/width/${uiConf.width}/ks/${this._appAuthentication.appUser.ks}`;
+                  }
+                  break;
+              case 'iframe':
+                  config = `&config[provider]={"ks":"${ks}"}&config[plugins]={"kava":{"disable":true}}`;
+                  // force thumbnail download using ks if needed
+                  if (this._appAuthentication.appUser.partnerInfo.loadThumbnailWithKs) {
+                      config += `&config[sources]={"poster": "${this.media.thumbnailUrl}/width/${uiConf.width}/ks/${this._appAuthentication.appUser.ks}"}`;
+                  }
+                  break;
+              case 'auto':
+                  config = `&ks=${ks}`;
           }
       }
       embedConfig.serverUri = serverUri;
