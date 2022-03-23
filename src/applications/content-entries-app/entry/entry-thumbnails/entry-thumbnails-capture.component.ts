@@ -53,7 +53,7 @@ export class EntryThumbnailCapture implements AfterContentInit, OnInit, OnDestro
         }, 0);
     }
 
-    private generateV3code(isPreview: boolean): string | EmbedParams {
+    private generateV3code(): string | EmbedParams {
         const uiConfId = serverConfig.kalturaServer.previewUIConfV7.toString();
         const embedType = 'dynamic';
         const ks = this._appAuthentication.appUser.ks;
@@ -84,7 +84,7 @@ export class EntryThumbnailCapture implements AfterContentInit, OnInit, OnDestro
             window.addEventListener('message', this.renderPlayer);
             const uri = serverConfig.externalApps.playerWrapper ? serverConfig.externalApps.playerWrapper.uri : '/public/playerWrapper.html';
             this.previewIframe.nativeElement.src = uri;
-            this._generatedPreviewCode = this.generateV3code(true);
+            this._generatedPreviewCode = this.generateV3code();
         }, 0);
     }
 

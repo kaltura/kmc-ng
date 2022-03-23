@@ -25,8 +25,7 @@
 
     <div class="kContainer">
       <div class="kFrame">
-          <iframe *ngIf="_iframeSrc.length" [src]="_iframeSrc | safe" width="340" height="210"
-                  allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0" allow="autoplay *; fullscreen *; encrypted-media *"></iframe>
+          <iframe #previewIframe *ngIf="_showPlayer" width="340" height="210" frameborder="0" marginheight="0" marginwidth="0" allowFullScreen webkitallowfullscreen mozallowfullscreen></iframe>
       </div>
 
       <div class="appSubMenu">
