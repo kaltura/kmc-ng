@@ -88,8 +88,30 @@
 			flex: 0 0 auto;
 			width: 150px;
 		}
-        .noSrtKey {
-            color: $kGrayscale4;
+        .kSrtKey {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+        .srtKeyInput {
+            width: 260px;
+            height: 34px;
+            margin-left: 16px;
+        }
+        .kSeparator {
+            background-color: $kGrayscale4;
+            height: 16px;
+            width: 1px;
+            flex: 0 0 auto;
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+        .clearSrt {
+            flex: 0 0 auto;
+            font-weight: 700;
+            font-size: 14px;
+            color: $kPrimary;
+            cursor: pointer;
         }
         .sip {
             display: flex;
@@ -185,6 +207,9 @@
 :host ::ng-deep .kLiveBitrate .p-dropdown{
 	width: 120px !important;
 }
+:host ::ng-deep .srtOptions .p-dropdown{
+	width: 160px !important;
+}
 :host ::ng-deep .p-dropdown-label.p-inputtext{
 	background-color: #ffffff;
 }
@@ -199,6 +224,14 @@
 :host ::ng-deep .sip {
     .p-dropdown-panel {
         min-width: 280px;
+    }
+    .p-button:disabled {
+        opacity: 1;
+    }
+}
+:host ::ng-deep .srtOptions {
+    .p-dropdown-panel {
+        min-width: 160px;
     }
     .p-button:disabled {
         opacity: 1;
