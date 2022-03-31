@@ -56,6 +56,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	public _showDVRWindow: boolean = false;
 	public _dvrWindowAvailable: boolean = false;
 	public _explicitLive: boolean = true;
+	public _srtKey: string = '';
 	public _liveDashboardEnabled: boolean = false;
 
 	public _selectedConversionProfile: number;
@@ -83,6 +84,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		this._dvrWindowAvailable = false;
 		this._selectedConversionProfile = null;
 		this._explicitLive = true;
+		this._srtKey = "";
 		this._manualStreamsConfiguration = [];
 		this._bitrates = [];
 		this.dirty = false;
@@ -105,9 +107,16 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		}
 		if (this._liveType === "kaltura") {
 			(data as KalturaLiveStreamEntry).explicitLive = this._explicitLive ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
+			(data as KalturaLiveStreamEntry).srtPass = this._srtKey === '' ? null : this._srtKey;
 			(data as KalturaLiveStreamEntry).conversionProfileId = this._selectedConversionProfile;
 		}
 	}
+
+    public onSrtPassChange(): void {
+        if (this._srtKey.length > 9 && this._srtKey.length < 80){
+            this.setDirty();
+        }
+    }
 
 	protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean}> {
 		return Observable.create(observer => {
@@ -211,6 +220,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 			}
 		}
 		this._explicitLive = entry.explicitLive === KalturaNullableBoolean.trueValue;
+        this._srtKey = entry.srtPass;
 	}
 
 	private _setRecordStatus(): void {
@@ -284,6 +294,21 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	public setDirty():void{
 		super.updateState({isValid: true, isDirty: true});
 	}
+
+    public clearSrtPass(): void {
+        this._srtKey = '';
+        this.setDirty();
+    }
+
+    public _generateSrtPass(): void {
+        let rndString = '';
+        let chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        for (let i = 48; i > 0; --i) {
+            rndString += chars[Math.floor(Math.random() * chars.length)];
+        }
+        this._srtKey = rndString;
+        this.setDirty();
+    }
 
 	public regenerateStreamToken(): void {
 		this.sectionBlockerMessage = null;

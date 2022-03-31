@@ -27,7 +27,12 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
         {value: KalturaSipSourceType.pictureInPicture, label: this._appLocalization.get('applications.content.entryDetails.live.sipSource2')},
         {value: KalturaSipSourceType.screenShare, label: this._appLocalization.get('applications.content.entryDetails.live.sipSource3')}
     ];
+    public _srtPassOptions = [
+        {value: 'auto', label: this._appLocalization.get('applications.content.entryDetails.live.srtPassAuto')},
+        {value: 'manual', label: this._appLocalization.get('applications.content.entryDetails.live.srtPassManual')}
+    ];
     public _selectedSipSource = null;
+    public _selectedSrtPassMode = 'auto';
     public _generatingSipToken = false;
     public _sipTokenError = false;
 

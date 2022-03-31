@@ -75,10 +75,30 @@
           </div>
           <div class="kRow">
             <span class="kLabels">{{'applications.content.entryDetails.live.srtKey' | translate}}</span>
-            <span [class.noSrtKey]="!_widgetService.data?.srtPass">{{_widgetService.data?.srtPass ? _widgetService.data?.srtPass : 'applications.content.entryDetails.live.noSrtKey' | translate}}</span>
-            <kCopyToClipboard  *ngIf="_widgetService.data?.srtPass" class="kIcon" [text]="_widgetService.data?.srtPass" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
+            <span class="kSrtKey">{{_widgetService._srtKey ? _widgetService._srtKey : 'applications.content.entryDetails.live.noSrtKey' | translate}}</span>
+            <kCopyToClipboard  *ngIf="_widgetService._srtKey && (_selectedSrtPassMode === 'auto' || (_selectedSrtPassMode === 'manual' && _widgetService.data?.srtPass))" class="kIcon" [text]="_widgetService._srtKey" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
+            <div *ngIf="_widgetService._srtKey" class="kSeparator"></div>
+            <span *ngIf="_widgetService._srtKey" class="clearSrt" (click)="_widgetService.clearSrtPass()">{{'applications.content.entryDetails.live.clearSrt' | translate}}</span>
           </div>
-
+            <div class="kRow">
+                <span class="kLabels"></span>
+                <div class="sip">
+                    <div class="sipContent">
+                        <p-dropdown class="srtOptions" [options]="_srtPassOptions" [(ngModel)]="_selectedSrtPassMode" [placeholder]="'applications.content.entryDetails.live.sipSource' | translate"></p-dropdown>
+                        <button *ngIf="_selectedSrtPassMode === 'auto'" type="button" class="kButtonDefault" pButton
+                                [label]="(_widgetService._srtKey ? 'applications.content.entryDetails.live.regenerateSrtKey' : 'applications.content.entryDetails.live.generateSrtKey') | translate"
+                                (click)="_widgetService._generateSrtPass()"></button>
+                        <input *ngIf="_selectedSrtPassMode === 'manual'" [(ngModel)]="_widgetService._srtKey" (ngModelChange)="_widgetService.onSrtPassChange()" pInputText class="srtKeyInput" [placeholder]="'applications.content.entryDetails.live.srtPassPlaceholder' | translate"/>
+                        <kInputHelper *ngIf="_selectedSrtPassMode === 'manual'" class="kHelp">
+                            <span>{{'applications.content.entryDetails.live.srtPassTooltip' | translate}}</span>
+                        </kInputHelper>
+                    </div>
+                    <div class="sipError" *ngIf="_sipTokenError">
+                        <i class="kIconerror"></i>
+                        <span>{{'applications.content.entryDetails.live.sipError' | translate}}</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
           <div *ngIf="_kmcPermissions.FEATURE_SIP | kNgIfPermitted">
