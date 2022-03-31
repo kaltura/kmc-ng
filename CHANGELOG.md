@@ -1,13 +1,6 @@
 <a name="7.4.0"></a>
 # [7.4.0](https://github.com/kaltura/kmc-ng/compare/v7.3.0...v7.4.0) (2022-03-31)
 
-
-### Bug Fixes
-
-* CSP support enhancements for entry thumbnail grabber and moderation report SUP-31585 ([#1006](https://github.com/kaltura/kmc-ng/issues/1006)) ([22e13fb](https://github.com/kaltura/kmc-ng/commit/22e13fb))
-* **entry/live:** style for disabled generating SIP token button KMCNG-2419 ([d2551d9](https://github.com/kaltura/kmc-ng/commit/d2551d9))
-
-
 ### Features
 
 * **entry/live:** edit SRT encryption settings KMCNG-2420 ([#1008](https://github.com/kaltura/kmc-ng/issues/1008)) ([5574726](https://github.com/kaltura/kmc-ng/commit/5574726))
@@ -20,7 +13,7 @@
 ### Bug Fixes
 
 * **settings/reach:** use the real length of data to avoid mistmatch when exceedeing the char limit SUP-28797 ([#1005](https://github.com/kaltura/kmc-ng/issues/1005)) ([fcc4b2a](https://github.com/kaltura/kmc-ng/commit/fcc4b2a))
-
+* **entry/live:** style for disabled generating SIP token button KMCNG-2419 ([d2551d9](https://github.com/kaltura/kmc-ng/commit/d2551d9))
 
 ### Features
 
