@@ -350,6 +350,8 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 						entry.primaryRtspBroadcastingUrl =  response[1].result.primaryRtspBroadcastingUrl;
 						entry.secondaryBroadcastingUrl =  response[1].result.secondaryBroadcastingUrl;
 						entry.secondaryRtspBroadcastingUrl =  response[1].result.secondaryRtspBroadcastingUrl;
+						entry.primarySrtStreamId =  response[1].result.primarySrtStreamId;
+						entry.secondarySrtStreamId =  response[1].result.secondarySrtStreamId;
 					}
 				}
 			);
