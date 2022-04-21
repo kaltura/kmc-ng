@@ -78,7 +78,7 @@ export class ReachProfileDictionaryWidget extends ReachProfileWidget {
 
     public _onDataChange(index, data: string[] = null): void {
         if (data) {
-            const numberOfCharacters = data.join('').length;
+            const numberOfCharacters = data.length;
             this._dictionaries[index].usedCharacters = numberOfCharacters;
             this._dictionaries[index].isValid = numberOfCharacters <= this._maxCharacters;
         }
