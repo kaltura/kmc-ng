@@ -367,6 +367,25 @@ export const PermissionTreeNodes: PermissionTreeNode[] = [
     ]
   },
     {
+        value: KMCPermissions.APP_TOKEN_BASE,
+        label: 'Application Token',
+        isAdvancedGroup: true,
+        items: [
+            {
+                value: KMCPermissions.APP_TOKEN_ADD,
+                label: 'Create Token'
+            },
+            {
+                value: KMCPermissions.APP_TOKEN_UPDATE,
+                label: 'Modify Token'
+            },
+            {
+                value: KMCPermissions.APP_TOKEN_DELETE,
+                label: 'Delete Token'
+            }
+        ]
+    },
+    {
         value: KMCPermissions.ADMIN_BASE,
         label: 'Administration',
         isAdvancedGroup: true,
