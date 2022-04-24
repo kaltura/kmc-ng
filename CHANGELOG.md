@@ -1,3 +1,15 @@
+<a name="7.4.1"></a>
+## [7.4.1](https://github.com/kaltura/kmc-ng/compare/v7.4.0...v7.4.1) (2022-04-24)
+
+
+### Bug Fixes
+
+* **administration/roles:** add app token permissions KMCNG-2393 ([#1013](https://github.com/kaltura/kmc-ng/issues/1013)) ([ff70973](https://github.com/kaltura/kmc-ng/commit/ff70973))
+* **entry/live:** update primary and secondary SRT stream id when regenerating stream token KMCNG-2421 ([#1011](https://github.com/kaltura/kmc-ng/issues/1011)) ([ab469d3](https://github.com/kaltura/kmc-ng/commit/ab469d3))
+* **settings/reach:** fix dictionary characters count SUP-28797 ([430f83c](https://github.com/kaltura/kmc-ng/commit/430f83c))
+
+
+
 <a name="7.4.0"></a>
 # [7.4.0](https://github.com/kaltura/kmc-ng/compare/v7.3.0...v7.4.0) (2022-03-31)
 
