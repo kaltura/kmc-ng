@@ -42,7 +42,7 @@ export class ReachProfileDictionaryWidget extends ReachProfileWidget {
         this.data.dictionaries.forEach((dictionary: KalturaDictionary) => {
             this._dictionaries.push(Object.assign({
                 words: dictionary.data.split(String.fromCharCode(10)),
-                usedCharacters: dictionary.data.length,
+                usedCharacters: dictionary.data.split(String.fromCharCode(10)).join('').length,
                 isValid: true
             }, dictionary));
         })
