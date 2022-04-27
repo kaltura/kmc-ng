@@ -4,6 +4,9 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AppAuthentication } from "../auth/app-authentication.service";
+import { serverConfig } from "config/server";
+import { HttpClient } from "@angular/common/http";
+import { globalConfig } from "config/global";
 
 export enum EventType
 {
@@ -62,17 +65,26 @@ export class AppAnalytics {
 
     private _logger: KalturaLogger;
     private _enabled = false;
+    private _analyticsBaseUrl = '';
 
     constructor(private kalturaServerClient: KalturaClient,
                 private _appAuthentication: AppAuthentication,
-                logger: KalturaLogger,
-                private router: Router) {
+                private _http: HttpClient,
+                private router: Router,
+                logger: KalturaLogger) {
         this._logger = logger.subLogger('AppAnalytics');
     }
 
     public init(): void {
         this._logger.info('init app analytics');
-        this._enabled = true; // TODO check for Analytics URI
+        // init analytics base URL
+        this._analyticsBaseUrl = serverConfig?.analyticsServer?.uri?.length ? serverConfig.analyticsServer.uri : '';
+        if (this._analyticsBaseUrl.length > 0 && this._analyticsBaseUrl.indexOf('http') !== 0) {
+            this._analyticsBaseUrl = 'https://' + this._analyticsBaseUrl;
+        }
+        // enable analytics only if base URL was set correctly
+        this._enabled = this._analyticsBaseUrl.length > 0;
+
         if (this._enabled) {
             this.registerPageLoadEvents();
         }
@@ -164,7 +176,7 @@ export class AppAnalytics {
         }
     }
 
-    private trackEvent(eventType: EventType, EventVar1: ButtonType | PageType, EventVar2: string): void {
+    private trackEvent(eventType: EventType, eventVar1: ButtonType | PageType, eventVar2: string): void {
         if (!this._enabled) {
             return;
         }
@@ -174,11 +186,24 @@ export class AppAnalytics {
         const urlParts = this.router.url.split('/');
         const entryIndex = urlParts.indexOf('entry') + 1;
         const entryId =  entryIndex > 0 && urlParts.length >= entryIndex ? urlParts[entryIndex] : null;
-
+        // build track event url
+        let url = this._analyticsBaseUrl;
         if (eventType === EventType.PageLoad) {
-            console.log("----> trackEvent: eventType: " + eventType + ", pageType: " + EventVar1 + ", pageName: " + EventVar2);
+            url = `${url}/api_v3/index.php?service=analytics&action=trackEvent&eventType=${eventType}&pageType=${eventVar1}&pageName=${eventVar2}`;
         } else {
-            console.log("----> trackEvent: eventType: " + eventType + ", buttonType: " + EventVar1 + ", buttonName: " + EventVar2);
+            url = `${url}/api_v3/index.php?service=analytics&action=trackEvent&eventType=${eventType}&buttonType=${eventVar1}&buttonName=${eventVar2}`;
         }
+        url = `${url}&kalturaApplication=${ApplicationType.KMC}&kalturaApplicationVer=${globalConfig.client.appVersion}`;
+        if (pid) {
+            url = `${url}&partnerId=${pid}`;
+        }
+        if (entryId) {
+            url = `${url}&entryId=${entryId}`;
+        }
+        if (ks) {
+            url = `${url}&ks=${ks}`;
+        }
+        // send tracking event
+        this._http.get(url).subscribe(); // no need to handle response
     }
 }
