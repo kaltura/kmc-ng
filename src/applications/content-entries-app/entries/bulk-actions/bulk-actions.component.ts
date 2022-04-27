@@ -1,29 +1,55 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { MenuItem } from 'primeng/api';
-import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { CategoriesStatus, CategoriesStatusMonitorService } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
-import { BulkAccessControlService, BulkAddCategoriesService, BulkAddTagsService, BulkChangeOwnerService, BulkDeleteService, BulkDownloadService, BulkRemoveCategoriesService, BulkRemoveTagsService, BulkSchedulingService, SchedulingParams } from './services';
-import { KalturaMediaEntry, KalturaMediaType, KalturaAccessControl, KalturaUser, KalturaPlaylistType, KalturaEntryStatus } from 'kaltura-ngx-client';
-import { BulkActionBaseService } from './services/bulk-action-base.service';
-import { subApplicationsConfig } from 'config/sub-applications';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { AppEventsService } from 'app-shared/kmc-shared';
-import {CreateNewPlaylistEvent } from 'app-shared/kmc-shared/events/playlist-creation';
-import { CategoryData } from 'app-shared/content-shared/categories/categories-search.service';
-import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { BulkAddPublishersService } from './services/bulk-add-publishers.service';
-import { BulkAddEditorsService } from './services/bulk-add-editors.service';
-import { BulkRemoveEditorsService } from './services/bulk-remove-editors.service';
-import { BulkRemovePublishersService } from './services/bulk-remove-publishers.service';
-import { ContentNewCategoryViewService } from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
-import { ContentPlaylistViewSections, ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BulkAddViewersService } from './services/bulk-add-viewers.service';
-import { BulkRemoveViewersService } from './services/bulk-remove-viewers.service';
-import {Menu} from "primeng/menu";
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {MenuItem} from 'primeng/api';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {AreaBlockerMessage, PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import {
+    CategoriesStatus,
+    CategoriesStatusMonitorService
+} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
+import {
+    BulkAccessControlService,
+    BulkAddCategoriesService,
+    BulkAddTagsService,
+    BulkChangeOwnerService,
+    BulkDeleteService,
+    BulkDownloadService,
+    BulkRemoveCategoriesService,
+    BulkRemoveTagsService,
+    BulkSchedulingService,
+    SchedulingParams
+} from './services';
+import {
+    KalturaAccessControl,
+    KalturaEntryStatus,
+    KalturaMediaEntry,
+    KalturaMediaType,
+    KalturaPlaylistType,
+    KalturaUser
+} from 'kaltura-ngx-client';
+import {BulkActionBaseService} from './services/bulk-action-base.service';
+import {subApplicationsConfig} from 'config/sub-applications';
+import {cancelOnDestroy, tag} from '@kaltura-ng/kaltura-common';
+import {AppEventsService} from 'app-shared/kmc-shared';
+import {CreateNewPlaylistEvent} from 'app-shared/kmc-shared/events/playlist-creation';
+import {CategoryData} from 'app-shared/content-shared/categories/categories-search.service';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {BulkAddPublishersService} from './services/bulk-add-publishers.service';
+import {BulkAddEditorsService} from './services/bulk-add-editors.service';
+import {BulkRemoveEditorsService} from './services/bulk-remove-editors.service';
+import {BulkRemovePublishersService} from './services/bulk-remove-publishers.service';
+import {
+    ContentNewCategoryViewService
+} from 'app-shared/kmc-shared/kmc-views/details-views/content-new-category-view.service';
+import {
+    ContentPlaylistViewSections,
+    ReachAppViewService,
+    ReachPages
+} from 'app-shared/kmc-shared/kmc-views/details-views';
+import {BulkAddViewersService} from './services/bulk-add-viewers.service';
+import {BulkRemoveViewersService} from './services/bulk-remove-viewers.service';
 import {TieredMenu} from "primeng/tieredmenu";
+import {AppAnalytics} from "app-shared/kmc-shell";
 
 @Component({
   selector: 'kBulkActions',
@@ -71,29 +97,31 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   @ViewChild('bulkActionsPopup', { static: true }) public bulkActionsPopup: PopupWidgetComponent;
   @ViewChild('menu', { static: true }) private _bulkMenu: TieredMenu;
 
-  constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService,
-    private _bulkSchedulingService: BulkSchedulingService,
-    private _bulkAccessControlService: BulkAccessControlService,
-    private _bulkAddTagsService: BulkAddTagsService,
-    private _bulkAddEditorsService: BulkAddEditorsService,
-    private _bulkRemoveEditorsService: BulkRemoveEditorsService,
-    private _bulkAddPublishersService: BulkAddPublishersService,
-    private _bulkRemovePublishersService: BulkRemovePublishersService,
-    private _bulkAddViewersService: BulkAddViewersService,
-    private _bulkRemoveViewersService: BulkRemoveViewersService,
-    private _bulkRemoveTagsService: BulkRemoveTagsService,
-    private _bulkAddCategoriesService: BulkAddCategoriesService,
-    private _bulkChangeOwnerService: BulkChangeOwnerService,
-    private _bulkRemoveCategoriesService: BulkRemoveCategoriesService,
-    private _bulkDownloadService: BulkDownloadService,
-    private _bulkDeleteService: BulkDeleteService,
-    private _appEvents: AppEventsService,
-              public _contentNewCategoryView: ContentNewCategoryViewService,
-              private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
-              private _permissionsService: KMCPermissionsService,
-              private _reachAppViewService: ReachAppViewService) {
+    constructor(private _appLocalization: AppLocalization,
+                private _browserService: BrowserService,
+                private _analytics: AppAnalytics,
+                private _bulkSchedulingService: BulkSchedulingService,
+                private _bulkAccessControlService: BulkAccessControlService,
+                private _bulkAddTagsService: BulkAddTagsService,
+                private _bulkAddEditorsService: BulkAddEditorsService,
+                private _bulkRemoveEditorsService: BulkRemoveEditorsService,
+                private _bulkAddPublishersService: BulkAddPublishersService,
+                private _bulkRemovePublishersService: BulkRemovePublishersService,
+                private _bulkAddViewersService: BulkAddViewersService,
+                private _bulkRemoveViewersService: BulkRemoveViewersService,
+                private _bulkRemoveTagsService: BulkRemoveTagsService,
+                private _bulkAddCategoriesService: BulkAddCategoriesService,
+                private _bulkChangeOwnerService: BulkChangeOwnerService,
+                private _bulkRemoveCategoriesService: BulkRemoveCategoriesService,
+                private _bulkDownloadService: BulkDownloadService,
+                private _bulkDeleteService: BulkDeleteService,
+                private _appEvents: AppEventsService,
+                public _contentNewCategoryView: ContentNewCategoryViewService,
+                private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
+                private _permissionsService: KMCPermissionsService,
+                private _reachAppViewService: ReachAppViewService) {
 
-  }
+    }
 
   ngOnInit() {
     this._categoriesStatusMonitorService.status$
@@ -274,6 +302,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   // bulk delete
   public deleteEntries(): void {
+    this._analytics.trackClickEvent('Bulk_delete');
     const entriesToDelete = this.selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}` ),
       entries: string = this.selectedEntries.length <= 10 ? entriesToDelete.join(',').replace(/,/gi, '\n') : '',
       message: string = this.selectedEntries.length > 1 ?

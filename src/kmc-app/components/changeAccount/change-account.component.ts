@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup, FormBuilder} from '@angular/forms';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
+import {AppAuthentication, AppAnalytics, BrowserService} from 'app-shared/kmc-shell';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {KalturaClient} from 'kaltura-ngx-client';
 import {PartnerListPartnersForUserAction} from 'kaltura-ngx-client';
@@ -32,6 +32,7 @@ export class ChangeAccountComponent implements OnInit {
               private _browserService: BrowserService,
               private _appAuthentication: AppAuthentication,
               private _kalturaServerClient: KalturaClient,
+              private _analytics: AppAnalytics,
               private _userAuthentication: AppAuthentication) {
   }
 
@@ -73,6 +74,7 @@ export class ChangeAccountComponent implements OnInit {
   }
 
   public _saveAndClose(): void {
+    this._analytics.trackClickEvent('Change_account');
     const account = this.changeAccountForm.get('account').value; // pass selected account
     // this.parentPopupWidget.close(account);
     this._isBusy = true;

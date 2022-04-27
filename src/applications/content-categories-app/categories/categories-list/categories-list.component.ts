@@ -28,6 +28,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ContentCategoriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { first } from 'rxjs/operators';
+import {AppAnalytics} from "app-shared/kmc-shell";
 
 @Component({
   selector: 'kCategoriesList',
@@ -75,6 +76,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
                 private router: Router,
                 private _refineFiltersService: CategoriesRefineFiltersService,
                 private _browserService: BrowserService,
+                private _analytics: AppAnalytics,
                 private _appLocalization: AppLocalization,
                 private _categoriesUtilsService: CategoriesUtilsService,
                 public _contentNewCategoryView: ContentNewCategoryViewService,
@@ -424,6 +426,11 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
 
     onTagsChange() {
         this.tags.updateLayout();
+    }
+
+    public addCategory(): void {
+        this._analytics.trackClickEvent('Add_category');
+        this.addNewCategory.open();
     }
 
     onCategoryAdded(category: KalturaCategory): void {

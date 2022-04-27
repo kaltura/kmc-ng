@@ -10,7 +10,7 @@
           <button pButton type="button" label="{{'applications.content.categories.addCategory' | translate}}"
                   class="kButtonBranded kAddCategoryBtn" [class.kHidden]="_selectedCategories?.length"
                   [disabled]="_kmcPermissions.CONTENT_MANAGE_EDIT_CATEGORIES | kDisabledIfNotPermitted"
-                  (click)="addNewCategory.open()"></button>
+                  (click)="addCategory()"></button>
           <span class="kSelectedCategoriesNum" *ngIf="_categoriesTotalCount">
              {{'applications.content.categories.categories' | translate: {'0': _categoriesTotalCount} }}
             </span>

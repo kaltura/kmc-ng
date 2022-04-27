@@ -17,7 +17,7 @@ import {KalturaDVRStatus} from 'kaltura-ngx-client';
 import {KalturaMediaEntry} from 'kaltura-ngx-client';
 import {LiveStreamRegenerateStreamTokenAction} from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import {BrowserService} from 'app-shared/kmc-shell';
+import {AppAnalytics, BrowserService} from 'app-shared/kmc-shell';
 import {LiveXMLExporter} from './live-xml-exporter';
 import {AVAIL_BITRATES} from './bitrates';
 import {EntryWidget} from '../entry-widget';
@@ -71,6 +71,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 
 	constructor(private _kalturaServerClient: KalturaClient,
               private _appLocalization: AppLocalization,
+              private _analytics: AppAnalytics,
               private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
                 private _liveDasboardAppViewService: LiveDashboardAppViewService,
@@ -301,6 +302,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
     }
 
     public _generateSrtPass(): void {
+        this._analytics.trackClickEvent('Generate_passphrase_encryption');
         let rndString = '';
         let chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         for (let i = 48; i > 0; --i) {

@@ -8,7 +8,7 @@ import { StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BrowserService } from 'app-shared/kmc-shell/providers';
+import {AppAnalytics, BrowserService} from 'app-shared/kmc-shell/providers';
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
@@ -54,6 +54,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               private _router: Router,
               private _appEvents: AppEventsService,
               private _browserService: BrowserService,
+              private _analytics: AppAnalytics,
               private _contentPlaylistsMainViewService: ContentPlaylistsMainViewService,
               private _contentPlaylistViewService: ContentPlaylistViewService,
               public _bulkDeleteService: BulkDeleteService) {
@@ -311,6 +312,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   public _addPlaylist(): void {
+    this._analytics.trackClickEvent('Add_playlist');
     this.addNewPlaylist.open();
   }
 }

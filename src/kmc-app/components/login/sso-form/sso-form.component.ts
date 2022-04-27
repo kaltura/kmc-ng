@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BrowserService } from 'app-shared/kmc-shell';
+import {AppAnalytics, BrowserService} from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kKMCSsoForm',
@@ -10,7 +10,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 export class SsoFormComponent {
   @Input() inProgress: boolean;
   @Input() errorMessage: string;
-  
+
   @Output() onSsoLogin = new EventEmitter<string>();
   @Output() onRememberMe = new EventEmitter<string>();
 
@@ -33,7 +33,9 @@ export class SsoFormComponent {
     return this.inProgress ? 'app.login.wait' : 'app.common.continue';
   }
 
-  constructor(private _fb: FormBuilder, private _browserService: BrowserService) {
+  constructor(private _fb: FormBuilder,
+              private _browserService: BrowserService,
+              private _analytics: AppAnalytics) {
     this._buildForm();
   }
 
@@ -49,6 +51,7 @@ export class SsoFormComponent {
 
   public _ssoLogin(event: Event): void {
     event.preventDefault();
+    this._analytics.trackClickEvent('Login_with_SSO');
     if (this._ssoForm.valid) {
       const rememberMePayload = this._rememberMeField.value ? this._emailField.value : '';
       this.onSsoLogin.emit(this._emailField.value);

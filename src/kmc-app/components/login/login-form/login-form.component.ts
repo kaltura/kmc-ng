@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginScreens } from '../login.component';
-import { BrowserService } from 'app-shared/kmc-shell/providers';
+import {AppAnalytics, BrowserService} from 'app-shared/kmc-shell/providers';
 import { serverConfig } from 'config/server';
 
 @Component({
@@ -54,6 +54,7 @@ export class LoginFormComponent {
   }
 
   constructor(private _fb: FormBuilder,
+              private _analytics: AppAnalytics,
               private _browserService: BrowserService) {
       this.buildForm();
 
@@ -90,7 +91,7 @@ export class LoginFormComponent {
 
   _login(event: Event): void {
     event.preventDefault();
-
+    this._analytics.trackClickEvent('Login');
     if (this._usernameField.valid && this._passwordField.valid) {
       const rememberMePayload = this._rememberMeField.value ? this._usernameField.value : '';
       const loginPayload = {
@@ -109,6 +110,7 @@ export class LoginFormComponent {
   }
 
   _ssoLogin(): void {
+
     this.onSetScreen.emit(LoginScreens.Sso);
   }
 

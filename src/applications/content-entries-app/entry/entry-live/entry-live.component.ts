@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { BrowserService } from 'app-shared/kmc-shell/providers';
+import { AppAnalytics, BrowserService } from 'app-shared/kmc-shell/providers';
 
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { EntryLiveWidget } from './entry-live-widget.service';
@@ -40,6 +40,7 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 	    public _widgetService: EntryLiveWidget,
         private _entryStore: EntryStore,
         private _appLocalization: AppLocalization,
+        private _analytics: AppAnalytics,
         private _browserService: BrowserService,
         private _liveAnalyticsView: LiveAnalyticsMainViewService
     ) {
@@ -94,6 +95,7 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
     public _generateSip(): void {
         if (this._selectedSipSource) {
+            this._analytics.trackClickEvent('Generate_SIP_user');
             this._generatingSipToken = true;
             this._sipTokenError = false;
             const regenerate = (this._widgetService.data as KalturaLiveStreamEntry).sipToken ? true : false;

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from "app-shared/kmc-shell";
+import { BrowserService, AppAnalytics } from "app-shared/kmc-shell";
 
 @Component({
   selector: 'kChangelog',
@@ -12,10 +12,12 @@ export class ChangelogComponent {
   @Output() showChangelog = new EventEmitter<void>();
   @ViewChild('changelog', { static: true }) changelogPopup: PopupWidgetComponent;
 
-  constructor(private _browserService: BrowserService,) {
+  constructor(private _browserService: BrowserService,
+              private _analytics: AppAnalytics) {
   }
 
   public _openChangelog(): void {
+    this._analytics.trackClickEvent('Change_log')
     this.showChangelog.emit();
     this.changelogPopup.open();
   }
