@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EqualFieldsValidator } from 'app-shared/kmc-shell/validators/equalFields.validator';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
@@ -11,19 +11,33 @@ import { serverConfig } from 'config/server';
 })
 export class PasswordExpiredFormComponent {
   @Input() errorMessage: string;
-  @Input() errorCode: string;
+  @Input()
+  set errorCode(value: string) {
+        this._errorCode = value;
+        if (value === 'MISSING_OTP') {
+            this.showAuthenticationCode = true;
+            setTimeout(() => {
+                this.authField.nativeElement.focus();
+            },100)
+        }
+  };
   @Input() inProgress = false;
   @Input() passwordRestored = false;
 
-  @Output() onResetPassword = new EventEmitter<{ password: string, newPassword: string }>();
+  @Output() onResetPassword = new EventEmitter<{ password: string, newPassword: string, otp?: string }>();
+  @ViewChild('auth', { static: true }) authField;
 
   public _formSent = false;
   public _resetPasswordForm: FormGroup;
   public _passwords: FormGroup;
   public _oldPasswordField: AbstractControl;
   public _newPasswordField: AbstractControl;
+  public _authenticationField: AbstractControl;
   public _repeatPasswordField: AbstractControl;
   public _supportAddress: string;
+  public showAuthenticationCode = false;
+
+  public _errorCode: string;
 
   public get _sendBtnText(): string {
     return this.inProgress ? 'app.login.wait' : 'app.login.send';
@@ -38,11 +52,11 @@ export class PasswordExpiredFormComponent {
   }
 
   public get _oldPasswordWrong(): boolean {
-    return 'WRONG_OLD_PASSWORD' === this.errorCode;
+    return 'WRONG_OLD_PASSWORD' === this._errorCode;
   }
 
   public get _passwordStructureInvalid(): boolean {
-    return 'PASSWORD_STRUCTURE_INVALID' === this.errorCode;
+    return 'PASSWORD_STRUCTURE_INVALID' === this._errorCode;
   }
 
   public get _passwordStructureInvalidMessage(): string {
@@ -68,18 +82,24 @@ export class PasswordExpiredFormComponent {
           validator: Validators.compose([
               NotEqualFieldsValidator.validate(), EqualFieldsValidator.validate('newPassword', 'repeatPassword')
           ])
-      })
+      }),
+      authentication: [''],
     });
 
     this._oldPasswordField = this._resetPasswordForm.controls['oldPassword'];
     this._passwords = <FormGroup>this._resetPasswordForm.controls['passwords'];
     this._newPasswordField = this._passwords.controls['newPassword'];
     this._repeatPasswordField = this._passwords.controls['repeatPassword'];
+    this._authenticationField = this._resetPasswordForm.controls['authentication'];
   }
 
   public _showError(control: AbstractControl): boolean {
     return control.invalid && (control.dirty || this._formSent);
   }
+
+  public _showSuccess(control: AbstractControl): boolean {
+        return control.valid && control.dirty;
+    }
 
   public _getClientValidationMessage(control: AbstractControl): string {
     const invalid = this._showError(control);
@@ -105,7 +125,8 @@ export class PasswordExpiredFormComponent {
       this._formSent = false;
       this.onResetPassword.emit({
         password: this._oldPasswordField.value,
-        newPassword: this._newPasswordField.value
+        newPassword: this._newPasswordField.value,
+        otp: this._authenticationField.value || ''
       });
     }
   }
