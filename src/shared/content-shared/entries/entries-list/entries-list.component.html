@@ -122,6 +122,7 @@
 <!-- popup widgets section -->
 <kPopupWidget #categoriesFilterPopup
               data-aid="categoriesFilterPopup"
+              (onOpen)="sendAnalytics('Filter_categories')"
               [popupWidth]="400"
               [popupHeight]="500"
               placement="top"
@@ -144,6 +145,7 @@
               [popupWidth]="400"
               [popupHeight]="500"
               placement="top"
+              (onOpen)="sendAnalytics('Refine')"
               [closeBtn]="false"
               [targetRef]="refineBtn"
               [targetOffset]="{'x':-200, 'y': -15}"

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { EntriesListComponent } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
-import { BrowserService, NewEntryUploadFile } from 'app-shared/kmc-shell';
+import { AppAnalytics, BrowserService, NewEntryUploadFile } from 'app-shared/kmc-shell';
 import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { AreaBlockerMessage, PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
@@ -13,12 +13,7 @@ import { cancelOnDestroy, tag, TrackedFileStatuses, UploadManagement } from '@ka
 import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entries-list-event';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { EntriesListService } from './entries-list.service';
-import {
-    ContentEntryViewSections,
-    ContentEntryViewService,
-    ReachAppViewService,
-    ReachPages
-} from 'app-shared/kmc-shared/kmc-views/details-views';
+import { ContentEntryViewSections, ContentEntryViewService, ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { AnalyticsNewMainViewService, ContentEntriesMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { ClearEntriesSelectionEvent } from 'app-shared/kmc-shared/events/clear-entries-selection-event';
@@ -89,6 +84,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               private _activatedRoute: ActivatedRoute,
               private _entriesListService: EntriesListService,
               private _browserService: BrowserService,
+              private _analytics: AppAnalytics,
               private _appEvents: AppEventsService,
               private _appLocalization: AppLocalization,
               private _uploadManagement: UploadManagement,
@@ -144,7 +140,8 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   public _onActionSelected({ action, entry }) {
     switch (action) {
       case 'preview':
-          this._entriesList.clearSelection();
+        this._analytics.trackClickEvent('Share_Embed');
+        this._entriesList.clearSelection();
         this._appEvents.publish(new PreviewAndEmbedEvent(entry));
         break;
       case 'view':
@@ -152,6 +149,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
           this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
         break;
       case 'delete':
+        this._analytics.trackClickEvent('Delete');
         this._browserService.confirm(
             {
               header: this._appLocalization.get('applications.content.entries.deleteEntry'),
@@ -169,6 +167,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         break;
       case 'realTimeAnalytics':
         if (entry && entry.id) {
+          this._analytics.trackClickEvent('Real-time_analytics');
           this._entriesList.clearSelection();
           this._entryId = entry.id;
             if (this._analyticsNewMainViewService.isAvailable()) {
@@ -178,6 +177,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         break;
       case 'webcastAnalytics':
         if (entry && entry.id) {
+          this._analytics.trackClickEvent('Webcast_analytics');
           this._entriesList.clearSelection();
           this._entryId = entry.id;
             if (this._analyticsNewMainViewService.isAvailable()) {
@@ -185,8 +185,8 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
             }
         }
         break;
-
         case 'captionRequest':
+            this._analytics.trackClickEvent('Captions_enrich');
             this._reachAppViewService.open({ entry, page: ReachPages.entry });
             break;
       default:

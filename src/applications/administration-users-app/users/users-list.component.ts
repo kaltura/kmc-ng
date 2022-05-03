@@ -11,7 +11,7 @@ import { serverConfig } from 'config/server';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { AdminUsersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { AppAuthentication, PartnerPackageTypes } from "app-shared/kmc-shell";
+import { AppAnalytics, AppAuthentication, PartnerPackageTypes } from "app-shared/kmc-shell";
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -42,6 +42,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
 
   constructor(public _usersStore: UsersStore,
               private _appLocalization: AppLocalization,
+              private _analytics: AppAnalytics,
               public _userAuthentication: AppAuthentication,
               private _adminUsersMainViewService: AdminUsersMainViewService,
               private _browserService: BrowserService,
@@ -163,6 +164,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   public _addUser(): void {
+    this._analytics.trackClickEvent('Add_user');
     this._user = null;
     this.editUserPopup.open();
   }

@@ -56,6 +56,13 @@ export const ServerConfigSchema = {
             required: ['kpfPackageManagerBaseUrl', 'kpfPurchaseManagerBaseUrl'],
             additionalProperties: true
         },
+        analyticsServer: {
+            properties: {
+                uri: {type: ['string', 'null']},
+            },
+            required: ['uri'],
+            additionalProperties: true
+        },
         externalAPI: {
             properties: {
                 youtube: {

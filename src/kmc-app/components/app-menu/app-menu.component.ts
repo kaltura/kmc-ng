@@ -1,6 +1,12 @@
 import {Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {AppAuthentication, AppUserStatus, BrowserService, PartnerPackageTypes} from 'app-shared/kmc-shell';
+import {
+    AppAnalytics,
+    AppAuthentication,
+    AppUserStatus,
+    BrowserService,
+    PartnerPackageTypes
+} from 'app-shared/kmc-shell';
 import {buildBaseUri, serverConfig} from 'config/server';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {KmcLoggerConfigurator} from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
@@ -67,6 +73,7 @@ export class AppMenuComponent implements OnInit, OnDestroy {
                 private renderer: Renderer2,
                 private _appEvents: AppEventsService,
                 private _browserService: BrowserService,
+                private _analytics: AppAnalytics,
                 private _kpfService: KPFService,
                 private _analyticsNewMainViewService: AnalyticsNewMainViewService) {
 
@@ -165,6 +172,7 @@ export class AppMenuComponent implements OnInit, OnDestroy {
                 link = serverConfig.externalLinks.kaltura.userManual;
                 break;
             case 'kmcOverview':
+                this._analytics.trackClickEvent('KMC_overview');
                 link = serverConfig.externalLinks.kaltura.kmcOverview;
                 break;
             case 'mediaManagement':

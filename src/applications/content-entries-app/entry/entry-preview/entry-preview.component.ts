@@ -11,6 +11,7 @@ import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { ClipAndTrimAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { EntryStore } from '../entry-store.service';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import {AppAnalytics} from "app-shared/kmc-shell";
 
 @Component({
 	selector: 'kEntryPreview',
@@ -32,10 +33,11 @@ export class EntryPreview implements OnInit, OnDestroy {
 
 
 	constructor(public _widgetService: EntryPreviewWidget,
-              private _appLocalization: AppLocalization,
+                private _appLocalization: AppLocalization,
+                private _analytics: AppAnalytics,
                 private _clipAndTrimAppViewService: ClipAndTrimAppViewService,
                 private _permissionsService: KMCPermissionsService,
-              private _appEvents: AppEventsService,
+                private _appEvents: AppEventsService,
                 private _store: EntryStore) {
 	}
 
@@ -84,6 +86,7 @@ export class EntryPreview implements OnInit, OnDestroy {
     }
 
 	openPreviewAndEmbed() {
+        this._analytics.trackClickEvent('Share_Embed');
 		this._appEvents.publish(new PreviewAndEmbedEvent(this._currentEntry));
 	}
 

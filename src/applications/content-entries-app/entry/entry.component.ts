@@ -30,7 +30,7 @@ import { CustomMenuItem } from 'app-shared/content-shared/entries/entries-list/e
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ContentEntriesAppService } from '../content-entries-app.service';
-import { BrowserService } from 'app-shared/kmc-shell/providers';
+import { AppAnalytics, BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
@@ -136,6 +136,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	            private _permissionsService: KMCPermissionsService,
 	            private _entriesStore: EntriesStore,
 	            private _appLocalization: AppLocalization,
+                private _analytics: AppAnalytics,
 	            public _entryStore: EntryStore,
                 private _contentEntryViewService: ContentEntryViewService,
                 private _liveDashboardAppViewService: LiveDashboardAppViewService,
@@ -181,7 +182,10 @@ export class EntryComponent implements OnInit, OnDestroy {
                 switch (item.commandName) {
                     case 'preview':
                         item.disabled = entry.status === KalturaEntryStatus.noContent;
-                        item.command = () => this._appEvents.publish(new PreviewAndEmbedEvent(entry));
+                        item.command = () => {
+                            this._analytics.trackClickEvent('Share_Embed');
+                            this._appEvents.publish(new PreviewAndEmbedEvent(entry));
+                        }
                         break;
                     case 'editor':
                         item.disabled = !this._clipAndTrimAppViewService.isAvailable({
@@ -191,11 +195,14 @@ export class EntryComponent implements OnInit, OnDestroy {
                         item.command = () => this._clipAndTrim.open();
                         break;
                     case 'delete':
-                        item.command = () => this._browserService.confirm({
-                            header: this._appLocalization.get('applications.content.entries.deleteEntry'),
-                            message: this._appLocalization.get('applications.content.entries.confirmDeleteSingle', [entry.id]),
-                            accept: () => this._deleteEntry(entry.id)
-                        });
+                        item.command = () => {
+                            this._analytics.trackClickEvent('Delete');
+                            this._browserService.confirm({
+                                header: this._appLocalization.get('applications.content.entries.deleteEntry'),
+                                message: this._appLocalization.get('applications.content.entries.confirmDeleteSingle', [entry.id]),
+                                accept: () => this._deleteEntry(entry.id)
+                            });
+                        };
                         break;
                     case 'download':
                         item.command = () => this._downloadEntry(entry);
@@ -444,6 +451,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 
     public _openEntryAnalytics(): void {
         if (this._analyticsAllowed) {
+            this._analytics.trackClickEvent('View_analytics');
             const isLive = this._sourceType === KalturaSourceType.liveStream || this._sourceType === KalturaSourceType.manualLiveStream || this._sourceType === KalturaSourceType.akamaiLive || this._sourceType === KalturaSourceType.akamaiUniversalLive;
             const isWebcast = this._entry.adminTags && this._entry.adminTags.indexOf('kms-webcast-event') !== -1;
             const route = isLive ? ( isWebcast ? 'analytics/entry-webcast' : 'analytics/entry-live' ) : 'analytics/entry';

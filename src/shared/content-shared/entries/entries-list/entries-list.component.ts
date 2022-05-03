@@ -3,7 +3,7 @@ import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { CategoriesStatusMonitorService, CategoriesStatus } from '../../categories-status/categories-status-monitor.service';
 import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
-import { BrowserService } from 'app-shared/kmc-shell/providers';
+import { AppAnalytics, BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaEntryStatus, KalturaMediaEntry, KalturaMediaType, KalturaSourceType } from 'kaltura-ngx-client';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -74,6 +74,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     constructor(public _entriesStore: EntriesStore,
                 private _entriesRefineFilters: EntriesRefineFiltersService,
                 private _appLocalization: AppLocalization,
+                private _analytics: AppAnalytics,
                 private _browserService: BrowserService,
                 private _permissionsService: KMCPermissionsService,
                 private _reachAppViewService: ReachAppViewService,
@@ -380,8 +381,13 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
       if (this._query.freetext.length > 0 && this._query.freetext.trim().length === 0){
           this._query.freetext = '';
       }else {
+          this._analytics.trackClickEvent('Search_entries');
           this._entriesStore.filter({freetext: this._query.freetext, freetextSearchField: this._query.freetextSearchField, includeCaptions: this._query.includeCaptions});
       }
+  }
+
+  public sendAnalytics(buttonName: string): void {
+      this._analytics.trackClickEvent(buttonName);
   }
 
   onSortChanged(event) {
@@ -437,6 +443,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
             this.searchFieldsTooltip = this._appLocalization.get('applications.content.filters.searchFields.tooltips.' + fields.selectedSearchField);
         }
         if (this._query.freetext) {
+            this._analytics.trackClickEvent('Search_entries');
             this._entriesStore.filter({
                 freetext: this._query.freetext,
                 freetextSearchField: this._query.freetextSearchField,

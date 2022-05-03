@@ -1,9 +1,10 @@
-import {Component, ViewChild} from '@angular/core';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
-import {KalturaMediaType} from 'kaltura-ngx-client';
-import {PrepareEntryComponent} from '../prepare-entry/prepare-entry.component';
+import { Component, ViewChild } from '@angular/core';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { KalturaMediaType } from 'kaltura-ngx-client';
+import { PrepareEntryComponent } from '../prepare-entry/prepare-entry.component';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KMCFileCreationType } from '../upload-settings/upload-settings.component';
+import { AppAnalytics } from "app-shared/kmc-shell";
 
 @Component({
   selector: 'kUploadButton',
@@ -22,7 +23,7 @@ export class UploadButtonComponent {
     public _creationTypes = KMCFileCreationType;
     public _creationType = this._creationTypes.upload;
 
-  constructor(private _appPermissions: KMCPermissionsService) {
+  constructor(private _appPermissions: KMCPermissionsService, private _analytics: AppAnalytics) {
       this._disabled = !this._appPermissions.hasAnyPermissions([
           KMCPermissions.CONTENT_INGEST_UPLOAD,
           KMCPermissions.CONTENT_INGEST_BULK_UPLOAD,
@@ -31,6 +32,11 @@ export class UploadButtonComponent {
           KMCPermissions.LIVE_STREAM_ADD,
           KMCPermissions.ADMIN_USER_BULK
       ]);
+  }
+
+  public _open(): void {
+      this._analytics.trackClickEvent('Create');
+      this.uploadMenuPopup.open();
   }
 
   _onMenuItemSelected(item: string): void {

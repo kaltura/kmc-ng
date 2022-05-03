@@ -81,6 +81,9 @@ export interface ServerConfig {
         kpfPackageManagerBaseUrl: string,
         kpfPurchaseManagerBaseUrl: string
     },
+    analyticsServer?: {
+        uri?: string
+    }
     externalAPI: {
         youtube: {
             uri: string;

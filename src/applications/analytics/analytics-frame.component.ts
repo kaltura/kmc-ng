@@ -103,6 +103,9 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                 previewUIConf: serverConfig.kalturaServer.previewUIConf,
                 previewUIConfV7: serverConfig.kalturaServer.previewUIConfV7
             },
+            analyticsServer: {
+                uri : serverConfig.analyticsServer?.uri?.length ? serverConfig.analyticsServer.uri : null
+            },
             cdnServers: serverConfig.cdnServers,
             liveAnalytics: serverConfig.externalApps.liveAnalytics,
             ks: this.appAuthentication.appUser.ks,

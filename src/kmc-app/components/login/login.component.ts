@@ -1,5 +1,12 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { AppAuthentication, AutomaticLoginErrorReasons, BrowserService, LoginError, LoginResponse } from 'app-shared/kmc-shell';
+import {
+    AppAnalytics,
+    AppAuthentication,
+    AutomaticLoginErrorReasons,
+    BrowserService,
+    LoginError,
+    LoginResponse
+} from 'app-shared/kmc-shell';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -59,6 +66,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(private _appAuthentication: AppAuthentication,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
+              private _analytics: AppAnalytics,
               private _el: ElementRef,
               private _renderer: Renderer2,
               private _route: ActivatedRoute,
@@ -261,6 +269,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public _signUp(): void {
+    this._analytics.trackClickEvent('Sign_up');
     this._browserService.openLink(serverConfig.externalLinks.kaltura.signUp, {}, '_self');
   }
 
