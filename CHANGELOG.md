@@ -5,6 +5,7 @@
 ### Bug Fixes
 
 * **login:** display authenticator field for 2FA reset password form SUP-31938 ([#1016](https://github.com/kaltura/kmc-ng/issues/1016)) ([d448692](https://github.com/kaltura/kmc-ng/commit/d448692))
+* **entry/create:** remove support for Universal Live entry creation KMCNG-2429
 
 
 ### Features

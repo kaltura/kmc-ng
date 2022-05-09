@@ -85,11 +85,6 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.kaltura')
       },
       {
-        id: 'universal',
-        value: StreamTypes.universal,
-        label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.universal')
-      },
-      {
         id: 'manual',
         value: StreamTypes.manual,
         label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.manual')
@@ -99,8 +94,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
     this._permissionsService.filterList(
       this._availableStreamTypes,
       {
-        'kaltura': KMCPermissions.FEATURE_KALTURA_LIVE_STREAM,
-        'universal': KMCPermissions.FEATURE_KMC_AKAMAI_UNIVERSAL_LIVE_STREAM_PROVISION
+        'kaltura': KMCPermissions.FEATURE_KALTURA_LIVE_STREAM
       }
     );
 
