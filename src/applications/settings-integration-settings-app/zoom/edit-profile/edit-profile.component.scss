@@ -102,6 +102,15 @@
                     margin-bottom: 16px;
                 }
             }
+            .uploadInOut {
+                flex: 0 0 auto;
+                width: 150px;
+            }
+            .kError {
+                font-size: 14px;
+                color: $kDandger;
+                margin-top: 4px;
+            }
         }
     }
 }
