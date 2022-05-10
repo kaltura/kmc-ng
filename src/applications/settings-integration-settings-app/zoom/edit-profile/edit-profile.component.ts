@@ -251,6 +251,11 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             .subscribe(value => {
                 this.validate();
             });
+        this._upload.valueChanges
+            .pipe(cancelOnDestroy(this))
+            .subscribe(value => {
+                this.validate();
+            });
         this._uploadIn.valueChanges
             .pipe(cancelOnDestroy(this))
             .subscribe(value => {
