@@ -427,7 +427,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                             return group === suggestedUser.screenName;
                         });
                         suggestions.push({
-                            name: suggestedUser.screenName + '(' + suggestedUser.id + ')',
+                            name: suggestedUser.screenName,
                             item: suggestedUser,
                             isSelectable
                         });
