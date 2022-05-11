@@ -8,12 +8,6 @@
 * **entry/create:** remove support for Universal Live entry creation KMCNG-2429
 
 
-### Features
-
-* **zoom:** manage zoom ingest to Kaltura (opt in/out) KMCNG-2423 ([#1017](https://github.com/kaltura/kmc-ng/issues/1017)) ([0f82dda](https://github.com/kaltura/kmc-ng/commit/0f82dda))
-
-
-
 <a name="7.4.1"></a>
 ## [7.4.1](https://github.com/kaltura/kmc-ng/compare/v7.4.0...v7.4.1) (2022-04-24)
 
