@@ -106,7 +106,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
       clip['offset'] = this._getClipOffset(clip);
       clip['duration'] = this._getClipDuration(clip);
     });
-    return clips;
+    return clips.filter(clip => clip.id !== this.data.id);
   }
 
   private _getClipOffset(entry: KalturaMediaEntry): string {
