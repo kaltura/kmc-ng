@@ -415,16 +415,10 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                 data => {
                     this._logger.info(`handle successful search groups action`);
                     const suggestions = [];
-                    let profileGroups = [];
-                    if (options === 'optIn' && this.profile.optInGroupNames) {
-                        profileGroups = this.profile.optInGroupNames.split(this.groupsDelimiter);
-                    }
-                    if (options === 'optOut' && this.profile.optOutGroupNames) {
-                        profileGroups = this.profile.optOutGroupNames.split(this.groupsDelimiter);
-                    }
+                    const profileGroups = options === 'optIn' ? this._uploadIn.value : this._uploadOut.value;
                     (data.objects || []).forEach((suggestedUser: KalturaUser) => {
                         const isSelectable = !profileGroups.find(group => {
-                            return group === suggestedUser.screenName;
+                            return group.screenName === suggestedUser.screenName;
                         });
                         suggestions.push({
                             name: suggestedUser.screenName,
