@@ -41,13 +41,13 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
     public _deleteContent: AbstractControl;
     public _transcription: AbstractControl;
     public _defaultUserId: AbstractControl;
-    // public _uploadIn: AbstractControl;
-    // public _uploadOut: AbstractControl;
+    public _uploadIn: AbstractControl;
+    public _uploadOut: AbstractControl;
     public _userId: AbstractControl;
     public _postfix: AbstractControl;
     public _userPostfix: AbstractControl;
     public _participation: AbstractControl;
-    // public _upload: AbstractControl;
+    public _upload: AbstractControl;
     public _categories: AbstractControl;
     public _createUser: AbstractControl;
     public _uploadMeeting: AbstractControl;
@@ -57,15 +57,15 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
     private _searchCategoriesSubscription: ISubscription;
     public _usersProvider = new Subject<SuggestionsProviderData>();
-    // public _groupsProvider = new Subject<SuggestionsProviderData>();
+    public _groupsProvider = new Subject<SuggestionsProviderData>();
 
     public _showDeleteContent = true;
     public _showTranscription = true;
     public _enableMeetingUpload = false;
 
     private _searchUsersSubscription: ISubscription;
-    // private _searchGroupsSubscription: ISubscription;
-    // private groupsDelimiter: string = String.fromCharCode(13)+String.fromCharCode(10); // \r\n
+    private _searchGroupsSubscription: ISubscription;
+    private groupsDelimiter: string = String.fromCharCode(13)+String.fromCharCode(10); // \r\n
 
     constructor(private _appLocalization: AppLocalization,
                 private _fb: FormBuilder,
@@ -88,24 +88,24 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this._categoriesProvider.complete();
         this._usersProvider.complete();
-        // this._groupsProvider.complete();
+        this._groupsProvider.complete();
     }
 
     private _setInitialValue(profile: KalturaZoomIntegrationSetting): void {
-        // let optInGroupNames = [];
-        // if (profile.optInGroupNames) {
-        //     profile.optInGroupNames.split(this.groupsDelimiter).forEach(groupName => optInGroupNames.push({screenName: groupName}));
-        // }
-        // let optOutGroupNames = [];
-        // if (profile.optOutGroupNames) {
-        //     profile.optOutGroupNames.split(this.groupsDelimiter).forEach(groupName => optOutGroupNames.push({screenName: groupName}));
-        // }
+        let optInGroupNames = [];
+        if (profile.optInGroupNames) {
+            profile.optInGroupNames.split(this.groupsDelimiter).forEach(groupName => optInGroupNames.push({screenName: groupName}));
+        }
+        let optOutGroupNames = [];
+        if (profile.optOutGroupNames) {
+            profile.optOutGroupNames.split(this.groupsDelimiter).forEach(groupName => optOutGroupNames.push({screenName: groupName}));
+        }
         this._profileForm.setValue({
             enabled: profile.enableRecordingUpload === KalturaNullableBoolean.trueValue,
             accountId: profile.accountId || '',
             defaultUserId: profile.defaultUserId ? [{screenName: profile.defaultUserId}] : [],
-            // uploadIn: optInGroupNames,
-            // uploadOut: optOutGroupNames,
+            uploadIn: optInGroupNames,
+            uploadOut: optOutGroupNames,
             description: profile.zoomAccountDescription || '',
             deleteContent: profile.deletionPolicy === KalturaNullableBoolean.trueValue,
             transcription: profile.enableZoomTranscription === KalturaNullableBoolean.trueValue,
@@ -114,7 +114,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             postfix: profile.zoomUserMatchingMode,
             userPostfix: profile.zoomUserPostfix,
             participation: profile.handleParticipantsMode,
-            // upload: profile.groupParticipationType || 0,
+            upload: profile.groupParticipationType || 0,
             categories: profile.zoomCategory ? [{name: profile.zoomCategory}] : [],
             webinarCategory: profile.zoomWebinarCategory ? [{name: profile.zoomWebinarCategory}] : [],
             uploadMeeting: typeof profile.enableMeetingUpload === "undefined" || profile.enableMeetingUpload === KalturaNullableBoolean.trueValue,
@@ -128,8 +128,8 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             enabled: false,
             accountId: [''],
             defaultUserId: [[]],
-            // uploadIn: [[]],
-            // uploadOut: [[]],
+            uploadIn: [[]],
+            uploadOut: [[]],
             description: [''],
             deleteContent: false,
             transcription: false,
@@ -138,7 +138,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             postfix: null,
             userPostfix: [''],
             participation: null,
-            // upload: null,
+            upload: null,
             categories: [[]],
             webinarCategory: [[]],
             uploadMeeting: false,
@@ -149,8 +149,8 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         this._accountId = this._profileForm.controls['accountId'];
         this._accountId.disable();
         this._defaultUserId = this._profileForm.controls['defaultUserId'];
-        // this._uploadIn = this._profileForm.controls['uploadIn'];
-        // this._uploadOut = this._profileForm.controls['uploadOut'];
+        this._uploadIn = this._profileForm.controls['uploadIn'];
+        this._uploadOut = this._profileForm.controls['uploadOut'];
         this._description = this._profileForm.controls['description'];
         this._deleteContent = this._profileForm.controls['deleteContent'];
         this._transcription = this._profileForm.controls['transcription'];
@@ -159,7 +159,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         this._postfix = this._profileForm.controls['postfix'];
         this._userPostfix = this._profileForm.controls['userPostfix'];
         this._participation = this._profileForm.controls['participation'];
-        // this._upload = this._profileForm.controls['upload'];
+        this._upload = this._profileForm.controls['upload'];
         this._categories = this._profileForm.controls['categories'];
         this._webinarCategory = this._profileForm.controls['webinarCategory'];
         this._uploadMeeting = this._profileForm.controls['uploadMeeting'];
@@ -177,13 +177,13 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                     this._transcription.enable();
                     this._userId.enable();
                     this._defaultUserId.enable();
-                    // this._uploadIn.enable();
-                    // this._uploadOut.enable();
+                    this._uploadIn.enable();
+                    this._uploadOut.enable();
                     this._createUser.enable();
                     this._postfix.enable();
                     this._userPostfix.enable();
                     this._participation.enable();
-                    // this._upload.enable();
+                    this._upload.enable();
                     this._categories.enable();
                     this._webinarCategory.enable();
                     if (this._enableMeetingUpload) {
@@ -199,11 +199,11 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                     this._postfix.disable();
                     this._userPostfix.disable();
                     this._participation.disable();
-                    // this._upload.disable();
+                    this._upload.disable();
                     this._categories.disable();
                     this._defaultUserId.disable();
-                    // this._uploadIn.disable();
-                    // this._uploadOut.disable();
+                    this._uploadIn.disable();
+                    this._uploadOut.disable();
                     this._webinarCategory.disable();
                     this._uploadMeeting.disable();
                     this._uploadWebinar.disable();
@@ -251,32 +251,32 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             .subscribe(value => {
                 this.validate();
             });
-        // this._upload.valueChanges
-        //     .pipe(cancelOnDestroy(this))
-        //     .subscribe(value => {
-        //         this.validate();
-        //     });
-        // this._uploadIn.valueChanges
-        //     .pipe(cancelOnDestroy(this))
-        //     .subscribe(value => {
-        //         this.validate();
-        //     });
-        // this._uploadOut.valueChanges
-        //     .pipe(cancelOnDestroy(this))
-        //     .subscribe(value => {
-        //         this.validate();
-        //     });
+        this._upload.valueChanges
+            .pipe(cancelOnDestroy(this))
+            .subscribe(value => {
+                this.validate();
+            });
+        this._uploadIn.valueChanges
+            .pipe(cancelOnDestroy(this))
+            .subscribe(value => {
+                this.validate();
+            });
+        this._uploadOut.valueChanges
+            .pipe(cancelOnDestroy(this))
+            .subscribe(value => {
+                this.validate();
+            });
     }
 
     private validate(): void {
         const formValue = this._profileForm.getRawValue();
         this.formValid = formValue.defaultUserId.length || (!formValue.defaultUserId.length && formValue.createUser);
-        // if (this.formValid && formValue.upload === 1) {
-        //     this.formValid = formValue.uploadIn !== null && formValue.uploadIn.length > 0;
-        // }
-        // if (this.formValid && formValue.upload === 2) {
-        //     this.formValid = formValue.uploadOut !== null && formValue.uploadOut.length > 0;
-        // }
+        if (this.formValid && formValue.upload === 1) {
+            this.formValid = formValue.uploadIn !== null && formValue.uploadIn.length > 0;
+        }
+        if (this.formValid && formValue.upload === 2) {
+            this.formValid = formValue.uploadOut !== null && formValue.uploadOut.length > 0;
+        }
     }
 
     public openHelpLink(): void {
@@ -289,20 +289,20 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         this.profile.enableRecordingUpload = formValue.enabled ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
         this.profile.zoomAccountDescription = formValue.description;
         this.profile.defaultUserId = formValue.defaultUserId.length ? formValue.defaultUserId[0].screenName : '';
-        // if (formValue.uploadIn.length) {
-        //     let optInGroups = [];
-        //     formValue.uploadIn.forEach(group => optInGroups.push(group.screenName));
-        //     this.profile.optInGroupNames = optInGroups.join(this.groupsDelimiter);
-        // } else {
-        //     this.profile.optInGroupNames = null;
-        // }
-        // if (formValue.uploadOut.length) {
-        //     let optOutGroups = [];
-        //     formValue.uploadOut.forEach(group => optOutGroups.push(group.screenName));
-        //     this.profile.optOutGroupNames = optOutGroups.join(this.groupsDelimiter);
-        // } else {
-        //     this.profile.optOutGroupNames = null;
-        // }
+        if (formValue.uploadIn.length) {
+            let optInGroups = [];
+            formValue.uploadIn.forEach(group => optInGroups.push(group.screenName));
+            this.profile.optInGroupNames = optInGroups.join(this.groupsDelimiter);
+        } else {
+            this.profile.optInGroupNames = null;
+        }
+        if (formValue.uploadOut.length) {
+            let optOutGroups = [];
+            formValue.uploadOut.forEach(group => optOutGroups.push(group.screenName));
+            this.profile.optOutGroupNames = optOutGroups.join(this.groupsDelimiter);
+        } else {
+            this.profile.optOutGroupNames = null;
+        }
         this.profile.zoomCategory = formValue.categories.length ? formValue.categories[0].name : '';
         this.profile.zoomWebinarCategory = formValue.webinarCategory.length ? formValue.webinarCategory[0].name : '';
         if (this._showDeleteContent) {
@@ -323,7 +323,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         }
         this.profile.zoomUserPostfix = formValue.userPostfix;
         this.profile.handleParticipantsMode = formValue.participation;
-        // this.profile.groupParticipationType = formValue.upload;
+        this.profile.groupParticipationType = formValue.upload;
         this.onSave.emit(this.profile);
         this.parentPopup.close();
     }
@@ -386,7 +386,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
     /* ---------------------------- categories auto complete code ends ------------------------- */
 
     /* ---------------------------- groups auto complete code starts ------------------------- */
-/*
+
     public _searchGroups(event, options: string): void {
         this._logger.info(`handle search groups action`, { query: event.query });
         this._groupsProvider.next({suggestions: [], isLoading: true});
@@ -415,16 +415,10 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                 data => {
                     this._logger.info(`handle successful search groups action`);
                     const suggestions = [];
-                    let profileGroups = [];
-                    if (options === 'optIn' && this.profile.optInGroupNames) {
-                        profileGroups = this.profile.optInGroupNames.split(this.groupsDelimiter);
-                    }
-                    if (options === 'optOut' && this.profile.optOutGroupNames) {
-                        profileGroups = this.profile.optOutGroupNames.split(this.groupsDelimiter);
-                    }
+                    const profileGroups = options === 'optIn' ? this._uploadIn.value : this._uploadOut.value;
                     (data.objects || []).forEach((suggestedUser: KalturaUser) => {
                         const isSelectable = !profileGroups.find(group => {
-                            return group === suggestedUser.screenName;
+                            return group.screenName === suggestedUser.screenName;
                         });
                         suggestions.push({
                             name: suggestedUser.screenName,
@@ -444,7 +438,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
     public _groupsTooltipResolver = (value: any) => {
         return value.screenName;
     };
-*/
+
     /* ---------------------------- groups auto complete code ends ------------------------- */
 
 

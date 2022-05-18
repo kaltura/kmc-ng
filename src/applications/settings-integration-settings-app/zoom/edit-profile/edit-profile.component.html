@@ -92,55 +92,55 @@
             </kAutoComplete>
         </div>
 
-<!--        <div class="kRow">-->
-<!--            <div class="kLabel">-->
-<!--                <span>{{'applications.settings.integrationSettings.zoom.upload' | translate}}</span>-->
-<!--            </div>-->
-<!--            <p-radioButton name="upload"-->
-<!--                           [value]="0"-->
-<!--                           formControlName="upload"-->
-<!--                           [label]="'applications.settings.integrationSettings.zoom.uploadAll' | translate"></p-radioButton>-->
-<!--            <p-radioButton name="upload"-->
-<!--                           [value]="1"-->
-<!--                           formControlName="upload"-->
-<!--                           [label]="'applications.settings.integrationSettings.zoom.uploadIn' | translate"></p-radioButton>-->
-<!--            <p-radioButton name="upload"-->
-<!--                           [value]="2"-->
-<!--                           formControlName="upload"-->
-<!--                           [label]="'applications.settings.integrationSettings.zoom.uploadOut' | translate"></p-radioButton>-->
-<!--        </div>-->
+        <div class="kRow">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.upload' | translate}}</span>
+            </div>
+            <p-radioButton name="upload"
+                           [value]="0"
+                           formControlName="upload"
+                           [label]="'applications.settings.integrationSettings.zoom.uploadAll' | translate"></p-radioButton>
+            <p-radioButton name="upload"
+                           [value]="1"
+                           formControlName="upload"
+                           [label]="'applications.settings.integrationSettings.zoom.uploadIn' | translate"></p-radioButton>
+            <p-radioButton name="upload"
+                           [value]="2"
+                           formControlName="upload"
+                           [label]="'applications.settings.integrationSettings.zoom.uploadOut' | translate"></p-radioButton>
+        </div>
 
-<!--        <div class="kRow" *ngIf="_upload.value !== 0">-->
-<!--            <div class="kLabel"></div>-->
-<!--            <div class="kRow">-->
-<!--                <span class="uploadInOut">{{_upload.value === 1 ? ('applications.settings.integrationSettings.zoom.uploadIn' | translate) : ('applications.settings.integrationSettings.zoom.uploadOut' | translate)}}</span>-->
-<!--                <div class="kRadios">-->
-<!--                    <kAutoComplete *ngIf="_upload.value === 1" formControlName="uploadIn"-->
-<!--                                   field="screenName"-->
-<!--                                   [tooltipResolver]="_groupsTooltipResolver"-->
-<!--                                   suggestionItemField="item"-->
-<!--                                   suggestionLabelField="name"-->
-<!--                                   suggestionSelectableField="isSelectable"-->
-<!--                                   [allowMultiple]="true"-->
-<!--                                   [minLength]="3"-->
-<!--                                   [suggestionsProvider]="_groupsProvider"-->
-<!--                                   (completeMethod)="_searchGroups($event, 'optIn')">-->
-<!--                    </kAutoComplete>-->
-<!--                    <kAutoComplete *ngIf="_upload.value === 2" formControlName="uploadOut"-->
-<!--                                   field="screenName"-->
-<!--                                   [tooltipResolver]="_groupsTooltipResolver"-->
-<!--                                   suggestionItemField="item"-->
-<!--                                   suggestionLabelField="name"-->
-<!--                                   suggestionSelectableField="isSelectable"-->
-<!--                                   [allowMultiple]="true"-->
-<!--                                   [minLength]="3"-->
-<!--                                   [suggestionsProvider]="_groupsProvider"-->
-<!--                                   (completeMethod)="_searchGroups($event, 'optOut')">-->
-<!--                    </kAutoComplete>-->
-<!--                    <span class="kError" *ngIf="(_upload.value === 1 && !_uploadIn.value.length) || (_upload.value === 2 && !_uploadOut.value.length)">{{'applications.settings.integrationSettings.zoom.uploadError' | translate}}</span>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
+        <div class="kRow" *ngIf="_upload.value !== 0">
+            <div class="kLabel"></div>
+            <div class="kRow">
+                <span class="uploadInOut">{{_upload.value === 1 ? ('applications.settings.integrationSettings.zoom.uploadIn' | translate) : ('applications.settings.integrationSettings.zoom.uploadOut' | translate)}}</span>
+                <div class="kRadios">
+                    <kAutoComplete *ngIf="_upload.value === 1" formControlName="uploadIn"
+                                   field="screenName"
+                                   [tooltipResolver]="_groupsTooltipResolver"
+                                   suggestionItemField="item"
+                                   suggestionLabelField="name"
+                                   suggestionSelectableField="isSelectable"
+                                   [allowMultiple]="true"
+                                   [minLength]="3"
+                                   [suggestionsProvider]="_groupsProvider"
+                                   (completeMethod)="_searchGroups($event, 'optIn')">
+                    </kAutoComplete>
+                    <kAutoComplete *ngIf="_upload.value === 2" formControlName="uploadOut"
+                                   field="screenName"
+                                   [tooltipResolver]="_groupsTooltipResolver"
+                                   suggestionItemField="item"
+                                   suggestionLabelField="name"
+                                   suggestionSelectableField="isSelectable"
+                                   [allowMultiple]="true"
+                                   [minLength]="3"
+                                   [suggestionsProvider]="_groupsProvider"
+                                   (completeMethod)="_searchGroups($event, 'optOut')">
+                    </kAutoComplete>
+                    <span class="kError" *ngIf="(_upload.value === 1 && !_uploadIn.value.length) || (_upload.value === 2 && !_uploadOut.value.length)">{{'applications.settings.integrationSettings.zoom.uploadError' | translate}}</span>
+                </div>
+            </div>
+        </div>
 
         <div class="kRow" *ngIf="_showDeleteContent">
             <div class="kLabel">
@@ -250,7 +250,7 @@
                                        [suggestionsProvider]="_usersProvider"
                                        (completeMethod)="_searchUsers($event)">
                         </kAutoComplete>
-                        <span *ngIf="!formValid" class="kInvalid">{{'applications.settings.integrationSettings.zoom.invalid' | translate}}</span>
+                        <span *ngIf="!_createUser.value && !_defaultUserId.value.length" class="kInvalid">{{'applications.settings.integrationSettings.zoom.invalid' | translate}}</span>
                     </div>
                 </div>
             </div>
