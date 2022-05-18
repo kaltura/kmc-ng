@@ -1,3 +1,15 @@
+<a name="7.5.1"></a>
+## [7.5.1](https://github.com/kaltura/kmc-ng/compare/v7.5.0...v7.5.1) (2022-05-18)
+
+
+### Bug Fixes
+
+* **content/entry:** avoid listing the original entry in its clips panel KMCNG-2436 ([01e2832](https://github.com/kaltura/kmc-ng/commit/01e2832))
+* **reach:** allow autoplay for player in reach iframe SUP-26406 ([08a515f](https://github.com/kaltura/kmc-ng/commit/08a515f))
+* **settings/integration:** manage zoom ingest to Kaltura (opt in/out) KMCNG-2423 ([#1018](https://github.com/kaltura/kmc-ng/issues/1018)) ([4516083](https://github.com/kaltura/kmc-ng/commit/4516083))
+
+
+
 <a name="7.5.0"></a>
 # [7.5.0](https://github.com/kaltura/kmc-ng/compare/v7.4.1...v7.5.0) (2022-05-09)
 
