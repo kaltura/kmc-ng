@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaBaseEntry } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs';
+import {Observable, of} from 'rxjs';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
 import { KalturaMetadataSearchItem } from 'kaltura-ngx-client';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client';
@@ -258,6 +258,9 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
     }
   }
 
+  public exportToCsv(data: EntriesFilters): Observable<any> {
+    return of({});
+  }
 
   public executeQuery(data: EntriesFilters): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }> {
     let pagination: KalturaFilterPager = null;

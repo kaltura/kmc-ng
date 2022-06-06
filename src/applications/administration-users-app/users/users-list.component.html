@@ -23,6 +23,8 @@
           <span class="kSelectedUsersNum" *ngIf="_usersAmount">
             {{_usersAmount}}
           </span>
+          <button pButton class="kButtonDefault kExportBtn" (click)="_export()" type="text"
+                  [label]="'applications.content.entryDetails.distribution.export' | translate"></button>
           <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh"
                   [kTooltip]="'applications.administration.users.refresh' | translate"></button>
         </div>

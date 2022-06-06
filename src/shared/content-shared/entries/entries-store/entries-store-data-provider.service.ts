@@ -21,7 +21,8 @@ import {
     KalturaExternalMediaSourceType,
     KalturaExternalMediaEntryFilter,
     KalturaEntryCaptionAdvancedFilter,
-    KalturaLiveChannel
+    KalturaLiveChannel,
+    BaseEntryExportToCsvAction
 } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
 import { cancelOnDestroy, KalturaUtils } from '@kaltura-ng/kaltura-common';
@@ -331,6 +332,17 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
     } catch (err) {
       return throwError(err);
     }
+  }
+
+  public exportToCsv(data: EntriesFilters): Observable<any> {
+      return <any>
+          this.getServerFilter(data)
+              .pipe(switchMap(filter => this._kalturaServerClient.request(
+                  new BaseEntryExportToCsvAction({
+                      filter
+                  })
+              ))
+          );
   }
 
   public executeQuery(data: EntriesFilters): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }> {

@@ -32,6 +32,7 @@ export interface CustomMenuItem extends MenuItem {
 })
 export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     @Input() showReload = true;
+    @Input() showExport = false;
     @Input() selectedEntries: any[] = [];
     @Input() columns: EntriesTableColumns | null;
     @Input() rowActions: { label: string, commandName: string, styleClass: string }[];
@@ -416,6 +417,10 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     this.clearSelection();
     this._browserService.scrollToTop();
     this._entriesStore.reload();
+  }
+
+  public _export(): void {
+      this._entriesStore.export();
   }
 
   clearSelection() {

@@ -29,6 +29,14 @@
       left: 28px;
     }
   }
+
+  .kExportBtn {
+      margin-right: 8px;
+      ::ng-deep .p-button-icon {
+          font-size: 24px;
+      }
+  }
+
   .kRefreshBtn {
     font-size: 24px;
     border: none;

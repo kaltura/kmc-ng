@@ -1,5 +1,6 @@
 <k-area-blocker [message]="_blockerMessage" [bodyScroll]="true">
 <kEntriesList [columns]="_columns"
+              [showExport]="true"
               [rowActions]="_rowActions"
               (onActionsSelected)="_onActionSelected($event)">
   <div class="bulk-actions">
