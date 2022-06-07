@@ -348,7 +348,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
                           new KalturaKeyValue({key: 'Duration', value: 'duration'}),
                           new KalturaKeyValue({key: 'Plays', value: 'plays'}),
                           new KalturaKeyValue({key: 'Status', value: 'status'}),
-                          new KalturaKeyValue({key: 'Owner', value: 'creatorId'})
+                          new KalturaKeyValue({key: 'Owner', value: 'userId'})
                       ]
                   })
               ))
