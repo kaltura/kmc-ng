@@ -29,6 +29,7 @@ import { UserAddAction } from 'kaltura-ngx-client';
 import { AdminUsersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { KalturaKeyValue } from "kaltura-ngx-client";
 
 export interface QueryData {
   pageIndex: number;
@@ -162,7 +163,13 @@ export class UsersStore implements OnDestroy {
                   loginEnabledEqual: KalturaNullableBoolean.trueValue,
                   statusIn: KalturaUserStatus.active + ',' + KalturaUserStatus.blocked,
                   orderBy: KalturaUserOrderBy.createdAtAsc.toString()
-              })
+              }),
+                mappedFields: [
+                    new KalturaKeyValue({key: 'Role', value: 'roleNames'}),
+                    new KalturaKeyValue({key: 'Status', value: 'status'}),
+                    new KalturaKeyValue({key: 'Registration Date', value: 'createdAt'}),
+                    new KalturaKeyValue({key: 'Last Login', value: 'lastLoginTime'})
+                ]
           });
       this._kalturaServerClient.request(request)
           .pipe(tag('block-shell'))

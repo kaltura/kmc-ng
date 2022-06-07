@@ -22,7 +22,8 @@ import {
     KalturaExternalMediaEntryFilter,
     KalturaEntryCaptionAdvancedFilter,
     KalturaLiveChannel,
-    BaseEntryExportToCsvAction
+    BaseEntryExportToCsvAction,
+    KalturaKeyValue
 } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
 import { cancelOnDestroy, KalturaUtils } from '@kaltura-ng/kaltura-common';
@@ -339,7 +340,16 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
           this.getServerFilter(data)
               .pipe(switchMap(filter => this._kalturaServerClient.request(
                   new BaseEntryExportToCsvAction({
-                      filter
+                      filter,
+                      mappedFields: [
+                          new KalturaKeyValue({key: 'Media Type', value: 'mediaType'}),
+                          new KalturaKeyValue({key: 'Created On', value: 'createdAt'}),
+                          new KalturaKeyValue({key: 'Last Update Date', value: 'updatedAt'}),
+                          new KalturaKeyValue({key: 'Duration', value: 'duration'}),
+                          new KalturaKeyValue({key: 'Plays', value: 'plays'}),
+                          new KalturaKeyValue({key: 'Status', value: 'status'}),
+                          new KalturaKeyValue({key: 'Owner', value: 'creatorId'})
+                      ]
                   })
               ))
           );
