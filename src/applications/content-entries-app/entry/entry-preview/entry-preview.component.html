@@ -1,6 +1,9 @@
 <div class="kEntryPreview">
-  <iframe *ngIf="_widgetService._iframeSrc" [src]="_widgetService._iframeSrc | safe" width="280" height="158"
-          allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0" allow="autoplay *; fullscreen *; encrypted-media *"></iframe>
+  <app-k-player-v7 *ngIf="_entryId.length && !_isImage" [width]="280" [height]="158" [cdnUrl]="_cdnUrl" [pid]="_pid" [uiconfid]="_uiconf" [entryid]="_entryId"></app-k-player-v7>
+  <div *ngIf="_isImage" class="kThumbnailHolder" #holder>
+    <img *ngIf="_thumbnailUrl.length && _loadThumbnailWithKs" [src]="_thumbnailUrl+'/ks/'+_ks">
+    <img *ngIf="_thumbnailUrl.length && !_loadThumbnailWithKs" [src]="_thumbnailUrl" (error)="_onThumbLoadError($event)">
+  </div>
   <div class="kPreviewAndEmbedContainer">
     <div class="kLink" (click)="!_previewDisabled && openPreviewAndEmbed()">
       <i [class.disabled]="_previewDisabled" class="kIconShare"></i>

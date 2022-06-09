@@ -81,31 +81,33 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	private doEmbed(): void {
-    try {
-      const kalturaPlayer = window["KalturaPlayer"].setup({
-        targetId: "kaltura_player_" + this.id,
-        plugins: {
-          kava: {
-            disable: true
-          }
-        },
-        provider: {
-          ks: this.ks,
-          partnerId: this.pid,
-          uiConfId: this.uiconfid
-        },
-        playback: {
-          autoplay: this.autoPlay,
-          muted: this.muted
+	private doEmbed():void {
+        try {
+          const kalturaPlayer = window["KalturaPlayer"].setup({
+            targetId: "kaltura_player_" + this.id,
+            plugins: {
+                kava: {
+                    disable: true
+                },
+                ivq: {},
+                kalturaCuepoints: {}
+            },
+            provider: {
+              ks: this.ks,
+              partnerId: this.pid,
+              uiConfId: this.uiconfid
+            },
+            playback: {
+              autoplay: this.autoPlay,
+              muted: this.muted
+            }
+          });
+          this.onPlayerInitialized.emit(kalturaPlayer); // for API calls
+          kalturaPlayer.loadMedia({entryId: this.entryid});
+        } catch (e) {
+          console.error(e.message);
         }
-      });
-      this.onPlayerInitialized.emit(kalturaPlayer); // for API calls
-      kalturaPlayer.loadMedia({entryId: this.entryid});
-    } catch (e) {
-      console.error(e.message);
     }
-	}
 
   ngOnDestroy(): void {
 	  // remove player lib from head on destroy
