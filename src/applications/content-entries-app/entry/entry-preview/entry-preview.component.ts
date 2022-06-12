@@ -31,7 +31,7 @@ export class EntryPreview implements OnInit, OnDestroy {
     public _previewDisabled = false;
     public _pid = this.appAuthentication.appUser.partnerId;
     public _cdnUrl = buildCDNUrl("");
-    public _uiconf = 50344782;//serverConfig.kalturaServer.previewUIConfV7;
+    public _uiconf = serverConfig.kalturaServer.previewUIConfV7;
     public _entryId = '';
     public _isImage = false;
     public _loadThumbnailWithKs = false;
