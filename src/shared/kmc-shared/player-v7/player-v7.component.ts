@@ -90,7 +90,8 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
                     disable: true
                 },
                 ivq: {},
-                kalturaCuepoints: {}
+                kalturaCuepoints: {},
+                "kaltura-live": {}
             },
             provider: {
               ks: this.ks,
