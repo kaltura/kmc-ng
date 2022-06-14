@@ -4,7 +4,7 @@
 
 ### Features
 
-* **content/entries:** add export to CSV feature SUP-31109 ([#1021](https://github.com/kaltura/kmc-ng/issues/1021)) ([6628795](https://github.com/kaltura/kmc-ng/commit/6628795))
+* **content/entries:** Add export to CSV feature for Entries and Users SUP-31109 ([#1021](https://github.com/kaltura/kmc-ng/issues/1021)) ([6628795](https://github.com/kaltura/kmc-ng/commit/6628795))
 
 
 
