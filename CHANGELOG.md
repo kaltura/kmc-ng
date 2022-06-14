@@ -1,3 +1,13 @@
+<a name="7.6.0"></a>
+# [7.6.0](https://github.com/kaltura/kmc-ng/compare/v7.5.1...v7.6.0) (2022-06-14)
+
+
+### Features
+
+* **content/entries:** add export to CSV feature SUP-31109 ([#1021](https://github.com/kaltura/kmc-ng/issues/1021)) ([6628795](https://github.com/kaltura/kmc-ng/commit/6628795))
+
+
+
 <a name="7.5.1"></a>
 ## [7.5.1](https://github.com/kaltura/kmc-ng/compare/v7.5.0...v7.5.1) (2022-05-18)
 
