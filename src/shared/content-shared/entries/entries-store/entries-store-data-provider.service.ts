@@ -23,7 +23,7 @@ import {
     KalturaEntryCaptionAdvancedFilter,
     KalturaLiveChannel,
     BaseEntryExportToCsvAction,
-    KalturaKeyValue
+    KalturaKeyValueExtended
 } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
 import { cancelOnDestroy, KalturaUtils } from '@kaltura-ng/kaltura-common';
@@ -342,13 +342,13 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
                   new BaseEntryExportToCsvAction({
                       filter,
                       mappedFields: [
-                          new KalturaKeyValue({key: 'Media Type', value: 'mediaType'}),
-                          new KalturaKeyValue({key: 'Created On', value: 'createdAt'}),
-                          new KalturaKeyValue({key: 'Last Update Date', value: 'updatedAt'}),
-                          new KalturaKeyValue({key: 'Duration', value: 'duration'}),
-                          new KalturaKeyValue({key: 'Plays', value: 'plays'}),
-                          new KalturaKeyValue({key: 'Status', value: 'status'}),
-                          new KalturaKeyValue({key: 'Owner', value: 'userId'})
+                          new KalturaKeyValueExtended({key: 'Media Type', value: 'mediaType', predefinedFormat: KalturaNullableBoolean.trueValue}),
+                          new KalturaKeyValueExtended({key: 'Created On', value: 'createdAt', predefinedFormat: KalturaNullableBoolean.trueValue}),
+                          new KalturaKeyValueExtended({key: 'Last Update Date', value: 'updatedAt', predefinedFormat: KalturaNullableBoolean.trueValue}),
+                          new KalturaKeyValueExtended({key: 'Duration', value: 'duration', predefinedFormat: KalturaNullableBoolean.trueValue}),
+                          new KalturaKeyValueExtended({key: 'Plays', value: 'plays', predefinedFormat: KalturaNullableBoolean.falseValue}),
+                          new KalturaKeyValueExtended({key: 'Status', value: 'status', predefinedFormat: KalturaNullableBoolean.trueValue}),
+                          new KalturaKeyValueExtended({key: 'Owner', value: 'userId', predefinedFormat: KalturaNullableBoolean.falseValue})
                       ]
                   })
               ))

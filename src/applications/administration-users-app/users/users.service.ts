@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { IsUserExistsStatuses } from './user-exists-statuses';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { KalturaAPIException, KalturaUser, UserExportToCsvAction } from 'kaltura-ngx-client';
+import {KalturaAPIException, KalturaKeyValueExtended, KalturaUser, UserExportToCsvAction} from 'kaltura-ngx-client';
 import { KalturaUserRole } from 'kaltura-ngx-client';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import { UserRoleListAction } from 'kaltura-ngx-client';
@@ -29,7 +29,6 @@ import { UserAddAction } from 'kaltura-ngx-client';
 import { AdminUsersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { KalturaKeyValue } from "kaltura-ngx-client";
 
 export interface QueryData {
   pageIndex: number;
@@ -165,10 +164,10 @@ export class UsersStore implements OnDestroy {
                   orderBy: KalturaUserOrderBy.createdAtAsc.toString()
               }),
                 mappedFields: [
-                    new KalturaKeyValue({key: 'Role', value: 'roleNames'}),
-                    new KalturaKeyValue({key: 'Status', value: 'status'}),
-                    new KalturaKeyValue({key: 'Registration Date', value: 'createdAt'}),
-                    new KalturaKeyValue({key: 'Last Login', value: 'lastLoginTime'})
+                    new KalturaKeyValueExtended({key: 'Role', value: 'roleNames', predefinedFormat: KalturaNullableBoolean.falseValue}),
+                    new KalturaKeyValueExtended({key: 'Status', value: 'status', predefinedFormat: KalturaNullableBoolean.trueValue}),
+                    new KalturaKeyValueExtended({key: 'Registration Date', value: 'createdAt', predefinedFormat: KalturaNullableBoolean.trueValue}),
+                    new KalturaKeyValueExtended({key: 'Last Login', value: 'lastLoginTime', predefinedFormat: KalturaNullableBoolean.trueValue})
                 ]
           });
       this._kalturaServerClient.request(request)
