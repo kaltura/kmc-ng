@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
 import { MetadataProfileStore } from 'app-shared/kmc-shared';
-import { BaseEntryDeleteAction } from 'kaltura-ngx-client';
+import {BaseEntryDeleteAction, KalturaAPIException} from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
@@ -27,7 +27,7 @@ import { Subject } from 'rxjs';
 import { KalturaBaseEntry } from 'kaltura-ngx-client';
 import { KalturaMediaEntryFilter } from 'kaltura-ngx-client';
 import { globalConfig } from 'config/global';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import {cancelOnDestroy, tag} from '@kaltura-ng/kaltura-common';
 import { throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -38,6 +38,8 @@ export enum SortDirection {
 
 export interface EntriesDataProvider {
   executeQuery(filters: EntriesFilters): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }>;
+
+  exportToCsv(filters: EntriesFilters): Observable<any>;
 
   getDefaultFilterValues(savedAutoSelectChildren: CategoriesModes, pageSize: number): EntriesFilters;
 
@@ -184,6 +186,25 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     } else {
       this._prepare();
     }
+  }
+
+  public export(): void {
+      this._dataProvider.exportToCsv(this._getFiltersAsReadonly())
+          .pipe(tag('block-shell'))
+          .pipe(cancelOnDestroy(this))
+          .subscribe(
+              response => {
+                  this._browserService.alert({
+                      header: this._appLocalization.get('applications.entries.export'),
+                      message: this._appLocalization.get('app.common.export')
+                  });
+              },
+              (e: KalturaAPIException) => {
+                  this._browserService.alert({
+                      header: this._appLocalization.get('app.common.error'),
+                      message: e.message
+                  });
+              });
   }
 
   private _executeQuery(): void {

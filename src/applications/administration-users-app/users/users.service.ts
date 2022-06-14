@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { IsUserExistsStatuses } from './user-exists-statuses';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { KalturaUser } from 'kaltura-ngx-client';
+import {KalturaAPIException, KalturaKeyValueExtended, KalturaUser, UserExportToCsvAction} from 'kaltura-ngx-client';
 import { KalturaUserRole } from 'kaltura-ngx-client';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import { UserRoleListAction } from 'kaltura-ngx-client';
@@ -153,6 +153,40 @@ export class UsersStore implements OnDestroy {
           this._users.state.next({ loading: false, error: this._appLocalization.get('applications.administration.users.failedLoading') });
         }
       );
+  }
+
+  public export(): void {
+      const request = new UserExportToCsvAction({
+              filter: new KalturaUserFilter({
+                  isAdminEqual: KalturaNullableBoolean.trueValue,
+                  loginEnabledEqual: KalturaNullableBoolean.trueValue,
+                  statusIn: KalturaUserStatus.active + ',' + KalturaUserStatus.blocked,
+                  orderBy: KalturaUserOrderBy.createdAtAsc.toString()
+              }),
+                mappedFields: [
+                    new KalturaKeyValueExtended({key: 'Role', value: 'roleNames', predefinedFormat: KalturaNullableBoolean.falseValue}),
+                    new KalturaKeyValueExtended({key: 'Status', value: 'status', predefinedFormat: KalturaNullableBoolean.trueValue}),
+                    new KalturaKeyValueExtended({key: 'Registration Date', value: 'createdAt', predefinedFormat: KalturaNullableBoolean.trueValue}),
+                    new KalturaKeyValueExtended({key: 'Last Login', value: 'lastLoginTime', predefinedFormat: KalturaNullableBoolean.trueValue})
+                ]
+          });
+      this._kalturaServerClient.request(request)
+          .pipe(tag('block-shell'))
+          .pipe(cancelOnDestroy(this))
+          .subscribe(
+              response => {
+                  this._browserService.alert({
+                      header: this._appLocalization.get('applications.administration.users.export'),
+                      message: this._appLocalization.get('app.common.export')
+                  });
+              },
+              (e: KalturaAPIException) => {
+                  this._browserService.alert({
+                      header: this._appLocalization.get('app.common.error'),
+                      message: e.message
+                  });
+              }
+          );
   }
 
   public isCurrentUser(user: KalturaUser): boolean {

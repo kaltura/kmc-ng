@@ -21,7 +21,9 @@ import {
     KalturaExternalMediaSourceType,
     KalturaExternalMediaEntryFilter,
     KalturaEntryCaptionAdvancedFilter,
-    KalturaLiveChannel
+    KalturaLiveChannel,
+    BaseEntryExportToCsvAction,
+    KalturaKeyValueExtended
 } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
 import { cancelOnDestroy, KalturaUtils } from '@kaltura-ng/kaltura-common';
@@ -331,6 +333,26 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
     } catch (err) {
       return throwError(err);
     }
+  }
+
+  public exportToCsv(data: EntriesFilters): Observable<any> {
+      return <any>
+          this.getServerFilter(data)
+              .pipe(switchMap(filter => this._kalturaServerClient.request(
+                  new BaseEntryExportToCsvAction({
+                      filter,
+                      mappedFields: [
+                          new KalturaKeyValueExtended({key: 'Media Type', value: 'mediaType', predefinedFormat: KalturaNullableBoolean.trueValue}),
+                          new KalturaKeyValueExtended({key: 'Created On', value: 'createdAt', predefinedFormat: KalturaNullableBoolean.trueValue}),
+                          new KalturaKeyValueExtended({key: 'Last Update Date', value: 'updatedAt', predefinedFormat: KalturaNullableBoolean.trueValue}),
+                          new KalturaKeyValueExtended({key: 'Duration', value: 'duration', predefinedFormat: KalturaNullableBoolean.trueValue}),
+                          new KalturaKeyValueExtended({key: 'Plays', value: 'plays', predefinedFormat: KalturaNullableBoolean.falseValue}),
+                          new KalturaKeyValueExtended({key: 'Status', value: 'status', predefinedFormat: KalturaNullableBoolean.trueValue}),
+                          new KalturaKeyValueExtended({key: 'Owner', value: 'userId', predefinedFormat: KalturaNullableBoolean.falseValue})
+                      ]
+                  })
+              ))
+          );
   }
 
   public executeQuery(data: EntriesFilters): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }> {

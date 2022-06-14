@@ -51,6 +51,8 @@
               </div>
             </div>
           </div>
+          <button *ngIf="showExport" pButton class="kButtonDefault kExportBtn" (click)="_export()" type="text"
+                  [label]="'applications.content.entryDetails.distribution.export' | translate"></button>
           <button *ngIf="showReload"
                   pButton
                   class="kButtonDefault kRefreshBtn small"

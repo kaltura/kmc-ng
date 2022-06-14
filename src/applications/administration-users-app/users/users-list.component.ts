@@ -172,4 +172,8 @@ export class UsersListComponent implements OnInit, OnDestroy {
   public _reload(): void {
     this._usersStore.reload(true);
   }
+
+  public _export(): void {
+    this._usersStore.export();
+  }
 }
