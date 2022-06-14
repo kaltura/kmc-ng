@@ -1,10 +1,26 @@
 @import 'app-theme/_variables.scss';
 
 .kEntryPreview {
-	iframe{
-		border-top-left-radius: 3px;
-		border-top-right-radius: 3px;
-	}
+    .kThumbnailHolder {
+        overflow: hidden;
+        position: relative;
+        width: 280px;
+        height: 158px;
+        background-color: white;
+        white-space: nowrap;
+        text-align: center;
+        cursor: pointer;
+        img {
+            position: absolute;
+            left: -100%;
+            right: -100%;
+            top: -100%;
+            bottom: -100%;
+            margin: auto;
+            width: 280px;
+            height: auto;
+        }
+    }
 	.kPreviewAndEmbedContainer{
 		display: flex;
 		align-items: center;
