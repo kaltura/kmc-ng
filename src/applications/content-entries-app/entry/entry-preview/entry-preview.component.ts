@@ -86,7 +86,11 @@ export class EntryPreview implements OnInit, OnDestroy {
             data => {
                 if (data) {
                     this._currentEntry = data;
-                    this._entryId = data.id;
+                    this._entryId = '';
+                    // force player reload
+                    setTimeout(() => {
+                        this._entryId = this._currentEntry.id;
+                    })
                     this._isImage = data.mediaType === KalturaMediaType.image;
                     this._thumbnailUrl = data.thumbnailUrl + '/width/280';
                     const entryHasContent = this._currentEntry.status.toString() !== KalturaEntryStatus.noContent.toString();
