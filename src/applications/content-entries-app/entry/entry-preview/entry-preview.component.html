@@ -1,5 +1,5 @@
 <div class="kEntryPreview">
-  <app-k-player-v7 *ngIf="_entryId.length && !_isImage" [width]="280" [ks]="_ks" [height]="158" [cdnUrl]="_cdnUrl" [pid]="_pid" [uiconfid]="_uiconf" [entryid]="_entryId"></app-k-player-v7>
+    <iframe #previewIframe *ngIf="_showPlayer" width="280" height="158" frameborder="0" marginheight="0" marginwidth="0" allowFullScreen webkitallowfullscreen mozallowfullscreen></iframe>
   <div *ngIf="_isImage" class="kThumbnailHolder" #holder>
     <img *ngIf="_thumbnailUrl.length && _loadThumbnailWithKs" [src]="_thumbnailUrl+'/ks/'+_ks">
     <img *ngIf="_thumbnailUrl.length && !_loadThumbnailWithKs" [src]="_thumbnailUrl" (error)="_onThumbLoadError($event)">
