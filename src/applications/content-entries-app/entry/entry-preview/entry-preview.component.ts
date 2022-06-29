@@ -170,7 +170,7 @@ export class EntryPreview implements OnInit, OnDestroy {
     private showPreview(): void {
         setTimeout(() => { // use a timeout to allow the iframe to render before accessing its native element
             window.addEventListener('message', this.renderPlayer);
-            const uri = serverConfig.externalApps.playerWrapper ? serverConfig.externalApps.playerWrapper.uri : '/public/playerWrapper.html?context=preview';
+            const uri = serverConfig.externalApps.playerWrapper ? `${serverConfig.externalApps.playerWrapper.uri}?context=preview` : '/public/playerWrapper.html?context=preview';
             this.previewIframe.nativeElement.src = uri;
             this._generatedPreviewCode = this.generateV3code();
         }, 0);

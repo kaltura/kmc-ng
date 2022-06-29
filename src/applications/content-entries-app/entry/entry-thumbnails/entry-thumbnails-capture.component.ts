@@ -83,7 +83,7 @@ export class EntryThumbnailCapture implements AfterContentInit, OnInit, OnDestro
         setTimeout(() => { // use a timeout to allow the iframe to render before accessing its native element
             window.removeEventListener('message', this.renderPlayer);
             window.addEventListener('message', this.renderPlayer);
-            const uri = serverConfig.externalApps.playerWrapper ? serverConfig.externalApps.playerWrapper.uri : '/public/playerWrapper.html?context=thumbnailCapture';
+            const uri = serverConfig.externalApps.playerWrapper ? `${serverConfig.externalApps.playerWrapper.uri}?context=thumbnailCapture` : '/public/playerWrapper.html?context=thumbnailCapture';
             this.previewIframe.nativeElement.src = uri;
             this._generatedPreviewCode = this.generateV3code();
         }, 0);
