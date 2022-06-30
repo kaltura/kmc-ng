@@ -116,7 +116,7 @@
                 <span class="uploadInOut">{{_upload.value === 1 ? ('applications.settings.integrationSettings.zoom.uploadIn' | translate) : ('applications.settings.integrationSettings.zoom.uploadOut' | translate)}}</span>
                 <div class="kRadios">
                     <kAutoComplete *ngIf="_upload.value === 1" formControlName="uploadIn"
-                                   field="screenName"
+                                   field="id"
                                    [tooltipResolver]="_groupsTooltipResolver"
                                    suggestionItemField="item"
                                    suggestionLabelField="name"
@@ -127,7 +127,7 @@
                                    (completeMethod)="_searchGroups($event, 'optIn')">
                     </kAutoComplete>
                     <kAutoComplete *ngIf="_upload.value === 2" formControlName="uploadOut"
-                                   field="screenName"
+                                   field="id"
                                    [tooltipResolver]="_groupsTooltipResolver"
                                    suggestionItemField="item"
                                    suggestionLabelField="name"
