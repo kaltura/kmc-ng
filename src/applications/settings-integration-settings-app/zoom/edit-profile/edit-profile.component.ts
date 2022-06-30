@@ -94,11 +94,11 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
     private _setInitialValue(profile: KalturaZoomIntegrationSetting): void {
         let optInGroupNames = [];
         if (profile.optInGroupNames) {
-            profile.optInGroupNames.split(this.groupsDelimiter).forEach(groupName => optInGroupNames.push({screenName: groupName}));
+            profile.optInGroupNames.split(this.groupsDelimiter).forEach(groupName => optInGroupNames.push({id: groupName}));
         }
         let optOutGroupNames = [];
         if (profile.optOutGroupNames) {
-            profile.optOutGroupNames.split(this.groupsDelimiter).forEach(groupName => optOutGroupNames.push({screenName: groupName}));
+            profile.optOutGroupNames.split(this.groupsDelimiter).forEach(groupName => optOutGroupNames.push({id: groupName}));
         }
         this._profileForm.setValue({
             enabled: profile.enableRecordingUpload === KalturaNullableBoolean.trueValue,
@@ -291,14 +291,14 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         this.profile.defaultUserId = formValue.defaultUserId.length ? formValue.defaultUserId[0].screenName : '';
         if (formValue.uploadIn.length) {
             let optInGroups = [];
-            formValue.uploadIn.forEach(group => optInGroups.push(group.screenName));
+            formValue.uploadIn.forEach(group => optInGroups.push(group.id));
             this.profile.optInGroupNames = optInGroups.join(this.groupsDelimiter);
         } else {
             this.profile.optInGroupNames = null;
         }
         if (formValue.uploadOut.length) {
             let optOutGroups = [];
-            formValue.uploadOut.forEach(group => optOutGroups.push(group.screenName));
+            formValue.uploadOut.forEach(group => optOutGroups.push(group.id));
             this.profile.optOutGroupNames = optOutGroups.join(this.groupsDelimiter);
         } else {
             this.profile.optOutGroupNames = null;
@@ -401,7 +401,8 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             new UserListAction(
                 {
                     filter: new KalturaUserFilter({
-                        typeEqual: KalturaUserType.group
+                        typeEqual: KalturaUserType.group,
+                        idOrScreenNameStartsWith: event.query.split(" ").join("_")
                     }),
                     pager: new KalturaFilterPager({
                         pageIndex: 0,
@@ -418,10 +419,10 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                     const profileGroups = options === 'optIn' ? this._uploadIn.value : this._uploadOut.value;
                     (data.objects || []).forEach((suggestedUser: KalturaUser) => {
                         const isSelectable = !profileGroups.find(group => {
-                            return group.screenName === suggestedUser.screenName;
+                            return group.id === suggestedUser.id;
                         });
                         suggestions.push({
-                            name: suggestedUser.screenName,
+                            name: suggestedUser.id === suggestedUser.screenName ? suggestedUser.id : `${suggestedUser.id} (${suggestedUser.screenName})`,
                             item: suggestedUser,
                             isSelectable
                         });
@@ -436,7 +437,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
     }
 
     public _groupsTooltipResolver = (value: any) => {
-        return value.screenName;
+        return value.id;
     };
 
     /* ---------------------------- groups auto complete code ends ------------------------- */
