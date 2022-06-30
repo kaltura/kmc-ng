@@ -1,3 +1,14 @@
+<a name="7.6.1"></a>
+## [7.6.1](https://github.com/kaltura/kmc-ng/compare/v7.6.0...v7.6.1) (2022-06-30)
+
+
+### Bug Fixes
+
+* **content/entry:** use playerWrapper to display entry preview + add preview context for internal logic + add live plugin to preview player SUP-33110 ([#1022](https://github.com/kaltura/kmc-ng/issues/1022)) ([9c92462](https://github.com/kaltura/kmc-ng/commit/9c92462))
+* **settings/integration/zoom:** use group id instead of group screen name for recording upload opt in / opt out settings SUP-32915 ([#1023](https://github.com/kaltura/kmc-ng/issues/1023)) ([9cff7b1](https://github.com/kaltura/kmc-ng/commit/9cff7b1))
+
+
+
 <a name="7.6.0"></a>
 # [7.6.0](https://github.com/kaltura/kmc-ng/compare/v7.5.1...v7.6.0) (2022-06-14)
 
