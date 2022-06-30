@@ -11,6 +11,7 @@
   <body>
   <script>
       let kPlayer = null;
+      const context = window.location.search.length && window.location.search.split("=").length ? window.location.search.split("=")[1] : null;
       window.addEventListener('message', (e) => {
           if (!e.data) {
               return;
@@ -69,13 +70,17 @@
                                           plugins: {
                                               kava: {
                                                   disable: true
-                                              }
+                                              },
                                           },
                                           provider: {
                                               ...JSON.parse(embedParams.embedParameters.playerConfig),
                                               partnerId: embedParams.embedParameters.partnerId,
                                               uiConfId: embedParams.embedParameters.uiconf_id
                                           }
+                                      };
+                                      // add live plugin for KMC preview only. Plugin is bundled into the player by default
+                                      if (context === "preview") {
+                                          Object.assign(playerOptions.plugins, {'kaltura-live': {}});
                                       };
                                       if (embedParams.embedParameters.poster.length) {
                                           Object.assign(playerOptions, {
@@ -106,7 +111,7 @@
               }
           }
       });
-      window.parent.postMessage({ 'messageType': 'init' }, window.location.origin);
+      window.parent.postMessage({ 'messageType': 'init', context }, window.location.origin);
   </script>
   </body>
 </html>

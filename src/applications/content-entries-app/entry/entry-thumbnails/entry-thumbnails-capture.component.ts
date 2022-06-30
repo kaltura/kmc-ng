@@ -15,7 +15,7 @@ export class EntryThumbnailCapture implements AfterContentInit, OnInit, OnDestro
 	@Input() entryId: string;
 	@Input() thumbnailUrl: string;
 	@Input() parentPopupWidget: PopupWidgetComponent;
-    @ViewChild('previewIframe') previewIframe: ElementRef;
+    @ViewChild('thumbPreviewIframe') previewIframe: ElementRef;
 
     serverUri = getKalturaServerUri();
     playerConfig: any;
@@ -81,8 +81,9 @@ export class EntryThumbnailCapture implements AfterContentInit, OnInit, OnDestro
 
     private showPreview(){
         setTimeout(() => { // use a timeout to allow the iframe to render before accessing its native element
+            window.removeEventListener('message', this.renderPlayer);
             window.addEventListener('message', this.renderPlayer);
-            const uri = serverConfig.externalApps.playerWrapper ? serverConfig.externalApps.playerWrapper.uri : '/public/playerWrapper.html';
+            const uri = serverConfig.externalApps.playerWrapper ? `${serverConfig.externalApps.playerWrapper.uri}?context=thumbnailCapture` : '/public/playerWrapper.html?context=thumbnailCapture';
             this.previewIframe.nativeElement.src = uri;
             this._generatedPreviewCode = this.generateV3code();
         }, 0);
