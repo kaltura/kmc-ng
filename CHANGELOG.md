@@ -1,3 +1,13 @@
+<a name="7.6.2"></a>
+## [7.6.2](https://github.com/kaltura/kmc-ng/compare/v7.6.1...v7.6.2) (2022-07-10)
+
+
+### Bug Fixes
+
+* **content/entry:** check live status with ks ([600a429](https://github.com/kaltura/kmc-ng/commit/600a429))
+
+
+
 <a name="7.6.1"></a>
 ## [7.6.1](https://github.com/kaltura/kmc-ng/compare/v7.6.0...v7.6.1) (2022-06-30)
 
