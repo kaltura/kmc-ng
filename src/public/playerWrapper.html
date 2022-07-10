@@ -80,7 +80,7 @@
                                       };
                                       // add live plugin for KMC preview only. Plugin is bundled into the player by default
                                       if (context === "preview") {
-                                          Object.assign(playerOptions.plugins, {'kaltura-live': {}});
+                                          Object.assign(playerOptions.plugins, {'kaltura-live': {"checkLiveWithKs": true}});
                                       };
                                       if (embedParams.embedParameters.poster.length) {
                                           Object.assign(playerOptions, {
