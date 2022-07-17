@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {KalturaClient} from 'kaltura-ngx-client';
+import {KalturaClient, KalturaFilterPager} from 'kaltura-ngx-client';
 import { KalturaMultiRequest, KalturaRequest, KalturaRequestBase } from 'kaltura-ngx-client';
 import {KalturaUserRoleFilter} from 'kaltura-ngx-client';
 import {KalturaUserRoleStatus} from 'kaltura-ngx-client';
@@ -9,7 +9,6 @@ import {KalturaUserStatus} from 'kaltura-ngx-client';
 import {UserRoleListAction} from 'kaltura-ngx-client';
 import {UserListAction} from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {KalturaPartner} from 'kaltura-ngx-client';
 import {PartnerGetInfoAction} from 'kaltura-ngx-client';
 import {PartnerUpdateAction} from 'kaltura-ngx-client';
@@ -63,10 +62,11 @@ export class SettingsAccountSettingsService {
     })
       .setDependency(['roleIdsEqual', 0, 'objects:0:id']);
 
+    const pager = new KalturaFilterPager({pageIndex : 0, pageSize: 500});
 
     const multiRequest = new KalturaMultiRequest(
-      new UserRoleListAction({filter: userRoleFilter}),
-      new UserListAction({filter: userFilter}),
+      new UserRoleListAction({pager, filter: userRoleFilter}),
+      new UserListAction({pager, filter: userFilter}),
       new PartnerGetInfoAction()
     );
 
