@@ -1,3 +1,12 @@
+<a name="7.6.3"></a>
+## [7.6.3](https://github.com/kaltura/kmc-ng/compare/v7.6.2...v7.6.3) (2022-07-10)
+
+
+### Bug Fixes
+
+* **settings/account-settings:** provide larger pager for users list api SUP-31005
+
+
 <a name="7.6.2"></a>
 ## [7.6.2](https://github.com/kaltura/kmc-ng/compare/v7.6.1...v7.6.2) (2022-07-10)
 
