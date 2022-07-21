@@ -88,7 +88,7 @@ export class CategoriesBulkAddTags implements OnInit, OnDestroy, AfterViewInit {
           tagFilter: new KalturaTagFilter(
             {
               tagStartsWith : event.query,
-              objectTypeEqual : KalturaTaggedObjectType.entry
+              objectTypeEqual : KalturaTaggedObjectType.category
             }
           ),
           pager: new KalturaFilterPager({
