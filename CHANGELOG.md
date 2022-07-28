@@ -1,3 +1,13 @@
+<a name="7.6.4"></a>
+## [7.6.4](https://github.com/kaltura/kmc-ng/compare/v7.6.3...v7.6.4) (2022-07-28)
+
+
+### Bug Fixes
+
+* **content/categories:** tag search type fix for bulk add tag action KMCNG-2451 ([ec38124](https://github.com/kaltura/kmc-ng/commit/ec38124))
+
+
+
 <a name="7.6.3"></a>
 ## [7.6.3](https://github.com/kaltura/kmc-ng/compare/v7.6.2...v7.6.3) (2022-07-10)
 
