@@ -1,3 +1,13 @@
+<a name="7.6.5"></a>
+## [7.6.5](https://github.com/kaltura/kmc-ng/compare/v7.6.4...v7.6.5) (2022-08-30)
+
+
+### Bug Fixes
+
+* **content/playlists:** use baseEntryList instead of playlistList action to support eSearch queries SUP-31434 ([#1027](https://github.com/kaltura/kmc-ng/issues/1027)) ([60b8776](https://github.com/kaltura/kmc-ng/commit/60b8776))
+
+
+
 <a name="7.6.4"></a>
 ## [7.6.4](https://github.com/kaltura/kmc-ng/compare/v7.6.3...v7.6.4) (2022-07-28)
 
