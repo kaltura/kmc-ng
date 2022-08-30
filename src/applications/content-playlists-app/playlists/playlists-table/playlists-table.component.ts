@@ -10,7 +10,7 @@ import {
     ViewChild
 } from '@angular/core';
 import {Menu} from 'primeng/menu';
-import {KalturaPlaylist} from 'kaltura-ngx-client';
+import {KalturaBaseEntry, KalturaPlaylist} from 'kaltura-ngx-client';
 import {KalturaEntryStatus} from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {globalConfig} from 'config/global';
@@ -153,7 +153,7 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
         this.selectedPlaylistsChange.emit(event);
     }
 
-    onActionSelected(action: string, playlist: KalturaPlaylist) {
+    onActionSelected(action: string, playlist: KalturaBaseEntry) {
         this.actionSelected.emit({'action': action, 'playlist': playlist});
     }
 

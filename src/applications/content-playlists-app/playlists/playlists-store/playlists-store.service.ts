@@ -1,32 +1,15 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Observable } from 'rxjs';
-import { throwError } from 'rxjs';
-import { ISubscription } from 'rxjs/Subscription';
-import { KalturaClient, KalturaPlaylistType } from 'kaltura-ngx-client';
-import { PlaylistListAction } from 'kaltura-ngx-client';
-import { KalturaPlaylistFilter } from 'kaltura-ngx-client';
-import { KalturaFilterPager } from 'kaltura-ngx-client';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client';
-import { PlaylistDeleteAction } from 'kaltura-ngx-client';
-import { KalturaPlaylist } from 'kaltura-ngx-client';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-shared';
-import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { KalturaSearchOperatorType } from 'kaltura-ngx-client';
-import { KalturaSearchOperator } from 'kaltura-ngx-client';
-import { StringTypeAdapter } from '@kaltura-ng/mc-shared';
-import { NumberTypeAdapter } from '@kaltura-ng/mc-shared';
-import { KalturaUtils } from '@kaltura-ng/kaltura-common';
-import { ContentPlaylistsMainViewService } from 'app-shared/kmc-shared/kmc-views';
-import { globalConfig } from 'config/global';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { KalturaPlaylistListResponse } from 'kaltura-ngx-client';
+import {Injectable, OnDestroy} from '@angular/core';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
+import {ISubscription} from 'rxjs/Subscription';
+import {BaseEntryListAction, KalturaBaseEntry, KalturaBaseEntryListResponse, KalturaClient, KalturaDetachedResponseProfile, KalturaEntryType, KalturaFilterPager, KalturaPlaylist, KalturaPlaylistFilter, KalturaPlaylistType, KalturaResponseProfileType, KalturaSearchOperator, KalturaSearchOperatorType, PlaylistDeleteAction} from 'kaltura-ngx-client';
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import {AppLocalization, DatesRangeAdapter, DatesRangeType, FiltersStoreBase, NumberTypeAdapter, StringTypeAdapter, TypeAdaptersMapping} from '@kaltura-ng/mc-shared';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {cancelOnDestroy, KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {ContentPlaylistsMainViewService} from 'app-shared/kmc-shared/kmc-views';
+import {globalConfig} from 'config/global';
 import {PlaylistsUtilsService} from "../../playlists-utils.service";
-import { map } from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 
 export enum SortDirection {
   Desc = -1,
@@ -43,7 +26,7 @@ export interface PlaylistsFilters {
   createdAt: DatesRangeType
 }
 
-export interface ExtendedPlaylist extends KalturaPlaylist {
+export interface ExtendedPlaylist extends KalturaBaseEntry {
     tooltip?: string;
     isRapt?: boolean;
     isPath?: boolean;
@@ -150,21 +133,21 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
   private _extendPlaylistsWithTooltipAndRapt(playlists: ExtendedPlaylist[]): ExtendedPlaylist[] {
       playlists.forEach(playlist => {
           const tags = playlist.tags ? playlist.tags.split(',').filter(item => !!item).map(item => item.trim()).join('\n') : null;
-          playlist.isRapt = this._playlistsUtilsService.isRapt(playlist);
-          playlist.isPath = this._playlistsUtilsService.isPath(playlist);
-          playlist.isManual = this._playlistsUtilsService.isManual(playlist);
-          playlist.isRuleBased = this._playlistsUtilsService.isRuleBased(playlist);
+          playlist.isRapt = this._playlistsUtilsService.isRapt(playlist as KalturaPlaylist);
+          playlist.isPath = this._playlistsUtilsService.isPath(playlist as KalturaPlaylist);
+          playlist.isManual = this._playlistsUtilsService.isManual(playlist as KalturaPlaylist);
+          playlist.isRuleBased = this._playlistsUtilsService.isRuleBased(playlist as KalturaPlaylist);
           playlist.tooltip = tags
               ? this._appLocalization.get('applications.content.table.nameTooltip', [playlist.name, tags])
               : playlist.name;
       });
       return playlists;
   }
-    private _buildQueryRequest(): Observable<KalturaPlaylistListResponse> {
+    private _buildQueryRequest(): Observable<KalturaBaseEntryListResponse> {
     try {
 
       // create request items
-      const filter = new KalturaPlaylistFilter({});
+      const filter = new KalturaPlaylistFilter({typeEqual: KalturaEntryType.playlist});
       let responseProfile: KalturaDetachedResponseProfile = null;
       let pager: KalturaFilterPager = null;
 
@@ -217,7 +200,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
         );
       }
 
-      let result: Observable<KalturaPlaylistListResponse> = null;
+      let result: Observable<KalturaBaseEntryListResponse> = null;
       // build the request
       if (filter.adminTagsMultiLikeOr) {
           // create multirequest for interactive videos list since we need to list both rapt and path
@@ -227,10 +210,10 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
           pathFilter.playListTypeEqual = KalturaPlaylistType.path;
 
           result = this._kalturaServerClient.multiRequest([
-              new PlaylistListAction({filter: pathFilter, pager}).setRequestOptions({
+              new BaseEntryListAction({filter: pathFilter, pager}).setRequestOptions({
                   responseProfile
               }),
-              new PlaylistListAction({filter, pager}).setRequestOptions({
+              new BaseEntryListAction({filter, pager}).setRequestOptions({
                   responseProfile
               }),
           ]).pipe(map(responses => {
@@ -247,7 +230,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       } else {
           // filter without interactive videos (dates or free text search)
           result = this._kalturaServerClient.request(
-              new PlaylistListAction({filter, pager}).setRequestOptions({
+              new BaseEntryListAction({filter, pager}).setRequestOptions({
                   responseProfile
               })
           );
