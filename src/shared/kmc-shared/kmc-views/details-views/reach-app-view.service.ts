@@ -71,9 +71,9 @@ export class ReachAppViewService extends KmcDetailsViewBaseService<ReachAppViewA
 
     public isRelevantEntry(entry: KalturaMediaEntry): boolean {
         if (entry) {
-            const isVideoAudio = entry.mediaType === KalturaMediaType.video || entry.mediaType === KalturaMediaType.audio;
+            const notImage = entry.mediaType !== KalturaMediaType.image;
             const isReady = entry.status === KalturaEntryStatus.ready;
-            return isReady && isVideoAudio;
+            return isReady && notImage;
         }
         return false;
     }

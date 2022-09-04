@@ -6,7 +6,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
-import { KalturaCaptionAssetStatus, KalturaCaptionType } from 'kaltura-ngx-client';
+import {KalturaCaptionAssetStatus, KalturaCaptionType, KalturaMediaType} from 'kaltura-ngx-client';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 
 import { EntryCaptionsWidget } from './entry-captions-widget.service';
@@ -31,6 +31,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
     public _captionStatusReady = KalturaCaptionAssetStatus.ready;
     public _captionStatusError = KalturaCaptionAssetStatus.error;
     public _requestCaptionsAvailable = false;
+    public _isLive = false;
 
     @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
     @ViewChild('editPopup', { static: true }) public editPopup: PopupWidgetComponent;
@@ -58,6 +59,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
             .pipe(cancelOnDestroy(this))
             .subscribe(entry => {
                 this._requestCaptionsAvailable = this._reachAppViewService.isAvailable({ page: ReachPages.entry, entry });
+                this._isLive = entry && this._isLiveMediaEntry(entry.mediaType);
             });
     }
 
@@ -82,6 +84,12 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
         }
     }
 
+    private _isLiveMediaEntry(mediaType: KalturaMediaType): boolean {
+        return mediaType === KalturaMediaType.liveStreamFlash ||
+            mediaType === KalturaMediaType.liveStreamWindowsMedia ||
+            mediaType === KalturaMediaType.liveStreamRealMedia ||
+            mediaType === KalturaMediaType.liveStreamQuicktime;
+    }
 
     private filterActions() {
         if (this._widgetService.currentCaption?.status === KalturaCaptionAssetStatus.error) {
