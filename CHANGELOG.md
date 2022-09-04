@@ -1,3 +1,13 @@
+<a name="7.7.0"></a>
+# [7.7.0](https://github.com/kaltura/kmc-ng/compare/v7.6.5...v7.7.0) (2022-09-04)
+
+
+### Features
+
+* **content/entries:** enable captions & enrich for live entries KMCNG-2456 ([#1028](https://github.com/kaltura/kmc-ng/issues/1028)) ([2366aa4](https://github.com/kaltura/kmc-ng/commit/2366aa4))
+
+
+
 <a name="7.6.5"></a>
 ## [7.6.5](https://github.com/kaltura/kmc-ng/compare/v7.6.4...v7.6.5) (2022-08-30)
 
