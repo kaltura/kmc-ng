@@ -1,3 +1,13 @@
+<a name="7.7.1"></a>
+## [7.7.1](https://github.com/kaltura/kmc-ng/compare/v7.7.0...v7.7.1) (2022-10-24)
+
+
+### Bug Fixes
+
+* **help:** fix broken link in contextual help KMCNG-2459 ([bb861e0](https://github.com/kaltura/kmc-ng/commit/bb861e0))
+
+
+
 <a name="7.7.0"></a>
 # [7.7.0](https://github.com/kaltura/kmc-ng/compare/v7.6.5...v7.7.0) (2022-09-04)
 
