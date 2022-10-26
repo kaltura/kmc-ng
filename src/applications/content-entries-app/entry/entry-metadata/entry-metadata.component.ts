@@ -191,8 +191,11 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 			    .subscribe(event => {
 				    if (event.state === PopupWidgetStates.Close) {
 					    if (event.context && event.context.isDirty){
-						   this._widgetService.setDirty();
-					    }
+						   setTimeout(()=> {
+                               this._widgetService.setDirty();
+                           }, 0);
+
+                        }
 				    }
 			    });
 	    }

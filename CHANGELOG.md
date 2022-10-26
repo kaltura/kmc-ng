@@ -5,6 +5,7 @@
 ### Bug Fixes
 
 * **help:** fix broken link in contextual help KMCNG-2459 ([bb861e0](https://github.com/kaltura/kmc-ng/commit/bb861e0))
+* **content/entry:** enable save button when selecting entry category from the categories tree selector PSVAMB-39092
 
 
 
