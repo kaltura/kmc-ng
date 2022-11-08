@@ -202,6 +202,7 @@ $kmc-flags-path: '../../styles/flags/';
     width: 100% !important;
     &.p-autocomplete-multiple-container.p-inputtext {
         height: 70px;
+        overflow: auto;
     }
 }
 :host ::ng-deep .kHighlightedText {
