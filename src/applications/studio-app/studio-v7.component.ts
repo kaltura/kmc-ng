@@ -18,6 +18,7 @@ export class StudioV7Component implements OnInit, OnDestroy {
 
   constructor(
         private _appEvents: AppEventsService, private logger: KalturaLogger,
+        private _appAuthentication: AppAuthentication,
         private _studioV7MainView: StudioV7MainViewService) {
   }
 
@@ -28,7 +29,8 @@ export class StudioV7Component implements OnInit, OnDestroy {
                    'updateList': (isPlaylist: boolean) => {
                        this._updatePlayers(isPlaylist);
                    }
-               }
+               },
+               'pid': this._appAuthentication.appUser.partnerId
            };
            this.studioUrl = serverConfig.externalApps.studioV7.uri;
        }
