@@ -1,3 +1,15 @@
+<a name="7.7.2"></a>
+## [7.7.2](https://github.com/kaltura/kmc-ng/compare/v7.7.1...v7.7.2) (2022-11-10)
+
+
+### Bug Fixes
+
+* **content/entry:** enable save button when selecting entry category from the categories tree selector PSVAMB-39092 ([e757026](https://github.com/kaltura/kmc-ng/commit/e757026))
+* **login:** update invalid password structure message KMCNG-2458 ([9cb68c0](https://github.com/kaltura/kmc-ng/commit/9cb68c0))
+* **studio:** support studio v7 FEV-1579 ([a4b9c84](https://github.com/kaltura/kmc-ng/commit/a4b9c84))
+
+
+
 <a name="7.7.1"></a>
 ## [7.7.1](https://github.com/kaltura/kmc-ng/compare/v7.7.0...v7.7.1) (2022-10-24)
 
