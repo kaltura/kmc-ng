@@ -10,6 +10,7 @@ import {
     ContentUploadsMainViewService,
     ContentBulkUploadsMainViewService,
     ContentDropFoldersMainViewService,
+    StudioV7MainViewService,
     StudioV3MainViewService,
     StudioV2MainViewService,
     UsageDashboardMainViewService,
@@ -63,6 +64,7 @@ export class KmcMainViewsService {
         private _contentDropFoldersMain: ContentDropFoldersMainViewService,
         private _studioV2Main: StudioV2MainViewService,
         private _studioV3Main: StudioV3MainViewService,
+        private _studioV7Main: StudioV7MainViewService,
         private _servicesDashboardMain: ServicesDashboardMainViewService,
         private _analyticsMainViewService: AnalyticsMainViewService,
         private _analyticsNewMainViewService: AnalyticsNewMainViewService,
@@ -187,6 +189,14 @@ export class KmcMainViewsService {
                         },
                         menuTitle: this._studioV3Main.getViewMetadata().menu
                     },
+                    {
+                        isAvailable: this._studioV7Main.isAvailable(),
+                        isActiveView:  (path) => this._studioV7Main.isActiveView(path),
+                        open: () => {
+                            this._studioV7Main.open();
+                        },
+                        menuTitle: this._studioV7Main.getViewMetadata().menu
+                    }
                 ]
             },
             {

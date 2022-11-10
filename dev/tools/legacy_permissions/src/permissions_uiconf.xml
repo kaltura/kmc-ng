@@ -590,6 +590,10 @@
         <permissionGroup id="FEATURE_V3_STUDIO_PERMISSION">
             <ui id="studio" showStudioV3="false"/>
         </permissionGroup>
+        <!-- studio v7 -->
+        <permissionGroup id="FEATURE_V7_STUDIO_PERMISSION">
+            <ui id="studio" showStudioV7="false"/>
+        </permissionGroup>
 
 
     </partnerPermissions>
