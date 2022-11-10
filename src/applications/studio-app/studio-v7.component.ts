@@ -15,6 +15,7 @@ import { StudioV7MainViewService } from 'app-shared/kmc-shared/kmc-views';
 export class StudioV7Component implements OnInit, OnDestroy {
 
   public studioUrl = '';
+  public iframeHeight = '920px';
 
   constructor(
         private _appEvents: AppEventsService, private logger: KalturaLogger,
@@ -30,7 +31,10 @@ export class StudioV7Component implements OnInit, OnDestroy {
                        this._updatePlayers(isPlaylist);
                    }
                },
-               'pid': this._appAuthentication.appUser.partnerId
+               'pid': this._appAuthentication.appUser.partnerId,
+               'updateView': (view: string) => {
+                   this.iframeHeight = view === 'list' ? '920px' : 'calc(100vh - 104px)';
+               }
            };
            this.studioUrl = serverConfig.externalApps.studioV7.uri;
        }
