@@ -20,6 +20,7 @@ export type EmbedConfig = {
     pid: number;
     serverUri: string;
     playerConfig: string;
+    isPlaylist?: boolean;
 }
 
 export type EmbedParams = {
@@ -28,7 +29,7 @@ export type EmbedParams = {
     scriptUrl?: string;
     htmlContent?: string;
     embedParameters?: any;
-
+    isPlaylist?: boolean;
 }
 
 @Injectable()
@@ -39,10 +40,10 @@ export class PreviewEmbedService {
 
 	listPlayers(isPlaylist: boolean = false): Observable<KalturaUiConfListResponse>{
 
-		const tags = isPlaylist ? 'playlist' : 'player';
+		const tags = isPlaylist ? 'playlist,kalturaPlayerJs' : 'player';
 
 		const filter = new KalturaUiConfFilter({
-			'tagsMultiLikeAnd': tags,
+			'tagsMultiLikeOr': tags,
 			'orderBy': '-updatedAt',
 			'objTypeIn': '1,8',
 			'creationModeEqual': 2
@@ -50,7 +51,7 @@ export class PreviewEmbedService {
 
 		const pager = new KalturaFilterPager({
 			'pageIndex': 1,
-			'pageSize': 999
+			'pageSize': 500
 		});
 
 		let responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
@@ -169,16 +170,19 @@ kWidget.thumbEmbed({
                     embedParameters = {targetId: `kaltura_player_${rnd}`, partnerId: config.pid, uiconf_id: config.uiConfId, entry_id: config.entryId, poster, playerConfig: config.playerConfig};
                     break;
                 case 'iframe':
-                    htmlContent = `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"></iframe>`;
+                    htmlContent = config.isPlaylist ? `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&playlist_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"></iframe>` :
+                        `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"></iframe>`;
                     break;
                 case 'auto':
-                    scriptUrl = `${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?autoembed=true&targetId=kaltura_player_${rnd}&entry_id=${config.entryId}${config.playerConfig}`;
+                    scriptUrl = config.isPlaylist ? `${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?autoembed=true&targetId=kaltura_player_${rnd}&playlist_id=${config.entryId}${config.playerConfig}` :
+                        `${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?autoembed=true&targetId=kaltura_player_${rnd}&entry_id=${config.entryId}${config.playerConfig}`;
                     htmlContent = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>`;
                     break;
             }
             return {
                 playerVersion: 7,
                 embedType: config.embedType,
+                isPlaylist: config.isPlaylist,
                 scriptUrl,
                 htmlContent,
                 embedParameters
@@ -188,7 +192,23 @@ kWidget.thumbEmbed({
             switch (config.embedType) {
                 case 'dynamic':
                 case 'thumb':
-                    code = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
+                    code = config.isPlaylist ? `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
+                    <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
+                    <script type="text/javascript">
+                    try {
+                      var kalturaPlayer = KalturaPlayer.setup({
+                        targetId: "kaltura_player_${rnd}",
+                        provider: {
+                          partnerId: ${config.pid},
+                          uiConfId: ${config.uiConfId}
+                        }
+                      });
+                      kalturaPlayer.loadPlaylist({playlistId: '${config.entryId}'});
+                    } catch (e) {
+                      console.error(e.message)
+                    }
+                  </script>`:
+                    `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
                     <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
                     <script type="text/javascript">
                     try {
@@ -206,10 +226,13 @@ kWidget.thumbEmbed({
                   </script>`;
                     break;
                 case 'iframe':
-                    code = `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"></iframe>`;
+                    code = config.isPlaylist ? `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&playlist_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"></iframe>` :
+                        `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"></iframe>`;
                     break;
                 case 'auto':
-                    code = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
+                    code = config.isPlaylist ? `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
+<script type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?autoembed=true&targetId=kaltura_player_${rnd}&playlist_id=${config.entryId}${config.playerConfig}'></script>` :
+                        `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
 <script type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?autoembed=true&targetId=kaltura_player_${rnd}&entry_id=${config.entryId}${config.playerConfig}'></script>`
                     break;
                 default:

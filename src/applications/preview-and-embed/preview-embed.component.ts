@@ -258,7 +258,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           height: uiConf.height,
           pid: this._appAuthentication.appUser.partnerId,
           serverUri: '',
-          playerConfig: ''
+          playerConfig: '',
+          isPlaylist: this.media instanceof KalturaPlaylist
       }
       let config = '';
       let poster = '';
@@ -412,6 +413,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
         url += '/uiconf_id/' + this._previewForm.controls['selectedPlayer'].value.uiConf.id;
         if (this.media instanceof KalturaMediaEntry) {
           url += '/entry_id/' + this.media.id;
+        } else {
+            url += '/playlist_id/' + this.media.id;
         }
         url += '/embed/' + this._previewForm.controls['selectedEmbedType'].value;
         if (this._selectedPlayerVersion === 2 ) {
