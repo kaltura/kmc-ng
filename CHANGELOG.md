@@ -4,10 +4,8 @@
 
 ### Bug Fixes
 
-* **content/entry:** enable save button when selecting entry category from the categories tree selector PSVAMB-39092 ([e757026](https://github.com/kaltura/kmc-ng/commit/e757026))
-* **login:** update invalid password structure message KMCNG-2458 ([9cb68c0](https://github.com/kaltura/kmc-ng/commit/9cb68c0))
 * **studio:** support studio v7 FEV-1579 ([a4b9c84](https://github.com/kaltura/kmc-ng/commit/a4b9c84))
-
+* **settings/access-control:** allow scrolling for domains field selection SUP-33042
 
 
 <a name="7.7.1"></a>
@@ -17,8 +15,8 @@
 ### Bug Fixes
 
 * **help:** fix broken link in contextual help KMCNG-2459 ([bb861e0](https://github.com/kaltura/kmc-ng/commit/bb861e0))
-* **content/entry:** enable save button when selecting entry category from the categories tree selector PSVAMB-39092
-* **login:** update invalid password structure message KMCNG-2458
+* **content/entry:** enable save button when selecting entry category from the categories tree selector PSVAMB-39092 ([e757026](https://github.com/kaltura/kmc-ng/commit/e757026))
+* **login:** update invalid password structure message KMCNG-2458 ([9cb68c0](https://github.com/kaltura/kmc-ng/commit/9cb68c0))
 
 
 
