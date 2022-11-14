@@ -16,6 +16,7 @@ export class StudioV7Component implements OnInit, OnDestroy {
 
   public studioUrl = '';
   public iframeHeight = '920px';
+  public currentView = 'list';
 
   constructor(
         private _appEvents: AppEventsService, private logger: KalturaLogger,
@@ -34,7 +35,8 @@ export class StudioV7Component implements OnInit, OnDestroy {
                'pid': this._appAuthentication.appUser.partnerId,
                'publisherEnvType': this._appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
                'updateView': (view: string) => {
-                   this.iframeHeight = view === 'list' ? '920px' : 'calc(100vh - 104px)';
+                   this.currentView = view;
+                   this.iframeHeight = view === 'list' ? '920px' : '100vh';
                }
            };
            this.studioUrl = serverConfig.externalApps.studioV7.uri;
