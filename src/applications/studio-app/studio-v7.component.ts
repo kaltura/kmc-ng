@@ -36,7 +36,7 @@ export class StudioV7Component implements OnInit, OnDestroy {
                'publisherEnvType': this._appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
                'updateView': (view: string) => {
                    this.currentView = view;
-                   this.iframeHeight = view === 'list' ? '920px' : '100vh';
+                   this.iframeHeight = view === 'list' ? '920px' : 'calc(100vh - 104px)';
                }
            };
            this.studioUrl = serverConfig.externalApps.studioV7.uri;
