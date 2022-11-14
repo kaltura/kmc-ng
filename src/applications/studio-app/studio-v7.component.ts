@@ -32,6 +32,7 @@ export class StudioV7Component implements OnInit, OnDestroy {
                    }
                },
                'pid': this._appAuthentication.appUser.partnerId,
+               'publisherEnvType': this._appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
                'updateView': (view: string) => {
                    this.iframeHeight = view === 'list' ? '920px' : 'calc(100vh - 104px)';
                }
