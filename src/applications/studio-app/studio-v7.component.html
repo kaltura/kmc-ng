@@ -1,4 +1,4 @@
 <div class="kStudio" [class.edit]="currentView === 'edit'">
-  <iframe *ngIf="studioUrl" frameborder="0" [src]="studioUrl | safe" [ngStyle]="{'height': iframeHeight}"></iframe>
+  <iframe #studioFrame frameborder="0" [src]="studioUrl | safe" [ngStyle]="{'height': iframeHeight}"></iframe>
 </div>
 

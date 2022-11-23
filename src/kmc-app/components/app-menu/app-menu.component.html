@@ -1,13 +1,13 @@
-<kSticky stickyId="header" [stickyClass]="'kStickyClass'">
+<kSticky stickyId="header" [stickyClass]="'kStickyClass'" [class.kHideMainMenu]="hideMainMenu">
     <div *ngIf="_showNotificationsBar" class="kNotificationsBar">
         <span class="notification" *ngIf="_isFreeTrial">{{'selfServe.trialExpired' | translate}}</span>
         <button *ngIf="_isFreeTrial" (click)="startPlan()" class="kButtonBranded kNotificationBtn" [disabled]="_connectingToKPF" pButton [label]="_connectingToKPF ? (('selfServe.connecting' | translate)) : ('selfServe.startPlan' | translate)"></button>
         <span class="notification" *ngIf="!_isFreeTrial">{{'selfServe.deactivated' | translate}}</span>
         <button *ngIf="!_isFreeTrial" (click)="updatePayment()" class="kButtonBranded kNotificationBtn" [disabled]="_connectingToKPF" pButton [label]="_connectingToKPF ? (('selfServe.connecting' | translate)) : ('selfServe.update' | translate)"></button>
     </div>
-    <div class="kMainMenuWrapper">
+    <div class="kMainMenuWrapper" [class.kHideMainMenu]="hideMainMenu">
         <kLazyModuleLoadingProgressBar></kLazyModuleLoadingProgressBar>
-        <div #appmenu class="appMenu">
+        <div #appmenu class="appMenu" [class.kHideMainMenu]="hideMainMenu">
 
             <div class="kIconkaltura_logo kLogo"></div>
 

@@ -16,7 +16,7 @@ import {ContextualHelpLink, ContextualHelpService} from 'app-shared/kmc-shared/c
 import {globalConfig} from 'config/global';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {AppEventsService} from 'app-shared/kmc-shared';
-import {ResetMenuEvent, UpdateMenuEvent} from 'app-shared/kmc-shared/events';
+import {HideMenuEvent, ResetMenuEvent, UpdateMenuEvent} from 'app-shared/kmc-shared/events';
 import {KalturaPartnerStatus} from "kaltura-ngx-client";
 import { KPFLoginRedirects, KPFService } from "app-shared/kmc-shell/providers/kpf.service";
 import {AppLocalization} from "@kaltura-ng/mc-shared";
@@ -53,6 +53,7 @@ export class AppMenuComponent implements OnInit, OnDestroy {
     public _isMultiAccount = false;
     public _appUserStatus: AppUserStatus = null;
     public _connectingToKPF = false;
+    public hideMainMenu = false;
 
     menuConfig: KMCAppMenuItem[];
     leftMenuConfig: KMCAppMenuItem[];
@@ -136,6 +137,13 @@ export class AppMenuComponent implements OnInit, OnDestroy {
                     return item.position === 'left';
                 });
                 this.replaceMenu('kmc', menu);
+            });
+
+        this._appEvents.event(HideMenuEvent)
+            .pipe(cancelOnDestroy(this))
+            .subscribe((event) => {
+                this.showSubMenu = false;
+                this.hideMainMenu = !event.onlySubMenu;
             });
 
     }

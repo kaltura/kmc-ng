@@ -250,7 +250,13 @@
         }
     }
 }
-
+.kHideMainMenu {
+    height: 0px;
+    overflow: hidden;
+}
+.kHideMainMenu::ng-deep .kStickyWrapper {
+    height: 0px !important;
+}
 .kStartPlan {
     margin-right: 8px;
     background: rgba(0,0,0,0.5);
