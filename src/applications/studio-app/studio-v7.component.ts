@@ -31,7 +31,9 @@ export class StudioV7Component implements OnInit, OnDestroy {
       window['kmc'] = {
           'preview_embed': {
               'updateList': (isPlaylist: boolean) => {
-                  this._appEvents.publish(new PlayersUpdatedEvent(isPlaylist));
+                  this._ngZone.run(() => {
+                      this._appEvents.publish(new PlayersUpdatedEvent(isPlaylist));
+                  });
               }
           },
           'pid': this._appAuthentication.appUser.partnerId,
