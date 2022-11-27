@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { serverConfig } from 'config/server';
@@ -23,6 +23,7 @@ export class StudioV7Component implements OnInit, OnDestroy {
   constructor(
         private _appEvents: AppEventsService, private logger: KalturaLogger,
         private _appAuthentication: AppAuthentication,
+        private _ngZone: NgZone,
         private _studioV7MainView: StudioV7MainViewService) {
   }
 
@@ -36,14 +37,16 @@ export class StudioV7Component implements OnInit, OnDestroy {
           'pid': this._appAuthentication.appUser.partnerId,
           'publisherEnvType': this._appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
           'updateView': (view: string) => {
-              this.currentView = view;
-              if (view === 'list') {
-                  this._appEvents.publish(new HideMenuEvent(true));
-                  this.iframeHeight = '920px';
-              } else {
-                  this._appEvents.publish(new HideMenuEvent(false));
-                  this.iframeHeight = '100vh';
-              }
+              this._ngZone.run(() => {
+                  this.currentView = view;
+                  if (view === 'list') {
+                      this._appEvents.publish(new HideMenuEvent(true));
+                      this.iframeHeight = '920px';
+                  } else {
+                      this._appEvents.publish(new HideMenuEvent(false));
+                      this.iframeHeight = '100vh';
+                  }
+              });
           }
       };
       this.studioUrl = serverConfig.externalApps.studioV7.uri;
