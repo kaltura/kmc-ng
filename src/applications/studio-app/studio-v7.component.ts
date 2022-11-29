@@ -53,7 +53,7 @@ export class StudioV7Component implements OnInit, OnDestroy {
       };
       this.studioUrl = serverConfig.externalApps.studioV7.uri;
 
-      // all commented out code is a placeholder to use postmessage communication instead of window vars to support unfriendly iframe (KMS)
+      // all commented out code is a placeholder to use postmessage communication instead of window vars to support unfriendly iframe (KMS, EP)
       /*
       const config = {
           'pid': this._appAuthentication.appUser.partnerId,
