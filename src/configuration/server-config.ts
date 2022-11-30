@@ -127,7 +127,8 @@ export interface ServerConfig {
             bulkUploadSamples?: string
         },
         live?: {
-            akamaiEdgeServerIpURL?: string
+            akamaiEdgeServerIpURL?: string,
+            lowLatency?: string
         }
     };
 }

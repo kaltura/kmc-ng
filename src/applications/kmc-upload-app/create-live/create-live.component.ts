@@ -41,7 +41,8 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
     liveDVR: false,
     enableRecording: this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM_RECORD),
     enableRecordingSelectedOption: KalturaRecordStatus.appended,
-    previewMode: false
+    previewMode: false,
+    lowLatency: false
   };
   public manualLiveData: ManualLive = {
     name: '',

@@ -492,6 +492,10 @@
                         "appended": "Append recorded content to a single entry"
                     },
                     "previewMode": "Preview Mode",
+                    "lowLatency": "Low Latency (Beta)",
+                    "lowLatencyHelp1": "Follow instructions on this",
+                    "lowLatencyHelp2": "Knowledge Center article",
+                    "lowLatencyHelp3": "to make sure Low Latency works correctly",
                     "errors": {
                         "required": "This field is required."
                     }
@@ -1880,6 +1884,7 @@
                     "dvrWindow": "DVR Window:",
                     "activeRec": "Recording:",
                     "previewMode": "Preview Mode:",
+                    "lowLatency": "Low Latency (Beta):",
                     "rtsp": "RTSP Broadcasting URLs",
                     "srt": "SRT Broadcasting URLs",
                     "primarySRTid": "Primary Stream ID:",

@@ -7,5 +7,6 @@ export interface KalturaLive {
   liveDVR: boolean,
   enableRecording: boolean,
   enableRecordingSelectedOption: KalturaRecordStatus,
-  previewMode: boolean
+  previewMode: boolean,
+  lowLatency: boolean
 }

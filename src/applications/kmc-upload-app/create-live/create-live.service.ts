@@ -32,6 +32,7 @@ export class CreateLiveService {
       name: data.name,
       application: KalturaEntryApplication.kmc,
       applicationVersion: globalConfig.client.appVersion,
+      adminTags: data.lowLatency ? 'lowlatency' : '',
       sourceVersion: 'create_live',
       description: data.description,
       recordStatus: data.enableRecording ? data.enableRecordingSelectedOption : KalturaRecordStatus.disabled,

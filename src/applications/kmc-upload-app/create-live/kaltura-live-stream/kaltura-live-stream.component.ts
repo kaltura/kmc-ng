@@ -8,6 +8,7 @@ import {BrowserService} from 'app-shared/kmc-shell';
 import {KalturaLive} from './kaltura-live-stream.interface';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {serverConfig} from "config/server";
 
 @Component({
     selector: 'kKalturaLiveStream',
@@ -119,7 +120,8 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
             liveDVR: false,
             enableRecording: [{value: false, disabled: !canRecordLive}],
             enableRecordingSelectedOption: [{value: '', disabled: true}],
-            previewMode: false
+            previewMode: false,
+            lowLatency: false
         });
 
         this._form
@@ -144,5 +146,9 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
     private _updateAreaBlockerState(isBusy: boolean, message: AreaBlockerMessage): void {
         this._isBusy = isBusy;
         this._blockerMessage = message;
+    }
+
+    public openLowLatencyLink(): void {
+        this._browserService.openLink(serverConfig.externalLinks.live.lowLatency);
     }
 }
