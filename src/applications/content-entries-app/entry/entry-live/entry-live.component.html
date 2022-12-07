@@ -167,7 +167,7 @@
                                    [disabled]="_kmcPermissions.LIVE_STREAM_UPDATE | kDisabledIfNotPermitted"
                                    (onChange)="_widgetService.setDirty()"
                                    [(ngModel)]="_widgetService._lowLatency"></p-inputSwitch>
-                    <span>{{_widgetService._explicitLive ? ( 'app.common.on' | translate) : ( 'app.common.off' | translate)}}</span>
+                    <span>{{_widgetService._lowLatency ? ( 'app.common.on' | translate) : ( 'app.common.off' | translate)}}</span>
                 </div>
             </div>
         </div>
