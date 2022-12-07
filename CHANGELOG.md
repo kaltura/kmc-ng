@@ -1,3 +1,13 @@
+<a name="7.8.0"></a>
+# [7.8.0](https://github.com/kaltura/kmc-ng/compare/v7.7.2...v7.8.0) (2022-12-07)
+
+
+### Features
+
+* **live:** support low latency streams (beta) KMCNG-2460 ([#1035](https://github.com/kaltura/kmc-ng/issues/1035)) ([87f6a88](https://github.com/kaltura/kmc-ng/commit/87f6a88))
+
+
+
 <a name="7.7.2"></a>
 ## [7.7.2](https://github.com/kaltura/kmc-ng/compare/v7.7.1...v7.7.2) (2022-11-10)
 
