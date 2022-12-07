@@ -9,6 +9,7 @@ import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { LiveAnalyticsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { KalturaLiveStreamEntry, KalturaSipSourceType } from 'kaltura-ngx-client';
 import { EntryStore } from "../entry-store.service";
+import {serverConfig} from "config/server";
 
 @Component({
     selector: 'kEntryLive',
@@ -18,6 +19,7 @@ import { EntryStore } from "../entry-store.service";
 export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
 	@ViewChild('liveAnalytics', { static: true }) _liveAnalytics: PopupWidgetComponent;
+	@ViewChild('lowLatencyHelp', { static: true }) _lowLatencyHelp: PopupWidgetComponent;
 
   public _kmcPermissions = KMCPermissions;
 	public _copyToClipboardTooltips: { success: string, failure: string, idle: string, notSupported: string } = null;
@@ -92,6 +94,10 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
             this._liveAnalytics.open();
         }
     }
+    public openLoaLatencyHelp(): void {
+        this._lowLatencyHelp.open();
+        this._lowLatencyHelp.popup.nativeElement.style.opacity = 1;
+    }
 
     public _generateSip(): void {
         if (this._selectedSipSource) {
@@ -109,6 +115,11 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
                     this._sipTokenError = true;
                 });
         }
+    }
+
+    public openLowLatencyLink(): void {
+        this._browserService.openLink(serverConfig.externalLinks.live.lowLatency);
+        this._lowLatencyHelp.close();
     }
 }
 

@@ -1,5 +1,5 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
-<form [formGroup]="_form" novalidate class="kContent">
+<form [formGroup]="_form" novalidate class="kContent" #popup>
   <section class="kFormContainer">
     <div class="kFormSection">
 
@@ -77,7 +77,27 @@
             </div>
         </div>
 
+        <div class="kRow">
+            <span class="kLabel kInputSwitchLabel">{{'applications.upload.prepareLive.kalturaStreamType.lowLatency' | translate}}</span>
+            <div class="kRequired"></div>
+            <div>
+                <p-inputSwitch class="kControl kInputSwitch" formControlName="lowLatency"></p-inputSwitch>
+                <span>{{_form.controls['lowLatency'].value ? ( 'app.common.on' | translate) : ( 'app.common.off' | translate)}}</span>
+                <i #helpTip class="kIconhelp_full kHelpTip"></i>
+            </div>
+        </div>
+
     </div>
   </section>
 </form>
 </k-area-blocker>
+
+<kPopupWidget data-aid="helpTip" [popupWidth]="410" [targetRef]="helpTip" [appendTo]="popup" [targetOffset]="{'x':0, 'y': 24}" [closeBtn]="false">
+    <div class="kTooltip">
+        <div class="content1">
+            <span>{{'applications.upload.prepareLive.kalturaStreamType.lowLatencyHelp1' | translate}}</span>
+            <a (click)="openLowLatencyLink()">{{'applications.upload.prepareLive.kalturaStreamType.lowLatencyHelp2' | translate}}</a>
+        </div>
+        <span>{{'applications.upload.prepareLive.kalturaStreamType.lowLatencyHelp3' | translate}}</span>
+    </div>
+</kPopupWidget>

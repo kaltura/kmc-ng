@@ -85,8 +85,10 @@
 			margin-bottom: 14px;
 		}
 		.kLabels{
+            display: flex;
+            align-items: center;
 			flex: 0 0 auto;
-			width: 150px;
+			width: 170px;
 		}
         .kSrtKey {
             white-space: nowrap;
@@ -197,6 +199,30 @@
 			color: $kDandger;
 			font-size: 13px;
 		}
+        .kHelpTip {
+            font-size: 15px;
+            margin-left: 8px;
+            cursor: pointer;
+            &:hover{
+                color: $kSecondary;
+            }
+        }
+        .kTooltip {
+            padding: 24px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            span, a {
+                white-space: nowrap;
+            }
+            .content1 {
+                display: flex;
+                margin-bottom: 4px;
+                a {
+                    margin-left: 4px;
+                }
+            }
+        }
 	}
 
 }

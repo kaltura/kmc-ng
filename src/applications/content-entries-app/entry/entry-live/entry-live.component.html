@@ -1,7 +1,7 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [bodyScroll]="true">
   <div class="kLive">
     <p class="kTitle">{{'applications.content.entryDetails.live.live' | translate}}</p>
-    <div class="kLiveDetails">
+    <div class="kLiveDetails" #details>
 
       <div *ngIf="_widgetService._liveType === 'kaltura'">
         <div>
@@ -156,6 +156,20 @@
               <span>{{_widgetService._explicitLive ? ( 'app.common.on' | translate) : ( 'app.common.off' | translate)}}</span>
             </div>
           </div>
+
+            <div class="kRow">
+                <div class="kLabels">
+                    <span>{{'applications.content.entryDetails.live.lowLatency' | translate}}</span>
+                    <i #helpTip class="kIconhelp_full kHelpTip" (click)="openLoaLatencyHelp()"></i>
+                </div>
+                <div>
+                    <p-inputSwitch class="kControl kInputSwitch"
+                                   [disabled]="_kmcPermissions.LIVE_STREAM_UPDATE | kDisabledIfNotPermitted"
+                                   (onChange)="_widgetService.setDirty()"
+                                   [(ngModel)]="_widgetService._lowLatency"></p-inputSwitch>
+                    <span>{{_widgetService._explicitLive ? ( 'app.common.on' | translate) : ( 'app.common.off' | translate)}}</span>
+                </div>
+            </div>
         </div>
 
 
@@ -299,6 +313,7 @@
           <span>{{config.url}}</span>
         </div>
       </div>
+        <span #anchor></span>
     </div>
   </div>
 </k-area-blocker>
@@ -313,4 +328,14 @@
     <ng-template>
         <kLiveDashboard [entryId]="_widgetService.data.id" [parentPopupWidget]="liveDashboard"></kLiveDashboard>
     </ng-template>
+</kPopupWidget>
+
+<kPopupWidget data-aid="helpTip" #lowLatencyHelp [popupWidth]="410" [appendTo]="details" [closeBtn]="false" [targetRef]="anchor" [targetOffset]="{'x': 158, 'y': -50}" [closeOnScroll]="true">
+    <div class="kTooltip">
+        <div class="content1">
+            <span>{{'applications.upload.prepareLive.kalturaStreamType.lowLatencyHelp1' | translate}}</span>
+            <a (click)="openLowLatencyLink()">{{'applications.upload.prepareLive.kalturaStreamType.lowLatencyHelp2' | translate}}</a>
+        </div>
+        <span>{{'applications.upload.prepareLive.kalturaStreamType.lowLatencyHelp3' | translate}}</span>
+    </div>
 </kPopupWidget>

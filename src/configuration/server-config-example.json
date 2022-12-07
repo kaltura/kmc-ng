@@ -42,7 +42,8 @@
             "bulkUploadSamples": "http://kmc.kaltura.com/content/docs/kaltura_batch_upload_sample.zip"
         },
         "live": {
-            "akamaiEdgeServerIpURL": "kalvodhds-i.akamaihd.net/serverIp"
+            "akamaiEdgeServerIpURL": "kalvodhds-i.akamaihd.net/serverIp",
+            "lowLatency": "https://knowledge.kaltura.com/help/low-latency-streaming-guidelines"
         }
     }
 }

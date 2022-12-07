@@ -56,6 +56,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	public _showDVRWindow: boolean = false;
 	public _dvrWindowAvailable: boolean = false;
 	public _explicitLive: boolean = true;
+	public _lowLatency: boolean = false;
 	public _srtKey: string = '';
 	public _liveDashboardEnabled: boolean = false;
 
@@ -85,6 +86,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		this._dvrWindowAvailable = false;
 		this._selectedConversionProfile = null;
 		this._explicitLive = true;
+		this._lowLatency = false;
 		this._srtKey = "";
 		this._manualStreamsConfiguration = [];
 		this._bitrates = [];
@@ -108,10 +110,32 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		}
 		if (this._liveType === "kaltura") {
 			(data as KalturaLiveStreamEntry).explicitLive = this._explicitLive ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
+			(data as KalturaLiveStreamEntry).adminTags = this.getAdminTags(data.adminTags || '');
 			(data as KalturaLiveStreamEntry).srtPass = this._srtKey === '' ? null : this._srtKey;
 			(data as KalturaLiveStreamEntry).conversionProfileId = this._selectedConversionProfile;
 		}
 	}
+
+    private getAdminTags(tags: string): string {
+        if (this._lowLatency) {
+            if (tags.indexOf('lowlatency') === -1) {
+                if (tags === '') {
+                    tags = 'lowlatency';
+                } else {
+                    tags += ',lowlatency';
+                }
+            }
+        } else {
+            if (tags.indexOf('lowlatency') > -1) {
+                if (tags.indexOf(',lowlatency') !== -1) {
+                    tags = tags.replace(',lowlatency','');
+                } else {
+                    tags = tags.replace('lowlatency', '');
+                }
+            }
+        }
+        return tags;
+    }
 
     public onSrtPassChange(): void {
         if (this._srtKey.length > 9 && this._srtKey.length < 80){
@@ -221,6 +245,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 			}
 		}
 		this._explicitLive = entry.explicitLive === KalturaNullableBoolean.trueValue;
+		this._lowLatency = entry.adminTags && entry.adminTags.indexOf('lowlatency') > -1;
         this._srtKey = entry.srtPass;
 	}
 
