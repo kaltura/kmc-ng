@@ -413,13 +413,12 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
         url += '/uiconf_id/' + this._previewForm.controls['selectedPlayer'].value.uiConf.id;
         if (this.media instanceof KalturaMediaEntry) {
           url += '/entry_id/' + this.media.id;
+        } else if (this.media instanceof KalturaPlaylist && this._selectedPlayerVersion === 3) {
+          url += '/playlist_id/' + this.media.id;
         }
         url += '/embed/' + this._previewForm.controls['selectedEmbedType'].value;
         if (this._selectedPlayerVersion === 2 ) {
             url += '?' + this.flashVarsToUrl(this.getEmbedFlashVars(false));
-        }
-        if (this.media instanceof KalturaPlaylist && this._selectedPlayerVersion === 3) {
-            url += '?isPlaylist=true';
         }
         this._previewLink = url;
       } catch (e){
