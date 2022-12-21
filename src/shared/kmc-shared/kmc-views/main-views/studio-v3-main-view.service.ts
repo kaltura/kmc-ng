@@ -30,7 +30,7 @@ export class StudioV3MainViewService extends KmcMainViewBaseService {
             KMCPermissions.STUDIO_UPDATE_UICONF,
             KMCPermissions.STUDIO_DELETE_UICONF,
         ]);
-        const studioHtmlIsAvailable = !!serverConfig.externalApps.studioV3;
+        const studioHtmlIsAvailable = !!serverConfig.externalApps.studioV7;
         const studioHtmlIsPermitted = this._appPermissions.hasPermission(KMCPermissions.FEATURE_V3_STUDIO_PERMISSION);
 
         this._logger.info(`handle isAvailable action by user`,
@@ -40,14 +40,14 @@ export class StudioV3MainViewService extends KmcMainViewBaseService {
     }
 
     getRoutePath(): string {
-        return 'studio/v3';
+        return 'studio/v7';
     }
 
     getViewMetadata(): ViewMetadata {
         return {
             viewKey: 'studio-v3',
-            title: this._appLocalization.get('app.titles.studioV3PageTitle'),
-            menu: this._appLocalization.get('app.titles.studio3MenuTitle')
+            title: this._appLocalization.get('app.titles.studioV7PageTitle'),
+            menu: this._appLocalization.get('app.titles.studio7MenuTitle')
         };
     }
 }
