@@ -40,7 +40,7 @@ export class StudioV3MainViewService extends KmcMainViewBaseService {
     }
 
     getRoutePath(): string {
-        return 'studio/v7';
+        return 'studio/v3';
     }
 
     getViewMetadata(): ViewMetadata {
