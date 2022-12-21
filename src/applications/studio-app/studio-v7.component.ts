@@ -1,10 +1,9 @@
-import {ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
+import { Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { AppAuthentication } from 'app-shared/kmc-shell';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import {HideMenuEvent, PlayersUpdatedEvent} from 'app-shared/kmc-shared/events';
-import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { StudioV7MainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
