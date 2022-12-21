@@ -1,3 +1,19 @@
+<a name="7.9.0"></a>
+# [7.9.0](https://github.com/kaltura/kmc-ng/compare/v7.8.0...v7.9.0) (2022-12-21)
+
+
+### Bug Fixes
+
+* **share&embed:** support v7 players for playlists KMCNG-2464 ([#1031](https://github.com/kaltura/kmc-ng/issues/1031)) ([5148b19](https://github.com/kaltura/kmc-ng/commit/5148b19))
+
+
+### Features
+
+* **settings/integration:** integration screen for Webex - KMCNG-2461 ([#1039](https://github.com/kaltura/kmc-ng/issues/1039)) ([f27a4d1](https://github.com/kaltura/kmc-ng/commit/f27a4d1))
+* **studio:** new Kaltura player studio ([d4882b1](https://github.com/kaltura/kmc-ng/commit/d4882b1))
+
+
+
 <a name="7.8.0"></a>
 # [7.8.0](https://github.com/kaltura/kmc-ng/compare/v7.7.2...v7.8.0) (2022-12-07)
 
