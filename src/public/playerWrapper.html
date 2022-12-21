@@ -90,7 +90,11 @@
                                           })
                                       }
                                       kPlayer = window['KalturaPlayer'].setup(playerOptions);
-                                      kPlayer['loadMedia']({ entryId: embedParams.embedParameters.entry_id });
+                                      if (embedParams.isPlaylist === true) {
+                                          kPlayer['loadPlaylist']({playlistId: embedParams.embedParameters.entry_id});
+                                      } else {
+                                          kPlayer['loadMedia']({entryId: embedParams.embedParameters.entry_id});
+                                      }
                                   } catch (e) {
                                       console.error(e.message)
                                   }
