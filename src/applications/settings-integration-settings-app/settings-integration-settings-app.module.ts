@@ -22,6 +22,7 @@ import { MenuModule } from 'primeng/menu';
 import { DistributionComponent } from "./distribution/distribution.component";
 import { ProfilesTableComponent } from "./distribution/profiles-table/profiles-table.component";
 import { ZoomComponent } from "./zoom/zoom.component";
+import { WebexComponent } from "./webex/webex.component";
 import { ZoomProfilesTableComponent } from "./zoom/profiles-table/profiles-table.component";
 import { GenerateCodeComponent } from "./zoom/generate-code/generate-code.component";
 import { InputTextareaModule } from 'primeng/inputtextarea';
@@ -29,6 +30,9 @@ import { EditZoomProfileComponent } from "./zoom/edit-profile/edit-profile.compo
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { WebexProfilesTableComponent } from "./webex/profiles-table/profiles-table.component";
+import { WebexGenerateCodeComponent } from "./webex/generate-code/generate-code.component";
+import { EditWebexProfileComponent } from "./webex/edit-profile/edit-profile.component";
 
 @NgModule({
   imports: [
@@ -63,8 +67,12 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
     EditEntitlementComponent,
     DistributionComponent,
     ZoomComponent,
+    WebexComponent,
     ProfilesTableComponent,
     ZoomProfilesTableComponent,
+    WebexProfilesTableComponent,
+    WebexGenerateCodeComponent,
+    EditWebexProfileComponent,
     GenerateCodeComponent,
     EditZoomProfileComponent
   ]

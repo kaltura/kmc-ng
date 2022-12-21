@@ -1,0 +1,13 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+    <div class="kContainer">
+        <div class="kTitle">{{'applications.settings.integrationSettings.zoom.codeTitle' | translate}}</div>
+        <div class="kCode">
+            <span>{{'applications.settings.integrationSettings.webex.code' | translate}}</span>
+            <textarea #code class="kCodeText" disabled pInputTextarea>{{_code}}</textArea>
+        </div>
+        <div class="kFooter">
+            <button type="button" class="kButtonDefault" (click)="close()" pButton label="{{'app.common.cancel' | translate}}"></button>
+            <button [disabled]="code.value.length === 0" type="button" class="kButtonBranded" (click)="copyCode(code)" pButton label="{{'applications.settings.integrationSettings.zoom.copy' | translate}}"></button>
+        </div>
+    </div>
+</k-area-blocker>

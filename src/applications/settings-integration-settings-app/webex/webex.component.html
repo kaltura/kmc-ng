@@ -1,0 +1,30 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+    <div class="kContainer">
+        <div class="kTitle">
+            <span>{{'applications.settings.integrationSettings.webex.title' | translate}}</span>
+        </div>
+        <div class="kGenerateCode">
+            <button type="button" class="kButtonDefault" (click)="integrationCodePopup.open()" pButton
+                    label="{{'applications.settings.integrationSettings.zoom.generate' | translate}}"></button>
+        </div>
+        <div class="kExplanation">{{'applications.settings.integrationSettings.webex.explanation' | translate}}</div>
+      <div class="tableHolder">
+          <kWebexProfilesTable [_profiles]="_profiles" (onActionSelected)="_onActionSelected($event)"></kWebexProfilesTable>
+      </div>
+      <span *ngIf="totalCount > maxAccountsAllowed" class="kNote">{{'applications.settings.integrationSettings.webex.note' | translate:{'0': maxAccountsAllowed} }}</span>
+    </div>
+</k-area-blocker>
+
+<kPopupWidget #integrationCodePopup data-aid="integrationCodePopup" [popupWidth]="380" [popupHeight]="320" [modal]="true" [preventPageScroll]="true" [closeOnClickOutside]="false">
+    <ng-template>
+        <kWebexGenerateCode (onClose)="integrationCodePopup.close()"></kWebexGenerateCode>
+    </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #editProfile data-aid="editProfile" [popupWidth]="995" [slider]="true">
+    <ng-template>
+        <kWebexEditProfile [profile]="_currentProfile" [parentPopup]="editProfile" (onSave)="saveProfile($event)"></kWebexEditProfile>
+    </ng-template>
+</kPopupWidget>
+
+
