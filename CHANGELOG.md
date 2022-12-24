@@ -9,7 +9,6 @@
 
 ### Features
 
-* **settings/integration:** integration screen for Webex - KMCNG-2461 ([#1039](https://github.com/kaltura/kmc-ng/issues/1039)) ([f27a4d1](https://github.com/kaltura/kmc-ng/commit/f27a4d1))
 * **studio:** new Kaltura player studio ([d4882b1](https://github.com/kaltura/kmc-ng/commit/d4882b1))
 
 
