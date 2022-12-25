@@ -3,8 +3,8 @@ import { AppAuthentication } from 'app-shared/kmc-shell';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import {HideMenuEvent, PlayersUpdatedEvent} from 'app-shared/kmc-shared/events';
-import { StudioV7MainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { HideMenuEvent, PlayersUpdatedEvent } from 'app-shared/kmc-shared/events';
+import { StudioV3MainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kStudioV7',
@@ -23,34 +23,36 @@ export class StudioV7Component implements OnInit, OnDestroy {
         private _appEvents: AppEventsService, private logger: KalturaLogger,
         private _appAuthentication: AppAuthentication,
         private _ngZone: NgZone,
-        private _studioV7MainView: StudioV7MainViewService) {
+        private _studioV3MainView: StudioV3MainViewService) {
   }
 
   ngOnInit() {
-      window['kmc'] = {
-          'preview_embed': {
-              'updateList': (isPlaylist: boolean) => {
+      if (this._studioV3MainView.viewEntered()) {
+          window['kmc'] = {
+              'preview_embed': {
+                  'updateList': (isPlaylist: boolean) => {
+                      this._ngZone.run(() => {
+                          this._appEvents.publish(new PlayersUpdatedEvent(isPlaylist));
+                      });
+                  }
+              },
+              'pid': this._appAuthentication.appUser.partnerId,
+              'publisherEnvType': this._appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
+              'updateView': (view: string) => {
                   this._ngZone.run(() => {
-                      this._appEvents.publish(new PlayersUpdatedEvent(isPlaylist));
+                      this.currentView = view;
+                      if (view === 'list') {
+                          this._appEvents.publish(new HideMenuEvent(true));
+                          this.iframeHeight = '920px';
+                      } else {
+                          this._appEvents.publish(new HideMenuEvent(false));
+                          this.iframeHeight = '100vh';
+                      }
                   });
               }
-          },
-          'pid': this._appAuthentication.appUser.partnerId,
-          'publisherEnvType': this._appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
-          'updateView': (view: string) => {
-              this._ngZone.run(() => {
-                  this.currentView = view;
-                  if (view === 'list') {
-                      this._appEvents.publish(new HideMenuEvent(true));
-                      this.iframeHeight = '920px';
-                  } else {
-                      this._appEvents.publish(new HideMenuEvent(false));
-                      this.iframeHeight = '100vh';
-                  }
-              });
-          }
-      };
-      this.studioUrl = serverConfig.externalApps.studioV7.uri;
+          };
+          this.studioUrl = serverConfig.externalApps.studioV7.uri;
+      }
 
       // all commented out code is a placeholder to use postmessage communication instead of window vars to support unfriendly iframe (KMS, EP)
       /*
