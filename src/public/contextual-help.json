@@ -372,8 +372,8 @@
         "viewKey": "studio-v3",
         "links": [
             {
-                "value": "https://knowledge.kaltura.com/help/kaltura-tv-platform-studio-information-guide",
-                "label": "Kaltura TV Platform Studio Information Guide"
+                "value": "https://knowledge.kaltura.com/help/player-v7",
+                "label": "Kaltura Player Studio"
             }
         ]
     },
