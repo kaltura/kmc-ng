@@ -645,6 +645,7 @@
                 "moveCategory": "Move Category",
                 "cancel": "Cancel",
                 "addServiceRule": "Add Service Rule",
+                "export": "Export Categories",
                 "bActions": {
                     "addRemoveTags": "Add / Remove Tags",
                     "addTags": "Add Tags",
@@ -652,7 +653,7 @@
                     "removeTags": "Remove Tags",
                     "removeTagsLabel": "Select the tags you want to remove from the selected categories.",
                     "noTagsToRemove": "No tags to remove",
-          "moveCategories": "Move Categories",
+                    "moveCategories": "Move Categories",
                     "changeContentPrivacy": "Change Content Privacy",
                     "changeContentPrivacyLabel": "Change the Content Privacy settings for all selected categories.",
                     "changeCategoryListing": "Change Category Listing",

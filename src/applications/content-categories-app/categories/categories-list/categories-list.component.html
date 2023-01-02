@@ -41,6 +41,8 @@
               <i class="kIcondropdown_arrow_bottom dropdown"></i>
             </div>
           </div>
+          <button pButton class="kButtonDefault kExportBtn" (click)="_export()" type="text"
+                  [label]="'applications.content.entryDetails.distribution.export' | translate"></button>
           <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh"
                   [kTooltip]="'applications.content.categories.refresh' | translate"></button>
         </div>
