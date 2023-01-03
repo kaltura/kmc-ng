@@ -443,4 +443,8 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
             this._contentCategoryView.open({ category, section: ContentCategoryViewSections.Metadata });
         }
     }
+
+    public _export(): void {
+        this._categoriesService.export();
+    }
 }
