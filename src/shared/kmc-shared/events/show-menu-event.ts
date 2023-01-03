@@ -1,9 +1,9 @@
 import {AppEvent} from 'app-shared/kmc-shared/app-events/app-event';
 
-export class HideMenuEvent extends AppEvent {
+export class ShowMenuEvent extends AppEvent {
 
     constructor()
     {
-        super('HidedMenuEvent');
+        super('ShowMenuEvent');
     }
 }

@@ -16,7 +16,7 @@ import {ContextualHelpLink, ContextualHelpService} from 'app-shared/kmc-shared/c
 import {globalConfig} from 'config/global';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {AppEventsService} from 'app-shared/kmc-shared';
-import {HideMenuEvent, ResetMenuEvent, UpdateMenuEvent} from 'app-shared/kmc-shared/events';
+import {HideMenuEvent, ShowMenuEvent, ResetMenuEvent, UpdateMenuEvent} from 'app-shared/kmc-shared/events';
 import {KalturaPartnerStatus} from "kaltura-ngx-client";
 import { KPFLoginRedirects, KPFService } from "app-shared/kmc-shell/providers/kpf.service";
 import {AppLocalization} from "@kaltura-ng/mc-shared";
@@ -142,8 +142,15 @@ export class AppMenuComponent implements OnInit, OnDestroy {
         this._appEvents.event(HideMenuEvent)
             .pipe(cancelOnDestroy(this))
             .subscribe((event) => {
-                this.showSubMenu = !event.onlySubMenu;
-                this.hideMainMenu = !event.onlySubMenu;
+                this.showSubMenu = false;
+                this.hideMainMenu = true;
+            });
+
+        this._appEvents.event(ShowMenuEvent)
+            .pipe(cancelOnDestroy(this))
+            .subscribe((event) => {
+                this.showSubMenu = true;
+                this.hideMainMenu = false;
             });
 
     }

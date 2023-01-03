@@ -9,3 +9,4 @@ export { CaptionRequestEvent } from './caption-request-event';
 export { ResetMenuEvent } from './reset-menu-event';
 export { UpdateMenuEvent } from './update-menu-event';
 export { HideMenuEvent } from './hide-menu-event';
+export { ShowMenuEvent } from './show-menu-event';
