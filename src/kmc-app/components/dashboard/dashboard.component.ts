@@ -3,6 +3,7 @@ import { AppAuthentication, AppShellService, BrowserService, PartnerPackageTypes
 import {buildCDNUrl, buildDeployUrl, serverConfig} from 'config/server';
 import * as $ from 'jquery';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'kKMCDashboard',
@@ -21,7 +22,10 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   public _studioPlayerReady = false;
   private onResize : () => void;
 
-  constructor(private appShellService : AppShellService, private appAuthentication: AppAuthentication, private _browserService: BrowserService) {
+  constructor(private appShellService : AppShellService,
+              private appAuthentication: AppAuthentication,
+              private _browserService: BrowserService,
+              private _router: Router) {
       this.onResize = this._resizeContent.bind(this);
   }
 
@@ -47,7 +51,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   private _showStudioPromo(): void {
       const isSelfserve = this.appAuthentication.appUser.partnerInfo.isSelfServe;
       const studioPromoShown = this._browserService.getFromLocalStorage('studioPromoShown') || false;
-      if (!isSelfserve && studioPromoShown){
+      if (!isSelfserve && !studioPromoShown){
           setTimeout(()=>{
               this._browserService.setInLocalStorage('studioPromoShown',true);
               this._studioPromo.open();
@@ -55,14 +59,15 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       }
   }
 
-  public onStudioPlayerReady(): void {
-      setTimeout(() => {
+  public onStudioPlayerReady(player: any): void {
+      player.addEventListener(player.Event.Core.FIRST_PLAY, event => {
           this._studioPlayerReady = true;
-      }, 1000);
+      });
   }
 
   public navigateToStudio(): void {
       this._studioPromo.close();
+      this._router.navigateByUrl('/studio/v3');
   }
 
     closeWin():void{
