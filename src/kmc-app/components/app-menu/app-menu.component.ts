@@ -150,6 +150,9 @@ export class AppMenuComponent implements OnInit, OnDestroy {
             .pipe(cancelOnDestroy(this))
             .subscribe((event) => {
                 this.showSubMenu = true;
+                if (this.menuConfig) {
+                    this.showSubMenu = this.selectedMenuItem && this.selectedMenuItem.children && this.selectedMenuItem.children.length > 1;
+                }
                 this.hideMainMenu = false;
             });
 
