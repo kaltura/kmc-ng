@@ -174,14 +174,6 @@ export class KmcMainViewsService {
                 position: 'left',
                 children: [
                     {
-                        isAvailable: this._studioV2Main.isAvailable(),
-                        isActiveView:  (path) => this._studioV2Main.isActiveView(path),
-                        open: () => {
-                            this._studioV2Main.open();
-                        },
-                        menuTitle: this._studioV2Main.getViewMetadata().menu
-                    },
-                    {
                         isAvailable: this._studioV3Main.isAvailable(),
                         isActiveView:  (path) => this._studioV3Main.isActiveView(path),
                         open: () => {
@@ -190,12 +182,12 @@ export class KmcMainViewsService {
                         menuTitle: this._studioV3Main.getViewMetadata().menu
                     },
                     {
-                        isAvailable: this._studioV7Main.isAvailable(),
-                        isActiveView:  (path) => this._studioV7Main.isActiveView(path),
+                        isAvailable: this._studioV2Main.isAvailable(),
+                        isActiveView:  (path) => this._studioV2Main.isActiveView(path),
                         open: () => {
-                            this._studioV7Main.open();
+                            this._studioV2Main.open();
                         },
-                        menuTitle: this._studioV7Main.getViewMetadata().menu
+                        menuTitle: this._studioV2Main.getViewMetadata().menu
                     }
                 ]
             },
