@@ -1,3 +1,14 @@
+<a name="7.10.0"></a>
+# [7.10.0](https://github.com/kaltura/kmc-ng/compare/v7.9.0...v7.10.0) (2023-01-03)
+
+
+### Features
+
+* **content/categories:** export categories to csv - KMCNG-2440 ([#1041](https://github.com/kaltura/kmc-ng/issues/1041)) ([d5730ca](https://github.com/kaltura/kmc-ng/commit/d5730ca))
+* **settings/integration:** integration screen for Webex - KMCNG-2461 ([b8f0fac](https://github.com/kaltura/kmc-ng/commit/b8f0fac))
+
+
+
 <a name="7.9.0"></a>
 # [7.9.0](https://github.com/kaltura/kmc-ng/compare/v7.8.0...v7.9.0) (2022-12-21)
 
