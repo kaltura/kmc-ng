@@ -3,6 +3,7 @@ import { AppAuthentication, AppShellService, BrowserService, PartnerPackageTypes
 import {buildCDNUrl, buildDeployUrl, serverConfig} from 'config/server';
 import * as $ from 'jquery';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'kKMCDashboard',
@@ -12,14 +13,19 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('appMenu', { static: true }) private _appMenuRef : any;
   @ViewChild('whatsNew', { static: true }) private _whatsNewWin : PopupWidgetComponent;
+  @ViewChild('studioPromo', { static: true }) private _studioPromo : PopupWidgetComponent;
 
   public _uiconf = serverConfig.kalturaServer.previewUIConfV7;
   public _entryId = '1_rickx95w';
   public _pid = '811441';
   public _cdnUrl = buildCDNUrl("");
+  public _studioPlayerReady = false;
   private onResize : () => void;
 
-  constructor(private appShellService : AppShellService, private appAuthentication: AppAuthentication, private _browserService: BrowserService) {
+  constructor(private appShellService : AppShellService,
+              private appAuthentication: AppAuthentication,
+              private _browserService: BrowserService,
+              private _router: Router) {
       this.onResize = this._resizeContent.bind(this);
   }
 
@@ -42,6 +48,27 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
           },200);
       }
   }
+  private _showStudioPromo(): void {
+      const isSelfserve = this.appAuthentication.appUser.partnerInfo.isSelfServe;
+      const studioPromoShown = this._browserService.getFromLocalStorage('studioPromoShown') || false;
+      if (!isSelfserve && !studioPromoShown){
+          setTimeout(()=>{
+              this._browserService.setInLocalStorage('studioPromoShown',true);
+              this._studioPromo.open();
+          },200);
+      }
+  }
+
+  public onStudioPlayerReady(player: any): void {
+      player.addEventListener(player.Event.Core.FIRST_PLAY, event => {
+          this._studioPlayerReady = true;
+      });
+  }
+
+  public navigateToStudio(): void {
+      this._studioPromo.close();
+      this._router.navigateByUrl('/studio/v3');
+  }
 
     closeWin():void{
         this._whatsNewWin.close();
@@ -52,6 +79,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     $(window).bind('resize', this.onResize); // We bind the event to a function reference that proxy 'actual' this inside
     this._resizeContent();
     this._showWhatsNew();
+    this._showStudioPromo();
   }
 
   ngOnInit() {

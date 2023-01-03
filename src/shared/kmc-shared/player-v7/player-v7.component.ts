@@ -35,6 +35,12 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
 	muted = false;
 
 	@Input()
+	isPlaylist = false;
+
+	@Input()
+	loopPlaylist = false;
+
+	@Input()
 	id = "";
 
 	@Input()
@@ -83,28 +89,41 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
 
 	private doEmbed():void {
         try {
-          const kalturaPlayer = window["KalturaPlayer"].setup({
-            targetId: "kaltura_player_" + this.id,
-            plugins: {
-                kava: {
-                    disable: true
+            let config = {
+                targetId: "kaltura_player_" + this.id,
+                plugins: {
+                    kava: {
+                        disable: true
+                    },
+                    ivq: {},
+                    kalturaCuepoints: {},
+                    "kaltura-live": {}
                 },
-                ivq: {},
-                kalturaCuepoints: {},
-                "kaltura-live": {}
-            },
-            provider: {
-              ks: this.ks,
-              partnerId: this.pid,
-              uiConfId: this.uiconfid
-            },
-            playback: {
-              autoplay: this.autoPlay,
-              muted: this.muted
+                provider: {
+                    ks: this.ks,
+                    partnerId: this.pid,
+                    uiConfId: this.uiconfid
+                },
+                playback: {
+                    autoplay: this.autoPlay,
+                    muted: this.muted
+                }
+            };
+            if (this.isPlaylist && this.loopPlaylist) {
+                config['playlist'] = {
+                    "options": {
+                        "autoContinue": true,
+                        "loop": true
+                    }
+                }
             }
-          });
+          const kalturaPlayer = window["KalturaPlayer"].setup(config);
           this.onPlayerInitialized.emit(kalturaPlayer); // for API calls
-          kalturaPlayer.loadMedia({entryId: this.entryid});
+          if (this.isPlaylist) {
+            kalturaPlayer.loadPlaylist({playlistId: this.entryid});
+          } else {
+            kalturaPlayer.loadMedia({entryId: this.entryid});
+          }
         } catch (e) {
           console.error(e.message);
         }

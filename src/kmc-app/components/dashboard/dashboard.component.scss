@@ -24,7 +24,38 @@
         }
     }
 }
-
+.studioPromo {
+    position: relative;
+    .title {
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 24px;
+        color: #333333;
+        position: absolute;
+        top: 40px;
+        width: 100%;
+        text-align: center;
+    }
+    .subTitle {
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 18px;
+        color: #333333;
+        position: absolute;
+        top: 73px;
+        width: 100%;
+        text-align: center;
+    }
+    a {
+        color: #006EFA;
+        text-decoration: none;
+    }
+    button {
+        position: absolute;
+        top: 133px;
+        left: 274px;
+    }
+}
 .kMenuCover {
     display: none;
 }
@@ -36,4 +67,22 @@ button ::ng-deep .kMute {
 :host {
   width: 100%;
   height: 100%;
+}
+::ng-deep kPopupWidget[data-aid="studioPromo"] .kPopupWidget app-k-player-v7 ::ng-deep {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    .playkit-playback-gui-wrapper {
+        display: none;
+    }
+}
+
+::ng-deep kPopupWidget[data-aid="studioPromo"] .kPopupWidget{
+    border-radius: 8px;
+    overflow: hidden;
+    .kCloseBtn {
+        z-index: 1;
+        position: relative;
+        color: #333333 !important;
+    }
 }
