@@ -26,6 +26,8 @@
 }
 .studioPromo {
     position: relative;
+    height: 536px;
+    background-color: #93E5CA;
     .title {
         font-weight: 700;
         font-size: 20px;
@@ -54,6 +56,13 @@
         position: absolute;
         top: 133px;
         left: 274px;
+    }
+    img {
+        position: absolute;
+        width: 686px;
+        height: 535px;
+        top: 0px;
+        left: 0px;
     }
 }
 .kMenuCover {

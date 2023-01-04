@@ -61,7 +61,9 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public onStudioPlayerReady(player: any): void {
       player.addEventListener(player.Event.Core.FIRST_PLAY, event => {
-          this._studioPlayerReady = true;
+          setTimeout(() => {
+            this._studioPlayerReady = true;
+          },1000);
       });
   }
 
