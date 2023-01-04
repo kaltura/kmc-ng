@@ -20,6 +20,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   public _pid = '811441';
   public _cdnUrl = buildCDNUrl("");
   public _studioPlayerReady = false;
+  public _studioBannerUrl = buildDeployUrl('./assets/studio.png');
   private onResize : () => void;
 
   constructor(private appShellService : AppShellService,
