@@ -268,7 +268,7 @@ export class EditWebexProfileComponent implements OnInit, OnDestroy {
         } else {
             this.profile.optOutGroupNames = null;
         }
-        this.profile.webexCategory = formValue.categories.length ? formValue.categories[0].name : '';
+        this.profile.webexCategory = formValue.categories.length ? formValue.categories[0].fullName : '';
         if (this._showDeleteContent) {
             this.profile.deletionPolicy = formValue.deleteContent ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
         }
@@ -303,7 +303,7 @@ export class EditWebexProfileComponent implements OnInit, OnDestroy {
                 (data || []).forEach(suggestedCategory => {
                     const label = suggestedCategory.fullName + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
                     const isSelectable = !profileCategories.find(category => {
-                        return category === suggestedCategory.name;
+                        return category === suggestedCategory.fullName;
                     });
                     suggestions.push({name: label, isSelectable: isSelectable, item: suggestedCategory});
                 });
