@@ -1,5 +1,5 @@
 import { Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import { AppAuthentication } from 'app-shared/kmc-shell';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -22,6 +22,7 @@ export class StudioV7Component implements OnInit, OnDestroy {
   constructor(
         private _appEvents: AppEventsService, private logger: KalturaLogger,
         private _appAuthentication: AppAuthentication,
+        private _browserService: BrowserService,
         private _ngZone: NgZone,
         private _studioV3MainView: StudioV3MainViewService) {
   }
@@ -36,6 +37,7 @@ export class StudioV7Component implements OnInit, OnDestroy {
                       });
                   }
               },
+              'dateFormat': this._browserService.getFromLocalStorage('kmc_date_format') || 'month-day-year',
               'pid': this._appAuthentication.appUser.partnerId,
               'publisherEnvType': this._appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
               'updateView': (view: string) => {
