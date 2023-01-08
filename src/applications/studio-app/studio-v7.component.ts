@@ -43,7 +43,7 @@ export class StudioV7Component implements OnInit, OnDestroy {
                       this.currentView = view;
                       if (view === 'list') {
                           this._appEvents.publish(new ShowMenuEvent());
-                          this.iframeHeight = '920px';
+                          this.iframeHeight = '932px';
                       } else {
                           this._appEvents.publish(new HideMenuEvent());
                           this.iframeHeight = '100vh';
@@ -76,7 +76,7 @@ export class StudioV7Component implements OnInit, OnDestroy {
           }
           if (postMessageData.messageType === 'listView') {
               this._appEvents.publish(new HideMenuEvent(true));
-              this.iframeHeight = '920px';
+              this.iframeHeight = '932px';
           }
           if (postMessageData.messageType === 'editView') {
               this._appEvents.publish(new HideMenuEvent(false));
