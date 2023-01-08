@@ -14,7 +14,7 @@ import { StudioV3MainViewService } from 'app-shared/kmc-shared/kmc-views';
 export class StudioV7Component implements OnInit, OnDestroy {
 
   public studioUrl = '';
-  public iframeHeight = '920px';
+  public iframeHeight = '932px';
   public currentView = 'list';
   public _windowEventListener = null;
   @ViewChild('studioFrame', { static: true}) studioFrame: ElementRef;
