@@ -1,3 +1,13 @@
+<a name="7.10.1"></a>
+## [7.10.1](https://github.com/kaltura/kmc-ng/compare/v7.10.0...v7.10.1) (2023-01-19)
+
+
+### Bug Fixes
+
+* fix categories name in zoom and webex ([7bb6fc3](https://github.com/kaltura/kmc-ng/commit/7bb6fc3))
+
+
+
 <a name="7.10.0"></a>
 # [7.10.0](https://github.com/kaltura/kmc-ng/compare/v7.9.0...v7.10.0) (2023-01-03)
 
