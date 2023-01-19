@@ -303,7 +303,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         } else {
             this.profile.optOutGroupNames = null;
         }
-        this.profile.zoomCategory = formValue.categories.length ? formValue.categories[0].fullName : '';
+        this.profile.zoomCategory = formValue.categories.length ? (formValue.categories[0].fullName ? formValue.categories[0].fullName : formValue.categories[0].name) : '';
         this.profile.zoomWebinarCategory = formValue.webinarCategory.length ? formValue.webinarCategory[0].name : '';
         if (this._showDeleteContent) {
             this.profile.deletionPolicy = formValue.deleteContent ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
@@ -339,7 +339,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         }
         this._searchCategoriesSubscription = this.searchCategories(event.query).subscribe(data => {
                 const suggestions = [];
-                const profileCategories = this.profile.zoomCategory.split(',');
+                const profileCategories = this.profile.zoomCategory && this.profile.zoomCategory.length ? this.profile.zoomCategory.split(',') : [];
                 (data || []).forEach(suggestedCategory => {
                     const label = suggestedCategory.fullName + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
                     const isSelectable = !profileCategories.find(category => {

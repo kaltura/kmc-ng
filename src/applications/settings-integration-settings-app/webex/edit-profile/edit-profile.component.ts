@@ -268,7 +268,7 @@ export class EditWebexProfileComponent implements OnInit, OnDestroy {
         } else {
             this.profile.optOutGroupNames = null;
         }
-        this.profile.webexCategory = formValue.categories.length ? formValue.categories[0].fullName : '';
+        this.profile.webexCategory = formValue.categories.length ? (formValue.categories[0].fullName ? formValue.categories[0].fullName : formValue.categories[0].name) : '';
         if (this._showDeleteContent) {
             this.profile.deletionPolicy = formValue.deleteContent ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
         }
@@ -299,7 +299,7 @@ export class EditWebexProfileComponent implements OnInit, OnDestroy {
         }
         this._searchCategoriesSubscription = this.searchCategories(event.query).subscribe(data => {
                 const suggestions = [];
-                const profileCategories = this.profile.webexCategory.split(',');
+                const profileCategories = this.profile.webexCategory && this.profile.webexCategory.length ? this.profile.webexCategory.split(',') : [];
                 (data || []).forEach(suggestedCategory => {
                     const label = suggestedCategory.fullName + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
                     const isSelectable = !profileCategories.find(category => {
