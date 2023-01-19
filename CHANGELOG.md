@@ -4,7 +4,7 @@
 
 ### Bug Fixes
 
-* fix categories name in zoom and webex ([7bb6fc3](https://github.com/kaltura/kmc-ng/commit/7bb6fc3))
+* fix categories name in Zoom and Webex profiles ([7bb6fc3](https://github.com/kaltura/kmc-ng/commit/7bb6fc3))
 
 
 
