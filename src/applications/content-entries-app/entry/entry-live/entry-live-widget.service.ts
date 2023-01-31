@@ -75,8 +75,8 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
               private _analytics: AppAnalytics,
               private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
-                private _liveDasboardAppViewService: LiveDashboardAppViewService,
-                logger: KalturaLogger) {
+              private _liveDasboardAppViewService: LiveDashboardAppViewService,
+              logger: KalturaLogger) {
 		super(ContentEntryViewSections.Live, logger);
 	}
 
@@ -109,8 +109,9 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 			(data as KalturaLiveStreamEntry).bitrates = bitrates;
 		}
 		if (this._liveType === "kaltura") {
+            const entry = this.data as KalturaLiveStreamEntry;
 			(data as KalturaLiveStreamEntry).explicitLive = this._explicitLive ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
-			(data as KalturaLiveStreamEntry).adminTags = this.getAdminTags(data.adminTags || '');
+			(data as KalturaLiveStreamEntry).adminTags = this.getAdminTags(entry.adminTags || '');
 			(data as KalturaLiveStreamEntry).srtPass = this._srtKey === '' ? null : this._srtKey;
 			(data as KalturaLiveStreamEntry).conversionProfileId = this._selectedConversionProfile;
 		}
