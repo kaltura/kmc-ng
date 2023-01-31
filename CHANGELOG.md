@@ -1,3 +1,13 @@
+<a name="7.10.2"></a>
+## [7.10.2](https://github.com/kaltura/kmc-ng/compare/v7.10.1...v7.10.2) (2023-01-31)
+
+
+### Bug Fixes
+
+* **content/entry:** prevent overriding entry adminTags when saving live settings KMCNG-2473 ([b3a2b77](https://github.com/kaltura/kmc-ng/commit/b3a2b77))
+
+
+
 <a name="7.10.1"></a>
 ## [7.10.1](https://github.com/kaltura/kmc-ng/compare/v7.10.0...v7.10.1) (2023-01-19)
 
