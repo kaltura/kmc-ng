@@ -142,6 +142,41 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         this._captions.next({items: []});
     }
 
+    public reloadCaptions(): Observable<{
+        failed: boolean;
+        error?: Error;
+    }> {
+        return this._kalturaServerClient.request(new CaptionAssetListAction({
+            filter: new KalturaAssetFilter({ entryIdEqual: this._entryId }),
+            pager: new KalturaFilterPager( { pageIndex: 0, pageSize: 500 })
+        }))
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
+            .pipe(map(response => {
+                // Restore previous upload state
+                this._updateCaptionsResponse(response);
+
+                this._captions.next({ items: response.objects as any[] });
+                this.captionsListDiffer = this._listDiffers.find([]).create();
+                this.captionsListDiffer.diff(this._captions.getValue().items);
+
+                this.captionDiffer = {};
+                this._captions.getValue().items.forEach((caption) => {
+                    this.captionDiffer[caption.id] = this._objectDiffers.find([]).create();
+                    this.captionDiffer[caption.id].diff(caption);
+                });
+                super._hideLoader();
+
+                return {failed: false};
+            }))
+            .pipe(catchError(error => {
+                    super._hideLoader();
+                    super._showActivationError();
+                    this._captions.next({ items: [] });
+                    return throwError(error);
+                }
+            ));
+    }
+
   protected onActivate(firstTimeActivating: boolean) {
     this._entryId = this.data.id;
     super._showLoader();
@@ -149,36 +184,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       this._trackUploadFiles();
     }
     this._captions.next({ items: [] });
-
-    return this._kalturaServerClient.request(new CaptionAssetListAction({
-      filter: new KalturaAssetFilter({ entryIdEqual: this._entryId }),
-      pager: new KalturaFilterPager( { pageIndex: 0, pageSize: 500 })
-    }))
-      .pipe(cancelOnDestroy(this, this.widgetReset$))
-      .pipe(map(response => {
-        // Restore previous upload state
-        this._updateCaptionsResponse(response);
-
-        this._captions.next({ items: response.objects as any[] });
-        this.captionsListDiffer = this._listDiffers.find([]).create();
-        this.captionsListDiffer.diff(this._captions.getValue().items);
-
-        this.captionDiffer = {};
-        this._captions.getValue().items.forEach((caption) => {
-          this.captionDiffer[caption.id] = this._objectDiffers.find([]).create();
-          this.captionDiffer[caption.id].diff(caption);
-        });
-        super._hideLoader();
-
-          return {failed: false};
-      }))
-      .pipe(catchError(error => {
-          super._hideLoader();
-          super._showActivationError();
-          this._captions.next({ items: [] });
-          return throwError(error);
-        }
-      ));
+    return this.reloadCaptions();
   }
 
   private _updateCaptionsResponse(response): void {

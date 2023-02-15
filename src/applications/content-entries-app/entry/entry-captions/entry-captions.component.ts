@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import { Menu } from 'primeng/menu';
 import { ISubscription } from 'rxjs/Subscription';
@@ -8,9 +8,7 @@ import { AppAuthentication } from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 import {KalturaCaptionAssetStatus, KalturaCaptionType, KalturaMediaType} from 'kaltura-ngx-client';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
-
 import { EntryCaptionsWidget } from './entry-captions-widget.service';
-
 import { getKalturaServerUri, serverConfig } from 'config/server';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
@@ -41,6 +39,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
                 private _appAuthentication: AppAuthentication,
                 private _appLocalization: AppLocalization,
                 private _browserService: BrowserService,
+                private _ngZone: NgZone,
                 private _reachAppViewService: ReachAppViewService) {
     }
 
@@ -61,6 +60,17 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
                 this._requestCaptionsAvailable = this._reachAppViewService.isAvailable({ page: ReachPages.entry, entry });
                 this._isLive = entry && this._isLiveMediaEntry(entry.mediaType);
             });
+
+        // create message bus for closed captions editor
+        window['kmcCaptions'] = {
+            'updateCaptions': () => {
+                this._ngZone.run(() => {
+                    this._widgetService.reloadCaptions().subscribe(
+                        (status) => {}
+                    );
+                });
+            }
+        }
     }
 
     openActionsMenu(event: any, caption: any): void{
@@ -169,7 +179,8 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
         this._popupStateChangeSubscribe.unsubscribe();
 
         this._widgetService.detachForm();
-
+        // clear message bus
+        window['kmcCaptions'] = null;
     }
 
 
