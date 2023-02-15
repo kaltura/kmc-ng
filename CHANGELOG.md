@@ -1,3 +1,8 @@
+<a name="7.10.3"></a>
+## [7.10.3](https://github.com/kaltura/kmc-ng/compare/v7.10.2...v7.10.3) (2023-02-15)
+
+
+
 <a name="7.10.2"></a>
 ## [7.10.2](https://github.com/kaltura/kmc-ng/compare/v7.10.1...v7.10.2) (2023-01-31)
 
