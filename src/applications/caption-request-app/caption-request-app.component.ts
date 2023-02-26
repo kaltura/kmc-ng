@@ -2,7 +2,7 @@ import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { CaptionRequestEvent } from 'app-shared/kmc-shared/events';
+import { CaptionRequestEvent, CaptionsUpdatedEvent } from 'app-shared/kmc-shared/events';
 import { ReachData } from 'app-shared/kmc-shared/reach-frame';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
@@ -20,19 +20,23 @@ export class CaptionRequestAppComponent implements OnDestroy {
     public _page: ReachPages;
 
     constructor(private _logger: KalturaLogger,
-                appEvents: AppEventsService) {
-        appEvents.event(CaptionRequestEvent)
-            .pipe(cancelOnDestroy(this))
-            .subscribe(({ data, page }) => {
-                this._logger.info(`handle open caption request window event`, { data, page });
-                this._data = data;
-                this._page = page;
-                if (!this.captionRequest.isShow) {
-                    this.captionRequest.open();
-                } else {
-                    this._logger.warn('Cannot open caption request (window already open?)');
-                }
-            });
+                private _appEvents: AppEventsService) {
+                    this._appEvents.event(CaptionRequestEvent)
+                        .pipe(cancelOnDestroy(this))
+                        .subscribe(({ data, page }) => {
+                            this._logger.info(`handle open caption request window event`, { data, page });
+                            this._data = data;
+                            this._page = page;
+                            if (!this.captionRequest.isShow) {
+                                this.captionRequest.open();
+                            } else {
+                                this._logger.warn('Cannot open caption request (window already open?)');
+                            }
+                        });
+    }
+
+    public onClose() {
+        this._appEvents.publish(new CaptionsUpdatedEvent());
     }
 
     ngOnDestroy() {

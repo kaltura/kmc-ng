@@ -10,3 +10,4 @@ export { ResetMenuEvent } from './reset-menu-event';
 export { UpdateMenuEvent } from './update-menu-event';
 export { HideMenuEvent } from './hide-menu-event';
 export { ShowMenuEvent } from './show-menu-event';
+export { CaptionsUpdatedEvent } from './captions-updated-event';

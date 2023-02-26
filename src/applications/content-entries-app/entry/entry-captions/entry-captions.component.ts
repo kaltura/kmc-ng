@@ -14,6 +14,8 @@ import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { MenuItem } from 'primeng/api';
+import { AppEventsService } from "app-shared/kmc-shared";
+import { CaptionsUpdatedEvent } from "app-shared/kmc-shared/events";
 
 
 @Component({
@@ -39,6 +41,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
                 private _appAuthentication: AppAuthentication,
                 private _appLocalization: AppLocalization,
                 private _browserService: BrowserService,
+                private _appEvents: AppEventsService,
                 private _ngZone: NgZone,
                 private _reachAppViewService: ReachAppViewService) {
     }
@@ -61,16 +64,14 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
                 this._isLive = entry && this._isLiveMediaEntry(entry.mediaType);
             });
 
-        // create message bus for closed captions editor
-        window['kmcCaptions'] = {
-            'updateCaptions': () => {
-                this._ngZone.run(() => {
-                    this._widgetService.reloadCaptions().subscribe(
-                        (status) => {}
-                    );
-                });
-            }
-        }
+        this._appEvents.event(CaptionsUpdatedEvent)
+            .pipe(cancelOnDestroy(this))
+            .subscribe(() => {
+                // update the captions table once the captions editor / captions & enrich window closes
+                this._widgetService.reloadCaptions().subscribe(
+                    (status) => {}
+                );
+            });
     }
 
     openActionsMenu(event: any, caption: any): void{
