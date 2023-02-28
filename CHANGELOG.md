@@ -1,3 +1,13 @@
+<a name="7.10.4"></a>
+## [7.10.4](https://github.com/kaltura/kmc-ng/compare/v7.10.3...v7.10.4) (2023-02-28)
+
+
+### Bug Fixes
+
+* **entry/captions:** reload captions when closing captions editor or reach request window REACH2-1138 ([afb62b0](https://github.com/kaltura/kmc-ng/commit/afb62b0))
+
+
+
 <a name="7.10.3"></a>
 ## [7.10.3](https://github.com/kaltura/kmc-ng/compare/v7.10.2...v7.10.3) (2023-02-15)
 
