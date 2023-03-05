@@ -66,7 +66,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             tag.dataFetchSubscription = null;
         }
 
-        const booleanFilters = ['youtubeVideo', 'videoQuiz', 'videoCaptions', 'videoNoCaptions'];
+        const booleanFilters = ['youtubeVideo', 'videoQuiz', 'videoCaptions', 'videoNoCaptions','recycled'];
         if (tag.type === 'categories' || (refineListsType.indexOf(tag.type) > -1 && booleanFilters.indexOf(tag.type) === -1)) {
             // remove tag of type list from filters
             const previousData = this._entriesStore.cloneFilter(tag.type, []);
@@ -118,6 +118,9 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                     break;
                 case 'videoNoCaptions':
                     this._entriesStore.filter({ videoNoCaptions: false });
+                    break;
+                case 'recycled':
+                    this._entriesStore.filter({ recycled: false });
                     break;
                 default:
                     break;
@@ -213,6 +216,10 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
         if (typeof updates.videoNoCaptions !== 'undefined') {
             this._syncTagOfVideoNoCaptions();
+        }
+
+        if (typeof updates.recycled !== 'undefined') {
+            this._syncTagOfRecycled();
         }
 
         refineListsType.forEach(listType => {
@@ -374,6 +381,25 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 value: currentVideoNoCaptionsValue,
                 label: this._appLocalization.get(`applications.content.filters.videoNoCaptions`),
                 tooltip: this._appLocalization.get(`applications.content.filters.videoNoCaptions`)
+            });
+        }
+    }
+    private _syncTagOfRecycled(): void {
+        const previousItem = this._tags.findIndex(item => item.type === 'recycled');
+        if (previousItem !== -1) {
+            this._tags.splice(
+                previousItem,
+                1);
+        }
+
+        const currentVideoRecycledValue = this._entriesStore.cloneFilter('recycled', null);
+
+        if (currentVideoRecycledValue) {
+            this._tags.push({
+                type: 'recycled',
+                value: currentVideoRecycledValue,
+                label: this._appLocalization.get(`applications.content.filters.recycled`),
+                tooltip: this._appLocalization.get(`applications.content.filters.recycled`)
             });
         }
     }

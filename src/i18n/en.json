@@ -1192,6 +1192,7 @@
                 "videoQuiz": "Video with Quiz",
                 "videoCaptions": "Video with Captions",
                 "videoNoCaptions": "Video without Captions",
+                "recycled": "Recycled entries",
                 "preferences": {
                     "preferences": "Preferences",
                     "filterPreferences": "Filter Preferences",

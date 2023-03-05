@@ -81,6 +81,7 @@ export interface EntriesFilters {
   videoQuiz: boolean;
   videoCaptions: boolean;
   videoNoCaptions: boolean;
+  recycled: boolean;
 }
 
 export const EntriesDataProviderToken = new InjectionToken('entries-data-provider');
@@ -298,7 +299,8 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
       youtubeVideo: new BooleanTypeAdapter(),
       videoQuiz: new BooleanTypeAdapter(),
       videoCaptions: new BooleanTypeAdapter(),
-      videoNoCaptions: new BooleanTypeAdapter()
+      videoNoCaptions: new BooleanTypeAdapter(),
+      recycled: new BooleanTypeAdapter()
     };
   }
 

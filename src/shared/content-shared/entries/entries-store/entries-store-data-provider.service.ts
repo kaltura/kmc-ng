@@ -1,13 +1,20 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { EntriesDataProvider, EntriesFilters, MetadataProfileData, SortDirection } from './entries-store.service';
+import {Injectable, OnDestroy} from '@angular/core';
+import {EntriesDataProvider, EntriesFilters, MetadataProfileData, SortDirection} from './entries-store.service';
 import {
+    BaseEntryExportToCsvAction,
     BaseEntryListAction,
     KalturaBaseEntry,
     KalturaClient,
     KalturaContentDistributionSearchItem,
     KalturaDetachedResponseProfile,
+    KalturaEntryCaptionAdvancedFilter,
+    KalturaEntryDisplayInSearchType,
     KalturaExternalMediaEntry,
+    KalturaExternalMediaEntryFilter,
+    KalturaExternalMediaSourceType,
     KalturaFilterPager,
+    KalturaKeyValueExtended,
+    KalturaLiveChannel,
     KalturaLiveStreamAdminEntry,
     KalturaLiveStreamEntry,
     KalturaMediaEntryFilter,
@@ -17,22 +24,14 @@ import {
     KalturaResponseProfileType,
     KalturaSearchCondition,
     KalturaSearchOperator,
-    KalturaSearchOperatorType,
-    KalturaExternalMediaSourceType,
-    KalturaExternalMediaEntryFilter,
-    KalturaEntryCaptionAdvancedFilter,
-    KalturaLiveChannel,
-    BaseEntryExportToCsvAction,
-    KalturaKeyValueExtended
+    KalturaSearchOperatorType
 } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs';
-import { cancelOnDestroy, KalturaUtils } from '@kaltura-ng/kaltura-common';
-import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
-import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
-import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { first } from 'rxjs/operators';
-import { throwError } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import {Observable, throwError} from 'rxjs';
+import {cancelOnDestroy, KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {CategoriesModes} from 'app-shared/content-shared/categories/categories-mode-type';
+import {MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes} from 'app-shared/kmc-shared';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {first, map, switchMap} from 'rxjs/operators';
 
 @Injectable()
 export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy {
@@ -124,6 +123,11 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
           // filter 'lastPlayedAt'
           if (data.lastPlayedAt) {
               filter.lastPlayedAtLessThanOrEqual = KalturaUtils.getEndDateValue(new Date(data.lastPlayedAt * 1000));
+          }
+
+          // filter 'recycled'
+          if (data.recycled) {
+              filter.displayInSearchEqual = KalturaEntryDisplayInSearchType.recycled;
           }
 
           // filters of joined list
@@ -420,6 +424,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
       videoQuiz: false,
       videoCaptions: false,
       videoNoCaptions: false,
+      recycled: false
     };
   }
 }
