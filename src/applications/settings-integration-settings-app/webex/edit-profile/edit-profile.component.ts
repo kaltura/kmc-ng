@@ -5,10 +5,20 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import {
     KalturaClient,
     KalturaFilterPager,
-    KalturaNullableBoolean, KalturaUser, KalturaUserFilter,
+    KalturaNullableBoolean,
+    KalturaUser,
+    KalturaUserFilter,
     KalturaUserType,
     UserListAction,
-    KalturaWebexAPIIntegrationSetting
+    KalturaWebexAPIIntegrationSetting,
+    ESearchSearchUserAction,
+    KalturaESearchUserParams,
+    KalturaESearchUserOperator,
+    KalturaESearchOperatorType,
+    KalturaESearchUserItem,
+    KalturaESearchItemType,
+    KalturaESearchUserFieldName,
+    KalturaESearchUserResult
 } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
@@ -416,24 +426,40 @@ export class EditWebexProfileComponent implements OnInit, OnDestroy {
         }
 
         this._searchUsersSubscription = this._kalturaServerClient.request(
-            new UserListAction(
-                {
-                    filter: new KalturaUserFilter({
-                        idOrScreenNameStartsWith: event.query
-                    }),
-                    pager: new KalturaFilterPager({
-                        pageIndex: 0,
-                        pageSize: 30
+            new ESearchSearchUserAction({
+                searchParams: new KalturaESearchUserParams({
+                    searchOperator: new KalturaESearchUserOperator({
+                        operator: KalturaESearchOperatorType.orOp,
+                        searchItems: [
+                            new KalturaESearchUserItem({
+                                itemType: KalturaESearchItemType.startsWith,
+                                fieldName: KalturaESearchUserFieldName.screenName,
+                                searchTerm: event.query
+                            }),
+                            new KalturaESearchUserItem({
+                                itemType: KalturaESearchItemType.startsWith,
+                                fieldName: KalturaESearchUserFieldName.userId,
+                                searchTerm: event.query
+                            })
+                        ]
                     })
-                }
-            )
+                }),
+                pager: new KalturaFilterPager({
+                    pageIndex : 0,
+                    pageSize : 30
+                })
+            })
         )
             .pipe(cancelOnDestroy(this))
             .subscribe(
                 data => {
                     this._logger.info(`handle successful search users action`);
                     const suggestions = [];
-                    (data.objects || []).forEach((suggestedUser: KalturaUser) => {
+                    let users = [];
+                    if (data?.objects) {
+                        data.objects.forEach((res: KalturaESearchUserResult) => users.push(res.object))
+                    }
+                    (users).forEach((suggestedUser: KalturaUser) => {
                         suggestions.push({
                             name: suggestedUser.screenName + '(' + suggestedUser.id + ')',
                             item: suggestedUser,

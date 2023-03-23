@@ -2,15 +2,22 @@ import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output
 import {ISubscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs';
 
-import {KalturaClient} from 'kaltura-ngx-client';
+import {
+    ESearchSearchUserAction,
+    KalturaClient,
+    KalturaESearchItemType,
+    KalturaESearchOperatorType,
+    KalturaESearchUserFieldName,
+    KalturaESearchUserItem,
+    KalturaESearchUserOperator,
+    KalturaESearchUserParams, KalturaESearchUserResult
+} from 'kaltura-ngx-client';
 import {KalturaFilterPager} from 'kaltura-ngx-client';
 import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui';
-import {UserListAction} from 'kaltura-ngx-client';
-import {KalturaUserFilter} from 'kaltura-ngx-client';
 import {KalturaUser} from 'kaltura-ngx-client';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
@@ -85,22 +92,38 @@ export class BulkAddEditorsComponent implements OnInit, OnDestroy, AfterViewInit
       this._searchEditorsSubscription = null;
     }
 
-    this._kalturaServerClient.request(new UserListAction({
-      filter: new KalturaUserFilter({
-        idOrScreenNameStartsWith: event.query
-      }),
-      pager: new KalturaFilterPager({
-          pageIndex: 0,
-          pageSize: 30
-        }
-      )
+    this._kalturaServerClient.request(new ESearchSearchUserAction({
+        searchParams: new KalturaESearchUserParams({
+            searchOperator: new KalturaESearchUserOperator({
+                operator: KalturaESearchOperatorType.orOp,
+                searchItems: [
+                    new KalturaESearchUserItem({
+                        itemType: KalturaESearchItemType.startsWith,
+                        fieldName: KalturaESearchUserFieldName.screenName,
+                        searchTerm: event.query
+                    }),
+                    new KalturaESearchUserItem({
+                        itemType: KalturaESearchItemType.startsWith,
+                        fieldName: KalturaESearchUserFieldName.userId,
+                        searchTerm: event.query
+                    })
+                ]
+            })
+        }),
+        pager: new KalturaFilterPager({
+            pageIndex : 0,
+            pageSize : 30
+        })
     }))
       .pipe(cancelOnDestroy(this))
       .subscribe(
         result => {
           const suggestions = [];
-          const users: KalturaUser[] = result.objects;
-          (users || []).forEach(suggestedUser => {
+          let users = [];
+          if (result?.objects) {
+            result.objects.forEach((res: KalturaESearchUserResult) => users.push(res.object))
+          }
+          users.forEach(suggestedUser => {
               suggestedUser['__tooltip'] = suggestedUser.id;
             const isSelectable = !(this.users || []).find(user => user.id === suggestedUser.id);
             suggestions.push({
