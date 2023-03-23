@@ -4,7 +4,7 @@
 
 ### Bug Fixes
 
-* **content/entry:** user eSearch for users search SUP-35902 ([#1046](https://github.com/kaltura/kmc-ng/issues/1046)) ([f375bfb](https://github.com/kaltura/kmc-ng/commit/f375bfb))
+* **content/entry:** use eSearch for users search SUP-35902 ([#1046](https://github.com/kaltura/kmc-ng/issues/1046)) ([f375bfb](https://github.com/kaltura/kmc-ng/commit/f375bfb))
 
 
 ### Features
