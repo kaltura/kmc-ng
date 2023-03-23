@@ -42,6 +42,12 @@ export const DefaultFiltersList: DefaultFilterList[] = [
         items: []
     },
     {
+        name: 'recycled',
+        label: 'Recycled entries',
+        value: true,
+        items: []
+    },
+    {
         name: 'ingestionStatuses', label: 'Ingestion Statuses',
         items: [
             { value: KalturaEntryStatus.ready.toString(), label: 'Ready' },

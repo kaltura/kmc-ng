@@ -162,7 +162,9 @@ export class EntriesRefineFiltersService {
                 null,
                 defaultFilterList.value
             );
-            result.lists.push(newRefineFilter);
+            if (defaultFilterList.name !== 'recycled' || (defaultFilterList.name === 'recycled' && this._permissionsService.hasPermission(KMCPermissions.FEATURE_RECYCLE_BIN))) {
+                result.lists.push(newRefineFilter);
+            }
             defaultFilterList.items.forEach((item: any) => {
               if (item.value !== '201' || this._permissionsService.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM)) {
                 newRefineFilter.items.push({ value: item.value, label: item.label });
