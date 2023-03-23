@@ -4,16 +4,23 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs';
 import {
+    ESearchSearchUserAction,
     KalturaClient,
+    KalturaESearchUserItem,
+    KalturaESearchUserOperator,
     KalturaFilterPager,
     KalturaMediaEntry,
     KalturaMultiRequest,
     KalturaMultiResponse,
     KalturaResponse,
     KalturaUser,
-    KalturaUserFilter,
+    KalturaESearchOperatorType,
     UserGetAction,
-    UserListAction
+    KalturaESearchUserFieldName,
+    KalturaESearchUserParams,
+    KalturaESearchItemType,
+    KalturaESearchUserResponse,
+    KalturaESearchUserResult
 } from 'kaltura-ngx-client';
 
 import { EntryWidget } from '../entry-widget';
@@ -267,23 +274,39 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 		return Observable.create(
 			observer => {
 				const requestSubscription: ISubscription = this._kalturaServerClient.request(
-					new UserListAction(
-						{
-							filter: new KalturaUserFilter({
-								idOrScreenNameStartsWith : text
-							}),
-							pager: new KalturaFilterPager({
-								pageIndex : 0,
-								pageSize : 30
-							})
-						}
-					)
+                    new ESearchSearchUserAction({
+                        searchParams: new KalturaESearchUserParams({
+                            searchOperator: new KalturaESearchUserOperator({
+                                operator: KalturaESearchOperatorType.orOp,
+                                searchItems: [
+                                    new KalturaESearchUserItem({
+                                        itemType: KalturaESearchItemType.startsWith,
+                                        fieldName: KalturaESearchUserFieldName.screenName,
+                                        searchTerm: text
+                                    }),
+                                    new KalturaESearchUserItem({
+                                        itemType: KalturaESearchItemType.startsWith,
+                                        fieldName: KalturaESearchUserFieldName.userId,
+                                        searchTerm: text
+                                    })
+                                ]
+                            })
+                        }),
+                        pager: new KalturaFilterPager({
+                            pageIndex : 0,
+                            pageSize : 30
+                        })
+                    })
 				)
 				.pipe(cancelOnDestroy(this, this.widgetReset$))
 				.subscribe(
-					result =>
+                    (result: KalturaESearchUserResponse) =>
 					{
-						observer.next(result.objects);
+                        let users = [];
+                        if (result?.objects) {
+                            result.objects.forEach((res: KalturaESearchUserResult) => users.push(res.object))
+                        }
+						observer.next(users);
 						observer.complete();
 					},
 					err =>
