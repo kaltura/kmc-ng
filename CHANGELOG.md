@@ -1,3 +1,18 @@
+<a name="7.11.0"></a>
+# [7.11.0](https://github.com/kaltura/kmc-ng/compare/v7.10.4...v7.11.0) (2023-03-23)
+
+
+### Bug Fixes
+
+* **content/entry:** user eSearch for users search SUP-35902 ([#1046](https://github.com/kaltura/kmc-ng/issues/1046)) ([f375bfb](https://github.com/kaltura/kmc-ng/commit/f375bfb))
+
+
+### Features
+
+* **content/entries:** add filter to display recycled entries KMCNG-2472 ([#1045](https://github.com/kaltura/kmc-ng/issues/1045)) ([c044090](https://github.com/kaltura/kmc-ng/commit/c044090))
+
+
+
 <a name="7.10.4"></a>
 ## [7.10.4](https://github.com/kaltura/kmc-ng/compare/v7.10.3...v7.10.4) (2023-02-28)
 
