@@ -1,3 +1,13 @@
+<a name="7.11.1"></a>
+## [7.11.1](https://github.com/kaltura/kmc-ng/compare/v7.11.0...v7.11.1) (2023-05-02)
+
+
+### Bug Fixes
+
+* **entry/flavours:** better calculation of flavor size PSVAMB-42445 ([c7320b6](https://github.com/kaltura/kmc-ng/commit/c7320b6))
+
+
+
 <a name="7.11.0"></a>
 # [7.11.0](https://github.com/kaltura/kmc-ng/compare/v7.10.4...v7.11.0) (2023-03-23)
 
