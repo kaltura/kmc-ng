@@ -359,6 +359,9 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
     }
 
     private _createFlavor(flavor: KalturaFlavorAssetWithParams, allFlavors: KalturaFlavorAssetWithParams[]): Flavor {
+        const getSize = (flavorAsset: KalturaFlavorAsset) => {
+            return flavorAsset.sizeInBytes ? Math.floor(flavorAsset.sizeInBytes / 1024).toString() : flavorAsset.size.toString();
+        }
         let newFlavor: Flavor = <Flavor>flavor;
         newFlavor.name = flavor.flavorParams ? flavor.flavorParams.name : '';
         newFlavor.id = flavor.flavorAsset ? flavor.flavorAsset.id : '';
@@ -369,7 +372,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy {
         newFlavor.format = flavor.flavorAsset ? flavor.flavorAsset.fileExt : '';
         newFlavor.codec = flavor.flavorAsset ? flavor.flavorAsset.videoCodecId : '';
         newFlavor.bitrate = (flavor.flavorAsset && flavor.flavorAsset.bitrate && flavor.flavorAsset.bitrate > 0) ? flavor.flavorAsset.bitrate.toString() : '';
-        newFlavor.size = flavor.flavorAsset ? (flavor.flavorAsset.status.toString() === KalturaFlavorAssetStatus.ready.toString() ? flavor.flavorAsset.size.toString() : '0') : '';
+        newFlavor.size = flavor.flavorAsset ? (flavor.flavorAsset.status.toString() === KalturaFlavorAssetStatus.ready.toString() ? getSize(flavor.flavorAsset) : '0') : '';
         newFlavor.status = flavor.flavorAsset ? flavor.flavorAsset.status.toString() : '';
         newFlavor.statusLabel = "";
         newFlavor.statusTooltip = "";
