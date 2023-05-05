@@ -21,7 +21,7 @@ export interface TagItem {
     disabled?: boolean;
 }
 
-const refineListsType: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions', 'youtubeVideo', 'videoQuiz', 'videoCaptions', 'videoNoCaptions'];
+const refineListsType: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions', 'youtubeVideo', 'videoQuiz', 'videoCaptions', 'videoNoCaptions', 'recycled'];
 
 @Component({
     selector: 'k-entries-list-tags',
