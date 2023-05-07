@@ -52,6 +52,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	public _conversionProfiles$ = this._conversionProfiles.asObservable();
 
 	public _recordStatus: string = "";
+	public _manualLiveUrl: string = "";
 	public _DVRStatus: string = "";
 	public _showDVRWindow: boolean = false;
 	public _dvrWindowAvailable: boolean = false;
@@ -82,6 +83,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 
 	protected onReset() {
 		this._DVRStatus = "";
+        this._manualLiveUrl = "";
 		this._showDVRWindow = false;
 		this._dvrWindowAvailable = false;
 		this._selectedConversionProfile = null;
@@ -114,6 +116,10 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 			(data as KalturaLiveStreamEntry).adminTags = this.getAdminTags(entry.adminTags || '');
 			(data as KalturaLiveStreamEntry).srtPass = this._srtKey === '' ? null : this._srtKey;
 			(data as KalturaLiveStreamEntry).conversionProfileId = this._selectedConversionProfile;
+		}
+		if (this._liveType === "manual") {
+            const entry = this.data as KalturaLiveStreamEntry;
+			(data as KalturaLiveStreamEntry).hlsStreamUrl = this._manualLiveUrl;
 		}
 	}
 
@@ -261,6 +267,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 
 	private _setManualStreams(): void {
 		let entry: KalturaLiveStreamEntry = this.data as KalturaLiveStreamEntry;
+        this._manualLiveUrl = entry.hlsStreamUrl;
 		if (entry.liveStreamConfigurations) {
 			entry.liveStreamConfigurations.forEach(streamConfig => {
 				let protocol = streamConfig.protocol.toString();

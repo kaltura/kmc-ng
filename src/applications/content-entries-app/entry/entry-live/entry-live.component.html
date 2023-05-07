@@ -305,7 +305,7 @@
       <div *ngIf="_widgetService._liveType === 'manual'">
         <div class="kRow">
           <span class="kWideLabels">{{'applications.content.entryDetails.live.hlsStream' | translate}}</span>
-          <span>{{_widgetService.data?.hlsStreamUrl}}</span>
+            <input [(ngModel)]="_widgetService._manualLiveUrl" (ngModelChange)="_widgetService.setDirty()" pInputText class="urlInput"/>
         </div>
         <div class="kRow" *ngFor="let config of _widgetService._manualStreamsConfiguration">
           <!-- loop through liveStreamConfigurations array -->
