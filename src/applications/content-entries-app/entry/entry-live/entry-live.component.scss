@@ -66,6 +66,10 @@
                     }
                 }
             }
+            input.kControl, .inputWrapper {
+                width: 100%;
+                max-width: 500px;
+            }
 		}
 		.kCopyBtn{
 			border: 0px solid white;
@@ -94,6 +98,12 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
+        }
+        .kHasError {
+            border-color: $kDandger;
+        }
+        .error {
+            margin-top: 4px;
         }
         .srtKeyInput {
             width: 260px;

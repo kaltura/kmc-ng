@@ -303,15 +303,66 @@
       </div>
 
       <div *ngIf="_widgetService._liveType === 'manual'">
-        <div class="kRow">
-          <span class="kWideLabels">{{'applications.content.entryDetails.live.hlsStream' | translate}}</span>
-            <input [(ngModel)]="_widgetService._manualLiveUrl" (ngModelChange)="_widgetService.setDirty()" pInputText class="urlInput"/>
-        </div>
-        <div class="kRow" *ngFor="let config of _widgetService._manualStreamsConfiguration">
-          <!-- loop through liveStreamConfigurations array -->
-          <span class="kWideLabels">{{config.label}}</span>
-          <span>{{config.url}}</span>
-        </div>
+          <form [formGroup]="_widgetService._form" novalidate>
+              <section class="kFormContainer">
+                  <div class="kFormSection">
+                      <div class="kRow">
+                          <span class="kWideLabels">{{'applications.content.entryDetails.live.hlsStream' | translate}}</span>
+                          <div class="inputWrapper">
+                              <input class="kControl" formControlName="hlsStreamUrl" pInputText [ngClass]="{'kHasError':!_widgetService._form.controls['hlsStreamUrl'].valid && _widgetService._form.controls['hlsStreamUrl'].touched}">
+                              <div *ngIf="_widgetService._form.controls['hlsStreamUrl'].touched">
+                                  <div *ngIf="_widgetService._form.controls['hlsStreamUrl'].hasError('url')" class="error">
+                                      {{'applications.upload.prepareLive.manualStreamType.errors.invalidUrl' | translate}}
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="kFormSection">
+                      <div class="kRow">
+                          <span class="kWideLabels">{{'applications.upload.prepareLive.manualStreamType.flashHDSURL' | translate}}</span>
+                          <div class="inputWrapper">
+                              <input class="kControl" formControlName="flashHDSURL" pInputText [ngClass]="{'kHasError':!_widgetService._form.controls['flashHDSURL'].valid && _widgetService._form.controls['flashHDSURL'].touched}">
+                              <div *ngIf="_widgetService._form.controls['flashHDSURL'].touched">
+                                  <div *ngIf="_widgetService._form.controls['flashHDSURL'].hasError('url')" class="error">
+                                      {{'applications.upload.prepareLive.manualStreamType.errors.invalidUrl' | translate}}
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="kFormSection">
+                      <div class="kRow">
+                          <span class="kWideLabels">{{'applications.upload.prepareLive.manualStreamType.dashStreamUrl' | translate}}</span>
+                          <div class="inputWrapper">
+                              <input class="kControl" formControlName="dashStreamUrl" pInputText [ngClass]="{'kHasError':!_widgetService._form.controls['dashStreamUrl'].valid && _widgetService._form.controls['dashStreamUrl'].touched}">
+                              <div *ngIf="_widgetService._form.controls['dashStreamUrl'].touched">
+                                  <div *ngIf="_widgetService._form.controls['dashStreamUrl'].hasError('url')" class="error">
+                                      {{'applications.upload.prepareLive.manualStreamType.errors.invalidUrl' | translate}}
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </section>
+          </form>
+
+          <div class="kRow">
+              <div
+                  *ngIf="_widgetService._form.touched && _widgetService._form.hasError('atLeastOneUrl')"
+                  class="error">
+                  {{'applications.upload.prepareLive.manualStreamType.errors.enterUrl' | translate}}
+              </div>
+          </div>
+
+          <div class="kRow" *ngFor="let config of _widgetService._manualStreamsConfiguration">
+              <!-- loop through unsupported liveStreamConfigurations array -->
+              <span *ngIf="!config.label.startsWith('applehttp') && !config.label.startsWith('hds') && !config.label.startsWith('mpegdash') && !config.label.startsWith('hdnetworkmanifest')" class="kWideLabels">{{config.label}}</span>
+              <span *ngIf="!config.label.startsWith('applehttp') && !config.label.startsWith('hds') && !config.label.startsWith('mpegdash') && !config.label.startsWith('hdnetworkmanifest')">{{config.url}}</span>
+          </div>
+
       </div>
         <span #anchor></span>
     </div>

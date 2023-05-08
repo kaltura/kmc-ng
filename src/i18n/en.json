@@ -1898,7 +1898,7 @@
                     "srtPassManual": "Set Manually",
                     "srtPassPlaceholder": "Enter a passphrase",
                     "srtPassTooltip": "Set a passphrase to enable encryption\n10-79 alphanumeric character\npassphrase for encryption",
-                    "hlsStream": "HLS stream URL:",
+                    "hlsStream": "HLS (Apple HTTP) stream URL:",
                     "akamaiStream": "Akamai Stream ID:",
                     "transcoding": "Transcoding Profile Configuration",
                     "transcodingProfile": "Transcoding Profile:",

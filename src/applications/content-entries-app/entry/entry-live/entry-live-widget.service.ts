@@ -1,11 +1,11 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {asyncScheduler, BehaviorSubject, merge} from 'rxjs';
 import { Observable, of as ObservableOf } from 'rxjs';
 import { throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import {map, catchError, observeOn} from 'rxjs/operators';
 import {
-    KalturaClient,
-    KalturaMultiRequest,
+    KalturaClient, KalturaLiveStreamConfiguration,
+    KalturaMultiRequest, KalturaPlaybackProtocol,
     KalturaSipSourceType,
     PexipGenerateSipUrlAction
 } from 'kaltura-ngx-client';
@@ -26,13 +26,14 @@ import {KalturaConversionProfileFilter} from 'kaltura-ngx-client';
 import {KalturaFilterPager} from 'kaltura-ngx-client';
 import {KalturaConversionProfileType} from 'kaltura-ngx-client';
 import {KalturaNullableBoolean} from 'kaltura-ngx-client';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {AreaBlockerMessage, KalturaValidators} from '@kaltura-ng/kaltura-ui';
 import {BaseEntryGetAction} from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import {FormBuilder, FormGroup} from "@angular/forms";
 
 export interface bitrate {
 	enabled: boolean,
@@ -65,6 +66,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	public _manualStreamsConfiguration = [];
 	public _bitrates: bitrate[] = [];
 	public _availableBitrates = AVAIL_BITRATES;
+    public _form: FormGroup;
 
 	public _autoStartOptions = [
 		{label: this._appLocalization.get('applications.content.entryDetails.live.disabled'), value: true},
@@ -77,9 +79,44 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
               private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService,
               private _liveDasboardAppViewService: LiveDashboardAppViewService,
+              private _fb: FormBuilder,
               logger: KalturaLogger) {
 		super(ContentEntryViewSections.Live, logger);
 	}
+
+    public initManualForm() {
+        this._form = this._fb.group({
+                flashHDSURL: ['', KalturaValidators.url],
+                hlsStreamUrl: ['', KalturaValidators.url],
+                dashStreamUrl: ['', KalturaValidators.url]
+            },
+            {
+                validator: (formGroup: FormGroup) => {
+                    return this._atLeastOneUrlValidator(formGroup);
+                }
+            });
+
+        let flashHDSURL = this._manualStreamsConfiguration.find(stream => stream.label.split(" ")[0] === KalturaPlaybackProtocol.akamaiHds)?.url || '';
+        if (flashHDSURL === '') {
+            flashHDSURL = this._manualStreamsConfiguration.find(stream => stream.label.split(" ")[0] === KalturaPlaybackProtocol.hds)?.url || '';
+        }
+        const hlsStreamUrl = this._manualStreamsConfiguration.find(stream => stream.label.split(" ")[0] === KalturaPlaybackProtocol.appleHttp)?.url || '';
+        const dashStreamUrl = this._manualStreamsConfiguration.find(stream => stream.label.split(" ")[0] === KalturaPlaybackProtocol.mpegDash)?.url || '';
+        this._form.reset({ flashHDSURL, hlsStreamUrl, dashStreamUrl });
+
+        merge(this._form.valueChanges,
+            this._form.statusChanges)
+            .pipe(observeOn(asyncScheduler)) // using async scheduler so the form group status/dirty mode will be synchornized
+            .pipe(cancelOnDestroy(this))
+            .subscribe(
+                () => {
+                    super.updateState({
+                        isValid: this._form.status !== 'INVALID',
+                        isDirty: this._form.dirty
+                    });
+                }
+            );
+    }
 
 	protected onReset() {
 		this._DVRStatus = "";
@@ -118,8 +155,41 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 			(data as KalturaLiveStreamEntry).conversionProfileId = this._selectedConversionProfile;
 		}
 		if (this._liveType === "manual") {
-            const entry = this.data as KalturaLiveStreamEntry;
-			(data as KalturaLiveStreamEntry).hlsStreamUrl = this._manualLiveUrl;
+            const entry = data as KalturaLiveStreamEntry;
+            entry.liveStreamConfigurations = [];
+            // save hls stream to main entry and stream configuration
+            const hlsStreamUrl = this._form.controls['hlsStreamUrl'].value;
+            entry.hlsStreamUrl = hlsStreamUrl;
+            if (hlsStreamUrl && hlsStreamUrl.length) {
+                const cfg = new KalturaLiveStreamConfiguration();
+                cfg.protocol = KalturaPlaybackProtocol.appleHttp;
+                cfg.url = hlsStreamUrl;
+                entry.liveStreamConfigurations.push(cfg);
+            }
+
+            // save flash stream to stream configuration
+            const flashStreamUrl = this._form.controls['flashHDSURL'].value;
+            if (flashStreamUrl && flashStreamUrl.length) {
+                let protocol = KalturaPlaybackProtocol.akamaiHds;
+                let flashStreamConfig = (this.data as KalturaLiveStreamEntry).liveStreamConfigurations.find(cfg => cfg.protocol === KalturaPlaybackProtocol.akamaiHds);
+                if (!flashStreamConfig) {
+                    protocol = KalturaPlaybackProtocol.hds;
+                }
+                const cfg = new KalturaLiveStreamConfiguration();
+                cfg.protocol = protocol;
+                cfg.url = flashStreamUrl;
+                entry.liveStreamConfigurations.push(cfg);
+            }
+
+            // save dash stream to stream configuration
+            const dashStreamUrl = this._form.controls['dashStreamUrl'].value;
+            if (dashStreamUrl && dashStreamUrl.length) {
+                const dashStreamConfig = (this.data as KalturaLiveStreamEntry).liveStreamConfigurations.find(cfg => cfg.protocol === KalturaPlaybackProtocol.mpegDash);
+                const cfg = new KalturaLiveStreamConfiguration();
+                cfg.protocol = KalturaPlaybackProtocol.mpegDash;
+                cfg.url = dashStreamUrl;
+                entry.liveStreamConfigurations.push(cfg);
+            }
 		}
 	}
 
@@ -152,11 +222,33 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 
 	protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean}> {
 		return Observable.create(observer => {
-			const isValid = this._liveType === "universal" ? this._validateBitrates({updateDirtyMode: false}) : true;
-			observer.next({isValid});
+			let isValid = this._liveType === "universal" ? this._validateBitrates({updateDirtyMode: false}) : true;
+            if (this._liveType === "manual") {
+                for (const controlName in this._form.controls) {
+                    if (this._form.controls.hasOwnProperty(controlName)) {
+                        if (this._form.get(controlName).errors !== null) {
+                            isValid = false;
+                        }
+                    }
+                }
+                if (this._form.errors !== null) {
+                    isValid = false;
+                }
+            }
+            observer.next({isValid});
 			observer.complete()
 		});
 	}
+
+    private _atLeastOneUrlValidator(formgroup: FormGroup) {
+        if (!formgroup.controls['flashHDSURL'].value &&
+            !formgroup.controls['hlsStreamUrl'].value &&
+            !formgroup.controls['dashStreamUrl'].value) {
+            return {atLeastOneUrl: true};
+        } else {
+            return null;
+        }
+    }
 
 	protected onActivate(firstTimeActivating : boolean) {
 		// set live type and load data accordingly
@@ -228,6 +320,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 			case KalturaSourceType.manualLiveStream.toString():
 				this._liveType = "manual";
 				this._setManualStreams();
+                this.initManualForm();
 				break;
 		}
 
