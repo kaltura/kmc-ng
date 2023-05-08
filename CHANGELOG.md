@@ -1,3 +1,14 @@
+<a name="7.12.0"></a>
+# [7.12.0](https://github.com/kaltura/kmc-ng/compare/v7.11.1...v7.12.0) (2023-05-08)
+
+
+### Features
+
+* **entry/live:** allow editing manual live HLS stream URL KMCNG-2476 ([1265ad8](https://github.com/kaltura/kmc-ng/commit/1265ad8))
+* **entry/live:** allow editing manual live streams KMCNG-2476 ([be2aa5d](https://github.com/kaltura/kmc-ng/commit/be2aa5d))
+
+
+
 <a name="7.11.1"></a>
 ## [7.11.1](https://github.com/kaltura/kmc-ng/compare/v7.11.0...v7.11.1) (2023-05-02)
 
