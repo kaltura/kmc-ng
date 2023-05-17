@@ -18,7 +18,9 @@
             "contentModerationPageTitle": "Content > Moderation",
             "contentModerationMenuTitle": "Moderation",
             "contentPlaylistsPageTitle": "Content > Playlists",
+            "contentRoomsPageTitle": "Content > Rooms",
             "contentPlaylistsMenuTitle": "Playlists",
+            "contentRoomsMenuTitle": "Rooms",
             "contentSyndicationPageTitle": "Content > Syndication",
             "contentSyndicationMenuTitle": "Syndication",
             "contentUploadsPageTitle": "Content > Upload Control",
@@ -768,6 +770,12 @@
                 "noEntries": "No entries",
                 "viewAnalytics": "View Analytics",
                 "filterError": "Could not filter entries using the provided filters combination.\nPlease remove some of the filters and try again."
+            },
+            "rooms": {
+                "rooms": "{{0}} Rooms",
+                "searchRooms": "Search Rooms",
+                "deleteRoom": "Delete Room",
+                "confirmDeleteSingle": "Are you sure you want to delete the selected room? \n {{0}} \n Please note: this room will be permanently deleted from your account."
             },
             "playlists": {
                 "playlists": "{{0}} Playlists",

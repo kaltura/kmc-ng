@@ -1,0 +1,15 @@
+<kTags [title]="'applications.content.filters.activeFilters' | translate"
+       [data]="_filterTags"
+       [labelField]="'label'"
+       [tooltipField]="'tooltip'"
+       [clearAllLabel]="'applications.content.filters.clearAll' | translate"
+       (onTagRemove)="removeTag($event)"
+       (onRemoveAll)="removeAllTags()"
+       (onTagsChange)="onTagsChange.emit($event)">
+    <ng-template let-item="item">
+        <div class="kTagContent" [kTooltip]="item.tooltip">
+            <span class="kTagLabel">{{item.label}}</span>
+            <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
+        </div>
+    </ng-template>
+</kTags>

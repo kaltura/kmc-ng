@@ -1,0 +1,33 @@
+:host ::ng-deep span.p-button-icon-left.pi-kIconarrow_forward, :host ::ng-deep span.p-button-icon-left.pi-kIconarrow_backward {
+	margin-left: -.5em;
+}
+:host ::ng-deep .stickyHeader{
+	background-color: white;
+	height: 55px;
+	z-index: 500;
+	left: 0px;
+	right: 0px;
+	padding-top: 11px;
+	box-sizing: border-box;
+	box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.2);
+	width: 100% !important;
+}
+.kSections{
+	height: 100%;
+}
+.kEntryActionsWrapper {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+
+    .kAnalytics {
+        margin-right: 24px;
+        ::ng-deep .kIconstatistic {
+            font-size: 24px;
+        }
+        ::ng-deep .p-button-text{
+            padding-left: 42px;
+            white-space: nowrap;
+        }
+    }
+}
