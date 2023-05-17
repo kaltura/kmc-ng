@@ -1,0 +1,62 @@
+@import 'app-theme/_variables.scss';
+
+
+.kRoomsTable {
+  background-color: white;
+  height: auto;
+  padding: 0;
+    width: 100%;
+    .emptymessage {
+        display: table-row;
+        border: 0;
+        height: 200px;
+
+        .kEmptyMessage {
+            position: absolute;
+            width: 100%;
+            height: 200px;
+            border-bottom: 1px solid $kGrayscale4;
+        }
+    }
+
+  .kRoomsTableActions {
+    width: 100%;
+    text-align: center;
+  }
+  .kTitle{
+    color: $kGrayscale1;
+    font-weight: 700;
+    cursor: pointer;
+    overflow: hidden;
+    max-height: 45px;
+    &:hover{
+      color: #000000;
+    }
+  }
+
+  .kRoomsNameWrap {
+    display: flex;
+    align-items: center;
+  }
+
+}
+
+:host {
+	display: flex;
+	flex-flow: row wrap;
+	margin: 0;
+	flex-direction: column;
+}
+
+:host ::ng-deep p-table .p-datatable-scrollable-body{
+  margin-bottom: 34px;
+}
+:host ::ng-deep p-table .stickyHeader{
+  z-index: 10;
+  display: table;
+}
+:host ::ng-deep p-table {
+    .p-datatable .p-datatable-thead > tr > th {
+        border-left: 1px solid $kGrayscale6;
+    }
+}

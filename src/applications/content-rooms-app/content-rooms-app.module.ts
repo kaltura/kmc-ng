@@ -36,6 +36,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RoomsListComponent } from "./rooms/rooms-list/rooms-list.component";
 import {RoomsTagsComponent} from "./rooms/rooms-tags/rooms-tags.component";
 import {CategoriesModule} from "app-shared/content-shared/categories/categories.module";
+import {RoomsTableComponent} from "./rooms/rooms-table/rooms-table.component";
 
 @NgModule({
     imports: [
@@ -75,7 +76,8 @@ import {CategoriesModule} from "app-shared/content-shared/categories/categories.
   ],declarations: [
       ContentRoomsComponent,
         RoomsListComponent,
-        RoomsTagsComponent
+        RoomsTagsComponent,
+        RoomsTableComponent
     ],
     exports: [
     ],

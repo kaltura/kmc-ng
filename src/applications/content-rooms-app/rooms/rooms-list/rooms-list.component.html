@@ -49,14 +49,13 @@
             <k-area-blocker [showLoader]="_tableIsBusy"
                             [message]="_tableBlockerMessage"
                             [bodyScroll]="true">
-<!--                <kPlaylistsTable-->
-<!--                    class="kPlaylistsTable"-->
-<!--                    [playlists]="(_roomsStore.playlists.data$ | async)?.items"-->
-<!--                    (sortChanged)="_onSortChanged($event)"-->
-<!--                    [sortField]="_query.sortBy"-->
-<!--                    [sortOrder]="_query.sortDirection"-->
-<!--                    (actionSelected)="_onActionSelected($event)"-->
-<!--                    [(selectedPlaylists)]="_selectedPlaylists"></kPlaylistsTable>-->
+                <kRoomsTable
+                    class="kPlaylistsTable"
+                    [rooms]="(_roomsStore.rooms.data$ | async)?.items"
+                    (sortChanged)="_onSortChanged($event)"
+                    [sortField]="_query.sortBy"
+                    [sortOrder]="_query.sortDirection"
+                    (actionSelected)="_onActionSelected($event)"></kRoomsTable>
             </k-area-blocker>
 
             <div class="kPlaylistsTableFooter kContent" #footer *ngIf="(_roomsStore.rooms.data$ | async)?.totalCount">
