@@ -11,7 +11,7 @@ import { KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
         RoomsStore,
         KalturaLogger,
         {
-            provide: KalturaLoggerName, useValue: 'playlists-store.service'
+            provide: KalturaLoggerName, useValue: 'rooms-store.service'
         }
     ]
 })

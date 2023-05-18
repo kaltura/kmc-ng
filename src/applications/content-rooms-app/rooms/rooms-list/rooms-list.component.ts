@@ -200,7 +200,7 @@ export class RoomsListComponent implements OnInit, OnDestroy {
 
                     if (result.errorMessage) {
                         this._tableBlockerMessage = new AreaBlockerMessage({
-                            message: result.errorMessage || 'Error loading playlists',
+                            message: result.errorMessage || 'Error loading rooms',
                             buttons: [{
                                 label: 'Retry',
                                 action: () => {
@@ -215,13 +215,13 @@ export class RoomsListComponent implements OnInit, OnDestroy {
                     }
                 },
                 error => {
-                    console.warn('[kmcng] -> could not load playlists'); // navigate to error page
+                    console.warn('[kmcng] -> could not load playlroomsists'); // navigate to error page
                     throw error;
                 });
     }
 
-    private _openRaptAnalytics(id: string): void {
-      this._router.navigate(['analytics/playlist'], { queryParams: { id } });
+    private _openRoomAnalytics(id: string): void {
+      this._router.navigate(['analytics/entryEp'], { queryParams: { id } });
     }
 
   public _onTagsChange(): void {
@@ -234,7 +234,7 @@ export class RoomsListComponent implements OnInit, OnDestroy {
               this._contentRoomViewService.open({ room: event.room, section: ContentRoomViewSections.Metadata });
               break;
           case 'analytics':
-              this._openRaptAnalytics( event.room.id );
+              this._openRoomAnalytics( event.room.id );
               break;
           case 'delete':
               this._browserService.confirm(

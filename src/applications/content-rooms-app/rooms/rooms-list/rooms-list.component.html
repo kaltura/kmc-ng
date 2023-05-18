@@ -40,7 +40,7 @@
                     </div>
                 </div>
             </kSticky>
-            <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="playlistsTags" [sticksTo]="'roomsFilters'">
+            <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="roomsTags" [sticksTo]="'roomsFilters'">
                 <div class="kTagsWrapper kContent">
                     <k-rooms-tags (onTagsChange)="_onTagsChange()"></k-rooms-tags>
                 </div>
@@ -50,7 +50,6 @@
                             [message]="_tableBlockerMessage"
                             [bodyScroll]="true">
                 <kRoomsTable
-                    class="kPlaylistsTable"
                     [rooms]="(_roomsStore.rooms.data$ | async)?.items"
                     (sortChanged)="_onSortChanged($event)"
                     [sortField]="_query.sortBy"
@@ -58,7 +57,7 @@
                     (actionSelected)="_onActionSelected($event)"></kRoomsTable>
             </k-area-blocker>
 
-            <div class="kPlaylistsTableFooter kContent" #footer *ngIf="(_roomsStore.rooms.data$ | async)?.totalCount">
+            <div class="kRoomsTableFooter kContent" #footer *ngIf="(_roomsStore.rooms.data$ | async)?.totalCount">
                 <p-paginator
                     [rows]="_query.pageSize"
                     [first]="_query.pageIndex * _query.pageSize"
@@ -89,21 +88,4 @@
     </ng-template>
 </kPopupWidget>
 
-<!--<kPopupWidget-->
-<!--    #refinePopup-->
-<!--    data-aid="roomsRefinePopup"-->
-<!--    [popupWidth]="350"-->
-<!--    [popupHeight]="300"-->
-<!--    [closeBtn]="false"-->
-<!--    [targetRef]="refineBtn"-->
-<!--    [targetOffset]="{'x':-156, 'y': -20}"-->
-<!--    kSticky-->
-<!--    [sticksTo]="'header'"-->
-<!--    [stickyClass]="'kForceFix'"-->
-<!--    stickyId="roomsAdditionalFilter"-->
-<!--    [scrollOffset]="80">-->
-<!--    <ng-template>-->
-<!--        <k-playlists-refine-filters [parentPopupWidget]="refinePopup"></k-playlists-refine-filters>-->
-<!--    </ng-template>-->
-<!--</kPopupWidget>-->
 

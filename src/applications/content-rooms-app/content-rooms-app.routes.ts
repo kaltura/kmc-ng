@@ -13,9 +13,9 @@ export const routing: Route[] = [
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       { path: 'list', component: RoomsListComponent },
       {
-        path: 'playlist/:id', canDeactivate: [RoomCanDeactivate], component: RoomComponent,
+        path: 'room/:id', canDeactivate: [RoomCanDeactivate], component: RoomComponent,
         data: {
-          playlistRoute: true
+          roomRoute: true
         },
         children: [
           // { path: '', redirectTo: 'metadata', pathMatch: 'full' },

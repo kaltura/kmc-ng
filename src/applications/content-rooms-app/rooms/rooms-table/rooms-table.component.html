@@ -12,9 +12,7 @@
             [defaultSortOrder]="_defaultSortOrder"
             (sortFunction)="onSortChanged($event)" [customSort]="true"
             (onColResize)="_columnsResizeManager.onColumnResize($event)"
-            [(selection)]="selectedRooms"
-            (selectionChange)="onSelectionChange($event)"
-            kStickyHeader [sticksTo]="'playlistsTags'" stickyClass="stickyHeader" [stickyId]="'playlistsTable'">
+            kStickyHeader [sticksTo]="'roomsTags'" stickyClass="stickyHeader" [stickyId]="'roomsTable'">
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
                 <col data-cid="typeIcon" [ngStyle]="{'width': '44px'}">

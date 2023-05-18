@@ -24,7 +24,7 @@ import {AnalyticsNewMainViewService} from "app-shared/kmc-shared/kmc-views";
     styleUrls: ['./rooms-table.component.scss'],
     providers: [
         ColumnsResizeManagerService,
-        {provide: ResizableColumnsTableName, useValue: 'playlists-table'}
+        {provide: ResizableColumnsTableName, useValue: 'rooms-table'}
     ]
 })
 export class RoomsTableComponent implements AfterViewInit, OnInit, OnDestroy {
@@ -41,10 +41,8 @@ export class RoomsTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
     @Input() sortField: string = null;
     @Input() sortOrder: number = null;
-    @Input() selectedRooms: any[] = [];
 
     @Output() sortChanged = new EventEmitter<{ field: string, order: number }>();
-    @Output() selectedPlaylistsChange = new EventEmitter<any>();
     @Output() actionSelected = new EventEmitter<any>();
 
     @ViewChild('actionsmenu', {static: true}) private actionsMenu: Menu;
@@ -110,11 +108,6 @@ export class RoomsTableComponent implements AfterViewInit, OnInit, OnDestroy {
                 command: () => this.onActionSelected('delete', room)
             }
         ];
-    }
-
-
-    onSelectionChange(event) {
-        this.selectedPlaylistsChange.emit(event);
     }
 
     onActionSelected(action: string, room: KalturaRoomEntry) {

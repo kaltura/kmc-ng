@@ -13,7 +13,7 @@ import {
     KalturaRoomType,
     KalturaSearchOperator,
     KalturaSearchOperatorType,
-    RoomDeleteAction, RoomListAction
+    RoomDeleteAction, RoomListAction, KalturaRoomEntry
 } from 'kaltura-ngx-client';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {
@@ -27,7 +27,7 @@ import {
 } from '@kaltura-ng/mc-shared';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {cancelOnDestroy, KalturaUtils} from '@kaltura-ng/kaltura-common';
-import {ContentPlaylistsMainViewService} from 'app-shared/kmc-shared/kmc-views';
+import {ContentRoomsMainViewService} from 'app-shared/kmc-shared/kmc-views';
 import {globalConfig} from 'config/global';
 import {map} from 'rxjs/operators';
 import {
@@ -54,20 +54,12 @@ export interface RoomsFilters {
   categoriesMode: CategoriesModeType,
 }
 
-export interface ExtendedPlaylist extends KalturaBaseEntry {
-    tooltip?: string;
-    isRapt?: boolean;
-    isPath?: boolean;
-    isManual?: boolean;
-    isRuleBased?: boolean;
-}
-
 const localStoragePageSizeKey = 'rooms.list.pageSize';
 
 @Injectable()
 export class RoomsStore extends FiltersStoreBase<RoomsFilters> implements OnDestroy {
   private _rooms = {
-    data: new BehaviorSubject<{ items: ExtendedPlaylist[], totalCount: number }>({ items: [], totalCount: 0 }),
+    data: new BehaviorSubject<{ items: KalturaRoomEntry[], totalCount: number }>({ items: [], totalCount: 0 }),
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
   private _isReady = false;
@@ -82,10 +74,10 @@ export class RoomsStore extends FiltersStoreBase<RoomsFilters> implements OnDest
   constructor(private _kalturaServerClient: KalturaClient,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
-              contentPlaylistsMainView: ContentPlaylistsMainViewService,
+              contentRoomsMainView: ContentRoomsMainViewService,
               _logger: KalturaLogger) {
         super(_logger);
-        if (contentPlaylistsMainView.isAvailable()) {
+        if (contentRoomsMainView.isAvailable()) {
             this._prepare();
         }
   }

@@ -1,26 +1,24 @@
 import { Injectable } from '@angular/core';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { WidgetsManagerBase } from '@kaltura-ng/kaltura-ui'
-import { KalturaMultiRequest } from 'kaltura-ngx-client';
-import { KalturaPlaylist } from 'kaltura-ngx-client';
+import {KalturaMultiRequest, KalturaRoomEntry} from 'kaltura-ngx-client';
 import { RoomStore } from './room-store.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
-export class RoomWidgetsManager extends WidgetsManagerBase<KalturaPlaylist, KalturaMultiRequest> {
+export class RoomWidgetsManager extends WidgetsManagerBase<KalturaRoomEntry, KalturaMultiRequest> {
   private _roomStore: RoomStore;
 
   constructor(logger: KalturaLogger) {
-    super(logger.subLogger('PlaylistWidgetsManager'));
+    super(logger.subLogger('RoomWidgetsManager'));
   }
 
-  set playlistStore(value: RoomStore) {
+  set roomStore(value: RoomStore) {
     this._roomStore = value;
   }
 
-  public returnToPlaylists(): void {
+  public returnToRooms(): void {
     if (this._roomStore) {
-      this._roomStore.returnToPlaylists();
+      this._roomStore.returnToRooms();
     }
   }
 }
