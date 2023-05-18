@@ -286,6 +286,16 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
                                     }),
                                     new KalturaESearchUserItem({
                                         itemType: KalturaESearchItemType.startsWith,
+                                        fieldName: KalturaESearchUserFieldName.firstName,
+                                        searchTerm: text.split(" ")[0]
+                                    }),
+                                    new KalturaESearchUserItem({
+                                        itemType: KalturaESearchItemType.partial,
+                                        fieldName: KalturaESearchUserFieldName.lastName,
+                                        searchTerm: text
+                                    }),
+                                    new KalturaESearchUserItem({
+                                        itemType: KalturaESearchItemType.startsWith,
                                         fieldName: KalturaESearchUserFieldName.userId,
                                         searchTerm: text
                                     })
