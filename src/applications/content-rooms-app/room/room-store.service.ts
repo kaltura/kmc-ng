@@ -164,8 +164,8 @@ export class RoomStore implements OnDestroy {
 
               this._loadRoomSubscription = null;
 
-              const playlistLoadedResult = this._widgetsManager.notifyDataLoaded(room, { isNewData: false });
-              if (playlistLoadedResult.errors.length) {
+              const roomLoadedResult = this._widgetsManager.notifyDataLoaded(room, { isNewData: false });
+              if (roomLoadedResult.errors.length) {
                   this._state.next({
                       action: ActionTypes.RoomLoadingFailed,
                       error: new Error('one of the widgets failed while handling data loaded event')
@@ -209,7 +209,7 @@ export class RoomStore implements OnDestroy {
       .subscribe(
         () => {
           const currentRoomId = this._roomRoute.snapshot.params.id;
-          this._notifications.next({ type: NotificationTypes.ViewEntered });
+          setTimeout(() => this._loadRoom(currentRoomId), 0);
         }
       );
   }

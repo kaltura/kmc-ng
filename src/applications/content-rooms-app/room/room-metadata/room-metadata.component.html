@@ -1,0 +1,47 @@
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+  <div class="kMetadataWrap">
+    <div class="kMetadataDetails">
+      <span class="kSchemaTitle">{{'applications.content.playlistDetails.sections.metadata' | translate}}</span>
+
+      <form [formGroup]="_widgetService.metadataForm" novalidate>
+        <div class="kRow kValign">
+        <span class="kLabel" >
+          {{'applications.content.playlistDetails.metadata.playlistName' | translate}}
+        </span>
+          <div class="kControl">
+            <input #metadataNameInput formControlName="name" pInputText
+                    (blur)="_trimNameValue()"
+                    [ngClass]="{'kHasError':!_widgetService.metadataForm.controls['name'].valid &&
+                   _widgetService.metadataForm.controls['name'].touched}">
+            <div *ngIf="_widgetService.metadataForm.controls['name'].touched &&
+                 _widgetService.metadataForm.controls['name'].hasError('required')"
+                 class="error">
+              {{'applications.content.rooms.nameIsMandatory' | translate}}
+            </div>
+          </div>
+        </div>
+        <div class="kRow">
+          <span class="kLabel">{{'applications.content.playlistDetails.metadata.description' | translate}}</span>
+          <div class="kControl">
+            <textarea formControlName="description" pInputTextarea class="threeRows"></textarea>
+          </div>
+        </div>
+        <div class="kRow kValign">
+          <span class="kLabel">{{'applications.content.playlistDetails.metadata.tags' | translate}}</span>
+          <div class="kControl">
+            <kAutoComplete
+              formControlName="tags"
+              suggestionItemField="item"
+              suggestionSelectableField="isSelectable"
+              [allowMultiple]="true"
+              [limitToSuggestions]="false"
+              [minLength]="3"
+              [suggestionsProvider]="_tagsProvider"
+              (completeMethod)="_searchTags($event)">
+            </kAutoComplete>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</k-area-blocker>

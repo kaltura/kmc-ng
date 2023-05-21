@@ -4,92 +4,76 @@ import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Observable } from 'rxjs';
-// import { NotificationTypes, ActionTypes, PlaylistStore } from './playlist-store.service';
 import { RoomsStore } from '../rooms/rooms-store/rooms-store.service';
-// import { PlaylistWidgetsManager } from './playlist-widgets-manager';
-// import { PlaylistSectionsListWidget } from './playlist-sections-list/playlist-sections-list-widget.service';
-// import { ManualContentWidget } from './playlist-content/manual/manual-content-widget.service';
-// import { PlaylistMetadataWidget } from './playlist-metadata/playlist-metadata-widget.service';
-// import { PlaylistDetailsWidget } from './playlist-details/playlist-details-widget.service';
-// import { RuleBasedContentWidget } from './playlist-content/rule-based/rule-based-content-widget.service';
-import {KalturaPlaylistType, KalturaSourceType} from 'kaltura-ngx-client';
-import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { ContentPlaylistViewSections, ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { ContentRoomViewSections, ContentRoomViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AnalyticsNewMainViewService } from "app-shared/kmc-shared/kmc-views";
-import {RoomStore} from "./room-store.service";
+import { ActionTypes, NotificationTypes, RoomStore } from "./room-store.service";
+import { RoomWidgetsManager } from "./room-widgets-manager";
+import { RoomSectionsListWidget } from "./room-sections-list/room-sections-list-widget.service";
+import { RoomDetailsWidget } from "./room-details/room-details-widget.service";
+import { RoomMetadataWidget } from "./room-metadata/room-metadata-widget.service";
 
 @Component({
-  selector: 'kRoomlist',
+  selector: 'kRoom',
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.scss'],
   providers: [
     RoomsStore,
-    // PlaylistWidgetsManager,
-    // PlaylistSectionsListWidget,
-    // PlaylistDetailsWidget,
-    // ManualContentWidget,
-    // PlaylistMetadataWidget,
-    // RuleBasedContentWidget
+    RoomStore,
+    RoomWidgetsManager,
+    RoomSectionsListWidget,
+    RoomDetailsWidget,
+    RoomMetadataWidget
   ]
 })
 export class RoomComponent implements OnInit, OnDestroy {
-  public _playlistName: string;
-  public _playlistTypeIcon: string;
-  public _currentPlaylistId: string;
+  public _roomName: string;
+  public _currentRoomId: string;
   public _showLoader = false;
   public _areaBlockerMessage: AreaBlockerMessage;
   public isValid = true;
   public isDirty = true;
-  public _isRapt = false;
-  public _isManual = false;
-  public _isRuleBased = false;
-  public _isPath = false;
   public _analyticsAllowed = false;
   public _enablePrevButton: boolean;
   public _enableNextButton: boolean;
 
     public get _enableSaveBtn(): boolean {
-        return true;
-        // const hasUpdatePermission = this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_UPDATE);
-        // const isNewPlaylist = this._playlistWidgetsManager.isNewData;
-        // return  isNewPlaylist || (this._playlistStore.playlistIsDirty && !isNewPlaylist && hasUpdatePermission);
+        return true; // TODO [kmc] check for room update permissions once added to the backend
     }
 
   constructor(private _browserService: BrowserService,
               public _roomStore: RoomStore,
               private _appLocalization: AppLocalization,
-              // private _playlistsStore: PlaylistsStore,
+              private _roomsStore: RoomsStore,
               private _permissionsService: KMCPermissionsService,
-              // private _playlistWidgetsManager: PlaylistWidgetsManager,
-              // private _playlistsUtilsService: PlaylistsUtilsService,
-              // widget1: PlaylistSectionsListWidget,
-              // widget2: PlaylistDetailsWidget,
-              // widget3: ManualContentWidget,
-              // widget4: PlaylistMetadataWidget,
-              // widget5: RuleBasedContentWidget,
-              private _contentPlaylistView: ContentPlaylistViewService,
+              private _roomWidgetsManager: RoomWidgetsManager,
+              widget1: RoomSectionsListWidget,
+              widget2: RoomDetailsWidget,
+              widget3: RoomMetadataWidget,
+              // widget4: RuleBasedContentWidget,
+              private _contentRoomView: ContentRoomViewService,
               private _analyticsNewMainViewService: AnalyticsNewMainViewService,
               private _router: Router,
-              private _playlistRoute: ActivatedRoute) {
-    // _playlistWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5])
+              private _roomRoute: ActivatedRoute) {
+    _roomWidgetsManager.registerWidgets([widget1, widget2, widget3])
   }
 
   ngOnInit() {
     let errorMessage;
-/*
-      this._playlistStore.notifications$
+      this._roomStore.notifications$
           .pipe(cancelOnDestroy(this))
           .subscribe(
               ({ type, error }) => {
                   switch(type) {
                       case NotificationTypes.ViewEntered:
-                          const playlist = this._playlistStore.playlist;
-                          if (playlist ) {
-                              this._contentPlaylistView.viewEntered({
-                                  playlist,
-                                  activatedRoute: this._playlistRoute,
-                                  section: ContentPlaylistViewSections.ResolveFromActivatedRoute
+                          const room = this._roomStore.room;
+                          if (room ) {
+                              this._contentRoomView.viewEntered({
+                                  room,
+                                  activatedRoute: this._roomRoute,
+                                  section: ContentRoomViewSections.ResolveFromActivatedRoute
                               });
                           }
 
@@ -99,7 +83,7 @@ export class RoomComponent implements OnInit, OnDestroy {
                   }
               });
 
-    this._playlistStore.state$
+    this._roomStore.state$
       .pipe(cancelOnDestroy(this))
       .subscribe(
         status => {
@@ -108,49 +92,42 @@ export class RoomComponent implements OnInit, OnDestroy {
 
           if (status) {
             switch (status.action) {
-              case ActionTypes.PlaylistLoading:
+              case ActionTypes.RoomLoading:
                 this._showLoader = true;
 
-                // when loading new playlist in progress, the 'playlistID' property
-                // reflect the playlist that is currently being loaded
-                // while 'playlist$' stream is null
-                this._currentPlaylistId = this._playlistStore.playlistId;
+                // when loading new room in progress, the 'roomId' property
+                // reflect the room that is currently being loaded
+                // while 'room$' stream is null
+                this._currentRoomId = this._roomStore.roomId;
+                break;
+
+              case ActionTypes.RoomLoaded:
+                this._roomName = this._roomStore.room.name;
+                this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable(); // new analytics app is available
                 this._updateNavigationState();
                 break;
 
-              case ActionTypes.PlaylistLoaded:
-                this._playlistName = this._playlistStore.playlist.name;
-                this._isRapt = this._playlistsUtilsService.isRapt(this._playlistStore.playlist);
-                this._isPath = this._playlistsUtilsService.isPath(this._playlistStore.playlist);
-                this._isManual = this._playlistsUtilsService.isManual(this._playlistStore.playlist);
-                this._isRuleBased = this._playlistsUtilsService.isRuleBased(this._playlistStore.playlist);
-                this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable(); // new analytics app is available
-                this._playlistTypeIcon = this._playlistStore.playlist.playlistType === KalturaPlaylistType.staticList
-                  ? 'kIconPlaylist_Manual'
-                  : 'kIconPlaylist_RuleBased';
-                break;
-
-              case ActionTypes.PlaylistLoadingFailed:
+              case ActionTypes.RoomLoadingFailed:
                 errorMessage = status.error
                   ? status.error.message
                   : this._appLocalization.get('applications.content.errors.loadError');
                 this._areaBlockerMessage = new AreaBlockerMessage({
                   message: errorMessage,
                   buttons: [
-                    this._createBackToPlaylistsButton(),
+                    this._createBackToRoomsButton(),
                     {
                       label: this._appLocalization.get('applications.content.playlistDetails.errors.retry'),
-                      action: () => this._playlistStore.reloadPlaylist()
+                      action: () => this._roomStore.reloadRoom()
                     }
                   ]
                 });
                 break;
 
-              case ActionTypes.PlaylistSaving:
+              case ActionTypes.RoomSaving:
                 this._showLoader = true;
                 break;
 
-              case ActionTypes.PlaylistSavingFailed:
+              case ActionTypes.RoomSavingFailed:
                 errorMessage = status.error && status.error.message
                   ? status.error.message
                   : this._appLocalization.get('applications.content.playlistDetails.errors.saveError');
@@ -159,12 +136,12 @@ export class RoomComponent implements OnInit, OnDestroy {
                   message: errorMessage,
                   buttons: [{
                     label: this._appLocalization.get('applications.content.playlistDetails.errors.ok'),
-                    action: () => this._playlistStore.reloadPlaylist()
+                    action: () => this._roomStore.reloadRoom()
                   }]
                 });
                 break;
 
-              case ActionTypes.PlaylistDataIsInvalid:
+              case ActionTypes.RoomDataIsInvalid:
                 this._areaBlockerMessage = new AreaBlockerMessage({
                   message: this._appLocalization.get('applications.content.playlistDetails.errors.validationError'),
                   buttons: [{
@@ -184,7 +161,7 @@ export class RoomComponent implements OnInit, OnDestroy {
                 });
                 break;
 
-              case ActionTypes.PlaylistPrepareSavingFailed:
+              case ActionTypes.RoomPrepareSavingFailed:
                 errorMessage = status.error && status.error.message
                   ? status.error.message
                   : this._appLocalization.get('applications.content.playlistDetails.errors.savePrepareError');
@@ -207,72 +184,71 @@ export class RoomComponent implements OnInit, OnDestroy {
             message: error.message,
             buttons: [{
               label: this._appLocalization.get('applications.content.playlistDetails.errors.ok'),
-              action: () => this._playlistStore.reloadPlaylist()
+              action: () => this._roomStore.reloadRoom()
             }]
           });
         }
       );
 
 
- */
+
   }
 
   ngOnDestroy() {
   }
 
   private _updateNavigationState(): void {
-    // TODO [kmcng] find a better way that doesn't need access to the playlist directly
-    // const playlists = this._playlistsStore.playlists.data().items;
-    // if (playlists && this._currentPlaylistId) {
-    //   const currentPlaylistIndex = playlists.findIndex(playlist => playlist.id === this._currentPlaylistId);
-    //   this._enableNextButton = currentPlaylistIndex >= 0 && (currentPlaylistIndex < playlists.length - 1);
-    //   this._enablePrevButton = currentPlaylistIndex > 0;
-    // } else {
-    //   this._enableNextButton = false;
-    //   this._enablePrevButton = false;
-    // }
+    const rooms = this._roomsStore.rooms.data().items;
+    if (rooms && this._currentRoomId) {
+      const currentRoomIndex = rooms.findIndex(room => room.id === this._currentRoomId);
+      this._enableNextButton = currentRoomIndex >= 0 && (currentRoomIndex < rooms.length - 1);
+      this._enablePrevButton = currentRoomIndex > 0;
+    } else {
+      this._enableNextButton = false;
+      this._enablePrevButton = false;
+    }
   }
 
-  // private _createBackToPlaylistsButton(): AreaBlockerMessageButton {
-  //   return {
-  //     label: this._appLocalization.get('applications.content.playlistDetails.errors.backToPlaylists'),
-  //     action: () => this._playlistStore.returnToPlaylists()
-  //   };
-  // }
+  private _createBackToRoomsButton(): AreaBlockerMessageButton {
+    return {
+      label: this._appLocalization.get('applications.content.rooms.backToPlaylists'),
+      action: () => this._roomStore.returnToRooms()
+    };
+  }
 
   public _backToList(): void {
-    //this._playlistStore.returnToPlaylists();
+    this._roomStore.returnToRooms();
   }
 
   public save(): void {
-    //this._playlistStore.savePlaylist();
+    this._roomStore.saveRoom();
   }
 
-  // public _navigateToPlaylist(direction: 'next' | 'prev'): void {
-  //   // TODO [kmcng] find a better way that doesn't need access to the playlist directly
-  //   const playlists = this._playlistsStore.playlists.data().items;
-  //   if (playlists && this._currentPlaylistId) {
-  //     const currentPlaylistIndex = playlists.findIndex(playlist => playlist.id === this._currentPlaylistId);
-  //     let newPlaylist = null;
-  //     if (direction === 'next' && this._enableNextButton) {
-  //       newPlaylist = playlists[currentPlaylistIndex + 1];
-  //     }
-  //     if (direction === 'prev' && this._enablePrevButton) {
-  //       newPlaylist = playlists[currentPlaylistIndex - 1];
-  //     }
-  //     if (newPlaylist) {
-  //       this._playlistStore.openPlaylist(newPlaylist);
-  //     }
-  //   }
-  // }
-  //
+  public _navigateToRoom(direction: 'next' | 'prev'): void {
+    const rooms = this._roomsStore.rooms.data().items;
+    if (rooms && this._currentRoomId) {
+      const currentRoomIndex = rooms.findIndex(room => room.id === this._currentRoomId);
+      let newRoom = null;
+      if (direction === 'next' && this._enableNextButton) {
+          newRoom = rooms[currentRoomIndex + 1];
+      }
+      if (direction === 'prev' && this._enablePrevButton) {
+          newRoom = rooms[currentRoomIndex - 1];
+      }
+      if (newRoom) {
+        this._roomStore.openRoom(newRoom);
+      }
+    }
+  }
+
+    public _openRoomAnalytics(): void {
+        if (this._analyticsAllowed) {
+            this._router.navigate(['analytics/entry-ep'], { queryParams: { id: this._roomStore.room.id } });
+        }
+    }
+
   public canLeave(): Observable<{ allowed: boolean }> {
     return this._roomStore.canLeaveWithoutSaving();
   }
 
-  public _openRaptAnalytics(): void {
-      // if (this._analyticsAllowed) {
-      //     this._router.navigate(['analytics/playlist'], { queryParams: { id: this._playlistStore.playlist.id } });
-      // }
-  }
 }

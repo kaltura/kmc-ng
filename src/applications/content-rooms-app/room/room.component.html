@@ -1,40 +1,40 @@
-<!--<k-area-blocker [showLoader]="_showLoader" [message]="_areaBlockerMessage" [bodyScroll]="true">-->
-<!--	<div class="kmcDetailsLayout kOverrideFAIcons">-->
-<!--		<div class="kContent kDetailsWrapper">-->
-<!--			<kSticky stickyId="playlistHeader" [sticksTo]="'header'" stickyClass="stickyHeader">-->
-<!--				<div class="kDetailsHeader">-->
-<!--					<div class="kContent">-->
-<!--						<button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>-->
-<!--						<div class="kTitle">{{ _playlistName }}</div>-->
-<!--                        <div class="kEntryActionsWrapper">-->
-<!--                            <button pButton icon="kIconstatistic" class="kButtonDefault kAnalytics"-->
-<!--                                    *ngIf="(_isPath || _isRapt || _isManual) && _analyticsAllowed"-->
-<!--                                    [label]="'applications.content.entries.viewAnalytics' | translate"-->
-<!--                                    (click)="_openRaptAnalytics()"></button>-->
-<!--                            <button pButton class="kButtonBranded kSaveBtn"-->
-<!--                                    [label]="'app.common.save' | translate"-->
-<!--                                    [disabled]="!_enableSaveBtn"-->
-<!--                                    (click)="save()"></button>-->
-<!--                            <button pButton class="kButtonDefault kNavigationBtnLeft"  icon="kIconarrow_backward" (click)="_navigateToPlaylist('prev')" [disabled]="!_enablePrevButton"></button>-->
-<!--                            <button pButton class="kButtonDefault kNavigationBtnRight" icon="kIconarrow_forward"  (click)="_navigateToPlaylist('next')" [disabled]="!_enableNextButton"></button>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--				</div>-->
-<!--			</kSticky>-->
-<!--			<div class="kHeaderDetails">-->
-<!--				<kPlaylistDetails [isRapt]="_isRapt"></kPlaylistDetails>-->
-<!--			</div>-->
-<!--			<div class="kDetailsMain">-->
-<!--				<div class="kSections">-->
-<!--					<kPlaylistSectionsList></kPlaylistSectionsList>-->
-<!--				</div>-->
-<!--				<div class="kDetailsContent">-->
-<!--					<router-outlet></router-outlet>-->
-<!--				</div>-->
-<!--			</div>-->
-<!--			<div class="kSpacer"></div>-->
-<!--		</div>-->
+<k-area-blocker [showLoader]="_showLoader" [message]="_areaBlockerMessage" [bodyScroll]="true">
+	<div class="kmcDetailsLayout kOverrideFAIcons">
+		<div class="kContent kDetailsWrapper">
+			<kSticky stickyId="roomHeader" [sticksTo]="'header'" stickyClass="stickyHeader">
+				<div class="kDetailsHeader">
+					<div class="kContent">
+						<button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
+						<div class="kTitle">{{ _roomName }}</div>
+                        <div class="kEntryActionsWrapper">
+                            <button pButton icon="kIconstatistic" class="kButtonDefault kAnalytics"
+                                    *ngIf="_analyticsAllowed"
+                                    [label]="'applications.content.entries.viewAnalytics' | translate"
+                                    (click)="_openRoomAnalytics()"></button>
+                            <button pButton class="kButtonBranded kSaveBtn"
+                                    [label]="'app.common.save' | translate"
+                                    [disabled]="!_enableSaveBtn"
+                                    (click)="save()"></button>
+                            <button pButton class="kButtonDefault kNavigationBtnLeft"  icon="kIconarrow_backward" (click)="_navigateToRoom('prev')" [disabled]="!_enablePrevButton"></button>
+                            <button pButton class="kButtonDefault kNavigationBtnRight" icon="kIconarrow_forward"  (click)="_navigateToRoom('next')" [disabled]="!_enableNextButton"></button>
+                        </div>
+                    </div>
+				</div>
+			</kSticky>
+			<div class="kHeaderDetails">
+				<kRoomDetails></kRoomDetails>
+			</div>
+			<div class="kDetailsMain">
+				<div class="kSections">
+					<kRoomSectionsList></kRoomSectionsList>
+				</div>
+				<div class="kDetailsContent">
+					<router-outlet></router-outlet>
+				</div>
+			</div>
+			<div class="kSpacer"></div>
+		</div>
 
-<!--	</div>-->
-<!--</k-area-blocker>-->
-<span>Room component</span>
+	</div>
+</k-area-blocker>
+

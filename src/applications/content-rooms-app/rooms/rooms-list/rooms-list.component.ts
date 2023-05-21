@@ -16,6 +16,7 @@ import {
     CategoriesStatus,
     CategoriesStatusMonitorService
 } from "app-shared/content-shared/categories-status/categories-status-monitor.service";
+import {CategoriesModes} from "app-shared/content-shared/categories/categories-mode-type";
 
 @Component({
   selector: 'kRoomsList',
@@ -147,6 +148,10 @@ export class RoomsListComponent implements OnInit, OnDestroy {
 
     if (typeof updates.sortDirection !== 'undefined') {
       this._query.sortDirection = updates.sortDirection;
+    }
+
+    if (typeof updates.categoriesMode !== 'undefined') {
+      this._query.categoriesMode = updates.categoriesMode === CategoriesModes.Self ? CategoriesModes.Self : CategoriesModes.SelfAndChildren;
     }
   }
 

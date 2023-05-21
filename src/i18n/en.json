@@ -775,7 +775,12 @@
                 "rooms": "{{0}} Rooms",
                 "searchRooms": "Search Rooms",
                 "deleteRoom": "Delete Room",
-                "confirmDeleteSingle": "Are you sure you want to delete the selected room? \n {{0}} \n Please note: this room will be permanently deleted from your account."
+                "confirmDeleteSingle": "Are you sure you want to delete the selected room? \n {{0}} \n Please note: this room will be permanently deleted from your account.",
+                "sections": {
+                    "metadata": "Metadata"
+                },
+                "backToRooms": "Back To Rooms",
+                "nameIsMandatory": "You must enter a Room Name"
             },
             "playlists": {
                 "playlists": "{{0}} Playlists",

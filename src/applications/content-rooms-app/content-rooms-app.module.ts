@@ -34,9 +34,13 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { SharedModule } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { RoomsListComponent } from "./rooms/rooms-list/rooms-list.component";
-import {RoomsTagsComponent} from "./rooms/rooms-tags/rooms-tags.component";
-import {CategoriesModule} from "app-shared/content-shared/categories/categories.module";
-import {RoomsTableComponent} from "./rooms/rooms-table/rooms-table.component";
+import { RoomsTagsComponent } from "./rooms/rooms-tags/rooms-tags.component";
+import { CategoriesModule } from "app-shared/content-shared/categories/categories.module";
+import { RoomsTableComponent } from "./rooms/rooms-table/rooms-table.component";
+import { RoomSectionsList } from "./room/room-sections-list/room-sections-list.component";
+import {RoomDetailsComponent} from "./room/room-details/room-details.component";
+import {RoomComponent} from "./room/room.component";
+import {RoomMetadataComponent} from "./room/room-metadata/room-metadata.component";
 
 @NgModule({
     imports: [
@@ -77,7 +81,11 @@ import {RoomsTableComponent} from "./rooms/rooms-table/rooms-table.component";
       ContentRoomsComponent,
         RoomsListComponent,
         RoomsTagsComponent,
-        RoomsTableComponent
+        RoomsTableComponent,
+        RoomComponent,
+        RoomSectionsList,
+        RoomDetailsComponent,
+        RoomMetadataComponent
     ],
     exports: [
     ],

@@ -5,7 +5,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {DetailsViewMetadata, KmcDetailsViewBaseService} from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {KalturaPlaylist, KalturaPlaylistType, KalturaRoomEntry} from 'kaltura-ngx-client';
+import {KalturaRoomEntry} from 'kaltura-ngx-client';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {Title} from '@angular/platform-browser';
 import {ContextualHelpService} from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
@@ -38,18 +38,18 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
 
     getViewMetadata(args: ContentRoomViewArgs): DetailsViewMetadata {
         const mainTitle = this._appLocalization.get('app.titles.contentRoomsPageTitle');
-        const playlistId = args.room.id;
+        const roomId = args.room.id;
         const section = args.section === ContentRoomViewSections.ResolveFromActivatedRoute ? this._getSectionFromActivatedRoute(args.activatedRoute, args.room) : args.section;
-        const sectionTitle = this._appLocalization.get(`applications.content.playlistDetails.sections.${section.toLowerCase()}`);
+        const sectionTitle = this._appLocalization.get(`applications.content.rooms.sections.${section.toLowerCase()}`);
         return {
-            title: `${mainTitle} > ${playlistId} > ${sectionTitle}`,
-            viewKey: `content-playlist-${section.toLowerCase()}`
+            title: `${mainTitle} > ${roomId} > ${sectionTitle}`,
+            viewKey: `content-room-${section.toLowerCase()}`
         };
     }
 
     isAvailable(args: ContentRoomViewArgs): boolean {
         const section = args.section === ContentRoomViewSections.ResolveFromActivatedRoute ? this._getSectionFromActivatedRoute(args.activatedRoute, args.room) : args.section;
-        this._logger.info(`handle isAvailable action by user`, { playlistId: args.room.id, section });
+        this._logger.info(`handle isAvailable action by user`, { roomId: args.room.id, section });
         return this._isSectionEnabled(section, args.room);
     }
 
@@ -109,7 +109,7 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
     }
 
     protected _open(args: ContentRoomViewArgs): Observable<boolean> {
-        this._logger.info('handle open room view request by the user', { playlistId: args.room.id });
+        this._logger.info('handle open room view request by the user', { roomId: args.room.id });
         const sectionToken = this._getSectionRouteToken(args.section);
         return fromPromise(this._router.navigateByUrl(`/content/rooms/room/${args.room.id}/${sectionToken}`));
     }
