@@ -1,0 +1,47 @@
+<div class="kAddCategory kTreeContainer kOverrideFAIcons">
+	<div class="kHeader">
+		<span class="kTitle">{{'applications.content.entryDetails.metadata.selectCategories' | translate}}</span>
+	</div>
+
+	<div class="kTagsContainer" [class.kLocked]="_categoriesLocked">
+		<span *ngIf="_categoriesLocked">{{'applications.content.categories.categoriesLockMsg' | translate}}</span>
+		<span class="kSelectCategoriesMsg" *ngIf="!_selectedCategories.length && !_categoriesLocked">{{'applications.content.entryDetails.metadata.catSelect' | translate}}</span>
+		<div *ngIf="_categoriesUpdating && !_selectedCategories.length && !_categoriesLocked" class="k-spinner-background kSpinnerBkg" kTooltip="{{'applications.content.categories.categoriesUpdateMsg' | translate}}">
+			<div class="k-spinner-animation kSpinnerAnim"></div>
+		</div>
+		<kTags #tags *ngIf="_selectedCategories?.length" [data]="_selectedCategories" [labelField]="'name'"  (onTagRemove)="_removeTag($event)" (onRemoveAll)="_removeAllTag()" [clearAllLabel]="'applications.content.filters.clearAll' | translate">
+			<ng-template let-item="item">
+				<div class="kTagContent" [kTooltip]="item.data | kCategoryTooltip">
+					<span class="kTagLabel">{{item.label}}</span>
+					<i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="_removeTag(item.data)"></i>
+				</div>
+			</ng-template>
+		</kTags>
+	</div>
+	<div class="kMain" [class.kLocked]="_categoriesLocked">
+		<kAutoComplete #autoComplete
+					   [disabled]="!_categoriesLoaded || _categoriesLocked"
+					   [allowMultiple]="false"
+					   field="name"
+					   suggestionItemField="item"
+					   suggestionLabelField="name"
+					   suggestionSelectableField="isSelectable"
+					   placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"
+					   [minLength]="3"
+					   (onSelect)="_onAutoCompleteSelected()"
+					   [suggestionsProvider]="_categoriesProvider"
+					   (completeMethod)="_onAutoCompleteSearch($event)">
+		</kAutoComplete>
+
+
+		<k-categories-tree #categoriesTree
+						   [(selectedCategories)]="_treeSelection"
+						   (onCategoriesLoaded)="_onTreeCategoriesLoad($event)"
+						   (onCategorySelected)="_onCategorySelected($event)"
+						   (onCategoryUnselected)="_onCategoryUnselected($event)"></k-categories-tree>
+	</div>
+
+    <div class="kFooter" [class.kLocked]="_categoriesLocked">
+        <button class="kButtonBranded" pButton label="{{buttonLabel}}" (click)="_apply()"></button>
+    </div>
+</div>

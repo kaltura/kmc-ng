@@ -41,7 +41,46 @@
             </kAutoComplete>
           </div>
         </div>
+
+          <div class="kRow kValign">
+              <span class="kLabel">{{'applications.content.entryDetails.metadata.categories' | translate}}</span>
+
+              <div class="kControl">
+                  <kAutoComplete formControlName="categories"
+                                 field="name"
+                                 [class.kHasError]="_widgetService.metadataForm.controls['categories'].touched && _widgetService.metadataForm.controls['categories'].invalid"
+                                 suggestionItemField="item"
+                                 suggestionLabelField="name"
+                                 suggestionSelectableField="isSelectable"
+                                 [allowMultiple]="true"
+                                 [tooltipResolver]="_categoriesTooltipResolver"
+                                 [minLength]="3"
+                                 [suggestionsProvider]="_categoriesProvider"
+                                 (completeMethod)="_searchCategories($event)">
+                  </kAutoComplete>
+                  <div
+                      *ngIf="_widgetService.metadataForm.controls['categories'].touched && _widgetService.metadataForm.controls['categories'].invalid"
+                      class="kControlErrorMessage">
+                      {{_categoriesErrorMessage}}
+                  </div>
+              </div>
+          </div>
+          <div class="kRow kValign" *ngIf="_kmcPermissions.CONTENT_MANAGE_ASSIGN_CATEGORIES | kNgIfPermitted">
+              <span class="kLabel"></span>
+              <a (click)="openCategoriesBrowser()" class="kLink">
+                  {{'applications.content.entryDetails.metadata.browse' | translate}}
+              </a>
+          </div>
       </form>
     </div>
   </div>
+
+    <kPopupWidget #categoriesPopup data-aid="categoriesPopup" [popupWidth]="560" [popupHeight]="586" [closeBtn]="true" [modal]="true">
+        <ng-template>
+            <kCategoriesSelector [parentPopupWidget]="categoriesPopup" (valueChange)="_updateEntryCategories($event)"
+                                 [value]="_widgetService.metadataForm.value.categories"
+                                 [buttonLabel]="'applications.content.entryDetails.metadata.addCategories' | translate"></kCategoriesSelector>
+        </ng-template>
+    </kPopupWidget>
+
 </k-area-blocker>

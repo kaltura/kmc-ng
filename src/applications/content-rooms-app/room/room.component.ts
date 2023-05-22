@@ -40,7 +40,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   public _enableNextButton: boolean;
 
     public get _enableSaveBtn(): boolean {
-        return true; // TODO [kmc] check for room update permissions once added to the backend
+        return this._roomStore.roomIsDirty; // TODO [kmc] check for room update permissions once added to the backend
     }
 
   constructor(private _browserService: BrowserService,
