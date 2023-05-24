@@ -32,7 +32,7 @@ export class RoomSectionsList implements OnInit, OnDestroy {
         this._loading = false;
         this._sections = sections;
         this._showList = sections && sections.length > 0;
-        this.roomSections.updateLayout();
+        // this.roomSections.updateLayout();
       });
   }
 
