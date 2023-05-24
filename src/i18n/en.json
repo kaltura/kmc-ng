@@ -138,6 +138,7 @@
             "error": "Error",
             "connectionError": "Error connecting to server",
             "invalidKs": "User session has expired. Please re-login.",
+            "noAccess": "You don't have permission to access Kaltura Management Console. Please contact your admin to get access.",
             "export": "We are preparing your report. We will send it to your email address shortly."
         },
         "redirect":{
