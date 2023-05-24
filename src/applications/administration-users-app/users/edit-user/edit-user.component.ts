@@ -1,18 +1,16 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SelectItem } from 'primeng/api';
-import { UsersStore } from '../users.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { IsUserExistsStatuses } from '../user-exists-statuses';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { KalturaPartnerAuthenticationType, KalturaUser } from 'kaltura-ngx-client';
-import { KalturaUserRole } from 'kaltura-ngx-client';
-import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { first } from 'rxjs/operators';
-import { AppAuthentication } from "app-shared/kmc-shell";
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {AreaBlockerMessage, PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {SelectItem} from 'primeng/api';
+import {UsersStore} from '../users.service';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {IsUserExistsStatuses} from '../user-exists-statuses';
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import {KalturaPartnerAuthenticationType, KalturaUser, KalturaUserRole} from 'kaltura-ngx-client';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {cancelOnDestroy, tag} from '@kaltura-ng/kaltura-common';
+import {first} from 'rxjs/operators';
+import {AppAuthentication} from "app-shared/kmc-shell";
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number;
@@ -59,7 +57,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
               _appAuthentication: AppAuthentication) {
-    this._showSsoUser = _appAuthentication.appUser.partnerInfo.authenticationType === KalturaPartnerAuthenticationType.sso;
+    this._showSsoUser = _appAuthentication.appUser.partnerInfo.authenticationType === KalturaPartnerAuthenticationType.sso && _permissionsService.hasPermission(KMCPermissions.ALLOW_SSO_PER_USER);
     // build FormControl group
     this._userForm = _formBuilder.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
