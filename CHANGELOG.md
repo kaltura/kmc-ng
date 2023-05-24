@@ -1,3 +1,15 @@
+<a name="7.12.1"></a>
+## [7.12.1](https://github.com/kaltura/kmc-ng/compare/v7.12.0...v7.12.1) (2023-05-24)
+
+
+### Bug Fixes
+
+* **administration/user:** hide sso checkbox if the partner is not allowed to edit sso by permission KMCNG-2477 ([#1049](https://github.com/kaltura/kmc-ng/issues/1049)) ([69807ad](https://github.com/kaltura/kmc-ng/commit/69807ad))
+* **entry/user:** fix user search logic SUP-35902 ([#1047](https://github.com/kaltura/kmc-ng/issues/1047)) ([52b7fe7](https://github.com/kaltura/kmc-ng/commit/52b7fe7))
+* prevent KMC access when the user has no KMC permissions SUP-37570 ([#1048](https://github.com/kaltura/kmc-ng/issues/1048)) ([956da2a](https://github.com/kaltura/kmc-ng/commit/956da2a))
+
+
+
 <a name="7.12.0"></a>
 # [7.12.0](https://github.com/kaltura/kmc-ng/compare/v7.11.1...v7.12.0) (2023-05-08)
 
