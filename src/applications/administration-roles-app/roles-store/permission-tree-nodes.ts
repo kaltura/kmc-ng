@@ -419,5 +419,10 @@ export const PermissionTreeNodes: PermissionTreeNode[] = [
                 label: 'End-User Bulk Upload'
             }
         ]
+    },
+    {
+        value: KMCPermissions.KMC_ACCESS,
+        label: 'KMC Access',
+        noChildren: true
     }
 ];

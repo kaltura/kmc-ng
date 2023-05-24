@@ -1,44 +1,50 @@
-import { Injectable } from '@angular/core';
-import { Location } from '@angular/common';
-import { Observable } from 'rxjs';
-import { KalturaAuthentication, KalturaClient, KalturaMultiRequest, KalturaRequestOptions, SessionEndAction, SsoLoginAction, AdminUserSetInitialPasswordAction } from 'kaltura-ngx-client';
-import { UserLoginByLoginIdAction } from 'kaltura-ngx-client';
-import { UserGetByLoginIdAction } from 'kaltura-ngx-client';
-import { UserGetAction } from 'kaltura-ngx-client';
-import { PartnerGetInfoAction } from 'kaltura-ngx-client';
-import { PermissionListAction } from 'kaltura-ngx-client';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
-import { KalturaPermissionFilter } from 'kaltura-ngx-client';
-import { KalturaPermissionListResponse } from 'kaltura-ngx-client';
-import { KalturaUserRole } from 'kaltura-ngx-client';
-import { KalturaFilterPager } from 'kaltura-ngx-client';
-import { KalturaPermissionStatus } from 'kaltura-ngx-client';
-import { UserRoleGetAction } from 'kaltura-ngx-client';
+import {Injectable} from '@angular/core';
+import {Location} from '@angular/common';
+import {Observable, of as ObservableOf, throwError} from 'rxjs';
+import {
+    AdminUserSetInitialPasswordAction,
+    AdminUserUpdatePasswordAction,
+    KalturaAuthentication,
+    KalturaClient,
+    KalturaDetachedResponseProfile,
+    KalturaFilterPager,
+    KalturaMultiRequest,
+    KalturaPartner,
+    KalturaPermissionFilter,
+    KalturaPermissionListResponse,
+    KalturaPermissionStatus,
+    KalturaRequestOptions,
+    KalturaResponseProfileType,
+    KalturaUser,
+    KalturaUserRole,
+    PartnerGetInfoAction,
+    PermissionListAction,
+    SessionEndAction,
+    SsoLoginAction,
+    UserGetAction,
+    UserGetByLoginIdAction,
+    UserLoginByKsAction,
+    UserLoginByLoginIdAction,
+    UserResetPasswordAction,
+    UserRoleGetAction
+} from 'kaltura-ngx-client';
 import * as Immutable from 'seamless-immutable';
-import { AppUser } from './app-user';
-import { UserResetPasswordAction } from 'kaltura-ngx-client';
-import { AdminUserUpdatePasswordAction } from 'kaltura-ngx-client';
-import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification/page-exit-verification.service';
-import { UserLoginStatusEvent } from 'app-shared/kmc-shared/events';
-import { KalturaPartner } from 'kaltura-ngx-client';
-import { KalturaUser } from 'kaltura-ngx-client';
-import { AppEventsService } from 'app-shared/kmc-shared/app-events';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { serverConfig } from 'config/server';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { UserLoginByKsAction } from 'kaltura-ngx-client';
-import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
-import { HttpClient } from '@angular/common/http';
-import { buildBaseUri } from 'config/server';
-import { KmcMainViewsService } from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
-import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
-import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
-import {switchMap, map, catchError} from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
-import { AuthenticatorViewService } from "app-shared/kmc-shared/kmc-views/details-views";
-import { throwError } from 'rxjs';
+import {AppUser} from './app-user';
+import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verification/page-exit-verification.service';
+import {UserLoginStatusEvent} from 'app-shared/kmc-shared/events';
+import {AppEventsService} from 'app-shared/kmc-shared/app-events';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {buildBaseUri, serverConfig} from 'config/server';
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import {KmcServerPolls} from 'app-shared/kmc-shared/server-polls';
+import {HttpClient} from '@angular/common/http';
+import {KmcMainViewsService} from 'app-shared/kmc-shared/kmc-views/kmc-main-views.service';
+import {kmcAppConfig} from '../../../kmc-app/kmc-app-config';
+import {RestorePasswordViewService} from 'app-shared/kmc-shared/kmc-views/details-views/restore-password-view.service';
+import {catchError, map, switchMap} from 'rxjs/operators';
+import {AuthenticatorViewService} from "app-shared/kmc-shared/kmc-views/details-views";
+import {AppLocalization} from "@kaltura-ng/mc-shared";
 
 const ksSessionStorageKey = 'auth.login.ks';
 
@@ -97,6 +103,7 @@ export class AppAuthentication {
                 private _permissionsService: KMCPermissionsService,
                 private _http: HttpClient,
                 private _appEvents: AppEventsService,
+                private _appLocalization: AppLocalization,
                 private _location: Location,
                 private _kmcViewsManager: KmcMainViewsService,
                 private _restorePasswordView: RestorePasswordViewService,
@@ -318,6 +325,17 @@ export class AppAuthentication {
         const partnerPermissionList = permissionList.objects.map(item => item.name);
         const userRolePermissionList = userRole.permissionNames.split(',');
         this._permissionsService.load(userRolePermissionList, partnerPermissionList);
+        // check if the user has KMC access permission and block KMC loading if not
+        if (!this._permissionsService.hasPermission(KMCPermissions.KMC_ACCESS)) {
+            this._browserService.alert({
+                header: this._appLocalization.get('app.common.attention'),
+                message: this._appLocalization.get('app.common.noAccess'),
+                accept: () => {
+                    this.logout(false);
+                }
+            });
+            return;
+        }
 
         const appUser: Immutable.ImmutableObject<AppUser> = Immutable({
             ks,
@@ -369,10 +387,10 @@ export class AppAuthentication {
         this._browserService.removeFromSessionStorage(ksSessionStorageKey);
     }
 
-    logout() {
+    logout(reloadPage = true) {
         this._logger.info('handle logout request by the user');
         this._clearSessionCredentials();
-        this._logout();
+        this._logout(reloadPage);
     }
 
     private _loginByKS(loginToken: string, storeCredentialsInSessionStorage): Observable<boolean> {
