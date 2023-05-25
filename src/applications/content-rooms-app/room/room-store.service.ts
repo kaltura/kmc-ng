@@ -209,7 +209,9 @@ export class RoomStore implements OnDestroy {
       .subscribe(
         () => {
           const currentRoomId = this._roomRoute.snapshot.params.id;
-          setTimeout(() => this._loadRoom(currentRoomId), 0);
+          if (currentRoomId !== this._roomId) {
+              setTimeout(() => this._loadRoom(currentRoomId), 0);
+          }
         }
       );
   }
