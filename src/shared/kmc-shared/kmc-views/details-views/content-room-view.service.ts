@@ -13,6 +13,7 @@ import { from as fromPromise} from 'rxjs';
 
 export enum ContentRoomViewSections {
     Metadata = 'Metadata',
+    Thumbnails = 'Thumbnails',
     ResolveFromActivatedRoute = 'ResolveFromActivatedRoute'
 }
 
@@ -63,6 +64,9 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
                     case 'metadata':
                         result = ContentRoomViewSections.Metadata;
                         break;
+                    case 'thumbnails':
+                        result = ContentRoomViewSections.Thumbnails;
+                        break;
                     default:
                         break;
                 }
@@ -80,9 +84,14 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
         let result;
 
         switch (section) {
+            case ContentRoomViewSections.Thumbnails:
+                result = 'thumbnails';
+                break;
+            case ContentRoomViewSections.Metadata:
             default:
                 result = 'metadata';
                 break;
+
         }
 
         this._logger.debug(`section mapped to token`, { section, token: result });
@@ -94,9 +103,7 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
         let result = false;
         switch (section) {
             case ContentRoomViewSections.Metadata:
-                // metadata section is always available to the user.
-                // if you need to change this you will need to resolve at runtime
-                // the default section to open
+            case ContentRoomViewSections.Thumbnails:
                 result = true;
                 break;
             default:

@@ -4,5 +4,9 @@ export const SectionsList = [
   {
     label: 'applications.content.rooms.sections.metadata',
     key: ContentRoomViewSections.Metadata
+  },
+  {
+    label : 'applications.content.entryDetails.sections.thumbnails',
+    key : ContentRoomViewSections.Thumbnails
   }
 ];
