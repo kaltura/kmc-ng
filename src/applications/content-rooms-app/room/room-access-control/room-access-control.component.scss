@@ -1,0 +1,66 @@
+@import 'app-theme/_variables.scss';
+
+.kAccessControl{
+	.kTitle{
+		padding-left: 24px;
+		color: $kGrayscale1;
+		font-size: 20px;
+		font-weight: 700;
+	}
+	.kAccessControlDetails{
+        padding: 0 24px 24px 24px;
+        word-break: break-word;
+
+        .kAccessProfileItem {
+            white-space: nowrap;
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 190px;
+            font-weight: normal;
+        }
+
+		.kRow{
+			display: flex;
+			padding-top: 24px;
+			align-items: center;
+		}
+		.kMultiLine{
+			white-space: pre-wrap;
+		}
+		.kLabels{
+			width: 190px;
+			flex: 0 0 auto;
+		}
+	}
+}
+:host ::ng-deep .p-dropdown{
+    min-width: 180px;
+	width: 180px !important;
+}
+
+:host ::ng-deep .p-dropdown-label.p-inputtext{
+	background-color: #ffffff;
+}
+
+:host ::ng-deep .p-dropdown-label {
+  text-overflow: ellipsis;
+
+}
+:host ::ng-deep .kAccessControlProfiles {
+    .p-dropdown-panel {
+        width: 250px;
+    }
+
+    .p-dropdown-label {
+        text-overflow: ellipsis;
+        font-weight: normal;
+        font-size: 15px;
+        color: $kGrayscale1;
+    }
+
+    .p-dropdown {
+        min-width: 184px;
+        width: 184px;
+    }
+}

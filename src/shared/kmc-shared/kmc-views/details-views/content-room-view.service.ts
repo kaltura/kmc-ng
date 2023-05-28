@@ -14,6 +14,7 @@ import { from as fromPromise} from 'rxjs';
 export enum ContentRoomViewSections {
     Metadata = 'Metadata',
     Thumbnails = 'Thumbnails',
+    AccessControl = 'AccessControl',
     ResolveFromActivatedRoute = 'ResolveFromActivatedRoute'
 }
 
@@ -67,6 +68,9 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
                     case 'thumbnails':
                         result = ContentRoomViewSections.Thumbnails;
                         break;
+                    case 'accesscontrol':
+                        result = ContentRoomViewSections.AccessControl;
+                        break;
                     default:
                         break;
                 }
@@ -87,6 +91,9 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
             case ContentRoomViewSections.Thumbnails:
                 result = 'thumbnails';
                 break;
+            case ContentRoomViewSections.AccessControl:
+                result = 'accesscontrol';
+                break;
             case ContentRoomViewSections.Metadata:
             default:
                 result = 'metadata';
@@ -104,6 +111,7 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
         switch (section) {
             case ContentRoomViewSections.Metadata:
             case ContentRoomViewSections.Thumbnails:
+            case ContentRoomViewSections.AccessControl:
                 result = true;
                 break;
             default:

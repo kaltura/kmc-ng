@@ -22,7 +22,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { RoomWidget } from '../room-widget';
 import { globalConfig } from 'config/global';
 import { getKalturaServerUri } from 'config/server';
-import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { of } from 'rxjs';

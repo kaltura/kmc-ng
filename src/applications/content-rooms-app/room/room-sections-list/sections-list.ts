@@ -8,5 +8,9 @@ export const SectionsList = [
   {
     label : 'applications.content.entryDetails.sections.thumbnails',
     key : ContentRoomViewSections.Thumbnails
+  },
+  {
+    label : 'applications.content.entryDetails.sections.accesscontrol',
+    key : ContentRoomViewSections.AccessControl
   }
 ];
