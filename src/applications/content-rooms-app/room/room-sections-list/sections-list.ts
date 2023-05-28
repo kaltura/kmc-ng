@@ -12,5 +12,9 @@ export const SectionsList = [
   {
     label : 'applications.content.entryDetails.sections.accesscontrol',
     key : ContentRoomViewSections.AccessControl
+  },
+  {
+    label : 'applications.content.entryDetails.sections.users',
+    key : ContentRoomViewSections.Users
   }
 ];

@@ -44,6 +44,7 @@ import {RoomMetadataComponent} from "./room/room-metadata/room-metadata.componen
 import {CategoriesSelector} from "./room/room-metadata/category-selector/categories-selector.component";
 import {RoomThumbnails} from "./room/room-thumbnails/room-thumbnails.component";
 import {RoomAccessControl} from "./room/room-access-control/room-access-control.component";
+import {RoomUsers} from "./room/room-users/room-users.component";
 
 @NgModule({
     imports: [
@@ -91,7 +92,8 @@ import {RoomAccessControl} from "./room/room-access-control/room-access-control.
         RoomMetadataComponent,
         CategoriesSelector,
         RoomThumbnails,
-        RoomAccessControl
+        RoomAccessControl,
+        RoomUsers
     ],
     exports: [
     ],

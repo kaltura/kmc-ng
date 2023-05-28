@@ -7,6 +7,7 @@ import { RoomMetadataComponent } from './room/room-metadata/room-metadata.compon
 import { RoomCanDeactivate } from './room/room-can-deactivate.service';
 import { RoomThumbnails } from "./room/room-thumbnails/room-thumbnails.component";
 import { RoomAccessControl } from "./room/room-access-control/room-access-control.component";
+import { RoomUsers } from "./room/room-users/room-users.component";
 
 export const routing: Route[] = [
   {
@@ -23,7 +24,8 @@ export const routing: Route[] = [
           { path: '', redirectTo: 'metadata', pathMatch: 'full' },
           { path: 'metadata', component: RoomMetadataComponent },
           { path: 'thumbnails', component: RoomThumbnails },
-          { path: 'accesscontrol', component: RoomAccessControl }
+          { path: 'accesscontrol', component: RoomAccessControl },
+          { path: 'users', component: RoomUsers }
         ]
       }
     ]

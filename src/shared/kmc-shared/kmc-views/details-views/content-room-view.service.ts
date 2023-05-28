@@ -15,6 +15,7 @@ export enum ContentRoomViewSections {
     Metadata = 'Metadata',
     Thumbnails = 'Thumbnails',
     AccessControl = 'AccessControl',
+    Users = 'Users',
     ResolveFromActivatedRoute = 'ResolveFromActivatedRoute'
 }
 
@@ -71,6 +72,9 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
                     case 'accesscontrol':
                         result = ContentRoomViewSections.AccessControl;
                         break;
+                    case 'users':
+                        result = ContentRoomViewSections.Users;
+                        break;
                     default:
                         break;
                 }
@@ -94,6 +98,9 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
             case ContentRoomViewSections.AccessControl:
                 result = 'accesscontrol';
                 break;
+            case ContentRoomViewSections.Users:
+                result = 'users';
+                break;
             case ContentRoomViewSections.Metadata:
             default:
                 result = 'metadata';
@@ -112,6 +119,7 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
             case ContentRoomViewSections.Metadata:
             case ContentRoomViewSections.Thumbnails:
             case ContentRoomViewSections.AccessControl:
+            case ContentRoomViewSections.Users:
                 result = true;
                 break;
             default:

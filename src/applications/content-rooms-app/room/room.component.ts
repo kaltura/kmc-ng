@@ -16,6 +16,7 @@ import { RoomDetailsWidget } from "./room-details/room-details-widget.service";
 import { RoomMetadataWidget } from "./room-metadata/room-metadata-widget.service";
 import { RoomThumbnailsWidget } from "./room-thumbnails/room-thumbnails-widget.service";
 import { RoomAccessControlWidget } from "./room-access-control/room-access-control-widget.service";
+import { RoomUsersWidget } from "./room-users/room-users-widget.service";
 
 @Component({
   selector: 'kRoom',
@@ -29,7 +30,8 @@ import { RoomAccessControlWidget } from "./room-access-control/room-access-contr
     RoomSectionsListWidget,
     RoomDetailsWidget,
     RoomMetadataWidget,
-    RoomAccessControlWidget
+    RoomAccessControlWidget,
+    RoomUsersWidget
   ]
 })
 export class RoomComponent implements OnInit, OnDestroy {
@@ -58,11 +60,12 @@ export class RoomComponent implements OnInit, OnDestroy {
               widget3: RoomMetadataWidget,
               widget4: RoomThumbnailsWidget,
               widget5: RoomAccessControlWidget,
+              widget6: RoomUsersWidget,
               private _contentRoomView: ContentRoomViewService,
               private _analyticsNewMainViewService: AnalyticsNewMainViewService,
               private _router: Router,
               private _roomRoute: ActivatedRoute) {
-    _roomWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5])
+    _roomWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5, widget6])
   }
 
   ngOnInit() {
