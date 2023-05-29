@@ -1,23 +1,6 @@
 import { Injectable } from '@angular/core';
-
 import { BehaviorSubject } from 'rxjs';
-import { forkJoin } from 'rxjs';
-import { throwError } from 'rxjs';
-import {
-    KalturaBaseEntry, KalturaBaseEntryListResponse, KalturaDetachedResponseProfile,
-    KalturaEntryStatus, KalturaFilterPager, KalturaRequestOptions, KalturaResponseProfileType,
-    KalturaRoomEntryFilter, KalturaRoomType, RoomListAction,
-    ThumbAssetSetAsDefaultAction
-} from 'kaltura-ngx-client';
-import { ThumbAssetGetByEntryIdAction } from 'kaltura-ngx-client';
-import { KalturaThumbAsset } from 'kaltura-ngx-client';
-import { DistributionProfileListAction } from 'kaltura-ngx-client';
-import { KalturaDistributionProfileListResponse } from 'kaltura-ngx-client';
-import { KalturaDistributionProfile } from 'kaltura-ngx-client';
-import { KalturaThumbAssetStatus } from 'kaltura-ngx-client';
-import { KalturaDistributionThumbDimensions } from 'kaltura-ngx-client';
-import { ThumbAssetDeleteAction } from 'kaltura-ngx-client';
-import { ThumbAssetAddFromImageAction } from 'kaltura-ngx-client';
+import { KalturaBaseEntry, KalturaDetachedResponseProfile, KalturaEntryStatus, KalturaFilterPager, KalturaRequestOptions, KalturaResponseProfileType, KalturaRoomEntryFilter, KalturaRoomType, RoomListAction } from 'kaltura-ngx-client';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -28,7 +11,6 @@ import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { ContentRoomViewSections } from "app-shared/kmc-shared/kmc-views/details-views";
-import {SortDirection} from "../../../content-playlists-app/playlists/playlists-store/playlists-store.service";
 
 @Injectable()
 export class RoomBreakoutWidget extends RoomWidget {
@@ -41,10 +23,8 @@ export class RoomBreakoutWidget extends RoomWidget {
     private sortBy = 'name';
     private sortDirection = -1;
 
-    constructor(private _kalturaServerClient: KalturaClient, private _appAuthentication: AppAuthentication,
-                private _permissionsService: KMCPermissionsService,
+    constructor(private _kalturaServerClient: KalturaClient,
                 private _appLocalization: AppLocalization,
-                private _appEvents: AppEventsService,
                 private _browserService: BrowserService,
                 logger: KalturaLogger) {
         super(ContentRoomViewSections.Breakout, logger);

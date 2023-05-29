@@ -6,7 +6,6 @@ import { RoomBreakoutWidget } from './room-breakout-widget.service';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import {AnalyticsNewMainViewService} from "app-shared/kmc-shared/kmc-views";
 import {Router} from "@angular/router";
-import {SortDirection} from "../../../content-playlists-app/playlists/playlists-store/playlists-store.service";
 
 @Component({
     selector: 'kRoomBreakout',
