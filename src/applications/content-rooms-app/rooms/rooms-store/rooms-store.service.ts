@@ -162,24 +162,6 @@ export class RoomsStore extends FiltersStoreBase<RoomsFilters> implements OnDest
 
       const data: RoomsFilters = this._getFiltersAsReadonly();
 
-      // filter 'createdAt'
-      // if (data.createdAt) {
-      //   if (data.createdAt.fromDate) {
-      //     filter.createdAtGreaterThanOrEqual = KalturaUtils.getStartDateValue(data.createdAt.fromDate);
-      //   }
-      //
-      //   if (data.createdAt.toDate) {
-      //     filter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(data.createdAt.toDate);
-      //   }
-      // }
-
-      // filter interactive video
-      // if (data.adminTagsMultiLikeOr !== '') {
-      //     filter.adminTagsMultiLikeOr = data.adminTagsMultiLikeOr;
-      // } else {
-      //     delete filter.adminTagsMultiLikeOr;
-      // }
-
       // filter categories
         if (data.categories && data.categories.length) {
           const categoriesValue = data.categories.join(',');

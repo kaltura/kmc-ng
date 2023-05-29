@@ -8,6 +8,7 @@ import { RoomCanDeactivate } from './room/room-can-deactivate.service';
 import { RoomThumbnails } from "./room/room-thumbnails/room-thumbnails.component";
 import { RoomAccessControl } from "./room/room-access-control/room-access-control.component";
 import { RoomUsers } from "./room/room-users/room-users.component";
+import { RoomBreakout } from "./room/room-breakout/room-breakout.component";
 
 export const routing: Route[] = [
   {
@@ -25,6 +26,7 @@ export const routing: Route[] = [
           { path: 'metadata', component: RoomMetadataComponent },
           { path: 'thumbnails', component: RoomThumbnails },
           { path: 'accesscontrol', component: RoomAccessControl },
+          { path: 'breakout', component: RoomBreakout },
           { path: 'users', component: RoomUsers }
         ]
       }

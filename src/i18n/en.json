@@ -781,7 +781,8 @@
                     "metadata": "Metadata"
                 },
                 "backToRooms": "Back To Rooms",
-                "nameIsMandatory": "You must enter a Room Name"
+                "nameIsMandatory": "You must enter a Room Name",
+                "breakout": "Breakout Rooms"
             },
             "playlists": {
                 "playlists": "{{0}} Playlists",

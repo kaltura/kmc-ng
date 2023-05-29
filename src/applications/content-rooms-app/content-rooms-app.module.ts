@@ -45,6 +45,7 @@ import {CategoriesSelector} from "./room/room-metadata/category-selector/categor
 import {RoomThumbnails} from "./room/room-thumbnails/room-thumbnails.component";
 import {RoomAccessControl} from "./room/room-access-control/room-access-control.component";
 import {RoomUsers} from "./room/room-users/room-users.component";
+import {RoomBreakout} from "./room/room-breakout/room-breakout.component";
 
 @NgModule({
     imports: [
@@ -93,6 +94,7 @@ import {RoomUsers} from "./room/room-users/room-users.component";
         CategoriesSelector,
         RoomThumbnails,
         RoomAccessControl,
+        RoomBreakout,
         RoomUsers
     ],
     exports: [
