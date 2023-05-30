@@ -14,6 +14,10 @@ export const SectionsList = [
     key : ContentRoomViewSections.AccessControl
   },
   {
+    label : 'applications.content.rooms.recordings',
+    key : ContentRoomViewSections.Recordings
+  },
+  {
     label : 'applications.content.rooms.breakout',
     key : ContentRoomViewSections.Breakout
   },

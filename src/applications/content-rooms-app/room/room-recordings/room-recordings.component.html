@@ -1,0 +1,81 @@
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage"
+                [bodyScroll]="true">
+    <div class="kRecordings" #thumbnails>
+        <div class="kHeader">
+            <p class="kTitle">{{'applications.content.rooms.recordings' | translate}}</p>
+        </div>
+        <div class="kTable">
+            <p-table scrollHeight="100%"
+                     [sortField]="'name'"
+                     [value]="(_widgetService._recordings$ | async)?.items"
+                     [scrollable]="true"
+                     (sortFunction)="_widgetService.onSortChanged($event)"
+                     [customSort]="true"
+                     [defaultSortOrder]="-1"
+                     [sortOrder]="-1">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th [ngStyle]="{'width':'124px', 'padding-left': '24px'}">
+                            {{'applications.content.entryDetails.thumbnails.thumbnail' | translate}}
+                        </th>
+                        <th [kpSortableColumn]="'name'">
+                            {{'applications.content.table.name' | translate}}
+                            <p-sortIcon [field]="'name'"></p-sortIcon>
+                        </th>
+                        <th [ngStyle]="{'width':'100px'}">
+                            {{'applications.content.table.id' | translate}}
+                        </th>
+                        <th [ngStyle]="{'width':'150px'}" [pSortableColumn]="'createdAt'">
+                            {{'applications.settings.reach.table.created' | translate}}
+                            <p-sortIcon [field]="'createdAt'"></p-sortIcon>
+                        </th>
+                        <th [ngStyle]="{'width':'90px'}" [pSortableColumn]="'duration'">
+                            {{'applications.content.table.duration' | translate}}
+                            <p-sortIcon [field]="'duration'"></p-sortIcon>
+                        </th>
+                        <th [ngStyle]="{'width':'80px'}" [pSortableColumn]="'plays'">
+                            {{'applications.content.table.plays' | translate}}
+                            <p-sortIcon [field]="'plays'"></p-sortIcon>
+                        </th>
+                        <th [ngStyle]="{'width':'80px'}">
+                            {{'applications.content.table.status' | translate}}
+                        </th>
+                        <th  [ngStyle]="{'width':'80px'}"></th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-recording>
+                    <tr [ngClass]="_widgetService.getRowStyle(recording)">
+                        <td [ngStyle]="{'width':'124px', 'padding-left': '24px'}">
+                            <div #holder class="kThumbnailHolder" [class.error]="_loadingError">
+                                <img [src]="_widgetService._loadThumbnailWithKs ? recording.thumbnailUrl + '/width/124/ks/' + _widgetService._ks : recording.thumbnailUrl" (error)="_onThumbLoadError($event)">
+                                <i class="kIconimage"></i>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="kName">{{recording.name}}</span>
+                        </td>
+                        <td [ngStyle]="{'width':'100px'}">{{recording.id}}</td>
+                        <td [ngStyle]="{'width':'150px'}">{{recording.createdAt | kmcDate}}</td>
+                        <td [ngStyle]="{'width':'90px'}">{{recording.duration | kTime}}</td>
+                        <td [ngStyle]="{'width':'80px'}">{{recording.plays}}</td>
+                        <td [ngStyle]="{'width':'80px'}">{{recording | entryStatus}}</td>
+                        <td  [ngStyle]="{'width':'80px'}" *ngIf="_kmcPermissions.CONTENT_MANAGE_THUMBNAIL | kNgIfPermitted">
+                            <div class="kThumbnailsTableActions" *ngIf="recording.id !== ''">
+                                <button type="button" pButton class="kMoreActionsButton" icon="kIconmore"
+                                        (click)="openActionsMenu($event, recording)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <div class="emptymessage">{{'applications.content.table.noResults' | translate}}</div>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+
+</k-area-blocker>
+
+<p-menu #actionsmenu [popup]="true" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>

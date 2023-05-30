@@ -782,7 +782,8 @@
                 },
                 "backToRooms": "Back To Rooms",
                 "nameIsMandatory": "You must enter a Room Name",
-                "breakout": "Breakout Rooms"
+                "breakout": "Breakout Rooms",
+                "recordings": "Recordings"
             },
             "playlists": {
                 "playlists": "{{0}} Playlists",

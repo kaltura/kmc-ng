@@ -46,6 +46,8 @@ import {RoomThumbnails} from "./room/room-thumbnails/room-thumbnails.component";
 import {RoomAccessControl} from "./room/room-access-control/room-access-control.component";
 import {RoomUsers} from "./room/room-users/room-users.component";
 import {RoomBreakout} from "./room/room-breakout/room-breakout.component";
+import {RoomRecordings} from "./room/room-recordings/room-recordings.component";
+import {ContentRoomsAppService} from "./content-rooms-app.service";
 
 @NgModule({
     imports: [
@@ -94,13 +96,15 @@ import {RoomBreakout} from "./room/room-breakout/room-breakout.component";
         CategoriesSelector,
         RoomThumbnails,
         RoomAccessControl,
+        RoomRecordings,
         RoomBreakout,
         RoomUsers
     ],
     exports: [
     ],
     providers : [
-      RoomCanDeactivate
+      RoomCanDeactivate,
+      ContentRoomsAppService
     ]
 })
 export class ContentRoomsAppModule {
