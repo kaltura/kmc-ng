@@ -1,8 +1,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {BehaviorSubject, Observable, throwError} from 'rxjs';
+import {BehaviorSubject, Observable, of as ObservableOf, throwError} from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
 import {
-    KalturaBaseEntry,
     KalturaClient,
     KalturaDetachedResponseProfile,
     KalturaFilterPager,
@@ -11,9 +10,8 @@ import {
     KalturaRoomEntryFilter,
     KalturaRoomEntryListResponse,
     KalturaRoomType,
-    KalturaSearchOperator,
-    KalturaSearchOperatorType,
-    RoomDeleteAction, RoomListAction, KalturaRoomEntry
+    KalturaBaseEntryFilter,
+    RoomDeleteAction, RoomListAction, KalturaRoomEntry, KalturaMediaEntry, BaseEntryListAction
 } from 'kaltura-ngx-client';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {
@@ -29,7 +27,7 @@ import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {cancelOnDestroy, KalturaUtils} from '@kaltura-ng/kaltura-common';
 import {ContentRoomsMainViewService} from 'app-shared/kmc-shared/kmc-views';
 import {globalConfig} from 'config/global';
-import {map} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {
     CategoriesModeAdapter,
     CategoriesModes,
@@ -59,7 +57,7 @@ const localStoragePageSizeKey = 'rooms.list.pageSize';
 @Injectable()
 export class RoomsStore extends FiltersStoreBase<RoomsFilters> implements OnDestroy {
   private _rooms = {
-    data: new BehaviorSubject<{ items: KalturaRoomEntry[], totalCount: number }>({ items: [], totalCount: 0 }),
+    data: new BehaviorSubject<{ items: (KalturaRoomEntry | KalturaMediaEntry)[], totalCount: number }>({ items: [], totalCount: 0 }),
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
   private _isReady = false;
@@ -138,7 +136,7 @@ export class RoomsStore extends FiltersStoreBase<RoomsFilters> implements OnDest
           this._rooms.state.next({ loading: false, errorMessage: null });
 
           this._rooms.data.next({
-            items: response.objects,
+            items: [...response.rooms, ...response.media],
             totalCount: <number>response.totalCount
           });
         },
@@ -149,16 +147,14 @@ export class RoomsStore extends FiltersStoreBase<RoomsFilters> implements OnDest
         });
   }
 
-    private _buildQueryRequest(): Observable<KalturaRoomEntryListResponse> {
+    private _buildQueryRequest(): Observable<{rooms: KalturaRoomEntry[], media: KalturaMediaEntry[], totalCount: number}> {
     try {
 
       // create request items
       const filter = new KalturaRoomEntryFilter({statusEqual: KalturaEntryStatus.noContent, roomTypeEqual: KalturaRoomType.room});
+      const mediaFilter = new KalturaBaseEntryFilter({adminTagsMultiLikeOr: '__meeting_room,kms-webcast-event,kme-webcast-event,kms-webcast-event-kalturalive'});
       let responseProfile: KalturaDetachedResponseProfile = null;
       let pager: KalturaFilterPager = null;
-
-      const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
-      advancedSearch.type = KalturaSearchOperatorType.searchAnd;
 
       const data: RoomsFilters = this._getFiltersAsReadonly();
 
@@ -167,8 +163,10 @@ export class RoomsStore extends FiltersStoreBase<RoomsFilters> implements OnDest
           const categoriesValue = data.categories.join(',');
           if (data.categoriesMode === CategoriesModes.SelfAndChildren) {
               filter.categoryAncestorIdIn = categoriesValue;
+              mediaFilter.categoryAncestorIdIn = categoriesValue;
           } else {
               filter.categoriesIdsMatchOr = categoriesValue;
+              mediaFilter.categoriesIdsMatchOr = categoriesValue;
           }
       }
 
@@ -181,11 +179,13 @@ export class RoomsStore extends FiltersStoreBase<RoomsFilters> implements OnDest
       // update the sort by args
       if (data.sortBy) {
         filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
+        mediaFilter.orderBy = filter.orderBy;
       }
 
       // filter 'freeText'
       if (data.freeText) {
         filter.freeText = data.freeText;
+        mediaFilter.freeText = data.freeText;
       }
 
       // update pagination args
@@ -198,9 +198,27 @@ export class RoomsStore extends FiltersStoreBase<RoomsFilters> implements OnDest
         );
       }
 
-      return this._kalturaServerClient.request(
-          new RoomListAction({filter, pager}).setRequestOptions({
-              responseProfile
+      const roomsRequest = new RoomListAction({filter, pager}).setRequestOptions({
+          responseProfile
+      });
+      const mediaRequest = new BaseEntryListAction({filter: mediaFilter, pager}).setRequestOptions({
+          responseProfile
+      });
+
+      return this._kalturaServerClient.multiRequest([roomsRequest, mediaRequest])
+          .pipe(map(responses => {
+              if (responses.hasErrors()) {
+                  const errorMessage = responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, '');
+                  throw new Error(errorMessage);
+              }
+
+              const [roomsResponse, mediaResponse] = responses;
+              let totalCount = 0;
+              const rooms = roomsResponse.result?.objects || [];
+              totalCount = roomsResponse.result?.totalCount ? totalCount + roomsResponse.result?.totalCount : totalCount;
+              const media = mediaResponse.result?.objects || [];
+              totalCount = roomsResponse.result?.totalCount ? totalCount + mediaResponse.result?.totalCount : totalCount;
+              return { rooms, media, totalCount };
           }));
     } catch (err) {
       return throwError(err);
