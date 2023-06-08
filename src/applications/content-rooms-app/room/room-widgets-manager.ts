@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { WidgetsManagerBase } from '@kaltura-ng/kaltura-ui'
-import {KalturaMultiRequest, KalturaRoomEntry} from 'kaltura-ngx-client';
+import {KalturaMediaEntry, KalturaMultiRequest, KalturaRoomEntry} from 'kaltura-ngx-client';
 import { RoomStore } from './room-store.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 @Injectable()
-export class RoomWidgetsManager extends WidgetsManagerBase<KalturaRoomEntry, KalturaMultiRequest> {
+export class RoomWidgetsManager extends WidgetsManagerBase<KalturaRoomEntry | KalturaMediaEntry, KalturaMultiRequest> {
   private _roomStore: RoomStore;
 
   constructor(logger: KalturaLogger) {

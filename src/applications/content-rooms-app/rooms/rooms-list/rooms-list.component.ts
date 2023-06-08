@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {RoomsFilters, RoomsStore, SortDirection} from '../rooms-store/rooms-store.service';
-import {KalturaRoomEntry} from 'kaltura-ngx-client';
+import {KalturaMediaEntry, KalturaRoomEntry} from 'kaltura-ngx-client';
 import {AreaBlockerMessage, StickyComponent} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {AppAnalytics, BrowserService} from 'app-shared/kmc-shell/providers';
@@ -21,8 +21,7 @@ import {CategoriesModes} from "app-shared/content-shared/categories/categories-m
 @Component({
   selector: 'kRoomsList',
   templateUrl: './rooms-list.component.html',
-  styleUrls: ['./rooms-list.component.scss'],
-  providers: [ContentRoomViewService]
+  styleUrls: ['./rooms-list.component.scss']
 })
 export class RoomsListComponent implements OnInit, OnDestroy {
 
@@ -233,7 +232,7 @@ export class RoomsListComponent implements OnInit, OnDestroy {
     this.tags.updateLayout();
   }
 
-  public _onActionSelected(event: { action: string, room: KalturaRoomEntry }): void {
+  public _onActionSelected(event: { action: string, room: KalturaRoomEntry | KalturaMediaEntry }): void {
       switch (event.action) {
           case 'view':
               this._contentRoomViewService.open({ room: event.room, section: ContentRoomViewSections.Metadata });

@@ -225,7 +225,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   private _createBackToRoomsButton(): AreaBlockerMessageButton {
     return {
-      label: this._appLocalization.get('applications.content.rooms.backToPlaylists'),
+      label: this._appLocalization.get('applications.content.rooms.backToRooms'),
       action: () => this._roomStore.returnToRooms()
     };
   }

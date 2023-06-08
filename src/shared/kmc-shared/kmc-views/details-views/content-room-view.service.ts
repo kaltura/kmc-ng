@@ -5,7 +5,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {DetailsViewMetadata, KmcDetailsViewBaseService} from 'app-shared/kmc-shared/kmc-views/kmc-details-view-base.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {KalturaRoomEntry} from 'kaltura-ngx-client';
+import {KalturaMediaEntry, KalturaRoomEntry} from 'kaltura-ngx-client';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {Title} from '@angular/platform-browser';
 import {ContextualHelpService} from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
@@ -22,7 +22,7 @@ export enum ContentRoomViewSections {
 }
 
 export interface ContentRoomViewArgs {
-    room: KalturaRoomEntry;
+    room: KalturaRoomEntry | KalturaMediaEntry;
     section: ContentRoomViewSections;
     activatedRoute?: ActivatedRoute;
 }
@@ -30,6 +30,8 @@ export interface ContentRoomViewArgs {
 
 @Injectable()
 export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoomViewArgs> {
+
+    public isLegacyRoom = false;
 
     constructor(private _appPermissions: KMCPermissionsService,
                 private _appLocalization: AppLocalization,
@@ -58,7 +60,7 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
         return this._isSectionEnabled(section, args.room);
     }
 
-    private _getSectionFromActivatedRoute(activatedRoute: ActivatedRoute, room: KalturaRoomEntry): ContentRoomViewSections {
+    private _getSectionFromActivatedRoute(activatedRoute: ActivatedRoute, room: KalturaRoomEntry | KalturaMediaEntry): ContentRoomViewSections {
         let result = null;
 
         if (activatedRoute) {
@@ -127,7 +129,7 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
         return result;
     }
 
-    private _isSectionEnabled(section: ContentRoomViewSections, room: KalturaRoomEntry): boolean {
+    private _isSectionEnabled(section: ContentRoomViewSections, room: KalturaRoomEntry | KalturaMediaEntry): boolean {
         let result = false;
         switch (section) {
             case ContentRoomViewSections.Metadata:
@@ -150,6 +152,12 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
     protected _open(args: ContentRoomViewArgs): Observable<boolean> {
         this._logger.info('handle open room view request by the user', { roomId: args.room.id });
         const sectionToken = this._getSectionRouteToken(args.section);
+        this.isLegacyRoom = false;
+        ['kms-webcast-event', 'kme-webcast-event', 'kms-webcast-event-kalturalive', '__meeting_room'].forEach(adminTag => {
+            if (args.room.adminTags?.indexOf(adminTag) > -1) {
+                this.isLegacyRoom = true;
+            }
+        })
         return fromPromise(this._router.navigateByUrl(`/content/rooms/room/${args.room.id}/${sectionToken}`));
     }
 }

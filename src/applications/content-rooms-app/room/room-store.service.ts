@@ -3,7 +3,8 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {BehaviorSubject, EMPTY, Observable, Subject, timer} from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
 import {
-    KalturaClient,
+    BaseEntryGetAction, BaseEntryUpdateAction,
+    KalturaClient, KalturaMediaEntry,
     KalturaMultiRequest,
     KalturaObjectBaseFactory,
     KalturaRoomEntry,
@@ -48,7 +49,7 @@ export class RoomStore implements OnDestroy {
   private _roomIsDirty = false;
   private _saveRoomInvoked = false;
   private _roomId: string;
-  private _room = new BehaviorSubject<{ room: KalturaRoomEntry }>({ room: null });
+  private _room = new BehaviorSubject<{ room: KalturaRoomEntry | KalturaMediaEntry}>({ room: null });
   private _pageExitVerificationToken: string;
 
   public state$ = this._state.asObservable();
@@ -57,7 +58,7 @@ export class RoomStore implements OnDestroy {
     return this._roomRoute.snapshot.params.id ? this._roomRoute.snapshot.params.id : null;
   }
 
-  public get room(): KalturaRoomEntry {
+  public get room(): KalturaRoomEntry | KalturaMediaEntry {
     return this._room.getValue().room;
   }
 
@@ -149,10 +150,12 @@ export class RoomStore implements OnDestroy {
       return this._state.next({ action: ActionTypes.RoomLoadingFailed, error: new Error('Missing roomId') });
     }
 
+    const request = this._contentRoomView.isLegacyRoom ? new BaseEntryGetAction({entryId: id}) : new RoomGetAction({ roomId: id });
+
     this._loadRoomSubscription = this._kalturaServerClient
-      .request(new RoomGetAction({ roomId: id }))
+      .request(request)
       .pipe(cancelOnDestroy(this))
-      .subscribe(room => {
+      .subscribe((room: KalturaRoomEntry | KalturaMediaEntry) => {
               this._room.next({ room });
               this._notifications.next({ type: NotificationTypes.ViewEntered });
 
@@ -217,11 +220,10 @@ export class RoomStore implements OnDestroy {
   }
 
   public saveRoom(): void {
-    if (this.room && this.room instanceof KalturaRoomEntry) {
-      const newRoom = <KalturaRoomEntry>KalturaObjectBaseFactory.createObject(this.room);
-
+    if (this.room) {
+      const newRoom = this._contentRoomView.isLegacyRoom ? <KalturaMediaEntry>KalturaObjectBaseFactory.createObject(this.room) : <KalturaRoomEntry>KalturaObjectBaseFactory.createObject(this.room);
       const id = this._getRoomId();
-      const action = new RoomUpdateAction({roomId: id, room: newRoom});
+      const action = this._contentRoomView.isLegacyRoom ? new BaseEntryUpdateAction({entryId: id, baseEntry: newRoom as KalturaMediaEntry}) : new RoomUpdateAction({roomId: id, room: newRoom as KalturaRoomEntry});
       const request = new KalturaMultiRequest(action);
 
       this._widgetsManager.notifyDataSaving(newRoom, request, this.room)

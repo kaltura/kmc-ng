@@ -1,10 +1,10 @@
 import { AreaBlockerMessage, AreaBlockerMessageButton, WidgetBase } from '@kaltura-ng/kaltura-ui';
-import {KalturaMultiRequest, KalturaRoomEntry} from 'kaltura-ngx-client';
+import {KalturaMediaEntry, KalturaMultiRequest, KalturaRoomEntry} from 'kaltura-ngx-client';
 import { RoomWidgetsManager } from './room-widgets-manager';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 
-export abstract class RoomWidget extends WidgetBase<RoomWidgetsManager, KalturaRoomEntry, KalturaMultiRequest> {
+export abstract class RoomWidget extends WidgetBase<RoomWidgetsManager, KalturaRoomEntry | KalturaMediaEntry, KalturaMultiRequest> {
   public sectionBlockerMessage: AreaBlockerMessage;
   public showSectionLoader: boolean;
 

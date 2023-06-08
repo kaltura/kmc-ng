@@ -78,7 +78,7 @@ export class RoomMetadataWidget extends RoomWidget implements OnDestroy {
       });
   }
 
-  protected onDataSaving(newData: KalturaRoomEntry, request: KalturaMultiRequest): void {
+  protected onDataSaving(newData: KalturaRoomEntry | KalturaMediaEntry, request: KalturaMultiRequest): void {
 
       const metadataFormValue = this.metadataForm.value;
       newData.name = metadataFormValue.name;
@@ -237,7 +237,7 @@ export class RoomMetadataWidget extends RoomWidget implements OnDestroy {
       });
   }
 
-    private _loadEntryCategories(entry : KalturaRoomEntry) : Observable<boolean> {
+    private _loadEntryCategories(entry : KalturaRoomEntry | KalturaMediaEntry) : Observable<boolean> {
 
         // update entry categories
         this._entryCategories = [];
