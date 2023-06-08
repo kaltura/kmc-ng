@@ -132,11 +132,13 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
     private _isSectionEnabled(section: ContentRoomViewSections, room: KalturaRoomEntry | KalturaMediaEntry): boolean {
         let result = false;
         switch (section) {
+            case ContentRoomViewSections.Breakout:
+                result = room instanceof KalturaRoomEntry;
+                break;
             case ContentRoomViewSections.Metadata:
             case ContentRoomViewSections.Thumbnails:
             case ContentRoomViewSections.AccessControl:
             case ContentRoomViewSections.Recordings:
-            case ContentRoomViewSections.Breakout:
             case ContentRoomViewSections.Users:
                 result = true;
                 break;
@@ -152,12 +154,7 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
     protected _open(args: ContentRoomViewArgs): Observable<boolean> {
         this._logger.info('handle open room view request by the user', { roomId: args.room.id });
         const sectionToken = this._getSectionRouteToken(args.section);
-        this.isLegacyRoom = false;
-        ['kms-webcast-event', 'kme-webcast-event', 'kms-webcast-event-kalturalive', '__meeting_room'].forEach(adminTag => {
-            if (args.room.adminTags?.indexOf(adminTag) > -1) {
-                this.isLegacyRoom = true;
-            }
-        })
+        this.isLegacyRoom = !(args.room instanceof KalturaRoomEntry);
         return fromPromise(this._router.navigateByUrl(`/content/rooms/room/${args.room.id}/${sectionToken}`));
     }
 }
