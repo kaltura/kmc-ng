@@ -27,11 +27,22 @@ export class EntryDetails implements OnInit, OnDestroy {
 
 	public _currentEntry: EntryDetailsKalturaMediaEntry;
 
+
 	get currentEntry(): EntryDetailsKalturaMediaEntry {
 		return this._currentEntry;
 	}
 
-
+	get isRoom(): boolean {
+		let room = false;
+        if (this._currentEntry) {
+            ['__meeting_room', 'kms-webcast-event', 'kme-webcast-event', 'kms-webcast-event-kalturalive'].forEach(tag => {
+                if (this._currentEntry.adminTags?.indexOf(tag) > -1) {
+                    room = true;
+                }
+            })
+        }
+        return room;
+	}
 
 	constructor(public _widgetService: EntryDetailsWidget,
 				private browserService: BrowserService,

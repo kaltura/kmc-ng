@@ -170,5 +170,15 @@ export class EntriesTableComponent implements AfterViewInit, OnInit {
   public _onThumbLoadError(event): void {
       event.target.style.display = 'none';
   }
+
+  public isRoom(entry: KalturaMediaEntry): boolean {
+      let room = false;
+      ['__meeting_room', 'kms-webcast-event', 'kme-webcast-event', 'kms-webcast-event-kalturalive'].forEach(tag => {
+          if (entry?.adminTags?.indexOf(tag) > -1) {
+              room = true;
+          }
+      })
+      return room;
+  }
 }
 
