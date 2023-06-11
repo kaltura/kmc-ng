@@ -211,7 +211,13 @@ export class RoomsListComponent implements OnInit, OnDestroy {
                                     this._tableBlockerMessage = null;
                                     this._roomsStore.reload();
                                 }
-                            }
+                                },
+                                {
+                                    label: this._appLocalization.get('app.common.cancel'),
+                                    action: () => {
+                                        this._tableBlockerMessage = null;
+                                    }
+                                }
                             ]
                         })
                     } else {

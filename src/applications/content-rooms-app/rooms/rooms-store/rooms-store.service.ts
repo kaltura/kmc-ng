@@ -1,38 +1,35 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {BehaviorSubject, Observable, of as ObservableOf, throwError} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
 import {
     KalturaClient,
-    KalturaDetachedResponseProfile,
     KalturaFilterPager,
-    KalturaEntryStatus,
-    KalturaResponseProfileType,
-    KalturaRoomEntryFilter,
-    KalturaRoomEntryListResponse,
-    KalturaRoomType,
-    KalturaBaseEntryFilter,
-    RoomDeleteAction, RoomListAction, KalturaRoomEntry, KalturaMediaEntry, BaseEntryListAction
+    RoomDeleteAction,
+    KalturaRoomEntry,
+    KalturaMediaEntry,
+    KalturaESearchOperatorType,
+    KalturaESearchItemType,
+    KalturaESearchCategoryEntryFieldName,
+    ESearchSearchEntryAction,
+    KalturaESearchEntryParams,
+    KalturaESearchOrderBy,
+    KalturaESearchEntryOrderByItem,
+    KalturaESearchEntryOrderByFieldName,
+    KalturaESearchEntryOperator,
+    KalturaESearchEntryItem,
+    KalturaESearchSortOrder,
+    KalturaESearchEntryFieldName,
+    KalturaESearchEntryResponse,
+    KalturaESearchCategoryEntryItem
 } from 'kaltura-ngx-client';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {
-    AppLocalization,
-    DatesRangeAdapter,
-    DatesRangeType,
-    FiltersStoreBase, ListTypeAdapter,
-    NumberTypeAdapter,
-    StringTypeAdapter,
-    TypeAdaptersMapping
-} from '@kaltura-ng/mc-shared';
+import {AppLocalization, DatesRangeAdapter, DatesRangeType, FiltersStoreBase, ListTypeAdapter, NumberTypeAdapter, StringTypeAdapter, TypeAdaptersMapping} from '@kaltura-ng/mc-shared';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {cancelOnDestroy, KalturaUtils} from '@kaltura-ng/kaltura-common';
 import {ContentRoomsMainViewService} from 'app-shared/kmc-shared/kmc-views';
 import {globalConfig} from 'config/global';
-import {map, switchMap} from 'rxjs/operators';
-import {
-    CategoriesModeAdapter,
-    CategoriesModes,
-    CategoriesModeType
-} from "app-shared/content-shared/categories/categories-mode-type";
+import {map} from 'rxjs/operators';
+import {CategoriesModeAdapter, CategoriesModes, CategoriesModeType} from "app-shared/content-shared/categories/categories-mode-type";
 
 
 export enum SortDirection {
@@ -127,16 +124,22 @@ export class RoomsStore extends FiltersStoreBase<RoomsFilters> implements OnDest
     }
 
     this._rooms.state.next({ loading: true, errorMessage: null });
+
     this._querySubscription = this._buildQueryRequest()
       .pipe(cancelOnDestroy(this))
       .subscribe(
-        response => {
+          response => {
           this._querySubscription = null;
 
           this._rooms.state.next({ loading: false, errorMessage: null });
 
+          const rooms = [];
+          if (response.objects && response.objects.length) {
+              response.objects.forEach(entry => rooms.push(entry.object));
+          }
+
           this._rooms.data.next({
-            items: [...response.rooms, ...response.media],
+            items: rooms,
             totalCount: <number>response.totalCount
           });
         },
@@ -147,83 +150,91 @@ export class RoomsStore extends FiltersStoreBase<RoomsFilters> implements OnDest
         });
   }
 
-    private _buildQueryRequest(): Observable<{rooms: KalturaRoomEntry[], media: KalturaMediaEntry[], totalCount: number}> {
-    try {
+    private _buildQueryRequest(): Observable<KalturaESearchEntryResponse> {
+      const filterData: RoomsFilters = this._getFiltersAsReadonly();
 
-      // create request items
-      const filter = new KalturaRoomEntryFilter({statusEqual: KalturaEntryStatus.noContent, roomTypeEqual: KalturaRoomType.room});
-      const mediaFilter = new KalturaBaseEntryFilter({adminTagsMultiLikeOr: '__meeting_room,kms-webcast-event,kme-webcast-event,kms-webcast-event-kalturalive'});
-      let responseProfile: KalturaDetachedResponseProfile = null;
-      let pager: KalturaFilterPager = null;
+      const getEntryType = new KalturaESearchEntryOperator({
+          operator: KalturaESearchOperatorType.orOp,
+          searchItems: [
+              new KalturaESearchEntryItem({
+                  itemType: KalturaESearchItemType.exactMatch,
+                  fieldName: KalturaESearchEntryFieldName.entryType,
+                  searchTerm: 'room.room'
+              }),
+              new KalturaESearchEntryItem({
+                  itemType: KalturaESearchItemType.exactMatch,
+                  fieldName: KalturaESearchEntryFieldName.adminTags,
+                  searchTerm: '__meeting_room'
+              })
+          ]
+      })
 
-      const data: RoomsFilters = this._getFiltersAsReadonly();
+        const getFreeTextFilter = new KalturaESearchEntryOperator({
+          operator: KalturaESearchOperatorType.orOp,
+          searchItems: [
+              new KalturaESearchEntryItem({
+                  itemType: KalturaESearchItemType.partial,
+                  fieldName: KalturaESearchEntryFieldName._name,
+                  searchTerm: filterData.freeText
+              }),
+              new KalturaESearchEntryItem({
+                  itemType: KalturaESearchItemType.exactMatch,
+                  fieldName: KalturaESearchEntryFieldName.id,
+                  searchTerm: filterData.freeText
+              })
+          ]
+      })
 
-      // filter categories
-        if (data.categories && data.categories.length) {
-          const categoriesValue = data.categories.join(',');
-          if (data.categoriesMode === CategoriesModes.SelfAndChildren) {
-              filter.categoryAncestorIdIn = categoriesValue;
-              mediaFilter.categoryAncestorIdIn = categoriesValue;
-          } else {
-              filter.categoriesIdsMatchOr = categoriesValue;
-              mediaFilter.categoriesIdsMatchOr = categoriesValue;
-          }
+      const categoriesSearchItems = [];
+      if (filterData.categories && filterData.categories.length) {
+          filterData.categories.forEach(categoryId => {
+              categoriesSearchItems.push(
+                  new KalturaESearchCategoryEntryItem({
+                      itemType: KalturaESearchItemType.exactMatch,
+                      fieldName: KalturaESearchCategoryEntryFieldName.id,
+                      searchTerm: categoryId.toString()
+                  })
+              );
+          })
       }
 
-      // update desired fields of entries
-        responseProfile = new KalturaDetachedResponseProfile({
-          type: KalturaResponseProfileType.includeFields,
-          fields: 'id,name,createdAt,roomType,status,tags,adminTags'
-        });
+      const getCategoriesFilter = new KalturaESearchEntryOperator({
+        operator: KalturaESearchOperatorType.orOp,
+        searchItems: categoriesSearchItems
+      })
 
-      // update the sort by args
-      if (data.sortBy) {
-        filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
-        mediaFilter.orderBy = filter.orderBy;
+      const searchItems = [getEntryType];
+      if (filterData.freeText) {
+          searchItems.push(getFreeTextFilter);
+      }
+      if (filterData.categories && filterData.categories.length) {
+          searchItems.push(getCategoriesFilter);
       }
 
-      // filter 'freeText'
-      if (data.freeText) {
-        filter.freeText = data.freeText;
-        mediaFilter.freeText = data.freeText;
-      }
+        return this._kalturaServerClient.request(new ESearchSearchEntryAction({
+            searchParams: new KalturaESearchEntryParams({
+                objectStatuses: '7',
+                orderBy: new KalturaESearchOrderBy({
+                    orderItems: [
+                        new KalturaESearchEntryOrderByItem({
+                            sortOrder: filterData.sortDirection === SortDirection.Desc ? KalturaESearchSortOrder.orderByDesc : KalturaESearchSortOrder.orderByAsc,
+                            sortField: filterData.sortBy === 'createdAt' ? KalturaESearchEntryOrderByFieldName.createdAt : KalturaESearchEntryOrderByFieldName._name
+                        }),
+                    ]
+                }),
+                searchOperator: new KalturaESearchEntryOperator({
+                    operator: KalturaESearchOperatorType.andOp,
+                    searchItems
+                })
 
-      // update pagination args
-      if (data.pageIndex || data.pageSize) {
-        pager = new KalturaFilterPager(
-          {
-            pageSize: data.pageSize,
-            pageIndex: data.pageIndex + 1
-          }
-        );
-      }
+            }),
+            pager: new KalturaFilterPager({
+                pageIndex : filterData.pageIndex + 1,
+                pageSize : filterData.pageSize
+            })
+        }))
 
-      const roomsRequest = new RoomListAction({filter, pager}).setRequestOptions({
-          responseProfile
-      });
-      const mediaRequest = new BaseEntryListAction({filter: mediaFilter, pager}).setRequestOptions({
-          responseProfile
-      });
-
-      return this._kalturaServerClient.multiRequest([roomsRequest, mediaRequest])
-          .pipe(map(responses => {
-              if (responses.hasErrors()) {
-                  const errorMessage = responses.reduce((acc, val) => `${acc}\n${val.error ? val.error.message : ''}`, '');
-                  throw new Error(errorMessage);
-              }
-
-              const [roomsResponse, mediaResponse] = responses;
-              let totalCount = 0;
-              const rooms = roomsResponse.result?.objects || [];
-              totalCount = roomsResponse.result?.totalCount ? totalCount + roomsResponse.result?.totalCount : totalCount;
-              const media = mediaResponse.result?.objects || [];
-              totalCount = roomsResponse.result?.totalCount ? totalCount + mediaResponse.result?.totalCount : totalCount;
-              return { rooms, media, totalCount };
-          }));
-    } catch (err) {
-      return throwError(err);
     }
-  }
 
     protected _preFiltersReset(updates: Partial<RoomsFilters>): Partial<RoomsFilters> {
         delete updates.sortBy;
