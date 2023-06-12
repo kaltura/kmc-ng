@@ -33,15 +33,7 @@ export class EntryDetails implements OnInit, OnDestroy {
 	}
 
 	get isRoom(): boolean {
-		let room = false;
-        if (this._currentEntry) {
-            ['__meeting_room', 'kms-webcast-event', 'kme-webcast-event', 'kms-webcast-event-kalturalive'].forEach(tag => {
-                if (this._currentEntry.adminTags?.indexOf(tag) > -1) {
-                    room = true;
-                }
-            })
-        }
-        return room;
+        return this._currentEntry?.adminTags?.indexOf('__meeting_room') > -1;
 	}
 
 	constructor(public _widgetService: EntryDetailsWidget,

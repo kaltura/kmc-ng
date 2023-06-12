@@ -143,13 +143,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   }
 
     public isRoom(entry: KalturaMediaEntry): boolean {
-        let room = false;
-        ['__meeting_room', 'kms-webcast-event', 'kme-webcast-event', 'kms-webcast-event-kalturalive'].forEach(tag => {
-            if (entry?.adminTags?.indexOf(tag) > -1) {
-                room = true;
-            }
-        })
-        return room;
+        return entry?.adminTags?.indexOf('__meeting_room') > -1;
     }
 }
 
