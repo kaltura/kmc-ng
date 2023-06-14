@@ -19,14 +19,14 @@
                             {{'applications.content.table.name' | translate}}
                             <p-sortIcon [field]="'name'"></p-sortIcon>
                         </th>
-                        <th [ngStyle]="{'width':'120px'}">
+                        <th [ngStyle]="{'width':'20%'}">
                             {{'applications.content.table.id' | translate}}
                         </th>
-                        <th [ngStyle]="{'width':'160px'}" pResizableColumn [pSortableColumn]="'createdAt'">
+                        <th [ngStyle]="{'width':'25%'}" pResizableColumn [pSortableColumn]="'createdAt'">
                             {{'applications.settings.reach.table.created' | translate}}
                             <p-sortIcon [field]="'createdAt'"></p-sortIcon>
                         </th>
-                        <th [ngStyle]="{'width':'150px'}"></th>
+<!--                        <th [ngStyle]="{'width':'150px'}"></th>-->
                     </tr>
                 </ng-template>
 
@@ -35,13 +35,13 @@
                         <td [ngStyle]="{'padding-left': '24px'}">
                             <span class="kDimensions">{{breakout.name}}</span>
                         </td>
-                        <td [ngStyle]="{'width':'120px'}">{{breakout.id}}</td>
-                        <td [ngStyle]="{'width':'160px'}">{{breakout.createdAt | kmcDate}}</td>
-                        <td [ngStyle]="{'width':'150px'}">
-                            <button pButton class="kButtonDefault"
-                                    [label]="'applications.content.entries.viewAnalytics' | translate"
-                                    (click)="_openBreakoutAnalytics(breakout.id)"></button>
-                        </td>
+                        <td [ngStyle]="{'width':'20%'}">{{breakout.id}}</td>
+                        <td [ngStyle]="{'width':'25%'}">{{breakout.createdAt | kmcDate}}</td>
+<!--                        <td [ngStyle]="{'width':'150px'}">-->
+<!--                            <button pButton class="kButtonDefault"-->
+<!--                                    [label]="'applications.content.entries.viewAnalytics' | translate"-->
+<!--                                    (click)="_openBreakoutAnalytics(breakout.id)"></button>-->
+<!--                        </td>-->
                     </tr>
                 </ng-template>
 
