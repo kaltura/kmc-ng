@@ -12,7 +12,7 @@
       [suggestionsProvider]="_suggestionsProvider"
       (completeMethod)="_searchSuggestions($event)"
     ></kAutoComplete>
-    <i #config class="kIcongear kTreeConfig"
+    <i #config class="kIcongear kTreeConfig" [class.kHidden]="!showPreferences"
        [kTooltip]="'applications.content.filters.preferences.preferences' | translate"></i>
     <div class="kAllCategories">
       <span>{{'applications.content.filters.allCategories' | translate | uppercase}} </span>

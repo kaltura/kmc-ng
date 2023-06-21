@@ -25,6 +25,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     @Input() public selectionMode: CategoriesModes;
     @Output() public selectionModeChange = new EventEmitter<CategoriesModes>();
     @Input() public selection: number[];
+    @Input() public showPreferences = true;
     @Output() onCategorySelected: EventEmitter<number> = new EventEmitter();
     @Output() onCategoriesUnselected: EventEmitter<number[]> = new EventEmitter();
 

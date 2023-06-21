@@ -170,5 +170,9 @@ export class EntriesTableComponent implements AfterViewInit, OnInit {
   public _onThumbLoadError(event): void {
       event.target.style.display = 'none';
   }
+
+  public isRoom(entry: KalturaMediaEntry): boolean {
+      return entry?.adminTags?.indexOf('__meeting_room') > -1;
+  }
 }
 

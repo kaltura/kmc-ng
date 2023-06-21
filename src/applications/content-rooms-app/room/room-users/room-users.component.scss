@@ -1,0 +1,102 @@
+@import 'app-theme/_variables.scss';
+
+form{
+	width: 100%;
+}
+
+.kUsers {
+	padding-left: 24px;
+	padding-right: 24px;
+	width: 100%;
+	box-sizing: border-box;
+	.kTitle {
+		color: $kGrayscale1;
+		font-size: 20px;
+		font-weight: 700;
+	}
+	.kUsersDetails{
+		padding-right: 12px;
+		margin-top: 12px;
+		width: 100%;
+		box-sizing: border-box;
+		.kRow{
+			display: flex;
+			padding-top: 24px;
+			align-items: center;
+		}
+		.kLabels{
+			width: 180px;
+			flex: 0 0 auto;
+		}
+		.changeOwner{
+			margin-left: 12px;
+		}
+		.kSeparator{
+			margin-top: 48px;
+		}
+	}
+}
+
+.kFloater{
+  display: flex;
+  flex-direction: column;
+  height: 260px;
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+    flex: 0 0 auto;
+    .kTitle {
+      color: #333333;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+  .kContainer{
+    flex: 0 0 auto;
+    height: 72px;
+    margin: 24px;
+    .kLabel{
+      display: block;
+      margin-bottom: 8px;
+    }
+  }
+  .kFooter{
+    flex: 0 0 auto;
+    height: 66px;
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button{
+      height: 34px;
+      margin-left: 8px;
+    }
+  }
+}
+
+kautocomplete {
+    width: 100%;
+}
+
+kautocomplete ::ng-deep ul{
+    width: 100% !important;
+    .p-autocomplete-input-token input {
+        width: 220px;
+    }
+    li.userAdded {
+        background-color: transparentize($kPrimary, 0.5) !important;
+    }
+}
+:host ::ng-deep .kHighlightedText {
+    text-decoration: underline;
+}
+
+kPopupWidget ::ng-deep .kPopupWidget {
+    overflow: visible !important;
+}
+
+

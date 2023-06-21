@@ -21,3 +21,17 @@
 	}
 
 }
+.kRoom {
+    border-right: 1px solid #cccccc;
+    border-left: 1px solid #cccccc;
+    height: 13px;
+    margin-top: 7px;
+    margin-right: 8px;
+    margin-left: 8px;
+    flex: 0 0 auto;
+    padding-right: 8px;
+    padding-left: 8px;
+    svg {
+        display: block;
+    }
+}

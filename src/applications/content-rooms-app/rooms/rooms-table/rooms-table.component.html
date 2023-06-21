@@ -1,0 +1,91 @@
+  <div class="kRoomsTable" [class.noResults]="!_rooms?.length">
+
+    <p-table
+            [scrollable]="true"
+            scrollHeight="100%"
+            [value]="_rooms"
+            dataKey="id"
+            [rowTrackBy]="rowTrackBy"
+            [sortField]="sortField"
+            [sortOrder]="sortOrder"
+            [resizableColumns]="true"
+            [defaultSortOrder]="_defaultSortOrder"
+            (sortFunction)="onSortChanged($event)" [customSort]="true"
+            (onColResize)="_columnsResizeManager.onColumnResize($event)"
+            kStickyHeader [sticksTo]="'roomsTags'" stickyClass="stickyHeader" [stickyId]="'roomsTable'">
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                <col data-cid="typeIcon" [ngStyle]="{'width': '44px'}">
+                <col data-cid="name">
+                <col data-cid="roomId" [ngStyle]="{'width': '160px'}">
+                <col data-cid="createdAt" [ngStyle]="{'width': '180px'}">
+                <col [ngStyle]="{'width': '80px'}">
+            </colgroup>
+        </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th data-cid="typeIcon" [ngStyle]="{'width': '44px'}"></th>
+          <th data-cid="name" pResizableColumn [pSortableColumn]="'name'">
+            {{'applications.content.table.name' | translate}}
+            <p-sortIcon [field]="'name'"></p-sortIcon>
+          </th>
+          <th data-cid="roomId" [ngStyle]="{'width': '160px'}" pResizableColumn>
+            {{'applications.content.table.id' | translate}}
+          </th>
+          <th data-cid="createdAt" [ngStyle]="{'width': '180px'}" [pSortableColumn]="'createdAt'">
+            {{'applications.content.table.createdOn' | translate}}
+            <p-sortIcon [field]="'createdAt'"></p-sortIcon>
+          </th>
+          <th [ngStyle]="{'width': '80px'}"></th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-room>
+        <tr [pSelectableRow]="room">
+
+            <td [ngStyle]="{'width': '44px', 'paddingLeft': '12px'}">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M4 6C2.89543 6 2 6.89543 2 8V16C2 17.1046 2.89543 18 4 18H13C14.1046 18 15 17.1046 15 16V8C15 6.89543 14.1046 6 13 6H4ZM17.4855 8.7087C17.1843 8.88942 17 9.21493 17 9.56619V14.4338C17 14.7851 17.1843 15.1106 17.4855 15.2913L20.4855 17.0913C21.152 17.4912 22 17.0111 22 16.2338V7.76619C22 6.9889 21.152 6.50879 20.4855 6.9087L17.4855 8.7087Z" fill="#333333"/>
+                </svg>
+            </td>
+
+          <td class="ui-resizable-column">
+            <div class="kRoomsNameWrap">
+              <div class="kTitle kTableColumn"
+                   [kTooltip]="room.tooltip"
+                   (click)="onActionSelected('view',room)">
+                {{room.name}}
+              </div>
+            </div>
+          </td>
+
+          <td class="ui-resizable-column">
+              <span class="kTableColumn" [kTooltip]="room.id" [showOnEllipsis]="true">{{room.id}}</span>
+          </td>
+
+          <td class="ui-resizable-column">
+              <span class="kTableColumn" [kTooltip]="room.createdAt | kmcDate" [showOnEllipsis]="true">
+                  {{room.createdAt | kmcDate}}
+              </span>
+          </td>
+
+          <td [ngStyle]="{'width': '80px'}">
+            <div class="kRoomsTableActions">
+              <button class="kMoreActionsButton" type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, room)"></button>
+            </div>
+          </td>
+
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+          <div class="emptymessage">
+              <div class="kEmptyMessage">{{_emptyMessage}}</div>
+          </div>
+      </ng-template>
+    </p-table>
+
+  </div>
+
+  <p-menu #actionsmenu [popup]="true" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+

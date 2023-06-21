@@ -66,8 +66,13 @@
                           (click)="_goToEntry(entry)">{{entry.name}}</span>
                     </td>
                     <td class="mediaTypeColumn">
-                        <div [kTooltip]="entry.mediaType | entryType: true"
-                             [ngClass]="entry.mediaType | entryType: false"></div>
+                        <div *ngIf="!isRoom(entry)" [kTooltip]="entry.mediaType | entryType: true"
+                             [class]="entry.mediaType | entryType: false"></div>
+                        <div *ngIf="isRoom(entry)" [kTooltip]="'applications.content.rooms.legacy' | translate">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M3.33331 5C2.78103 5 2.33331 5.44772 2.33331 6V10C2.33331 10.5523 2.78103 11 3.33331 11H7.99998C8.55226 11 8.99998 10.5523 8.99998 10V6C8.99998 5.44772 8.55226 5 7.99998 5H3.33331ZM12.3333 6.56619L12.3333 9.43381L13.6666 10.2338L13.6666 5.76619L12.3333 6.56619ZM1.33331 6C1.33331 4.89543 2.22874 4 3.33331 4H7.99998C9.10455 4 9.99998 4.89543 9.99998 6V10C9.99998 11.1046 9.10455 12 7.99998 12H3.33331C2.22874 12 1.33331 11.1046 1.33331 10V6ZM11.3333 6.56619C11.3333 6.21493 11.5176 5.88942 11.8188 5.7087L13.1522 4.9087C13.8187 4.50878 14.6666 4.9889 14.6666 5.76619V10.2338C14.6666 11.0111 13.8187 11.4912 13.1522 11.0913L11.8188 10.2913C11.5176 10.1106 11.3333 9.78507 11.3333 9.43381V6.56619Z" fill="#888888"/>
+                            </svg>
+                        </div>
                     </td>
                     <td class="createdAtColumn">{{entry.createdAt | kmcDate}}</td>
                     <td class="durationColumn">{{entry.duration | kTime | entryDuration:entry}}</td>

@@ -141,5 +141,9 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   public _onThumbLoadError(event): void {
     event.target.style.display = 'none';
   }
+
+    public isRoom(entry: KalturaMediaEntry): boolean {
+        return entry?.adminTags?.indexOf('__meeting_room') > -1;
+    }
 }
 

@@ -1,0 +1,13 @@
+<k-area-blocker [showLoader]="_loading">
+	<kSticky #roomSections stickyId="roomSections" [sticksTo]="'roomHeader'" [scrollOffset]="120" [stickyClass]="'kStickySections'">
+		<div class="kSections">
+			<ul *ngIf="_showList">
+				<li *ngFor="let section of _sections" [class.active]="section.attached">
+					<div (click)="_navigateToSection(section)" [class.kSectionHasErrors]="!section.isValid">
+						{{section.label}}
+					</div>
+				</li>
+			</ul>
+		</div>
+	</kSticky>
+</k-area-blocker>

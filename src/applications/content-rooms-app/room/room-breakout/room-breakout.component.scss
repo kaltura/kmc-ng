@@ -1,0 +1,15 @@
+@import 'app-theme/_variables.scss';
+
+.kBreakout{
+	.kHeader{
+		padding-left: 24px;
+	}
+	.kTitle{
+		color: $kGrayscale1;
+		font-size: 20px;
+		font-weight: 700;
+	}
+	.kTable{
+		padding-top: 12px;
+	}
+}

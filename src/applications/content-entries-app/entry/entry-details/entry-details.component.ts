@@ -27,11 +27,14 @@ export class EntryDetails implements OnInit, OnDestroy {
 
 	public _currentEntry: EntryDetailsKalturaMediaEntry;
 
+
 	get currentEntry(): EntryDetailsKalturaMediaEntry {
 		return this._currentEntry;
 	}
 
-
+	get isRoom(): boolean {
+        return this._currentEntry?.adminTags?.indexOf('__meeting_room') > -1;
+	}
 
 	constructor(public _widgetService: EntryDetailsWidget,
 				private browserService: BrowserService,
