@@ -267,11 +267,11 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
       const fieldA = typeof a[field] === 'string' ? a[field].toLowerCase() : a[field];
       const fieldB = typeof b[field] === 'string' ? b[field].toLowerCase() : b[field];
 
-      if (fieldA < fieldB) {
+      if (fieldA > fieldB) {
         return order;
       }
 
-      if (fieldA > fieldB) {
+      if (fieldA < fieldB) {
         return -order;
       }
 
