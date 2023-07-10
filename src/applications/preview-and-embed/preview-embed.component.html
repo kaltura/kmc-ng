@@ -45,11 +45,11 @@
                               <button pButton type="button" class="kButtonBranded kCopyCode" (click)="copyEmbedCode(code)" label="{{'applications.embed.copy' | translate}}"></button>
                           </div>
                         </ng-container>
-                        <div class="kSection kAlignTop kRow">
+                        <div class="kSection kAlignTop kRow" *ngIf="_showShortLink">
                             <span class="kCol">{{'applications.embed.view' | translate}}</span>
                             <a href="{{_shortLink}}" target="_blank">{{_shortLink}}</a>
                         </div>
-                        <div class="kSection kRow kAlignTop">
+                        <div class="kSection kRow kAlignTop" *ngIf="_showShortLink">
                             <span class="kCol">{{'applications.embed.qr' | translate}}</span>
                             <qrcode *ngIf="_shortLink" [qrdata]="_shortLink" [margin]="0" [width]="80" [errorCorrectionLevel]="'M'"></qrcode>
                         </div>

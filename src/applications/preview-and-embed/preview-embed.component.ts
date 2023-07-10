@@ -47,6 +47,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   public _generatedCode: string | EmbedParams = "";
   public _generatedPreviewCode: string | EmbedParams = "";
   public _shortLink = "";
+  public _showShortLink = true;
   public _showEmbedParams = true;
   public _showAdvanced = false;
   public _title: string;
@@ -75,6 +76,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   ngOnInit(){
     this._playersSortBy = this._browserService.getFromLocalStorage('previewEmbed.sortBy') || 'updatedAt';
+    this._showShortLink = !this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_PREVIEW_PAGE);
     this.listPlayers();
     this.createForm();
     this._title = this._showEmberCode
