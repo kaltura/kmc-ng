@@ -110,6 +110,9 @@ export class AppAnalytics {
                     case '/content/syndication/list':
                         this.trackEvent(EventType.PageLoad, PageType.List, 'KMC_content_syndication_list');
                         break;
+                   case '/content/bulk/list':
+                        this.trackEvent(EventType.PageLoad, PageType.List, 'KMC_content_bulk_upload_list');
+                        break;
                     case '/content/categories/list':
                         this.trackEvent(EventType.PageLoad, PageType.List, 'KMC_content_categories_list');
                         break;
@@ -146,6 +149,7 @@ export class AppAnalytics {
                 break;
             case 'Refine':
             case 'Filter_categories':
+            case 'Bulk_upload_dates_filter':
                 buttonType = ButtonType.Filter;
                 break;
             case 'Search_entries':

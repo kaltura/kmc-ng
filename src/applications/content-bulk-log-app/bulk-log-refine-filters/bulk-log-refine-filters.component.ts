@@ -9,7 +9,7 @@ import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared';
 import { RefineList } from '../bulk-log-store/bulk-log-refine-filters.service';
-import { BrowserService } from 'app-shared/kmc-shell/providers';
+import { AppAnalytics, BrowserService } from 'app-shared/kmc-shell/providers';
 
 
 const listOfFilterNames: (keyof BulkLogFilters)[] = [
@@ -54,9 +54,11 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChang
   public _uploadedBefore: Date;
   public _createdAtFilterError: string = null;
   public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
+  private _analyticsSend = false;
 
   constructor(private _browserService: BrowserService,
               private _bulkLogStore: BulkLogStoreService,
+              private _analytics: AppAnalytics,
               private _appLocalization: AppLocalization) {
   }
 
@@ -226,6 +228,10 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy, OnChang
   }
 
   public _onCreatedChanged(): void {
+    if (!this._analyticsSend) {
+      this._analytics.trackClickEvent('Bulk_upload_dates_filter');
+      this._analyticsSend = true; // send only once per page load
+    }
     const updateResult = this._bulkLogStore.filter({
       createdAt: {
         fromDate: this._uploadedAfter,
