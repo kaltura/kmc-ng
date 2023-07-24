@@ -20,7 +20,8 @@ import {
     KalturaESearchSortOrder,
     KalturaESearchEntryFieldName,
     KalturaESearchEntryResponse,
-    KalturaESearchCategoryEntryItem
+    KalturaESearchCategoryEntryItem,
+    BaseEntryDeleteAction
 } from 'kaltura-ngx-client';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {AppLocalization, DatesRangeAdapter, DatesRangeType, FiltersStoreBase, ListTypeAdapter, NumberTypeAdapter, StringTypeAdapter, TypeAdaptersMapping} from '@kaltura-ng/mc-shared';
@@ -298,11 +299,19 @@ export class RoomsStore extends FiltersStoreBase<RoomsFilters> implements OnDest
     }
   }
 
-  public deleteRoom(roomId: string): Observable<void> {
-    return this._kalturaServerClient
-      .request(new RoomDeleteAction({ roomId }))
-      .pipe(map(() => {
-      }));
+  public deleteRoom(roomId: string, isRoomType: boolean): Observable<void> {
+      if (isRoomType) {
+          return this._kalturaServerClient
+              .request(new RoomDeleteAction({ roomId }))
+              .pipe(map(() => {
+              }));
+      } else {
+          return this._kalturaServerClient
+              .request(new BaseEntryDeleteAction({ entryId: roomId }))
+              .pipe(map(() => {
+              }));
+      }
+
   }
 }
 

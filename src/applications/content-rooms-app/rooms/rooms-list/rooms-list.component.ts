@@ -83,8 +83,8 @@ export class RoomsListComponent implements OnInit, OnDestroy {
       this._registerToDataChanges();
   }
 
-  private _deleteRoom(roomId: string): void {
-    this._roomsStore.deleteRoom(roomId)
+  private _deleteRoom(roomId: string, isRoomType: boolean): void {
+    this._roomsStore.deleteRoom(roomId, isRoomType)
       .pipe(cancelOnDestroy(this))
       .pipe(tag('block-shell'))
       .subscribe(
@@ -104,7 +104,7 @@ export class RoomsListComponent implements OnInit, OnDestroy {
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
                   this._blockerMessage = null;
-                  this._deleteRoom(roomId);
+                  this._deleteRoom(roomId, isRoomType);
                 }
               },
               {
@@ -261,7 +261,7 @@ export class RoomsListComponent implements OnInit, OnDestroy {
                       header: this._appLocalization.get('applications.content.rooms.deleteRoom'),
                       message: this._appLocalization.get('applications.content.rooms.confirmDeleteSingle', {0: event.room.name}),
                       accept: () => {
-                          this._deleteRoom(event.room.id);
+                          this._deleteRoom(event.room.id, event.room instanceof KalturaRoomEntry);
                       }
                   }
               );
