@@ -2,35 +2,48 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
 import {
-    KalturaClient,
-    KalturaFilterPager,
-    RoomDeleteAction,
-    KalturaRoomEntry,
-    KalturaMediaEntry,
-    KalturaESearchOperatorType,
-    KalturaESearchItemType,
-    KalturaESearchCategoryEntryFieldName,
+    BaseEntryDeleteAction,
     ESearchSearchEntryAction,
-    KalturaESearchEntryParams,
-    KalturaESearchOrderBy,
-    KalturaESearchEntryOrderByItem,
-    KalturaESearchEntryOrderByFieldName,
-    KalturaESearchEntryOperator,
-    KalturaESearchEntryItem,
-    KalturaESearchSortOrder,
-    KalturaESearchEntryFieldName,
-    KalturaESearchEntryResponse,
+    KalturaClient,
+    KalturaESearchCategoryEntryFieldName,
     KalturaESearchCategoryEntryItem,
-    BaseEntryDeleteAction
+    KalturaESearchEntryFieldName,
+    KalturaESearchEntryItem,
+    KalturaESearchEntryOperator,
+    KalturaESearchEntryOrderByFieldName,
+    KalturaESearchEntryOrderByItem,
+    KalturaESearchEntryParams,
+    KalturaESearchEntryResponse,
+    KalturaESearchItemType,
+    KalturaESearchOperatorType,
+    KalturaESearchOrderBy,
+    KalturaESearchSortOrder,
+    KalturaFilterPager,
+    KalturaMediaEntry,
+    KalturaRoomEntry,
+    RoomDeleteAction
 } from 'kaltura-ngx-client';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {AppLocalization, DatesRangeAdapter, DatesRangeType, FiltersStoreBase, ListTypeAdapter, NumberTypeAdapter, StringTypeAdapter, TypeAdaptersMapping} from '@kaltura-ng/mc-shared';
+import {
+    AppLocalization,
+    DatesRangeAdapter,
+    DatesRangeType,
+    FiltersStoreBase,
+    ListTypeAdapter,
+    NumberTypeAdapter,
+    StringTypeAdapter,
+    TypeAdaptersMapping
+} from '@kaltura-ng/mc-shared';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-import {cancelOnDestroy, KalturaUtils} from '@kaltura-ng/kaltura-common';
+import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {ContentRoomsMainViewService} from 'app-shared/kmc-shared/kmc-views';
 import {globalConfig} from 'config/global';
 import {map} from 'rxjs/operators';
-import {CategoriesModeAdapter, CategoriesModes, CategoriesModeType} from "app-shared/content-shared/categories/categories-mode-type";
+import {
+    CategoriesModeAdapter,
+    CategoriesModes,
+    CategoriesModeType
+} from "app-shared/content-shared/categories/categories-mode-type";
 
 
 export enum SortDirection {
@@ -196,6 +209,15 @@ export class RoomsStore extends FiltersStoreBase<RoomsFilters> implements OnDest
                       searchTerm: categoryId.toString()
                   })
               );
+              if (filterData.categoriesMode === CategoriesModes.SelfAndChildren) {
+                  categoriesSearchItems.push(
+                      new KalturaESearchCategoryEntryItem({
+                          itemType: KalturaESearchItemType.exactMatch,
+                          fieldName: KalturaESearchCategoryEntryFieldName.ancestorId,
+                          searchTerm: categoryId.toString()
+                      })
+                  );
+              }
           })
       }
 
@@ -248,13 +270,16 @@ export class RoomsStore extends FiltersStoreBase<RoomsFilters> implements OnDest
       // reset page index to first page everytime filtering the list by any filter that is not page index
       updates.pageIndex = 0;
     }
-
+    if (typeof updates.categoriesMode !== 'undefined')
+    {
+        this._browserService.setInLocalStorage('rooms.categoriesTree.selectionMode', updates.categoriesMode);
+    }
     return updates;
   }
 
   protected _createDefaultFiltersValue(): RoomsFilters {
       const savedAutoSelectChildren: CategoriesModes = this._browserService
-          .getFromLocalStorage('contentShared.categoriesTree.selectionMode');
+          .getFromLocalStorage('rooms.categoriesTree.selectionMode');
       const categoriesMode = typeof savedAutoSelectChildren === 'number'
           ? savedAutoSelectChildren
           : CategoriesModes.SelfAndChildren;

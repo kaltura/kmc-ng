@@ -82,7 +82,6 @@
     <ng-template>
         <kCategoriesFilter  [parentPopupWidget]="categoriesFilterPopup" [selection]="_query.categories"
                             [selectionMode]="_query.categoriesMode"
-                            [showPreferences]="false"
                             (onCategorySelected)="onCategorySelected($event)"
                             (onCategoriesUnselected)="onCategoriesUnselected($event)"
                             (selectionModeChange)="onCategoriesModeChanged($event)"></kCategoriesFilter>
