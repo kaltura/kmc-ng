@@ -152,6 +152,10 @@ export class RoomsListComponent implements OnInit, OnDestroy {
     if (typeof updates.categoriesMode !== 'undefined') {
       this._query.categoriesMode = updates.categoriesMode === CategoriesModes.Self ? CategoriesModes.Self : CategoriesModes.SelfAndChildren;
     }
+
+    if (typeof updates.categories !== 'undefined') {
+      this._query.categories = [...updates.categories];
+    }
   }
 
     onCategoriesModeChanged(categoriesMode)
