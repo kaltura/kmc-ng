@@ -89,7 +89,12 @@ export class RoomsListComponent implements OnInit, OnDestroy {
       .pipe(tag('block-shell'))
       .subscribe(
         () => {
-          this._roomsStore.reload();
+            this._isBusy = true;
+            setTimeout(() => {
+                this._roomsStore.reload();
+                this._isBusy = false;
+            }, 1000);
+
         },
         error => {
           this._blockerMessage = new AreaBlockerMessage({
