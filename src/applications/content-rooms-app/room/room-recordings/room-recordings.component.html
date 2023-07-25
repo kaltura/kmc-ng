@@ -18,26 +18,26 @@
                         <th [ngStyle]="{'width':'124px', 'padding-left': '24px'}">
                             {{'applications.content.entryDetails.thumbnails.thumbnail' | translate}}
                         </th>
-                        <th [kpSortableColumn]="'name'">
+                        <th [kpSortableColumn]="'name'" [ngStyle]="{'width':'40%'}">
                             {{'applications.content.table.name' | translate}}
                             <p-sortIcon [field]="'name'"></p-sortIcon>
                         </th>
-                        <th [ngStyle]="{'width':'100px'}">
+                        <th [ngStyle]="{'width':'15%'}">
                             {{'applications.content.table.id' | translate}}
                         </th>
-                        <th [ngStyle]="{'width':'150px'}" [pSortableColumn]="'createdAt'">
+                        <th [ngStyle]="{'width':'15%'}" [pSortableColumn]="'createdAt'">
                             {{'applications.settings.reach.table.created' | translate}}
                             <p-sortIcon [field]="'createdAt'"></p-sortIcon>
                         </th>
-                        <th [ngStyle]="{'width':'90px'}" [pSortableColumn]="'duration'">
+                        <th [ngStyle]="{'width':'10%'}" [pSortableColumn]="'duration'">
                             {{'applications.content.table.duration' | translate}}
                             <p-sortIcon [field]="'duration'"></p-sortIcon>
                         </th>
-                        <th [ngStyle]="{'width':'80px'}" [pSortableColumn]="'plays'">
+                        <th [ngStyle]="{'width':'10%'}" [pSortableColumn]="'plays'">
                             {{'applications.content.table.plays' | translate}}
                             <p-sortIcon [field]="'plays'"></p-sortIcon>
                         </th>
-                        <th [ngStyle]="{'width':'80px'}">
+                        <th [ngStyle]="{'width':'10%'}">
                             {{'applications.content.table.status' | translate}}
                         </th>
                         <th  [ngStyle]="{'width':'80px'}"></th>
@@ -52,14 +52,14 @@
                                 <i class="kIconimage"></i>
                             </div>
                         </td>
-                        <td>
-                            <span class="kName">{{recording.name}}</span>
+                        <td [ngStyle]="{'width':'40%'}">
+                            <span class="kName" [kTooltip]="recording.name" [showOnEllipsis]="true">{{recording.name}}</span>
                         </td>
-                        <td [ngStyle]="{'width':'100px'}">{{recording.id}}</td>
-                        <td [ngStyle]="{'width':'150px'}">{{recording.createdAt | kmcDate}}</td>
-                        <td [ngStyle]="{'width':'90px'}">{{recording.duration | kTime}}</td>
-                        <td [ngStyle]="{'width':'80px'}">{{recording.plays}}</td>
-                        <td [ngStyle]="{'width':'80px'}">{{recording | entryStatus}}</td>
+                        <td [ngStyle]="{'width':'15%'}" [kTooltip]="recording.id" [showOnEllipsis]="true">{{recording.id}}</td>
+                        <td [ngStyle]="{'width':'15%'}" [kTooltip]="recording.createdAt | kmcDate" [showOnEllipsis]="true">{{recording.createdAt | kmcDate}}</td>
+                        <td [ngStyle]="{'width':'10%'}" [kTooltip]="recording.duration | kTime" [showOnEllipsis]="true">{{recording.duration | kTime}}</td>
+                        <td [ngStyle]="{'width':'10%'}" [kTooltip]="recording.plays" [showOnEllipsis]="true">{{recording.plays}}</td>
+                        <td [ngStyle]="{'width':'10%'}" [kTooltip]="recording | entryStatus" [showOnEllipsis]="true">{{recording | entryStatus}}</td>
                         <td  [ngStyle]="{'width':'80px'}" *ngIf="_kmcPermissions.CONTENT_MANAGE_THUMBNAIL | kNgIfPermitted">
                             <div class="kThumbnailsTableActions" *ngIf="recording.id !== ''">
                                 <button type="button" pButton class="kMoreActionsButton" icon="kIconmore"
