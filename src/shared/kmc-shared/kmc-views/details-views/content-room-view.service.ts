@@ -138,8 +138,6 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
         let result = false;
         switch (section) {
             case ContentRoomViewSections.Breakout:
-                result = room instanceof KalturaRoomEntry;
-                break;
             case ContentRoomViewSections.Metadata:
             case ContentRoomViewSections.Thumbnails:
             case ContentRoomViewSections.AccessControl:
