@@ -32,6 +32,7 @@ export interface ContentRoomViewArgs {
 export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoomViewArgs> {
 
     public isLegacyRoom = false;
+    private browserService: BrowserService;
 
     constructor(private _appPermissions: KMCPermissionsService,
                 private _appLocalization: AppLocalization,
@@ -41,6 +42,10 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
                 _titleService: Title,
                 _contextualHelpService: ContextualHelpService) {
         super(_logger.subLogger('ContentRoomViewService'), _browserService, _titleService, _contextualHelpService);
+        this.browserService = _browserService;
+        if (!!_browserService.getFromSessionStorage('isLegacyRoom')) {
+            this.isLegacyRoom = true;
+        }
     }
 
     getViewMetadata(args: ContentRoomViewArgs): DetailsViewMetadata {
@@ -155,6 +160,7 @@ export class ContentRoomViewService extends KmcDetailsViewBaseService<ContentRoo
         this._logger.info('handle open room view request by the user', { roomId: args.room.id });
         const sectionToken = this._getSectionRouteToken(args.section);
         this.isLegacyRoom = !(args.room instanceof KalturaRoomEntry);
+        this._browserService.setInSessionStorage('isLegacyRoom', this.isLegacyRoom); // save in session for page reload
         return fromPromise(this._router.navigateByUrl(`/content/rooms/room/${args.room.id}/${sectionToken}`));
     }
 }
