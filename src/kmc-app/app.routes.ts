@@ -93,6 +93,10 @@ const routes: Routes = <Routes>[
                             loadChildren: () => import('../applications/settings-account-information-app/settings-account-information-app.module').then(m => m.SettingsAccountInformationAppModule)
                         },
                         {
+                            path: 'authentication',
+                            loadChildren: () => import('../applications/settings-authentication-app/settings-authentication-app.module').then(m => m.SettingsAuthenticationAppModule)
+                        },
+                        {
                             path: 'accessControl',
                             loadChildren: () => import('../applications/settings-access-control-app/settings-access-control-app.module').then(m => m.SettingsAccessControlAppModule)
                         },

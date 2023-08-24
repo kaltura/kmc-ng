@@ -1,0 +1,35 @@
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {SettingsAuthenticationComponent} from './settings-authentication.component';
+import {routing} from './settings-authentication-app.routes';
+import {RouterModule} from '@angular/router';
+import {ReactiveFormsModule} from '@angular/forms';
+import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule, PopupWidgetModule} from '@kaltura-ng/kaltura-ui';
+import {TranslateModule} from '@ngx-translate/core';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import {ProfilesListComponent} from "./profiles-list/profiles-list.component";
+
+@NgModule({
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routing),
+    ReactiveFormsModule,
+    InputTextModule,
+    StickyModule,
+    TooltipModule,
+    PopupWidgetModule,
+    ButtonModule,
+    AreaBlockerModule,
+    TranslateModule,
+    InputTextareaModule,
+    KalturaUIModule
+  ],
+  declarations: [
+      SettingsAuthenticationComponent,
+      ProfilesListComponent
+  ]
+})
+export class SettingsAuthenticationAppModule {
+}

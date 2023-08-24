@@ -12,6 +12,9 @@
         "kpfPackageManagerBaseUrl": "https://kpf-dev.kaltura.com/package-manager",
         "kpfPurchaseManagerBaseUrl": "https://kpf-dev.kaltura.com/purchase-manager"
     },
+    "authBrokerServer": {
+        "authBrokerBaseUrl": "https://auth.nvp1.ovp.kaltura.com"
+    },
     "externalApps": {
     },
     "externalLinks": {

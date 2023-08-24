@@ -90,6 +90,9 @@ export interface ServerConfig {
         kpfPackageManagerBaseUrl: string,
         kpfPurchaseManagerBaseUrl: string
     },
+    authBrokerServer: {
+        authBrokerBaseUrl: string
+    },
     analyticsServer?: {
         uri?: string
     }
