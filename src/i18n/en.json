@@ -2679,7 +2679,9 @@
                 }
             },
             "authentication": {
-                "newProfile": "New profile"
+                "newProfile": "New SAML profile",
+                "profilesNum": "{{0}} Profiles",
+                "loadError": "Error loading authentication profiles"
             },
             "metadata": {
                 "errorLoading": "Error loading schemas",

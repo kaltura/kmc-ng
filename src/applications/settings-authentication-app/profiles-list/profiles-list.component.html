@@ -1,4 +1,4 @@
-<k-area-blocker [message]="_blockerMessage" [bodyScroll]="true">
+<k-area-blocker [message]="_blockerMessage" [bodyScroll]="true" [showLoader]="_isBusy">
   <div class="kRoles kOverrideFAIcons">
     <div #rolesTableHolder class="kRolesHolder kContent">
       <div class="kContent kFiltersWrapper">
@@ -7,17 +7,15 @@
             <button pButton type="button" class="kButtonBranded kAddRoleBtn"
                     [label]="'applications.settings.authentication.newProfile' | translate"
                     (click)="_addProfile()"></button>
-<!--            <span class="kSelectedRolesNum" *ngIf="(_rolesStore.roles.data$ | async)?.totalCount">-->
-<!--              {{ 'applications.administration.roles.rolesNum' | translate:[(_rolesStore.roles.data$ | async)?.totalCount] }}-->
-<!--            </span>-->
-            <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh"
+            <span class="kSelectedRolesNum">
+              {{ 'applications.settings.authentication.profilesNum' | translate:{'0': _profilesCount} }}
+            </span>
+            <button pButton class="kButtonDefault kRefreshBtn small" (click)="_refresh()" type="text" icon="kIconrefresh"
                     [kTooltip]="'applications.administration.roles.refresh' | translate"></button>
           </div>
         </kSticky>
       </div>
-      <k-area-blocker [showLoader]="_tableIsBusy"
-                      [message]="_tableBlockerMessage"
-                      [bodyScroll]="true">
+      <k-area-blocker [bodyScroll]="true">
           <span>Profiles table</span>
 <!--        <kRolesTable class="kRolesTable"-->
 <!--                     [roles]="(_rolesStore.roles.data$ | async)?.items"-->
