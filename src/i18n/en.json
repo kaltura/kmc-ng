@@ -2681,7 +2681,19 @@
             "authentication": {
                 "newProfile": "New SAML profile",
                 "profilesNum": "{{0}} Profiles",
-                "loadError": "Error loading authentication profiles"
+                "loadError": "Error loading authentication profiles",
+                "table": {
+                    "name": "Name",
+                    "description": "Description",
+                    "id": "ID",
+                    "status": "Status",
+                    "type": "Authentication type",
+                    "provider": "Provider (IdP)",
+                    "created": "Creation date",
+                    "edit": "Edit",
+                    "delete": "Delete"
+
+                }
             },
             "metadata": {
                 "errorLoading": "Error loading schemas",

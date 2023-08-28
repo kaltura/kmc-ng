@@ -4,6 +4,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { serverConfig } from "config/server";
 import { AppAuthentication } from "app-shared/kmc-shell";
+import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-store.service";
 
 export type AuthStrategyConfig = {
     callbackUrl: string;
@@ -24,7 +25,7 @@ export type AuthProfile = {
     authStrategy: string;
     authStrategyConfig: AuthStrategyConfig;
     createNewGroups: boolean;
-    createdAt: string;
+    createdAt: Date;
     description: string;
     groupAttributeName: string;
     id: string;
@@ -35,7 +36,7 @@ export type AuthProfile = {
     providerType: string;
     removeFromExistingGroups: boolean;
     syncDelayTimeoutMin: number;
-    updatedAt: string;
+    updatedAt: Date;
     userAttributeMappings: Record<string, string>,
     userGroupMappings: Record<string, string>,
     userGroupsSyncAll: boolean;
@@ -61,7 +62,7 @@ export class ProfilesStoreService implements OnDestroy {
                 private _appAuthentication: AppAuthentication) {
     }
 
-    public loadProfiles(pageSize: number, pageIndex: number, orderBy: string): Observable<LoadProfilesResponse> {
+    public loadProfiles(pageSize: number, pageIndex: number, sortField: string, sortOrder: number): Observable<LoadProfilesResponse> {
         const ks = this._appAuthentication.appUser.ks;
         const pager: Pager = {
             offset: pageIndex,
@@ -73,6 +74,7 @@ export class ProfilesStoreService implements OnDestroy {
                 'Content-Type': 'application/json',
             })
         };
+        const orderBy = sortOrder === SortDirection.Desc ? `-${sortField}` : `+${sortField}`;
         try {
             return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-profile/list`, {pager, orderBy}, httpOptions).pipe(cancelOnDestroy(this)) as Observable<LoadProfilesResponse>;
         } catch (ex) {
