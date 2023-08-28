@@ -4,19 +4,8 @@
 
 ### Bug Fixes
 
-* handle room recordings table responsive design KMCNG-2506 ([fedd09c](https://github.com/kaltura/kmc-ng/commit/fedd09c))
-* hard code promotional videos URLs (cdn, uiconf and entry id) to support regional cloud environments KMCNG-2524 ([f74f989](https://github.com/kaltura/kmc-ng/commit/f74f989))
-* remove live rtsp section from entry live stream tab KMCNG-2523 ([ba6a5d6](https://github.com/kaltura/kmc-ng/commit/ba6a5d6))
-* **content/bulk-log:** add bulk upload and bulk upload date filter to product analytics KMCNG-2490 ([48df4e7](https://github.com/kaltura/kmc-ng/commit/48df4e7))
-* **content/entry:** hide short link and QR code from share & embed window when "disable preview page" permission is set KMCNG-2491 ([4a2f268](https://github.com/kaltura/kmc-ng/commit/4a2f268))
-* **content/playlist:** save the correct content order in manual playlist SUP-37442 ([7585180](https://github.com/kaltura/kmc-ng/commit/7585180))
-* **content/room:** display breakout rooms for legacy room entries KMCNG-2503 ([f4814f4](https://github.com/kaltura/kmc-ng/commit/f4814f4))
-* **content/room:** save room type in session storage and use it on page reload KMCNG-2499 ([bab24c6](https://github.com/kaltura/kmc-ng/commit/bab24c6))
-* **content/rooms:** fix categories filter 'clear all' functionality KMCNG-2495 ([0c30d6f](https://github.com/kaltura/kmc-ng/commit/0c30d6f))
-* **content/rooms:** fix nested categories filter KMCNG-2496 ([d8138ac](https://github.com/kaltura/kmc-ng/commit/d8138ac))
-* **content/rooms:** fix refresh requirement after room deletion KMCNG-2497 ([c59dde3](https://github.com/kaltura/kmc-ng/commit/c59dde3))
-* **content/rooms:** fix room deletion logic KMCNG-2500 ([32ff04f](https://github.com/kaltura/kmc-ng/commit/32ff04f))
-
+* **content:** hard code promotional videos URLs (cdn, uiconf and entry id) to support regional cloud environments KMCNG-2524 ([f74f989](https://github.com/kaltura/kmc-ng/commit/f74f989))
+* **content/entry:** remove live rtsp section from entry live stream tab KMCNG-2523 ([ba6a5d6](https://github.com/kaltura/kmc-ng/commit/ba6a5d6))
 
 
 <a name="7.13.0"></a>
