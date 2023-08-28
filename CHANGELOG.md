@@ -1,3 +1,13 @@
+<a name="7.13.1"></a>
+## [7.13.1](https://github.com/kaltura/kmc-ng/compare/v7.13.0...v7.13.1) (2023-08-28)
+
+
+### Bug Fixes
+
+* **content:** hard code promotional videos URLs (cdn, uiconf and entry id) to support regional cloud environments KMCNG-2524 ([f74f989](https://github.com/kaltura/kmc-ng/commit/f74f989))
+* **content/entry:** remove live rtsp section from entry live stream tab KMCNG-2523 ([ba6a5d6](https://github.com/kaltura/kmc-ng/commit/ba6a5d6))
+
+
 <a name="7.13.0"></a>
 # [7.13.0](https://github.com/kaltura/kmc-ng/compare/v7.12.1...v7.13.0) (2023-06-21)
 

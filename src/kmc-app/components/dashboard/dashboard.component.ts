@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
-import { AppAuthentication, AppShellService, BrowserService, PartnerPackageTypes } from "app-shared/kmc-shell";
-import {buildCDNUrl, buildDeployUrl, serverConfig} from 'config/server';
+import { AppAuthentication, AppShellService, BrowserService } from "app-shared/kmc-shell";
+import { buildDeployUrl } from 'config/server';
 import * as $ from 'jquery';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { Router } from "@angular/router";
@@ -15,10 +15,11 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('whatsNew', { static: true }) private _whatsNewWin : PopupWidgetComponent;
   @ViewChild('studioPromo', { static: true }) private _studioPromo : PopupWidgetComponent;
 
-  public _uiconf = serverConfig.kalturaServer.previewUIConfV7;
-  public _entryId = '1_rickx95w';
+  // promo videos are hard coded to Kaltura production server in order to support additional environments
+  public _uiconf = 53016472;
   public _pid = '811441';
-  public _cdnUrl = buildCDNUrl("");
+  public _cdnUrl = 'http://www.kaltura.com';
+
   public _studioPlayerReady = false;
   public _studioBannerUrl = buildDeployUrl('./assets/studio.png');
   private onResize : () => void;
