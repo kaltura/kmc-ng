@@ -2692,8 +2692,13 @@
                     "created": "Creation date",
                     "edit": "Edit",
                     "delete": "Delete"
-
-                }
+                },
+                "delete": "Delete profile",
+                "deleteMsg": "Are you sure you what to deletet he selected profile? \"{{0}}\"",
+                "deleteConfirm": "To confirm, type \"{{0}}\" in the box below",
+                "deleteBtn": "Delete this profile",
+                "profileName": "Profile name",
+                "deleteError": "Error deleting profile"
             },
             "metadata": {
                 "errorLoading": "Error loading schemas",

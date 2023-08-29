@@ -24,6 +24,7 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
 
 export class ProfilesListComponent implements OnInit, OnDestroy {
   @ViewChild('editPopup', { static: true }) public editPopup: PopupWidgetComponent;
+  @ViewChild('deletePopup', { static: true }) public deletePopup: PopupWidgetComponent;
   @ViewChild('actionsmenu', { static: true }) private _actionsMenu: Menu;
 
   public _isBusy = false;
@@ -124,13 +125,14 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
               this._editProfile(profile);
               break;
           case "delete":
-              console.log("delete");
+              this.deletePopup.open();
               break;
       }
   }
 
   public _openActionsMenu(event: any, profile: AuthProfile): void {
       if (this._actionsMenu) {
+          this._currentEditProfile = profile;
           this._buildMenu(profile);
           this._actionsMenu.toggle(event);
       }
@@ -148,6 +150,41 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
     this._analytics.trackClickEvent('Edit_Authentication_profile');
     this._logger.info(`handle edit authentication profile action by user`);
     this.editPopup.open();
+  }
+
+  public deleteProfile(): void {
+      this._blockerMessage = null;
+      this._isBusy = true;
+      const displayError = (error: string) => {
+          this._isBusy = false;
+          this._blockerMessage = new AreaBlockerMessage({
+              message: error?.length ? error : this._appLocalization.get('applications.settings.authentication.deleteError'),
+              buttons: [
+                  {
+                      label: this._appLocalization.get('app.common.close'),
+                      action: () => {
+                          this._blockerMessage = null;
+                      }
+                  }
+              ]
+          });
+      }
+      this._profilesStore.deleteProfile(this._currentEditProfile.id).subscribe(
+          (response) => {
+              if (response && response.objectType && response.objectType === "KalturaAPIException") {
+                  // error returned from the server in the response
+                  displayError(response.message ? response.message : '');
+              } else {
+                  // success
+                  this._currentEditProfile = null;
+                  this.pageIndex = 0;
+                  this._refresh();
+              }
+          },
+          error => {
+              displayError('');
+          }
+      )
   }
 
     public _onPaginationChanged(state: any): void {

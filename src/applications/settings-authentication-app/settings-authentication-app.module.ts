@@ -12,9 +12,10 @@ import { TableModule } from 'primeng/table';
 import { MenuModule } from 'primeng/menu';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import {ProfilesListComponent} from "./profiles-list/profiles-list.component";
-import {KalturaPrimeNgUIModule} from "@kaltura-ng/kaltura-primeng-ui";
-import {DateFormatModule} from "app-shared/kmc-shared/date-format/date-format.module";
+import { ProfilesListComponent } from "./profiles-list/profiles-list.component";
+import { KalturaPrimeNgUIModule } from "@kaltura-ng/kaltura-primeng-ui";
+import { DateFormatModule } from "app-shared/kmc-shared/date-format/date-format.module";
+import { DeleteProfileComponent } from "./delete-profile/delete-profile.component";
 
 @NgModule({
     imports: [
@@ -38,7 +39,8 @@ import {DateFormatModule} from "app-shared/kmc-shared/date-format/date-format.mo
     ],
   declarations: [
       SettingsAuthenticationComponent,
-      ProfilesListComponent
+      ProfilesListComponent,
+      DeleteProfileComponent
   ]
 })
 export class SettingsAuthenticationAppModule {

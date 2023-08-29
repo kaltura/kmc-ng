@@ -40,16 +40,16 @@
                         <th data-cid="id">
                             {{'applications.settings.authentication.table.id' | translate}}
                         </th>
-                         <th data-cid="status">
+                         <th data-cid="status" [ngStyle]="{'width': '120px'}">
                             {{'applications.settings.authentication.table.status' | translate}}
                         </th>
-                       <th data-cid="type">
+                       <th data-cid="type" [ngStyle]="{'width': '140px'}">
                             {{'applications.settings.authentication.table.type' | translate}}
                         </th>
-                       <th data-cid="provider">
+                       <th data-cid="provider" [ngStyle]="{'width': '120px'}">
                             {{'applications.settings.authentication.table.provider' | translate}}
                         </th>
-                       <th data-cid="updated" pResizableColumn [pSortableColumn]="'updatedAt'">
+                       <th data-cid="updated" pResizableColumn [pSortableColumn]="'updatedAt'" [ngStyle]="{'width': '140px'}">
                             {{'applications.settings.authentication.table.created' | translate}}
                            <p-sortIcon [field]="'updatedAt'"></p-sortIcon>
                         </th>
@@ -68,16 +68,16 @@
                         <td>
                             <span class="kTableColumn">{{profile.id}}</span>
                         </td>
-                        <td>
+                        <td [ngStyle]="{'width': '120px'}">
                             <span class="kTableColumn">{{profile.status}}</span>
                         </td>
-                        <td>
+                        <td [ngStyle]="{'width': '140px'}">
                             <span class="kTableColumn">{{profile.authStrategy}}</span>
                         </td>
-                        <td>
+                        <td [ngStyle]="{'width': '120px'}">
                             <span class="kTableColumn">{{profile.providerType}}</span>
                         </td>
-                        <td>
+                        <td [ngStyle]="{'width': '140px'}">
                           <span class="kTableColumn">
                               {{profile.createdAt | kmcDate}}
                           </span>
@@ -109,11 +109,18 @@
         </div>
     </div>
   </div>
-  <kPopupWidget #editPopup data-aid="rolesEditPopup" [popupWidth]="995" [slider]="true">
+</k-area-blocker>
+
+<kPopupWidget #editPopup data-aid="rolesEditPopup" [popupWidth]="995" [slider]="true">
     <ng-template>
         <span>Edit profile</span>
-<!--      <kEditRole [role]="_currentEditRole"-->
-<!--                 [parentPopupWidget]="editPopup"></kEditRole>-->
+        <!--      <kEditRole [role]="_currentEditRole"-->
+        <!--                 [parentPopupWidget]="editPopup"></kEditRole>-->
     </ng-template>
-  </kPopupWidget>
-</k-area-blocker>
+</kPopupWidget>
+
+<kPopupWidget #deletePopup data-aid="deleteProfilePopup" [popupWidth]="600" [popupHeight]="330" [modal]="true" [preventPageScroll]="true" [closeBtn]="false">
+    <ng-template>
+        <kDeleteProfile [parentPopupWidget]="deletePopup" [profile]="_currentEditProfile" (onDelete)="deleteProfile()"></kDeleteProfile>
+    </ng-template>
+</kPopupWidget>

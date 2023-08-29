@@ -82,6 +82,21 @@ export class ProfilesStoreService implements OnDestroy {
         }
     }
 
+    public deleteProfile(id: string): Observable<any> {
+        const ks = this._appAuthentication.appUser.ks;
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'authorization': `KS ${ks}`,
+                'Content-Type': 'application/json',
+            })
+        };
+        try {
+            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-profile/delete`, {id}, httpOptions).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to load authentication profiles'));
+        }
+    }
+
     ngOnDestroy(): void {
     }
 }
