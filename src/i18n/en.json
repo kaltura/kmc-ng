@@ -2698,7 +2698,12 @@
                 "deleteConfirm": "To confirm, type \"{{0}}\" in the box below",
                 "deleteBtn": "Delete this profile",
                 "profileName": "Profile name",
-                "deleteError": "Error deleting profile"
+                "deleteError": "Error deleting profile",
+                "edit": {
+                    "titleAdd": "Add profile",
+                    "titleEdit": "Edit profile",
+                    "newProfile": "New profile"
+                }
             },
             "metadata": {
                 "errorLoading": "Error loading schemas",

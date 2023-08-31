@@ -91,7 +91,8 @@ export interface ServerConfig {
         kpfPurchaseManagerBaseUrl: string
     },
     authBrokerServer: {
-        authBrokerBaseUrl: string
+        authBrokerBaseUrl: string,
+        appRegistryBaseUrl: string
     },
     analyticsServer?: {
         uri?: string

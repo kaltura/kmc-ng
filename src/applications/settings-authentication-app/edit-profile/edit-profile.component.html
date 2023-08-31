@@ -1,0 +1,54 @@
+<k-area-blocker [message]="_blockerMessage">
+  <div class="kEditProfile">
+    <div class="kFloater">
+      <div class="kHeader" kStickyHeader [stickyId]="'editProfileHeader'">
+        <span class="kTitle">{{_title}}</span>
+        <div class="kButtons">
+          <a class="kCancel" (click)="parentPopupWidget.close()">
+            {{'applications.administration.role.cancel' | translate}}
+          </a>
+          <button pButton class="kButtonBranded kSaveBtn"
+                  [label]="_actionBtnLabel"
+                  [disabled]="_saveDisabled"
+                  (click)="_performAction()"></button>
+        </div>
+      </div>
+      <div class="kContainer" #scrollableContainer>
+        <form class="kProfileForm" [formGroup]="_editProfileForm" novalidate>
+          <div class="kRow">
+            <span class="kLabel">{{'applications.administration.role.name' | translate}}</span>
+            <div class="kRequired" [class.kHasError]="_nameField.invalid && _nameField.touched">*</div>
+            <div>
+              <input class="kControl" pInputText
+                     [formControl]="_nameField"
+                     [class.kHasError]="_nameField.invalid && _nameField.touched">
+              <div *ngIf="_nameField.hasError('required') && _nameField.touched" class="kError">
+                {{'applications.administration.role.errors.required' | translate}}
+              </div>
+                <div *ngIf="_nameField.hasError('unsafeValue') && _nameField.pristine" class="kError">
+                    {{'applications.administration.role.errors.unsafeValue' | translate}}
+                </div>
+            </div>
+          </div>
+
+          <div class="kRow">
+            <span class="kLabel">{{'applications.administration.role.description' | translate}}</span>
+            <div class="kRequired" [class.kHasError]="_descriptionField.invalid && _descriptionField.touched">*</div>
+            <div>
+              <textarea class="kControl" pInputTextarea
+                        [formControl]="_descriptionField"
+                        [class.kHasError]="_descriptionField.invalid && _descriptionField.touched">
+              </textArea>
+              <div *ngIf="_descriptionField.hasError('required') && _descriptionField.touched" class="kError">
+                {{'applications.administration.role.errors.required' | translate}}
+              </div>
+                <div *ngIf="_descriptionField.hasError('unsafeValue') && _descriptionField.pristine" class="kError">
+                    {{'applications.administration.role.errors.unsafeValue' | translate}}
+                </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</k-area-blocker>

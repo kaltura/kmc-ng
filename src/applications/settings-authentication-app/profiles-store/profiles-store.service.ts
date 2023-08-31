@@ -63,38 +63,42 @@ export class ProfilesStoreService implements OnDestroy {
     }
 
     public loadProfiles(pageSize: number, pageIndex: number, sortField: string, sortOrder: number): Observable<LoadProfilesResponse> {
-        const ks = this._appAuthentication.appUser.ks;
         const pager: Pager = {
             offset: pageIndex,
             limit: pageSize
         }
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'authorization': `KS ${ks}`,
-                'Content-Type': 'application/json',
-            })
-        };
         const orderBy = sortOrder === SortDirection.Desc ? `-${sortField}` : `+${sortField}`;
         try {
-            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-profile/list`, {pager, orderBy}, httpOptions).pipe(cancelOnDestroy(this)) as Observable<LoadProfilesResponse>;
+            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-profile/list`, {pager, orderBy}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadProfilesResponse>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to load authentication profiles'));
         }
     }
 
     public deleteProfile(id: string): Observable<any> {
+        try {
+            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-profile/delete`, {id}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to delete authentication profile ' + id));
+        }
+    }
+
+    public updateProfile(profile: AuthProfile): Observable<any> {
+        try {
+            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-profile/update`, profile, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to update authentication profile ' + profile.id));
+        }
+    }
+
+    private getHttpOptions() {
         const ks = this._appAuthentication.appUser.ks;
-        const httpOptions = {
+        return {
             headers: new HttpHeaders({
                 'authorization': `KS ${ks}`,
                 'Content-Type': 'application/json',
             })
         };
-        try {
-            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-profile/delete`, {id}, httpOptions).pipe(cancelOnDestroy(this)) as Observable<any>;
-        } catch (ex) {
-            return throwError(new Error('An error occurred while trying to load authentication profiles'));
-        }
     }
 
     ngOnDestroy(): void {

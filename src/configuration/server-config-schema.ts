@@ -58,9 +58,10 @@ export const ServerConfigSchema = {
         },
         authBrokerServer: {
             properties: {
-                authBrokerBaseUrl: {type: ['string', 'null']}
+                authBrokerBaseUrl: {type: ['string', 'null']},
+                appRegistryBaseUrl: {type: ['string', 'null']}
             },
-            required: ['authBrokerBaseUrl'],
+            required: ['authBrokerBaseUrl','appRegistryBaseUrl'],
             additionalProperties: true
         },
         analyticsServer: {

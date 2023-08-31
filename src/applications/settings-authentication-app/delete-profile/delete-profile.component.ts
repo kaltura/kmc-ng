@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {AuthProfile} from "../profiles-store/profiles-store.service";
 

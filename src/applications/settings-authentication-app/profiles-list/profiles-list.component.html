@@ -113,9 +113,7 @@
 
 <kPopupWidget #editPopup data-aid="rolesEditPopup" [popupWidth]="995" [slider]="true">
     <ng-template>
-        <span>Edit profile</span>
-        <!--      <kEditRole [role]="_currentEditRole"-->
-        <!--                 [parentPopupWidget]="editPopup"></kEditRole>-->
+        <kEditProfile [profile]="_currentEditProfile" [parentPopupWidget]="editPopup" (onRefresh)="_refresh()"></kEditProfile>
     </ng-template>
 </kPopupWidget>
 

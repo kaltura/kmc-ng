@@ -16,6 +16,7 @@ import { ProfilesListComponent } from "./profiles-list/profiles-list.component";
 import { KalturaPrimeNgUIModule } from "@kaltura-ng/kaltura-primeng-ui";
 import { DateFormatModule } from "app-shared/kmc-shared/date-format/date-format.module";
 import { DeleteProfileComponent } from "./delete-profile/delete-profile.component";
+import { EditProfileComponent } from "./edit-profile/edit-profile.component";
 
 @NgModule({
     imports: [
@@ -40,7 +41,8 @@ import { DeleteProfileComponent } from "./delete-profile/delete-profile.componen
   declarations: [
       SettingsAuthenticationComponent,
       ProfilesListComponent,
-      DeleteProfileComponent
+      DeleteProfileComponent,
+      EditProfileComponent
   ]
 })
 export class SettingsAuthenticationAppModule {
