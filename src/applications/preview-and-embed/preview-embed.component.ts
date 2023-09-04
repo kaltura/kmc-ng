@@ -107,15 +107,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           this._generatedPreviewCode = this.generateCode(true);
           this.createPreviewLink();
       } else {
-          if (this._previewForm.controls['selectedEmbedType'].value === 'thumb'){
-              // if coming from a V2 player with thumb embed, change the embed type to dynamic. This will trigger another change that will generate the correct embed code.
-              this._previewForm.controls['selectedEmbedType'].setValue('dynamic');
-              this._browserService.setInLocalStorage('previewEmbed.embedType', 'dynamic');
-          } else {
-              this._generatedCode = this.generateV3code(false);
-              this._generatedPreviewCode = this.generateV3code(true);
-              this.createPreviewLink();
-          }
+          this._generatedCode = this.generateV3code(false);
+          this._generatedPreviewCode = this.generateV3code(true);
+          this.createPreviewLink();
       }
       this._showPlayer = false; // remove iframe from DOM to invoke refresh
       setTimeout(() => {        // use a timeout to ivoke iframe content refresh
@@ -240,7 +234,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     this._embedTypes.push({"label": this._appLocalization.get("applications.embed.embedDynamic"), "value": "dynamic"});
     this._embedTypes.push({"label": this._appLocalization.get("applications.embed.embedIframe"), "value": "iframe"});
     this._embedTypes.push({"label": this._appLocalization.get("applications.embed.embedAuto"), "value": "auto"});
-    if (this.media instanceof KalturaMediaEntry && this._selectedPlayerVersion === 2) {
+    if (this.media instanceof KalturaMediaEntry) {
       this._embedTypes.push({"label": this._appLocalization.get("applications.embed.embedThumb"), "value": "thumb"}); // no thumb embed for playlists and v3 players
     }
   }
@@ -272,6 +266,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           // pass ks to player for preview only
           switch (embedType) {
               case 'dynamic':
+              case 'thumb':
                   config = `{"ks": "${ks}"}`;
                   // force thumbnail download using ks if needed
                   if (this._appAuthentication.appUser.partnerInfo.loadThumbnailWithKs) {
@@ -287,6 +282,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
                   break;
               case 'auto':
                   config = `&ks=${ks}`;
+                  break;
           }
       }
       embedConfig.serverUri = serverUri;

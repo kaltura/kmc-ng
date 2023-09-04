@@ -7,6 +7,7 @@
             margin: auto;
         }
     </style>
+    <script src="https://static.kaltura.com/content/static/player-scripts/thumbnail-embed.js"></script>
 </head>
   <body>
   <script>
@@ -57,6 +58,7 @@
               } else if (embedParams.playerVersion === 7) {
                   switch (embedParams.embedType) {
                       case 'dynamic':
+                      case 'thumb':
                           script.setAttribute('src', embedParams.scriptUrl);
                           document.head.appendChild(script);
                           template.innerHTML = embedParams.htmlContent;
@@ -89,11 +91,18 @@
                                               }
                                           })
                                       }
-                                      kPlayer = window['KalturaPlayer'].setup(playerOptions);
-                                      if (embedParams.isPlaylist === true) {
-                                          kPlayer['loadPlaylist']({playlistId: embedParams.embedParameters.entry_id});
+                                      if (embedParams.embedType === 'dynamic') {
+                                          kPlayer = window['KalturaPlayer'].setup(playerOptions);
+                                          if (embedParams.isPlaylist === true) {
+                                              kPlayer['loadPlaylist']({playlistId: embedParams.embedParameters.entry_id});
+                                          } else {
+                                              kPlayer['loadMedia']({entryId: embedParams.embedParameters.entry_id});
+                                          }
                                       } else {
-                                          kPlayer['loadMedia']({entryId: embedParams.embedParameters.entry_id});
+                                          window['__thumbnailEmbed']({
+                                              config: {...playerOptions},
+                                              mediaInfo: {entryId: embedParams.embedParameters.entry_id}
+                                          });
                                       }
                                   } catch (e) {
                                       console.error(e.message)
