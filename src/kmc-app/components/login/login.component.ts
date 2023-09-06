@@ -1,12 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import {
-    AppAnalytics,
-    AppAuthentication,
-    AutomaticLoginErrorReasons,
-    BrowserService,
-    LoginError,
-    LoginResponse
-} from 'app-shared/kmc-shell';
+import { AppAnalytics, AppAuthentication, AutomaticLoginErrorReasons, BrowserService, LoginError, LoginResponse } from 'app-shared/kmc-shell';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,6 +9,7 @@ import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/deta
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { AuthenticatorViewService } from "app-shared/kmc-shared/kmc-views/details-views";
 import { KalturaAuthentication } from "kaltura-ngx-client";
+import { HttpClient } from "@angular/common/http";
 
 export enum LoginScreens {
   Login,
@@ -68,6 +62,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
               private _browserService: BrowserService,
               private _analytics: AppAnalytics,
               private _el: ElementRef,
+              private _http: HttpClient,
               private _renderer: Renderer2,
               private _route: ActivatedRoute,
               private _router: Router,
@@ -306,7 +301,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       this._currentScreen = this._loginScreens.Login;
   }
 
-  public _ssoLogin(email: string): void{
+  public _ssoLogin(email: string): void {
       this._inProgress = true;
       this._errorMessage = '';
       this._appAuthentication._ssoLogin(email).subscribe(
@@ -314,14 +309,37 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
               this._browserService.openLink(redirectUrl.toString(), {}, '_self');
           },
           error => {
-              this._inProgress = false;
-              this._errorCode = error.code;
-              if (!error.custom) {
-                  this._errorMessage = this._appLocalization.get(error.message);
+              // if AuthBroker is configured, try to use it for login, else display the error
+              if (!!serverConfig.authBrokerServer && !!serverConfig.authBrokerServer.authBrokerBaseUrl) {
+                  this._authBrokerLogin(email);
               } else {
-                  this._errorMessage = error.message;
+                  this._inProgress = false;
+                  this._errorCode = error.code;
+                  if (!error.custom) {
+                      this._errorMessage = this._appLocalization.get(error.message);
+                  } else {
+                      this._errorMessage = error.message;
+                  }
               }
           }
       );
+  }
+
+  private _authBrokerLogin(email: string): void {
+      const loginData = {
+          appType: "kmc",
+          email
+      }
+      this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/spa-proxy/login`, loginData, {responseType: 'text'}).subscribe(
+          response => {
+              document.open();
+              document.write(response);
+              document.close();
+          },
+          error => {
+              this._inProgress = false;
+              this._errorMessage = error?.message || this._appLocalization.get('applications.settings.authentication.loginError');
+          }
+      )
   }
 }
