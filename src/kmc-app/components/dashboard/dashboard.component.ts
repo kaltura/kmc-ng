@@ -18,7 +18,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   // promo videos are hard coded to Kaltura production server in order to support additional environments
   public _uiconf = 53016472;
   public _pid = '811441';
-  public _cdnUrl = 'http://www.kaltura.com';
+  public _cdnUrl = 'https://www.kaltura.com';
 
   public _studioPlayerReady = false;
   public _studioBannerUrl = buildDeployUrl('./assets/studio.png');
