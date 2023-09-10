@@ -33,6 +33,7 @@ import {
     SettingsAuthenticationMainViewService,
 } from './main-views';
 import { Observable } from 'rxjs';
+import { AppUser } from "app-shared/kmc-shell";
 
 export interface KMCAppMenuItem {
     menuTitle: string;
@@ -89,7 +90,7 @@ export class KmcMainViewsService {
         this._logger = logger.subLogger('KmcMainViewsService');
     }
 
-    private _getMainViewsList(): KMCAppMenuItem[] {
+    private _getMainViewsList(appUser: AppUser): KMCAppMenuItem[] {
         return [
             {
                 menuTitle: this._appLocalization.get('app.titles.content'),
@@ -314,7 +315,7 @@ export class KmcMainViewsService {
                         'position': 'left'
                     },
                     {
-                        isAvailable: this._settingsAuthenticationMain.isAvailable(),
+                        isAvailable: this._settingsAuthenticationMain.isAvailable() && appUser.isAdmin,
                         isActiveView:  (path) => this._settingsAuthenticationMain.isActiveView(path),
                         open: () => {
                             this._settingsAuthenticationMain.open();
@@ -367,7 +368,7 @@ export class KmcMainViewsService {
     }
 
 
-    public rebuildMenu(): void {
+    public rebuildMenu(appUser: AppUser): void {
         this._logger.info('build app menu');
 
         const openFirstChild = function(this: KMCAppMenuItem): void {
@@ -410,6 +411,6 @@ export class KmcMainViewsService {
             return target;
         };
 
-        this._cache = this._getMainViewsList().reduce(processItem, []);
+        this._cache = this._getMainViewsList(appUser).reduce(processItem, []);
     }
 }

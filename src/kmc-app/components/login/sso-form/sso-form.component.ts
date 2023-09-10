@@ -11,7 +11,7 @@ export class SsoFormComponent {
   @Input() inProgress: boolean;
   @Input() errorMessage: string;
 
-  @Output() onSsoLogin = new EventEmitter<string>();
+  @Output() onSsoLogin = new EventEmitter<{email: string, organizationId: string}>();
   @Output() onRememberMe = new EventEmitter<string>();
 
   @Input()
@@ -22,8 +22,10 @@ export class SsoFormComponent {
 
   public _ssoForm: FormGroup;
   public _emailField: AbstractControl;
+  public _organizationField: AbstractControl;
   public _rememberMeField: AbstractControl;
   public _displayEmailField = true;
+  public _showOrganizationField = false;
 
   public get _emailValidationMessage(): string {
     return this._emailField.invalid && this._emailField.touched ? 'app.login.error.email' : '';
@@ -42,10 +44,12 @@ export class SsoFormComponent {
   private _buildForm(): void {
     this._ssoForm = this._fb.group({
         email: ['', Validators.compose([Validators.required, Validators.email])],
+        organization: [''],
         rememberMe: false
     });
 
     this._emailField = this._ssoForm.controls['email'];
+    this._organizationField = this._ssoForm.controls['organization'];
     this._rememberMeField = this._ssoForm.controls['rememberMe'];
   }
 
@@ -54,7 +58,7 @@ export class SsoFormComponent {
     this._analytics.trackClickEvent('Login_with_SSO');
     if (this._ssoForm.valid) {
       const rememberMePayload = this._rememberMeField.value ? this._emailField.value : '';
-      this.onSsoLogin.emit(this._emailField.value);
+      this.onSsoLogin.emit({email: this._emailField.value, organizationId: this._organizationField.value});
       this.onRememberMe.emit(rememberMePayload);
     }
   }

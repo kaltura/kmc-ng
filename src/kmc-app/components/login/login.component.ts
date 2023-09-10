@@ -301,17 +301,17 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       this._currentScreen = this._loginScreens.Login;
   }
 
-  public _ssoLogin(email: string): void {
+  public _ssoLogin(event: {email: string, organizationId: string}): void {
       this._inProgress = true;
       this._errorMessage = '';
-      this._appAuthentication._ssoLogin(email).subscribe(
+      this._appAuthentication._ssoLogin(event.email).subscribe(
           redirectUrl => {
               this._browserService.openLink(redirectUrl.toString(), {}, '_self');
           },
           error => {
               // if AuthBroker is configured, try to use it for login, else display the error
               if (!!serverConfig.authBrokerServer && !!serverConfig.authBrokerServer.authBrokerBaseUrl) {
-                  this._authBrokerLogin(email);
+                  this._authBrokerLogin(event.email, event.organizationId);
               } else {
                   this._inProgress = false;
                   this._errorCode = error.code;
@@ -325,16 +325,27 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       );
   }
 
-  private _authBrokerLogin(email: string): void {
-      const loginData = {
+  private _authBrokerLogin(email: string, organizationId: string = ''): void {
+      let loginData = {
           appType: "kmc",
           email
       }
+      if (organizationId?.length) {
+          loginData["organizationId"] = organizationId;
+      }
       this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/spa-proxy/login`, loginData, {responseType: 'text'}).subscribe(
           response => {
-              document.open();
-              document.write(response);
-              document.close();
+              if (response.indexOf("KalturaAPIException") > -1) {
+                  const parsedResponse = JSON.parse(response);
+                  if (parsedResponse?.objectType === "KalturaAPIException") {
+                      this._inProgress = false;
+                      this._errorMessage = parsedResponse.message;
+                  }
+              } else {
+                  document.open();
+                  document.write(response);
+                  document.close();
+              }
           },
           error => {
               this._inProgress = false;

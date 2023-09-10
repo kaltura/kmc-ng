@@ -15,6 +15,17 @@
              }"
              [kTooltip]="_emailValidationMessage | translate"
              placement="right">
+
+        <div class="linkWrapper" [class.open]="_showOrganizationField">
+            <i *ngIf="!_showOrganizationField" (click)="_showOrganizationField=true" class="kIcontree-arrow-right"></i>
+            <i *ngIf="_showOrganizationField" class="kIcontree-arrow-down"></i>
+            <a (click)="_showOrganizationField=true">{{ 'applications.settings.authentication.addOrganizationId' | translate }}</a>
+        </div>
+
+
+      <input pInputText autocomplete="off" *ngIf="_showOrganizationField"
+             [placeholder]="'applications.settings.authentication.organizationId' | translate"
+             [formControl]="_organizationField">
     </div>
 
     <p *ngIf="errorMessage" class="kErrorMessage" [innerHTML]="errorMessage"></p>

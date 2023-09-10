@@ -2699,6 +2699,8 @@
                 "deleteBtn": "Delete this profile",
                 "profileName": "Profile name",
                 "deleteError": "Error deleting profile",
+                "addOrganizationId": "Add organization ID (optional)",
+                "organizationId": "Organization ID",
                 "loginError": "Login error occurred",
                 "edit": {
                     "titleAdd": "Add profile",
