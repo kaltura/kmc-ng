@@ -67,7 +67,7 @@ export class ProfilesStoreService implements OnDestroy {
             offset: pageIndex,
             limit: pageSize
         }
-        const orderBy = sortOrder === SortDirection.Desc ? `-${sortField}` : `+${sortField}`;
+        const orderBy = sortOrder === SortDirection.Desc ? `-${sortField}` : `${sortField}`;
         try {
             return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-profile/list`, {pager, orderBy}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadProfilesResponse>;
         } catch (ex) {

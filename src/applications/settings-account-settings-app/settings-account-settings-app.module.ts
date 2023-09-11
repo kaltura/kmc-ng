@@ -3,29 +3,35 @@ import {CommonModule} from '@angular/common';
 import {SettingsAccountSettingsComponent} from './settings-account-settings.component';
 import {routing} from "./settings-account-settings-app.routes";
 import {RouterModule} from "@angular/router";
-import {ReactiveFormsModule} from "@angular/forms";
-import {AreaBlockerModule} from "@kaltura-ng/kaltura-ui";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {AreaBlockerModule, TooltipModule} from "@kaltura-ng/kaltura-ui";
 import {TranslateModule} from "@ngx-translate/core";
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { SettingsAccountSettingsCanDeactivateService } from './settings-account-settings-can-deactivate.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
+import { MultiSelectModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { SsoConfigComponent } from "./sso-config/sso-config.component";
+import { ProfilesStoreService } from "../settings-authentication-app/profiles-store/profiles-store.service";
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild(routing),
+    FormsModule,
     ReactiveFormsModule,
     DropdownModule,
+    MultiSelectModule,
     InputTextModule,
+    TooltipModule,
     ButtonModule,
     AreaBlockerModule,
     TranslateModule,
     KMCPermissionsModule
   ],
-  declarations: [SettingsAccountSettingsComponent],
-    providers:[SettingsAccountSettingsCanDeactivateService]
+  declarations: [SettingsAccountSettingsComponent, SsoConfigComponent],
+    providers:[SettingsAccountSettingsCanDeactivateService, ProfilesStoreService]
 })
 export class SettingsAccountSettingsAppModule {
 }

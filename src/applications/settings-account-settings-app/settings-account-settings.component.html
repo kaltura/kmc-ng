@@ -11,11 +11,11 @@
       </div>
     </section>
     <section class="kFormContainer">
-      <div class="kFormSection">
+      <span class="kTitle">{{'applications.settings.authentication.subscribe.general' | translate}}</span>
+      <div class="kInfo">
         <i class="kIconwarning"></i>
         <span>{{'applications.settings.accountSettings.informationMessage' | translate}}</span>
       </div>
-      <hr>
       <div class="kFormSection">
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.accountSettings.name' | translate}}</span>
@@ -93,11 +93,17 @@
         <div class="kSaveBtnContainer kRow">
           <button pButton class="kButtonBranded kSaveBtn"
                   label="{{'applications.settings.accountSettings.apply' | translate}}"
-                  [disabled]="accountSettingsForm.pristine || (_kmcPermissions.ACCESS_CONTROL_ADD | kDisabledIfNotPermitted)"></button>
+                  [disabled]="accountSettingsForm.pristine || accountSettingsForm.invalid || (_kmcPermissions.ACCESS_CONTROL_ADD | kDisabledIfNotPermitted)"></button>
         </div>
       </div>
 
 
     </section>
+
+      <div class="sso" *ngIf="_showSSO">
+        <kSSOConfig></kSSOConfig>
+      </div>
   </form>
+
+
 </k-area-blocker>

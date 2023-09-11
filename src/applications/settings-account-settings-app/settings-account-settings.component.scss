@@ -23,7 +23,6 @@
       font-weight: 700;
       height: 29px;
       font-size: 24px;
-      font-weight: bold;
       line-height: 29px;
       .kTitleIcon:before {
         font-size: 32px;
@@ -68,16 +67,21 @@
 
 .kFormContainer {
   background: white;
-
-  hr {
-    display: block;
-    height: 0px;
-    border: 0;
-    border-top: 1px solid #ccc;
-    padding: 0;
-    margin: 0;
+  .kTitle {
+      font-size: 24px;
+      font-weight: bold;
+      margin-left: 24px;
+      margin-top: 24px;
+      display: block;
   }
-
+  .kInfo {
+      margin-left: 24px;
+      margin-top: 24px;
+      display: flex;
+      i {
+          margin-right: 8px;
+      }
+  }
   .kFormSection {
     font-size: 15px;
     padding: 29px 27px;
@@ -140,7 +144,7 @@
       }
 
       &.kSaveBtnContainer {
-        padding-top: 60px;
+        padding-top: 28px;
         .kSaveBtn {
           margin-left: auto;
           width: 125px;
@@ -151,7 +155,12 @@
     }
   }
 }
-
+.sso {
+    background-color: white;
+    width: 100%;
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
 /*********************/
 /* PrimeNG overrides */
 /*********************/

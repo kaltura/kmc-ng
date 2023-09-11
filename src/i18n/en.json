@@ -2706,6 +2706,17 @@
                     "titleAdd": "Add profile",
                     "titleEdit": "Edit profile",
                     "newProfile": "New profile"
+                },
+                "subscribe": {
+                    "general": "General",
+                    "config": "SSO configuration",
+                    "profiles": "Profiles",
+                    "profilesPlaceholder": "Select profiles",
+                    "profiles-help": "Select one or more admin profiles",
+                    "domain": "Domain",
+                    "domain-help": "Enter your organization domain i.e: <organization>.com",
+                    "orgId": "Organization ID",
+                    "orgId-help": "Optionally, you can add an organization ID to support multiple accounts per domain"
                 }
             },
             "metadata": {
