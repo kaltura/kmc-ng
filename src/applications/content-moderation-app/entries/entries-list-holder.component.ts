@@ -35,6 +35,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   public _kmcPermissions = KMCPermissions;
     public _enforcedFilters: Partial<EntriesFilters> = {
         'moderationStatuses': ['1', '5'],
+        'displayInSearchIn': '0,1,2,-1'
     };
   public _defaultFilters: Partial<EntriesFilters> = {
       'sortDirection': SortDirection.Desc

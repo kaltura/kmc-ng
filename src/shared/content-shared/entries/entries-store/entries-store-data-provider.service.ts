@@ -125,9 +125,11 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
               filter.lastPlayedAtLessThanOrEqual = KalturaUtils.getEndDateValue(new Date(data.lastPlayedAt * 1000));
           }
 
-          // filter 'recycled'
+          // filter 'recycled' and displayInSearch for moderation
           if (data.recycled) {
               filter.displayInSearchEqual = KalturaEntryDisplayInSearchType.recycled;
+          } else if (data.displayInSearchIn !== '') {
+              filter.displayInSearchIn = data.displayInSearchIn;
           }
 
           // filters of joined list
@@ -398,6 +400,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
 
     return {
       freetext: '',
+      displayInSearchIn: '',
       freetextSearchField: '',
       includeCaptions: true,
       pageSize: pageSize,
