@@ -35,6 +35,8 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
 
   public profiles = [];
 
+  private kmcAppGuid = '';
+
   public get _saveDisabled(): boolean {
     return this._ssoConfigForm.pristine;
   }
@@ -53,29 +55,48 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
 
   private _prepare(): void {
       // fetch admin profiles
+      const displayError = error => {
+          this._isBusy = false;
+          this._blockerMessage = new AreaBlockerMessage({
+              message: this._appLocalization.get('applications.settings.authentication.loadError'),
+              buttons: [
+                  {
+                      label: this._appLocalization.get('app.common.close'),
+                      action: () => {
+                          this._logger.info(`user didn't confirm, abort action, dismiss dialog`);
+                          this._blockerMessage = null;
+                      }
+                  }
+              ]
+          });
+      }
       this._isBusy = true;
       this._blockerMessage = null;
       this._profilesService.loadProfiles(100,0,'name', SortDirection.Desc).subscribe(
           (response: LoadProfilesResponse) => {
-              this._isBusy = false;
               if (response.objects?.length) {
                   this.profiles = response.objects as AuthProfile[]; // TODO filter only admin profiles
               }
+              // load app registry
+              this._profilesService.listApplications().subscribe(
+                  response => {
+                      if (response.objects?.length > 0) {
+                          this.kmcAppGuid = response.objects[0].id;
+                          // TODO load subscriptions with kmc app id in the filter
+                          // if found:
+                          // 1. populate domain and org id in the form
+                          // 2. list subscription profiles with filter.appGuid with the app id
+                          // 3. if subscription is found - select its profile in the profiles drop down
+                      }
+                      this._isBusy = false;
+                  },
+                  error => {
+                      displayError(error);
+                  }
+              );
           },
           error => {
-              this._isBusy = false;
-              this._blockerMessage = new AreaBlockerMessage({
-                  message: this._appLocalization.get('applications.settings.authentication.loadError'),
-                  buttons: [
-                      {
-                          label: this._appLocalization.get('app.common.close'),
-                          action: () => {
-                              this._logger.info(`user didn't confirm, abort action, dismiss dialog`);
-                              this._blockerMessage = null;
-                          }
-                      }
-                  ]
-              });
+              displayError(error);
           }
       );
   }
@@ -131,14 +152,20 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
     this._blockerMessage = null;
 
     this._logger.info(`send new profile to the server`);
-
-    const retryFn = () => this._updateSsoConfig();
     const { profiles, domain, organizationId } = this._ssoConfigForm.value;
 
-    // this._profilesService.addRole(this.profile)
-    //   .pipe(cancelOnDestroy(this))
-    //   .pipe(tag('block-shell'))
-    //   .subscribe(this._getObserver(retryFn));
+    // TODO implement logic
+      // 1. if this.kmcAppGuid is empty (no app registry):
+        // 1a. register kmc app with the selected domain and org id
+        // 1b. use the created app id to create a subscription with the selected profile
+      // 2. if this.kmcAppGuid exists (kmc app is registered):
+        // 2a. if no subscription profile exists - go to 1b.
+        // 2b. if a subscription profile exists for this app:
+            // 2b-1. if the entered domain is equal to the subscription domain but profile or org id changed - preform subscription update
+            // 2b-2. if the entered domain is different than the subscription domain:
+                // 2b-2a: delete subscription
+                // 2b-2b: delete kmc app registration
+                // 2b-2c: go to 1 and preform 1a and 1b.
   }
 
   public _performAction(): void {

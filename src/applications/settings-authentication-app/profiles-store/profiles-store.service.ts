@@ -91,6 +91,19 @@ export class ProfilesStoreService implements OnDestroy {
         }
     }
 
+    public listApplications(): Observable<any> {
+        const filter = {
+            "appType": "kmc",
+            "status": "enabled",
+            "appCustomIdIn": [this._appAuthentication.appUser.partnerInfo.partnerId.toString()]
+        }
+        try {
+            return this._http.post(`${serverConfig.authBrokerServer.appRegistryBaseUrl}/api/v1/app-registry/list`, {filter}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to load app from registry'));
+        }
+    }
+
     private getHttpOptions() {
         const ks = this._appAuthentication.appUser.ks;
         return {
