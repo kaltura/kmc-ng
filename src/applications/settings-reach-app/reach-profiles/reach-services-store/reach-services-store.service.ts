@@ -177,7 +177,7 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
 
             const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
                 type: KalturaResponseProfileType.includeFields,
-                fields: 'id,createdAt,serviceType,serviceFeature,turnAroundTime,pricing,enableSpeakerId,sourceLanguage,targetLanguage'
+                fields: 'id,createdAt,serviceType,serviceFeature,turnAroundTime,pricing,pricePerUnit,enableSpeakerId,sourceLanguage,targetLanguage'
             });
 
             const reachServicesListAction = new VendorCatalogItemListAction({ filter, pager }).setRequestOptions({responseProfile});
