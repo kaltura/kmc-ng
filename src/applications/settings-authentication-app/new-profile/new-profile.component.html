@@ -1,0 +1,68 @@
+<k-area-blocker [message]="_blockerMessage">
+    <div class="kNewProfile">
+
+        <div class="kHeader">
+            <span class="kTitle">{{'applications.settings.authentication.new.createTitle' | translate}}</span>
+        </div>
+        <div class="kContainer" #scrollableContainer>
+            <form class="kProfileForm" [formGroup]="_newProfileForm" novalidate>
+                <div class="kRow">
+                    <span class="kLabel required">{{'applications.administration.role.name' | translate}}</span>
+                    <div class="kRequired" [class.kHasError]="_nameField.invalid && _nameField.touched">*</div>
+                    <div>
+                        <input class="kControl" pInputText
+                               [formControl]="_nameField"
+                               [placeholder]="'applications.settings.authentication.edit.newProfile' | translate"
+                               [class.kHasError]="_nameField.invalid && _nameField.touched">
+                        <div *ngIf="_nameField.hasError('required') && _nameField.touched" class="kError">
+                            {{'applications.administration.role.errors.required' | translate}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <span class="kLabel">{{'applications.administration.role.description' | translate}}</span>
+                    <div>
+                          <textarea class="kControl" pInputTextarea
+                                    [formControl]="_descriptionField"
+                                    [class.kHasError]="_descriptionField.invalid && _descriptionField.touched">
+                          </textArea>
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <span class="kLabel">{{'applications.settings.authentication.new.provider' | translate}}</span>
+                    <div>
+                        <p-dropdown class="kControl" [formControl]="_providerField" appendTo="body"
+                                    [options]="_providerTypes"></p-dropdown>
+                    </div>
+                </div>
+
+                <div class="kRow center">
+                    <span class="kLabel">{{'applications.settings.authentication.new.admin' | translate}}</span>
+                    <div>
+                        <p-checkbox [formControl]="_adinProfileField"
+                                    [label]="'applications.settings.authentication.new.adminLabel' | translate"
+                                    binary="true"></p-checkbox>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+
+        <div class="doc">
+            <span>{{'applications.settings.authentication.new.doc' | translate}}</span>
+            <span class="link" (click)="openHelp()">{{'applications.settings.authentication.new.docLink' | translate}}</span>
+        </div>
+
+        <div class="kFooter">
+            <button type="button" class="kButtonDefault kBtn" (click)="parentPopupWidget.close()" pButton
+                    label="{{'app.common.cancel' | translate}}"></button>
+            <button type="button" class="kButtonBranded kBtn" [kTooltip]="'applications.settings.authentication.new.create_tt' | translate"
+                    [disabled]="_saveDisabled" (click)="_createProfile()" pButton
+                    label="{{'applications.settings.authentication.new.create' | translate}}"></button>
+        </div>
+
+    </div>
+</k-area-blocker>

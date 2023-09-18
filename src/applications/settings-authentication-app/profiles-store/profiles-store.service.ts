@@ -42,7 +42,8 @@ export type AuthProfile = {
     userGroupsSyncAll: boolean;
     userIdAttribute: string;
     version: number;
-    status: 'complete' | 'incomplete';
+    isAdminProfile: boolean;
+    status: 'complete' | 'draft';
 }
 
 export type Pager = {
@@ -72,6 +73,14 @@ export class ProfilesStoreService implements OnDestroy {
             return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-profile/list`, {pager, orderBy}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadProfilesResponse>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to load authentication profiles'));
+        }
+    }
+
+    public createProfile(profile: any): Observable<any> {
+        try {
+            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-profile/add`, profile, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to create profile'));
         }
     }
 

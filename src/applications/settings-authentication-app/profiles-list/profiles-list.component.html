@@ -69,7 +69,10 @@
                             <span class="kTableColumn">{{profile.id}}</span>
                         </td>
                         <td [ngStyle]="{'width': '120px'}">
-                            <span class="kTableColumn">{{profile.status}}</span>
+                            <div class="status">
+                                <div class="bullet" [ngStyle]="{backgroundColor: profile.status === 'complete' ? '#009444' : '#DB1F26'}"></div>
+                                <span class="kTableColumn" [ngStyle]="{color: profile.status === 'complete' ? '#009444' : '#DB1F26'}">{{profile.status === 'complete' ? ('applications.settings.authentication.table.complete' | translate) : ('applications.settings.authentication.table.draft' | translate)}}</span>
+                            </div>
                         </td>
                         <td [ngStyle]="{'width': '140px'}">
                             <span class="kTableColumn">{{profile.authStrategy}}</span>
@@ -120,5 +123,11 @@
 <kPopupWidget #deletePopup data-aid="deleteProfilePopup" [popupWidth]="600" [popupHeight]="330" [modal]="true" [preventPageScroll]="true" [closeBtn]="false">
     <ng-template>
         <kDeleteProfile [parentPopupWidget]="deletePopup" [profile]="_currentEditProfile" (onDelete)="deleteProfile()"></kDeleteProfile>
+    </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #newPopup data-aid="newProfilePopup" [popupWidth]="750" [popupHeight]="508" [modal]="true" [preventPageScroll]="true">
+    <ng-template>
+        <kNewProfile [parentPopupWidget]="newPopup" (onProfileCreated)="onProfileCreated($event)"></kNewProfile>
     </ng-template>
 </kPopupWidget>

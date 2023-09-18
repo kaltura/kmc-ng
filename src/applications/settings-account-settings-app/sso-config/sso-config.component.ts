@@ -86,7 +86,7 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
                           // if found:
                           // 1. populate domain and org id in the form
                           // 2. list subscription profiles with filter.appGuid with the app id
-                          // 3. if subscription is found - select its profile in the profiles drop down
+                          // 3. if subscription is found - select its profile in the profiles drop down. If multiple profiles exists - the profile ID should be set in session storage upon login
                       }
                       this._isBusy = false;
                   },
@@ -157,15 +157,12 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
     // TODO implement logic
       // 1. if this.kmcAppGuid is empty (no app registry):
         // 1a. register kmc app with the selected domain and org id
-        // 1b. use the created app id to create a subscription with the selected profile
+        // 1b. use the created app id to create a subscription with the selected profiles
       // 2. if this.kmcAppGuid exists (kmc app is registered):
         // 2a. if no subscription profile exists - go to 1b.
         // 2b. if a subscription profile exists for this app:
-            // 2b-1. if the entered domain is equal to the subscription domain but profile or org id changed - preform subscription update
-            // 2b-2. if the entered domain is different than the subscription domain:
-                // 2b-2a: delete subscription
-                // 2b-2b: delete kmc app registration
-                // 2b-2c: go to 1 and preform 1a and 1b.
+            // 2b-1. if the entered domain is equal to kmc app domain - preform subscription update
+            // 2b-2. if the entered domain is different than the subscription domain - preform subscription update and also KMC app update
   }
 
   public _performAction(): void {

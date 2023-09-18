@@ -7,6 +7,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule, PopupWidgetModule} from '@kaltura-ng/kaltura-ui';
 import {TranslateModule} from '@ngx-translate/core';
 import { InputTextModule } from 'primeng/inputtext';
+import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { MenuModule } from 'primeng/menu';
@@ -17,6 +18,7 @@ import { KalturaPrimeNgUIModule } from "@kaltura-ng/kaltura-primeng-ui";
 import { DateFormatModule } from "app-shared/kmc-shared/date-format/date-format.module";
 import { DeleteProfileComponent } from "./delete-profile/delete-profile.component";
 import { EditProfileComponent } from "./edit-profile/edit-profile.component";
+import { NewProfileComponent } from "./new-profile/new-profile.component";
 
 @NgModule({
     imports: [
@@ -27,6 +29,7 @@ import { EditProfileComponent } from "./edit-profile/edit-profile.component";
         StickyModule,
         TooltipModule,
         PopupWidgetModule,
+        CheckboxModule,
         ButtonModule,
         TableModule,
         MenuModule,
@@ -42,6 +45,7 @@ import { EditProfileComponent } from "./edit-profile/edit-profile.component";
       SettingsAuthenticationComponent,
       ProfilesListComponent,
       DeleteProfileComponent,
+      NewProfileComponent,
       EditProfileComponent
   ]
 })

@@ -2691,7 +2691,9 @@
                     "provider": "Provider (IdP)",
                     "created": "Creation date",
                     "edit": "Edit",
-                    "delete": "Delete"
+                    "delete": "Delete",
+                    "draft": "Draft",
+                    "complete": "Complete"
                 },
                 "delete": "Delete profile",
                 "deleteMsg": "Are you sure you what to deletet he selected profile? \"{{0}}\"",
@@ -2706,6 +2708,16 @@
                     "titleAdd": "Add profile",
                     "titleEdit": "Edit profile",
                     "newProfile": "New profile"
+                },
+                "new": {
+                    "doc": "For instructions on how to configure a new SSO profile visit our",
+                    "docLink": "SSO profile configuration guide",
+                    "provider": "Provider",
+                    "admin": "Admin profile",
+                    "createTitle": "Create profile",
+                    "create": "Next",
+                    "create_tt": "Create profile and continue to complete profile settings",
+                    "adminLabel": "Set as admin application profile"
                 },
                 "subscribe": {
                     "general": "General",

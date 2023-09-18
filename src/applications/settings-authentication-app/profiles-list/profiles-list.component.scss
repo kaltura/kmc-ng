@@ -69,6 +69,16 @@
         padding: 0px;
         width: 100%;
         min-height: calc(100vh - 230px);
+        .status {
+            display: flex;
+            align-items: center;
+            .bullet {
+                width: 8px;
+                height: 8px;
+                border-radius: 4px;
+                margin-right: 8px;
+            }
+        }
         .kProfileName {
             font-weight: bold;
             color: $kGrayscale1;

@@ -24,6 +24,7 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
 
 export class ProfilesListComponent implements OnInit, OnDestroy {
   @ViewChild('editPopup', { static: true }) public editPopup: PopupWidgetComponent;
+  @ViewChild('newPopup', { static: true }) public newPopup: PopupWidgetComponent;
   @ViewChild('deletePopup', { static: true }) public deletePopup: PopupWidgetComponent;
   @ViewChild('actionsmenu', { static: true }) private _actionsMenu: Menu;
 
@@ -66,9 +67,9 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
               if (response.objects?.length) {
                   this._profiles = response.objects as AuthProfile[];
                   this._profiles.forEach(profile => { // mapping
-                      profile.status = 'incomplete'; // TODO calculate status according to profile fields
                       profile.createdAt = new Date(profile.createdAt);
                       profile.updatedAt = new Date(profile.updatedAt);
+                      profile.status = this.getProfileStatus(profile);
                   });
               }
               this._profilesCount = response.totalCount;
@@ -142,7 +143,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
     this._analytics.trackClickEvent('Add_Authentication_profile');
     this._logger.info(`handle add authentication profile action by user`);
     this._currentEditProfile = null;
-    this.editPopup.open();
+    this.newPopup.open();
   }
 
   public _editProfile(profile: AuthProfile): void {
@@ -187,6 +188,12 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
       )
   }
 
+  public onProfileCreated(profile: AuthProfile): void {
+      this._currentEditProfile = profile;
+      this.editPopup.open();
+      this._refresh();
+  }
+
     public _onPaginationChanged(state: any): void {
         if (state.page !== this.pageIndex || state.rows !== this.pageSize) {
             this.pageSize = state.rows;
@@ -201,5 +208,32 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
             this.sortOrder = event.order;
             this._refresh();
         }
+    }
+
+    private getProfileStatus(profile: AuthProfile): 'complete' | 'draft' {
+        let complete = true;
+        if (profile.authStrategyConfig) {
+            if (profile.authStrategyConfig.entryPoint === '__placeholder__' ||
+                profile.authStrategyConfig.callbackUrl === '__placeholder__' ||
+                profile.authStrategyConfig.cert === '__placeholder__') {
+                complete = false;
+            }
+        } else {
+            complete = false;
+        }
+        if (profile.userIdAttribute?.length) {
+            let attributeFound = false;
+            Object.values(profile.userAttributeMappings).forEach(value => {
+                if (value === profile.userIdAttribute) {
+                    attributeFound = true;
+                }
+            })
+            if (!attributeFound) {
+                complete = false;
+            }
+        } else {
+            complete = false;
+        }
+        return complete ? 'complete' : 'draft';
     }
 }
