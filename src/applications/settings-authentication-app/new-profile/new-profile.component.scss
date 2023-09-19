@@ -48,7 +48,18 @@
                     width: 152px;
                 }
             }
-
+            .labelWithHelpTip {
+                display: flex;
+                align-items: center;
+                width: 188px;
+                .kLabel {
+                    width: auto;
+                    margin-right: 4px;
+                }
+                i {
+                    color: $kGrayscale3;
+                }
+            }
             .kRequired {
                 width: 20px;
                 flex: 0 0 auto;

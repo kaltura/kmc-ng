@@ -2714,6 +2714,7 @@
                     "docLink": "SSO profile configuration guide",
                     "provider": "Provider",
                     "admin": "Admin profile",
+                    "admin-help": "Check this text box if this profile is created to sign into admin applications (i.e Event Platform, KMC)",
                     "createTitle": "Create profile",
                     "create": "Next",
                     "create_tt": "Create profile and continue to complete profile settings",
