@@ -69,7 +69,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
                   this._profiles.forEach(profile => { // mapping
                       profile.createdAt = new Date(profile.createdAt);
                       profile.updatedAt = new Date(profile.updatedAt);
-                      profile.status = this.getProfileStatus(profile);
+                      profile.status = this._profilesStore.getProfileStatus(profile);
                   });
               }
               this._profilesCount = response.totalCount;
@@ -210,30 +210,5 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
         }
     }
 
-    private getProfileStatus(profile: AuthProfile): 'complete' | 'draft' {
-        let complete = true;
-        if (profile.authStrategyConfig) {
-            if (profile.authStrategyConfig.entryPoint === '__placeholder__' ||
-                profile.authStrategyConfig.callbackUrl === '__placeholder__' ||
-                profile.authStrategyConfig.cert === '__placeholder__') {
-                complete = false;
-            }
-        } else {
-            complete = false;
-        }
-        if (profile.userIdAttribute?.length) {
-            let attributeFound = false;
-            Object.values(profile.userAttributeMappings).forEach(value => {
-                if (value === profile.userIdAttribute) {
-                    attributeFound = true;
-                }
-            })
-            if (!attributeFound) {
-                complete = false;
-            }
-        } else {
-            complete = false;
-        }
-        return complete ? 'complete' : 'draft';
-    }
+
 }

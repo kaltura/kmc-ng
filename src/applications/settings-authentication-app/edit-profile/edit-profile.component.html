@@ -2,13 +2,13 @@
   <div class="kEditProfile">
     <div class="kFloater">
       <div class="kHeader">
-        <span class="kTitle">{{_title}}</span>
+        <span class="kTitle">{{'applications.settings.authentication.edit.titleEdit' | translate}}</span>
         <div class="kButtons">
           <a class="kCancel" (click)="parentPopupWidget.close()">
             {{'applications.administration.role.cancel' | translate}}
           </a>
           <button pButton class="kButtonBranded kSaveBtn"
-                  [label]="_actionBtnLabel"
+                  [label]="'applications.administration.role.save' | translate"
                   [disabled]="_saveDisabled"
                   (click)="_performAction()"></button>
         </div>

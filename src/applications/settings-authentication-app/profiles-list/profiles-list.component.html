@@ -71,7 +71,7 @@
                         <td [ngStyle]="{'width': '120px'}">
                             <div class="status">
                                 <div class="bullet" [ngStyle]="{backgroundColor: profile.status === 'complete' ? '#009444' : '#DB1F26'}"></div>
-                                <span class="kTableColumn" [ngStyle]="{color: profile.status === 'complete' ? '#009444' : '#DB1F26'}">{{profile.status === 'complete' ? ('applications.settings.authentication.table.complete' | translate) : ('applications.settings.authentication.table.draft' | translate)}}</span>
+                                <span class="kTableColumn" [ngStyle]="{color: profile.status === 'complete' ? '#009444' : '#DB1F26'}">{{'applications.settings.authentication.table.' + profile.status | translate}}</span>
                             </div>
                         </td>
                         <td [ngStyle]="{'width': '140px'}">

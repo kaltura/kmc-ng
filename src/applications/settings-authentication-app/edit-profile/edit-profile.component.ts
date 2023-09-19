@@ -26,10 +26,8 @@ import { tag } from '@kaltura-ng/kaltura-common';
   public _editProfileForm: FormGroup;
   public _nameField: AbstractControl;
   public _descriptionField: AbstractControl;
-  public _title: string;
-  public _actionBtnLabel: string;
+
   public _blockerMessage: AreaBlockerMessage = null;
-  public _isNewProfile: boolean;
 
   public get _saveDisabled(): boolean {
     return this._editProfileForm.pristine;
@@ -48,25 +46,12 @@ import { tag } from '@kaltura-ng/kaltura-common';
   }
 
   private _prepare(): void {
-    this._isNewProfile = !this.profile;
-
-    if (this._isNewProfile) {
-      this._logger.info(`enter new profile mode`);
-      this._title = this._appLocalization.get('applications.settings.authentication.edit.titleAdd');
-      this._actionBtnLabel = this._appLocalization.get('app.titles.create');
-      this._editProfileForm.patchValue(
-        { name: this._appLocalization.get('applications.settings.authentication.edit.newProfile') },
-        { emitEvent: false }
-      );
-    } else {
       this._logger.info(`enter edit profile mode for existing profile`,{ id: this.profile.id, name: this.profile.name });
-      this._title = this._appLocalization.get('applications.settings.authentication.edit.titleEdit');
-      this._actionBtnLabel = this._appLocalization.get('applications.administration.role.save');
       this._editProfileForm.setValue({
         name: this.profile.name,
         description: this.profile.description
       }, { emitEvent: false });
-    }
+
   }
 
   private _buildForm(): void {

@@ -46,6 +46,45 @@ export type AuthProfile = {
     status: 'complete' | 'draft';
 }
 
+export type AppSubscription = {
+    appErrorPage: string;
+    appGuid: string;
+    appLandingPage: string;
+    attributePermissionListStatus: string;
+    authProfileIds: string[];
+    createdAt: string;
+    id: string;
+    name: string;
+    objectType: string;
+    partnerId: number;
+    permissionList: string[];
+    permissionListStatus: string;
+    redirectMethod: string;
+    status: string;
+    updatedAt: string;
+    userGroupsSyncAll: boolean;
+    version: number;
+}
+
+export type OrganizationDomain = {
+    domain: string;
+    organizationId: string;
+}
+
+export type App = {
+    appCustomId: string;
+    appCustomName: string;
+    appType: string;
+    createdAt: string;
+    id: string;
+    objectType: string;
+    organizationDomain: OrganizationDomain;
+    partnerId: number;
+    status: string;
+    updatedAt: string;
+    version: number;
+}
+
 export type Pager = {
     offset: number,
     limit: number
@@ -53,6 +92,16 @@ export type Pager = {
 
 export type LoadProfilesResponse = {
     objects: AuthProfile[];
+    totalCount: number;
+}
+
+export type LoadSubscriptionsResponse = {
+    objects: AppSubscription[];
+    totalCount: number;
+}
+
+export type LoadApplicationResponse = {
+    objects: App[];
     totalCount: number;
 }
 
@@ -111,6 +160,42 @@ export class ProfilesStoreService implements OnDestroy {
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to load app from registry'));
         }
+    }
+
+    public listSubscriptions(appGuid: string): Observable<any> {
+        const filter = {appGuid};
+        try {
+            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/app-subscription/list`, {filter}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to load app-subscription list'));
+        }
+    }
+
+    public getProfileStatus(profile: AuthProfile): 'complete' | 'draft' {
+        let complete = true;
+        if (profile.authStrategyConfig) {
+            if (profile.authStrategyConfig.entryPoint === '__placeholder__' ||
+                profile.authStrategyConfig.callbackUrl === '__placeholder__' ||
+                profile.authStrategyConfig.cert === '__placeholder__') {
+                complete = false;
+            }
+        } else {
+            complete = false;
+        }
+        if (profile.userIdAttribute?.length) {
+            let attributeFound = false;
+            Object.values(profile.userAttributeMappings).forEach(value => {
+                if (value === profile.userIdAttribute) {
+                    attributeFound = true;
+                }
+            })
+            if (!attributeFound) {
+                complete = false;
+            }
+        } else {
+            complete = false;
+        }
+        return complete ? 'complete' : 'draft';
     }
 
     private getHttpOptions() {

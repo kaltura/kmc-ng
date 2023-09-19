@@ -6,8 +6,9 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import {
-    AuthProfile,
-    LoadProfilesResponse,
+    App, AppSubscription,
+    AuthProfile, LoadApplicationResponse,
+    LoadProfilesResponse, LoadSubscriptionsResponse,
     ProfilesStoreService
 } from '../../settings-authentication-app/profiles-store/profiles-store.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -75,18 +76,42 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
       this._profilesService.loadProfiles(100,0,'name', SortDirection.Desc).subscribe(
           (response: LoadProfilesResponse) => {
               if (response.objects?.length) {
-                  this.profiles = response.objects as AuthProfile[]; // TODO filter only admin profiles
+                  // filter only admin profiles with complete status
+                  this.profiles = (response.objects as AuthProfile[]).filter(profile => profile.isAdminProfile && this._profilesService.getProfileStatus(profile) === 'complete');
               }
-              // load app registry
+              // load kmc app from app registry
               this._profilesService.listApplications().subscribe(
-                  response => {
+                  (response: LoadApplicationResponse) => {
                       if (response.objects?.length > 0) {
-                          this.kmcAppGuid = response.objects[0].id;
-                          // TODO load subscriptions with kmc app id in the filter
-                          // if found:
-                          // 1. populate domain and org id in the form
-                          // 2. list subscription profiles with filter.appGuid with the app id
-                          // 3. if subscription is found - select its profile in the profiles drop down. If multiple profiles exists - the profile ID should be set in session storage upon login
+                          // kmc app found
+                          const kmcApp: App = response.objects[0];
+                          this.kmcAppGuid = kmcApp.id; // save kmc app id for subscription filter
+                          // populate domain and org id in the form
+                          this._ssoConfigForm.patchValue(
+                              {
+                                  domain: kmcApp.organizationDomain?.domain ? kmcApp.organizationDomain.domain : '',
+                                  organizationId:  kmcApp.organizationDomain?.organizationId ? kmcApp.organizationDomain.organizationId : ''
+                              },
+                              { emitEvent: false }
+                          );
+                          // load subscriptions with kmc app id in the filter
+                          this._profilesService.listSubscriptions(this.kmcAppGuid).subscribe(
+                              (response: LoadSubscriptionsResponse) => {
+                                  if (response.objects?.length > 0) {
+                                      const subscription: AppSubscription = response.objects[0];
+                                      // populate selected profiles
+                                      this._ssoConfigForm.patchValue(
+                                          {
+                                              profiles: subscription.authProfileIds || []
+                                          },
+                                          { emitEvent: false }
+                                      );
+                                  }
+                              },
+                              error =>{
+                                  displayError(error);
+                              }
+                          )
                       }
                       this._isBusy = false;
                   },
