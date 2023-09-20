@@ -10,7 +10,6 @@ import {
 } from '../../settings-authentication-app/profiles-store/profiles-store.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
-import { tag } from '@kaltura-ng/kaltura-common';
 import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-store.service";
 
 @Component({

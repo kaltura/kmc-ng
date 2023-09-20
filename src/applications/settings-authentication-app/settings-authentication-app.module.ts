@@ -19,12 +19,14 @@ import { DateFormatModule } from "app-shared/kmc-shared/date-format/date-format.
 import { DeleteProfileComponent } from "./delete-profile/delete-profile.component";
 import { EditProfileComponent } from "./edit-profile/edit-profile.component";
 import { NewProfileComponent } from "./new-profile/new-profile.component";
+import { CopyToClipboardModule } from '@kaltura-ng/mc-shared';
 
 @NgModule({
     imports: [
         CommonModule,
         RouterModule.forChild(routing),
         ReactiveFormsModule,
+        CopyToClipboardModule,
         InputTextModule,
         StickyModule,
         TooltipModule,

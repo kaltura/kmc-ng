@@ -2694,12 +2694,13 @@
                     "edit": "Edit",
                     "delete": "Delete",
                     "draft": "Draft",
-                    "complete": "Complete"
+                    "complete": "Ready"
                 },
                 "delete": "Delete profile",
                 "deleteMsg": "Are you sure you what to deletet he selected profile? \"{{0}}\"",
                 "deleteConfirm": "To confirm, type \"{{0}}\" in the box below",
                 "deleteBtn": "Delete this profile",
+                "name": "Name",
                 "profileName": "Profile name",
                 "deleteError": "Error deleting profile",
                 "addOrganizationId": "Add organization ID (optional)",
@@ -2708,7 +2709,9 @@
                 "edit": {
                     "titleAdd": "Add profile",
                     "titleEdit": "Edit profile",
-                    "newProfile": "New profile"
+                    "newProfile": "New profile",
+                    "sps": "Service provider settings",
+                    "ssoUrl": "Single sign on URL"
                 },
                 "new": {
                     "doc": "For instructions on how to configure a new SSO profile visit our",

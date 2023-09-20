@@ -14,39 +14,42 @@
         </div>
       </div>
       <div class="kContainer" #scrollableContainer>
+          <div class="doc">
+              <span>{{'applications.settings.authentication.new.doc' | translate}}</span>
+              <span class="link" (click)="openHelp()">{{'applications.settings.authentication.new.docLink' | translate}}</span>
+          </div>
+
         <form class="kProfileForm" [formGroup]="_editProfileForm" novalidate>
+
           <div class="kRow">
-            <span class="kLabel">{{'applications.administration.role.name' | translate}}</span>
+            <span class="kLabel required">{{'applications.administration.role.name' | translate}}</span>
             <div class="kRequired" [class.kHasError]="_nameField.invalid && _nameField.touched">*</div>
             <div>
-              <input class="kControl" pInputText
-                     [formControl]="_nameField"
-                     [class.kHasError]="_nameField.invalid && _nameField.touched">
+              <input class="kControl" pInputText [formControl]="_nameField" [maxlength]="255" [class.kHasError]="_nameField.invalid && _nameField.touched">
               <div *ngIf="_nameField.hasError('required') && _nameField.touched" class="kError">
                 {{'applications.administration.role.errors.required' | translate}}
               </div>
-                <div *ngIf="_nameField.hasError('unsafeValue') && _nameField.pristine" class="kError">
-                    {{'applications.administration.role.errors.unsafeValue' | translate}}
-                </div>
             </div>
           </div>
 
           <div class="kRow">
-            <span class="kLabel">{{'applications.administration.role.description' | translate}}</span>
-            <div class="kRequired" [class.kHasError]="_descriptionField.invalid && _descriptionField.touched">*</div>
-            <div>
-              <textarea class="kControl" pInputTextarea
-                        [formControl]="_descriptionField"
-                        [class.kHasError]="_descriptionField.invalid && _descriptionField.touched">
-              </textArea>
-              <div *ngIf="_descriptionField.hasError('required') && _descriptionField.touched" class="kError">
-                {{'applications.administration.role.errors.required' | translate}}
-              </div>
-                <div *ngIf="_descriptionField.hasError('unsafeValue') && _descriptionField.pristine" class="kError">
-                    {{'applications.administration.role.errors.unsafeValue' | translate}}
-                </div>
-            </div>
+              <span class="kLabel">{{'applications.administration.role.description' | translate}}</span>
+              <textarea class="kControl" [maxlength]="512" pInputTextarea [formControl]="_descriptionField"></textArea>
           </div>
+
+            <div class="kRow divider">
+                <span class="kLabel">{{'applications.settings.authentication.new.provider' | translate}}</span>
+                <p-dropdown class="kControl" [formControl]="_providerField" appendTo="body" [options]="_providerTypes"></p-dropdown>
+            </div>
+
+            <span class="kSubTitle">{{'applications.settings.authentication.edit.sps' | translate}}</span>
+            <div class="kRow center">
+                <span class="kLabel">{{'applications.settings.authentication.edit.ssoUrl' | translate}}</span>
+                <span>{{_ssoUrl}}</span>
+                <kCopyToClipboard class="kIcon" [text]="_ssoUrl" [iconSwitchTimeout]="5000"></kCopyToClipboard>
+
+            </div>
+
         </form>
       </div>
     </div>
