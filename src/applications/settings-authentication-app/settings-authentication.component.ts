@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { Component } from '@angular/core';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kmc-settings-authentication',

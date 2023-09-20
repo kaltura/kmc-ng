@@ -9,7 +9,7 @@ import { SettingsAuthenticationMainViewService } from 'app-shared/kmc-shared/kmc
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from "app-shared/kmc-shared/columns-resize-manager";
 import { Menu } from "primeng/menu";
 import { MenuItem } from "primeng/api";
-import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-store.service";
+import { SortDirection } from "../profiles-store/profiles-store.service";
 
 @Component({
   selector: 'kAuthenticationProfilesList',

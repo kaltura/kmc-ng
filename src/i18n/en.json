@@ -120,6 +120,7 @@
             "copyToClipboard": "Copy to clipboard",
             "copySuccess": "Copied to clipboard",
             "copyFailure": "Copy operation failed",
+            "updateSuccess": "Updated successfully",
             "on": "On",
             "off": "Off",
             "ok": "OK",

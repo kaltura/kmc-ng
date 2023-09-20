@@ -1,10 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
-import {KalturaPartner} from 'kaltura-ngx-client';
-import {SettingsAccountSettingsService} from './settings-account-settings.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { KalturaPartner } from 'kaltura-ngx-client';
+import { SettingsAccountSettingsService } from './settings-account-settings.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { SelectItem } from 'primeng/api';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -25,7 +25,6 @@ function phoneValidator(): ValidatorFn {
     return null;
   };
 }
-
 
 @Component({
   selector: 'kmc-settings-account-settings',
@@ -132,6 +131,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
           this._logger.info(`handle successful update partner account settings request`);
           this._fillForm(updatedPartner);
               this._markFormFieldsAsUntouched();
+              this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('app.common.updateSuccess')});
         },
         error => {
           this._logger.info(`handle failed update partner account settings request`, { errorMessage: error.message });

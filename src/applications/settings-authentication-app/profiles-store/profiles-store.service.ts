@@ -4,7 +4,11 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { serverConfig } from "config/server";
 import { AppAuthentication } from "app-shared/kmc-shell";
-import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-store.service";
+
+export enum SortDirection {
+    Desc = -1,
+    Asc = 1
+}
 
 export type AuthStrategyConfig = {
     callbackUrl: string;
@@ -149,6 +153,38 @@ export class ProfilesStoreService implements OnDestroy {
         }
     }
 
+    public createApplication(domain = '', organizationId = ''): Observable<any> {
+        const request = {
+            appCustomId: this._appAuthentication.appUser.partnerInfo.partnerId.toString(),
+            appType: "kmc",
+            appCustomName: "kmc",
+            organizationDomain: {
+                domain,
+                organizationId
+            }
+        }
+        try {
+            return this._http.post(`${serverConfig.authBrokerServer.appRegistryBaseUrl}/api/v1/app-registry/add`, request, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to create app'));
+        }
+    }
+
+    public updateApplication(id: string, domain = '', organizationId = ''): Observable<any> {
+        const request = {
+            id,
+            organizationDomain: {
+                domain,
+                organizationId
+            }
+        }
+        try {
+            return this._http.post(`${serverConfig.authBrokerServer.appRegistryBaseUrl}/api/v1/app-registry/update`, request, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to update app'));
+        }
+    }
+
     public listApplications(): Observable<any> {
         const filter = {
             "appType": "kmc",
@@ -159,6 +195,31 @@ export class ProfilesStoreService implements OnDestroy {
             return this._http.post(`${serverConfig.authBrokerServer.appRegistryBaseUrl}/api/v1/app-registry/list`, {filter}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to load app from registry'));
+        }
+    }
+
+    public createSubscription(appGuid: string, authProfileIds: string[]): Observable<any> {
+        const request = {
+            name: "kmc app subscription",
+            appGuid,
+            authProfileIds,
+            appLandingPage: window.location.origin + "/actions/persist-login-by-ks",
+            appErrorPage: window.location.origin + "/login",
+            redirectMethod: "HTTP-POST"
+        }
+        try {
+            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/app-subscription/add`, request, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to create subscription'));
+        }
+    }
+
+    public updateSubscription(id: string, authProfileIds: string[]): Observable<any> {
+        const request = { id, authProfileIds };
+        try {
+            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/app-subscription/update`, request, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to update subscription'));
         }
     }
 

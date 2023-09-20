@@ -1,10 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { KalturaAPIException } from 'kaltura-ngx-client';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observer } from 'rxjs/Observer';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import {
     App, AppSubscription,
     AuthProfile, LoadApplicationResponse,
@@ -36,7 +33,8 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
 
   public profiles = [];
 
-  private kmcAppGuid = '';
+  private kmcApp: App = null;
+  private kmcSubscription: AppSubscription = null;
 
   public get _saveDisabled(): boolean {
     return this._ssoConfigForm.pristine;
@@ -56,21 +54,6 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
 
   private _prepare(): void {
       // fetch admin profiles
-      const displayError = error => {
-          this._isBusy = false;
-          this._blockerMessage = new AreaBlockerMessage({
-              message: this._appLocalization.get('applications.settings.authentication.loadError'),
-              buttons: [
-                  {
-                      label: this._appLocalization.get('app.common.close'),
-                      action: () => {
-                          this._logger.info(`user didn't confirm, abort action, dismiss dialog`);
-                          this._blockerMessage = null;
-                      }
-                  }
-              ]
-          });
-      }
       this._isBusy = true;
       this._blockerMessage = null;
       this._profilesService.loadProfiles(100,0,'name', SortDirection.Desc).subscribe(
@@ -85,7 +68,7 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
                       if (response.objects?.length > 0) {
                           // kmc app found
                           const kmcApp: App = response.objects[0];
-                          this.kmcAppGuid = kmcApp.id; // save kmc app id for subscription filter
+                          this.kmcApp = kmcApp; // save kmc app for subscription filter
                           // populate domain and org id in the form
                           this._ssoConfigForm.patchValue(
                               {
@@ -95,10 +78,11 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
                               { emitEvent: false }
                           );
                           // load subscriptions with kmc app id in the filter
-                          this._profilesService.listSubscriptions(this.kmcAppGuid).subscribe(
+                          this._profilesService.listSubscriptions(this.kmcApp.id).subscribe(
                               (response: LoadSubscriptionsResponse) => {
                                   if (response.objects?.length > 0) {
                                       const subscription: AppSubscription = response.objects[0];
+                                      this.kmcSubscription = subscription;
                                       // populate selected profiles
                                       this._ssoConfigForm.patchValue(
                                           {
@@ -106,24 +90,42 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
                                           },
                                           { emitEvent: false }
                                       );
+                                      this._isBusy = false;
                                   }
                               },
                               error =>{
-                                  displayError(error);
+                                  this.displayServerError(error);
                               }
                           )
+                      } else {
+                          this._isBusy = false;
                       }
-                      this._isBusy = false;
                   },
                   error => {
-                      displayError(error);
+                      this.displayServerError(error);
                   }
               );
           },
           error => {
-              displayError(error);
+              this.displayServerError(error);
           }
       );
+  }
+
+  private displayServerError = error => {
+      this._isBusy = false;
+      this._blockerMessage = new AreaBlockerMessage({
+          message: error.message || 'Error preforming operation',
+          buttons: [
+              {
+                  label: this._appLocalization.get('app.common.close'),
+                  action: () => {
+                      this._logger.info(`dismiss dialog`);
+                      this._blockerMessage = null;
+                  }
+              }
+          ]
+      });
   }
 
   private _buildForm(): void {
@@ -158,48 +160,138 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
         this._ssoConfigForm.updateValueAndValidity();
     }
 
-
-    // private _handleInvalidInputError(error: KalturaAPIException): void {
-    //     if (error.args['PROPERTY_NAME'] === 'profiles') {
-    //         this._profilesField.setErrors({ unsafeValue: true });
-    //     } else if (error.args['PROPERTY_NAME'] === 'domain') {
-    //         this._domainField.setErrors({ unsafeValue: true });
-    //     } else if (error.args['PROPERTY_NAME'] === 'organizationId') {
-    //         this._organizationIdField.setErrors({ unsafeValue: true });
-    //     }
-    // }
-
     public _onProfilesSelectionChange(event): void {
       // handle profiles selection change if needed, currently no implementation needed
     }
 
+    // utility function to compare profile IDs arrays and determine if they hold the same IDs (disregarding the order)
+    private compareProfilesArray(arr1: string[], arr2: string[]): boolean {
+      return arr1.length === arr2.length && arr1.every(profileId => arr2.indexOf(profileId) > -1);
+    }
+
   public _updateSsoConfig(): void {
     this._blockerMessage = null;
-
-    this._logger.info(`send new profile to the server`);
+    this._logger.info(`update sso config`);
     const { profiles, domain, organizationId } = this._ssoConfigForm.value;
 
-    // TODO implement logic
-      // 1. if this.kmcAppGuid is empty (no app registry):
+    // implementation logic
+      // 1. if this.kmcApp.id is empty (no app registry):
         // 1a. register kmc app with the selected domain and org id
         // 1b. use the created app id to create a subscription with the selected profiles
-      // 2. if this.kmcAppGuid exists (kmc app is registered):
+        // 1c. show success message
+      // 2. if this.kmcApp.id exists (kmc app is registered):
         // 2a. if no subscription profile exists - go to 1b.
         // 2b. if a subscription profile exists for this app:
-            // 2b-1. if the entered domain is equal to kmc app domain - preform subscription update
-            // 2b-2. if the entered domain is different than the subscription domain - preform subscription update and also KMC app update
+            // 2b-1. if the entered domain and org id are equal to kmc app domain and org id - preform subscription update for profiles if needed and show success message
+            // 2b-2. if the entered domain or org id are different from the app domain or org id - preform KMC app update for domain and org id and
+                    // then subscription update for profiles if needed. When all are complete - show success message
+
+      const displaySuccessMessage = () => {
+          this._browserService.showToastMessage({
+              severity: 'success',
+              detail: this._appLocalization.get('app.common.updateSuccess')
+          });
+      }
+
+      const createSubscription = () => {
+          this._profilesService.createSubscription(this.kmcApp.id, profiles).subscribe(
+              (subscription: AppSubscription) => {
+                  if (subscription.objectType === "KalturaAPIException") { // error handling
+                      this.displayServerError(subscription);
+                      return;
+                  }
+                  this._isBusy = false;
+                  this.kmcSubscription = subscription;
+                  this._markFormFieldsAsPristine();
+                  displaySuccessMessage();
+              },
+              error => {
+                  this.displayServerError(error);
+              }
+          )
+      }
+
+      const updateSubscription = () => {
+          this._profilesService.updateSubscription(this.kmcSubscription.id, profiles).subscribe(
+              (subscription: AppSubscription) => {
+                  if (subscription.objectType === "KalturaAPIException") { // error handling
+                      this.displayServerError(subscription);
+                      return;
+                  }
+                  this._isBusy = false;
+                  this.kmcSubscription = subscription;
+                  this._markFormFieldsAsPristine();
+                  displaySuccessMessage();
+              },
+              error => {
+                  this.displayServerError(error);
+              }
+          )
+      }
+
+      if (this.kmcApp?.id?.length) {
+        if (!this.kmcSubscription?.id?.length) {
+            this._isBusy = true;
+            createSubscription(); // create subscription for the registered app
+        } else {
+            // preform update
+            if (domain !== this.kmcApp.organizationDomain.domain || organizationId !== this.kmcApp.organizationDomain.organizationId) {
+                // update registered application
+                this._isBusy = true;
+                this._profilesService.updateApplication(this.kmcApp.id, domain, organizationId).subscribe(
+                    (app: App) => {
+                        if (app.objectType === "KalturaAPIException") { // error handling
+                            this.displayServerError(app);
+                            return;
+                        }
+                        this.kmcApp = app;
+                        if (!this.compareProfilesArray(profiles, this.kmcSubscription.authProfileIds)) {
+                            updateSubscription(); // update existing subscription
+                        } else {
+                            this._isBusy = false;
+                            displaySuccessMessage();
+                        }
+                    },
+                    error => {
+                        this.displayServerError(error);
+                    }
+                )
+            } else {
+                if (!this.compareProfilesArray(profiles, this.kmcSubscription.authProfileIds)) {
+                    this._isBusy = true;
+                    updateSubscription(); // update existing subscription
+                }
+            }
+        }
+      } else {
+          // register KMC app
+          this._isBusy = true;
+          this._profilesService.createApplication(domain, organizationId).subscribe(
+              (app: App) => {
+                  if (app.objectType === "KalturaAPIException") { // error handling
+                      this.displayServerError(app);
+                      return;
+                  }
+                  this.kmcApp = app;
+                  createSubscription(); // create subscription for the registered app
+              },
+              error => {
+                  this.displayServerError(error);
+              }
+          )
+      }
   }
 
   public _performAction(): void {
-    this._logger.info(`handle save request by the user`);
+    this._logger.info(`handle update request by the user`);
     if (!this._ssoConfigForm.valid) {
       this._markFormFieldsAsTouched();
-      this._logger.info(`abort action, profile has invalid data`);
+      this._logger.info(`abort action, sso config form has invalid data`);
       return;
     }
 
     this._markFormFieldsAsPristine();
-      this._updateSsoConfig();
+    this._updateSsoConfig();
   }
 
 }

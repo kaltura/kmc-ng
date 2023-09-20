@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import {AuthProfile} from "../profiles-store/profiles-store.service";
+import { AuthProfile } from "../profiles-store/profiles-store.service";
 
 @Component({
   selector: 'kDeleteProfile',

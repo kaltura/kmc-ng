@@ -1,7 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { KalturaAPIException } from 'kaltura-ngx-client';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observer } from 'rxjs/Observer';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
@@ -9,7 +7,7 @@ import { AuthProfile, ProfilesStoreService } from '../profiles-store/profiles-st
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { tag } from '@kaltura-ng/kaltura-common';
-import {AppAuthentication} from "app-shared/kmc-shell";
+import { AppAuthentication } from "app-shared/kmc-shell";
 
 @Component({
   selector: 'kNewProfile',
@@ -136,34 +134,33 @@ import {AppAuthentication} from "app-shared/kmc-shell";
       .pipe(tag('block-shell'))
       .subscribe(
           (profile: AuthProfile) => {
+              if (profile.objectType === "KalturaAPIException") { // error handling
+                  this.displayServerError(profile);
+                  return;
+              }
               this.onProfileCreated.emit(profile);
               this.parentPopupWidget.close();
           },
           error => {
-              this._blockerMessage = new AreaBlockerMessage(
-                  {
-                      message: error.message,
-                      buttons: [
-                          {
-                              label: this._appLocalization.get('app.common.retry'),
-                              action: () => {
-                                  this._logger.info(`handle retry request by the user`);
-                                  this._createProfile();
-                              }
-                          },
-                          {
-                              label: this._appLocalization.get('app.common.dismiss'),
-                              action: () => {
-                                  this._logger.info(`handle dismiss request by the user`);
-                                  this.parentPopupWidget.close();
-                              }
-                          }
-                      ]
-                  }
-              );
+              this.displayServerError(error);
           }
       );
   }
+
+    private displayServerError = error => {
+        this._blockerMessage = new AreaBlockerMessage({
+            message: error.message || 'Error preforming operation',
+            buttons: [
+                {
+                    label: this._appLocalization.get('app.common.close'),
+                    action: () => {
+                        this._logger.info(`dismiss dialog`);
+                        this._blockerMessage = null;
+                    }
+                }
+            ]
+        });
+    }
 
   public openHelp(): void {
       // TODO: open help link
