@@ -8,6 +8,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { tag } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from "app-shared/kmc-shell";
+import { serverConfig } from "config/server";
 
 @Component({
   selector: 'kNewProfile',
@@ -121,7 +122,7 @@ import { AppAuthentication } from "app-shared/kmc-shell";
         authStrategyConfig: {
             issuer: adminProfile ? "kaltura-auth-admin" : "kaltura-auth",
             entryPoint: "__placeholder__",
-            callbackUrl: "__placeholder__",
+            callbackUrl: `${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-manager/saml/ac`,
             cert: "__placeholder__"
         },
         ksPrivileges: "",
