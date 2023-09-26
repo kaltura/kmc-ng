@@ -165,6 +165,7 @@ kWidget.thumbEmbed({
             let embedParameters = null;
             switch (config.embedType) {
                 case 'dynamic':
+                case 'thumb':
                     scriptUrl = `${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}`;
                     htmlContent = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>`;
                     embedParameters = {targetId: `kaltura_player_${rnd}`, partnerId: config.pid, uiconf_id: config.uiConfId, entry_id: config.entryId, poster, playerConfig: config.playerConfig};
@@ -191,7 +192,6 @@ kWidget.thumbEmbed({
             let code = '';
             switch (config.embedType) {
                 case 'dynamic':
-                case 'thumb':
                     code = config.isPlaylist ? `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
                     <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
                     <script type="text/javascript">
@@ -220,6 +220,27 @@ kWidget.thumbEmbed({
                         }
                       });
                       kalturaPlayer.loadMedia({entryId: '${config.entryId}'});
+                    } catch (e) {
+                      console.error(e.message)
+                    }
+                  </script>`;
+                    break;
+                case 'thumb':
+                    code = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
+                    <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
+                    <script src="https://static.kaltura.com/content/static/player-scripts/thumbnail-embed.js"></script>
+                    <script type="text/javascript">
+                    try {
+                      __thumbnailEmbed({
+                        config:  {
+                            provider: {
+                              partnerId: ${config.pid},
+                              uiConfId: ${config.uiConfId}
+                            },
+                            targetId: "kaltura_player_${rnd}"
+                        },
+                        mediaInfo: {entryId: '${config.entryId}'}
+                      });
                     } catch (e) {
                       console.error(e.message)
                     }
