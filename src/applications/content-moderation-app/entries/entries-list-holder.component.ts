@@ -33,10 +33,9 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild('moderationDetails', { static: true }) private _moderationDetails: PopupWidgetComponent;
 
   public _kmcPermissions = KMCPermissions;
-    public _enforcedFilters: Partial<EntriesFilters> = {
-        'moderationStatuses': ['1', '5'],
-        'displayInSearchIn': '0,1,2,-1'
-    };
+  public _enforcedFilters: Partial<EntriesFilters> = {
+      'moderationStatuses': ['1', '5']
+  };
   public _defaultFilters: Partial<EntriesFilters> = {
       'sortDirection': SortDirection.Desc
   };
@@ -85,6 +84,11 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               private _permissionsService: KMCPermissionsService,
               private _contentModerationMainViewService: ContentModerationMainViewService,
               private _bulkService: BulkService) {
+
+      // display system entries in moderation if permitted
+      if (_permissionsService.hasPermission(KMCPermissions.VIEW_MODERATED_SYSTEM_ENTRIES)) {
+          this._enforcedFilters.displayInSearchIn = '0,1,2,-1';
+      }
   }
 
   ngOnInit() {
