@@ -1,3 +1,18 @@
+<a name="7.14.0"></a>
+# [7.14.0](https://github.com/kaltura/kmc-ng/compare/v7.13.1...v7.14.0) (2023-09-26)
+
+
+### Bug Fixes
+
+* **content/moderation:** display moderated entries with displayInSearch=-1 SUP-36757 ([#1055](https://github.com/kaltura/kmc-ng/issues/1055)) ([c0ba629](https://github.com/kaltura/kmc-ng/commit/c0ba629))
+
+
+### Features
+
+* **content/entry:** support thumbnail embed for player v7 FEC-13351 ([#1053](https://github.com/kaltura/kmc-ng/issues/1053)) ([405ab45](https://github.com/kaltura/kmc-ng/commit/405ab45))
+
+
+
 <a name="7.13.1"></a>
 ## [7.13.1](https://github.com/kaltura/kmc-ng/compare/v7.13.0...v7.13.1) (2023-08-28)
 
