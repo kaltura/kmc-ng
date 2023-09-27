@@ -259,6 +259,17 @@ export class ProfilesStoreService implements OnDestroy {
         return complete ? 'complete' : 'draft';
     }
 
+
+    public loadProfileMetadata(profileId: string): Observable<any> {
+        try {
+            return this._http.get(
+                `${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-manager/saml/metadata/${this._appAuthentication.appUser.partnerInfo.partnerId}/${profileId}`,
+                { responseType: "text" }) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to load profile metadata'));
+        }
+    }
+
     private getHttpOptions() {
         const ks = this._appAuthentication.appUser.ks;
         return {

@@ -43,6 +43,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _showAuthenticator = false;
   public _authenticationHash = '';
   public _qrCodeBase64 = null;
+  public _authBrokerProfiles = [];
 
   // Caution: this is extremely dirty hack, don't do something similar to that
   @HostListener('window:resize')
@@ -301,7 +302,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       this._currentScreen = this._loginScreens.Login;
   }
 
-  public _ssoLogin(event: {email: string, organizationId: string}): void {
+  public _ssoLogin(event: {email: string, organizationId: string, profileId: string}): void {
       this._inProgress = true;
       this._errorMessage = '';
       this._appAuthentication._ssoLogin(event.email).subscribe(
@@ -311,7 +312,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           error => {
               // if AuthBroker is configured, try to use it for login, else display the error
               if (!!serverConfig.authBrokerServer && !!serverConfig.authBrokerServer.authBrokerBaseUrl) {
-                  this._authBrokerLogin(event.email, event.organizationId);
+                  this._authBrokerLogin(event.email, event.organizationId, event.profileId);
               } else {
                   this._inProgress = false;
                   this._errorCode = error.code;
@@ -325,13 +326,16 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       );
   }
 
-  private _authBrokerLogin(email: string, organizationId: string = ''): void {
+  private _authBrokerLogin(email: string, organizationId: string = '', profileId: string = ''): void {
       let loginData = {
           appType: "kmc",
           email
       }
       if (organizationId?.length) {
           loginData["organizationId"] = organizationId;
+      }
+      if (profileId?.length) {
+          loginData["authProfileId"] = profileId;
       }
       this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/spa-proxy/login`, loginData, {responseType: 'text'}).subscribe(
           response => {
@@ -342,9 +346,15 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
                       this._errorMessage = parsedResponse.message;
                   }
               } else {
-                  document.open();
-                  document.write(response);
-                  document.close();
+                  if (response.indexOf('"objectType":"AuthProfile"') > -1) {
+                      // multiple profiles account - profiles list returned
+                      this._authBrokerProfiles = JSON.parse(response);
+                      this._inProgress = false;
+                  } else {
+                      document.open();
+                      document.write(response);
+                      document.close();
+                  }
               }
           },
           error => {

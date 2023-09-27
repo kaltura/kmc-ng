@@ -35,6 +35,7 @@ export class EditProfileComponent implements OnInit {
     ];
 
     public _ssoUrl = `${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-manager/saml/ac`;
+    private metadata = '';
 
     public _blockerMessage: AreaBlockerMessage = null;
 
@@ -59,6 +60,13 @@ export class EditProfileComponent implements OnInit {
             id: this.profile.id,
             name: this.profile.name
         });
+        // load profile metadata
+        this._profilesService.loadProfileMetadata(this.profile.id).subscribe(
+            result => {
+                this.metadata = result;
+            },
+            error => this.displayServerError(error)
+        );
         this._editProfileForm.setValue({
             name: this.profile.name,
             description: this.profile.description,
@@ -119,6 +127,7 @@ export class EditProfileComponent implements OnInit {
                         this.displayServerError(profile);
                         return;
                     }
+                    // TODO generate Pv Keys according to auth strategy enableRequestSign and enableAssertsDecryption values
                     this.onRefresh.emit();
                     this.parentPopupWidget.close();
                 },

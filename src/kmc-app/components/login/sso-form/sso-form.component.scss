@@ -32,6 +32,20 @@
     font-size: 14px;
     line-height: 17px;
   }
+    .providerWrapper {
+        width: 100%;
+        margin-top: -16px;
+        text-align: left;
+        margin-bottom: 36px;
+        display: flex;
+        flex-direction: column;
+        span {
+            margin-bottom: 8px;
+        }
+        ::ng-deep .p-dropdown {
+            width: 430px;
+        }
+    }
     .linkWrapper{
         width: 100%;
         margin-top: -16px;

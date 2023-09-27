@@ -2696,6 +2696,7 @@
                     "draft": "Draft",
                     "complete": "Ready"
                 },
+                "selectProfile": "Select authentication profile",
                 "delete": "Delete profile",
                 "deleteMsg": "Are you sure you what to deletet he selected profile? \"{{0}}\"",
                 "deleteConfirm": "To confirm, type \"{{0}}\" in the box below",

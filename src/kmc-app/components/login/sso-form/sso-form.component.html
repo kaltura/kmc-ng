@@ -22,10 +22,16 @@
             <a (click)="_showOrganizationField=true">{{ 'applications.settings.authentication.addOrganizationId' | translate }}</a>
         </div>
 
-
       <input pInputText autocomplete="off" *ngIf="_showOrganizationField"
              [placeholder]="'applications.settings.authentication.organizationId' | translate"
              [formControl]="_organizationField">
+
+
+        <div class="providerWrapper" *ngIf="_profiles.length">
+            <span>{{'applications.settings.authentication.selectProfile' | translate}}</span>
+            <p-dropdown class="kControl" [formControl]="_profileField" appendTo="body" [options]="_profiles"></p-dropdown>
+        </div>
+
     </div>
 
     <p *ngIf="errorMessage" class="kErrorMessage" [innerHTML]="errorMessage"></p>
