@@ -56,6 +56,7 @@ export class LoginFormComponent {
   constructor(private _fb: FormBuilder,
               private _analytics: AppAnalytics,
               private _browserService: BrowserService) {
+      this._browserService.setInLocalStorage('kmc_login_method', 'user_password');
       this.buildForm();
 
       if (serverConfig.externalLinks.kaltura && serverConfig.externalLinks.kaltura.support) {

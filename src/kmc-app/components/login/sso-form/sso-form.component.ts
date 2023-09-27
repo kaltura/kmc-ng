@@ -48,6 +48,7 @@ export class SsoFormComponent {
   constructor(private _fb: FormBuilder,
               private _browserService: BrowserService,
               private _analytics: AppAnalytics) {
+    this._browserService.setInLocalStorage('kmc_login_method', 'sso');
     this._buildForm();
   }
 

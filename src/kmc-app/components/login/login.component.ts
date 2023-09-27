@@ -85,7 +85,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         } else if (authenticatorArgs && authenticatorArgs.hash) {
             this._authenticationHash = authenticatorArgs.hash;
             this._currentScreen = LoginScreens.Authenticator;
-        } else if (queryParams.method && queryParams.method === 'sso') {
+        } else if ((queryParams.method && queryParams.method === 'sso') || this._browserService.getFromLocalStorage('kmc_login_method') === 'sso') {
             window.history.replaceState(null, null, window.location.pathname);
             this._currentScreen = LoginScreens.Sso;
         }
