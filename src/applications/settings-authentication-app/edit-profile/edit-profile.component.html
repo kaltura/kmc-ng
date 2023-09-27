@@ -43,10 +43,69 @@
             </div>
 
             <span class="kSubTitle">{{'applications.settings.authentication.edit.sps' | translate}}</span>
+
+            <div class="kRow">
+                <span>{{'applications.settings.authentication.edit.metadata' | translate}}</span>
+                <span class="link" (click)="downloadMetadata('url')">{{'applications.settings.authentication.edit.metadata1' | translate}}</span>
+                <span>{{'applications.settings.authentication.edit.metadata2' | translate}}</span>
+                <span class="link" (click)="downloadMetadata('file')">{{'applications.settings.authentication.edit.metadata3' | translate}}</span>
+            </div>
+
             <div class="kRow center">
-                <span class="kLabel">{{'applications.settings.authentication.edit.ssoUrl' | translate}}</span>
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.ssoUrl' | translate}}</span>
+                    <kInputHelper [trigger]="'click'">
+                        <span>{{'applications.settings.authentication.edit.ssoUrl_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
                 <span>{{_ssoUrl}}</span>
                 <kCopyToClipboard class="kIcon" [text]="_ssoUrl" [iconSwitchTimeout]="5000"></kCopyToClipboard>
+            </div>
+
+            <div class="kRow required">
+                <div class="labelWithHelpTip required">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.entity' | translate}}</span>
+                    <kInputHelper [trigger]="'click'">
+                        <span>{{'applications.settings.authentication.edit.entity_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div class="kRequired" [class.kHasError]="_entityField.invalid && _entityField.touched">*</div>
+                <div>
+                    <input class="kControl" pInputText [formControl]="_entityField" [maxlength]="255" [class.kHasError]="_entityField.invalid && _entityField.touched">
+                    <div *ngIf="_entityField.hasError('required') && _entityField.touched" class="kError">
+                        {{'applications.administration.role.errors.required' | translate}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="kRow center">
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.sign' | translate}}</span>
+                    <kInputHelper [trigger]="'click'">
+                        <span>{{'applications.settings.authentication.edit.sign_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div><p-checkbox [formControl]="_enableRequestSignField" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="enableRequestSignChange($event)"></p-checkbox></div>
+            </div>
+
+            <div class="kRow">
+                <span class="kLabel">{{'applications.settings.authentication.edit.signCert' | translate}}</span>
+                <textarea class="kControl" [disabled]="true" pInputTextarea>{{certificate}}</textArea>
+            </div>
+
+            <div class="kRow center">
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.encryption' | translate}}</span>
+                    <kInputHelper [trigger]="'click'">
+                        <span>{{'applications.settings.authentication.edit.encryption_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div><p-checkbox [formControl]="_enableAssertsDecryptionField" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="enableAssertsDecryptionChange($event)"></p-checkbox></div>
+            </div>
+
+            <div class="kRow">
+                <span class="kLabel">{{'applications.settings.authentication.edit.encryptionKey' | translate}}</span>
+                <textarea class="kControl" [disabled]="true" pInputTextarea>{{encryptionKey}}</textArea>
             </div>
 
         </form>

@@ -40,7 +40,9 @@
           <div class="kRow">
               <div class="labelWithHelpTip">
                   <span class="kLabel">{{'applications.settings.authentication.subscribe.domain' | translate}}</span>
-                  <i class="kIconhelp_full kHelpTip" [kTooltip]="'applications.settings.authentication.subscribe.domain-help' | translate"></i>
+                  <kInputHelper [trigger]="'click'">
+                      <span>{{'applications.settings.authentication.subscribe.domain-help' | translate}}</span>
+                  </kInputHelper>
               </div>
 
             <div class="kRequired" [class.kHasError]="_domainField.invalid && _domainField.touched">*</div>
@@ -60,7 +62,9 @@
           <div class="kRow">
               <div class="labelWithHelpTip notRequired">
                   <span class="kLabel">{{'applications.settings.authentication.subscribe.orgId' | translate}}</span>
-                  <i class="kIconhelp_full kHelpTip" [kTooltip]="'applications.settings.authentication.subscribe.orgId-help' | translate"></i>
+                  <kInputHelper [trigger]="'click'">
+                      <span>{{'applications.settings.authentication.subscribe.orgId-help' | translate}}</span>
+                  </kInputHelper>
               </div>
 
             <div>

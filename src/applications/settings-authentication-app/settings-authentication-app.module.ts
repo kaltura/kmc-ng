@@ -4,7 +4,7 @@ import {SettingsAuthenticationComponent} from './settings-authentication.compone
 import {routing} from './settings-authentication-app.routes';
 import {RouterModule} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
-import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule, PopupWidgetModule} from '@kaltura-ng/kaltura-ui';
+import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule, PopupWidgetModule, InputHelperModule} from '@kaltura-ng/kaltura-ui';
 import {TranslateModule} from '@ngx-translate/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -31,6 +31,7 @@ import { CopyToClipboardModule } from '@kaltura-ng/mc-shared';
         StickyModule,
         TooltipModule,
         PopupWidgetModule,
+        InputHelperModule,
         CheckboxModule,
         ButtonModule,
         TableModule,

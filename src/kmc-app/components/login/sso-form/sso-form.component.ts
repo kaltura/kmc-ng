@@ -13,7 +13,7 @@ export class SsoFormComponent {
   @Input()
   set authBrokerProfiles(value: any[]) {
       if (value.length > 0) {
-          value.forEach(profile => this._profiles.push({label: profile.name, value: profile.id}));
+          value.forEach(profile => this._profiles.push({label: `${profile.name} (${profile.providerType})`, value: profile.id}));
           this._profileField.setValue(value[0].id);
       }
   }

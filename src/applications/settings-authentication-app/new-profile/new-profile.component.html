@@ -33,10 +33,12 @@
                 <div class="kRow center">
                     <div class="labelWithHelpTip">
                         <span class="kLabel">{{'applications.settings.authentication.new.admin' | translate}}</span>
-                        <i class="kIconhelp_full kHelpTip" [kTooltip]="'applications.settings.authentication.new.admin-help' | translate"></i>
+                        <kInputHelper [trigger]="'click'">
+                            <span>{{'applications.settings.authentication.new.admin-help' | translate}}</span>
+                        </kInputHelper>
                     </div>
                     <div>
-                        <p-checkbox [formControl]="_adinProfileField"
+                        <p-checkbox [formControl]="_adminProfileField"
                                     [label]="'applications.settings.authentication.new.adminLabel' | translate"
                                     binary="true"></p-checkbox>
                     </div>

@@ -26,7 +26,7 @@ import { serverConfig } from "config/server";
   public _nameField: AbstractControl;
   public _descriptionField: AbstractControl;
   public _providerField: AbstractControl;
-  public _adinProfileField: AbstractControl;
+  public _adminProfileField: AbstractControl;
 
   public _providerTypes: Array<{ value: string, label: string }> = [
       {label: 'Azure', value: 'azure'},
@@ -74,7 +74,7 @@ import { serverConfig } from "config/server";
     this._nameField = this._newProfileForm.controls['name'];
     this._descriptionField = this._newProfileForm.controls['description'];
     this._providerField = this._newProfileForm.controls['provider'];
-    this._adinProfileField = this._newProfileForm.controls['adminProfile'];
+    this._adminProfileField = this._newProfileForm.controls['adminProfile'];
   }
 
     private _markFormFieldsAsTouched() {

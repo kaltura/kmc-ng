@@ -80,7 +80,24 @@
                         width: 172px;
                     }
                 }
-
+                .labelWithHelpTip {
+                    display: flex;
+                    align-items: center;
+                    width: 208px;
+                    .kLabel {
+                        width: auto;
+                    }
+                    i {
+                        color: $kGrayscale3;
+                    }
+                    &.required {
+                        width: 172px;
+                        align-items: flex-start;
+                        ::ng-deep .kInputHelper {
+                            margin-top: 10px;
+                        }
+                    }
+                }
                 .kRequired {
                     width: 20px;
                     font-size: 24px;
@@ -122,17 +139,16 @@
     .doc {
         display: flex;
         padding: 28px;
-
         span {
-            margin-right: 4px;
             font-size: 14px;
         }
-
-        .link {
-            text-decoration: none;
-            color: $kPrimary;
-            cursor: pointer;
-            font-weight: normal;
-        }
+    }
+    .link {
+        margin-left: 4px;
+        margin-right: 4px;
+        text-decoration: none;
+        color: $kPrimary;
+        cursor: pointer;
+        font-weight: normal;
     }
 }

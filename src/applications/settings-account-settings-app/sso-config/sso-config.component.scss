@@ -26,9 +26,8 @@
 
     .kContainer {
       flex: 1 1 auto;
-      overflow-y: auto;
+      overflow-y: hidden;
       max-height: calc(100vh - 158px);
-
       .kProfileForm {
         padding: 0 28px 28px 28px;
       }
@@ -56,9 +55,6 @@
             .kLabel {
                 width: auto;
                 margin-right: 4px;
-            }
-            i {
-                color: $kGrayscale3;
             }
         }
         .kRequired {

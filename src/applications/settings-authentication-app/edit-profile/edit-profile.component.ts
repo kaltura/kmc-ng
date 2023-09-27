@@ -25,6 +25,9 @@ export class EditProfileComponent implements OnInit {
     public _nameField: AbstractControl;
     public _descriptionField: AbstractControl;
     public _providerField: AbstractControl;
+    public _entityField: AbstractControl;
+    public _enableRequestSignField: AbstractControl;
+    public _enableAssertsDecryptionField: AbstractControl;
 
     public _providerTypes: Array<{ value: string, label: string }> = [
         {label: 'Azure', value: 'azure'},
@@ -36,6 +39,9 @@ export class EditProfileComponent implements OnInit {
 
     public _ssoUrl = `${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-manager/saml/ac`;
     private metadata = '';
+    private metadataLoading = false;
+    public certificate = '';
+    public encryptionKey = '';
 
     public _blockerMessage: AreaBlockerMessage = null;
 
@@ -60,31 +66,62 @@ export class EditProfileComponent implements OnInit {
             id: this.profile.id,
             name: this.profile.name
         });
-        // load profile metadata
-        this._profilesService.loadProfileMetadata(this.profile.id).subscribe(
-            result => {
-                this.metadata = result;
-            },
-            error => this.displayServerError(error)
-        );
+        this.loadProfileMetadata();
         this._editProfileForm.setValue({
             name: this.profile.name,
             description: this.profile.description,
-            provider: this.profile.providerType
+            provider: this.profile.providerType,
+            entity: this.profile.authStrategyConfig.issuer,
+            enableRequestSign: this.profile.authStrategyConfig.enableRequestSign,
+            enableAssertsDecryption: this.profile.authStrategyConfig.enableAssertsDecryption
         }, {emitEvent: false});
 
     }
 
+    private getFromMetadata(searchTerm: string): string {
+        let res = '';
+        if (this.metadata.indexOf(searchTerm) > -1) {
+            const arr = this.metadata.split('>');
+            arr.forEach((str, index) => {
+                if (str.indexOf(searchTerm) > -1 && arr.length > index + 4) {
+                    res = arr[index + 4];
+                }
+            })
+        }
+        return res;
+    }
+    private loadProfileMetadata(): void {
+        this.metadataLoading = true;
+        this._profilesService.loadProfileMetadata(this.profile.id).subscribe(
+            result => {
+                this.metadataLoading = false;
+                this.metadata = result;
+                console.log(this.getFromMetadata('use="signing"'));
+                this.certificate = this.getFromMetadata('use="signing"');
+                this.encryptionKey = this.getFromMetadata('use="encryption"');
+            },
+            error => {
+                this.metadataLoading = false;
+                this.displayServerError(error)
+            }
+        );
+    }
     private _buildForm(): void {
         this._editProfileForm = this._fb.group({
             name: ['', Validators.required],
             description: [''],
             provider: [''],
+            entity: ['', Validators.required],
+            enableRequestSign: false,
+            enableAssertsDecryption: false
         });
 
         this._nameField = this._editProfileForm.controls['name'];
         this._descriptionField = this._editProfileForm.controls['description'];
         this._providerField = this._editProfileForm.controls['provider'];
+        this._entityField = this._editProfileForm.controls['entity'];
+        this._enableRequestSignField = this._editProfileForm.controls['enableRequestSign'];
+        this._enableAssertsDecryptionField = this._editProfileForm.controls['enableAssertsDecryption'];
     }
 
     private _markFormFieldsAsTouched() {
@@ -112,8 +149,13 @@ export class EditProfileComponent implements OnInit {
 
         this._logger.info(`send updated profile to the server`);
 
-        const {name, description, provider} = this._editProfileForm.value;
-        const updatedProfile = Object.assign(this.profile, {name, description, providerType: provider});
+        const {name, description, provider, entity, enableRequestSign, enableAssertsDecryption} = this._editProfileForm.value;
+        const updatedProfile = Object.assign(this.profile, {
+            name,
+            description,
+            providerType: provider,
+            authStrategyConfig: Object.assign(this.profile.authStrategyConfig, {issuer: entity, enableRequestSign, enableAssertsDecryption})
+        });
         const retryFn = () => this._updateProfile();
         const successFn = () => {
             this.onRefresh.emit();
@@ -166,5 +208,32 @@ export class EditProfileComponent implements OnInit {
 
     public openHelp(): void {
         // TODO: open help link
+    }
+
+    public downloadMetadata(action: string): void {
+        const url = this._profilesService.getProfileMetadataUrl(this.profile.id);
+        if (action === 'url') {
+            this._browserService.openLink(url);
+        } else {
+            this._browserService.download(url, `${this.profile.name}_metadata.xml`, 'text/xml');
+        }
+    }
+
+    public enableRequestSignChange(event): void {
+        if (event.checked) {
+            // TODO - generate Pv keys and then reload metadata and fill the certificate field
+        } else {
+            // TODO - generate Pv keys and then reload metadata
+            this.certificate = '';
+        }
+    }
+
+    public enableAssertsDecryptionChange(event): void {
+        if (event.checked) {
+            // TODO - generate Pv keys and then reload metadata and fill the encryption key field
+        } else {
+            // TODO - generate Pv keys and then reload metadata
+            this.encryptionKey = '';
+        }
     }
 }
