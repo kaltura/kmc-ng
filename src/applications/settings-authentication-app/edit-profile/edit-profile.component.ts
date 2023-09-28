@@ -241,6 +241,11 @@ export class EditProfileComponent implements OnInit {
         this.metadataLoading = true;
         // we need to update the profile before generating PvKeys and before loading metadata
         const {enableRequestSign, enableAssertsDecryption} = this._editProfileForm.value;
+        if (!enableRequestSign && !enableAssertsDecryption) {
+            this.certificate = '';
+            this.encryptionKey = '';
+            return; // cannot delete PvKeys from metadata so just clear fields and exit
+        }
         const updatedProfile = Object.assign(
             this.profile,
             {authStrategyConfig: Object.assign(this.profile.authStrategyConfig, {enableRequestSign, enableAssertsDecryption})

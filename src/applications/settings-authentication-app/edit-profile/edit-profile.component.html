@@ -126,7 +126,7 @@
                 </div>
                 <div class="kRequired">*</div>
                 <div>
-                    <input class="kControl" pInputText [formControl]="_loginUrlField" [maxlength]="255">
+                    <input class="kControl" pInputText [formControl]="_loginUrlField">
                 </div>
             </div>
 
@@ -138,7 +138,7 @@
                     </kInputHelper>
                 </div>
                 <div>
-                    <input class="kControl" pInputText [formControl]="_logoutUrlField" [maxlength]="255">
+                    <input class="kControl" pInputText [formControl]="_logoutUrlField">
                 </div>
             </div>
 
@@ -157,7 +157,7 @@
 
             <div class="kRow">
                 <span class="kLabel">{{'applications.settings.authentication.edit.metadataUrl' | translate}}</span>
-                <input class="kControl" pInputText [formControl]="_metadataUrlField" [maxlength]="255">
+                <input class="kControl" pInputText [formControl]="_metadataUrlField">
             </div>
 
         </form>
