@@ -232,6 +232,24 @@ export class ProfilesStoreService implements OnDestroy {
         }
     }
 
+    public generatePvKeys(authProfileId: string, enableRequestSign: boolean, enableAssertsDecryption: boolean): Observable<any> {
+        let pvKeys = '';
+        if (enableRequestSign && !enableAssertsDecryption) {
+            pvKeys = 'signingKey';
+        }
+        if (!enableRequestSign && enableAssertsDecryption) {
+            pvKeys = 'decryptionKey';
+        }
+        if (enableRequestSign && enableAssertsDecryption) {
+            pvKeys = 'both';
+        }
+        try {
+            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-profile/generatePvKeys`, {authProfileId, pvKeys}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to generate profile Pv keys. Profile ID: ' + authProfileId));
+        }
+    }
+
     public getProfileStatus(profile: AuthProfile): 'complete' | 'draft' {
         let complete = true;
         if (profile.authStrategyConfig) {

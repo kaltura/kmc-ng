@@ -151,4 +151,19 @@
         cursor: pointer;
         font-weight: normal;
     }
+    .kUpdating {
+        .kSpinnerAnim {
+            width: 12px;
+            height: 12px;
+            margin-left: 16px;
+            margin-right: 8px;
+        }
+        span {
+            opacity: 0.3;
+            cursor: default !important;
+            &:last-child {
+                opacity: 1;
+            }
+        }
+    }
 }

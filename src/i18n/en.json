@@ -2716,6 +2716,7 @@
                     "metadata1": "URL",
                     "metadata2": "or",
                     "metadata3": "File",
+                    "metadataUpdate": "updating...",
                     "ssoUrl": "Single sign on URL",
                     "ssoUrl_tt": "Assertion consumer service, tells the IdP where to redirect an authenticated user after sign-in. The SAML response is posted to this URL.",
                     "entity": "Entity ID",
@@ -2726,7 +2727,12 @@
                     "signCert": "Signing certificate",
                     "encryption": "Encryption",
                     "encryption_tt": "Encrypt the SAML assertions with the public key provided below. Assertions can be decrypted with the private keys held by Kaltura.",
-                    "encryptionKey": "Encryption key"
+                    "encryptionKey": "Encryption key",
+                    "idp": "Identity provider settings",
+                    "login": "Login URL",
+                    "logout": "Logout URL",
+                    "ipc": "Identity provider certificate",
+                    "metadataUrl": "Metadata URL "
                 },
                 "new": {
                     "doc": "For instructions on how to configure a new SSO profile visit our",

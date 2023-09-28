@@ -38,8 +38,7 @@ export class EditProfileComponent implements OnInit {
     ];
 
     public _ssoUrl = `${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-manager/saml/ac`;
-    private metadata = '';
-    private metadataLoading = false;
+    public metadataLoading = false;
     public certificate = '';
     public encryptionKey = '';
 
@@ -78,13 +77,13 @@ export class EditProfileComponent implements OnInit {
 
     }
 
-    private getFromMetadata(searchTerm: string): string {
+    private getFromMetadata(metadata: string, searchTerm: string): string {
         let res = '';
-        if (this.metadata.indexOf(searchTerm) > -1) {
-            const arr = this.metadata.split('>');
+        if (metadata.indexOf(searchTerm) > -1) {
+            const arr = metadata.split('>');
             arr.forEach((str, index) => {
                 if (str.indexOf(searchTerm) > -1 && arr.length > index + 4) {
-                    res = arr[index + 4];
+                    res = arr[index + 4].split('</')[0];
                 }
             })
         }
@@ -95,14 +94,12 @@ export class EditProfileComponent implements OnInit {
         this._profilesService.loadProfileMetadata(this.profile.id).subscribe(
             result => {
                 this.metadataLoading = false;
-                this.metadata = result;
-                console.log(this.getFromMetadata('use="signing"'));
-                this.certificate = this.getFromMetadata('use="signing"');
-                this.encryptionKey = this.getFromMetadata('use="encryption"');
+                this.certificate = this.getFromMetadata(result, 'use="signing"');
+                this.encryptionKey = this.getFromMetadata(result, 'use="encryption"');
             },
             error => {
                 this.metadataLoading = false;
-                this.displayServerError(error)
+                console.error(error)
             }
         );
     }
@@ -211,6 +208,7 @@ export class EditProfileComponent implements OnInit {
     }
 
     public downloadMetadata(action: string): void {
+        if (this.metadataLoading) return;
         const url = this._profilesService.getProfileMetadataUrl(this.profile.id);
         if (action === 'url') {
             this._browserService.openLink(url);
@@ -219,21 +217,14 @@ export class EditProfileComponent implements OnInit {
         }
     }
 
-    public enableRequestSignChange(event): void {
-        if (event.checked) {
-            // TODO - generate Pv keys and then reload metadata and fill the certificate field
-        } else {
-            // TODO - generate Pv keys and then reload metadata
-            this.certificate = '';
-        }
-    }
-
-    public enableAssertsDecryptionChange(event): void {
-        if (event.checked) {
-            // TODO - generate Pv keys and then reload metadata and fill the encryption key field
-        } else {
-            // TODO - generate Pv keys and then reload metadata
-            this.encryptionKey = '';
-        }
+    public generateKeys(): void {
+        this.metadataLoading = true;
+        this._profilesService.generatePvKeys(this.profile.id, this._enableRequestSignField.value, this._enableAssertsDecryptionField.value).subscribe(
+            success => this.loadProfileMetadata(),
+            error => {
+                this.displayServerError(error);
+                this.metadataLoading = false;
+            }
+        );
     }
 }

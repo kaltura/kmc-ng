@@ -44,11 +44,13 @@
 
             <span class="kSubTitle">{{'applications.settings.authentication.edit.sps' | translate}}</span>
 
-            <div class="kRow">
-                <span>{{'applications.settings.authentication.edit.metadata' | translate}}</span>
+            <div class="kRow" [class.kUpdating]="metadataLoading">
+                <span class="gap">{{'applications.settings.authentication.edit.metadata' | translate}}</span>
                 <span class="link" (click)="downloadMetadata('url')">{{'applications.settings.authentication.edit.metadata1' | translate}}</span>
                 <span>{{'applications.settings.authentication.edit.metadata2' | translate}}</span>
                 <span class="link" (click)="downloadMetadata('file')">{{'applications.settings.authentication.edit.metadata3' | translate}}</span>
+                <div *ngIf="metadataLoading" class="k-spinner-animation kSpinnerAnim"></div>
+                <span *ngIf="metadataLoading">{{'applications.settings.authentication.edit.metadataUpdate' | translate}}</span>
             </div>
 
             <div class="kRow center">
@@ -85,7 +87,7 @@
                         <span>{{'applications.settings.authentication.edit.sign_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
-                <div><p-checkbox [formControl]="_enableRequestSignField" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="enableRequestSignChange($event)"></p-checkbox></div>
+                <div><p-checkbox [formControl]="_enableRequestSignField" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="generateKeys()"></p-checkbox></div>
             </div>
 
             <div class="kRow">
@@ -100,13 +102,15 @@
                         <span>{{'applications.settings.authentication.edit.encryption_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
-                <div><p-checkbox [formControl]="_enableAssertsDecryptionField" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="enableAssertsDecryptionChange($event)"></p-checkbox></div>
+                <div><p-checkbox [formControl]="_enableAssertsDecryptionField" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="generateKeys()"></p-checkbox></div>
             </div>
 
             <div class="kRow">
                 <span class="kLabel">{{'applications.settings.authentication.edit.encryptionKey' | translate}}</span>
                 <textarea class="kControl" [disabled]="true" pInputTextarea>{{encryptionKey}}</textArea>
             </div>
+
+            <span class="kSubTitle">{{'applications.settings.authentication.edit.idp' | translate}}</span>
 
         </form>
       </div>
