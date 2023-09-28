@@ -2729,9 +2729,13 @@
                     "encryption_tt": "Encrypt the SAML assertions with the public key provided below. Assertions can be decrypted with the private keys held by Kaltura.",
                     "encryptionKey": "Encryption key",
                     "idp": "Identity provider settings",
+                    "idp_tt": "Copy the following from the IdP and paste in the text boxes below",
                     "login": "Login URL",
+                    "login_tt": "Obtained from the IdP metadata. Typically will appear as <SingleSignOnService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect\"……/>",
                     "logout": "Logout URL",
-                    "ipc": "Identity provider certificate",
+                    "logout_tt": "Obtained from the IdP metadata. Typically will appear as <SingleLogoutService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect”…/>",
+                    "ipc": "IdP certificate",
+                    "ipc_tt": "The certificate used by the Identity Provider (IdP) to sign the SAML response. Obtained from the IdP meta-data.",
                     "metadataUrl": "Metadata URL "
                 },
                 "new": {

@@ -28,6 +28,10 @@ export class EditProfileComponent implements OnInit {
     public _entityField: AbstractControl;
     public _enableRequestSignField: AbstractControl;
     public _enableAssertsDecryptionField: AbstractControl;
+    public _loginUrlField: AbstractControl;
+    public _logoutUrlField: AbstractControl;
+    public _certField: AbstractControl;
+    public _metadataUrlField: AbstractControl;
 
     public _providerTypes: Array<{ value: string, label: string }> = [
         {label: 'Azure', value: 'azure'},
@@ -66,15 +70,20 @@ export class EditProfileComponent implements OnInit {
             name: this.profile.name
         });
         this.loadProfileMetadata();
+        const loginUrl = this.profile.authStrategyConfig.entryPoint === '__placeholder__' ? '' : this.profile.authStrategyConfig.entryPoint;
+        const cert = this.profile.authStrategyConfig.cert === '__placeholder__' ? '' : this.profile.authStrategyConfig.cert;
         this._editProfileForm.setValue({
             name: this.profile.name,
             description: this.profile.description,
             provider: this.profile.providerType,
             entity: this.profile.authStrategyConfig.issuer,
             enableRequestSign: this.profile.authStrategyConfig.enableRequestSign,
-            enableAssertsDecryption: this.profile.authStrategyConfig.enableAssertsDecryption
+            enableAssertsDecryption: this.profile.authStrategyConfig.enableAssertsDecryption,
+            loginUrl,
+            logoutUrl: this.profile.authStrategyConfig.logoutUrl || '',
+            cert,
+            metadataUrl: this.profile.authStrategyConfig.idpMetadataUrl || '',
         }, {emitEvent: false});
-
     }
 
     private getFromMetadata(metadata: string, searchTerm: string): string {
@@ -110,7 +119,11 @@ export class EditProfileComponent implements OnInit {
             provider: [''],
             entity: ['', Validators.required],
             enableRequestSign: false,
-            enableAssertsDecryption: false
+            enableAssertsDecryption: false,
+            loginUrl: [''],
+            logoutUrl: [''],
+            cert: [''],
+            metadataUrl: [''],
         });
 
         this._nameField = this._editProfileForm.controls['name'];
@@ -119,6 +132,10 @@ export class EditProfileComponent implements OnInit {
         this._entityField = this._editProfileForm.controls['entity'];
         this._enableRequestSignField = this._editProfileForm.controls['enableRequestSign'];
         this._enableAssertsDecryptionField = this._editProfileForm.controls['enableAssertsDecryption'];
+        this._loginUrlField = this._editProfileForm.controls['loginUrl'];
+        this._logoutUrlField = this._editProfileForm.controls['logoutUrl'];
+        this._certField = this._editProfileForm.controls['cert'];
+        this._metadataUrlField = this._editProfileForm.controls['metadataUrl'];
     }
 
     private _markFormFieldsAsTouched() {
@@ -146,17 +163,21 @@ export class EditProfileComponent implements OnInit {
 
         this._logger.info(`send updated profile to the server`);
 
-        const {name, description, provider, entity, enableRequestSign, enableAssertsDecryption} = this._editProfileForm.value;
+        const {name, description, provider, entity, enableRequestSign, enableAssertsDecryption, loginUrl, logoutUrl, cert, metadataUrl} = this._editProfileForm.value;
         const updatedProfile = Object.assign(this.profile, {
             name,
             description,
             providerType: provider,
-            authStrategyConfig: Object.assign(this.profile.authStrategyConfig, {issuer: entity, enableRequestSign, enableAssertsDecryption})
+            authStrategyConfig: Object.assign(this.profile.authStrategyConfig, {
+                issuer: entity,
+                enableRequestSign,
+                enableAssertsDecryption,
+                entryPoint: loginUrl,
+                logoutUrl,
+                cert,
+                idpMetadataUrl: metadataUrl
+            })
         });
-        const retryFn = () => this._updateProfile();
-        const successFn = () => {
-            this.onRefresh.emit();
-        };
 
         this._profilesService.updateProfile(updatedProfile)
             .pipe(tag('block-shell'))
@@ -166,7 +187,6 @@ export class EditProfileComponent implements OnInit {
                         this.displayServerError(profile);
                         return;
                     }
-                    // TODO generate Pv Keys according to auth strategy enableRequestSign and enableAssertsDecryption values
                     this.onRefresh.emit();
                     this.parentPopupWidget.close();
                 },
@@ -219,12 +239,36 @@ export class EditProfileComponent implements OnInit {
 
     public generateKeys(): void {
         this.metadataLoading = true;
-        this._profilesService.generatePvKeys(this.profile.id, this._enableRequestSignField.value, this._enableAssertsDecryptionField.value).subscribe(
-            success => this.loadProfileMetadata(),
-            error => {
-                this.displayServerError(error);
-                this.metadataLoading = false;
-            }
-        );
+        // we need to update the profile before generating PvKeys and before loading metadata
+        const {enableRequestSign, enableAssertsDecryption} = this._editProfileForm.value;
+        const updatedProfile = Object.assign(
+            this.profile,
+            {authStrategyConfig: Object.assign(this.profile.authStrategyConfig, {enableRequestSign, enableAssertsDecryption})
+        });
+        this._profilesService.updateProfile(updatedProfile)
+            .subscribe(
+                (profile: AuthProfile) => {
+                    if (profile.objectType === "KalturaAPIException") { // error handling
+                        console.error(profile);
+                        return;
+                    }
+                    this._profilesService.generatePvKeys(this.profile.id, this._enableRequestSignField.value, this._enableAssertsDecryptionField.value).subscribe(
+                        success => {
+                                this.onRefresh.emit();
+                                setTimeout(() => {
+                                    this.loadProfileMetadata(); // use timeout to allow XML writing to DB
+                                }, 1000);
+                            },
+                        error => {
+                            this.displayServerError(error);
+                            this.metadataLoading = false;
+                        }
+                    );
+                },
+                error =>  {
+                    console.error(error);
+                    this.metadataLoading = false;
+                }
+            );
     }
 }

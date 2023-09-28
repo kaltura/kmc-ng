@@ -22,7 +22,7 @@
         <form class="kProfileForm" [formGroup]="_editProfileForm" novalidate>
 
           <div class="kRow">
-            <span class="kLabel required">{{'applications.administration.role.name' | translate}}</span>
+            <span class="kLabel required">{{'applications.settings.authentication.name' | translate}}</span>
             <div class="kRequired" [class.kHasError]="_nameField.invalid && _nameField.touched">*</div>
             <div>
               <input class="kControl" pInputText [formControl]="_nameField" [maxlength]="255" [class.kHasError]="_nameField.invalid && _nameField.touched">
@@ -110,7 +110,55 @@
                 <textarea class="kControl" [disabled]="true" pInputTextarea>{{encryptionKey}}</textArea>
             </div>
 
-            <span class="kSubTitle">{{'applications.settings.authentication.edit.idp' | translate}}</span>
+            <div class="kRow center">
+                <span class="kSubTitle">{{'applications.settings.authentication.edit.idp' | translate}}</span>
+                <kInputHelper [trigger]="'click'">
+                    <span>{{'applications.settings.authentication.edit.idp_tt' | translate}}</span>
+                </kInputHelper>
+            </div>
+
+            <div class="kRow required">
+                <div class="labelWithHelpTip required">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.login' | translate}}</span>
+                    <kInputHelper [trigger]="'click'" [width]="400">
+                        <span>{{'applications.settings.authentication.edit.login_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div class="kRequired">*</div>
+                <div>
+                    <input class="kControl" pInputText [formControl]="_loginUrlField" [maxlength]="255">
+                </div>
+            </div>
+
+            <div class="kRow">
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.logout' | translate}}</span>
+                    <kInputHelper [trigger]="'click'" [width]="400">
+                        <span>{{'applications.settings.authentication.edit.logout_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div>
+                    <input class="kControl" pInputText [formControl]="_logoutUrlField" [maxlength]="255">
+                </div>
+            </div>
+
+            <div class="kRow required">
+                <div class="labelWithHelpTip required">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.ipc' | translate}}</span>
+                    <kInputHelper [trigger]="'click'">
+                        <span>{{'applications.settings.authentication.edit.ipc_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div class="kRequired">*</div>
+                <div>
+                    <textarea class="kControl" pInputTextarea [formControl]="_certField"></textArea>
+                </div>
+            </div>
+
+            <div class="kRow">
+                <span class="kLabel">{{'applications.settings.authentication.edit.metadataUrl' | translate}}</span>
+                <input class="kControl" pInputText [formControl]="_metadataUrlField" [maxlength]="255">
+            </div>
 
         </form>
       </div>

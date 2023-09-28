@@ -19,6 +19,8 @@ export type AuthStrategyConfig = {
     enableRequestSign: boolean;
     entryPoint: string;
     issuer: string;
+    logoutUrl: string;
+    idpMetadataUrl: string;
     requestIdExpirationPeriodMs: number;
     signatureAlgorithm: string;
     validateInResponseTo: boolean;
@@ -287,7 +289,7 @@ export class ProfilesStoreService implements OnDestroy {
     }
 
     public getProfileMetadataUrl(profileId: string): string {
-        return `${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-manager/saml/metadata/${this._appAuthentication.appUser.partnerInfo.partnerId}/${profileId}`;
+        return `${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-manager/saml/metadata/${this._appAuthentication.appUser.partnerInfo.partnerId}/${profileId}?rnd=${Math.random()}`;
     }
 
     private getHttpOptions() {
