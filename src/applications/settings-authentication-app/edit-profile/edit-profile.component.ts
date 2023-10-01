@@ -40,7 +40,7 @@ export class EditProfileComponent implements OnInit {
         {label: 'Akamai', value: 'akamai'},
         {label: this._appLocalization.get('applications.content.bulkUpload.objectType.other'), value: 'other'}
     ];
-
+    public _kalturaUserAttributes: Array<{ value: string, label: string }> = [];
     public _ssoUrl = `${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-manager/saml/ac`;
     public metadataLoading = false;
     public certificate = '';
@@ -57,6 +57,9 @@ export class EditProfileComponent implements OnInit {
                 private _profilesService: ProfilesStoreService,
                 private _browserService: BrowserService,
                 private _appLocalization: AppLocalization) {
+        ['Core_User_FirstName', 'Core_User_LastName','Core_User_Email', 'Core_User_ScreenName', 'Core_User_DateOfBirth', 'Core_User_Gender', 'Core_User_ThumbnailUrl', 'Core_User_Description', 'Core_User_Title', 'Core_User_Country', 'Core_User_Company', 'Core_User_State', 'Core_User_City', 'Core_User_Zip'].forEach(value => {
+           this._kalturaUserAttributes.push({label: _appLocalization.get('applications.settings.authentication.edit.attributes.' + value), value});
+        });
         this._buildForm();
     }
 
@@ -103,8 +106,8 @@ export class EditProfileComponent implements OnInit {
         this._profilesService.loadProfileMetadata(this.profile.id).subscribe(
             result => {
                 this.metadataLoading = false;
-                this.certificate = this.getFromMetadata(result, 'use="signing"');
-                this.encryptionKey = this.getFromMetadata(result, 'use="encryption"');
+                this.certificate = this._enableRequestSignField.value ? this.getFromMetadata(result, 'use="signing"') : '';
+                this.encryptionKey = this._enableAssertsDecryptionField.value ? this.getFromMetadata(result, 'use="encryption"') : '';
             },
             error => {
                 this.metadataLoading = false;
@@ -172,9 +175,9 @@ export class EditProfileComponent implements OnInit {
                 issuer: entity,
                 enableRequestSign,
                 enableAssertsDecryption,
-                entryPoint: loginUrl,
+                entryPoint: loginUrl.length ? loginUrl: '__placeholder__',
                 logoutUrl,
-                cert,
+                cert: cert.length ? cert : '__placeholder__',
                 idpMetadataUrl: metadataUrl
             })
         });
@@ -238,7 +241,6 @@ export class EditProfileComponent implements OnInit {
     }
 
     public generateKeys(): void {
-        this.metadataLoading = true;
         // we need to update the profile before generating PvKeys and before loading metadata
         const {enableRequestSign, enableAssertsDecryption} = this._editProfileForm.value;
         if (!enableRequestSign && !enableAssertsDecryption) {
@@ -246,6 +248,7 @@ export class EditProfileComponent implements OnInit {
             this.encryptionKey = '';
             return; // cannot delete PvKeys from metadata so just clear fields and exit
         }
+        this.metadataLoading = true;
         const updatedProfile = Object.assign(
             this.profile,
             {authStrategyConfig: Object.assign(this.profile.authStrategyConfig, {enableRequestSign, enableAssertsDecryption})

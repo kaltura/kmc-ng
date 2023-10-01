@@ -93,6 +93,7 @@
             <div class="kRow">
                 <span class="kLabel">{{'applications.settings.authentication.edit.signCert' | translate}}</span>
                 <textarea class="kControl" [disabled]="true" pInputTextarea>{{certificate}}</textArea>
+                <kCopyToClipboard class="kIcon" [text]="certificate" [iconSwitchTimeout]="5000"></kCopyToClipboard>
             </div>
 
             <div class="kRow center">
@@ -108,13 +109,12 @@
             <div class="kRow">
                 <span class="kLabel">{{'applications.settings.authentication.edit.encryptionKey' | translate}}</span>
                 <textarea class="kControl" [disabled]="true" pInputTextarea>{{encryptionKey}}</textArea>
+                <kCopyToClipboard class="kIcon" [text]="encryptionKey" [iconSwitchTimeout]="5000"></kCopyToClipboard>
             </div>
 
-            <div class="kRow center">
-                <span class="kSubTitle">{{'applications.settings.authentication.edit.idp' | translate}}</span>
-                <kInputHelper [trigger]="'click'">
-                    <span>{{'applications.settings.authentication.edit.idp_tt' | translate}}</span>
-                </kInputHelper>
+            <span class="kSubTitle">{{'applications.settings.authentication.edit.idp' | translate}}</span>
+            <div class="kRow">
+                <span class="gap">{{'applications.settings.authentication.edit.idp_tt' | translate}}</span>
             </div>
 
             <div class="kRow required">
@@ -156,10 +156,21 @@
             </div>
 
             <div class="kRow">
-                <span class="kLabel">{{'applications.settings.authentication.edit.metadataUrl' | translate}}</span>
-                <input class="kControl" pInputText [formControl]="_metadataUrlField">
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.metadataUrl' | translate}}</span>
+                    <kInputHelper [trigger]="'click'" [width]="400">
+                        <span>{{'applications.settings.authentication.edit.metadataUrl_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div>
+                    <input class="kControl" pInputText [formControl]="_metadataUrlField">
+                </div>
             </div>
 
+            <span class="kSubTitle">{{'applications.settings.authentication.edit.attributesStatement' | translate}}</span>
+            <div class="kRow">
+                <span class="gap">{{'applications.settings.authentication.edit.attributes_tt' | translate}}</span>
+            </div>
         </form>
       </div>
     </div>
