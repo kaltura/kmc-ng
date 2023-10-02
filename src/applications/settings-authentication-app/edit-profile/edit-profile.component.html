@@ -183,11 +183,14 @@
                 <kInputHelper *ngIf="attribute.kalturaAttribute==='Core_User_Email'" [trigger]="'click'">
                     <span>{{'applications.settings.authentication.edit.email_tt' | translate}}</span>
                 </kInputHelper>
-                <p-dropdown *ngIf="attribute.kalturaAttribute!=='Core_User_Email'" class="kControl" [(ngModel)]="attribute.kalturaAttribute" appendTo="body" [options]="_kalturaUserAttributes" (ngModelChange)="formPristine=false" [placeholder]="'applications.settings.authentication.edit.attributePh' | translate"></p-dropdown>
+                <p-dropdown *ngIf="attribute.isKalturaAttribute && attribute.kalturaAttribute!=='Core_User_Email'" class="kControl" [(ngModel)]="attribute.kalturaAttribute" appendTo="body" [options]="_kalturaUserAttributes" (ngModelChange)="formPristine=false" [placeholder]="'applications.settings.authentication.edit.attributePh' | translate"></p-dropdown>
+                <input *ngIf="!attribute.isKalturaAttribute" class="kControl customAttribute" pInputText [(ngModel)]="attribute.kalturaAttribute" (ngModelChange)="formPristine=false">
                 <i *ngIf="attribute.kalturaAttribute!=='Core_User_Email'" class="kIconremove kRemove" [kTooltip]="'applications.settings.authentication.edit.remove' | translate" (click)="removeAttribute(index)"></i>
             </div>
-            <button type="button" class="kButtonDefault" pButton icon="kIconplus" label="{{'applications.settings.authentication.edit.add' | translate}}" (click)="addAttribute()"></button>
-
+            <div class="kAttributeRow">
+                <button type="button" class="kButtonDefault" pButton icon="kIconplus" label="{{'applications.settings.authentication.edit.add' | translate}}" (click)="addAttribute(true)"></button>
+                <button type="button" class="kButtonDefault" pButton icon="kIconplus" label="{{'applications.settings.authentication.edit.addCustom' | translate}}" (click)="addAttribute(false)"></button>
+            </div>
         </div>
       </div>
     </div>

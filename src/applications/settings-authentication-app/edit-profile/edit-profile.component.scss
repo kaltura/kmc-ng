@@ -182,6 +182,7 @@
         .kRequired {
             width: 20px;
             font-size: 24px;
+            padding-top: 7px;
             color: $kGrayscale3;
         }
         .idp {
@@ -199,10 +200,14 @@
                 width: 308px;
             }
         }
-    }
-    .kButtonDefault {
-        margin-left: 28px;
-        font-weight: 400;
+        .customAttribute {
+            margin-left: 20px;
+            width: 308px;
+        }
+        .kButtonDefault {
+            font-weight: 400;
+            margin-right: 22px;
+        }
     }
     .kRemove{
         color: $kDandger;

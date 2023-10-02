@@ -34,12 +34,13 @@ export class EditProfileComponent implements OnInit {
         {label: 'Akamai', value: 'akamai'},
         {label: this._appLocalization.get('applications.content.bulkUpload.objectType.other'), value: 'other'}
     ];
+    private kalturaAttributes = ['Core_User_FirstName', 'Core_User_LastName', 'Core_User_Email', 'Core_User_ScreenName', 'Core_User_DateOfBirth', 'Core_User_Gender', 'Core_User_ThumbnailUrl', 'Core_User_Description', 'Core_User_Title', 'Core_User_Country', 'Core_User_Company', 'Core_User_State', 'Core_User_City', 'Core_User_Zip'];
     public _kalturaUserAttributes: Array<{ value: string, label: string }> = [];
     public _ssoUrl = `${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-manager/saml/ac`;
     public metadataLoading = false;
     public certificate = '';
     public encryptionKey = '';
-    public userAttributeMappings: {idpAttribute: string, kalturaAttribute: string}[] = [];
+    public userAttributeMappings: {idpAttribute: string, kalturaAttribute: string, isKalturaAttribute: boolean}[] = [];
 
     public formPristine = true;
     public nameRequiredError = false;
@@ -55,7 +56,7 @@ export class EditProfileComponent implements OnInit {
                 private _profilesService: ProfilesStoreService,
                 private _browserService: BrowserService,
                 private _appLocalization: AppLocalization) {
-        ['Core_User_FirstName', 'Core_User_LastName', 'Core_User_ScreenName', 'Core_User_DateOfBirth', 'Core_User_Gender', 'Core_User_ThumbnailUrl', 'Core_User_Description', 'Core_User_Title', 'Core_User_Country', 'Core_User_Company', 'Core_User_State', 'Core_User_City', 'Core_User_Zip'].forEach(value => {
+        this.kalturaAttributes.forEach(value => {
            this._kalturaUserAttributes.push({label: _appLocalization.get('applications.settings.authentication.edit.attributes.' + value) + ' (' + value + ')', value});
         });
     }
@@ -73,17 +74,17 @@ export class EditProfileComponent implements OnInit {
         this._profile.authStrategyConfig.entryPoint = this._profile.authStrategyConfig.entryPoint === '__placeholder__' ? '' : this._profile.authStrategyConfig.entryPoint;
         this._profile.authStrategyConfig.cert = this._profile.authStrategyConfig.cert === '__placeholder__' ? '' : this._profile.authStrategyConfig.cert;
         if (!this._profile.userAttributeMappings) {
-            this.userAttributeMappings = [{idpAttribute: '', kalturaAttribute: 'Core_User_Email'}];
+            this.userAttributeMappings = [{idpAttribute: '', kalturaAttribute: 'Core_User_Email', isKalturaAttribute: true}];
         } else {
             let emailAttributeFound = false;
             Object.keys(this._profile.userAttributeMappings).forEach(idpAttribute => {
-                this.userAttributeMappings.push({idpAttribute, kalturaAttribute: this._profile.userAttributeMappings[idpAttribute]});
+                this.userAttributeMappings.push({idpAttribute, kalturaAttribute: this._profile.userAttributeMappings[idpAttribute], isKalturaAttribute: this.kalturaAttributes.indexOf(this._profile.userAttributeMappings[idpAttribute]) > -1});
                 if (this._profile.userAttributeMappings[idpAttribute] === 'Core_User_Email') {
                     emailAttributeFound = true;
                 }
             });
             if (!emailAttributeFound) {
-                this.userAttributeMappings.unshift({idpAttribute: '', kalturaAttribute: 'Core_User_Email'});
+                this.userAttributeMappings.unshift({idpAttribute: '', kalturaAttribute: 'Core_User_Email', isKalturaAttribute: true});
             }
         }
     }
@@ -235,9 +236,9 @@ export class EditProfileComponent implements OnInit {
             );
     }
 
-    public addAttribute(): void {
+    public addAttribute(isKalturaAttribute): void {
         this.formPristine = false;
-        this.userAttributeMappings.push({idpAttribute: '', kalturaAttribute: ''});
+        this.userAttributeMappings.push({idpAttribute: '', kalturaAttribute: '', isKalturaAttribute});
     }
 
     public removeAttribute(index): void {

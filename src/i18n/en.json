@@ -2757,8 +2757,9 @@
                         "Core_User_Zip": "Zip"
                     },
                     "provider": "Provider name",
-                    "kaltura": "Kaltura name",
-                    "add": "Add attribute",
+                    "kaltura": "Kaltura / custom name",
+                    "add": "Add Kaltura attribute",
+                    "addCustom": "Add custom attribute",
                     "remove": "Remove attribute",
                     "attributePh": "Select Kaltura attribute",
                     "email_tt": "This will act as your unique identifier. If your unique identifier shouldn’t be email, contact your Kaltura admin."
