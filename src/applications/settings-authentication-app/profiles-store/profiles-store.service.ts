@@ -43,7 +43,7 @@ export type AuthProfile = {
     removeFromExistingGroups: boolean;
     syncDelayTimeoutMin: number;
     updatedAt: Date;
-    userAttributeMappings: Record<string, string>,
+    userAttributeMappings: any,
     userGroupMappings: Record<string, string>,
     userGroupsSyncAll: boolean;
     userIdAttribute: string;

@@ -171,4 +171,43 @@
             }
         }
     }
+    .kAttributeRow {
+        display: flex;
+        align-items: center;
+        padding-top: 24px;
+        padding: 0 28px 24px 28px;
+        .title {
+            width: 400px;
+        }
+        .kRequired {
+            width: 20px;
+            font-size: 24px;
+            color: $kGrayscale3;
+        }
+        .idp {
+            width: 380px;
+            &.required {
+                width: 360px;
+            }
+        }
+        .kaltura {
+            margin-left: 20px;
+        }
+        ::ng-deep p-dropdown {
+            margin-left: 20px;
+            .p-dropdown {
+                width: 308px;
+            }
+        }
+    }
+    .kButtonDefault {
+        margin-left: 28px;
+        font-weight: 400;
+    }
+    .kRemove{
+        color: $kDandger;
+        margin-left: 24px;
+        cursor: pointer;
+        font-size: 24px;
+    }
 }

@@ -2755,7 +2755,13 @@
                         "Core_User_State": "State",
                         "Core_User_City": "City",
                         "Core_User_Zip": "Zip"
-                    }
+                    },
+                    "provider": "Provider name",
+                    "kaltura": "Kaltura name",
+                    "add": "Add attribute",
+                    "remove": "Remove attribute",
+                    "attributePh": "Select Kaltura attribute",
+                    "email_tt": "This will act as your unique identifier. If your unique identifier shouldn’t be email, contact your Kaltura admin."
                 },
                 "new": {
                     "doc": "For instructions on how to configure a new SSO profile visit our",

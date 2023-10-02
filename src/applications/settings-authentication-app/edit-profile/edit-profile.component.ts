@@ -1,12 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {AreaBlockerMessage, PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {AuthProfile, ProfilesStoreService} from '../profiles-store/profiles-store.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {BrowserService} from 'app-shared/kmc-shell/providers';
-import {tag} from '@kaltura-ng/kaltura-common';
 import {serverConfig} from "config/server";
+import {tag} from "@kaltura-ng/kaltura-common";
 
 @Component({
     selector: 'kEditProfile',
@@ -17,21 +16,16 @@ import {serverConfig} from "config/server";
     ]
 })
 export class EditProfileComponent implements OnInit {
-    @Input() profile: AuthProfile;
+
+    @Input() set profile(value: AuthProfile) {
+        this._profile = JSON.parse(JSON.stringify(value)); // create a copy of the profile
+        this._originalProfile = JSON.parse(JSON.stringify(value)); // create a copy of the profile for partial updates
+    }
     @Input() parentPopupWidget: PopupWidgetComponent;
     @Output() onRefresh = new EventEmitter<void>();
 
-    public _editProfileForm: FormGroup;
-    public _nameField: AbstractControl;
-    public _descriptionField: AbstractControl;
-    public _providerField: AbstractControl;
-    public _entityField: AbstractControl;
-    public _enableRequestSignField: AbstractControl;
-    public _enableAssertsDecryptionField: AbstractControl;
-    public _loginUrlField: AbstractControl;
-    public _logoutUrlField: AbstractControl;
-    public _certField: AbstractControl;
-    public _metadataUrlField: AbstractControl;
+    private _originalProfile: AuthProfile; // used for partial updates
+    public _profile: AuthProfile;
 
     public _providerTypes: Array<{ value: string, label: string }> = [
         {label: 'Azure', value: 'azure'},
@@ -45,22 +39,25 @@ export class EditProfileComponent implements OnInit {
     public metadataLoading = false;
     public certificate = '';
     public encryptionKey = '';
+    public userAttributeMappings: {idpAttribute: string, kalturaAttribute: string}[] = [];
+
+    public formPristine = true;
+    public nameRequiredError = false;
+    public entityRequiredError = false;
 
     public _blockerMessage: AreaBlockerMessage = null;
 
     public get _saveDisabled(): boolean {
-        return this._editProfileForm.pristine || !this._editProfileForm.valid;
+        return this.formPristine || this.entityRequiredError || this.nameRequiredError;
     }
 
-    constructor(private _fb: FormBuilder,
-                private _logger: KalturaLogger,
+    constructor(private _logger: KalturaLogger,
                 private _profilesService: ProfilesStoreService,
                 private _browserService: BrowserService,
                 private _appLocalization: AppLocalization) {
-        ['Core_User_FirstName', 'Core_User_LastName','Core_User_Email', 'Core_User_ScreenName', 'Core_User_DateOfBirth', 'Core_User_Gender', 'Core_User_ThumbnailUrl', 'Core_User_Description', 'Core_User_Title', 'Core_User_Country', 'Core_User_Company', 'Core_User_State', 'Core_User_City', 'Core_User_Zip'].forEach(value => {
-           this._kalturaUserAttributes.push({label: _appLocalization.get('applications.settings.authentication.edit.attributes.' + value), value});
+        ['Core_User_FirstName', 'Core_User_LastName', 'Core_User_ScreenName', 'Core_User_DateOfBirth', 'Core_User_Gender', 'Core_User_ThumbnailUrl', 'Core_User_Description', 'Core_User_Title', 'Core_User_Country', 'Core_User_Company', 'Core_User_State', 'Core_User_City', 'Core_User_Zip'].forEach(value => {
+           this._kalturaUserAttributes.push({label: _appLocalization.get('applications.settings.authentication.edit.attributes.' + value) + ' (' + value + ')', value});
         });
-        this._buildForm();
     }
 
     ngOnInit() {
@@ -69,26 +66,36 @@ export class EditProfileComponent implements OnInit {
 
     private _prepare(): void {
         this._logger.info(`enter edit profile mode for existing profile`, {
-            id: this.profile.id,
-            name: this.profile.name
+            id: this._profile.id,
+            name: this._profile.name
         });
         this.loadProfileMetadata();
-        const loginUrl = this.profile.authStrategyConfig.entryPoint === '__placeholder__' ? '' : this.profile.authStrategyConfig.entryPoint;
-        const cert = this.profile.authStrategyConfig.cert === '__placeholder__' ? '' : this.profile.authStrategyConfig.cert;
-        this._editProfileForm.setValue({
-            name: this.profile.name,
-            description: this.profile.description,
-            provider: this.profile.providerType,
-            entity: this.profile.authStrategyConfig.issuer,
-            enableRequestSign: this.profile.authStrategyConfig.enableRequestSign,
-            enableAssertsDecryption: this.profile.authStrategyConfig.enableAssertsDecryption,
-            loginUrl,
-            logoutUrl: this.profile.authStrategyConfig.logoutUrl || '',
-            cert,
-            metadataUrl: this.profile.authStrategyConfig.idpMetadataUrl || '',
-        }, {emitEvent: false});
+        this._profile.authStrategyConfig.entryPoint = this._profile.authStrategyConfig.entryPoint === '__placeholder__' ? '' : this._profile.authStrategyConfig.entryPoint;
+        this._profile.authStrategyConfig.cert = this._profile.authStrategyConfig.cert === '__placeholder__' ? '' : this._profile.authStrategyConfig.cert;
+        if (!this._profile.userAttributeMappings) {
+            this.userAttributeMappings = [{idpAttribute: '', kalturaAttribute: 'Core_User_Email'}];
+        } else {
+            let emailAttributeFound = false;
+            Object.keys(this._profile.userAttributeMappings).forEach(idpAttribute => {
+                this.userAttributeMappings.push({idpAttribute, kalturaAttribute: this._profile.userAttributeMappings[idpAttribute]});
+                if (this._profile.userAttributeMappings[idpAttribute] === 'Core_User_Email') {
+                    emailAttributeFound = true;
+                }
+            });
+            if (!emailAttributeFound) {
+                this.userAttributeMappings.unshift({idpAttribute: '', kalturaAttribute: 'Core_User_Email'});
+            }
+        }
     }
 
+    public validate(value, key) {
+        if (key === 'entity') {
+            this.entityRequiredError = value.length === 0;
+        }
+        if (key === 'name') {
+            this.nameRequiredError = value.length === 0;
+        }
+    }
     private getFromMetadata(metadata: string, searchTerm: string): string {
         let res = '';
         if (metadata.indexOf(searchTerm) > -1) {
@@ -103,11 +110,11 @@ export class EditProfileComponent implements OnInit {
     }
     private loadProfileMetadata(): void {
         this.metadataLoading = true;
-        this._profilesService.loadProfileMetadata(this.profile.id).subscribe(
+        this._profilesService.loadProfileMetadata(this._profile.id).subscribe(
             result => {
                 this.metadataLoading = false;
-                this.certificate = this._enableRequestSignField.value ? this.getFromMetadata(result, 'use="signing"') : '';
-                this.encryptionKey = this._enableAssertsDecryptionField.value ? this.getFromMetadata(result, 'use="encryption"') : '';
+                this.certificate = this._profile.authStrategyConfig.enableRequestSign ? this.getFromMetadata(result, 'use="signing"') : '';
+                this.encryptionKey = this._profile.authStrategyConfig.enableAssertsDecryption ? this.getFromMetadata(result, 'use="encryption"') : '';
             },
             error => {
                 this.metadataLoading = false;
@@ -115,74 +122,22 @@ export class EditProfileComponent implements OnInit {
             }
         );
     }
-    private _buildForm(): void {
-        this._editProfileForm = this._fb.group({
-            name: ['', Validators.required],
-            description: [''],
-            provider: [''],
-            entity: ['', Validators.required],
-            enableRequestSign: false,
-            enableAssertsDecryption: false,
-            loginUrl: [''],
-            logoutUrl: [''],
-            cert: [''],
-            metadataUrl: [''],
-        });
-
-        this._nameField = this._editProfileForm.controls['name'];
-        this._descriptionField = this._editProfileForm.controls['description'];
-        this._providerField = this._editProfileForm.controls['provider'];
-        this._entityField = this._editProfileForm.controls['entity'];
-        this._enableRequestSignField = this._editProfileForm.controls['enableRequestSign'];
-        this._enableAssertsDecryptionField = this._editProfileForm.controls['enableAssertsDecryption'];
-        this._loginUrlField = this._editProfileForm.controls['loginUrl'];
-        this._logoutUrlField = this._editProfileForm.controls['logoutUrl'];
-        this._certField = this._editProfileForm.controls['cert'];
-        this._metadataUrlField = this._editProfileForm.controls['metadataUrl'];
-    }
-
-    private _markFormFieldsAsTouched() {
-        for (const controlName in this._editProfileForm.controls) {
-            if (this._editProfileForm.controls.hasOwnProperty(controlName)) {
-                this._editProfileForm.get(controlName).markAsTouched();
-                this._editProfileForm.get(controlName).updateValueAndValidity();
-            }
-        }
-        this._editProfileForm.updateValueAndValidity();
-    }
-
-    private _markFormFieldsAsPristine() {
-        for (const controlName in this._editProfileForm.controls) {
-            if (this._editProfileForm.controls.hasOwnProperty(controlName)) {
-                this._editProfileForm.get(controlName).markAsPristine();
-                this._editProfileForm.get(controlName).updateValueAndValidity();
-            }
-        }
-        this._editProfileForm.updateValueAndValidity();
-    }
 
     public _updateProfile(): void {
         this._blockerMessage = null;
-
         this._logger.info(`send updated profile to the server`);
 
-        const {name, description, provider, entity, enableRequestSign, enableAssertsDecryption, loginUrl, logoutUrl, cert, metadataUrl} = this._editProfileForm.value;
-        const updatedProfile = Object.assign(this.profile, {
-            name,
-            description,
-            providerType: provider,
-            authStrategyConfig: Object.assign(this.profile.authStrategyConfig, {
-                issuer: entity,
-                enableRequestSign,
-                enableAssertsDecryption,
-                entryPoint: loginUrl.length ? loginUrl: '__placeholder__',
-                logoutUrl,
-                cert: cert.length ? cert : '__placeholder__',
-                idpMetadataUrl: metadataUrl
-            })
-        });
-
-        this._profilesService.updateProfile(updatedProfile)
+        this._profile.authStrategyConfig.entryPoint = this._profile.authStrategyConfig.entryPoint === '' ? '__placeholder__' : this._profile.authStrategyConfig.entryPoint;
+        this._profile.authStrategyConfig.cert = this._profile.authStrategyConfig.cert === '' ? '__placeholder__' : this._profile.authStrategyConfig.cert;
+        if (this.userAttributeMappings.length) {
+            this._profile.userAttributeMappings = {};
+            this.userAttributeMappings.forEach(attribute => {
+                if (attribute.idpAttribute.length && attribute.kalturaAttribute.length) {
+                    this._profile.userAttributeMappings[attribute.idpAttribute] = attribute.kalturaAttribute;
+                }
+            });
+        }
+        this._profilesService.updateProfile(this._profile)
             .pipe(tag('block-shell'))
             .subscribe(
                 (profile: AuthProfile) => {
@@ -216,13 +171,12 @@ export class EditProfileComponent implements OnInit {
 
     public _performAction(): void {
         this._logger.info(`handle save request by the user`);
-        if (!this._editProfileForm.valid) {
-            this._markFormFieldsAsTouched();
+        if (this.entityRequiredError || this.nameRequiredError) {
             this._logger.info(`abort action, profile has invalid data`);
             return;
         }
 
-        this._markFormFieldsAsPristine();
+        this.formPristine = true;
         this._updateProfile();
     }
 
@@ -232,35 +186,36 @@ export class EditProfileComponent implements OnInit {
 
     public downloadMetadata(action: string): void {
         if (this.metadataLoading) return;
-        const url = this._profilesService.getProfileMetadataUrl(this.profile.id);
+        const url = this._profilesService.getProfileMetadataUrl(this._profile.id);
         if (action === 'url') {
             this._browserService.openLink(url);
         } else {
-            this._browserService.download(url, `${this.profile.name}_metadata.xml`, 'text/xml');
+            this._browserService.download(url, `${this._profile.name}_metadata.xml`, 'text/xml');
         }
     }
 
     public generateKeys(): void {
+        this.formPristine = false;
         // we need to update the profile before generating PvKeys and before loading metadata
-        const {enableRequestSign, enableAssertsDecryption} = this._editProfileForm.value;
+        const enableRequestSign = this._profile.authStrategyConfig.enableRequestSign;
+        const enableAssertsDecryption = this._profile.authStrategyConfig.enableAssertsDecryption;
         if (!enableRequestSign && !enableAssertsDecryption) {
             this.certificate = '';
             this.encryptionKey = '';
             return; // cannot delete PvKeys from metadata so just clear fields and exit
         }
         this.metadataLoading = true;
-        const updatedProfile = Object.assign(
-            this.profile,
-            {authStrategyConfig: Object.assign(this.profile.authStrategyConfig, {enableRequestSign, enableAssertsDecryption})
-        });
-        this._profilesService.updateProfile(updatedProfile)
+        this._originalProfile.authStrategyConfig.enableRequestSign = enableRequestSign;
+        this._originalProfile.authStrategyConfig.enableAssertsDecryption = enableAssertsDecryption;
+        this._profilesService.updateProfile(this._originalProfile)
             .subscribe(
                 (profile: AuthProfile) => {
                     if (profile.objectType === "KalturaAPIException") { // error handling
                         console.error(profile);
                         return;
                     }
-                    this._profilesService.generatePvKeys(this.profile.id, this._enableRequestSignField.value, this._enableAssertsDecryptionField.value).subscribe(
+                    this._originalProfile = JSON.parse(JSON.stringify(profile));
+                    this._profilesService.generatePvKeys(this._profile.id, enableRequestSign, enableAssertsDecryption).subscribe(
                         success => {
                                 this.onRefresh.emit();
                                 setTimeout(() => {
@@ -278,5 +233,15 @@ export class EditProfileComponent implements OnInit {
                     this.metadataLoading = false;
                 }
             );
+    }
+
+    public addAttribute(): void {
+        this.formPristine = false;
+        this.userAttributeMappings.push({idpAttribute: '', kalturaAttribute: ''});
+    }
+
+    public removeAttribute(index): void {
+        this.formPristine = false;
+        this.userAttributeMappings.splice(index, 1);
     }
 }

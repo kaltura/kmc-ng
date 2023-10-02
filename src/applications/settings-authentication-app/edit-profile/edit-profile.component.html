@@ -19,14 +19,14 @@
               <span class="link" (click)="openHelp()">{{'applications.settings.authentication.new.docLink' | translate}}</span>
           </div>
 
-        <form class="kProfileForm" [formGroup]="_editProfileForm" novalidate>
+        <div class="kProfileForm">
 
           <div class="kRow">
             <span class="kLabel required">{{'applications.settings.authentication.name' | translate}}</span>
-            <div class="kRequired" [class.kHasError]="_nameField.invalid && _nameField.touched">*</div>
+            <div class="kRequired" [class.kHasError]="nameRequiredError">*</div>
             <div>
-              <input class="kControl" pInputText [formControl]="_nameField" [maxlength]="255" [class.kHasError]="_nameField.invalid && _nameField.touched">
-              <div *ngIf="_nameField.hasError('required') && _nameField.touched" class="kError">
+              <input class="kControl" pInputText [(ngModel)]="_profile.name" [maxlength]="255" [class.kHasError]="nameRequiredError"  (ngModelChange)="formPristine=false; validate($event, 'name')">
+              <div *ngIf="nameRequiredError" class="kError">
                 {{'applications.administration.role.errors.required' | translate}}
               </div>
             </div>
@@ -34,12 +34,12 @@
 
           <div class="kRow">
               <span class="kLabel">{{'applications.administration.role.description' | translate}}</span>
-              <textarea class="kControl" [maxlength]="512" pInputTextarea [formControl]="_descriptionField"></textArea>
+              <textarea class="kControl" [maxlength]="512" pInputTextarea [(ngModel)]="_profile.description" (ngModelChange)="formPristine=false"></textArea>
           </div>
 
             <div class="kRow divider">
                 <span class="kLabel">{{'applications.settings.authentication.new.provider' | translate}}</span>
-                <p-dropdown class="kControl" [formControl]="_providerField" appendTo="body" [options]="_providerTypes"></p-dropdown>
+                <p-dropdown class="kControl" [(ngModel)]="_profile.providerType" appendTo="body" [options]="_providerTypes" (ngModelChange)="formPristine=false"></p-dropdown>
             </div>
 
             <span class="kSubTitle">{{'applications.settings.authentication.edit.sps' | translate}}</span>
@@ -71,10 +71,10 @@
                         <span>{{'applications.settings.authentication.edit.entity_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
-                <div class="kRequired" [class.kHasError]="_entityField.invalid && _entityField.touched">*</div>
+                <div class="kRequired" [class.kHasError]="entityRequiredError">*</div>
                 <div>
-                    <input class="kControl" pInputText [formControl]="_entityField" [maxlength]="255" [class.kHasError]="_entityField.invalid && _entityField.touched">
-                    <div *ngIf="_entityField.hasError('required') && _entityField.touched" class="kError">
+                    <input class="kControl" pInputText [(ngModel)]="_profile.authStrategyConfig.issuer" [maxlength]="255" [class.kHasError]="entityRequiredError" (ngModelChange)="formPristine=false; validate($event, 'entity')">
+                    <div *ngIf="entityRequiredError" class="kError">
                         {{'applications.administration.role.errors.required' | translate}}
                     </div>
                 </div>
@@ -87,7 +87,7 @@
                         <span>{{'applications.settings.authentication.edit.sign_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
-                <div><p-checkbox [formControl]="_enableRequestSignField" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="generateKeys()"></p-checkbox></div>
+                <div><p-checkbox [(ngModel)]="_profile.authStrategyConfig.enableRequestSign" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="generateKeys()"></p-checkbox></div>
             </div>
 
             <div class="kRow">
@@ -103,7 +103,7 @@
                         <span>{{'applications.settings.authentication.edit.encryption_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
-                <div><p-checkbox [formControl]="_enableAssertsDecryptionField" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="generateKeys()"></p-checkbox></div>
+                <div><p-checkbox [(ngModel)]="_profile.authStrategyConfig.enableAssertsDecryption" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="generateKeys()"></p-checkbox></div>
             </div>
 
             <div class="kRow">
@@ -126,7 +126,7 @@
                 </div>
                 <div class="kRequired">*</div>
                 <div>
-                    <input class="kControl" pInputText [formControl]="_loginUrlField">
+                    <input class="kControl" pInputText [(ngModel)]="_profile.authStrategyConfig.entryPoint" (ngModelChange)="formPristine=false">
                 </div>
             </div>
 
@@ -138,7 +138,7 @@
                     </kInputHelper>
                 </div>
                 <div>
-                    <input class="kControl" pInputText [formControl]="_logoutUrlField">
+                    <input class="kControl" pInputText [(ngModel)]="_profile.authStrategyConfig.logoutUrl" (ngModelChange)="formPristine=false">
                 </div>
             </div>
 
@@ -151,7 +151,7 @@
                 </div>
                 <div class="kRequired">*</div>
                 <div>
-                    <textarea class="kControl" pInputTextarea [formControl]="_certField"></textArea>
+                    <textarea class="kControl" pInputTextarea [(ngModel)]="_profile.authStrategyConfig.cert" (ngModelChange)="formPristine=false"></textArea>
                 </div>
             </div>
 
@@ -163,7 +163,7 @@
                     </kInputHelper>
                 </div>
                 <div>
-                    <input class="kControl" pInputText [formControl]="_metadataUrlField">
+                    <input class="kControl" pInputText [(ngModel)]="_profile.authStrategyConfig.idpMetadataUrl" (ngModelChange)="formPristine=false">
                 </div>
             </div>
 
@@ -171,7 +171,24 @@
             <div class="kRow">
                 <span class="gap">{{'applications.settings.authentication.edit.attributes_tt' | translate}}</span>
             </div>
-        </form>
+
+            <div class="kAttributeRow">
+                <span class="title">{{'applications.settings.authentication.edit.provider' | translate}}</span>
+                <span class="title">{{'applications.settings.authentication.edit.kaltura' | translate}}</span>
+            </div>
+            <div class="kAttributeRow" *ngFor="let attribute of userAttributeMappings; let index = index">
+                <div class="kRequired" *ngIf="attribute.kalturaAttribute==='Core_User_Email'">*</div>
+                <input class="kControl idp" [class.required]="attribute.kalturaAttribute==='Core_User_Email'" pInputText [(ngModel)]="attribute.idpAttribute" (ngModelChange)="formPristine=false">
+                <span class="kaltura" *ngIf="attribute.kalturaAttribute==='Core_User_Email'">{{attribute.kalturaAttribute}}</span>
+                <kInputHelper *ngIf="attribute.kalturaAttribute==='Core_User_Email'" [trigger]="'click'">
+                    <span>{{'applications.settings.authentication.edit.email_tt' | translate}}</span>
+                </kInputHelper>
+                <p-dropdown *ngIf="attribute.kalturaAttribute!=='Core_User_Email'" class="kControl" [(ngModel)]="attribute.kalturaAttribute" appendTo="body" [options]="_kalturaUserAttributes" (ngModelChange)="formPristine=false" [placeholder]="'applications.settings.authentication.edit.attributePh' | translate"></p-dropdown>
+                <i *ngIf="attribute.kalturaAttribute!=='Core_User_Email'" class="kIconremove kRemove" [kTooltip]="'applications.settings.authentication.edit.remove' | translate" (click)="removeAttribute(index)"></i>
+            </div>
+            <button type="button" class="kButtonDefault" pButton icon="kIconplus" label="{{'applications.settings.authentication.edit.add' | translate}}" (click)="addAttribute()"></button>
+
+        </div>
       </div>
     </div>
   </div>
