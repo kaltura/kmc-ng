@@ -27,6 +27,14 @@ export class EditProfileComponent implements OnInit {
     private _originalProfile: AuthProfile; // used for partial updates
     public _profile: AuthProfile;
 
+    public _ssoUrl = `${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-manager/saml/ac`;
+    public metadataLoading = false;
+    public showAdvancedSettings = false;
+    public certificate = '';
+    public encryptionKey = '';
+    public userAttributeMappings: {idpAttribute: string, kalturaAttribute: string, isKalturaAttribute: boolean}[] = [];
+
+    // dropdown providers
     public _providerTypes: Array<{ value: string, label: string }> = [
         {label: 'Azure', value: 'azure'},
         {label: 'Okta', value: 'okta'},
@@ -36,21 +44,27 @@ export class EditProfileComponent implements OnInit {
     ];
     private kalturaAttributes = ['Core_User_FirstName', 'Core_User_LastName', 'Core_User_Email', 'Core_User_ScreenName', 'Core_User_DateOfBirth', 'Core_User_Gender', 'Core_User_ThumbnailUrl', 'Core_User_Description', 'Core_User_Title', 'Core_User_Country', 'Core_User_Company', 'Core_User_State', 'Core_User_City', 'Core_User_Zip'];
     public _kalturaUserAttributes: Array<{ value: string, label: string }> = [];
-    public _ssoUrl = `${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-manager/saml/ac`;
-    public metadataLoading = false;
-    public certificate = '';
-    public encryptionKey = '';
-    public userAttributeMappings: {idpAttribute: string, kalturaAttribute: string, isKalturaAttribute: boolean}[] = [];
+    private formats = [
+        "urn:oasis:names:tc:SAML:2.0:nameid-format:emailAddress",
+        "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
+        "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
+        "urn:oasis:names:tc:SAML:2.0:nameid-format:X509SubjectName",
+        "urn:oasis:names:tc:SAML:2.0:nameid-format:WindowsDomainQualifiedName",
+        "urn:oasis:names:tc:SAML:2.0:nameid-format:kerberos",
+        "urn:oasis:names:tc:SAML:2.0:nameid-format:entity",
+        "urn:oasis:names:tc:SAML:2.0:nameid-format:encrypted"
+    ]
+    public _formatOptions: Array<{ value: string, label: string }> = [];
 
+    // form validation variables
     public formPristine = true;
     public nameRequiredError = false;
     public entityRequiredError = false;
-
-    public _blockerMessage: AreaBlockerMessage = null;
-
     public get _saveDisabled(): boolean {
         return this.formPristine || this.entityRequiredError || this.nameRequiredError;
     }
+
+    public _blockerMessage: AreaBlockerMessage = null;
 
     constructor(private _logger: KalturaLogger,
                 private _profilesService: ProfilesStoreService,
@@ -58,6 +72,9 @@ export class EditProfileComponent implements OnInit {
                 private _appLocalization: AppLocalization) {
         this.kalturaAttributes.forEach(value => {
            this._kalturaUserAttributes.push({label: _appLocalization.get('applications.settings.authentication.edit.attributes.' + value) + ' (' + value + ')', value});
+        });
+        this.formats.forEach(format => {
+           this._formatOptions.push({label: format, value: format});
         });
     }
 
@@ -71,32 +88,32 @@ export class EditProfileComponent implements OnInit {
             name: this._profile.name
         });
         this.loadProfileMetadata();
+        // prepare form - replace placeholders with empty strings
         this._profile.authStrategyConfig.entryPoint = this._profile.authStrategyConfig.entryPoint === '__placeholder__' ? '' : this._profile.authStrategyConfig.entryPoint;
         this._profile.authStrategyConfig.cert = this._profile.authStrategyConfig.cert === '__placeholder__' ? '' : this._profile.authStrategyConfig.cert;
-        if (!this._profile.userAttributeMappings) {
+        // prepare form - add email attribute as first attribute if no attributes exist or if email attribute is not found
+        if (!this._profile.userAttributeMappings) { // no attributes exist - add email attribute
             this.userAttributeMappings = [{idpAttribute: '', kalturaAttribute: 'Core_User_Email', isKalturaAttribute: true}];
         } else {
-            let emailAttributeFound = false;
-            Object.keys(this._profile.userAttributeMappings).forEach(idpAttribute => {
+            // fill the userAttributeMappings used in the template and find the email field index if exists
+            let emailAttributeIndex = -1;
+            Object.keys(this._profile.userAttributeMappings).forEach((idpAttribute, index) => {
                 this.userAttributeMappings.push({idpAttribute, kalturaAttribute: this._profile.userAttributeMappings[idpAttribute], isKalturaAttribute: this.kalturaAttributes.indexOf(this._profile.userAttributeMappings[idpAttribute]) > -1});
                 if (this._profile.userAttributeMappings[idpAttribute] === 'Core_User_Email') {
-                    emailAttributeFound = true;
+                    emailAttributeIndex = index;
                 }
             });
-            if (!emailAttributeFound) {
+            if (emailAttributeIndex === -1) { // no email attribute found - add as first attribute
                 this.userAttributeMappings.unshift({idpAttribute: '', kalturaAttribute: 'Core_User_Email', isKalturaAttribute: true});
+            } else if (emailAttributeIndex > 0) { // email attribute found - move to be first if it's not first already
+                this.userAttributeMappings.unshift(this.userAttributeMappings.splice(emailAttributeIndex, 1)[0]);
             }
+            // sort attributes to display kaltura attributes first and custom attributes at the end
+            this.userAttributeMappings.sort((a,b) => (a.isKalturaAttribute > b.isKalturaAttribute) ? -1 : ((b.isKalturaAttribute > a.isKalturaAttribute) ? 1 : 0))
         }
     }
 
-    public validate(value, key) {
-        if (key === 'entity') {
-            this.entityRequiredError = value.length === 0;
-        }
-        if (key === 'name') {
-            this.nameRequiredError = value.length === 0;
-        }
-    }
+    // get specific node value from metadata xml by search terms
     private getFromMetadata(metadata: string, searchTerm: string): string {
         let res = '';
         if (metadata.indexOf(searchTerm) > -1) {
@@ -109,8 +126,10 @@ export class EditProfileComponent implements OnInit {
         }
         return res;
     }
+
+    // load the metadata XML
     private loadProfileMetadata(): void {
-        this.metadataLoading = true;
+        this.metadataLoading = true; // used to display the loading animation in the form
         this._profilesService.loadProfileMetadata(this._profile.id).subscribe(
             result => {
                 this.metadataLoading = false;
@@ -127,7 +146,7 @@ export class EditProfileComponent implements OnInit {
     public _updateProfile(): void {
         this._blockerMessage = null;
         this._logger.info(`send updated profile to the server`);
-
+        this.formPristine = true;
         this._profile.authStrategyConfig.entryPoint = this._profile.authStrategyConfig.entryPoint === '' ? '__placeholder__' : this._profile.authStrategyConfig.entryPoint;
         this._profile.authStrategyConfig.cert = this._profile.authStrategyConfig.cert === '' ? '__placeholder__' : this._profile.authStrategyConfig.cert;
         if (this.userAttributeMappings.length) {
@@ -155,6 +174,15 @@ export class EditProfileComponent implements OnInit {
             );
     }
 
+    public validate(value, key) {
+        if (key === 'entity') {
+            this.entityRequiredError = value.length === 0;
+        }
+        if (key === 'name') {
+            this.nameRequiredError = value.length === 0;
+        }
+    }
+
     private displayServerError = error => {
         this._blockerMessage = new AreaBlockerMessage({
             message: error.message || 'Error preforming operation',
@@ -170,17 +198,6 @@ export class EditProfileComponent implements OnInit {
         });
     }
 
-    public _performAction(): void {
-        this._logger.info(`handle save request by the user`);
-        if (this.entityRequiredError || this.nameRequiredError) {
-            this._logger.info(`abort action, profile has invalid data`);
-            return;
-        }
-
-        this.formPristine = true;
-        this._updateProfile();
-    }
-
     public openHelp(): void {
         // TODO: open help link
     }
@@ -188,9 +205,9 @@ export class EditProfileComponent implements OnInit {
     public downloadMetadata(action: string): void {
         if (this.metadataLoading) return;
         const url = this._profilesService.getProfileMetadataUrl(this._profile.id);
-        if (action === 'url') {
+        if (action === 'url') { // open URL in a new tab
             this._browserService.openLink(url);
-        } else {
+        } else { // download metadata as xml
             this._browserService.download(url, `${this._profile.name}_metadata.xml`, 'text/xml');
         }
     }
@@ -244,5 +261,24 @@ export class EditProfileComponent implements OnInit {
     public removeAttribute(index): void {
         this.formPristine = false;
         this.userAttributeMappings.splice(index, 1);
+    }
+
+    public _cancel(): void {
+        this._logger.info(`handle cancel editing by the user, show confirmation`);
+        if (!this.formPristine) {
+            this._browserService.confirm({
+                header: this._appLocalization.get('applications.settings.metadata.discardChanges'),
+                message: this._appLocalization.get('applications.settings.metadata.discardWarning'),
+                accept: () => {
+                    this._logger.info(`user confirmed, discard changes`);
+                    this.parentPopupWidget.close();
+                },
+                reject: () => {
+                    this._logger.info(`user did't confirm, staying in the popup`);
+                }
+            });
+        } else {
+            this.parentPopupWidget.close();
+        }
     }
 }

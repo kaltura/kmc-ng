@@ -2762,7 +2762,21 @@
                     "addCustom": "Add custom attribute",
                     "remove": "Remove attribute",
                     "attributePh": "Select Kaltura attribute",
-                    "email_tt": "This will act as your unique identifier. If your unique identifier shouldn’t be email, contact your Kaltura admin."
+                    "email_tt": "This will act as your unique identifier. If your unique identifier shouldn’t be email, contact your Kaltura admin.",
+                    "show": "Show advanced settings",
+                    "hide": "Hide advanced settings",
+                    "group": "Group attribute statements",
+                    "group_tt": "Map the providers attributes to your Kaltura schema",
+                    "groupName": "Group attribute name",
+                    "groupName_tt": "Name of the attribute that contains the user groups as it would appear in the SAML assertion.",
+                    "createGroups": "Create new groups",
+                    "createGroups_tt": "Create groups in Kaltura that exist in the IdP and do not exist in Kaltura during the sync.",
+                    "removeGroups": "Remove from existing groups",
+                    "removeGroups_tt": "Remove users that were removed from the IdP group from the Kaltura group during the sync.",
+                    "additional": "Additional settings",
+                    "format": "Identifier format response",
+                    "format_tt": "NameID format as it will appear in the SAML request.",
+                    "formatPh": "Select identifier format response"
                 },
                 "new": {
                     "doc": "For instructions on how to configure a new SSO profile visit our",

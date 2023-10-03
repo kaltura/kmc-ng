@@ -23,6 +23,7 @@ export type AuthStrategyConfig = {
     idpMetadataUrl: string;
     requestIdExpirationPeriodMs: number;
     signatureAlgorithm: string;
+    identifierFormat: string;
     validateInResponseTo: boolean;
 }
 
