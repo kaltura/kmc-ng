@@ -196,9 +196,6 @@
 
         <div class="kContainer" *ngIf="showAdvancedSettings">
             <span class="kSubTitle">{{'applications.settings.authentication.edit.group' | translate}}</span>
-            <div class="kRow">
-                <span class="gap">{{'applications.settings.authentication.edit.group_tt' | translate}}</span>
-            </div>
 
             <div class="kRow">
                 <div class="labelWithHelpTip">
@@ -230,6 +227,26 @@
                     </kInputHelper>
                 </div>
                 <div><p-checkbox [(ngModel)]="_profile.removeFromExistingGroups" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="generateKeys()"></p-checkbox></div>
+            </div>
+
+            <span class="kSmallTitle">{{'applications.settings.authentication.edit.groupMapping' | translate}}</span>
+            <div class="kRow center">
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.syncGroups' | translate}}</span>
+                    <kInputHelper [trigger]="'click'">
+                        <span>{{'applications.settings.authentication.edit.syncGroups_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div><p-checkbox [(ngModel)]="_profile.userGroupsSyncAll" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="generateKeys()"></p-checkbox></div>
+            </div>
+            <div class="kContainer" *ngIf="!_profile.userGroupsSyncAll">
+                <div class="kRow">
+                    <span class="gap">{{'applications.settings.authentication.edit.group_tt' | translate}}</span>
+                </div>
+                <div class="kAttributeRow">
+                    <span class="title">{{'applications.settings.authentication.edit.provider' | translate}}</span>
+                    <span class="title">{{'applications.settings.authentication.edit.kalturaName' | translate}}</span>
+                </div>
             </div>
 
             <span class="kSubTitle">{{'applications.settings.authentication.edit.additional' | translate}}</span>
