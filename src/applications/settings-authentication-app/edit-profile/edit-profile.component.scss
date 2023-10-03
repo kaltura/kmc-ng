@@ -49,6 +49,9 @@
             overflow-y: auto;
             max-height: calc(100vh - 158px);
             font-size: 15px;
+            &.noScroll {
+                overflow-y: hidden;
+            }
             .kSubTitleContainer {
                 display: flex;
                 align-items: center;
@@ -186,6 +189,7 @@
         }
         .title {
             width: 400px;
+            font-weight: 700;
         }
         .kRequired {
             width: 20px;

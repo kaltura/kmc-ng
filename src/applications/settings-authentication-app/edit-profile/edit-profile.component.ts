@@ -33,6 +33,7 @@ export class EditProfileComponent implements OnInit {
     public certificate = '';
     public encryptionKey = '';
     public userAttributeMappings: {idpAttribute: string, kalturaAttribute: string, isKalturaAttribute: boolean}[] = [];
+    public groupAttributeMappings: {idpAttribute: string, kalturaAttribute: string}[] = [];
 
     // dropdown providers
     public _providerTypes: Array<{ value: string, label: string }> = [
@@ -44,16 +45,6 @@ export class EditProfileComponent implements OnInit {
     ];
     private kalturaAttributes = ['Core_User_FirstName', 'Core_User_LastName', 'Core_User_Email', 'Core_User_ScreenName', 'Core_User_DateOfBirth', 'Core_User_Gender', 'Core_User_ThumbnailUrl', 'Core_User_Description', 'Core_User_Title', 'Core_User_Country', 'Core_User_Company', 'Core_User_State', 'Core_User_City', 'Core_User_Zip'];
     public _kalturaUserAttributes: Array<{ value: string, label: string }> = [];
-    private formats = [
-        "urn:oasis:names:tc:SAML:2.0:nameid-format:emailAddress",
-        "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
-        "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
-        "urn:oasis:names:tc:SAML:2.0:nameid-format:X509SubjectName",
-        "urn:oasis:names:tc:SAML:2.0:nameid-format:WindowsDomainQualifiedName",
-        "urn:oasis:names:tc:SAML:2.0:nameid-format:kerberos",
-        "urn:oasis:names:tc:SAML:2.0:nameid-format:entity",
-        "urn:oasis:names:tc:SAML:2.0:nameid-format:encrypted"
-    ]
     public _formatOptions: Array<{ value: string, label: string }> = [];
 
     // form validation variables
@@ -73,8 +64,9 @@ export class EditProfileComponent implements OnInit {
         this.kalturaAttributes.forEach(value => {
            this._kalturaUserAttributes.push({label: _appLocalization.get('applications.settings.authentication.edit.attributes.' + value) + ' (' + value + ')', value});
         });
-        this.formats.forEach(format => {
-           this._formatOptions.push({label: format, value: format});
+        ["emailAddress", "transient", "persistent", "X509SubjectName", "WindowsDomainQualifiedName", "kerberos", "entity", "encrypted"].forEach(key => {
+           const format = `urn:oasis:names:tc:SAML:2.0:nameid-format:${key}`;
+           this._formatOptions.push({label: format, value: format}); // fill the formats array
         });
     }
 
@@ -146,9 +138,11 @@ export class EditProfileComponent implements OnInit {
     public _updateProfile(): void {
         this._blockerMessage = null;
         this._logger.info(`send updated profile to the server`);
-        this.formPristine = true;
+        this.formPristine = true; // mark form as pristine to prevent multiple "Save" button clicks
+        // replace placeholder for required empty fields
         this._profile.authStrategyConfig.entryPoint = this._profile.authStrategyConfig.entryPoint === '' ? '__placeholder__' : this._profile.authStrategyConfig.entryPoint;
         this._profile.authStrategyConfig.cert = this._profile.authStrategyConfig.cert === '' ? '__placeholder__' : this._profile.authStrategyConfig.cert;
+        // convert userAttributeMappings array to profile userAttributeMappings object
         if (this.userAttributeMappings.length) {
             this._profile.userAttributeMappings = {};
             this.userAttributeMappings.forEach(attribute => {
@@ -174,6 +168,7 @@ export class EditProfileComponent implements OnInit {
             );
     }
 
+    // required fields validation
     public validate(value, key) {
         if (key === 'entity') {
             this.entityRequiredError = value.length === 0;
@@ -223,6 +218,7 @@ export class EditProfileComponent implements OnInit {
             return; // cannot delete PvKeys from metadata so just clear fields and exit
         }
         this.metadataLoading = true;
+        // we use the original profile for a partial update of only enableRequestSign and enableAssertsDecryption keep all other fields with thier original values
         this._originalProfile.authStrategyConfig.enableRequestSign = enableRequestSign;
         this._originalProfile.authStrategyConfig.enableAssertsDecryption = enableAssertsDecryption;
         this._profilesService.updateProfile(this._originalProfile)
@@ -232,7 +228,7 @@ export class EditProfileComponent implements OnInit {
                         console.error(profile);
                         return;
                     }
-                    this._originalProfile = JSON.parse(JSON.stringify(profile));
+                    this._originalProfile = JSON.parse(JSON.stringify(profile)); // update original profile value with the saved profile value
                     this._profilesService.generatePvKeys(this._profile.id, enableRequestSign, enableAssertsDecryption).subscribe(
                         success => {
                                 this.onRefresh.emit();
@@ -261,6 +257,16 @@ export class EditProfileComponent implements OnInit {
     public removeAttribute(index): void {
         this.formPristine = false;
         this.userAttributeMappings.splice(index, 1);
+    }
+
+    public addGroup(): void {
+        this.formPristine = false;
+        this.groupAttributeMappings.push({idpAttribute: '', kalturaAttribute: ''});
+    }
+
+    public removeGroup(index): void {
+        this.formPristine = false;
+        this.groupAttributeMappings.splice(index, 1);
     }
 
     public _cancel(): void {

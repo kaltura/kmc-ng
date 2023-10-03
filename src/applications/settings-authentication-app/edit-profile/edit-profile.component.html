@@ -194,7 +194,7 @@
             </div>
 
 
-        <div class="kContainer" *ngIf="showAdvancedSettings">
+        <div class="kContainer noScroll" *ngIf="showAdvancedSettings">
             <span class="kSubTitle">{{'applications.settings.authentication.edit.group' | translate}}</span>
 
             <div class="kRow">
@@ -239,13 +239,17 @@
                 </div>
                 <div><p-checkbox [(ngModel)]="_profile.userGroupsSyncAll" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="generateKeys()"></p-checkbox></div>
             </div>
-            <div class="kContainer" *ngIf="!_profile.userGroupsSyncAll">
+            <div class="kContainer noScroll" *ngIf="!_profile.userGroupsSyncAll">
                 <div class="kRow">
                     <span class="gap">{{'applications.settings.authentication.edit.group_tt' | translate}}</span>
                 </div>
                 <div class="kAttributeRow">
                     <span class="title">{{'applications.settings.authentication.edit.provider' | translate}}</span>
                     <span class="title">{{'applications.settings.authentication.edit.kalturaName' | translate}}</span>
+                </div>
+
+                <div class="kAttributeRow">
+                    <button type="button" class="kButtonDefault" pButton icon="kIconplus" label="{{'applications.settings.authentication.edit.addGroup' | translate}}" (click)="addGroup()"></button>
                 </div>
             </div>
 

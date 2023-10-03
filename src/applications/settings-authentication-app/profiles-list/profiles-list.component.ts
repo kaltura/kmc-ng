@@ -190,7 +190,10 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
 
   public onProfileCreated(profile: AuthProfile): void {
       this._currentEditProfile = profile;
-      this.editPopup.open();
+      setTimeout(() => {
+          this.editPopup.open(); // use a timeout to allow screen refresh and prevent page scroll
+      });
+
       this._refresh();
   }
 
