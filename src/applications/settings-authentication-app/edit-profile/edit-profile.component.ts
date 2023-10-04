@@ -231,13 +231,13 @@ export class EditProfileComponent implements OnInit {
     }
 
     public generateKeys(): void {
-        this.formPristine = false;
         // we need to update the profile before generating PvKeys and before loading metadata
         const enableRequestSign = this._profile.authStrategyConfig.enableRequestSign;
         const enableAssertsDecryption = this._profile.authStrategyConfig.enableAssertsDecryption;
         if (!enableRequestSign && !enableAssertsDecryption) {
             this.certificate = '';
             this.encryptionKey = '';
+            this.formPristine = false; // mark form as changed since we are not going to update the profile
             return; // cannot delete PvKeys from metadata so just clear fields and exit
         }
         this.metadataLoading = true;
