@@ -45,7 +45,7 @@ export type AuthProfile = {
     syncDelayTimeoutMin: number;
     updatedAt: Date;
     userAttributeMappings: any,
-    userGroupMappings: Record<string, string>,
+    userGroupMappings: any,
     userGroupsSyncAll: boolean;
     userIdAttribute: string;
     version: number;

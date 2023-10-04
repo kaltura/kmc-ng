@@ -123,7 +123,8 @@ import { serverConfig } from "config/server";
             issuer: adminProfile ? "kaltura-auth-admin" : "kaltura-auth",
             entryPoint: "__placeholder__",
             callbackUrl: `${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-manager/saml/ac`,
-            cert: "__placeholder__"
+            cert: "__placeholder__",
+            identifierFormat: "urn:oasis:names:tc:SAML:2.0:nameid-format:emailAddress"
         },
         ksPrivileges: "",
         userIdAttribute: "",

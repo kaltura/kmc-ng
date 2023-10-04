@@ -64,8 +64,8 @@ export class EditProfileComponent implements OnInit {
         this.kalturaAttributes.forEach(value => {
            this._kalturaUserAttributes.push({label: _appLocalization.get('applications.settings.authentication.edit.attributes.' + value) + ' (' + value + ')', value});
         });
-        ["emailAddress", "transient", "persistent", "X509SubjectName", "WindowsDomainQualifiedName", "kerberos", "entity", "encrypted"].forEach(key => {
-           const format = `urn:oasis:names:tc:SAML:2.0:nameid-format:${key}`;
+        ["emailAddress", "transient", "persistent", "X509SubjectName", "WindowsDomainQualifiedName", "kerberos", "entity", "encrypted", this._appLocalization.get('app.common.none')].forEach(key => {
+           const format = key === this._appLocalization.get('app.common.none') ? key : `urn:oasis:names:tc:SAML:2.0:nameid-format:${key}`;
            this._formatOptions.push({label: format, value: format}); // fill the formats array
         });
     }
@@ -102,6 +102,12 @@ export class EditProfileComponent implements OnInit {
             }
             // sort attributes to display kaltura attributes first and custom attributes at the end
             this.userAttributeMappings.sort((a,b) => (a.isKalturaAttribute > b.isKalturaAttribute) ? -1 : ((b.isKalturaAttribute > a.isKalturaAttribute) ? 1 : 0))
+        }
+        // fill group attributes mapping
+        if (this._profile.userGroupMappings) {
+            Object.keys(this._profile.userGroupMappings).forEach(idpAttribute => {
+                this.groupAttributeMappings.push({idpAttribute, kalturaAttribute: this._profile.userGroupMappings[idpAttribute]});
+            });
         }
     }
 
@@ -150,6 +156,23 @@ export class EditProfileComponent implements OnInit {
                     this._profile.userAttributeMappings[attribute.idpAttribute] = attribute.kalturaAttribute;
                 }
             });
+        } else {
+           this._profile.userAttributeMappings = {};
+        }
+        // convert groupAttributeMappings array to profile userGroupMappings object
+        if (this.groupAttributeMappings.length) {
+            this._profile.userGroupMappings = {};
+            this.groupAttributeMappings.forEach(attribute => {
+                if (attribute.idpAttribute.length && attribute.kalturaAttribute.length) {
+                    this._profile.userGroupMappings[attribute.idpAttribute] = attribute.kalturaAttribute;
+                }
+            });
+        } else {
+            this._profile.userGroupMappings ={};
+        }
+        // check if we need to remove authStrategyConfig identifierFormat field
+        if (this._profile.authStrategyConfig.identifierFormat === this._appLocalization.get('app.common.none')) {
+            delete this._profile.authStrategyConfig.identifierFormat;
         }
         this._profilesService.updateProfile(this._profile)
             .pipe(tag('block-shell'))

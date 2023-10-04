@@ -248,6 +248,12 @@
                     <span class="title">{{'applications.settings.authentication.edit.kalturaName' | translate}}</span>
                 </div>
 
+                <div class="kAttributeRow" *ngFor="let attribute of groupAttributeMappings; let index = index">
+                    <input class="kControl idp" pInputText [(ngModel)]="attribute.idpAttribute" (ngModelChange)="formPristine=false">
+                    <input class="kControl customAttribute" pInputText [(ngModel)]="attribute.kalturaAttribute" (ngModelChange)="formPristine=false">
+                    <i *ngIf="attribute.kalturaAttribute!=='Core_User_Email'" class="kIconremove kRemove" [kTooltip]="'applications.settings.authentication.edit.remove' | translate" (click)="removeGroup(index)"></i>
+                </div>
+
                 <div class="kAttributeRow">
                     <button type="button" class="kButtonDefault" pButton icon="kIconplus" label="{{'applications.settings.authentication.edit.addGroup' | translate}}" (click)="addGroup()"></button>
                 </div>
