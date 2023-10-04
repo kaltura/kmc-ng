@@ -13,7 +13,7 @@
                   (click)="_updateProfile()"></button>
         </div>
       </div>
-      <div class="kContainer" #scrollableContainer>
+      <div class="kContainer kMain" #scrollableContainer>
           <div class="doc">
               <span>{{'applications.settings.authentication.new.doc' | translate}}</span>
               <span class="link" (click)="openHelp()">{{'applications.settings.authentication.new.docLink' | translate}}</span>
@@ -70,12 +70,13 @@
                     </kInputHelper>
                 </div>
                 <div class="kRequired" [class.kHasError]="entityRequiredError">*</div>
-                <div>
+                <div class="gap">
                     <input class="kControl" pInputText [(ngModel)]="_profile.authStrategyConfig.issuer" [maxlength]="255" [class.kHasError]="entityRequiredError" (ngModelChange)="formPristine=false; validate($event, 'entity')">
                     <div *ngIf="entityRequiredError" class="kError">
                         {{'applications.administration.role.errors.required' | translate}}
                     </div>
                 </div>
+                <kCopyToClipboard class="kIcon" [text]="_profile.authStrategyConfig.issuer" [iconSwitchTimeout]="5000"></kCopyToClipboard>
             </div>
 
             <div class="kRow center">
@@ -85,7 +86,9 @@
                         <span>{{'applications.settings.authentication.edit.sign_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
-                <div><p-checkbox [(ngModel)]="_profile.authStrategyConfig.enableRequestSign" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="generateKeys()"></p-checkbox></div>
+                <div>
+                    <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.authStrategyConfig.enableRequestSign" (onChange)="confirmGenerateKeys('sign')"></p-inputSwitch>
+                </div>
             </div>
 
             <div class="kRow">
@@ -101,7 +104,9 @@
                         <span>{{'applications.settings.authentication.edit.encryption_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
-                <div><p-checkbox [(ngModel)]="_profile.authStrategyConfig.enableAssertsDecryption" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="generateKeys()"></p-checkbox></div>
+                <div>
+                    <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.authStrategyConfig.enableAssertsDecryption" (onChange)="confirmGenerateKeys('encryption')"></p-inputSwitch>
+                </div>
             </div>
 
             <div class="kRow">
@@ -175,8 +180,7 @@
                 <span class="title">{{'applications.settings.authentication.edit.kaltura' | translate}}</span>
             </div>
             <div class="kAttributeRow" *ngFor="let attribute of userAttributeMappings; let index = index">
-                <div class="kRequired" *ngIf="attribute.kalturaAttribute==='Core_User_Email'">*</div>
-                <input class="kControl idp" [class.required]="attribute.kalturaAttribute==='Core_User_Email'" pInputText [(ngModel)]="attribute.idpAttribute" (ngModelChange)="formPristine=false">
+                <input class="kControl idp" pInputText [(ngModel)]="attribute.idpAttribute" (ngModelChange)="formPristine=false">
                 <span class="kaltura" *ngIf="attribute.kalturaAttribute==='Core_User_Email'">{{attribute.kalturaAttribute}}</span>
                 <kInputHelper *ngIf="attribute.kalturaAttribute==='Core_User_Email'" [trigger]="'click'">
                     <span>{{'applications.settings.authentication.edit.email_tt' | translate}}</span>
@@ -216,7 +220,9 @@
                         <span>{{'applications.settings.authentication.edit.createGroups_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
-                <div><p-checkbox [(ngModel)]="_profile.createNewGroups" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="generateKeys()"></p-checkbox></div>
+                <div>
+                    <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.createNewGroups" (onChange)="formPristine=false"></p-inputSwitch>
+                </div>
             </div>
 
             <div class="kRow center">
@@ -226,7 +232,9 @@
                         <span>{{'applications.settings.authentication.edit.removeGroups_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
-                <div><p-checkbox [(ngModel)]="_profile.removeFromExistingGroups" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="generateKeys()"></p-checkbox></div>
+                <div>
+                    <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.removeFromExistingGroups" (onChange)="formPristine=false"></p-inputSwitch>
+                </div>
             </div>
 
             <span class="kSmallTitle">{{'applications.settings.authentication.edit.groupMapping' | translate}}</span>
@@ -237,13 +245,15 @@
                         <span>{{'applications.settings.authentication.edit.syncGroups_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
-                <div><p-checkbox [(ngModel)]="_profile.userGroupsSyncAll" binary="true" [label]="'applications.settings.authentication.edit.enable' | translate" (onChange)="generateKeys()"></p-checkbox></div>
+                <div>
+                    <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.userGroupsSyncAll" (onChange)="formPristine=false"></p-inputSwitch>
+                </div>
             </div>
             <div class="kContainer noScroll" *ngIf="!_profile.userGroupsSyncAll">
-                <div class="kRow">
+                <div class="kRow" *ngIf="groupAttributeMappings.length">
                     <span class="gap">{{'applications.settings.authentication.edit.group_tt' | translate}}</span>
                 </div>
-                <div class="kAttributeRow">
+                <div class="kAttributeRow" *ngIf="groupAttributeMappings.length">
                     <span class="title">{{'applications.settings.authentication.edit.provider' | translate}}</span>
                     <span class="title">{{'applications.settings.authentication.edit.kalturaName' | translate}}</span>
                 </div>
@@ -270,6 +280,7 @@
                 <div class="format">
                     <p-dropdown class="kControl" [(ngModel)]="_profile.authStrategyConfig.identifierFormat" appendTo="body" [options]="_formatOptions" (ngModelChange)="formPristine=false" [placeholder]="'applications.settings.authentication.edit.formatPh' | translate"></p-dropdown>
                 </div>
+                <i *ngIf="_profile.authStrategyConfig?.identifierFormat" class="kIconremove kRemove" [kTooltip]="'applications.settings.authentication.edit.removeFormat' | translate" (click)="removeIdentifierFormat()"></i>
             </div>
 
             <div class="kAttributeRow lastRow">

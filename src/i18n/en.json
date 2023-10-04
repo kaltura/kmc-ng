@@ -2721,7 +2721,6 @@
                     "ssoUrl_tt": "Assertion consumer service, tells the IdP where to redirect an authenticated user after sign-in. The SAML response is posted to this URL.",
                     "entity": "Entity ID",
                     "entity_tt": "The unique identifier of the service provider. This field has been automatically generated with a recommended value.",
-                    "enable": "Enable",
                     "sign": "Sign SAML Request",
                     "sign_tt": "SAML Request Signature when enabled generates a signed authentication request. The request will be signed and the IdP can validate the request against the public key that was provided in the metadata (next field).",
                     "signCert": "Signing certificate",
@@ -2756,6 +2755,7 @@
                         "Core_User_City": "City",
                         "Core_User_Zip": "Zip"
                     },
+                    "confirm": "This change will save the profile. Do you wish to continue?",
                     "provider": "Provider name",
                     "kaltura": "Kaltura / custom name",
                     "kalturaName": "Kaltura name",
@@ -2781,7 +2781,8 @@
                     "additional": "Additional settings",
                     "format": "Identifier format response",
                     "format_tt": "NameID format as it will appear in the SAML request.",
-                    "formatPh": "Select identifier format response"
+                    "formatPh": "Select identifier format response",
+                    "removeFormat": "Remove"
                 },
                 "new": {
                     "doc": "For instructions on how to configure a new SSO profile visit our",

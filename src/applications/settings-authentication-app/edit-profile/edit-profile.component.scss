@@ -47,8 +47,10 @@
         .kContainer {
             flex: 1 1 auto;
             overflow-y: auto;
-            max-height: calc(100vh - 158px);
             font-size: 15px;
+            &.kMain {
+                max-height: calc(100vh - 158px);
+            }
             &.noScroll {
                 overflow-y: hidden;
             }
@@ -139,7 +141,9 @@
                     height: 76px;
                     margin-right: 8px;
                 }
-
+                .gap {
+                    margin-right: 8px;
+                }
                 .kError {
                     color: $kDandger;
                     padding-top: 8px;

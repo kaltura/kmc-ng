@@ -35,7 +35,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public pageSize = 25;
   public pageIndex = 0;
-  public sortField = 'name';
+  public sortField = 'createdAt';
   public sortOrder = SortDirection.Desc;
   public _rowTrackBy: Function = (index: number, item: any) => item.id;
   public _items: MenuItem[];

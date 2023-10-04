@@ -11,20 +11,16 @@ import {tag} from "@kaltura-ng/kaltura-common";
     selector: 'kEditProfile',
     templateUrl: './edit-profile.component.html',
     styleUrls: ['./edit-profile.component.scss'],
-    providers: [
-        KalturaLogger.createLogger('EditRoleComponent')
-    ]
+    providers: [KalturaLogger.createLogger('EditRoleComponent')]
 })
 export class EditProfileComponent implements OnInit {
 
     @Input() set profile(value: AuthProfile) {
         this._profile = JSON.parse(JSON.stringify(value)); // create a copy of the profile
-        this._originalProfile = JSON.parse(JSON.stringify(value)); // create a copy of the profile for partial updates
     }
     @Input() parentPopupWidget: PopupWidgetComponent;
     @Output() onRefresh = new EventEmitter<void>();
 
-    private _originalProfile: AuthProfile; // used for partial updates
     public _profile: AuthProfile;
 
     public _ssoUrl = `${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-manager/saml/ac`;
@@ -43,7 +39,7 @@ export class EditProfileComponent implements OnInit {
         {label: 'Akamai', value: 'akamai'},
         {label: this._appLocalization.get('applications.content.bulkUpload.objectType.other'), value: 'other'}
     ];
-    private kalturaAttributes = ['Core_User_FirstName', 'Core_User_LastName', 'Core_User_Email', 'Core_User_ScreenName', 'Core_User_DateOfBirth', 'Core_User_Gender', 'Core_User_ThumbnailUrl', 'Core_User_Description', 'Core_User_Title', 'Core_User_Country', 'Core_User_Company', 'Core_User_State', 'Core_User_City', 'Core_User_Zip'];
+    private kalturaAttributes = ['Core_User_FirstName', 'Core_User_LastName', 'Core_User_ScreenName', 'Core_User_DateOfBirth', 'Core_User_Gender', 'Core_User_ThumbnailUrl', 'Core_User_Description', 'Core_User_Title', 'Core_User_Country', 'Core_User_Company', 'Core_User_State', 'Core_User_City', 'Core_User_Zip'];
     public _kalturaUserAttributes: Array<{ value: string, label: string }> = [];
     public _formatOptions: Array<{ value: string, label: string }> = [];
 
@@ -64,8 +60,8 @@ export class EditProfileComponent implements OnInit {
         this.kalturaAttributes.forEach(value => {
            this._kalturaUserAttributes.push({label: _appLocalization.get('applications.settings.authentication.edit.attributes.' + value) + ' (' + value + ')', value});
         });
-        ["emailAddress", "transient", "persistent", "X509SubjectName", "WindowsDomainQualifiedName", "kerberos", "entity", "encrypted", this._appLocalization.get('app.common.none')].forEach(key => {
-           const format = key === this._appLocalization.get('app.common.none') ? key : `urn:oasis:names:tc:SAML:2.0:nameid-format:${key}`;
+        ["emailAddress", "transient", "persistent", "X509SubjectName", "WindowsDomainQualifiedName", "kerberos", "entity", "encrypted"].forEach(key => {
+           const format = `urn:oasis:names:tc:SAML:2.0:nameid-format:${key}`;
            this._formatOptions.push({label: format, value: format}); // fill the formats array
         });
     }
@@ -90,7 +86,8 @@ export class EditProfileComponent implements OnInit {
             // fill the userAttributeMappings used in the template and find the email field index if exists
             let emailAttributeIndex = -1;
             Object.keys(this._profile.userAttributeMappings).forEach((idpAttribute, index) => {
-                this.userAttributeMappings.push({idpAttribute, kalturaAttribute: this._profile.userAttributeMappings[idpAttribute], isKalturaAttribute: this.kalturaAttributes.indexOf(this._profile.userAttributeMappings[idpAttribute]) > -1});
+                const kalturaAttribute = this._profile.userAttributeMappings[idpAttribute];
+                this.userAttributeMappings.push({idpAttribute, kalturaAttribute, isKalturaAttribute: this.kalturaAttributes.indexOf(kalturaAttribute) > -1 || kalturaAttribute === 'Core_User_Email'});
                 if (this._profile.userAttributeMappings[idpAttribute] === 'Core_User_Email') {
                     emailAttributeIndex = index;
                 }
@@ -170,10 +167,6 @@ export class EditProfileComponent implements OnInit {
         } else {
             this._profile.userGroupMappings ={};
         }
-        // check if we need to remove authStrategyConfig identifierFormat field
-        if (this._profile.authStrategyConfig.identifierFormat === this._appLocalization.get('app.common.none')) {
-            delete this._profile.authStrategyConfig.identifierFormat;
-        }
         this._profilesService.updateProfile(this._profile)
             .pipe(tag('block-shell'))
             .subscribe(
@@ -230,28 +223,42 @@ export class EditProfileComponent implements OnInit {
         }
     }
 
-    public generateKeys(): void {
+    public confirmGenerateKeys(property: string): void {
+        this._browserService.confirm({
+            header: this._appLocalization.get('app.common.note'),
+            message: this._appLocalization.get('applications.settings.authentication.edit.confirm'),
+            accept: () => {
+                this.generateKeys();
+            },
+            reject: () => {
+                if (property === 'sign') {
+                    this._profile.authStrategyConfig.enableRequestSign = !this._profile.authStrategyConfig.enableRequestSign;
+                } else {
+                    this._profile.authStrategyConfig.enableAssertsDecryption = !this._profile.authStrategyConfig.enableAssertsDecryption;
+                }
+            }
+        });
+    }
+
+    private generateKeys(): void {
         // we need to update the profile before generating PvKeys and before loading metadata
+        this.formPristine = true;
         const enableRequestSign = this._profile.authStrategyConfig.enableRequestSign;
         const enableAssertsDecryption = this._profile.authStrategyConfig.enableAssertsDecryption;
         if (!enableRequestSign && !enableAssertsDecryption) {
             this.certificate = '';
             this.encryptionKey = '';
-            this.formPristine = false; // mark form as changed since we are not going to update the profile
             return; // cannot delete PvKeys from metadata so just clear fields and exit
         }
         this.metadataLoading = true;
-        // we use the original profile for a partial update of only enableRequestSign and enableAssertsDecryption keep all other fields with thier original values
-        this._originalProfile.authStrategyConfig.enableRequestSign = enableRequestSign;
-        this._originalProfile.authStrategyConfig.enableAssertsDecryption = enableAssertsDecryption;
-        this._profilesService.updateProfile(this._originalProfile)
+        this._profilesService.updateProfile(this._profile)
             .subscribe(
                 (profile: AuthProfile) => {
                     if (profile.objectType === "KalturaAPIException") { // error handling
                         console.error(profile);
                         return;
                     }
-                    this._originalProfile = JSON.parse(JSON.stringify(profile)); // update original profile value with the saved profile value
+                    this._profile = JSON.parse(JSON.stringify(profile)); // update profile value with the saved profile value
                     this._profilesService.generatePvKeys(this._profile.id, enableRequestSign, enableAssertsDecryption).subscribe(
                         success => {
                                 this.onRefresh.emit();
@@ -290,6 +297,11 @@ export class EditProfileComponent implements OnInit {
     public removeGroup(index): void {
         this.formPristine = false;
         this.groupAttributeMappings.splice(index, 1);
+    }
+
+    public removeIdentifierFormat(): void {
+        this.formPristine = false;
+        delete this._profile.authStrategyConfig.identifierFormat;
     }
 
     public _cancel(): void {

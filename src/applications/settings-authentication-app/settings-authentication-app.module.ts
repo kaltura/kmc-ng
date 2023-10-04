@@ -11,6 +11,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { MenuModule } from 'primeng/menu';
+import { InputSwitchModule } from 'primeng/inputswitch';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ProfilesListComponent } from "./profiles-list/profiles-list.component";
@@ -30,6 +31,7 @@ import { CopyToClipboardModule } from '@kaltura-ng/mc-shared';
         InputTextModule,
         StickyModule,
         TooltipModule,
+        InputSwitchModule,
         PopupWidgetModule,
         InputHelperModule,
         CheckboxModule,
