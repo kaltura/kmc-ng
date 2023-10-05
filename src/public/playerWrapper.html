@@ -2,9 +2,9 @@
 <html>
 <head>
     <style>
-        div, iframe {
-            display: block;
-            margin: auto;
+        body {
+            display: flex;
+            justify-content: center;
         }
     </style>
     <script src="https://static.kaltura.com/content/static/player-scripts/thumbnail-embed.js"></script>
@@ -48,7 +48,7 @@
                           document.body.appendChild(template.content.firstChild);
                           break;
                       case 'auto':
-                          const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {margin: 0 auto; text-align: center; } object, div { margin: 0 auto; }</style>';
+                          const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {display: flex; justify-content: center; }</style>';
                           const seo = embedParams.htmlContent ? embedParams.htmlContent : '';
                           document.open();
                           document.write('<!doctype html><html><head>' + style + '</head><body><div id="framePlayerContainer">' + seo + '<script src="' + embedParams.scriptUrl + '"></' + 'script></div></body></html>');
@@ -115,7 +115,7 @@
                           document.body.appendChild(template.content.firstChild);
                           break;
                       case 'auto':
-                          const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {margin: 0 auto; text-align: center; } object, div { margin: 0 auto; }</style>';
+                          const style = '<style>html, body {margin: 0; padding: 0; width: 100%; height: 100%; } #framePlayerContainer {display: flex; justify-content: center; }</style>';
                           document.open();
                           document.write('<!doctype html><html><head>' + style + '</head><body><div id="framePlayerContainer">' + embedParams.htmlContent + '<script src="' + embedParams.scriptUrl + '"></' + 'script></div></body></html>');
                           document.close();
