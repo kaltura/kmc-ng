@@ -126,7 +126,7 @@ export class ProfilesStoreService implements OnDestroy {
         }
         const orderBy = sortOrder === SortDirection.Desc ? `-${sortField}` : `${sortField}`;
         try {
-            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-profile/list`, {pager, orderBy}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadProfilesResponse>;
+            return this._http.post(`${serverConfig.externalServices.authBrokerServer.uri}/api/v1/auth-profile/list`, {pager, orderBy}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadProfilesResponse>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to load authentication profiles'));
         }
@@ -134,7 +134,7 @@ export class ProfilesStoreService implements OnDestroy {
 
     public createProfile(profile: any): Observable<any> {
         try {
-            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-profile/add`, profile, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+            return this._http.post(`${serverConfig.externalServices.authBrokerServer.uri}/api/v1/auth-profile/add`, profile, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to create profile'));
         }
@@ -142,7 +142,7 @@ export class ProfilesStoreService implements OnDestroy {
 
     public deleteProfile(id: string): Observable<any> {
         try {
-            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-profile/delete`, {id}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+            return this._http.post(`${serverConfig.externalServices.authBrokerServer.uri}/api/v1/auth-profile/delete`, {id}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to delete authentication profile ' + id));
         }
@@ -150,7 +150,7 @@ export class ProfilesStoreService implements OnDestroy {
 
     public updateProfile(profile: AuthProfile): Observable<any> {
         try {
-            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-profile/update`, profile, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+            return this._http.post(`${serverConfig.externalServices.authBrokerServer.uri}/api/v1/auth-profile/update`, profile, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to update authentication profile ' + profile.id));
         }
@@ -167,7 +167,7 @@ export class ProfilesStoreService implements OnDestroy {
             }
         }
         try {
-            return this._http.post(`${serverConfig.authBrokerServer.appRegistryBaseUrl}/api/v1/app-registry/add`, request, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+            return this._http.post(`${serverConfig.externalServices.appRegistryServer.uri}/api/v1/app-registry/add`, request, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to create app'));
         }
@@ -182,7 +182,7 @@ export class ProfilesStoreService implements OnDestroy {
             }
         }
         try {
-            return this._http.post(`${serverConfig.authBrokerServer.appRegistryBaseUrl}/api/v1/app-registry/update`, request, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+            return this._http.post(`${serverConfig.externalServices.appRegistryServer.uri}/api/v1/app-registry/update`, request, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to update app'));
         }
@@ -195,7 +195,7 @@ export class ProfilesStoreService implements OnDestroy {
             "appCustomIdIn": [this._appAuthentication.appUser.partnerInfo.partnerId.toString()]
         }
         try {
-            return this._http.post(`${serverConfig.authBrokerServer.appRegistryBaseUrl}/api/v1/app-registry/list`, {filter}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+            return this._http.post(`${serverConfig.externalServices.appRegistryServer.uri}/api/v1/app-registry/list`, {filter}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to load app from registry'));
         }
@@ -211,7 +211,7 @@ export class ProfilesStoreService implements OnDestroy {
             redirectMethod: "HTTP-POST"
         }
         try {
-            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/app-subscription/add`, request, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+            return this._http.post(`${serverConfig.externalServices.authBrokerServer.uri}/api/v1/app-subscription/add`, request, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to create subscription'));
         }
@@ -220,7 +220,7 @@ export class ProfilesStoreService implements OnDestroy {
     public updateSubscription(id: string, authProfileIds: string[]): Observable<any> {
         const request = { id, authProfileIds };
         try {
-            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/app-subscription/update`, request, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+            return this._http.post(`${serverConfig.externalServices.authBrokerServer.uri}/api/v1/app-subscription/update`, request, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to update subscription'));
         }
@@ -229,7 +229,7 @@ export class ProfilesStoreService implements OnDestroy {
     public listSubscriptions(appGuid: string): Observable<any> {
         const filter = {appGuid};
         try {
-            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/app-subscription/list`, {filter}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+            return this._http.post(`${serverConfig.externalServices.authBrokerServer.uri}/api/v1/app-subscription/list`, {filter}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to load app-subscription list'));
         }
@@ -247,7 +247,7 @@ export class ProfilesStoreService implements OnDestroy {
             pvKeys = 'both';
         }
         try {
-            return this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-profile/generatePvKeys`, {authProfileId, pvKeys}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+            return this._http.post(`${serverConfig.externalServices.authBrokerServer.uri}/api/v1/auth-profile/generatePvKeys`, {authProfileId, pvKeys}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to generate profile Pv keys. Profile ID: ' + authProfileId));
         }
@@ -290,7 +290,7 @@ export class ProfilesStoreService implements OnDestroy {
     }
 
     public getProfileMetadataUrl(profileId: string): string {
-        return `${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/auth-manager/saml/metadata/${this._appAuthentication.appUser.partnerInfo.partnerId}/${profileId}?rnd=${Math.random()}`;
+        return `${serverConfig.externalServices.authBrokerServer.uri}/api/v1/auth-manager/saml/metadata/${this._appAuthentication.appUser.partnerInfo.partnerId}/${profileId}?rnd=${Math.random()}`;
     }
 
     private getHttpOptions() {

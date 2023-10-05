@@ -12,9 +12,13 @@
         "kpfPackageManagerBaseUrl": "https://kpf-dev.kaltura.com/package-manager",
         "kpfPurchaseManagerBaseUrl": "https://kpf-dev.kaltura.com/purchase-manager"
     },
-    "authBrokerServer": {
-        "authBrokerBaseUrl": "https://auth.nvp1.ovp.kaltura.com",
-        "appRegistryBaseUrl": "https://app-registry.nvp1.ovp.kaltura.com"
+    "externalServices": {
+        "authBrokerServer": {
+            "uri": "https://auth.nvp1.ovp.kaltura.com"
+        },
+        "appRegistryServer": {
+            "uri": "https://app-registry.nvp1.ovp.kaltura.com"
+        }
     },
     "externalApps": {
     },

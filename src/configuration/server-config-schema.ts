@@ -56,13 +56,19 @@ export const ServerConfigSchema = {
             required: ['kpfPackageManagerBaseUrl', 'kpfPurchaseManagerBaseUrl'],
             additionalProperties: true
         },
-        authBrokerServer: {
+        externalServices: {
             properties: {
-                authBrokerBaseUrl: {type: ['string', 'null']},
-                appRegistryBaseUrl: {type: ['string', 'null']}
-            },
-            required: ['authBrokerBaseUrl','appRegistryBaseUrl'],
-            additionalProperties: true
+                authBrokerServer: {
+                    properties: {
+                        uri: {type: 'string'},
+                    }
+                },
+                appRegistryServer: {
+                    properties: {
+                        uri: {type: 'string'},
+                    }
+                }
+            }
         },
         analyticsServer: {
             properties: {

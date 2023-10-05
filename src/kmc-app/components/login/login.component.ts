@@ -311,7 +311,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           },
           error => {
               // if AuthBroker is configured, try to use it for login, else display the error
-              if (!!serverConfig.authBrokerServer && !!serverConfig.authBrokerServer.authBrokerBaseUrl) {
+              if (!!serverConfig.externalServices && !!serverConfig.externalServices.authBrokerServer && !!serverConfig.externalServices.authBrokerServer.uri) {
                   this._authBrokerLogin(event.email, event.organizationId, event.profileId);
               } else {
                   this._inProgress = false;
@@ -337,7 +337,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       if (profileId?.length) {
           loginData["authProfileId"] = profileId;
       }
-      this._http.post(`${serverConfig.authBrokerServer.authBrokerBaseUrl}/api/v1/spa-proxy/login`, loginData, {responseType: 'text'}).subscribe(
+      this._http.post(`${serverConfig.externalServices.authBrokerServer.uri}/api/v1/spa-proxy/login`, loginData, {responseType: 'text'}).subscribe(
           response => {
               if (response.indexOf("KalturaAPIException") > -1) {
                   const parsedResponse = JSON.parse(response);
