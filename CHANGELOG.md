@@ -1,3 +1,13 @@
+<a name="7.14.1"></a>
+## [7.14.1](https://github.com/kaltura/kmc-ng/compare/v7.14.0...v7.14.1) (2023-10-05)
+
+
+### Bug Fixes
+
+* **entry/share&embed:** fix quiz preview on v7 players KMCNG-2534 ([f32c1fa](https://github.com/kaltura/kmc-ng/commit/f32c1fa))
+
+
+
 <a name="7.14.0"></a>
 # [7.14.0](https://github.com/kaltura/kmc-ng/compare/v7.13.1...v7.14.0) (2023-09-26)
 
