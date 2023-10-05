@@ -34,7 +34,6 @@ export class SsoFormComponent {
   public _organizationField: AbstractControl;
   public _rememberMeField: AbstractControl;
   public _profileField: AbstractControl;
-  public _displayEmailField = true;
   public _showOrganizationField = false;
 
   public get _emailValidationMessage(): string {

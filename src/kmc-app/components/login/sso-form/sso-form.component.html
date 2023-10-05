@@ -1,53 +1,41 @@
 <form class="kLoginForm"
       [formGroup]="_ssoForm"
       (submit)="_ssoLogin($event)">
-  <h1>{{ 'app.login.login.title' | translate}}</h1>
+    <h1>{{ 'app.login.login.title' | translate}}</h1>
 
-  <ng-container *ngIf="_displayEmailField">
+    <span class="label">{{'applications.settings.myUserSettings.email' | translate}}</span>
 
-    <div>
-      <input pInputText autocomplete="off"
-             [placeholder]="'app.login.forgotPassword.placeholder' | translate"
-             [formControl]="_emailField"
-             [ngClass]="{
+    <input pInputText autocomplete="off" [formControl]="_emailField"
+           [ngClass]="{
                'has-error': errorMessage || _emailValidationMessage,
                'has-success': _emailField.valid && _emailField.touched
              }"
-             [kTooltip]="_emailValidationMessage | translate"
-             placement="right">
-
-        <div class="linkWrapper" [class.open]="_showOrganizationField">
-            <i *ngIf="!_showOrganizationField" (click)="_showOrganizationField=true" class="kIcontree-arrow-right"></i>
-            <i *ngIf="_showOrganizationField" class="kIcontree-arrow-down"></i>
-            <a (click)="_showOrganizationField=true">{{ 'applications.settings.authentication.addOrganizationId' | translate }}</a>
-        </div>
-
-      <input pInputText autocomplete="off" *ngIf="_showOrganizationField"
-             [placeholder]="'applications.settings.authentication.organizationId' | translate"
-             [formControl]="_organizationField">
+           [kTooltip]="_emailValidationMessage | translate"
+           placement="right">
 
 
-        <div class="providerWrapper" *ngIf="_profiles.length">
-            <span>{{'applications.settings.authentication.selectProfile' | translate}}</span>
-            <p-dropdown class="kControl" [formControl]="_profileField" appendTo="body" [options]="_profiles"></p-dropdown>
-        </div>
+    <span class="label">{{'applications.settings.authentication.addOrganizationId' | translate}}</span>
+    <input pInputText autocomplete="off" [formControl]="_organizationField">
 
+    <div class="providerWrapper" *ngIf="_profiles.length">
+        <span class="label">{{'applications.settings.authentication.selectProfile' | translate}}</span>
+        <p-dropdown class="kControl" [formControl]="_profileField" appendTo="body" [options]="_profiles"></p-dropdown>
     </div>
 
     <p *ngIf="errorMessage" class="kErrorMessage" [innerHTML]="errorMessage"></p>
 
-      <div class="kControlLinks">
-          <p-checkbox [formControl]="_rememberMeField"
-                      [binary]="true"
-                      [label]="'app.login.rememberMe' | translate"></p-checkbox>
-      </div>
-
-    <div>
-      <button class="kButtonDefault"
-              pButton
-              [label]="_resetBtnText | translate"
-              [disabled]="inProgress"></button>
+    <div class="kControlLinks">
+        <p-checkbox [formControl]="_rememberMeField"
+                    [binary]="true"
+                    [label]="'app.login.rememberMe' | translate"></p-checkbox>
     </div>
-  </ng-container>
+
+    <div class="buttonHolder">
+        <button class="kButtonDefault"
+                pButton
+                [label]="_resetBtnText | translate"
+                [disabled]="inProgress"></button>
+    </div>
+
 
 </form>
