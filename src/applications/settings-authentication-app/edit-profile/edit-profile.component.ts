@@ -245,12 +245,10 @@ export class EditProfileComponent implements OnInit {
         this.formPristine = true;
         const enableRequestSign = this._profile.authStrategyConfig.enableRequestSign;
         const enableAssertsDecryption = this._profile.authStrategyConfig.enableAssertsDecryption;
-        if (!enableRequestSign && !enableAssertsDecryption) {
-            this.certificate = '';
-            this.encryptionKey = '';
-            return; // cannot delete PvKeys from metadata so just clear fields and exit
-        }
         this.metadataLoading = true;
+        // replace placeholder for required empty fields
+        this._profile.authStrategyConfig.entryPoint = this._profile.authStrategyConfig.entryPoint === '' ? '__placeholder__' : this._profile.authStrategyConfig.entryPoint;
+        this._profile.authStrategyConfig.cert = this._profile.authStrategyConfig.cert === '' ? '__placeholder__' : this._profile.authStrategyConfig.cert;
         this._profilesService.updateProfile(this._profile)
             .subscribe(
                 (profile: AuthProfile) => {
@@ -259,6 +257,16 @@ export class EditProfileComponent implements OnInit {
                         return;
                     }
                     this._profile = JSON.parse(JSON.stringify(profile)); // update profile value with the saved profile value
+                    // replace placeholders with empty strings
+                    this._profile.authStrategyConfig.entryPoint = this._profile.authStrategyConfig.entryPoint === '__placeholder__' ? '' : this._profile.authStrategyConfig.entryPoint;
+                    this._profile.authStrategyConfig.cert = this._profile.authStrategyConfig.cert === '__placeholder__' ? '' : this._profile.authStrategyConfig.cert;
+                    if (!enableRequestSign && !enableAssertsDecryption) {
+                        this.certificate = '';
+                        this.encryptionKey = '';
+                        this.metadataLoading = false;
+                        this.onRefresh.emit();
+                        return; // cannot delete PvKeys from metadata so just clear fields and exit
+                    }
                     this._profilesService.generatePvKeys(this._profile.id, enableRequestSign, enableAssertsDecryption).subscribe(
                         success => {
                                 this.onRefresh.emit();
