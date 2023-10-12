@@ -47,7 +47,7 @@ export class StudioV2Component implements OnInit, AfterViewInit, OnDestroy {
                     'functions': {}
                 }
             };
-            this.studioUrl = serverConfig.externalApps.studioV2.uri;
+            this.studioUrl = `${serverConfig.externalApps.studioV2.uri}?rnd=${Math.random()}`;
         }
     }
 
