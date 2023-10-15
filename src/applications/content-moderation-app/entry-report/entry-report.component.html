@@ -26,8 +26,11 @@
     <div class="kContainer">
       <div class="kFrame">
           <iframe #previewIframe *ngIf="_showPlayer" width="340" height="210" frameborder="0" marginheight="0" marginwidth="0" allowFullScreen webkitallowfullscreen mozallowfullscreen></iframe>
+          <div *ngIf="_isImage" class="kThumbnailHolder">
+              <img *ngIf="_thumbnailUrl.length && _loadThumbnailWithKs" [src]="_thumbnailUrl+'/ks/'+_ks">
+              <img *ngIf="_thumbnailUrl.length && !_loadThumbnailWithKs" [src]="_thumbnailUrl" (error)="_onThumbLoadError($event)">
+          </div>
       </div>
-
       <div class="appSubMenu">
         <div *ngFor="let tab of _tabs; let i = index;"
              class="subMenuContainer"
