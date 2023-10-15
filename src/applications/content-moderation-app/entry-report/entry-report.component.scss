@@ -52,7 +52,27 @@
 
   .kContainer {
     padding: 24px 28px;
-
+      .kThumbnailHolder {
+          overflow: hidden;
+          position: relative;
+          width: 340px;
+          height: 210px;
+          background-color: white;
+          white-space: nowrap;
+          text-align: center;
+          cursor: pointer;
+          img {
+              position: absolute;
+              left: -100%;
+              right: -100%;
+              top: -100%;
+              bottom: -100%;
+              margin: auto;
+              width: 340px;
+              height: auto;
+              border-radius: 4px;
+          }
+      }
     .kFrame {
       width: 100%;
       display: flex;

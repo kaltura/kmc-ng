@@ -56,9 +56,13 @@ export class EntryReportComponent implements OnInit, OnDestroy {
     public EntryReportSections = EntryReportSections;
     public _isBusy = false;
     public _isEntryLinkAvailable = false;
+    public _isImage = false;
     public _showPlayer = true;
     private renderPlayer = null;
     public _generatedPreviewCode: string | EmbedParams = "";
+    public _loadThumbnailWithKs = false;
+    public _thumbnailUrl = '';
+    public _ks = '';
 
     constructor(public _moderationStore: ModerationStore,
                 private _appLocalization: AppLocalization,
@@ -74,6 +78,8 @@ export class EntryReportComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._showPlayer = false; // remove iframe from DOM to invoke refresh
+        this._loadThumbnailWithKs = this._appAuthentication.appUser.partnerInfo.loadThumbnailWithKs;
+        this._ks = this._appAuthentication.appUser.ks;
         this._loadEntryModerationDetails();
         this.renderPlayer = (e) => {
             if (!e.data) {
@@ -127,7 +133,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
         let poster = '';
         config = `{"ks": "${ks}"}`;
         // force thumbnail download using ks if needed
-        if (this._appAuthentication.appUser.partnerInfo.loadThumbnailWithKs) {
+        if (this._loadThumbnailWithKs) {
             poster = `${this._entry.thumbnailUrl}/width/340/ks/${this._appAuthentication.appUser.ks}`;
         }
         embedConfig.playerConfig = config;
@@ -208,8 +214,12 @@ export class EntryReportComponent implements OnInit, OnDestroy {
                     this._areaBlockerMessage = null;
                     if (response.entry && response.flag) {
                         this._entry = response.entry;
-                        this._showPlayer = true;
-                        this.showPreview();
+                        this._isImage = this._entry.mediaType === KalturaMediaType.image;
+                        this._thumbnailUrl = this._entry.thumbnailUrl + '/width/340';
+                        this._showPlayer = !this._isImage;
+                        if (this._showPlayer) {
+                            this.showPreview();
+                        }
                         this._isEntryLinkAvailable = this._contentEntryViewService.isAvailable({
                             entry: this._entry,
                             section: ContentEntryViewSections.Metadata
@@ -341,5 +351,9 @@ export class EntryReportComponent implements OnInit, OnDestroy {
         } else {
             this._doRejectEntry();
         }
+    }
+
+    public _onThumbLoadError(event): void {
+        event.target.style.display = 'none';
     }
 }
