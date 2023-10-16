@@ -116,6 +116,7 @@ import { serverConfig } from "config/server";
         description,
         providerType: provider,
         isAdminProfile: adminProfile,
+        createNewUser: !adminProfile,
         groupAttributeName: "",
         authStrategy: "saml",
         userGroupMappings: {},

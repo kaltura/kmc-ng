@@ -50,6 +50,7 @@ export type AuthProfile = {
     userIdAttribute: string;
     version: number;
     isAdminProfile: boolean;
+    createNewUser: boolean;
     status: 'complete' | 'draft';
 }
 
