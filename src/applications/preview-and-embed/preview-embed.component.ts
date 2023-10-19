@@ -3,12 +3,11 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { subApplicationsConfig } from 'config/sub-applications';
-import {PreviewEmbedService, EmbedConfig, EmbedParams} from './preview-and-embed.service';
+import { PreviewEmbedService, EmbedConfig, EmbedParams } from './preview-and-embed.service';
 
-import { KalturaPlaylist, UiConfListAction } from 'kaltura-ngx-client';
+import { KalturaPlaylist, KalturaUiConfObjType } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaUiConfListResponse } from 'kaltura-ngx-client';
 import { KalturaUiConf } from 'kaltura-ngx-client';
@@ -59,6 +58,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   public _showPlayer = true;
   private _previewLink = null;
   public renderPlayer = null;
+  public _isAudioPlayer = false;
 
   public get _showEmberCode(): boolean {
     const showForPlaylist = this.media instanceof KalturaPlaylist && this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_EMBED_CODE);
@@ -101,6 +101,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       if (form && form.selectedPlayer){
           this._selectedPlayerVersion = form.selectedPlayer.version;
       }
+      this._isAudioPlayer = this._previewForm.controls['selectedPlayer'].value.uiConf.objType === KalturaUiConfObjType.sap;
       this.setEmbedTypes();
       if (this._selectedPlayerVersion === 2) {
           this._generatedCode = this.generateCode(false);
@@ -231,11 +232,17 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   private setEmbedTypes():void{
     this._embedTypes = [];
+    const selectedEmbedType = this._previewForm.controls['selectedEmbedType'].value;
     this._embedTypes.push({"label": this._appLocalization.get("applications.embed.embedDynamic"), "value": "dynamic"});
     this._embedTypes.push({"label": this._appLocalization.get("applications.embed.embedIframe"), "value": "iframe"});
     this._embedTypes.push({"label": this._appLocalization.get("applications.embed.embedAuto"), "value": "auto"});
-    if (this.media instanceof KalturaMediaEntry) {
+    if (this.media instanceof KalturaMediaEntry && !this._isAudioPlayer) {
       this._embedTypes.push({"label": this._appLocalization.get("applications.embed.embedThumb"), "value": "thumb"}); // no thumb embed for playlists and v3 players
+    }
+    if (this._isAudioPlayer && selectedEmbedType === 'thumb') {
+        this._previewForm.patchValue({
+            selectedEmbedType: 'dynamic'
+        });
     }
   }
 
@@ -250,8 +257,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           ks,
           entryId: this.media.id,
           uiConfId: uiConf.id,
-          width: uiConf.width,
-          height: uiConf.height,
+          width: uiConf.objType === KalturaUiConfObjType.sap ? 528 : uiConf.width,
+          height: uiConf.objType === KalturaUiConfObjType.sap ? 132 : uiConf.height,
           pid: this._appAuthentication.appUser.partnerId,
           serverUri: '',
           playerConfig: '',

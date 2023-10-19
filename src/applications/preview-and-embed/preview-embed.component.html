@@ -12,13 +12,15 @@
                     <p-dropdown #playersDropdown [options]="_players" formControlName="selectedPlayer" [filter]="true" filterBy="label,value.uiConf.id">
                         <ng-template let-item pTemplate="selectedItem">
                             <div class="playerItem selectedPlayer">
-                                <div [class]="'playerIcon v'+item.value.version"></div>
+                                <div *ngIf="item.value.uiConf.objType===22" class="playerIcon audio"></div>
+                                <div *ngIf="item.value.uiConf.objType!==22" [class]="'playerIcon v'+item.value.version"></div>
                                 <span>{{item.label}}</span>
                             </div>
                         </ng-template>
                         <ng-template let-item pTemplate="item">
                             <div class="playerItem">
-                                <div [class]="'playerIcon v'+item.value.version"></div>
+                                <div *ngIf="item.value.uiConf.objType===22" class="playerIcon audio"></div>
+                                <div *ngIf="item.value.uiConf.objType!==22" [class]="'playerIcon v'+item.value.version"></div>
                                 <span>{{item.label}}</span>
                                 <i class="check kIconcheck_small"></i>
                             </div>
@@ -30,7 +32,7 @@
             </div>
 
             <div class="kPreview">
-                <div class="kPreviewContainer">
+                <div class="kPreviewContainer" [class.audioPlayer]="this._isAudioPlayer">
                     <iframe #previewIframe *ngIf="_showPlayer" frameborder="0" marginheight="0" marginwidth="0" allowFullScreen webkitallowfullscreen mozallowfullscreen></iframe>
                 </div>
                 <div class="kPreviewParams" [style.maxWidth]="_showEmbedParams ? '450px' : '0px'">
