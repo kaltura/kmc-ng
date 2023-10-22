@@ -1,3 +1,18 @@
+<a name="7.15.0"></a>
+# [7.15.0](https://github.com/kaltura/kmc-ng/compare/v7.14.1...v7.15.0) (2023-10-22)
+
+
+### Bug Fixes
+
+* **entry/moderation:** for moderated image entry: display image instead of player ([#1058](https://github.com/kaltura/kmc-ng/issues/1058)) ([8c75d4e](https://github.com/kaltura/kmc-ng/commit/8c75d4e))
+
+
+### Features
+
+* **share&embed:** support audio player preview KMCNG-2533 ([#1060](https://github.com/kaltura/kmc-ng/issues/1060)) ([e7123bb](https://github.com/kaltura/kmc-ng/commit/e7123bb))
+
+
+
 <a name="7.14.1"></a>
 ## [7.14.1](https://github.com/kaltura/kmc-ng/compare/v7.14.0...v7.14.1) (2023-10-05)
 
