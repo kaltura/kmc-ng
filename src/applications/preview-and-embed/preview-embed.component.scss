@@ -82,6 +82,11 @@
         bottom: 0px;
         top: 16px;
       }
+        &.audioPlayer {
+            iframe {
+                top: 100px;
+            }
+        }
     }
     .kPreviewParams{
       width: 450px;

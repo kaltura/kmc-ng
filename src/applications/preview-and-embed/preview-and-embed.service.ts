@@ -45,7 +45,7 @@ export class PreviewEmbedService {
 		const filter = new KalturaUiConfFilter({
 			'tagsMultiLikeOr': tags,
 			'orderBy': '-updatedAt',
-			'objTypeIn': '1,8',
+			'objTypeIn': '1,8,22',
 			'creationModeEqual': 2
 		});
 
@@ -56,7 +56,7 @@ export class PreviewEmbedService {
 
 		let responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
 			type: KalturaResponseProfileType.includeFields,
-			fields: 'id,name,html5Url,createdAt,updatedAt,width,height,tags'
+			fields: 'id,name,html5Url,createdAt,updatedAt,width,height,tags,objType'
 		});
 
 		return this._kalturaClient.request(new UiConfListAction({filter, pager}).setRequestOptions({
