@@ -1,3 +1,13 @@
+<a name="7.16.0"></a>
+# [7.16.0](https://github.com/kaltura/kmc-ng/compare/v7.15.0...v7.16.0) (2023-11-01)
+
+
+### Features
+
+* auth broker integration KMCNG-2479 ([#1057](https://github.com/kaltura/kmc-ng/issues/1057)) ([4876e83](https://github.com/kaltura/kmc-ng/commit/4876e83))
+
+
+
 <a name="7.15.0"></a>
 # [7.15.0](https://github.com/kaltura/kmc-ng/compare/v7.14.1...v7.15.0) (2023-10-22)
 
