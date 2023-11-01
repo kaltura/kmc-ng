@@ -1,12 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import {
-    AppAnalytics,
-    AppAuthentication,
-    AutomaticLoginErrorReasons,
-    BrowserService,
-    LoginError,
-    LoginResponse
-} from 'app-shared/kmc-shell';
+import { AppAnalytics, AppAuthentication, AutomaticLoginErrorReasons, BrowserService, LoginError, LoginResponse } from 'app-shared/kmc-shell';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,6 +9,7 @@ import { RestorePasswordViewService } from 'app-shared/kmc-shared/kmc-views/deta
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { AuthenticatorViewService } from "app-shared/kmc-shared/kmc-views/details-views";
 import { KalturaAuthentication } from "kaltura-ngx-client";
+import { HttpClient } from "@angular/common/http";
 
 export enum LoginScreens {
   Login,
@@ -49,6 +43,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _showAuthenticator = false;
   public _authenticationHash = '';
   public _qrCodeBase64 = null;
+  public _authBrokerProfiles = [];
 
   // Caution: this is extremely dirty hack, don't do something similar to that
   @HostListener('window:resize')
@@ -68,6 +63,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
               private _browserService: BrowserService,
               private _analytics: AppAnalytics,
               private _el: ElementRef,
+              private _http: HttpClient,
               private _renderer: Renderer2,
               private _route: ActivatedRoute,
               private _router: Router,
@@ -89,7 +85,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         } else if (authenticatorArgs && authenticatorArgs.hash) {
             this._authenticationHash = authenticatorArgs.hash;
             this._currentScreen = LoginScreens.Authenticator;
-        } else if (queryParams.method && queryParams.method === 'sso') {
+        } else if ((queryParams.method && queryParams.method === 'sso') || this._browserService.getFromLocalStorage('kmc_login_method') === 'sso') {
             window.history.replaceState(null, null, window.location.pathname);
             this._currentScreen = LoginScreens.Sso;
         }
@@ -306,22 +302,65 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       this._currentScreen = this._loginScreens.Login;
   }
 
-  public _ssoLogin(email: string): void{
+  public _ssoLogin(event: {email: string, organizationId: string, profileId: string}): void {
       this._inProgress = true;
       this._errorMessage = '';
-      this._appAuthentication._ssoLogin(email).subscribe(
+      this._appAuthentication._ssoLogin(event.email).subscribe(
           redirectUrl => {
               this._browserService.openLink(redirectUrl.toString(), {}, '_self');
           },
           error => {
-              this._inProgress = false;
-              this._errorCode = error.code;
-              if (!error.custom) {
-                  this._errorMessage = this._appLocalization.get(error.message);
+              // if AuthBroker is configured, try to use it for login, else display the error
+              if (!!serverConfig.externalServices && !!serverConfig.externalServices.authBrokerServer && !!serverConfig.externalServices.authBrokerServer.uri) {
+                  this._authBrokerLogin(event.email, event.organizationId, event.profileId);
               } else {
-                  this._errorMessage = error.message;
+                  this._inProgress = false;
+                  this._errorCode = error.code;
+                  if (!error.custom) {
+                      this._errorMessage = this._appLocalization.get(error.message);
+                  } else {
+                      this._errorMessage = error.message;
+                  }
               }
           }
       );
+  }
+
+  private _authBrokerLogin(email: string, organizationId: string = '', profileId: string = ''): void {
+      let loginData = {
+          appType: "kmc",
+          email
+      }
+      if (organizationId?.length) {
+          loginData["organizationId"] = organizationId;
+      }
+      if (profileId?.length) {
+          loginData["authProfileId"] = profileId;
+      }
+      this._http.post(`${serverConfig.externalServices.authBrokerServer.uri}/api/v1/spa-proxy/login`, loginData, {responseType: 'text'}).subscribe(
+          response => {
+              if (response.indexOf("KalturaAPIException") > -1) {
+                  const parsedResponse = JSON.parse(response);
+                  if (parsedResponse?.objectType === "KalturaAPIException") {
+                      this._inProgress = false;
+                      this._errorMessage = parsedResponse.message;
+                  }
+              } else {
+                  if (response.indexOf('"objectType":"AuthProfile"') > -1) {
+                      // multiple profiles account - profiles list returned
+                      this._authBrokerProfiles = JSON.parse(response);
+                      this._inProgress = false;
+                  } else {
+                      document.open();
+                      document.write(response);
+                      document.close();
+                  }
+              }
+          },
+          error => {
+              this._inProgress = false;
+              this._errorMessage = error?.message || this._appLocalization.get('applications.settings.authentication.loginError');
+          }
+      )
   }
 }

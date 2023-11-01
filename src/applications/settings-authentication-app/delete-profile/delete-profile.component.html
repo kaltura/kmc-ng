@@ -1,0 +1,24 @@
+<div class="kDeleteProfile">
+    <div class="kHeader">
+      <span class="kTitle">{{('applications.settings.authentication.delete') | translate}}</span>
+    </div>
+
+    <div class="kContainer">
+      <span>
+        {{('applications.settings.authentication.deleteMsg') | translate: {'0': profile.name} }}
+      </span>
+      <span class="confirm">
+        {{('applications.settings.authentication.deleteConfirm') | translate: {'0': profile.name} }}
+      </span>
+      <div class="kRow">
+        <div class="kControl">
+          <input [(ngModel)]="_profileName" kAutofocus type="text" placeholder="{{'applications.settings.authentication.profileName' | translate}}" pInputText/>
+        </div>
+      </div>
+    </div>
+
+    <div class="kFooter">
+      <button type="button" class="kButtonDefault kBtn" (click)="parentPopupWidget.close()" pButton label="{{'app.common.cancel' | translate}}"></button>
+      <button type="button" class="kButtonBranded kBtn" [disabled]="_profileName !== profile.name" (click)="delete()" pButton label="{{'applications.settings.authentication.deleteBtn' | translate}}"></button>
+    </div>
+</div>

@@ -32,22 +32,61 @@
     font-size: 14px;
     line-height: 17px;
   }
-
-  div {
-    width: 100%;
-    align-self: center;
-    text-align: center;
+    .providerWrapper {
+        width: 100%;
+        text-align: left;
+        margin-bottom: 36px;
+        display: flex;
+        flex-direction: column;
+        span {
+            margin-bottom: 8px;
+        }
+        ::ng-deep .p-dropdown {
+            width: 430px;
+            height: 48px;
+            padding-top: 6px;
+            .p-dropdown-trigger {
+                margin-right: 4px;
+            }
+        }
+    }
+    .linkWrapper{
+        width: 100%;
+        margin-top: -16px;
+        text-align: left;
+        margin-bottom: 36px;
+        display: flex;
+        align-items: center;
+        &.open {
+            margin-bottom: 16px;
+        }
+        i {
+            color: #006EFA;
+            margin-right: 4px;
+            transform: scale(0.7);
+            cursor: pointer;
+        }
+        a {
+            font-size: 16px;
+            text-decoration: none;
+            color: #006EFA;
+            cursor: pointer;
+        }
+        margin-top: -24px;
+    }
 
     input {
       width: 100%;
       height: 48px;
       padding: 14px 16px;
-      margin-bottom: 40px;
+      margin-bottom: 24px;
       color: $kGrayscale3;
       font-size: 16px;
       border-radius: 4px;
-
-      &:placeholder-shown {
+        &:focus {
+            color: $kGrayscale1;
+        }
+        &:placeholder-shown {
         background-color: $kGrayscale6;
       }
 
@@ -59,8 +98,15 @@
         border: 2px solid $kPrimary;
       }
     }
-  }
-
+    .label {
+        font-size: 14px;
+        font-weight: 700;
+        color: $kGrayscale1;
+        margin-bottom: 4px;
+    }
+    .buttonHolder {
+        text-align: center;
+    }
   .kButtonDefault {
     width: 160px;
     height: 48px;

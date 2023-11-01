@@ -3,9 +3,9 @@
       (submit)="_login($event)">
   <h1>{{ 'app.login.login.title' | translate}}</h1>
 
+    <span class="label">{{'applications.settings.myUserSettings.email' | translate}}</span>
   <div>
     <input pInputText autocomplete="off"
-           [placeholder]="'app.login.login.placeholder.username' | translate"
            [formControl]="_usernameField"
            [ngClass]="{
              'has-error': _showError(_usernameField),
@@ -14,11 +14,10 @@
            [kTooltip]="_loginValidationMessage | translate"
            placement="right">
   </div>
-
+    <span class="label">{{'applications.settings.myUserSettings.password' | translate}}</span>
   <div>
     <input type="password" autocomplete="off"
            appPreventPasswordAutofill pInputText
-           [placeholder]="'app.login.login.placeholder.password' | translate"
            [formControl]="_passwordField"
            [class.has-error]="_showError(_passwordField)">
   </div>

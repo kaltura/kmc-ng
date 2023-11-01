@@ -1,0 +1,241 @@
+@import 'app-theme/_variables.scss';
+
+.kEditProfile {
+    width: 100%;
+
+    .kFloater {
+        display: flex;
+        flex-direction: column;
+
+        .kHeader {
+            height: 78px;
+            width: 100%;
+            padding: 0 24px;
+            box-sizing: border-box;
+            border-bottom: 1px solid $kGrayscale4;
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+
+            .kTitle {
+                color: #333333;
+                font-size: 15px;
+                font-weight: 700;
+            }
+
+            .kButtons {
+                display: flex;
+                margin-left: auto;
+
+                .kSaveBtn {
+                    width: 100px;
+                }
+
+                .kCancel {
+                    font-size: 15px;
+                    color: #333333;
+                    align-self: center;
+                    margin-right: 24px;
+                }
+
+                .kButtonDefault {
+                    font-weight: normal;
+                }
+            }
+        }
+
+        .kContainer {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            font-size: 15px;
+            &.kMain {
+                max-height: calc(100vh - 158px);
+            }
+            &.noScroll {
+                overflow-y: hidden;
+            }
+            .kSubTitleContainer {
+                display: flex;
+                align-items: center;
+            }
+            .kSubTitle {
+                font-size: 20px;
+                font-weight: bold;
+                display: block;
+                padding: 24px 4px 24px 32px;
+            }
+            .kSmallTitle {
+                font-size: 16px;
+                font-weight: bold;
+                display: block;
+                padding: 24px 4px 24px 32px;
+            }
+            .kRow {
+                display: flex;
+                padding-top: 24px;
+                padding: 0 28px 24px 28px;
+                &.divider {
+                    border-bottom: 1px solid $kGrayscale4;
+                }
+                &.center {
+                    align-items: center;
+                }
+                .kLabel {
+                    width: 200px;
+                    flex: 0 0 auto;
+                    height: 18px;
+                    color: $kGrayscale1;
+                    font-size: 15px;
+                    line-height: 18px;
+
+                    &.required {
+                        width: 172px;
+                    }
+                }
+                .labelWithHelpTip {
+                    display: flex;
+                    align-items: center;
+                    width: 208px;
+                    .kLabel {
+                        width: auto;
+                        max-width: 150px;
+                    }
+                    i {
+                        color: $kGrayscale3;
+                    }
+                    &.required {
+                        width: 180px;
+                        align-items: flex-start;
+                        ::ng-deep .kInputHelper {
+                            margin-top: 10px;
+                        }
+                    }
+                }
+                .kRequired {
+                    width: 20px;
+                    font-size: 24px;
+                    color: $kGrayscale3;
+
+                    &.kHasError {
+                        color: $kDandger;
+                        font-weight: bold;
+                    }
+                }
+
+                .kRequired, .kLabel {
+                    padding: 8px 4px;
+                    height: 18px;
+                }
+
+                .kControl {
+                    height: 34px;
+                    width: 500px;
+
+                    &.kHasError {
+                        border: 1px solid $kDandger;
+                        background: initial;
+                    }
+                }
+
+                textarea.kControl {
+                    height: 76px;
+                    margin-right: 8px;
+                }
+                .gap {
+                    margin-right: 8px;
+                }
+                .kError {
+                    color: $kDandger;
+                    padding-top: 8px;
+                }
+            }
+        }
+    }
+
+    .doc {
+        display: flex;
+        padding: 28px;
+        span {
+            font-size: 14px;
+        }
+    }
+    .link {
+        margin-left: 4px;
+        margin-right: 4px;
+        text-decoration: none;
+        color: $kPrimary;
+        cursor: pointer;
+        font-weight: normal;
+    }
+    .kUpdating {
+        .kSpinnerAnim {
+            width: 12px;
+            height: 12px;
+            margin-left: 16px;
+            margin-right: 8px;
+        }
+        span {
+            opacity: 0.3;
+            cursor: default !important;
+            &:last-child {
+                opacity: 1;
+            }
+        }
+    }
+    .kAttributeRow {
+        display: flex;
+        align-items: center;
+        padding-top: 24px;
+        padding: 0 28px 24px 28px;
+        &.lastRow {
+            margin-bottom: 24px;
+            margin-top: 12px;
+        }
+        .title {
+            width: 400px;
+            font-weight: 700;
+        }
+        .kRequired {
+            width: 20px;
+            font-size: 24px;
+            padding-top: 7px;
+            color: $kGrayscale3;
+        }
+        .idp {
+            width: 380px;
+            &.required {
+                width: 360px;
+            }
+        }
+        .kaltura {
+            margin-left: 20px;
+        }
+        ::ng-deep p-dropdown {
+            margin-left: 20px;
+            .p-dropdown {
+                width: 308px;
+            }
+        }
+        .customAttribute {
+            margin-left: 20px;
+            width: 308px;
+        }
+        .kButtonDefault {
+            font-weight: 400;
+            margin-right: 22px;
+        }
+    }
+    .format {
+        ::ng-deep p-dropdown {
+            .p-dropdown {
+                width: 500px;
+            }
+        }
+    }
+    .kRemove{
+        color: $kDandger;
+        margin-left: 24px;
+        cursor: pointer;
+        font-size: 24px;
+    }
+}

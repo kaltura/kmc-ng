@@ -6,9 +6,9 @@
   <ng-container *ngIf="_displayEmailField">
     <p [innerHTML]="'app.login.invalidLoginHash.instructions' | translate"></p>
 
+      <span class="label">{{'applications.settings.myUserSettings.email' | translate}}</span>
     <div>
       <input pInputText autocomplete="off"
-             [placeholder]="'app.login.invalidLoginHash.placeholder' | translate"
              [formControl]="_emailField"
              [ngClass]="{
              'has-error': errorMessage || _emailValidationMessage,

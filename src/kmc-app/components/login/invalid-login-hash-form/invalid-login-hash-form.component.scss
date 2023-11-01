@@ -37,7 +37,12 @@
     font-size: 14px;
     line-height: 17px;
   }
-
+    .label {
+        font-size: 14px;
+        font-weight: 700;
+        color: $kGrayscale1;
+        margin-bottom: 4px;
+    }
   div {
     width: 100%;
     align-self: center;
@@ -55,8 +60,10 @@
       &:placeholder-shown {
         background-color: $kGrayscale6;
       }
-
-      &.has-error {
+        &:focus {
+            color: $kGrayscale1;
+        }
+        &.has-error {
         border: 2px solid $kDandger;
       }
 

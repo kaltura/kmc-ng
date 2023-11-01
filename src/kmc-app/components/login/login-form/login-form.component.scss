@@ -30,7 +30,12 @@
     font-size: 14px;
     line-height: 17px;
   }
-
+  .label {
+      font-size: 14px;
+      font-weight: 700;
+      color: $kGrayscale1;
+      margin-bottom: 4px;
+  }
   div {
     width: 100%;
     align-self: center;
@@ -38,44 +43,27 @@
     position: relative;
 
     input {
-      width: 100%;
-      height: 48px;
-      padding: 14px 16px;
-      margin-bottom: 40px;
-      color: $kGrayscale3;
-      font-size: 16px;
-      border-radius: 4px;
-
-      &:placeholder-shown, &:-webkit-autofill:placeholder-shown {
-        background-color: $kGrayscale6;
-      }
-
-      &.has-error {
-        border: 2px solid $kDandger;
-      }
-
-      &.has-success:focus {
-        border: 2px solid $kPrimary;
-      }
-
-        &.kAuth{
-            margin-bottom: 60px;
+        width: 100%;
+        height: 48px;
+        padding: 14px 16px;
+        margin-bottom: 24px;
+        color: $kGrayscale3;
+        font-size: 16px;
+        border-radius: 4px;
+        &:focus {
+            color: $kGrayscale1;
+        }
+        &:placeholder-shown {
+            background-color: $kGrayscale6;
         }
 
-      /* Override chrome's autofill styles */
-      -webkit-text-fill-color: $kGrayscale3;
+        &.has-error {
+            border: 2px solid $kDandger;
+        }
 
-      &:-webkit-autofill {
-        -webkit-box-shadow:0 0 0 48px $kGrayscale6 inset;
-      }
-
-      &:-webkit-autofill:focus {
-        -webkit-box-shadow:0 0 0 48px #FFFFFF inset;
-      }
-
-      &:-webkit-autofill:placeholder-shown {
-        background-color: $kGrayscale6;
-      }
+        &.has-success:focus {
+            border: 2px solid $kPrimary;
+        }
     }
   }
 

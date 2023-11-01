@@ -18,6 +18,7 @@
                       [errorMessage]="_errorMessage"
                       [inProgress]="_inProgress"
                       (onRememberMe)="_rememberMe($event)"
+                      [authBrokerProfiles]="_authBrokerProfiles"
                       (onSsoLogin)="_ssoLogin($event)"></kKMCSsoForm>
         <kKMCForgotPasswordForm *ngSwitchCase="_loginScreens.ForgotPassword"
                                 [errorMessage]="_errorMessage"

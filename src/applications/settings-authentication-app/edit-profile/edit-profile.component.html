@@ -1,0 +1,294 @@
+<k-area-blocker [message]="_blockerMessage">
+  <div class="kEditProfile">
+    <div class="kFloater">
+      <div class="kHeader">
+        <span class="kTitle">{{'applications.settings.authentication.edit.titleEdit' | translate}}</span>
+        <div class="kButtons">
+          <a class="kCancel" (click)="_cancel()">
+            {{'applications.administration.role.cancel' | translate}}
+          </a>
+          <button pButton class="kButtonBranded kSaveBtn"
+                  [label]="'applications.administration.role.save' | translate"
+                  [disabled]="_saveDisabled"
+                  (click)="_updateProfile()"></button>
+        </div>
+      </div>
+      <div class="kContainer kMain" #scrollableContainer>
+          <div class="doc">
+              <span>{{'applications.settings.authentication.new.doc' | translate}}</span>
+              <span class="link" (click)="openHelp()">{{'applications.settings.authentication.new.docLink' | translate}}</span>
+          </div>
+
+          <div class="kRow">
+            <span class="kLabel required">{{'applications.settings.authentication.name' | translate}}</span>
+            <div class="kRequired" [class.kHasError]="nameRequiredError">*</div>
+            <div>
+              <input class="kControl" pInputText [(ngModel)]="_profile.name" [maxlength]="255" [class.kHasError]="nameRequiredError"  (ngModelChange)="formPristine=false; validate($event, 'name')">
+              <div *ngIf="nameRequiredError" class="kError">
+                {{'applications.administration.role.errors.required' | translate}}
+              </div>
+            </div>
+          </div>
+
+          <div class="kRow">
+              <span class="kLabel">{{'applications.administration.role.description' | translate}}</span>
+              <textarea class="kControl" [maxlength]="512" pInputTextarea [(ngModel)]="_profile.description" (ngModelChange)="formPristine=false"></textArea>
+          </div>
+
+            <div class="kRow divider">
+                <span class="kLabel">{{'applications.settings.authentication.new.provider' | translate}}</span>
+                <p-dropdown class="kControl" [(ngModel)]="_profile.providerType" appendTo="body" [options]="_providerTypes" (ngModelChange)="formPristine=false"></p-dropdown>
+            </div>
+
+            <span class="kSubTitle">{{'applications.settings.authentication.edit.sps' | translate}}</span>
+
+            <div class="kRow" [class.kUpdating]="metadataLoading">
+                <span>{{'applications.settings.authentication.edit.metadata' | translate}}</span>
+                <span class="link" (click)="downloadMetadata('url')">{{'applications.settings.authentication.edit.metadata1' | translate}}</span>
+                <span>{{'applications.settings.authentication.edit.metadata2' | translate}}</span>
+                <span class="link" (click)="downloadMetadata('file')">{{'applications.settings.authentication.edit.metadata3' | translate}}</span>
+                <div *ngIf="metadataLoading" class="k-spinner-animation kSpinnerAnim"></div>
+                <span *ngIf="metadataLoading">{{'applications.settings.authentication.edit.metadataUpdate' | translate}}</span>
+            </div>
+
+            <div class="kRow center">
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.ssoUrl' | translate}}</span>
+                    <kInputHelper [trigger]="'click'">
+                        <span>{{'applications.settings.authentication.edit.ssoUrl_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <span>{{_ssoUrl}}</span>
+                <kCopyToClipboard class="kIcon" [text]="_ssoUrl" [iconSwitchTimeout]="5000"></kCopyToClipboard>
+            </div>
+
+            <div class="kRow required">
+                <div class="labelWithHelpTip required">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.entity' | translate}}</span>
+                    <kInputHelper [trigger]="'click'">
+                        <span>{{'applications.settings.authentication.edit.entity_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div class="kRequired" [class.kHasError]="entityRequiredError">*</div>
+                <div class="gap">
+                    <input class="kControl" pInputText [(ngModel)]="_profile.authStrategyConfig.issuer" [maxlength]="255" [class.kHasError]="entityRequiredError" (ngModelChange)="formPristine=false; validate($event, 'entity')">
+                    <div *ngIf="entityRequiredError" class="kError">
+                        {{'applications.administration.role.errors.required' | translate}}
+                    </div>
+                </div>
+                <kCopyToClipboard class="kIcon" [text]="_profile.authStrategyConfig.issuer" [iconSwitchTimeout]="5000"></kCopyToClipboard>
+            </div>
+
+            <div class="kRow center">
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.sign' | translate}}</span>
+                    <kInputHelper [trigger]="'click'">
+                        <span>{{'applications.settings.authentication.edit.sign_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div>
+                    <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.authStrategyConfig.enableRequestSign" (onChange)="confirmGenerateKeys('sign')"></p-inputSwitch>
+                </div>
+            </div>
+
+            <div class="kRow">
+                <span class="kLabel">{{'applications.settings.authentication.edit.signCert' | translate}}</span>
+                <textarea class="kControl" [disabled]="true" pInputTextarea>{{certificate}}</textArea>
+                <kCopyToClipboard class="kIcon" [text]="certificate" [iconSwitchTimeout]="5000"></kCopyToClipboard>
+            </div>
+
+            <div class="kRow center">
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.encryption' | translate}}</span>
+                    <kInputHelper [trigger]="'click'">
+                        <span>{{'applications.settings.authentication.edit.encryption_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div>
+                    <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.authStrategyConfig.enableAssertsDecryption" (onChange)="confirmGenerateKeys('encryption')"></p-inputSwitch>
+                </div>
+            </div>
+
+            <div class="kRow">
+                <span class="kLabel">{{'applications.settings.authentication.edit.encryptionKey' | translate}}</span>
+                <textarea class="kControl" [disabled]="true" pInputTextarea>{{encryptionKey}}</textArea>
+                <kCopyToClipboard class="kIcon" [text]="encryptionKey" [iconSwitchTimeout]="5000"></kCopyToClipboard>
+            </div>
+
+            <span class="kSubTitle">{{'applications.settings.authentication.edit.idp' | translate}}</span>
+            <div class="kRow">
+                <span class="gap">{{'applications.settings.authentication.edit.idp_tt' | translate}}</span>
+            </div>
+
+            <div class="kRow required">
+                <div class="labelWithHelpTip required">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.login' | translate}}</span>
+                    <kInputHelper [trigger]="'click'" [width]="400">
+                        <span>{{'applications.settings.authentication.edit.login_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div class="kRequired">*</div>
+                <div>
+                    <input class="kControl" pInputText [(ngModel)]="_profile.authStrategyConfig.entryPoint" (ngModelChange)="formPristine=false">
+                </div>
+            </div>
+
+            <div class="kRow">
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.logout' | translate}}</span>
+                    <kInputHelper [trigger]="'click'" [width]="400">
+                        <span>{{'applications.settings.authentication.edit.logout_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div>
+                    <input class="kControl" pInputText [(ngModel)]="_profile.authStrategyConfig.logoutUrl" (ngModelChange)="formPristine=false">
+                </div>
+            </div>
+
+            <div class="kRow required">
+                <div class="labelWithHelpTip required">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.ipc' | translate}}</span>
+                    <kInputHelper [trigger]="'click'">
+                        <span>{{'applications.settings.authentication.edit.ipc_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div class="kRequired">*</div>
+                <div>
+                    <textarea class="kControl" pInputTextarea [(ngModel)]="_profile.authStrategyConfig.cert" (ngModelChange)="formPristine=false"></textArea>
+                </div>
+            </div>
+
+            <div class="kRow">
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.metadataUrl' | translate}}</span>
+                    <kInputHelper [trigger]="'click'" [width]="400">
+                        <span>{{'applications.settings.authentication.edit.metadataUrl_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div>
+                    <input class="kControl" pInputText [(ngModel)]="_profile.authStrategyConfig.idpMetadataUrl" (ngModelChange)="formPristine=false">
+                </div>
+            </div>
+
+            <span class="kSubTitle">{{'applications.settings.authentication.edit.attributesStatement' | translate}}</span>
+            <div class="kRow">
+                <span class="gap">{{'applications.settings.authentication.edit.attributes_tt' | translate}}</span>
+            </div>
+
+            <div class="kAttributeRow">
+                <span class="title">{{'applications.settings.authentication.edit.provider' | translate}}</span>
+                <span class="title">{{'applications.settings.authentication.edit.kaltura' | translate}}</span>
+            </div>
+            <div class="kAttributeRow" *ngFor="let attribute of userAttributeMappings; let index = index">
+                <input class="kControl idp" pInputText [(ngModel)]="attribute.idpAttribute" (ngModelChange)="formPristine=false">
+                <span class="kaltura" *ngIf="attribute.kalturaAttribute==='Core_User_Email'">{{attribute.kalturaAttribute}}</span>
+                <kInputHelper *ngIf="attribute.kalturaAttribute==='Core_User_Email'" [trigger]="'click'">
+                    <span>{{'applications.settings.authentication.edit.email_tt' | translate}}</span>
+                </kInputHelper>
+                <p-dropdown *ngIf="attribute.isKalturaAttribute && attribute.kalturaAttribute!=='Core_User_Email'" class="kControl" [(ngModel)]="attribute.kalturaAttribute" appendTo="body" [options]="_kalturaUserAttributes" (ngModelChange)="formPristine=false" [placeholder]="'applications.settings.authentication.edit.attributePh' | translate"></p-dropdown>
+                <input *ngIf="!attribute.isKalturaAttribute" class="kControl customAttribute" pInputText [(ngModel)]="attribute.kalturaAttribute" (ngModelChange)="formPristine=false">
+                <i *ngIf="attribute.kalturaAttribute!=='Core_User_Email'" class="kIconremove kRemove" [kTooltip]="'applications.settings.authentication.edit.remove' | translate" (click)="removeAttribute(index)"></i>
+            </div>
+            <div class="kAttributeRow">
+                <button type="button" class="kButtonDefault" pButton icon="kIconplus" label="{{'applications.settings.authentication.edit.add' | translate}}" (click)="addAttribute(true)"></button>
+                <button type="button" class="kButtonDefault" pButton icon="kIconplus" label="{{'applications.settings.authentication.edit.addCustom' | translate}}" (click)="addAttribute(false)"></button>
+            </div>
+            <div class="kAttributeRow lastRow" *ngIf="!showAdvancedSettings">
+                <span class="link" (click)="showAdvancedSettings=true">{{'applications.settings.authentication.edit.show' | translate}}</span>
+            </div>
+
+
+        <div class="kContainer noScroll" *ngIf="showAdvancedSettings">
+            <span class="kSubTitle">{{'applications.settings.authentication.edit.group' | translate}}</span>
+
+            <div class="kRow">
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.groupName' | translate}}</span>
+                    <kInputHelper [trigger]="'click'" [width]="400">
+                        <span>{{'applications.settings.authentication.edit.groupName_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div>
+                    <input class="kControl" pInputText [(ngModel)]="_profile.groupAttributeName" (ngModelChange)="formPristine=false">
+                </div>
+            </div>
+
+            <div class="kRow center">
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.createGroups' | translate}}</span>
+                    <kInputHelper [trigger]="'click'">
+                        <span>{{'applications.settings.authentication.edit.createGroups_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div>
+                    <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.createNewGroups" (onChange)="formPristine=false"></p-inputSwitch>
+                </div>
+            </div>
+
+            <div class="kRow center">
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.removeGroups' | translate}}</span>
+                    <kInputHelper [trigger]="'click'">
+                        <span>{{'applications.settings.authentication.edit.removeGroups_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div>
+                    <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.removeFromExistingGroups" (onChange)="formPristine=false"></p-inputSwitch>
+                </div>
+            </div>
+
+            <span class="kSmallTitle">{{'applications.settings.authentication.edit.groupMapping' | translate}}</span>
+            <div class="kRow center">
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.syncGroups' | translate}}</span>
+                    <kInputHelper [trigger]="'click'">
+                        <span>{{'applications.settings.authentication.edit.syncGroups_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div>
+                    <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.userGroupsSyncAll" (onChange)="formPristine=false"></p-inputSwitch>
+                </div>
+            </div>
+            <div class="kContainer noScroll" *ngIf="!_profile.userGroupsSyncAll">
+                <div class="kRow" *ngIf="groupAttributeMappings.length">
+                    <span class="gap">{{'applications.settings.authentication.edit.group_tt' | translate}}</span>
+                </div>
+                <div class="kAttributeRow" *ngIf="groupAttributeMappings.length">
+                    <span class="title">{{'applications.settings.authentication.edit.provider' | translate}}</span>
+                    <span class="title">{{'applications.settings.authentication.edit.kalturaName' | translate}}</span>
+                </div>
+
+                <div class="kAttributeRow" *ngFor="let attribute of groupAttributeMappings; let index = index">
+                    <input class="kControl idp" pInputText [(ngModel)]="attribute.idpAttribute" (ngModelChange)="formPristine=false">
+                    <input class="kControl customAttribute" pInputText [(ngModel)]="attribute.kalturaAttribute" (ngModelChange)="formPristine=false">
+                    <i *ngIf="attribute.kalturaAttribute!=='Core_User_Email'" class="kIconremove kRemove" [kTooltip]="'applications.settings.authentication.edit.remove' | translate" (click)="removeGroup(index)"></i>
+                </div>
+
+                <div class="kAttributeRow">
+                    <button type="button" class="kButtonDefault" pButton icon="kIconplus" label="{{'applications.settings.authentication.edit.addGroup' | translate}}" (click)="addGroup()"></button>
+                </div>
+            </div>
+
+            <span class="kSubTitle">{{'applications.settings.authentication.edit.additional' | translate}}</span>
+            <div class="kRow center">
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.authentication.edit.format' | translate}}</span>
+                    <kInputHelper [trigger]="'click'">
+                        <span>{{'applications.settings.authentication.edit.format_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div class="format">
+                    <p-dropdown class="kControl" [(ngModel)]="_profile.authStrategyConfig.identifierFormat" appendTo="body" [options]="_formatOptions" (ngModelChange)="formPristine=false" [placeholder]="'applications.settings.authentication.edit.formatPh' | translate"></p-dropdown>
+                </div>
+                <i *ngIf="_profile.authStrategyConfig?.identifierFormat" class="kIconremove kRemove" [kTooltip]="'applications.settings.authentication.edit.removeFormat' | translate" (click)="removeIdentifierFormat()"></i>
+            </div>
+
+            <div class="kAttributeRow lastRow">
+                <span class="link" (click)="showAdvancedSettings=false">{{'applications.settings.authentication.edit.hide' | translate}}</span>
+            </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</k-area-blocker>

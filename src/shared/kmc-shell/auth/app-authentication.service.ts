@@ -346,6 +346,7 @@ export class AppAuthentication {
             lastName: user.lastName,
             isAccountOwner: user.isAccountOwner,
             createdAt: user.createdAt,
+            isAdmin: userRole.systemName === "Publisher Administrator",
             partnerInfo: {
                 partnerId: user.partnerId,
                 name: partner.name,
@@ -365,7 +366,7 @@ export class AppAuthentication {
             }
         });
 
-        this._kmcViewsManager.rebuildMenu();
+        this._kmcViewsManager.rebuildMenu(appUser);
         this.kalturaServerClient.setDefaultRequestOptions({
             ks: appUser.ks
         });

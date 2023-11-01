@@ -1,0 +1,133 @@
+<k-area-blocker [message]="_blockerMessage" [bodyScroll]="true" [showLoader]="_isBusy">
+  <div class="kProfiles kOverrideFAIcons">
+    <div class="kProfilesHolder kContent">
+      <div class="kContent kFiltersWrapper">
+        <kSticky stickyId="profilesFilters" [sticksTo]="'header'" [scrollOffset]="80">
+          <div class="kProfilesTableFilters kContent">
+            <button pButton type="button" class="kButtonBranded kAddProfileBtn"
+                    [label]="'applications.settings.authentication.newProfile' | translate"
+                    (click)="_addProfile()"></button>
+            <span class="kSelectedProfilesNum">
+              {{ 'applications.settings.authentication.profilesNum' | translate:{'0': _profilesCount} }}
+            </span>
+            <button pButton class="kButtonDefault kRefreshBtn small" (click)="_refresh()" type="text" icon="kIconrefresh"
+                    [kTooltip]="'applications.administration.roles.refresh' | translate"></button>
+          </div>
+        </kSticky>
+      </div>
+
+        <div class="kProfilesTable" [class.noResults]="!_profiles?.length">
+            <p-table kStickyHeader [scrollable]="true" stickyClass="stickyHeader" scrollHeight="100%" dataKey="id"
+                     [rowTrackBy]="_rowTrackBy"
+                     [sticksTo]="'profilesFilters'"
+                     [resizableColumns]="true"
+                     [sortField]="sortField"
+                     [sortOrder]="sortOrder"
+                     [value]="_profiles"
+                     [stickyId]="'profilesTable'"
+                     (sortFunction)="onSortChanged($event)" [customSort]="true"
+                     (onColResize)="_columnsResizeManager.onColumnResize($event)">
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th data-cid="name" [ngStyle]="{'padding-left': '1em'}" pResizableColumn [pSortableColumn]="'name'">
+                            {{'applications.settings.authentication.table.name' | translate}}
+                            <p-sortIcon [field]="'name'"></p-sortIcon>
+                        </th>
+                        <th data-cid="description">
+                            {{'applications.settings.authentication.table.description' | translate}}
+                        </th>
+                        <th data-cid="id">
+                            {{'applications.settings.authentication.table.id' | translate}}
+                        </th>
+                         <th data-cid="status" [ngStyle]="{'width': '120px'}">
+                            {{'applications.settings.authentication.table.status' | translate}}
+                        </th>
+                       <th data-cid="type" [ngStyle]="{'width': '140px'}">
+                            {{'applications.settings.authentication.table.type' | translate}}
+                        </th>
+                       <th data-cid="provider" [ngStyle]="{'width': '120px'}">
+                            {{'applications.settings.authentication.table.provider' | translate}}
+                        </th>
+                       <th data-cid="created" pResizableColumn [pSortableColumn]="'createdAt'" [ngStyle]="{'width': '140px'}">
+                            {{'applications.settings.authentication.table.created' | translate}}
+                           <p-sortIcon [field]="'createdAt'"></p-sortIcon>
+                        </th>
+                        <th [ngStyle]="{'overflow': 'hidden', 'width': '80px'}"></th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-profile>
+                    <tr>
+                        <td [ngStyle]="{'padding-left': '1em'}">
+                            <span class="kProfileName kTableColumn" [kTooltip]="profile.name" [showOnEllipsis]="true" (click)="_editProfile(profile)">{{profile.name}}</span>
+                        </td>
+                        <td>
+                            <span class="kTableColumn" [kTooltip]="profile.description" [showOnEllipsis]="true">{{profile.description}}</span>
+                        </td>
+                        <td>
+                            <span class="kTableColumn">{{profile.id}}</span>
+                        </td>
+                        <td [ngStyle]="{'width': '120px'}">
+                            <div class="status">
+                                <div class="bullet" [ngStyle]="{backgroundColor: profile.status === 'complete' ? '#009444' : '#DB1F26'}"></div>
+                                <span class="kTableColumn" [ngStyle]="{color: profile.status === 'complete' ? '#009444' : '#DB1F26'}">{{'applications.settings.authentication.table.' + profile.status | translate}}</span>
+                            </div>
+                        </td>
+                        <td [ngStyle]="{'width': '140px'}">
+                            <span class="kTableColumn">{{profile.authStrategy}}</span>
+                        </td>
+                        <td [ngStyle]="{'width': '120px'}">
+                            <span class="kTableColumn">{{profile.providerType}}</span>
+                        </td>
+                        <td [ngStyle]="{'width': '140px'}">
+                          <span class="kTableColumn">
+                              {{profile.createdAt | kmcDate}}
+                          </span>
+                        </td>
+                        <td [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
+                            <div class="kProfilesTableActions">
+                                <button type="button" pButton icon="kIconmore"
+                                        [disabled]="profile.partnerId === 0" class="kMoreActionsButton"
+                                        (click)="_openActionsMenu($event, profile)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <div class="emptymessage">
+                        <div class="kEmptyMessage">{{'applications.content.table.noResults' | translate}}</div>
+                    </div>
+                </ng-template>
+            </p-table>
+            <p-menu #actionsmenu [popup]="true" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+        </div>
+        <div class="kProfilesTableFooter kContent" #footer>
+            <p-paginator [rows]="pageSize" (onPageChange)="_onPaginationChanged($event)"
+                         [first]="pageIndex * pageSize"
+                         [totalRecords]="_profilesCount"
+                         [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
+            <span class="kPaginatorShowRowsLabel">{{'applications.administration.paginator.showRows' | translate}}</span>
+        </div>
+    </div>
+  </div>
+</k-area-blocker>
+
+<kPopupWidget #editPopup data-aid="rolesEditPopup" [popupWidth]="995" [slider]="true">
+    <ng-template>
+        <kEditProfile [profile]="_currentEditProfile" [parentPopupWidget]="editPopup" (onRefresh)="_refresh()"></kEditProfile>
+    </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #deletePopup data-aid="deleteProfilePopup" [popupWidth]="600" [popupHeight]="330" [modal]="true" [preventPageScroll]="true" [closeBtn]="false">
+    <ng-template>
+        <kDeleteProfile [parentPopupWidget]="deletePopup" [profile]="_currentEditProfile" (onDelete)="deleteProfile()"></kDeleteProfile>
+    </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #newPopup data-aid="newProfilePopup" [popupWidth]="750" [popupHeight]="508" [modal]="true" [preventPageScroll]="true">
+    <ng-template>
+        <kNewProfile [parentPopupWidget]="newPopup" (onProfileCreated)="onProfileCreated($event)"></kNewProfile>
+    </ng-template>
+</kPopupWidget>
