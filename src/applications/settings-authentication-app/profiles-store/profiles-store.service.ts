@@ -267,11 +267,13 @@ export class ProfilesStoreService implements OnDestroy {
         }
         if (profile.userIdAttribute?.length) {
             let attributeFound = false;
-            Object.values(profile.userAttributeMappings).forEach(value => {
-                if (value === profile.userIdAttribute) {
-                    attributeFound = true;
-                }
-            })
+            if (profile.userAttributeMappings) {
+                Object.values(profile.userAttributeMappings).forEach(value => {
+                    if (value === profile.userIdAttribute) {
+                        attributeFound = true;
+                    }
+                })
+            }
             if (!attributeFound) {
                 complete = false;
             }
