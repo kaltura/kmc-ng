@@ -37,13 +37,13 @@
                         <th data-cid="description">
                             {{'applications.settings.authentication.table.description' | translate}}
                         </th>
-                        <th data-cid="id">
+                        <th data-cid="id" [ngStyle]="{'width': '140px', 'padding-right': '20px'}">
                             {{'applications.settings.authentication.table.id' | translate}}
                         </th>
                          <th data-cid="status" [ngStyle]="{'width': '120px'}">
                             {{'applications.settings.authentication.table.status' | translate}}
                         </th>
-                       <th data-cid="type" [ngStyle]="{'width': '140px'}">
+                       <th data-cid="type" [ngStyle]="{'width': '120px'}">
                             {{'applications.settings.authentication.table.type' | translate}}
                         </th>
                        <th data-cid="provider" [ngStyle]="{'width': '120px'}">
@@ -59,14 +59,15 @@
 
                 <ng-template pTemplate="body" let-profile>
                     <tr>
-                        <td [ngStyle]="{'padding-left': '1em'}">
-                            <span class="kProfileName kTableColumn" [kTooltip]="profile.name" [showOnEllipsis]="true" (click)="_editProfile(profile)">{{profile.name}}</span>
+                        <td class="nameHolder">
+                            <span class="kProfileName kTableColumn name" [kTooltip]="profile.name" [showOnEllipsis]="true" (click)="_editProfile(profile)">{{profile.name}}</span>
+                            <span *ngIf="profile.isAdminProfile" class="kProfileName kTableColumn admin" (click)="_editProfile(profile)">{{'applications.settings.authentication.table.admin' | translate}}</span>
                         </td>
                         <td>
                             <span class="kTableColumn" [kTooltip]="profile.description" [showOnEllipsis]="true">{{profile.description}}</span>
                         </td>
-                        <td>
-                            <span class="kTableColumn">{{profile.id}}</span>
+                        <td [ngStyle]="{'width': '140px', 'padding-right': '20px'}">
+                            <span class="kTableColumn" [kTooltip]="profile.id" [showOnEllipsis]="true">{{profile.id}}</span>
                         </td>
                         <td [ngStyle]="{'width': '120px'}">
                             <div class="status">
@@ -74,7 +75,7 @@
                                 <span class="kTableColumn" [ngStyle]="{color: profile.status === 'complete' ? '#009444' : '#DB1F26'}">{{'applications.settings.authentication.table.' + profile.status | translate}}</span>
                             </div>
                         </td>
-                        <td [ngStyle]="{'width': '140px'}">
+                        <td [ngStyle]="{'width': '120px'}">
                             <span class="kTableColumn">{{profile.authStrategy}}</span>
                         </td>
                         <td [ngStyle]="{'width': '120px'}">

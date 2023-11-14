@@ -207,8 +207,8 @@ export class ProfilesStoreService implements OnDestroy {
             name: "kmc app subscription",
             appGuid,
             authProfileIds,
-            appLandingPage: window.location.origin + "/actions/persist-login-by-ks",
-            appErrorPage: window.location.origin + "/login",
+            appLandingPage: window.location.origin + "/index.php/kmcng/actions/persist-login-by-ks",
+            appErrorPage: window.location.origin + "/index.php/kmcng/login",
             redirectMethod: "HTTP-POST"
         }
         try {

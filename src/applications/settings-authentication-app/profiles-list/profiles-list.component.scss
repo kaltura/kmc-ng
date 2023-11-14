@@ -122,7 +122,17 @@
         right: 80px;
     }
 }
-
+p-table ::ng-deep .nameHolder {
+    padding-left: 1em;
+    display: flex;
+    align-items: center;
+    margin-top: -1px;
+    border-bottom: 0px;
+    .admin {
+        flex: 0 0 auto;
+        margin-left: 4px;
+    }
+}
 :host ::ng-deep .p-tieredmenu.p-menu {
   width: 250px;
   .ui-submenu-icon {

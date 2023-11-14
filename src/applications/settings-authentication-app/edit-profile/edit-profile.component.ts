@@ -210,7 +210,7 @@ export class EditProfileComponent implements OnInit {
     }
 
     public openHelp(): void {
-        // TODO: open help link
+        this._browserService.openLink('https://knowledge.kaltura.com/help/creating-and-managing-sso-profiles');
     }
 
     public downloadMetadata(action: string): void {

@@ -128,7 +128,7 @@ import { serverConfig } from "config/server";
             identifierFormat: "urn:oasis:names:tc:SAML:2.0:nameid-format:emailAddress"
         },
         ksPrivileges: "",
-        userIdAttribute: "",
+        userIdAttribute: "Core_User_Email",
         userAttributeMappings: {}
 
     }
@@ -166,7 +166,7 @@ import { serverConfig } from "config/server";
     }
 
   public openHelp(): void {
-      // TODO: open help link
+      this._browserService.openLink('https://knowledge.kaltura.com/help/creating-and-managing-sso-profiles');
   }
 
 }

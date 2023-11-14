@@ -2685,10 +2685,11 @@
                 "loadError": "Error loading authentication profiles",
                 "table": {
                     "name": "Name",
+                    "admin": "(Admin)",
                     "description": "Description",
                     "id": "ID",
                     "status": "Status",
-                    "type": "Authentication type",
+                    "type": "Type",
                     "provider": "Provider (IdP)",
                     "created": "Creation date",
                     "edit": "Edit",
