@@ -58,12 +58,37 @@ export const ServerConfigSchema = {
         },
         externalServices: {
             properties: {
-                authBrokerServer: {
+                appRegistryEndpoint: {
                     properties: {
                         uri: {type: 'string'},
                     }
                 },
-                appRegistryServer: {
+                appSubscriptionEndpoint: {
+                    properties: {
+                        uri: {type: 'string'},
+                    }
+                },
+                authManagerEndpoint: {
+                    properties: {
+                        uri: {type: 'string'},
+                    }
+                },
+                authProfileEndpoint: {
+                    properties: {
+                        uri: {type: 'string'},
+                    }
+                },
+                spaProxyEndpoint: {
+                    properties: {
+                        uri: {type: 'string'},
+                    }
+                },
+                userProfileEndpoint: {
+                    properties: {
+                        uri: {type: 'string'},
+                    }
+                },
+                userReportsEndpoint: {
                     properties: {
                         uri: {type: 'string'},
                     }

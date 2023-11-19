@@ -23,7 +23,7 @@ export class EditProfileComponent implements OnInit {
 
     public _profile: AuthProfile;
 
-    public _ssoUrl = `${serverConfig.externalServices.authBrokerServer.uri}/api/v1/auth-manager/saml/ac`;
+    public _ssoUrl = `${serverConfig.externalServices.authManagerEndpoint.uri}/saml/ac`;
     public metadataLoading = false;
     public showAdvancedSettings = false;
     public certificate = '';

@@ -23,7 +23,7 @@ export class SettingsAuthenticationMainViewService extends KmcMainViewBaseServic
     }
 
     isAvailable(): boolean {
-        return !!serverConfig.externalServices && !!serverConfig.externalServices.authBrokerServer && !!serverConfig.externalServices.authBrokerServer.uri;
+        return !!serverConfig.externalServices && !!serverConfig.externalServices.authProfileEndpoint && !!serverConfig.externalServices.authProfileEndpoint.uri;
     }
 
     getRoutePath(): string {

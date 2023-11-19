@@ -91,10 +91,25 @@ export interface ServerConfig {
         kpfPurchaseManagerBaseUrl: string
     },
     externalServices: {
-        authBrokerServer: {
+        appRegistryEndpoint: {
             uri: string;
         },
-        appRegistryServer: {
+        appSubscriptionEndpoint: {
+            uri: string;
+        },
+        authManagerEndpoint: {
+            uri: string;
+        },
+        authProfileEndpoint: {
+            uri: string;
+        },
+        spaProxyEndpoint: {
+            uri: string;
+        },
+        userProfileEndpoint: {
+            uri: string;
+        },
+        userReportsEndpoint: {
             uri: string;
         }
     },

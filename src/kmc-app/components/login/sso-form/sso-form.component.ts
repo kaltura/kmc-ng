@@ -10,6 +10,7 @@ import {AppAnalytics, BrowserService} from 'app-shared/kmc-shell';
 export class SsoFormComponent {
   @Input() inProgress: boolean;
   @Input() errorMessage: string;
+  @Input() missingOrgId: boolean;
   @Input()
   set authBrokerProfiles(value: any[]) {
       if (value.length > 0) {

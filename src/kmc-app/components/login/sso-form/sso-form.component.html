@@ -7,7 +7,7 @@
 
     <input pInputText autocomplete="off" [formControl]="_emailField"
            [ngClass]="{
-               'has-error': errorMessage || _emailValidationMessage,
+               'has-error': (errorMessage && !missingOrgId) || _emailValidationMessage,
                'has-success': _emailField.valid && _emailField.touched
              }"
            [kTooltip]="_emailValidationMessage | translate"
@@ -15,7 +15,7 @@
 
 
     <span class="label">{{'applications.settings.authentication.addOrganizationId' | translate}}</span>
-    <input pInputText autocomplete="off" [formControl]="_organizationField">
+    <input pInputText autocomplete="off" [formControl]="_organizationField"  [ngClass]="{'has-error': missingOrgId}">
 
     <div class="providerWrapper" *ngIf="_profiles.length">
         <span class="label">{{'applications.settings.authentication.selectProfile' | translate}}</span>

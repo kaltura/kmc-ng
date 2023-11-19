@@ -13,11 +13,26 @@
         "kpfPurchaseManagerBaseUrl": "https://kpf-dev.kaltura.com/purchase-manager"
     },
     "externalServices": {
-        "authBrokerServer": {
-            "uri": "https://auth.nvp1.ovp.kaltura.com"
+        "appRegistryEndpoint": {
+            "uri": "https://app-registry.nvp1.ovp.kaltura.com/api/v1/app-registry"
         },
-        "appRegistryServer": {
-            "uri": "https://app-registry.nvp1.ovp.kaltura.com"
+        "appSubscriptionEndpoint": {
+            "uri": "https://auth.nvp1.ovp.kaltura.com/api/v1/app-subscription"
+        },
+        "authManagerEndpoint": {
+            "uri": "https://auth.nvp1.ovp.kaltura.com/api/v1/auth-manager"
+        },
+        "authProfileEndpoint": {
+            "uri": "https://auth.nvp1.ovp.kaltura.com/api/v1/auth-profile"
+        },
+        "spaProxyEndpoint": {
+            "uri": "https://auth.nvp1.ovp.kaltura.com/api/v1/spa-proxy"
+        },
+        "userProfileEndpoint": {
+            "uri": "https://user.nvp1.ovp.kaltura.com/api/v1/user-profile"
+        },
+        "userReportsEndpoint": {
+            "uri": "https://user.nvp1.ovp.kaltura.com/api/v1/reports"
         }
     },
     "externalApps": {

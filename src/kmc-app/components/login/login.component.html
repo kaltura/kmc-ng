@@ -16,6 +16,7 @@
         <kKMCSsoForm  *ngSwitchCase="_loginScreens.Sso"
                       [username]="_username"
                       [errorMessage]="_errorMessage"
+                      [missingOrgId]="_missingOrgId"
                       [inProgress]="_inProgress"
                       (onRememberMe)="_rememberMe($event)"
                       [authBrokerProfiles]="_authBrokerProfiles"

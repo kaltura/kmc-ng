@@ -44,6 +44,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _authenticationHash = '';
   public _qrCodeBase64 = null;
   public _authBrokerProfiles = [];
+  public _missingOrgId = false;
 
   // Caution: this is extremely dirty hack, don't do something similar to that
   @HostListener('window:resize')
@@ -305,13 +306,14 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _ssoLogin(event: {email: string, organizationId: string, profileId: string}): void {
       this._inProgress = true;
       this._errorMessage = '';
+      this._missingOrgId = false;
       this._appAuthentication._ssoLogin(event.email).subscribe(
           redirectUrl => {
               this._browserService.openLink(redirectUrl.toString(), {}, '_self');
           },
           error => {
               // if AuthBroker is configured, try to use it for login, else display the error
-              if (!!serverConfig.externalServices && !!serverConfig.externalServices.authBrokerServer && !!serverConfig.externalServices.authBrokerServer.uri) {
+              if (!!serverConfig.externalServices && !!serverConfig.externalServices.spaProxyEndpoint && !!serverConfig.externalServices.spaProxyEndpoint.uri) {
                   this._authBrokerLogin(event.email, event.organizationId, event.profileId);
               } else {
                   this._inProgress = false;
@@ -337,13 +339,14 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       if (profileId?.length) {
           loginData["authProfileId"] = profileId;
       }
-      this._http.post(`${serverConfig.externalServices.authBrokerServer.uri}/api/v1/spa-proxy/login`, loginData, {responseType: 'text'}).subscribe(
+      this._http.post(`${serverConfig.externalServices.spaProxyEndpoint.uri}/login`, loginData, {responseType: 'text'}).subscribe(
           response => {
               if (response.indexOf("KalturaAPIException") > -1) {
                   const parsedResponse = JSON.parse(response);
                   if (parsedResponse?.objectType === "KalturaAPIException") {
                       this._inProgress = false;
-                      this._errorMessage = parsedResponse.message;
+                      this._missingOrgId = parsedResponse.code === "ORGANIZATION_ID_MISSING";
+                      this._errorMessage = parsedResponse.code === "ORGANIZATION_ID_MISSING" ? this._appLocalization.get('app.login.login.orgIdErr') : parsedResponse.message;
                   }
               } else {
                   if (response.indexOf('"objectType":"AuthProfile"') > -1) {
