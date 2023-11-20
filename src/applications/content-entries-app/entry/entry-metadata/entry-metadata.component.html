@@ -34,7 +34,7 @@
         </div>
         <div class="kRow kValign">
           <span class="kLabel">{{'applications.content.entryDetails.metadata.tags' | translate}}</span>
-          <div class="kControl">
+          <div class="kControl kTags">
             <kAutoComplete formControlName="tags"
                            suggestionItemField="item"
                            suggestionSelectableField="isSelectable"
@@ -44,6 +44,7 @@
                            [suggestionsProvider]="_tagsProvider"
                            (completeMethod)="_searchTags($event)">
             </kAutoComplete>
+            <kCopyToClipboard class="kIcon" [text]="_widgetService.metadataForm.value.tags" [iconSwitchTimeout]="5000"></kCopyToClipboard>
           </div>
         </div>
         <div class="kRow kValign">

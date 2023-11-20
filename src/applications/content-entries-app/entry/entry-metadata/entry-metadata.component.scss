@@ -82,6 +82,14 @@ hr{
                 display: block;
             }
 
+            .kTags {
+                display: flex;
+                ::ng-deep kcopytoclipboard {
+                    margin-left: 8px;
+                    margin-top: 6px;
+                }
+            }
+
 			.kControl, k-prime-control
 			{
 				width:100%;
