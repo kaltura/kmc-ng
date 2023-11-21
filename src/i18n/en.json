@@ -2706,7 +2706,7 @@
                 "name": "Name",
                 "profileName": "Profile name",
                 "deleteError": "Error deleting profile",
-                "addOrganizationId": "Add organization ID (optional)",
+                "addOrganizationId": "Organization ID (optional)",
                 "organizationId": "Organization ID",
                 "loginError": "Login error occurred",
                 "edit": {
