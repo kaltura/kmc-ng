@@ -10,6 +10,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { AuthenticatorViewService } from "app-shared/kmc-shared/kmc-views/details-views";
 import { KalturaAuthentication } from "kaltura-ngx-client";
 import { HttpClient } from "@angular/common/http";
+import { KMCPermissions, KMCPermissionsService } from "app-shared/kmc-shared/kmc-permissions";
 
 export enum LoginScreens {
   Login,
@@ -61,6 +62,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private _appAuthentication: AppAuthentication,
               private _appLocalization: AppLocalization,
+              private _appPermissions: KMCPermissionsService,
               private _browserService: BrowserService,
               private _analytics: AppAnalytics,
               private _el: ElementRef,
@@ -313,7 +315,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           },
           error => {
               // if AuthBroker is configured, try to use it for login, else display the error
-              if (!!serverConfig.externalServices && !!serverConfig.externalServices.spaProxyEndpoint && !!serverConfig.externalServices.spaProxyEndpoint.uri) {
+              if (this._appPermissions.hasPermission(KMCPermissions.FEATURE_AUTH_BROKER_PERMISSION) && !!serverConfig.externalServices && !!serverConfig.externalServices.spaProxyEndpoint && !!serverConfig.externalServices.spaProxyEndpoint.uri) {
                   this._authBrokerLogin(event.email, event.organizationId, event.profileId);
               } else {
                   this._inProgress = false;

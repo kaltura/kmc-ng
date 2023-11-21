@@ -7,6 +7,7 @@ import { Title } from '@angular/platform-browser';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { serverConfig } from 'config/server';
 import { ContextualHelpService } from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
+import { KMCPermissions, KMCPermissionsService } from "app-shared/kmc-shared/kmc-permissions";
 
 @Injectable()
 export class SettingsAuthenticationMainViewService extends KmcMainViewBaseService {
@@ -16,6 +17,7 @@ export class SettingsAuthenticationMainViewService extends KmcMainViewBaseServic
         browserService: BrowserService,
         router: Router,
         private _appLocalization: AppLocalization,
+        private _appPermissions: KMCPermissionsService,
         titleService: Title,
         contextualHelpService: ContextualHelpService
     ) {
@@ -23,7 +25,7 @@ export class SettingsAuthenticationMainViewService extends KmcMainViewBaseServic
     }
 
     isAvailable(): boolean {
-        return !!serverConfig.externalServices && !!serverConfig.externalServices.authProfileEndpoint && !!serverConfig.externalServices.authProfileEndpoint.uri;
+        return this._appPermissions.hasPermission(KMCPermissions.FEATURE_AUTH_BROKER_PERMISSION) && !!serverConfig.externalServices && !!serverConfig.externalServices.authProfileEndpoint && !!serverConfig.externalServices.authProfileEndpoint.uri;
     }
 
     getRoutePath(): string {
