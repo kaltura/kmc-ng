@@ -172,7 +172,7 @@
                 "qrCode": "Scan this QR code with your authentication app. You can download an authentication app for both platforms:",
                 "sso": "Login with SSO",
                 "loginWithPassword": "Login with Email and Password",
-                "orgIdErr": "Please provide organization ID"
+                "orgIdErr": "Please enter organization ID"
             },
             "invalidLoginHash": {
                 "title": "Invalid Login Link",
