@@ -1,6 +1,10 @@
 @import 'app-theme/_variables.scss';
 
 .kEditAccessControlProfile {
+    ::ng-deep .p-dropdown{
+        min-width: 240px;
+        width: 240px;
+    }
   .kHeader {
     height: 72px;
     width: 100%;

@@ -162,22 +162,25 @@
             </span>
         </div>
 
+        <span class="kSubTitle">{{'applications.settings.integrationSettings.zoom.permissions' | translate}}</span>
+
+        <div class="kRow">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.altHosts' | translate}}</span>
+            </div>
+            <p-dropdown class="kControl" formControlName="altHosts" [options]="_hostsOptions"></p-dropdown>
+        </div>
+        <div class="kRow">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.coHosts' | translate}}</span>
+            </div>
+            <p-dropdown class="kControl" formControlName="coHosts" [options]="_hostsOptions"></p-dropdown>
+        </div>
         <div class="kRow">
             <div class="kLabel">
                 <span>{{'applications.settings.integrationSettings.zoom.participation' | translate}}</span>
             </div>
-            <p-radioButton name="participation"
-                           [value]="2"
-                           formControlName="participation"
-                           [label]="'applications.settings.integrationSettings.zoom.participation1' | translate"></p-radioButton>
-            <p-radioButton name="participation"
-                           [value]="1"
-                           formControlName="participation"
-                           [label]="'applications.settings.integrationSettings.zoom.participation2' | translate"></p-radioButton>
-            <p-radioButton name="participation"
-                           [value]="0"
-                           formControlName="participation"
-                           [label]="'applications.settings.integrationSettings.zoom.participation3' | translate"></p-radioButton>
+            <p-dropdown class="kControl" formControlName="participation" [options]="_participationOptions"></p-dropdown>
         </div>
 
         <span class="kSubTitle">{{'applications.settings.integrationSettings.zoom.owner' | translate}}</span>

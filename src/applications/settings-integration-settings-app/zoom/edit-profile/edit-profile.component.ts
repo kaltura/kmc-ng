@@ -57,6 +57,8 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
     public _postfix: AbstractControl;
     public _userPostfix: AbstractControl;
     public _participation: AbstractControl;
+    public _altHosts: AbstractControl;
+    public _coHosts: AbstractControl;
     public _upload: AbstractControl;
     public _categories: AbstractControl;
     public _createUser: AbstractControl;
@@ -73,6 +75,9 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
     public _showTranscription = true;
     public _enableMeetingUpload = false;
 
+    public _participationOptions: Array<{ value: number, label: string }>;
+    public _hostsOptions: Array<{ value: number, label: string }>;
+
     private _searchUsersSubscription: ISubscription;
     private _searchGroupsSubscription: ISubscription;
     private groupsDelimiter: string = String.fromCharCode(13)+String.fromCharCode(10); // \r\n
@@ -83,6 +88,18 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                 private _kalturaServerClient: KalturaClient,
                 private _categoriesSearchService: CategoriesSearchService,
                 private _logger: KalturaLogger) {
+        this._participationOptions = [
+            {value: 2, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.participation1')},
+            {value: 1, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.participation2')},
+            {value: 0, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.participation3')}
+        ];
+        this._hostsOptions = [
+            {value: 2, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts1')},
+            {value: 1, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts2')},
+            {value: 0, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts3')},
+            {value: 3, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts4')},
+            {value: 4, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts5')}
+        ];
         this._buildForm();
     }
 
@@ -124,6 +141,8 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             postfix: profile.zoomUserMatchingMode,
             userPostfix: profile.zoomUserPostfix,
             participation: profile.handleParticipantsMode,
+            altHosts: profile.handleAlternativeHostsMode,
+            coHosts: profile.handleCohostsMode,
             upload: profile.groupParticipationType || 0,
             categories: profile.zoomCategory ? [{name: profile.zoomCategory}] : [],
             webinarCategory: profile.zoomWebinarCategory ? [{name: profile.zoomWebinarCategory}] : [],
@@ -148,6 +167,8 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             postfix: null,
             userPostfix: [''],
             participation: null,
+            altHosts: null,
+            coHosts: null,
             upload: null,
             categories: [[]],
             webinarCategory: [[]],
@@ -169,6 +190,8 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         this._postfix = this._profileForm.controls['postfix'];
         this._userPostfix = this._profileForm.controls['userPostfix'];
         this._participation = this._profileForm.controls['participation'];
+        this._altHosts = this._profileForm.controls['altHosts'];
+        this._coHosts = this._profileForm.controls['coHosts'];
         this._upload = this._profileForm.controls['upload'];
         this._categories = this._profileForm.controls['categories'];
         this._webinarCategory = this._profileForm.controls['webinarCategory'];
@@ -193,6 +216,8 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                     this._postfix.enable();
                     this._userPostfix.enable();
                     this._participation.enable();
+                    this._altHosts.enable();
+                    this._coHosts.enable();
                     this._upload.enable();
                     this._categories.enable();
                     this._webinarCategory.enable();
@@ -209,6 +234,8 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                     this._postfix.disable();
                     this._userPostfix.disable();
                     this._participation.disable();
+                    this._altHosts.disable();
+                    this._coHosts.disable();
                     this._upload.disable();
                     this._categories.disable();
                     this._defaultUserId.disable();
@@ -333,6 +360,8 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         }
         this.profile.zoomUserPostfix = formValue.userPostfix;
         this.profile.handleParticipantsMode = formValue.participation;
+        this.profile.handleAlternativeHostsMode = formValue.altHosts;
+        this.profile.handleCohostsMode = formValue.coHosts;
         this.profile.groupParticipationType = formValue.upload;
         this.onSave.emit(this.profile);
         this.parentPopup.close();
