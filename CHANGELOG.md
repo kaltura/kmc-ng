@@ -1,3 +1,14 @@
+<a name="7.16.1"></a>
+## [7.16.1](https://github.com/kaltura/kmc-ng/compare/v7.16.0...v7.16.1) (2023-11-27)
+
+
+### Bug Fixes
+
+* **settings/integration:** role configuration to the zoom connector KMCNG-2549 ([ed9518a](https://github.com/kaltura/kmc-ng/commit/ed9518a))
+* **login:** user friendly error messages for sso login KMCNG-2548 ([57084f7](https://github.com/kaltura/kmc-ng/commit/57084f7))
+
+
+
 <a name="7.16.0"></a>
 # [7.16.0](https://github.com/kaltura/kmc-ng/compare/v7.15.0...v7.16.0) (2023-11-01)
 
