@@ -42,19 +42,17 @@
 
             <span class="kSubTitle">{{'applications.settings.authentication.edit.sps' | translate}}</span>
 
-            <div class="kRow" [class.kUpdating]="metadataLoading">
+            <div class="kRow">
                 <span>{{'applications.settings.authentication.edit.metadata' | translate}}</span>
                 <span class="link" (click)="downloadMetadata('url')">{{'applications.settings.authentication.edit.metadata1' | translate}}</span>
                 <span>{{'applications.settings.authentication.edit.metadata2' | translate}}</span>
                 <span class="link" (click)="downloadMetadata('file')">{{'applications.settings.authentication.edit.metadata3' | translate}}</span>
-                <div *ngIf="metadataLoading" class="k-spinner-animation kSpinnerAnim"></div>
-                <span *ngIf="metadataLoading">{{'applications.settings.authentication.edit.metadataUpdate' | translate}}</span>
             </div>
 
             <div class="kRow center">
                 <div class="labelWithHelpTip">
                     <span class="kLabel">{{'applications.settings.authentication.edit.ssoUrl' | translate}}</span>
-                    <kInputHelper [trigger]="'click'">
+                    <kInputHelper>
                         <span>{{'applications.settings.authentication.edit.ssoUrl_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
@@ -65,7 +63,7 @@
             <div class="kRow required">
                 <div class="labelWithHelpTip required">
                     <span class="kLabel">{{'applications.settings.authentication.edit.entity' | translate}}</span>
-                    <kInputHelper [trigger]="'click'">
+                    <kInputHelper>
                         <span>{{'applications.settings.authentication.edit.entity_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
@@ -82,12 +80,14 @@
             <div class="kRow center">
                 <div class="labelWithHelpTip">
                     <span class="kLabel">{{'applications.settings.authentication.edit.sign' | translate}}</span>
-                    <kInputHelper [trigger]="'click'">
+                    <kInputHelper>
                         <span>{{'applications.settings.authentication.edit.sign_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
-                <div>
+                <div [class.kUpdating]="metadataLoading === 'sign' || metadataLoading === 'on'">
                     <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.authStrategyConfig.enableRequestSign" (onChange)="confirmGenerateKeys('sign')"></p-inputSwitch>
+                    <div *ngIf="metadataLoading === 'sign' || metadataLoading === 'on'" class="k-spinner-animation kSpinnerAnim"></div>
+                    <span *ngIf="metadataLoading === 'sign' || metadataLoading === 'on'">{{'applications.settings.authentication.edit.metadataUpdate' | translate}}</span>
                 </div>
             </div>
 
@@ -100,12 +100,14 @@
             <div class="kRow center">
                 <div class="labelWithHelpTip">
                     <span class="kLabel">{{'applications.settings.authentication.edit.encryption' | translate}}</span>
-                    <kInputHelper [trigger]="'click'">
+                    <kInputHelper>
                         <span>{{'applications.settings.authentication.edit.encryption_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
-                <div>
+                <div [class.kUpdating]="metadataLoading === 'encryption' || metadataLoading === 'on'">
                     <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.authStrategyConfig.enableAssertsDecryption" (onChange)="confirmGenerateKeys('encryption')"></p-inputSwitch>
+                    <div *ngIf="metadataLoading === 'encryption' || metadataLoading === 'on'" class="k-spinner-animation kSpinnerAnim"></div>
+                    <span *ngIf="metadataLoading === 'encryption' || metadataLoading === 'on'">{{'applications.settings.authentication.edit.metadataUpdate' | translate}}</span>
                 </div>
             </div>
 
@@ -123,7 +125,7 @@
             <div class="kRow required">
                 <div class="labelWithHelpTip required">
                     <span class="kLabel">{{'applications.settings.authentication.edit.login' | translate}}</span>
-                    <kInputHelper [trigger]="'click'" [width]="400">
+                    <kInputHelper [width]="400">
                         <span>{{'applications.settings.authentication.edit.login_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
@@ -136,7 +138,7 @@
             <div class="kRow">
                 <div class="labelWithHelpTip">
                     <span class="kLabel">{{'applications.settings.authentication.edit.logout' | translate}}</span>
-                    <kInputHelper [trigger]="'click'" [width]="400">
+                    <kInputHelper [width]="400">
                         <span>{{'applications.settings.authentication.edit.logout_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
@@ -148,7 +150,7 @@
             <div class="kRow required">
                 <div class="labelWithHelpTip required">
                     <span class="kLabel">{{'applications.settings.authentication.edit.ipc' | translate}}</span>
-                    <kInputHelper [trigger]="'click'">
+                    <kInputHelper>
                         <span>{{'applications.settings.authentication.edit.ipc_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
@@ -161,7 +163,7 @@
             <div class="kRow">
                 <div class="labelWithHelpTip">
                     <span class="kLabel">{{'applications.settings.authentication.edit.metadataUrl' | translate}}</span>
-                    <kInputHelper [trigger]="'click'" [width]="400">
+                    <kInputHelper [width]="400">
                         <span>{{'applications.settings.authentication.edit.metadataUrl_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
@@ -182,7 +184,7 @@
             <div class="kAttributeRow" *ngFor="let attribute of userAttributeMappings; let index = index">
                 <input class="kControl idp" pInputText [(ngModel)]="attribute.idpAttribute" (ngModelChange)="formPristine=false">
                 <span class="kaltura" *ngIf="attribute.kalturaAttribute==='Core_User_Email'">{{attribute.kalturaAttribute}}</span>
-                <kInputHelper *ngIf="attribute.kalturaAttribute==='Core_User_Email'" [trigger]="'click'">
+                <kInputHelper *ngIf="attribute.kalturaAttribute==='Core_User_Email'">
                     <span>{{'applications.settings.authentication.edit.email_tt' | translate}}</span>
                 </kInputHelper>
                 <p-dropdown *ngIf="attribute.isKalturaAttribute && attribute.kalturaAttribute!=='Core_User_Email'" class="kControl" [(ngModel)]="attribute.kalturaAttribute" appendTo="body" [options]="_kalturaUserAttributes" (ngModelChange)="formPristine=false" [placeholder]="'applications.settings.authentication.edit.attributePh' | translate"></p-dropdown>
@@ -204,7 +206,7 @@
             <div class="kRow">
                 <div class="labelWithHelpTip">
                     <span class="kLabel">{{'applications.settings.authentication.edit.groupName' | translate}}</span>
-                    <kInputHelper [trigger]="'click'" [width]="400">
+                    <kInputHelper [width]="400">
                         <span>{{'applications.settings.authentication.edit.groupName_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
@@ -216,7 +218,7 @@
             <div class="kRow center">
                 <div class="labelWithHelpTip">
                     <span class="kLabel">{{'applications.settings.authentication.edit.createGroups' | translate}}</span>
-                    <kInputHelper [trigger]="'click'">
+                    <kInputHelper>
                         <span>{{'applications.settings.authentication.edit.createGroups_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
@@ -228,7 +230,7 @@
             <div class="kRow center">
                 <div class="labelWithHelpTip">
                     <span class="kLabel">{{'applications.settings.authentication.edit.removeGroups' | translate}}</span>
-                    <kInputHelper [trigger]="'click'">
+                    <kInputHelper>
                         <span>{{'applications.settings.authentication.edit.removeGroups_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
@@ -241,7 +243,7 @@
             <div class="kRow center">
                 <div class="labelWithHelpTip">
                     <span class="kLabel">{{'applications.settings.authentication.edit.syncGroups' | translate}}</span>
-                    <kInputHelper [trigger]="'click'">
+                    <kInputHelper>
                         <span>{{'applications.settings.authentication.edit.syncGroups_tt' | translate}}</span>
                     </kInputHelper>
                 </div>
@@ -273,7 +275,7 @@
             <div class="kRow center">
                 <div class="labelWithHelpTip">
                     <span class="kLabel">{{'applications.settings.authentication.edit.format' | translate}}</span>
-                    <kInputHelper [trigger]="'click'">
+                    <kInputHelper>
                         <span>{{'applications.settings.authentication.edit.format_tt' | translate}}</span>
                     </kInputHelper>
                 </div>

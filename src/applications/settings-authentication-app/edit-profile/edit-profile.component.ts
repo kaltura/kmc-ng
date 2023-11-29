@@ -24,7 +24,7 @@ export class EditProfileComponent implements OnInit {
     public _profile: AuthProfile;
 
     public _ssoUrl = `${serverConfig.externalServices.authManagerEndpoint.uri}/saml/ac`;
-    public metadataLoading = false;
+    public metadataLoading = 'off';
     public showAdvancedSettings = false;
     public certificate = '';
     public encryptionKey = '';
@@ -75,6 +75,7 @@ export class EditProfileComponent implements OnInit {
             id: this._profile.id,
             name: this._profile.name
         });
+        this.metadataLoading = 'on'; // used to display the loading animation in the form
         this.loadProfileMetadata();
         // prepare form - replace placeholders with empty strings
         this._profile.authStrategyConfig.entryPoint = this._profile.authStrategyConfig.entryPoint === '__placeholder__' ? '' : this._profile.authStrategyConfig.entryPoint;
@@ -124,15 +125,14 @@ export class EditProfileComponent implements OnInit {
 
     // load the metadata XML
     private loadProfileMetadata(): void {
-        this.metadataLoading = true; // used to display the loading animation in the form
         this._profilesService.loadProfileMetadata(this._profile.id).subscribe(
             result => {
-                this.metadataLoading = false;
+                this.metadataLoading = 'off';
                 this.certificate = this._profile.authStrategyConfig.enableRequestSign ? this.getFromMetadata(result, 'use="signing"') : '';
                 this.encryptionKey = this._profile.authStrategyConfig.enableAssertsDecryption ? this.getFromMetadata(result, 'use="encryption"') : '';
             },
             error => {
-                this.metadataLoading = false;
+                this.metadataLoading = 'off';
                 console.error(error)
             }
         );
@@ -210,7 +210,7 @@ export class EditProfileComponent implements OnInit {
     }
 
     public openHelp(): void {
-        this._browserService.openLink('https://knowledge.kaltura.com/help/creating-and-managing-sso-profiles');
+        this._browserService.openLink('https://knowledge.kaltura.com/help/create-and-manage-saml-profiles#create');
     }
 
     public downloadMetadata(action: string): void {
@@ -228,7 +228,7 @@ export class EditProfileComponent implements OnInit {
             header: this._appLocalization.get('app.common.note'),
             message: this._appLocalization.get('applications.settings.authentication.edit.confirm'),
             accept: () => {
-                this.generateKeys();
+                this.generateKeys(property);
             },
             reject: () => {
                 if (property === 'sign') {
@@ -240,12 +240,12 @@ export class EditProfileComponent implements OnInit {
         });
     }
 
-    private generateKeys(): void {
+    private generateKeys(property: string): void {
         // we need to update the profile before generating PvKeys and before loading metadata
         this.formPristine = true;
         const enableRequestSign = this._profile.authStrategyConfig.enableRequestSign;
         const enableAssertsDecryption = this._profile.authStrategyConfig.enableAssertsDecryption;
-        this.metadataLoading = true;
+        this.metadataLoading = property;
         // replace placeholder for required empty fields
         this._profile.authStrategyConfig.entryPoint = this._profile.authStrategyConfig.entryPoint === '' ? '__placeholder__' : this._profile.authStrategyConfig.entryPoint;
         this._profile.authStrategyConfig.cert = this._profile.authStrategyConfig.cert === '' ? '__placeholder__' : this._profile.authStrategyConfig.cert;
@@ -263,7 +263,7 @@ export class EditProfileComponent implements OnInit {
                     if (!enableRequestSign && !enableAssertsDecryption) {
                         this.certificate = '';
                         this.encryptionKey = '';
-                        this.metadataLoading = false;
+                        this.metadataLoading = 'off';
                         this.onRefresh.emit();
                         return; // cannot delete PvKeys from metadata so just clear fields and exit
                     }
@@ -276,13 +276,13 @@ export class EditProfileComponent implements OnInit {
                             },
                         error => {
                             this.displayServerError(error);
-                            this.metadataLoading = false;
+                            this.metadataLoading = 'off';
                         }
                     );
                 },
                 error =>  {
                     console.error(error);
-                    this.metadataLoading = false;
+                    this.metadataLoading = 'off';
                 }
             );
     }
