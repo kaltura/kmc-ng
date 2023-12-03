@@ -127,11 +127,13 @@ p-table ::ng-deep .nameHolder {
     display: flex;
     align-items: center;
     margin-top: -1px;
-    border-bottom: 0px;
     .admin {
         flex: 0 0 auto;
         margin-left: 4px;
     }
+}
+p-table ::ng-deep tr:not(:last-child) .nameHolder {
+    border-bottom: 0px;
 }
 :host ::ng-deep .p-tieredmenu.p-menu {
   width: 250px;
