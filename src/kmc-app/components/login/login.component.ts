@@ -354,9 +354,20 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
                       this._authBrokerProfiles = JSON.parse(response);
                       this._inProgress = false;
                   } else {
-                      document.open();
-                      document.write(response);
-                      document.close();
+                      try {
+                          const scripts = document.getElementsByTagName('script');
+                          if (scripts.length) {
+                              const nonce = scripts[0].nonce;
+                              if (nonce) {
+                                  response = response.replace("\x3Cscript>", "\x3Cscript nonce='" + nonce + "'>");
+                              }
+                          }
+                          document.open();
+                          document.write(response);
+                          document.close();
+                      } catch(e) {
+                          console.error(`error logging-in using auth broker. ${e.message}`);
+                      }
                   }
               }
           },
