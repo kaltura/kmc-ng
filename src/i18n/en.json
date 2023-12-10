@@ -2788,11 +2788,12 @@
                     "removeFormat": "Remove"
                 },
                 "new": {
-                    "doc": "For instructions on how to configure a new SSO profile visit our",
-                    "docLink": "SSO profile configuration guide",
+                    "doc": "Visit our",
+                    "doc2": "for a step-by-step guide ",
+                    "docLink": "SSO profile configuration article",
                     "provider": "Provider",
                     "admin": "Admin profile",
-                    "admin-help": "Check this text box if this profile is created to sign into admin applications (i.e Event Platform, KMC)",
+                    "admin-help": "Check this box if profile will be used to sign into Kaltura admin applications (i.e KMC, Event Platform)",
                     "createTitle": "Create profile",
                     "create": "Next",
                     "create_tt": "Create profile and continue to complete profile settings",
