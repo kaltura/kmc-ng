@@ -44,9 +44,9 @@
 
             <div class="kRow">
                 <span>{{'applications.settings.authentication.edit.metadata' | translate}}</span>
-                <span class="link" (click)="downloadMetadata('url')">{{'applications.settings.authentication.edit.metadata1' | translate}}</span>
-                <span>{{'applications.settings.authentication.edit.metadata2' | translate}}</span>
                 <span class="link" (click)="downloadMetadata('file')">{{'applications.settings.authentication.edit.metadata3' | translate}}</span>
+                <span>{{'applications.settings.authentication.edit.metadata2' | translate}}</span>
+                <span class="link" (click)="downloadMetadata('url')">{{'applications.settings.authentication.edit.metadata1' | translate}}</span>
             </div>
 
             <div class="kRow center">
@@ -174,7 +174,10 @@
 
             <span class="kSubTitle">{{'applications.settings.authentication.edit.attributesStatement' | translate}}</span>
             <div class="kRow">
-                <span class="gap">{{'applications.settings.authentication.edit.attributes_tt' | translate}}</span>
+                <div class="kFloater">
+                    <span>{{'applications.settings.authentication.edit.attributes_tt' | translate}}</span>
+                    <span class="text2">{{'applications.settings.authentication.edit.attributes_tt2' | translate}}</span>
+                </div>
             </div>
 
             <div class="kAttributeRow">

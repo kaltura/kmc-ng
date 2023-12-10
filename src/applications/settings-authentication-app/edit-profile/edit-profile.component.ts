@@ -214,7 +214,7 @@ export class EditProfileComponent implements OnInit {
     }
 
     public downloadMetadata(action: string): void {
-        if (this.metadataLoading) return;
+        if (this.metadataLoading !== 'off') return;
         const url = this._profilesService.getProfileMetadataUrl(this._profile.id);
         if (action === 'url') { // open URL in a new tab
             this._browserService.openLink(url);
