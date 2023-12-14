@@ -1,3 +1,14 @@
+<a name="7.16.2"></a>
+## [7.16.2](https://github.com/kaltura/kmc-ng/compare/v7.16.1...v7.16.2) (2023-12-14)
+
+
+### Bug Fixes
+
+* text updates KMCNG-2509 ([d94f927](https://github.com/kaltura/kmc-ng/commit/d94f927))
+* text updates KMCNG-2527 ([166b941](https://github.com/kaltura/kmc-ng/commit/166b941))
+
+
+
 <a name="7.16.1"></a>
 ## [7.16.1](https://github.com/kaltura/kmc-ng/compare/v7.16.0...v7.16.1) (2023-11-27)
 
