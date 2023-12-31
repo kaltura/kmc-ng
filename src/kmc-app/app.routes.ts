@@ -49,6 +49,10 @@ const routes: Routes = <Routes>[
                             loadChildren: () => import('../applications/content-rooms-app/content-rooms-app.module').then(m => m.ContentRoomsAppModule)
                         },
                         {
+                            path: 'documents',
+                            loadChildren: () => import('../applications/content-documents-app/content-documents-app.module').then(m => m.ContentDocumentsAppModule)
+                        },
+                        {
                             path: 'playlists',
                             loadChildren: () => import('../applications/content-playlists-app/content-playlists-app.module').then(m => m.ContentPlaylistsAppModule)
                         },

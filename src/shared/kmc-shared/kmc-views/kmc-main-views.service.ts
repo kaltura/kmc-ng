@@ -7,6 +7,7 @@ import {
     ContentModerationMainViewService,
     ContentPlaylistsMainViewService,
     ContentRoomsMainViewService,
+    ContentDocumentsMainViewService,
     ContentSyndicationMainViewService,
     ContentUploadsMainViewService,
     ContentBulkUploadsMainViewService,
@@ -62,6 +63,7 @@ export class KmcMainViewsService {
         private _contentModerationMain: ContentModerationMainViewService,
         private _contentPlaylistsMain: ContentPlaylistsMainViewService,
         private _contentRoomsMain: ContentRoomsMainViewService,
+        private _contentDocumentsMain: ContentDocumentsMainViewService,
         private _contentSyndicationMain: ContentSyndicationMainViewService,
         private _contentUploadsMain: ContentUploadsMainViewService,
         private _contentBulkUploadsMain: ContentBulkUploadsMainViewService,
@@ -105,6 +107,15 @@ export class KmcMainViewsService {
                             this._contentEntriesMain.open();
                         },
                         menuTitle: this._contentEntriesMain.getViewMetadata().menu,
+                        'position': 'left'
+                    },
+                    {
+                        isAvailable: this._contentDocumentsMain.isAvailable(),
+                        isActiveView:  (path) => this._contentDocumentsMain.isActiveView(path),
+                        open: () => {
+                            this._contentDocumentsMain.open();
+                        },
+                        menuTitle: this._contentDocumentsMain.getViewMetadata().menu,
                         'position': 'left'
                     },
                     {

@@ -19,8 +19,10 @@
             "contentModerationMenuTitle": "Moderation",
             "contentPlaylistsPageTitle": "Content > Playlists",
             "contentRoomsPageTitle": "Content > Rooms",
+            "contentDocumentsPageTitle": "Content > Documents",
             "contentPlaylistsMenuTitle": "Playlists",
             "contentRoomsMenuTitle": "Rooms",
+            "contentDocumentsMenuTitle": "Documents",
             "contentSyndicationPageTitle": "Content > Syndication",
             "contentSyndicationMenuTitle": "Syndication",
             "contentUploadsPageTitle": "Content > Upload Control",
@@ -775,6 +777,10 @@
                 "noEntries": "No entries",
                 "viewAnalytics": "View Analytics",
                 "filterError": "Could not filter entries using the provided filters combination.\nPlease remove some of the filters and try again."
+            },
+            "documents": {
+                "documents": "{{0}} Documents",
+                "searchDocuments": "Search Documents"
             },
             "rooms": {
                 "legacy": "Room",
