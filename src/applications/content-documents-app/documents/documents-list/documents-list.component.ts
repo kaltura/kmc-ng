@@ -1,14 +1,14 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {DocumentsFilters, DocumentsStore, SortDirection} from '../documents-store/documents-store.service';
-import {KalturaMediaEntry, KalturaRoomEntry} from 'kaltura-ngx-client';
+import {KalturaDocumentEntry} from 'kaltura-ngx-client';
 import {AreaBlockerMessage, StickyComponent} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {AppAnalytics, BrowserService} from 'app-shared/kmc-shell/providers';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {KMCPermissions} from 'app-shared/kmc-shared/kmc-permissions';
-import {ContentRoomViewSections, ContentRoomViewService} from 'app-shared/kmc-shared/kmc-views/details-views';
-import {ContentRoomsMainViewService} from 'app-shared/kmc-shared/kmc-views';
+import {ContentRoomViewService} from 'app-shared/kmc-shared/kmc-views/details-views';
+import {ContentDocumentsMainViewService} from 'app-shared/kmc-shared/kmc-views';
 import {cancelOnDestroy, tag} from '@kaltura-ng/kaltura-common';
 import { asyncScheduler } from 'rxjs';
 import { observeOn } from 'rxjs/operators';
@@ -53,12 +53,12 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
               private _browserService: BrowserService,
               private _analytics: AppAnalytics,
               private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
-              private _contentRoomsMainViewService: ContentRoomsMainViewService,
+              private _contentDocumentsMainViewService: ContentDocumentsMainViewService,
               private _contentRoomViewService: ContentRoomViewService) {
   }
 
   ngOnInit() {
-    if (this._contentRoomsMainViewService.viewEntered()) {
+    if (this._contentDocumentsMainViewService.viewEntered()) {
         this._categoriesStatusMonitorService.status$
             .pipe(cancelOnDestroy(this))
             .subscribe((status: CategoriesStatus) => {
@@ -83,8 +83,8 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
       this._registerToDataChanges();
   }
 
-  private _deleteRoom(roomId: string, isRoomType: boolean): void {
-    this._documentsStore.deleteRoom(roomId, isRoomType)
+  private _deleteDocument(documentId: string): void {
+    this._documentsStore.deleteDocument(documentId)
       .pipe(cancelOnDestroy(this))
       .pipe(tag('block-shell'))
       .subscribe(
@@ -104,7 +104,7 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
                   this._blockerMessage = null;
-                  this._deleteRoom(roomId, isRoomType);
+                  this._documentsStore.deleteDocument(documentId);
                 }
               },
               {
@@ -213,7 +213,7 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
 
                     if (result.errorMessage) {
                         this._tableBlockerMessage = new AreaBlockerMessage({
-                            message: result.errorMessage || 'Error loading rooms',
+                            message: result.errorMessage || 'Error loading documents',
                             buttons: [{
                                 label: 'Retry',
                                 action: () => {
@@ -234,34 +234,30 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
                     }
                 },
                 error => {
-                    console.warn('[kmcng] -> could not load playlroomsists'); // navigate to error page
+                    console.warn('[kmcng] -> could not load documents'); // navigate to error page
                     throw error;
                 });
-    }
-
-    private _openRoomAnalytics(id: string): void {
-      this._router.navigate(['analytics/entryEp'], { queryParams: { id } });
     }
 
   public _onTagsChange(): void {
     this.tags.updateLayout();
   }
 
-  public _onActionSelected(event: { action: string, room: KalturaRoomEntry | KalturaMediaEntry }): void {
+  public _onActionSelected(event: { action: string, document: KalturaDocumentEntry }): void {
       switch (event.action) {
           case 'view':
-              this._contentRoomViewService.open({ room: event.room, section: ContentRoomViewSections.Metadata });
+              //this._contentDocumentViewService.open({ document: event.document, section: ContentDocumentViewSections.Metadata });
               break;
-          case 'analytics':
-              this._openRoomAnalytics( event.room.id );
+          case 'download':
+              this._browserService.openLink(event.document.downloadUrl);
               break;
           case 'delete':
               this._browserService.confirm(
                   {
-                      header: this._appLocalization.get('applications.content.rooms.deleteRoom'),
-                      message: this._appLocalization.get('applications.content.rooms.confirmDeleteSingle', {0: event.room.name}),
+                      header: this._appLocalization.get('applications.content.documents.deleteDocument'),
+                      message: this._appLocalization.get('applications.content.documents.confirmDeleteSingle', {0: event.document.name}),
                       accept: () => {
-                          this._deleteRoom(event.room.id, event.room instanceof KalturaRoomEntry);
+                          this._deleteDocument(event.document.id);
                       }
                   }
               );

@@ -10,7 +10,7 @@ import {
     ViewChild
 } from '@angular/core';
 import {Menu} from 'primeng/menu';
-import {KalturaBaseEntry, KalturaRoomEntry} from 'kaltura-ngx-client';
+import {KalturaDocumentEntry, KalturaRoomEntry} from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {globalConfig} from 'config/global';
 import {KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
@@ -83,9 +83,9 @@ export class DocumentsTableComponent implements AfterViewInit, OnInit, OnDestroy
         this._columnsResizeManager.updateColumns(this._el.nativeElement);
     }
 
-    openActionsMenu(event: any, room: KalturaRoomEntry) {
+    openActionsMenu(event: any, document: KalturaDocumentEntry) {
         if (this.actionsMenu) {
-            this.buildMenu(room);
+            this.buildMenu(document);
             this.actionsMenu.toggle(event);
         }
     }
@@ -94,24 +94,29 @@ export class DocumentsTableComponent implements AfterViewInit, OnInit, OnDestroy
         this.actionsMenu.hide();
     }
 
-    buildMenu(room: KalturaRoomEntry): void {
+    buildMenu(document: KalturaDocumentEntry): void {
         this._items = [
             {
                 id: 'view',
                 label: this._appLocalization.get('applications.content.table.view'),
-                command: () => this.onActionSelected('view', room)
+                command: () => this.onActionSelected('view', document)
+            },
+            {
+                id: 'download',
+                label: this._appLocalization.get('applications.content.table.download'),
+                command: () => this.onActionSelected('download', document)
             },
             {
                 id: 'delete',
                 label: this._appLocalization.get('applications.content.table.delete'),
                 styleClass: 'kDanger',
-                command: () => this.onActionSelected('delete', room)
+                command: () => this.onActionSelected('delete', document)
             }
         ];
     }
 
-    onActionSelected(action: string, room: KalturaRoomEntry) {
-        this.actionSelected.emit({'action': action, 'room': room});
+    onActionSelected(action: string, document: KalturaDocumentEntry) {
+        this.actionSelected.emit({'action': action, 'document': document});
     }
 
     onSortChanged(event) {

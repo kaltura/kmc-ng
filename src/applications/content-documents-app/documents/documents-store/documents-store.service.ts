@@ -2,7 +2,7 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
 import {
-    BaseEntryDeleteAction,
+    BaseEntryDeleteAction, DocumentsDeleteAction,
     DocumentsListAction,
     KalturaClient,
     KalturaDetachedResponseProfile,
@@ -291,18 +291,11 @@ export class DocumentsStore extends FiltersStoreBase<DocumentsFilters> implement
     }
   }
 
-  public deleteRoom(roomId: string, isRoomType: boolean): Observable<void> {
-      if (isRoomType) {
-          return this._kalturaServerClient
-              .request(new RoomDeleteAction({ roomId }))
-              .pipe(map(() => {
-              }));
-      } else {
-          return this._kalturaServerClient
-              .request(new BaseEntryDeleteAction({ entryId: roomId }))
-              .pipe(map(() => {
-              }));
-      }
+  public deleteDocument(documentId: string): Observable<void> {
+      return this._kalturaServerClient
+          .request(new DocumentsDeleteAction({ entryId: documentId }))
+          .pipe(map(() => {
+          }));
 
   }
 }

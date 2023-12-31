@@ -780,7 +780,9 @@
             },
             "documents": {
                 "documents": "{{0}} Documents",
-                "searchDocuments": "Search Documents"
+                "searchDocuments": "Search Documents",
+                "deleteDocument": "Delete Document",
+                "confirmDeleteSingle": "Are you sure you want to delete the selected document? \n {{0}} \n Please note: this document will be permanently deleted from your account."
             },
             "rooms": {
                 "legacy": "Room",
