@@ -1,9 +1,9 @@
-  <div class="kRoomsTable" [class.noResults]="!_rooms?.length">
+  <div class="kRoomsTable" [class.noResults]="!_documents?.length">
 
     <p-table
             [scrollable]="true"
             scrollHeight="100%"
-            [value]="_rooms"
+            [value]="_documents"
             dataKey="id"
             [rowTrackBy]="rowTrackBy"
             [sortField]="sortField"
@@ -17,7 +17,7 @@
             <colgroup>
                 <col data-cid="typeIcon" [ngStyle]="{'width': '44px'}">
                 <col data-cid="name">
-                <col data-cid="roomId" [ngStyle]="{'width': '160px'}">
+                <col data-cid="documentId" [ngStyle]="{'width': '160px'}">
                 <col data-cid="createdAt" [ngStyle]="{'width': '180px'}">
                 <col [ngStyle]="{'width': '80px'}">
             </colgroup>
@@ -29,19 +29,22 @@
             {{'applications.content.table.name' | translate}}
             <p-sortIcon [field]="'name'"></p-sortIcon>
           </th>
-          <th data-cid="roomId" [ngStyle]="{'width': '160px'}" pResizableColumn>
+          <th data-cid="documentId" [ngStyle]="{'width': '160px'}" pResizableColumn>
             {{'applications.content.table.id' | translate}}
           </th>
           <th data-cid="createdAt" [ngStyle]="{'width': '180px'}" [pSortableColumn]="'createdAt'">
             {{'applications.content.table.createdOn' | translate}}
             <p-sortIcon [field]="'createdAt'"></p-sortIcon>
           </th>
+          <th data-cid="status" [ngStyle]="{'width': '160px'}" pResizableColumn>
+            {{'applications.content.table.status' | translate}}
+          </th>
           <th [ngStyle]="{'width': '80px'}"></th>
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-room>
-        <tr [pSelectableRow]="room">
+      <ng-template pTemplate="body" let-document>
+        <tr [pSelectableRow]="document">
 
             <td [ngStyle]="{'width': '44px', 'paddingLeft': '12px'}">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -52,26 +55,32 @@
           <td class="ui-resizable-column">
             <div class="kRoomsNameWrap">
               <div class="kTitle kTableColumn"
-                   [kTooltip]="room.tooltip"
-                   (click)="onActionSelected('view',room)">
-                {{room.name}}
+                   [kTooltip]="document.tooltip"
+                   (click)="onActionSelected('view',document)">
+                {{document.name}}
               </div>
             </div>
           </td>
 
           <td class="ui-resizable-column">
-              <span class="kTableColumn" [kTooltip]="room.id" [showOnEllipsis]="true">{{room.id}}</span>
+              <span class="kTableColumn" [kTooltip]="document.id" [showOnEllipsis]="true">{{document.id}}</span>
           </td>
 
           <td class="ui-resizable-column">
-              <span class="kTableColumn" [kTooltip]="room.createdAt | kmcDate" [showOnEllipsis]="true">
-                  {{room.createdAt | kmcDate}}
+              <span class="kTableColumn" [kTooltip]="document.createdAt | kmcDate" [showOnEllipsis]="true">
+                  {{document.createdAt | kmcDate}}
+              </span>
+          </td>
+
+          <td class="ui-resizable-column">
+              <span class="kTableColumn" [kTooltip]="document | entryStatus" [showOnEllipsis]="true">
+                  {{document | entryStatus}}
               </span>
           </td>
 
           <td [ngStyle]="{'width': '80px'}">
             <div class="kRoomsTableActions">
-              <button class="kMoreActionsButton" type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, room)"></button>
+              <button class="kMoreActionsButton" type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, document)"></button>
             </div>
           </td>
 

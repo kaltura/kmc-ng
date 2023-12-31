@@ -30,9 +30,9 @@ import {AnalyticsNewMainViewService} from "app-shared/kmc-shared/kmc-views";
 export class DocumentsTableComponent implements AfterViewInit, OnInit, OnDestroy {
     @Input() set rooms(data: KalturaRoomEntry[]) {
         if (!this._deferredLoading) {
-            this._rooms = [];
+            this._documents = [];
             this._cdRef.detectChanges();
-            this._rooms = data;
+            this._documents = data;
             this._cdRef.detectChanges();
         } else {
             this._deferredRooms = data;
@@ -51,7 +51,7 @@ export class DocumentsTableComponent implements AfterViewInit, OnInit, OnDestroy
 
     public _deferredLoading = true;
     public _emptyMessage = '';
-    public _rooms: KalturaRoomEntry[] = [];
+    public _documents: KalturaRoomEntry[] = [];
     public _items: MenuItem[];
     public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
@@ -75,7 +75,7 @@ export class DocumentsTableComponent implements AfterViewInit, OnInit, OnDestroy
             // This prevents the screen from hanging during datagrid rendering of the data.
             setTimeout(() => {
                 this._deferredLoading = false;
-                this._rooms = this._deferredRooms;
+                this._documents = this._deferredRooms;
                 this._deferredRooms = null;
             }, 0);
         }

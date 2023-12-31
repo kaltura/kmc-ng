@@ -184,7 +184,7 @@ export class DocumentsStore extends FiltersStoreBase<DocumentsFilters> implement
             // update desired fields of entries
             responseProfile = new KalturaDetachedResponseProfile({
                 type: KalturaResponseProfileType.includeFields,
-                fields: 'id,name,createdAt,status,tags,adminTags'
+                fields: 'id,name,createdAt,status,tags,thumbnailUrl,moderationStatus,downloadUrl'
             });
 
             // update the sort by args
