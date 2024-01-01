@@ -1,0 +1,126 @@
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage"
+                [bodyScroll]="true">
+  <div class="jumpTo" *ngIf="_jumpToMenu.length > 2">
+    <p-menu #menu [popup]="true" [model]="_jumpToMenu" [appendTo]="'body'" kMenuCloseOnScroll [style]="{'width': '220px', 'overflow-x': 'hidden'}"></p-menu>
+    <button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right"
+            label="{{'applications.content.entryDetails.metadata.jumpTo' | translate}}"
+            (click)="menu.toggle($event)"></button>
+  </div>
+  <div class="kMetadataDetails" #metadataContainer *ngIf="_widgetService.data">
+    <k-jump-to-section [label]="'Metadata'"></k-jump-to-section>
+    <div class="kMetadataDetailsItem">
+      <span class="kSchemaTitle">{{'applications.content.entryDetails.sections.metadata' | translate}}</span>
+      <form [formGroup]="_widgetService.metadataForm" novalidate>
+        <div class="kRow kValign">
+          <span class="kLabel">{{'applications.content.entryDetails.metadata.entryName' | translate}}</span>
+          <div class="kControl">
+            <input #nameField
+                   formControlName="name"
+                   type="text"
+                   pInputText
+                   [class.kControlInvalid]="_widgetService.metadataForm.controls['name'].touched && _widgetService.metadataForm.controls['name'].invalid"/>
+            <div
+              *ngIf="_widgetService.metadataForm.controls['name'].touched && _widgetService.metadataForm.controls['name'].invalid"
+              class="kControlErrorMessage">
+              {{'applications.content.entryDetails.metadata.nameRequired' | translate}}
+            </div>
+          </div>
+        </div>
+        <div class="kRow">
+          <span class="kLabel">{{'applications.content.entryDetails.metadata.description' | translate}}</span>
+          <div class="kControl TextAreaControl">
+            <textarea formControlName="description" class="threeRows" pInputTextarea></textarea>
+          </div>
+        </div>
+        <div class="kRow kValign">
+          <span class="kLabel">{{'applications.content.entryDetails.metadata.tags' | translate}}</span>
+          <div class="kControl">
+            <kAutoComplete formControlName="tags"
+                           suggestionItemField="item"
+                           suggestionSelectableField="isSelectable"
+                           [allowMultiple]="true"
+                           [limitToSuggestions]="false"
+                           [minLength]="3"
+                           [suggestionsProvider]="_tagsProvider"
+                           (completeMethod)="_searchTags($event)">
+            </kAutoComplete>
+          </div>
+        </div>
+        <div class="kRow kValign">
+          <span class="kLabel">{{'applications.content.entryDetails.metadata.categories' | translate}}</span>
+
+          <div class="kControl">
+            <kAutoComplete formControlName="categories"
+                           field="name"
+                           [class.kHasError]="_widgetService.metadataForm.controls['categories'].touched && _widgetService.metadataForm.controls['categories'].invalid"
+                           suggestionItemField="item"
+                           suggestionLabelField="name"
+                           suggestionSelectableField="isSelectable"
+                           [allowMultiple]="true"
+                           [tooltipResolver]="_categoriesTooltipResolver"
+                           [minLength]="3"
+                           [suggestionsProvider]="_categoriesProvider"
+                           (completeMethod)="_searchCategories($event)">
+            </kAutoComplete>
+            <div
+              *ngIf="_widgetService.metadataForm.controls['categories'].touched && _widgetService.metadataForm.controls['categories'].invalid"
+              class="kControlErrorMessage">
+              {{_categoriesErrorMessage}}
+            </div>
+          </div>
+        </div>
+        <div class="kRow kValign" *ngIf="_kmcPermissions.CONTENT_MANAGE_ASSIGN_CATEGORIES | kNgIfPermitted">
+          <span class="kLabel"></span>
+          <a (click)="openCategoriesBrowser()" class="kLink">
+            {{'applications.content.entryDetails.metadata.browse' | translate}}
+          </a>
+        </div>
+        <div class="kRow" *ngIf="_widgetService.isLiveEntry">
+          <span class="kLabel">{{'applications.content.entryDetails.metadata.offlineMsg' | translate}}</span>
+          <div class="kControl TextAreaControl">
+            <textarea formControlName="offlineMessage" class="threeRows" pInputTextarea></textarea>
+          </div>
+        </div>
+        <div class="kRow kValign" *ngIf="_kmcPermissions.CONTENT_INGEST_REFERENCE_MODIFY | kNgIfPermitted">
+          <span class="kLabel">{{'applications.content.entryDetails.metadata.refId' | translate}}</span>
+          <div class="kControl">
+            <input formControlName="referenceId" type="text" pInputText/>
+          </div>
+        </div>
+      </form>
+    </div>
+
+
+    <div *ngFor="let customDataForm of _widgetService.customDataForms; let last = last">
+      <k-jump-to-section [label]="customDataForm.metadataProfile.name"></k-jump-to-section>
+      <div class="kMetadataDetailsItem kSchemaTitle">{{customDataForm.metadataProfile.name}}</div>
+      <div *ngIf="customDataForm && customDataForm.isReady">
+        <form novalidate [formGroup]="customDataForm.formGroup">
+          <k-dynamic-form-item [control]="customDataForm.formSectionControl" [form]="customDataForm.formGroup">
+            <ng-template let-item="item">
+              <k-linked-entries *ngIf="item.control.controlType === 'LinkedEntriesComponent'"
+                                [profileName]="customDataForm.metadataProfile.name"
+                                [formControlName]="item.control.key"
+                                [control]="item.control"
+                                [form]="item.form"></k-linked-entries>
+              <k-prime-control *ngIf="item.control.controlType !== 'LinkedEntriesComponent'"
+                               [control]="item.control"
+                               [form]="item.form"></k-prime-control>
+            </ng-template>
+          </k-dynamic-form-item>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+
+  <kPopupWidget #categoriesPopup data-aid="categoriesPopup" [popupWidth]="560" [popupHeight]="586" [closeBtn]="true" [modal]="true">
+    <ng-template>
+      <kCategoriesSelector [parentPopupWidget]="categoriesPopup" (valueChange)="_updateDocumentCategories($event)"
+                           [value]="_widgetService.metadataForm.value.categories"
+                           [buttonLabel]="'applications.content.entryDetails.metadata.addCategories' | translate"></kCategoriesSelector>
+    </ng-template>
+  </kPopupWidget>
+
+</k-area-blocker>

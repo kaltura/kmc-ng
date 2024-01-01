@@ -7,7 +7,7 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {AppAnalytics, BrowserService} from 'app-shared/kmc-shell/providers';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {KMCPermissions} from 'app-shared/kmc-shared/kmc-permissions';
-import {ContentRoomViewService} from 'app-shared/kmc-shared/kmc-views/details-views';
+import {ContentDocumentViewService, ContentDocumentViewSections} from 'app-shared/kmc-shared/kmc-views/details-views';
 import {ContentDocumentsMainViewService} from 'app-shared/kmc-shared/kmc-views';
 import {cancelOnDestroy, tag} from '@kaltura-ng/kaltura-common';
 import { asyncScheduler } from 'rxjs';
@@ -54,7 +54,7 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
               private _analytics: AppAnalytics,
               private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
               private _contentDocumentsMainViewService: ContentDocumentsMainViewService,
-              private _contentRoomViewService: ContentRoomViewService) {
+              private _contentDocumentViewService: ContentDocumentViewService) {
   }
 
   ngOnInit() {
@@ -246,7 +246,7 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
   public _onActionSelected(event: { action: string, document: KalturaDocumentEntry }): void {
       switch (event.action) {
           case 'view':
-              //this._contentDocumentViewService.open({ document: event.document, section: ContentDocumentViewSections.Metadata });
+              this._contentDocumentViewService.open({ document: event.document, section: ContentDocumentViewSections.Metadata });
               break;
           case 'download':
               this._browserService.openLink(event.document.downloadUrl);

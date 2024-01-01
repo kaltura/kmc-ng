@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DetailsBarModule } from '@kaltura-ng/kaltura-ui';
+import {DetailsBarModule, DynamicFormService} from '@kaltura-ng/kaltura-ui';
 
 import { routing } from './content-documents-app.routes';
 
@@ -13,7 +13,8 @@ import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { TagsModule } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
-
+import {DynamicFormModule} from '@kaltura-ng/kaltura-ui';
+import {DynamicFormModule as PrimeDynamicFormModule} from '@kaltura-ng/kaltura-primeng-ui';
 import { ContentDocumentsComponent } from './content-documents.component';
 import { EntriesModule } from 'app-shared/content-shared/entries/entries.module';
 import { FiltersModule } from '@kaltura-ng/mc-shared';
@@ -38,6 +39,14 @@ import { CategoriesModule } from "app-shared/content-shared/categories/categorie
 import { DocumentsTableComponent } from "./documents/documents-table/documents-table.component";
 import {ContentDocumentsAppService} from "./content-documents-app.service";
 import {DocumentsRefineFiltersComponent} from "./documents/documents-refine-filters/documents-refine-filters.component";
+import {DocumentComponent} from "./document/document.component";
+import {DocumentCanDeactivate} from "./document/document-can-deactivate.service";
+import {DocumentDetailsComponent} from "./document/document-details/document-details.component";
+import {DocumentSectionsList} from "./document/document-sections-list/document-sections-list.component";
+import {JumpToSection} from "./document/document-metadata/jump-to-section.component";
+import {CategoriesSelector} from "./document/document-metadata/category-selector/categories-selector.component";
+import {DocumentMetadataComponent} from "./document/document-metadata/document-metadata.component";
+import {DynamicMetadataFormModule} from "app-shared/kmc-shared";
 
 @NgModule({
     imports: [
@@ -68,22 +77,32 @@ import {DocumentsRefineFiltersComponent} from "./documents/documents-refine-filt
         EntriesModule,
     FiltersModule,
     DropdownModule,
+        DynamicFormModule,
+        PrimeDynamicFormModule,
     SliderModule,
       TableModule,
       KMCPermissionsModule,
         KPTableModule,
         DateFormatModule,
+        DynamicMetadataFormModule,
         CategoriesModule
   ],declarations: [
       ContentDocumentsComponent,
         DocumentsListComponent,
         DocumentsTagsComponent,
         DocumentsTableComponent,
-        DocumentsRefineFiltersComponent
+        DocumentsRefineFiltersComponent,
+        DocumentComponent,
+        DocumentDetailsComponent,
+        DocumentSectionsList,
+        CategoriesSelector,
+        JumpToSection,
+        DocumentMetadataComponent
     ],
     exports: [
     ],
     providers : [
+      DocumentCanDeactivate,
       ContentDocumentsAppService
     ]
 })

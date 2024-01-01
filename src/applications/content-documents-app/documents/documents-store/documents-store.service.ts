@@ -2,7 +2,7 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {ISubscription} from 'rxjs/Subscription';
 import {
-    BaseEntryDeleteAction, DocumentsDeleteAction,
+    DocumentsDeleteAction,
     DocumentsListAction,
     KalturaClient,
     KalturaDetachedResponseProfile,
