@@ -10,13 +10,14 @@ import {
     ViewChild
 } from '@angular/core';
 import {Menu} from 'primeng/menu';
-import {KalturaDocumentEntry, KalturaRoomEntry} from 'kaltura-ngx-client';
+import {KalturaDocumentEntry} from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {globalConfig} from 'config/global';
 import {KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 import {ColumnsResizeManagerService, ResizableColumnsTableName} from 'app-shared/kmc-shared/columns-resize-manager';
 import {MenuItem} from 'primeng/api';
 import {AnalyticsNewMainViewService} from "app-shared/kmc-shared/kmc-views";
+import {AppAuthentication} from "app-shared/kmc-shell";
 
 @Component({
     selector: 'kDocumentsTable',
@@ -28,14 +29,14 @@ import {AnalyticsNewMainViewService} from "app-shared/kmc-shared/kmc-views";
     ]
 })
 export class DocumentsTableComponent implements AfterViewInit, OnInit, OnDestroy {
-    @Input() set rooms(data: KalturaRoomEntry[]) {
+    @Input() set documents(data: KalturaDocumentEntry[]) {
         if (!this._deferredLoading) {
             this._documents = [];
             this._cdRef.detectChanges();
             this._documents = data;
             this._cdRef.detectChanges();
         } else {
-            this._deferredRooms = data;
+            this._deferredDocuments = data;
         }
     }
 
@@ -47,18 +48,21 @@ export class DocumentsTableComponent implements AfterViewInit, OnInit, OnDestroy
 
     @ViewChild('actionsmenu', {static: true}) private actionsMenu: Menu;
 
-    private _deferredRooms: KalturaRoomEntry[];
+    private _deferredDocuments: KalturaDocumentEntry[];
 
     public _deferredLoading = true;
     public _emptyMessage = '';
-    public _documents: KalturaRoomEntry[] = [];
+    public _documents: KalturaDocumentEntry[] = [];
     public _items: MenuItem[];
     public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
 
     public rowTrackBy: Function = (index: number, item: any) => item.id;
+    public _loadThumbnailWithKs = false;
+    public _ks = '';
 
     constructor(public _columnsResizeManager: ColumnsResizeManagerService,
                 private _appLocalization: AppLocalization,
+                private _appAuthentication: AppAuthentication,
                 private _permissionsService: KMCPermissionsService,
                 private _analyticsNewMainViewService: AnalyticsNewMainViewService,
                 private _cdRef: ChangeDetectorRef,
@@ -67,6 +71,8 @@ export class DocumentsTableComponent implements AfterViewInit, OnInit, OnDestroy
 
     ngOnInit() {
         this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
+        this._loadThumbnailWithKs = this._appAuthentication.appUser.partnerInfo.loadThumbnailWithKs;
+        this._ks = this._appAuthentication.appUser.ks;
     }
 
     ngAfterViewInit() {
@@ -75,8 +81,8 @@ export class DocumentsTableComponent implements AfterViewInit, OnInit, OnDestroy
             // This prevents the screen from hanging during datagrid rendering of the data.
             setTimeout(() => {
                 this._deferredLoading = false;
-                this._documents = this._deferredRooms;
-                this._deferredRooms = null;
+                this._documents = this._deferredDocuments;
+                this._deferredDocuments = null;
             }, 0);
         }
 
@@ -124,6 +130,10 @@ export class DocumentsTableComponent implements AfterViewInit, OnInit, OnDestroy
             // primeng workaround: must check that field and order was provided to prevent reset of sort value
             this.sortChanged.emit({field: event.field, order: event.order});
         }
+    }
+
+    public _onThumbLoadError(event): void {
+        event.target.style.display = 'none';
     }
 }
 

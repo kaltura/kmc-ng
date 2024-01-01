@@ -1,11 +1,11 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
-    <div class="kRooms kOverrideFAIcons">
-        <div class="kRoomsHolder kContent">
+    <div class="kDocuments kOverrideFAIcons">
+        <div class="kDocumentsHolder kContent">
             <kSticky stickyId="roomsFilters" [scrollOffset]="80" [sticksTo]="'header'">
                 <div class="kContent kFiltersWrapper">
-                    <div class="kRoomsTableFilters kContent">
+                    <div class="kDocumentsTableFilters kContent">
                         <span
-                            class="kSelectedRoomsNum"
+                            class="kSelectedDocumentsNum"
                             *ngIf="(_documentsStore.documents.data$ | async)?.totalCount">
               {{'applications.content.documents.documents' | translate : [(_documentsStore.documents.data$ | async)?.totalCount] }}
             </span>
@@ -50,14 +50,14 @@
                             [message]="_tableBlockerMessage"
                             [bodyScroll]="true">
                 <kDocumentsTable
-                    [rooms]="(_documentsStore.documents.data$ | async)?.items"
+                    [documents]="(_documentsStore.documents.data$ | async)?.items"
                     (sortChanged)="_onSortChanged($event)"
                     [sortField]="_query.sortBy"
                     [sortOrder]="_query.sortDirection"
                     (actionSelected)="_onActionSelected($event)"></kDocumentsTable>
             </k-area-blocker>
 
-            <div class="kRoomsTableFooter kContent" #footer *ngIf="(_documentsStore.documents.data$ | async)?.totalCount">
+            <div class="kDocumentsTableFooter kContent" #footer *ngIf="(_documentsStore.documents.data$ | async)?.totalCount">
                 <p-paginator
                     [rows]="_query.pageSize"
                     [first]="_query.pageIndex * _query.pageSize"

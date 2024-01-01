@@ -1,7 +1,7 @@
 @import 'app-theme/_variables.scss';
 
 
-.kRoomsTable {
+.kDocumentsTable {
   background-color: white;
   height: auto;
   padding: 0;
@@ -19,7 +19,7 @@
         }
     }
 
-  .kRoomsTableActions {
+  .kDocumentsTableActions {
     width: 100%;
     text-align: center;
   }
@@ -34,11 +34,39 @@
     }
   }
 
-  .kRoomsNameWrap {
+  .kDocumentsNameWrap {
     display: flex;
     align-items: center;
   }
-
+    .kThumbnailHolder {
+        overflow: hidden;
+        position: relative;
+        width: 80px;
+        height: 46px;
+        background-color: $kGrayscale6;
+        white-space: nowrap;
+        text-align: center;
+        border-radius: 3px;
+        cursor: pointer;
+        margin-left: 4px;
+        &.error{
+            border: 1px solid $kGrayscale4;
+            i{
+                opacity: 1;
+            }
+        }
+        img {
+            position: absolute;
+            left: -100%;
+            right: -100%;
+            top: -100%;
+            bottom: -100%;
+            margin: auto;
+            width: 80px;
+            height: auto;
+            border-radius: 3px;
+        }
+    }
 }
 
 :host {
