@@ -3,7 +3,7 @@ import { DocumentStore } from '../document-store.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { DocumentSectionsListWidget, SectionWidgetItem } from './document-sections-list-widget.service';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kDocumentSectionsList',
