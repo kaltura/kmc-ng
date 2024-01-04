@@ -1,0 +1,24 @@
+<div>
+	<form [formGroup]="relatedEditForm" novalidate>
+    <div class="kFloater">
+      <div class="kHeader">
+        <span class="kTitle">{{'applications.content.entryDetails.related.editTitle' | translate}}</span>
+      </div>
+
+      <div class="kContainer">
+        <div class="kRow">
+          <span class="kLabel">{{'applications.content.entryDetails.related.title' | translate}}</span>
+          <input formControlName="title" type="text" pInputText/>
+        </div>
+        <div class="kRow">
+          <span class="kLabel">{{'applications.content.entryDetails.related.description' | translate}}</span>
+          <textarea formControlName="description" class="threeRows" pInputTextarea></textarea>
+        </div>
+      </div>
+
+      <div class="kFooter">
+        <button type="button" class="kButtonBranded" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.related.done' | translate}}"></button>
+      </div>
+    </div>
+	</form>
+</div>

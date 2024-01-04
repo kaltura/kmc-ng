@@ -1,0 +1,91 @@
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage"
+                [bodyScroll]="true">
+    <kFileDialog #fileDialog [allowMultiple]="true"
+                 (onFileSelected)="_widgetService._onFileSelected($event)"></kFileDialog>
+    <div class="kRelated">
+        <p class="kTitle">{{'applications.content.entryDetails.related.related' | translate}}</p>
+        <button type="button" class="kButtonDefault" pButton
+                *ngIf="_kmcPermissions.ATTACHMENT_MODIFY | kNgIfPermitted"
+                [label]="'applications.content.entryDetails.related.add' | translate"
+                (click)="fileDialog.open($event)"></button>
+        <div class="kTable">
+            <p-table scrollHeight="100%"
+                     [value]="(_widgetService._relatedFiles$ | async)?.items"
+                     [scrollable]="true">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th [ngStyle]="{'padding-left': '24px'}">
+                            {{'applications.content.entryDetails.related.name' | translate}}
+                        </th>
+                        <th [ngStyle]="{'width':'150px', 'overflow':'visible'}">
+                            {{'applications.content.entryDetails.related.type' | translate}}
+                        </th>
+                        <th [ngStyle]="{'width':'100px'}">
+                            {{'applications.content.entryDetails.related.size' | translate}}
+                        </th>
+                        <th [ngStyle]="{'width':'100px'}">
+                            {{'applications.content.entryDetails.related.assetId' | translate}}
+                        </th>
+                        <th [ngStyle]="{'width':'80px'}"
+                            *ngIf="_kmcPermissions.ATTACHMENT_MODIFY | kNgIfPermitted"></th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-file let-index="rowIndex">
+                    <tr [ngClass]="_relatedTableRowStyle(file, index)">
+                        <td [ngStyle]="{'padding-left': '24px'}">
+                            <span class="kTableColumn kFileName" [kTooltip]="file.filename">{{file.filename}}</span>
+                        </td>
+                        <td [ngStyle]="{'width':'150px', 'overflow':'visible'}">
+                            <p-dropdown
+                                [disabled]="file.uploading || file.uploadFailure || (_kmcPermissions.ATTACHMENT_MODIFY | kDisabledIfNotPermitted)"
+                                [options]="_fileTypes"
+                                [placeholder]="'applications.content.entryDetails.related.select' | translate"
+                                [(ngModel)]="file.format"
+                                [appendTo]="'body'"
+                                (onChange)="_widgetService._setDirty()"></p-dropdown>
+                        </td>
+                        <td [ngStyle]="{'width':'100px'}">{{file.size | kFileSize}}</td>
+                        <td [ngStyle]="{'width':'100px'}">
+                            <div *ngIf="!file.uploadFailure">
+                                <span *ngIf="!file.id && file.progress === 100">
+                                    {{ 'applications.content.entryDetails.captions.ready' | translate }}
+                                </span>
+                                <span *ngIf="file.id">{{file.id}}</span>
+                            </div>
+                            <div *ngIf="file.uploadFailure" class="kError">
+                                <span>{{'applications.content.entryDetails.related.uploadError' | translate}}</span>
+                            </div>
+                        </td>
+                        <td [ngStyle]="{'width':'80px'}"
+                            *ngIf="_kmcPermissions.ATTACHMENT_MODIFY | kNgIfPermitted">
+                            <div class="kRelatedTableActions" *ngIf="!file.uploading && !file.uploadFailure">
+                                <button type="button" pButton class="kMoreActionsButton" icon="kIconmore"
+                                        (click)="openActionsMenu($event, file)"></button>
+                            </div>
+                            <div *ngIf="file.uploading" class="kUploadMonitor">
+                                <span>{{file.progress && file.progress !== '0' ? file.progress + '%' : 'applications.content.entryDetails.related.pending' | translate }}</span>
+                                <a (click)="_widgetService._cancelUpload(file)">
+                                    {{'applications.content.entryDetails.related.cancel' | translate}}
+                                </a>
+                            </div>
+                            <div *ngIf="file.uploadFailure">
+                                <a (click)="_widgetService._removeFile(file)">
+                                    {{'applications.content.entryDetails.related.remove' | translate}}
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <div class="emptymessage">{{'applications.content.table.noResults' | translate}}</div>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <kPopupWidget #editPopup data-aid="editRelatedPopup" [popupWidth]="380" [popupHeight]="300" [modal]="true">
+        <kDocumentRelatedEdit [currentFile]="_currentFile" [parentPopupWidget]="editPopup"></kDocumentRelatedEdit>
+    </kPopupWidget>
+</k-area-blocker>
+<p-menu #actionsmenu [popup]="true" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>

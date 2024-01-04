@@ -5,7 +5,6 @@ import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltur
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Observable } from 'rxjs';
 import { DocumentsStore } from '../documents/documents-store/documents-store.service';
-import { KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentDocumentViewSections, ContentDocumentViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AnalyticsNewMainViewService } from "app-shared/kmc-shared/kmc-views";
@@ -14,6 +13,11 @@ import { DocumentWidgetsManager } from "./document-widgets-manager";
 import { DocumentSectionsListWidget } from "./document-sections-list/document-sections-list-widget.service";
 import { DocumentDetailsWidget } from "./document-details/document-details-widget.service";
 import { DocumentMetadataWidget } from "./document-metadata/document-metadata-widget.service";
+import { DocumentThumbnailsWidget } from './document-thumbnails/document-thumbnails-widget.service';
+import { DocumentAccessControlWidget } from './document-access-control/document-access-control-widget.service';
+import { DocumentSchedulingWidget } from './document-scheduling/document-scheduling-widget.service';
+import { DocumentRelatedWidget } from './document-related/document-related-widget.service';
+import { DocumentUsersWidget } from './document-users/document-users-widget.service';
 
 @Component({
   selector: 'kDocument',
@@ -25,7 +29,12 @@ import { DocumentMetadataWidget } from "./document-metadata/document-metadata-wi
     DocumentWidgetsManager,
     DocumentSectionsListWidget,
     DocumentDetailsWidget,
-    DocumentMetadataWidget
+    DocumentMetadataWidget,
+    DocumentThumbnailsWidget,
+    DocumentAccessControlWidget,
+    DocumentSchedulingWidget,
+    DocumentRelatedWidget,
+    DocumentUsersWidget
   ]
 })
 export class DocumentComponent implements OnInit, OnDestroy {
@@ -47,16 +56,19 @@ export class DocumentComponent implements OnInit, OnDestroy {
               public _documentStore: DocumentStore,
               private _appLocalization: AppLocalization,
               private _DocumentsStore: DocumentsStore,
-              private _permissionsService: KMCPermissionsService,
-              private _roomWidgetsManager: DocumentWidgetsManager,
               widget1: DocumentSectionsListWidget,
               widget2: DocumentDetailsWidget,
               widget3: DocumentMetadataWidget,
+              widget4: DocumentThumbnailsWidget,
+              widget5: DocumentAccessControlWidget,
+              widget6: DocumentSchedulingWidget,
+              widget7: DocumentRelatedWidget,
+              widget8: DocumentUsersWidget,
               private _contentDocumentView: ContentDocumentViewService,
               private _analyticsNewMainViewService: AnalyticsNewMainViewService,
-              private _router: Router,
-              private _roomRoute: ActivatedRoute) {
-    _roomWidgetsManager.registerWidgets([widget1, widget2, widget3])
+              private _documentRoute: ActivatedRoute,
+              _documentWidgetsManager: DocumentWidgetsManager) {
+    _documentWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5, widget6, widget7, widget8])
   }
 
   ngOnInit() {
@@ -71,7 +83,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
                           if (document ) {
                               this._contentDocumentView.viewEntered({
                                   document,
-                                  activatedRoute: this._roomRoute,
+                                  activatedRoute: this._documentRoute,
                                   section: ContentDocumentViewSections.ResolveFromActivatedRoute
                               });
                           }
@@ -94,9 +106,9 @@ export class DocumentComponent implements OnInit, OnDestroy {
               case ActionTypes.DocumentLoading:
                 this._showLoader = true;
 
-                // when loading new room in progress, the 'roomId' property
-                // reflect the room that is currently being loaded
-                // while 'room$' stream is null
+                // when loading new document in progress, the 'documentId' property
+                // reflect the document that is currently being loaded
+                // while 'document' stream is null
                 this._currentDocumentId = this._documentStore.documentId;
                 break;
 
@@ -197,10 +209,10 @@ export class DocumentComponent implements OnInit, OnDestroy {
   }
 
   private _updateNavigationState(): void {
-    const rooms = this._DocumentsStore.documents.data().items;
-    if (rooms && this._currentDocumentId) {
-      const currentDocumentIndex = rooms.findIndex(room => room.id === this._currentDocumentId);
-      this._enableNextButton = currentDocumentIndex >= 0 && (currentDocumentIndex < rooms.length - 1);
+    const documents = this._DocumentsStore.documents.data().items;
+    if (documents && this._currentDocumentId) {
+      const currentDocumentIndex = documents.findIndex(room => room.id === this._currentDocumentId);
+      this._enableNextButton = currentDocumentIndex >= 0 && (currentDocumentIndex < documents.length - 1);
       this._enablePrevButton = currentDocumentIndex > 0;
     } else {
       this._enableNextButton = false;

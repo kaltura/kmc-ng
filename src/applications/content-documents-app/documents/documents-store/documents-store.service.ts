@@ -6,16 +6,14 @@ import {
     DocumentsListAction,
     KalturaClient,
     KalturaDetachedResponseProfile,
+    KalturaDocumentEntry,
     KalturaDocumentEntryFilter,
     KalturaDocumentListResponse,
     KalturaEntryType,
     KalturaFilterPager,
-    KalturaMediaEntry,
     KalturaResponseProfileType,
-    KalturaRoomEntry,
     KalturaSearchOperator,
     KalturaSearchOperatorType,
-    RoomDeleteAction
 } from 'kaltura-ngx-client';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {
@@ -38,7 +36,6 @@ import {
     CategoriesModes,
     CategoriesModeType
 } from "app-shared/content-shared/categories/categories-mode-type";
-import {PlaylistsFilters} from "../../../content-playlists-app/playlists/playlists-store/playlists-store.service";
 
 export enum SortDirection {
   Desc = -1,
@@ -61,7 +58,7 @@ const localStoragePageSizeKey = 'documents.list.pageSize';
 @Injectable()
 export class DocumentsStore extends FiltersStoreBase<DocumentsFilters> implements OnDestroy {
   private _documents = {
-    data: new BehaviorSubject<{ items: (KalturaRoomEntry | KalturaMediaEntry)[], totalCount: number }>({ items: [], totalCount: 0 }),
+    data: new BehaviorSubject<{ items: KalturaDocumentEntry[], totalCount: number }>({ items: [], totalCount: 0 }),
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
   private _isReady = false;
@@ -74,7 +71,6 @@ export class DocumentsStore extends FiltersStoreBase<DocumentsFilters> implement
   };
 
   constructor(private _kalturaServerClient: KalturaClient,
-              private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               contentDocumetsMainView: ContentDocumentsMainViewService,
               _logger: KalturaLogger) {
@@ -232,13 +228,13 @@ export class DocumentsStore extends FiltersStoreBase<DocumentsFilters> implement
         }
     }
 
-    protected _preFiltersReset(updates: Partial<PlaylistsFilters>): Partial<PlaylistsFilters> {
+    protected _preFiltersReset(updates: Partial<DocumentsFilters>): Partial<DocumentsFilters> {
         delete updates.sortBy;
         delete updates.sortDirection;
         return updates;
     }
 
-    protected _preFilter(updates: Partial<PlaylistsFilters>): Partial<PlaylistsFilters> {
+    protected _preFilter(updates: Partial<DocumentsFilters>): Partial<DocumentsFilters> {
         if (typeof updates.pageIndex === 'undefined') {
             // reset page index to first page everytime filtering the list by any filter that is not page index
             updates.pageIndex = 0;

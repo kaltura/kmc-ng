@@ -1,0 +1,5 @@
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+  <kScheduling [schedulingForm]="_widgetService.schedulingForm"
+               [hideClearDates]="_kmcPermissions.CONTENT_MANAGE_SCHEDULE | kHiddenIfNotPermitted"
+               (clearDates)="_widgetService._clearDates()"></kScheduling>
+</k-area-blocker>
