@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Observable } from 'rxjs';
 import { DocumentsStore } from '../documents/documents-store/documents-store.service';
 import { ContentDocumentViewSections, ContentDocumentViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { AnalyticsNewMainViewService } from "app-shared/kmc-shared/kmc-views";
 import { ActionTypes, NotificationTypes, DocumentStore } from "./document-store.service";
 import { DocumentWidgetsManager } from "./document-widgets-manager";
@@ -18,6 +18,10 @@ import { DocumentAccessControlWidget } from './document-access-control/document-
 import { DocumentSchedulingWidget } from './document-scheduling/document-scheduling-widget.service';
 import { DocumentRelatedWidget } from './document-related/document-related-widget.service';
 import { DocumentUsersWidget } from './document-users/document-users-widget.service';
+import { CustomMenuItem } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
+import { KalturaDocumentEntry, KalturaEntryStatus } from 'kaltura-ngx-client';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kDocument',
@@ -47,6 +51,19 @@ export class DocumentComponent implements OnInit, OnDestroy {
   public _analyticsAllowed = false;
   public _enablePrevButton: boolean;
   public _enableNextButton: boolean;
+    public _items: CustomMenuItem[] = [
+        {
+            label: this._appLocalization.get('applications.content.table.download'),
+            commandName: 'download',
+            styleClass: ''
+        },
+        {
+            label: this._appLocalization.get('applications.content.table.delete'),
+            commandName: 'delete',
+            styleClass: 'kDanger'
+        }
+    ];
+  public _menuItems: CustomMenuItem[] = [];
 
     public get _enableSaveBtn(): boolean {
         return this._documentStore.documentIsDirty; // TODO [kmc] check for room update permissions once added to the backend
@@ -54,8 +71,10 @@ export class DocumentComponent implements OnInit, OnDestroy {
 
   constructor(private _browserService: BrowserService,
               public _documentStore: DocumentStore,
+              private _documentsStore: DocumentsStore,
               private _appLocalization: AppLocalization,
               private _DocumentsStore: DocumentsStore,
+              private _logger: KalturaLogger,
               widget1: DocumentSectionsListWidget,
               widget2: DocumentDetailsWidget,
               widget3: DocumentMetadataWidget,
@@ -65,6 +84,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
               widget7: DocumentRelatedWidget,
               widget8: DocumentUsersWidget,
               private _contentDocumentView: ContentDocumentViewService,
+              private _permissionsService: KMCPermissionsService,
               private _analyticsNewMainViewService: AnalyticsNewMainViewService,
               private _documentRoute: ActivatedRoute,
               _documentWidgetsManager: DocumentWidgetsManager) {
@@ -116,6 +136,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
                 this._documentName = this._documentStore.document.name;
                 this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable(); // new analytics app is available
                 this._updateNavigationState();
+                this._buildMenu(this._documentStore.document);
                 break;
 
               case ActionTypes.DocumentLoadingFailed:
@@ -200,13 +221,70 @@ export class DocumentComponent implements OnInit, OnDestroy {
           });
         }
       );
-
-
-
   }
 
   ngOnDestroy() {
   }
+
+    private _buildMenu(document: KalturaDocumentEntry): void {
+        this._menuItems = this._items
+            .map(item => {
+                switch (item.commandName) {
+                    case 'delete':
+                        item.command = () => {
+                            this._browserService.confirm({
+                                header: this._appLocalization.get('applications.content.documents.deleteDocument'),
+                                message: this._appLocalization.get('applications.content.documents.confirmDeleteSingle', {0: document.name}),
+                                accept: () => this._deleteDocument(document.id)
+                            });
+                        };
+                        break;
+                    case 'download':
+                        item.command = () => this._browserService.openLink(document.downloadUrl);;
+                        item.disabled = document.status !== KalturaEntryStatus.ready || !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DOWNLOAD);
+                        break;
+                    default:
+                        break;
+                }
+                return item;
+            });
+    }
+
+    private _deleteDocument(documentId: string): void {
+        this._documentsStore.deleteDocument(documentId)
+            .pipe(cancelOnDestroy(this))
+            .pipe(tag('block-shell'))
+            .subscribe(
+                () => {
+                    this._showLoader = true;
+                    setTimeout(() => {
+                        this._documentsStore.reload();
+                        this._showLoader = false;
+                    }, 1000);
+
+                },
+                error => {
+                    this._areaBlockerMessage = new AreaBlockerMessage({
+                        message: error.message,
+                        buttons: [
+                            {
+                                label: this._appLocalization.get('app.common.retry'),
+                                action: () => {
+                                    this._areaBlockerMessage = null;
+                                    this._deleteDocument(documentId);
+                                }
+                            },
+                            {
+                                label: this._appLocalization.get('app.common.cancel'),
+                                action: () => {
+                                    this._areaBlockerMessage = null;
+                                }
+                            }
+                        ]
+                    });
+                }
+            );
+    }
 
   private _updateNavigationState(): void {
     const documents = this._DocumentsStore.documents.data().items;

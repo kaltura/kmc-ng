@@ -11,6 +11,8 @@
 <!--                                    *ngIf="_analyticsAllowed"-->
 <!--                                    [label]="'applications.content.entries.viewAnalytics' | translate"-->
 <!--                                    (click)="_openRoomAnalytics()"></button>-->
+                            <button type="button" pButton class="kButtonDefault kEntryActions" icon="kIconmore"
+                                    (click)="actionsmenu.toggle($event)"></button>
                             <button pButton class="kButtonBranded kSaveBtn"
                                     [label]="'app.common.save' | translate"
                                     [disabled]="!_enableSaveBtn"
@@ -18,6 +20,7 @@
                             <button pButton class="kButtonDefault kNavigationBtnLeft"  icon="kIconarrow_backward" (click)="_navigateToDocument('prev')" [disabled]="!_enablePrevButton"></button>
                             <button pButton class="kButtonDefault kNavigationBtnRight" icon="kIconarrow_forward"  (click)="_navigateToDocument('next')" [disabled]="!_enableNextButton"></button>
                         </div>
+                        <p-menu #actionsmenu [popup]="true" [model]="_menuItems" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
                     </div>
 				</div>
 			</kSticky>
