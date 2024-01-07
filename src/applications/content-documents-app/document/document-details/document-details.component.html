@@ -1,5 +1,6 @@
 <k-details-bar #detailsBar [data]="_currentDocument">
   <kDetailInfo *ngIf="!_isNew" [label]="'applications.content.playlistDetails.details.id' | translate" [valueField]="'id'"></kDetailInfo>
+  <kDetailInfo [iconStyle]="'kIconfile-small'"></kDetailInfo>
   <kDetailInfo *ngIf="!_isNew" [label]="'applications.content.playlistDetails.details.updatedAt' | translate" [value]="_currentDocument?.updatedAt | kmcDate:'dateOnly'" [tooltip]="_currentDocument?.updatedAt | kmcDate"></kDetailInfo>
   <kDetailInfo *ngIf="!_isNew" [label]="'applications.content.playlistDetails.details.creationDate' | translate" [value]="_currentDocument?.createdAt | kmcDate:'dateOnly'" [tooltip]="_currentDocument?.createdAt | kmcDate"></kDetailInfo>
   <kDetailInfo [label]="'applications.content.playlistDetails.details.creator' | translate" [valueField]="'creatorId'" [tooltip]="_currentDocument?.creatorId"></kDetailInfo>

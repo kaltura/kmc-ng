@@ -47,9 +47,10 @@
         <tr [pSelectableRow]="document">
 
             <td [ngStyle]="{'width': '110px'}">
-                <div class="kThumbnailHolder" #holder>
-                    <img *ngIf="document.thumbnailUrl && _loadThumbnailWithKs" [src]="document.thumbnailUrl+'/ks/'+_ks" (error)="_onThumbLoadError($event)">
-                    <img *ngIf="document.thumbnailUrl && !_loadThumbnailWithKs" [src]="document.thumbnailUrl" (error)="_onThumbLoadError($event)">
+                <div class="kThumbnailHolder" #holder [class.showIcon]="!document.thumbnailUrl">
+                    <img *ngIf="document.thumbnailUrl && _loadThumbnailWithKs" [src]="document.thumbnailUrl+'/ks/'+_ks" (error)="_onThumbLoadError($event, holder)">
+                    <img *ngIf="document.thumbnailUrl && !_loadThumbnailWithKs" [src]="document.thumbnailUrl" (error)="_onThumbLoadError($event, holder)">
+                    <div class="thumbnail" [ngClass]="getThumbnailClass(document.name)"></div>
                 </div>
             </td>
 

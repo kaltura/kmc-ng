@@ -1,41 +1,16 @@
-import {Injectable, OnDestroy} from '@angular/core';
-import {BehaviorSubject, Observable, throwError} from 'rxjs';
-import {ISubscription} from 'rxjs/Subscription';
-import {
-    DocumentsDeleteAction,
-    DocumentsListAction,
-    KalturaClient,
-    KalturaDetachedResponseProfile,
-    KalturaDocumentEntry,
-    KalturaDocumentEntryFilter,
-    KalturaDocumentListResponse,
-    KalturaEntryType,
-    KalturaFilterPager,
-    KalturaResponseProfileType,
-    KalturaSearchOperator,
-    KalturaSearchOperatorType,
-} from 'kaltura-ngx-client';
-import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {
-    AppLocalization,
-    DatesRangeAdapter,
-    DatesRangeType,
-    FiltersStoreBase,
-    ListTypeAdapter,
-    NumberTypeAdapter,
-    StringTypeAdapter,
-    TypeAdaptersMapping
-} from '@kaltura-ng/mc-shared';
-import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-import {cancelOnDestroy, KalturaUtils} from '@kaltura-ng/kaltura-common';
-import {ContentDocumentsMainViewService} from 'app-shared/kmc-shared/kmc-views';
-import {globalConfig} from 'config/global';
-import {map} from 'rxjs/operators';
-import {
-    CategoriesModeAdapter,
-    CategoriesModes,
-    CategoriesModeType
-} from "app-shared/content-shared/categories/categories-mode-type";
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { ISubscription } from 'rxjs/Subscription';
+import { DocumentsDeleteAction, DocumentsListAction, KalturaClient, KalturaDetachedResponseProfile, KalturaDocumentEntry, KalturaDocumentEntryFilter,
+         KalturaDocumentListResponse, KalturaEntryType, KalturaFilterPager, KalturaResponseProfileType, KalturaSearchOperator, KalturaSearchOperatorType } from 'kaltura-ngx-client';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { DatesRangeAdapter, DatesRangeType, FiltersStoreBase, ListTypeAdapter, NumberTypeAdapter, StringTypeAdapter, TypeAdaptersMapping } from '@kaltura-ng/mc-shared';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { cancelOnDestroy, KalturaUtils } from '@kaltura-ng/kaltura-common';
+import { ContentDocumentsMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { globalConfig } from 'config/global';
+import { map } from 'rxjs/operators';
+import { CategoriesModeAdapter, CategoriesModes, CategoriesModeType } from "app-shared/content-shared/categories/categories-mode-type";
 
 export enum SortDirection {
   Desc = -1,
