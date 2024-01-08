@@ -1,0 +1,85 @@
+@import "app-theme/_variables.scss";
+
+.kRefineFilters {
+  margin: 12px;
+}
+.kTypeFilter {
+    margin-top: 24px;
+}
+.kClearDates {
+    margin-top: 4px;
+    display: block;
+}
+.kFiltersGroupTitle {
+    color: $kGrayscale3;
+    line-height: 40px;
+    letter-spacing: 0.1em;
+    font-size: 13px;
+    border-top: 1px solid $kGrayscale6;
+    border-bottom: 1px solid $kGrayscale6;
+    margin-left: -12px;
+    padding-left: 20px;
+    margin-right: -20px;
+    margin-bottom: 8px;
+    margin-top: 8px;
+    display: inline-block;
+    width: 330px;
+}
+
+.kTreeContainer {
+  height: 255px;
+  border-bottom: 1px solid $kGrayscale6;
+  margin-left: -20px;
+  padding-left: 20px;
+  margin-right: -20px;
+  position: relative;
+  overflow: visible;
+}
+
+.kDateRange {
+  display: flex;
+  align-items: center;
+}
+
+.kClose {
+  float: right;
+}
+
+.kError {
+  font-size: 14px;
+  color: $kDandger;
+}
+
+/* prevent calendars from being cut by the popup widget borders */
+:host ::ng-deep .kPullLeft30 .p-datepicker {
+  margin-left: -30px;
+  left: 0px !important;
+}
+
+:host ::ng-deep .kPullLeft90 .p-datepicker {
+  margin-left: -90px;
+  left: 0px !important;
+}
+
+:host ::ng-deep .kDateRange .kDateRangeFirst .p-calendar.p-calendar-w-btn {
+  border-bottom-left-radius: 3px;
+  border-top-left-radius: 3px;
+}
+
+:host ::ng-deep .p-calendar.p-calendar-w-btn {
+  border-radius: 0px;
+}
+
+:host ::ng-deep .p-calendar .p-inputtext {
+  width: 120px;
+}
+
+:host ::ng-deep .kDateRange .kDateRangeLast .p-calendar.p-calendar-w-btn {
+  border-left: 0px solid $kGrayscale4;
+  border-bottom-right-radius: 3px;
+  border-top-right-radius: 3px;
+}
+:host ::ng-deep .ui-chkbox-label {
+    margin-left: 8px;
+    font-size: 14px;
+}

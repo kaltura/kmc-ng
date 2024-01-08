@@ -1,0 +1,286 @@
+@import 'app-theme/_variables.scss';
+
+hr{
+	margin-top: 24px;
+}
+.jumpTo{
+	position: absolute;
+	right: 8px;
+	top: 8px;
+	button{
+		font-weight: 400;
+		height: 34px;
+    ::ng-deep
+    .p-button-icon-right.kIcondropdown_arrow_bottom{
+      font-size: 10px;
+      color: $kGrayscale3;
+    }
+	}
+}
+.kMetadataDetails{
+	padding-bottom: 8px;
+	padding-top: 30px;
+	width: 100%;
+
+  .kMetadataDetailsItem {
+    padding-left: 24px;
+    padding-right: 38px;
+  }
+
+	.kSchemaTitle{
+		color: $kGrayscale1;
+		font-size: 20px;
+		font-weight: 700;
+		padding-top: 50px;
+		padding-bottom: 12px;
+	}
+
+	::ng-deep {
+    k-dynamic-form-item {
+      padding-left: 24px;
+      padding-right: 38px;
+    }
+
+		.kRow {
+			display: flex;
+			padding-top: 22px;
+
+			.kFormLabelContainer{
+				width:208px;
+				display: flex;
+				justify-content: space-between;
+				.kFormRequiredIndicator{
+					margin-right: 8px;
+				}
+
+				.kLabel {
+					flex: 0 0 auto;
+					word-wrap: break-word;
+					padding-right: 12px;
+				}
+			}
+			.kLabel {
+				width: 196px;
+				flex: 0 0 auto;
+				word-wrap: break-word;
+				padding-right: 12px;
+			}
+
+			input {
+				width: 100%;
+                max-width: 500px;
+			}
+
+			textarea{
+				width: 100%;
+                max-width: 500px;
+				height: 76px;
+			}
+
+            kmultiselect{
+                max-width: 500px;
+                display: block;
+            }
+
+			.kControl, k-prime-control
+			{
+				width:100%;
+
+        .kHasError .ui-autocomplete-multiple-container {
+          border-color: $kDandger;
+        }
+
+        .kControlInvalid {
+          border: 1px solid $kDandger;
+        }
+			}
+      .kControlErrorMessage {
+        color: $kDandger;
+        font-size: 14px;
+        margin-top: 8px;
+      }
+
+		}
+
+
+		/*******************/
+		/* Multiple Items  */
+		/*******************/
+
+		.kMultiple{
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+		}
+		.kSingleItem{
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			padding-bottom: 12px;
+		}
+
+		.kDelete{
+			margin-left: 14px;
+			&:not(.disabled) {
+				color: $kDandger;
+                cursor: pointer;
+			}
+		}
+		.kDeleteDate{
+			margin-left: 46px;
+		}
+
+		.kGroupTitle{
+			color: $kGrayscale1;
+			font-size: 16px;
+			font-weight: 700;
+			padding-top: 12px;
+			padding-bottom: 12px;
+		}
+		.kGroupContainer{
+			margin-bottom: 12px;
+			background-color: #ffffff;
+			border: 1px solid $kGrayscale3;
+			border-radius: 3px;
+			width: 100%;
+			padding: 8px;
+		}
+		.kGroupButtons{
+			padding-bottom: 12px;
+		}
+		.kDeleteGroup{
+			text-align: left;
+			padding-left: 208px;
+			padding-top: 8px;
+			padding-bottom: 4px;
+			a:not(.disabled){
+				color: $kDandger;
+                cursor: pointer;
+			}
+		}
+        .kButton{
+            height: 30px;
+            font-weight: 400;
+            color: $kGrayscale1;
+            background: white;
+            border: 1px solid $kGrayscale4;
+            cursor: pointer;
+            border-radius: 3px;
+            &:focus {
+                outline:0;
+            }
+            &:hover{
+                color: $kPrimary;
+            }
+            &:active:not(:disabled){
+                box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
+            }
+            &:disabled{
+                color: $kGrayscale4;
+                background: transparent;
+                border: 1px solid $kGrayscale4;
+                cursor: default;
+            }
+        }
+
+
+		/*********************/
+		/* PrimeNG overrides */
+		/*********************/
+
+	  .p-dropdown{
+			width: 100% !important;
+		}
+
+    .p-autocomplete-multiple-container {
+      max-height: 101px;
+      overflow-y: auto;
+    }
+
+		  .p-dropdown-label.p-inputtext{
+			background-color: #ffffff;
+              padding-left: 1em;
+		}
+		  .p-multiselect{
+			width: 100% !important;
+		}
+		  .p-multiselect-label-container{
+			color: $kGrayscale3;
+		}
+
+		  .p-multiselect-trigger .pi-pi-caret-down{
+			margin-top: 0px;
+			right: 8px;
+			position: absolute;
+			color: $kGrayscale3;
+		}
+
+		  .p-autocomplete{
+			width: 100%;
+			input{
+				width: 100%;
+			}
+		}
+		  .p-button-icon-right.ui-c.pi-pi-fw.kIcondropdown_arrow_bottom{
+			font-size: 11px;
+			padding-right: 4px;
+		}
+
+		  .p-autocomplete{
+			width: 100%;
+			input{
+				width: 100%;
+			}
+		}
+		  .p-calendar .p-inputtext{
+			width: 144px !important;
+		}
+
+		  .p-button-icon-only .pi{
+			margin-left: -.5em;
+		}
+
+		  .p-multiselect-panel .p-multiselect-filter-container .pi{
+			color: $kGrayscale3;
+			font-size: 14px;
+			font-weight: 400;
+		}
+
+		  kAutoComplete{
+			width: 100%;
+            max-width: 500px;
+            display: block;
+
+        .p-disabled {
+          background-color: $kGrayscale5;
+        }
+		}
+
+		  p-dropdown{
+			width: 100%;
+              max-width: 500px;
+              display: block;
+		}
+
+		  p-multiselect{
+			width: 100%;
+		}
+
+	}
+
+	.kValign{
+		align-items: center;
+	}
+	.kLink{
+		margin-top: -4px;
+		margin-bottom: 4px;
+		cursor: pointer;
+		color: $kPrimary;
+	}
+}
+:host ::ng-deep kautocomplete ul{
+	width: 100% !important;
+}
+:host ::ng-deep .kHighlightedText {
+    text-decoration: underline;
+}

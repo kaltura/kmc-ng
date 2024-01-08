@@ -1,0 +1,110 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
+    <div class="kDocuments kOverrideFAIcons">
+        <div class="kDocumentsHolder kContent">
+            <kSticky stickyId="roomsFilters" [scrollOffset]="80" [sticksTo]="'header'">
+                <div class="kContent kFiltersWrapper">
+                    <div class="kDocumentsTableFilters kContent">
+                        <span
+                            class="kSelectedDocumentsNum"
+                            *ngIf="(_documentsStore.documents.data$ | async)?.totalCount">
+              {{'applications.content.documents.documents' | translate : [(_documentsStore.documents.data$ | async)?.totalCount] }}
+            </span>
+
+                        <div class="kFilters">
+                            <input type="text" pInputText class="kSearchInput"
+                                   [(ngModel)]="_query.freetext"
+                                   (keyup.enter)="_onFreetextChanged()"
+                                   placeholder="{{'applications.content.documents.searchDocuments' | translate}}">
+
+                            <div #categoriesFilterBtn class="kCategoriesFilter kDropdown">
+                                <i class="kIconfolder" *ngIf="!_categoriesUpdating"></i>
+                                <div *ngIf="_categoriesUpdating" class="k-spinner-background kSpinnerBkg" kTooltip="{{'applications.content.categories.categoriesUpdateMsg' | translate}}">
+                                    <div class="k-spinner-animation kSpinnerAnim"></div>
+                                </div>
+                                <span>{{'applications.content.categories.filterCategories' | translate}}</span><i
+                                class="kIcondropdown_arrow_bottom dropdown"></i>
+                            </div>
+
+                            <div #refineBtn class="kRefine kDropdown">
+                                <i class="kIconfilter"></i>
+                                <span>{{'applications.content.bulkUpload.list.refine' | translate}}</span>
+                                <i class="kIcondropdown_arrow_bottom dropdown"></i>
+                            </div>
+                        </div>
+                        <button pButton
+                                class="kButtonDefault kRefreshBtn small"
+                                type="text"
+                                (click)="_reload()"
+                                icon="kIconrefresh"
+                                [kTooltip]="'applications.content.playlists.refresh' | translate"></button>
+                    </div>
+                </div>
+            </kSticky>
+            <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="roomsTags" [sticksTo]="'roomsFilters'">
+                <div class="kTagsWrapper kContent">
+                    <k-documents-tags (onTagsChange)="_onTagsChange()"></k-documents-tags>
+                </div>
+            </kSticky>
+
+            <k-area-blocker [showLoader]="_tableIsBusy"
+                            [message]="_tableBlockerMessage"
+                            [bodyScroll]="true">
+                <kDocumentsTable
+                    [documents]="(_documentsStore.documents.data$ | async)?.items"
+                    (sortChanged)="_onSortChanged($event)"
+                    [sortField]="_query.sortBy"
+                    [sortOrder]="_query.sortDirection"
+                    (actionSelected)="_onActionSelected($event)"></kDocumentsTable>
+            </k-area-blocker>
+
+            <div class="kDocumentsTableFooter kContent" #footer *ngIf="(_documentsStore.documents.data$ | async)?.totalCount">
+                <p-paginator
+                    [rows]="_query.pageSize"
+                    [first]="_query.pageIndex * _query.pageSize"
+                    [rowsPerPageOptions]="[25,50,100,250]"
+                    [totalRecords]="(_documentsStore.documents.data$ | async)?.totalCount"
+                    (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+                <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+            </div>
+        </div>
+    </div>
+</k-area-blocker>
+
+<kPopupWidget
+    #refinePopup
+    data-aid="playlistsRefinePopup"
+    [popupWidth]="350"
+    [popupHeight]="300"
+    [closeBtn]="false"
+    [targetRef]="refineBtn"
+    [targetOffset]="{'x':-156, 'y': -20}"
+    kSticky
+    [sticksTo]="'header'"
+    [stickyClass]="'kForceFix'"
+    stickyId="playlistsAdditionalFilter"
+    [scrollOffset]="80">
+    <ng-template>
+        <k-documents-refine-filters
+            [parentPopupWidget]="refinePopup"></k-documents-refine-filters>
+    </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #categoriesFilterPopup
+              data-aid="categoriesFilterPopup"
+              [popupWidth]="400"
+              [popupHeight]="500"
+              placement="top"
+              [closeBtn]="false"
+              [targetRef]="categoriesFilterBtn"
+              [targetOffset]="{'x':-200, 'y': -21}"
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'categoriesFilterPopup'" [scrollOffset]="80" >
+    <ng-template>
+        <kCategoriesFilter  [parentPopupWidget]="categoriesFilterPopup" [selection]="_query.categories"
+                            [selectionMode]="_query.categoriesMode"
+                            (onCategorySelected)="onCategorySelected($event)"
+                            (onCategoriesUnselected)="onCategoriesUnselected($event)"
+                            (selectionModeChange)="onCategoriesModeChanged($event)"></kCategoriesFilter>
+    </ng-template>
+</kPopupWidget>
+
+

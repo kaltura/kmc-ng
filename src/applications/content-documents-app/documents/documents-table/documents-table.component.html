@@ -1,0 +1,102 @@
+  <div class="kDocumentsTable" [class.noResults]="!_documents?.length">
+
+    <p-table
+            [scrollable]="true"
+            scrollHeight="100%"
+            [value]="_documents"
+            dataKey="id"
+            [rowTrackBy]="rowTrackBy"
+            [sortField]="sortField"
+            [sortOrder]="sortOrder"
+            [resizableColumns]="true"
+            [defaultSortOrder]="_defaultSortOrder"
+            (sortFunction)="onSortChanged($event)" [customSort]="true"
+            (onColResize)="_columnsResizeManager.onColumnResize($event)"
+            kStickyHeader [sticksTo]="'roomsTags'" stickyClass="stickyHeader" [stickyId]="'roomsTable'">
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                <col data-cid="thumbnail" [ngStyle]="{'width': '110px'}">
+                <col data-cid="name">
+                <col data-cid="documentId" [ngStyle]="{'width': '160px'}">
+                <col data-cid="createdAt" [ngStyle]="{'width': '180px'}">
+                <col [ngStyle]="{'width': '80px'}">
+            </colgroup>
+        </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th data-cid="thumbnailUrl" [ngStyle]="{'width': '110px'}"></th>
+          <th data-cid="name" pResizableColumn [pSortableColumn]="'name'">
+            {{'applications.content.table.name' | translate}}
+            <p-sortIcon [field]="'name'"></p-sortIcon>
+          </th>
+          <th data-cid="documentId" [ngStyle]="{'width': '160px'}" pResizableColumn>
+            {{'applications.content.table.id' | translate}}
+          </th>
+          <th data-cid="createdAt" [ngStyle]="{'width': '180px'}" [pSortableColumn]="'createdAt'">
+            {{'applications.content.table.createdOn' | translate}}
+            <p-sortIcon [field]="'createdAt'"></p-sortIcon>
+          </th>
+          <th data-cid="status" [ngStyle]="{'width': '160px'}" pResizableColumn>
+            {{'applications.content.table.status' | translate}}
+          </th>
+          <th [ngStyle]="{'width': '80px'}"></th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-document>
+        <tr [pSelectableRow]="document">
+
+            <td [ngStyle]="{'width': '110px'}">
+                <div class="kThumbnailHolder" #holder [class.showIcon]="!document.thumbnailUrl">
+                    <img *ngIf="document.thumbnailUrl && _loadThumbnailWithKs" [src]="document.thumbnailUrl+'/ks/'+_ks" (error)="_onThumbLoadError($event, holder)">
+                    <img *ngIf="document.thumbnailUrl && !_loadThumbnailWithKs" [src]="document.thumbnailUrl" (error)="_onThumbLoadError($event, holder)">
+                    <div class="thumbnail" [ngClass]="getThumbnailClass(document.name)"></div>
+                </div>
+            </td>
+
+          <td class="ui-resizable-column">
+            <div class="kDocumentsNameWrap">
+              <div class="kTitle kTableColumn"
+                   [kTooltip]="document.tooltip"
+                   (click)="onActionSelected('view',document)">
+                {{document.name}}
+              </div>
+            </div>
+          </td>
+
+          <td class="ui-resizable-column">
+              <span class="kTableColumn" [kTooltip]="document.id" [showOnEllipsis]="true">{{document.id}}</span>
+          </td>
+
+          <td class="ui-resizable-column">
+              <span class="kTableColumn" [kTooltip]="document.createdAt | kmcDate" [showOnEllipsis]="true">
+                  {{document.createdAt | kmcDate}}
+              </span>
+          </td>
+
+          <td class="ui-resizable-column">
+              <span class="kTableColumn" [kTooltip]="document | entryStatus" [showOnEllipsis]="true">
+                  {{document | entryStatus}}
+              </span>
+          </td>
+
+          <td [ngStyle]="{'width': '80px'}">
+            <div class="kDocumentsTableActions">
+              <button class="kMoreActionsButton" type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, document)"></button>
+            </div>
+          </td>
+
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+          <div class="emptymessage">
+              <div class="kEmptyMessage">{{_emptyMessage}}</div>
+          </div>
+      </ng-template>
+    </p-table>
+
+  </div>
+
+  <p-menu #actionsmenu [popup]="true" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+

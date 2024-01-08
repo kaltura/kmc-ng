@@ -1,0 +1,223 @@
+@import 'app-theme/_variables.scss';
+.kTagsWrapper{
+    z-index: 500;
+}
+.kDocuments {
+    font-size: 15px;
+    background-color: $appBkgColor;
+    padding-top: 24px;
+    width: 100%;
+	min-width: $minAppWidth;
+	box-sizing: border-box;
+	display: flex;
+	flex-flow: row wrap;
+	margin: 0px;
+    .kDocumentsHolder {
+        height: 100%;
+		min-height: $minTableHeight;
+        border: 1px solid $kGrayscale6;
+        position: relative;
+		display: flex;
+		flex-direction: column;
+        ::ng-deep kpopupwidget .kPopupWidget {
+            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .24);
+        }
+    }
+    .kDocumentsTable {
+        border: none;
+        position: relative;
+		background-color: white;
+		width: 100%;
+		flex: 1 1 auto;
+    }
+	.kDocumentsTableFooter {
+		bottom: 0px;
+		height: 34px;
+		background-color: white;
+		border-top: 1px solid $kGrayscale6;
+		position: fixed;
+		box-sizing: border-box;
+		flex: 0 0 auto;
+		padding: 0 14px 28px;
+		display: block;
+	}
+	.kPaginatorShowRowsLabel {
+		color: $kGrayscale1;
+		position: absolute;
+		top: 7px;
+		right: 80px;
+	}
+	.kFiltersWrapper{
+		display: block;
+		height: 66px;
+	}
+	.kDocumentsTableFilters {
+		color: $kGrayscale1;
+		z-index: 500;
+		height: 66px;
+		background-color: white;
+		flex: 0 0 auto;
+		align-items: center;
+		margin-left: 0px;
+		border-bottom: none;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+		display: flex;
+		.kSelectedDocumentsNum{
+			padding-left: 16px;
+		}
+	}
+	.kRefreshBtn {
+		font-size: 24px;
+		border: none;
+		min-width: inherit;
+		margin-right: 8px;
+		width: 40px;
+		outline: 0px;
+		color: $kGrayscale3;
+		&:active{
+			box-shadow: none;
+			transform: rotate(45deg);
+		}
+		&:hover{
+			background-color: #ffffff;
+			color: $kPrimary;
+		}
+	}
+	.kBulkOperations {
+    display: flex;
+    align-items: center;
+	}
+	.kSearchInput {
+		background: $kMagnifyingGlassBkg;
+		margin-right: 8px;
+		padding: 9px 4px 8px 38px;
+		width: 260px;
+        &::placeholder {
+            color: $kGrayscale3;
+            opacity: 1;
+        }
+        &:-ms-input-placeholder {
+            color: $kGrayscale3;
+        }
+        &::-ms-input-placeholder {
+            color: $kGrayscale3;
+        }
+	}
+	.kTagContent {
+		display: flex;
+		align-items: center;
+	}
+	.kTagLabel {
+		flex: 0 0 auto;
+		user-select: none;
+		cursor: default;
+	}
+	.kTagRemove {
+		flex: 0 0 auto;
+		margin-top: 2px;
+		margin-left: 8px;
+		padding: 5px;
+		cursor: pointer;
+		font-size: 10px;
+		&:hover{
+			background-color: rgba(255,255,255,0.3);
+			border: 0 solid rgba(255,255,255,0.3);
+			border-radius: 3px;
+		}
+	}
+	.kFilters {
+		display: flex;
+		margin-left: auto;
+	}
+    .kRefine {
+        display: flex;
+        height: 32px;
+        width: 130px;
+        align-items: center;
+        cursor: pointer;
+        color: $kGrayscale1;
+        position: relative;
+        padding: 0 15px;
+        margin-right: 8px;
+        i {
+            margin-right: 12px;
+            margin-left: 8px;
+            color: $kGrayscale3;
+        }
+        .kIconfilter {
+            font-size: 24px;
+        }
+        .dropdown {
+            font-size: 10px;
+            position: absolute;
+            right: 4px;
+            top: 12px;
+        }
+    }
+	.kHidden {
+		visibility: hidden;
+		width: 0px;
+		height: 0px;
+	}
+}
+.kCategoriesFilter {
+    display: flex;
+    height: 32px;
+    align-items: center;
+    cursor: pointer;
+    color: $kGrayscale1;
+    width: 190px;
+    position: relative;
+    margin-right: 8px;
+    .kSpinnerBkg{
+        position: relative;
+        width: 20px;
+        height: 20px;
+        padding-left: 8px;
+        padding-right: 8px;
+        margin-top: 0px;
+    }
+    .kSpinnerAnim{
+        width: 12px;
+        height: 12px;
+    }
+    i {
+        margin-right: 12px;
+        margin-left: 8px;
+        font-size: 24px;
+        color: $kGrayscale3;
+        &.dropdown {
+            font-size: 10px;
+        }
+    }
+    .dropdown {
+        position: absolute;
+        right: 4px;
+        top: 12px;
+    }
+}
+:host{
+	width: 100%;
+}
+
+:host ::ng-deep k-area-blocker>.kAreaBlockerContainer {
+  z-index: 203;
+}
+
+:host ::ng-deep span.p-button-icon-left.pi-kIcontrash{
+	margin-left: -.5em;
+}
+
+:host ::ng-deep .p-button-icon-only .pi{
+	margin-left: -.5em;
+}
+:host ::ng-deep .kStickyClass{
+	border-bottom: 1px solid $kGrayscale5;
+}
+
+:host ::ng-deep .kDocumentsTableFooter {
+  .p-dropdown-panel {
+    min-width: 70px;
+  }
+}

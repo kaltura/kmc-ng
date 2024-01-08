@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { KalturaEntryStatus } from 'kaltura-ngx-client';
+import {KalturaDocumentEntry, KalturaEntryStatus} from 'kaltura-ngx-client';
 import { KalturaEntryModerationStatus } from 'kaltura-ngx-client';
 import { KalturaMediaType } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
@@ -11,12 +11,15 @@ export class EntryStatusPipe implements PipeTransform {
   constructor(private appLocalization: AppLocalization) {
   }
 
-  transform(entry: KalturaMediaEntry): string {
+  transform(entry: KalturaMediaEntry | KalturaDocumentEntry): string {
     let ret = '';
-    const isLive = entry.mediaType === KalturaMediaType.liveStreamFlash ||
-      entry.mediaType === KalturaMediaType.liveStreamQuicktime ||
-      entry.mediaType === KalturaMediaType.liveStreamRealMedia ||
-      entry.mediaType === KalturaMediaType.liveStreamWindowsMedia;
+    let isLive = false;
+    if (entry instanceof KalturaMediaEntry) {
+        isLive = entry.mediaType === KalturaMediaType.liveStreamFlash ||
+        entry.mediaType === KalturaMediaType.liveStreamQuicktime ||
+        entry.mediaType === KalturaMediaType.liveStreamRealMedia ||
+        entry.mediaType === KalturaMediaType.liveStreamWindowsMedia;
+    }
     if (typeof(entry) !== 'undefined' && entry !== null) {
       switch (entry.status.toString()) {
         case KalturaEntryStatus.errorImporting.toString():
@@ -64,7 +67,7 @@ export class EntryStatusPipe implements PipeTransform {
     return ret;
   }
 
-  getReadyState(entry: KalturaMediaEntry) {
+  getReadyState(entry: KalturaMediaEntry | KalturaDocumentEntry) {
     const SCHEDULING_ALL_OR_IN_FRAME = 1;
     const SCHEDULING_BEFORE_FRAME = 2;
     const SCHEDULING_AFTER_FRAME = 3;

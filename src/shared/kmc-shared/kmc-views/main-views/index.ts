@@ -3,6 +3,7 @@ export * from './content-categories-main-view.service';
 export * from './content-moderation-main-view.service';
 export * from './content-playlists-main-view.service';
 export * from './content-rooms-main-view.service';
+export * from './content-documents-main-view.service';
 export * from './content-syndication-main-view.service';
 export * from './content-uploads-main-view.service';
 export * from './content-bulk-uploads-main-view.service';

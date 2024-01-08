@@ -11,6 +11,7 @@ import {
     ContentModerationMainViewService,
     ContentPlaylistsMainViewService,
     ContentRoomsMainViewService,
+    ContentDocumentsMainViewService,
     ContentSyndicationMainViewService,
     ContentUploadsMainViewService,
     LiveAnalyticsMainViewService,
@@ -42,7 +43,7 @@ import {
     SettingsReachProfileViewService,
     RestorePasswordViewService,
     AuthenticatorViewService,
-    ReachAppViewService
+    ReachAppViewService, ContentDocumentViewService
 } from './details-views';
 import {
     AdvertisementsAppViewService,
@@ -69,6 +70,8 @@ export class KmcViewsModule {
                 ContentModerationMainViewService,
                 ContentPlaylistsMainViewService,
                 ContentRoomViewService,
+                ContentDocumentViewService,
+                ContentDocumentsMainViewService,
                 ContentRoomsMainViewService,
                 ContentSyndicationMainViewService,
                 ContentUploadsMainViewService,
