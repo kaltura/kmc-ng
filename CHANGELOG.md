@@ -1,3 +1,13 @@
+<a name="7.17.0"></a>
+# [7.17.0](https://github.com/kaltura/kmc-ng/compare/v7.16.2...v7.17.0) (2024-01-08)
+
+
+### Features
+
+* documents list and document details KMCNG-2525 ([#1061](https://github.com/kaltura/kmc-ng/issues/1061)) ([ff75512](https://github.com/kaltura/kmc-ng/commit/ff75512))
+
+
+
 <a name="7.16.2"></a>
 ## [7.16.2](https://github.com/kaltura/kmc-ng/compare/v7.16.1...v7.16.2) (2023-12-14)
 
