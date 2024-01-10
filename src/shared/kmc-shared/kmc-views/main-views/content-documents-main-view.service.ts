@@ -24,14 +24,16 @@ export class ContentDocumentsMainViewService extends KmcMainViewBaseService {
     }
 
     isAvailable(): boolean {
-        return true;
-        // return this._appPermissions.hasAnyPermissions([
-        //     KMCPermissions.PLAYLIST_BASE,
-        //     KMCPermissions.PLAYLIST_ADD,
-        //     KMCPermissions.PLAYLIST_UPDATE,
-        //     KMCPermissions.PLAYLIST_DELETE,
-        //     KMCPermissions.PLAYLIST_EMBED_CODE
-        // ]);
+        return this._appPermissions.hasAnyPermissions([
+            KMCPermissions.CONTENT_MANAGE_BASE,
+            KMCPermissions.CONTENT_MANAGE_METADATA,
+            KMCPermissions.CONTENT_MANAGE_ASSIGN_CATEGORIES,
+            KMCPermissions.CONTENT_MANAGE_THUMBNAIL,
+            KMCPermissions.CONTENT_MANAGE_SCHEDULE,
+            KMCPermissions.CONTENT_MANAGE_ACCESS_CONTROL,
+            KMCPermissions.CONTENT_MANAGE_CUSTOM_DATA,
+            KMCPermissions.CONTENT_MANAGE_DELETE
+        ]);
     }
 
     getRoutePath(): string {
