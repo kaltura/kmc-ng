@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import {
@@ -89,8 +89,8 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
                                           },
                                           { emitEvent: false }
                                       );
-                                      this._isBusy = false;
                                   }
+                                  this._isBusy = false;
                               },
                               error =>{
                                   this.displayServerError(error);
@@ -127,16 +127,29 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
       });
   }
 
+  private profilesSelectedValidation(): ValidatorFn {
+      return (group: FormGroup): ValidationErrors => {
+          const profiles = group.controls['profiles'];
+          const domain = group.controls['domain'];
+          if (profiles.value.length > 0 && domain.value === '') {
+              domain.setErrors({required: true});
+          } else {
+              domain.setErrors(null);
+          }
+          return;
+      };
+  }
+
   private _buildForm(): void {
     this._ssoConfigForm = this._fb.group({
-      profiles: [[], Validators.required],
-      domain: ['', Validators.required],
+      profiles: [''],
+      domain: [''],
       organizationId: [''],
     });
-
     this._profilesField = this._ssoConfigForm.controls['profiles'];
     this._domainField = this._ssoConfigForm.controls['domain'];
     this._organizationIdField = this._ssoConfigForm.controls['organizationId'];
+    this._ssoConfigForm.setValidators(this.profilesSelectedValidation());
   }
 
     private _markFormFieldsAsTouched() {
@@ -160,7 +173,7 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
     }
 
     public _onProfilesSelectionChange(event): void {
-      // handle profiles selection change if needed, currently no implementation needed
+        this._ssoConfigForm.updateValueAndValidity();
     }
 
     // utility function to compare profile IDs arrays and determine if they hold the same IDs (disregarding the order)
@@ -228,11 +241,30 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
           )
       }
 
+      const deleteSubscription = () => {
+          this._profilesService.deleteSubscription(this.kmcSubscription.id).subscribe(
+              () => {
+                  this._isBusy = false;
+                  this.kmcSubscription = null;
+                  this._markFormFieldsAsPristine();
+                  this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('app.common.deleteSuccess')});
+              },
+              error => {
+                  this.displayServerError(error);
+              }
+          )
+      }
+
       if (this.kmcApp?.id?.length) {
         if (!this.kmcSubscription?.id?.length) {
             this._isBusy = true;
             createSubscription(); // create subscription for the registered app
         } else {
+            // check if we need to delete subscription (no profiles selected)
+            if (profiles.length === 0) {
+                deleteSubscription();
+                return;
+            }
             // preform update
             if (domain !== this.kmcApp.organizationDomain.domain || organizationId !== this.kmcApp.organizationDomain.organizationId) {
                 // update registered application

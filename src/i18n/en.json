@@ -123,6 +123,7 @@
             "copySuccess": "Copied to clipboard",
             "copyFailure": "Copy operation failed",
             "updateSuccess": "Updated successfully",
+            "deleteSuccess": "Deleted successfully",
             "on": "On",
             "off": "Off",
             "ok": "OK",

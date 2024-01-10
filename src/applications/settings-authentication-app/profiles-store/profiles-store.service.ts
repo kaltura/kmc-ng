@@ -227,6 +227,15 @@ export class ProfilesStoreService implements OnDestroy {
         }
     }
 
+    public deleteSubscription(id: string): Observable<any> {
+        const request = { id };
+        try {
+            return this._http.post(`${serverConfig.externalServices.appSubscriptionEndpoint.uri}/delete`, request, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to delete subscription'));
+        }
+    }
+
     public listSubscriptions(appGuid: string): Observable<any> {
         const filter = {appGuid};
         try {
