@@ -2813,7 +2813,8 @@
                 },
                 "subscribe": {
                     "general": "General",
-                    "config": "SSO configuration",
+                    "config": "KMC SSO configuration",
+                    "epConfig": "Event platform SSO configuration",
                     "profiles": "Profiles",
                     "profilesPlaceholder": "Select profiles",
                     "profiles-help": "Select one or more admin profiles",

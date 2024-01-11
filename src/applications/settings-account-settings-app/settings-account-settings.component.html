@@ -103,6 +103,10 @@
       <div class="sso" *ngIf="_showSSO">
         <kSSOConfig></kSSOConfig>
       </div>
+
+      <div class="epSso" *ngIf="_showSSO && _showEpSSO">
+        <kEpSSOConfig></kEpSSOConfig>
+      </div>
   </form>
 
 

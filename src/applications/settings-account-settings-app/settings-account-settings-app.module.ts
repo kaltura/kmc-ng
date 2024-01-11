@@ -14,6 +14,7 @@ import { ButtonModule } from 'primeng/button';
 import { MultiSelectModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { SsoConfigComponent } from "./sso-config/sso-config.component";
 import { ProfilesStoreService } from "../settings-authentication-app/profiles-store/profiles-store.service";
+import { EpSsoConfigComponent } from './ep-sso-config/ep-sso-config.component';
 
 @NgModule({
   imports: [
@@ -31,7 +32,7 @@ import { ProfilesStoreService } from "../settings-authentication-app/profiles-st
     TranslateModule,
     KMCPermissionsModule
   ],
-  declarations: [SettingsAccountSettingsComponent, SsoConfigComponent],
+  declarations: [SettingsAccountSettingsComponent, SsoConfigComponent, EpSsoConfigComponent],
     providers:[SettingsAccountSettingsCanDeactivateService, ProfilesStoreService]
 })
 export class SettingsAccountSettingsAppModule {

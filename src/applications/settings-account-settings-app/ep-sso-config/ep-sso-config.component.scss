@@ -1,0 +1,96 @@
+@import 'app-theme/_variables.scss';
+
+.kSSOConfig {
+    display: flex;
+    flex-direction: column;
+    .kSaveBtnContainer {
+        padding-top: 60px;
+        .kSaveBtn {
+            margin-left: auto;
+            width: 125px;
+            height: 34px;
+            font-weight: 400;
+            margin-right: 2px;
+        }
+    }
+      .kTitle {
+          color: $kGrayscale1;
+          font-weight: 700;
+          height: 29px;
+          font-size: 24px;
+          display: block;
+          margin-left: 24px;
+          margin-top: 24px;
+      }
+
+
+    .kContainer {
+      flex: 1 1 auto;
+      overflow-y: hidden;
+      max-height: calc(100vh - 158px);
+      .kProfileForm {
+        padding: 0 28px 28px 28px;
+      }
+
+      .kRow {
+        display: flex;
+        padding-top: 24px;
+          width: 710px;
+
+        .kLabel {
+          width: 272px;
+          flex: 0 0 auto;
+          height: 18px;
+          color: $kGrayscale1;
+          font-size: 15px;
+          line-height: 18px;
+        }
+        .labelWithHelpTip {
+            display: flex;
+            align-items: center;
+            width: 280px;
+            &.notRequired {
+                width: 308px;
+            }
+            .kLabel {
+                width: auto;
+                margin-right: 4px;
+            }
+        }
+        .kRequired {
+          width: 20px;
+          font-size: 24px;
+          color: $kGrayscale3;
+          &.kHasError {
+            color: $kDandger;
+            font-weight: bold;
+          }
+        }
+        .kRequired, .kLabel {
+          padding: 8px 4px;
+          height: 18px;
+        }
+        .kControl, kProfilesList {
+          height: 34px;
+          width: 400px;
+          &.kHasError {
+            border: 1px solid $kDandger;
+            background: initial;
+          }
+        }
+
+        textarea.kControl {
+          height: 76px;
+        }
+
+        .kError {
+          color: $kDandger;
+          padding-top: 8px;
+        }
+      }
+    }
+}
+
+::ng-deep .p-multiselect {
+    width: 400px;
+}

@@ -13,14 +13,14 @@ import { BrowserService } from 'app-shared/kmc-shell/providers';
 import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-store.service";
 
 @Component({
-  selector: 'kSSOConfig',
-  templateUrl: './sso-config.component.html',
-  styleUrls: ['./sso-config.component.scss'],
+  selector: 'kEpSSOConfig',
+  templateUrl: './ep-sso-config.component.html',
+  styleUrls: ['./ep-sso-config.component.scss'],
   providers: [
       KalturaLogger.createLogger('SSOConfigComponent')
   ]
 })
-  export class SsoConfigComponent implements OnInit {
+export class EpSsoConfigComponent implements OnInit {
 
   public _ssoConfigForm: FormGroup;
   public _profilesField: AbstractControl;

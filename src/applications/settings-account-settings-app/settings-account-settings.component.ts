@@ -1,18 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { KalturaPartner } from 'kaltura-ngx-client';
-import { SettingsAccountSettingsService } from './settings-account-settings.service';
-import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { SelectItem } from 'primeng/api';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { SettingsAccountSettingsMainViewService, SettingsAuthenticationMainViewService } from 'app-shared/kmc-shared/kmc-views';
-import { BrowserService } from 'shared/kmc-shell/providers/browser.service';
-import { Observable } from 'rxjs';
-import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
-import { AppAuthentication } from "app-shared/kmc-shell";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {KalturaPartner} from 'kaltura-ngx-client';
+import {SettingsAccountSettingsService} from './settings-account-settings.service';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {SelectItem} from 'primeng/api';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {cancelOnDestroy, tag} from '@kaltura-ng/kaltura-common';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {SettingsAccountSettingsMainViewService, SettingsAuthenticationMainViewService} from 'app-shared/kmc-shared/kmc-views';
+import {BrowserService} from 'shared/kmc-shell/providers/browser.service';
+import {Observable} from 'rxjs';
+import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verification';
+import {AppAuthentication} from 'app-shared/kmc-shell';
 
 function phoneValidator(): ValidatorFn {
   return (control: AbstractControl): {[key: string]: boolean} | null => {
@@ -46,6 +46,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
   public _showSSO = false;
+  public _showEpSSO = false;
 
   constructor(private _accountSettingsService: SettingsAccountSettingsService,
               private _appLocalization: AppLocalization,
@@ -58,6 +59,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
               private _settingsAccountSettingsMainView: SettingsAccountSettingsMainViewService,
               private _fb: FormBuilder) {
       this._showSSO = this._settingsAuthenticationMain.isAvailable() && _appAuthentication.appUser.isAdmin;
+      this._showEpSSO = this._permissionsService.hasPermission(KMCPermissions.FEATURE_EVENT_PLATFORM_PERMISSION);
   }
 
   ngOnInit() {
