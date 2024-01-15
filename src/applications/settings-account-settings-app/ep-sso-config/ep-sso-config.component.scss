@@ -3,6 +3,14 @@
 .kSSOConfig {
     display: flex;
     flex-direction: column;
+    .kInfo {
+        margin-left: 24px;
+        margin-top: 24px;
+        display: flex;
+        i {
+            margin-right: 8px;
+        }
+    }
     .kSaveBtnContainer {
         padding-top: 60px;
         .kSaveBtn {
@@ -77,6 +85,11 @@
             border: 1px solid $kDandger;
             background: initial;
           }
+            &.disabled {
+                opacity: 0.3;
+                cursor: default;
+                pointer-events: none;
+            }
         }
 
         textarea.kControl {

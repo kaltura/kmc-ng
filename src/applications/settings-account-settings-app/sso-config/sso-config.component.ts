@@ -62,7 +62,7 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
                   this.profiles = (response.objects as AuthProfile[]).filter(profile => profile.isAdminProfile && this._profilesService.getProfileStatus(profile) === 'complete');
               }
               // load kmc app from app registry
-              this._profilesService.listApplications().subscribe(
+              this._profilesService.listApplications('kmc').subscribe(
                   (response: LoadApplicationResponse) => {
                       if (response.objects?.length > 0) {
                           // kmc app found
@@ -206,7 +206,7 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
       }
 
       const createSubscription = () => {
-          this._profilesService.createSubscription(this.kmcApp.id, profiles).subscribe(
+          this._profilesService.createSubscription('kmc', this.kmcApp.id, profiles).subscribe(
               (subscription: AppSubscription) => {
                   if (subscription.objectType === "KalturaAPIException") { // error handling
                       this.displayServerError(subscription);

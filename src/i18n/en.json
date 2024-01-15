@@ -2649,6 +2649,7 @@
                 "adminEmail": "Email of Account Owner",
                 "adminUserId": "Name of Account Owner",
                 "informationMessage": "Please make sure that the information below is up to date.",
+                "epDisabled": "Please login at least once to Kaltura Event Platform to enable these settings",
                 "name": "Name of Publisher/Company",
                 "phone": "Phone",
                 "website": "Website",

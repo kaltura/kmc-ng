@@ -12,6 +12,9 @@
         "kpfPackageManagerBaseUrl": "https://kpf-dev.kaltura.com/package-manager",
         "kpfPurchaseManagerBaseUrl": "https://kpf-dev.kaltura.com/purchase-manager"
     },
+    "epServer": {
+        "uri": "https://epm.nvp1.ovp.kaltura.com"
+    },
     "externalServices": {
         "appRegistryEndpoint": {
             "uri": "https://app-registry.nvp1.ovp.kaltura.com/api/v1/app-registry"
