@@ -1,3 +1,18 @@
+<a name="7.18.0"></a>
+# [7.18.0](https://github.com/kaltura/kmc-ng/compare/v7.17.0...v7.18.0) (2024-01-23)
+
+
+### Bug Fixes
+
+* **content/documents:** list documents is all statuses and not just in ready status KMCNG-2572 ([553e7a3](https://github.com/kaltura/kmc-ng/commit/553e7a3))
+
+
+### Features
+
+* **settings/account:** configure event platform for auth broker SSO login KKMCNG-2557 ([#1062](https://github.com/kaltura/kmc-ng/issues/1062)) ([f610e91](https://github.com/kaltura/kmc-ng/commit/f610e91))
+
+
+
 <a name="7.17.0"></a>
 # [7.17.0](https://github.com/kaltura/kmc-ng/compare/v7.16.2...v7.17.0) (2024-01-08)
 
