@@ -84,9 +84,20 @@ export class EpSsoConfigComponent implements OnInit {
                                       const subscription: AppSubscription = response.objects[0];
                                       this.epSubscription = subscription;
                                       // populate selected profiles
+                                      // filter out profiles that appear in the subscription but are not listed in the loaded profiles (profiles that were deleted after set to the subscription)
+                                      let subscriptionProfiles = [];
+                                      if (subscription.authProfileIds) {
+                                          subscription.authProfileIds.forEach(profileId => {
+                                              this.profiles.forEach(profile => {
+                                                  if (profile.id === profileId) {
+                                                      subscriptionProfiles.push(profileId);
+                                                  }
+                                              })
+                                          })
+                                      }
                                       this._ssoConfigForm.patchValue(
                                           {
-                                              profiles: subscription.authProfileIds || []
+                                              profiles: subscriptionProfiles
                                           },
                                           { emitEvent: false }
                                       );
