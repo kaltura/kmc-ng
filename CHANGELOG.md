@@ -5,6 +5,7 @@
 ### Bug Fixes
 
 * **content/documents:** list documents is all statuses and not just in ready status KMCNG-2572 ([553e7a3](https://github.com/kaltura/kmc-ng/commit/553e7a3))
+* **settings/account:** Auth Broker - number of profiles is displayed incorrectly in SSO Profiles dropdown KMCNG-2569 ([553e7a3](https://github.com/kaltura/kmc-ng/commit/553e7a3))
 
 
 ### Features
