@@ -189,11 +189,12 @@ export class ProfilesStoreService implements OnDestroy {
         }
     }
 
-    public listApplications(): Observable<any> {
+    public listApplications(app: 'EP' | 'kmc'): Observable<any> {
+        const pid = this._appAuthentication.appUser.partnerInfo.partnerId.toString();
         const filter = {
-            "appType": "kmc",
+            "appType": app === 'kmc' ? "kmc" : "empAccount",
             "status": "enabled",
-            "appCustomIdIn": [this._appAuthentication.appUser.partnerInfo.partnerId.toString()]
+            "appCustomIdIn": app === 'kmc' ? [pid] : ['epm_account_' + pid]
         }
         try {
             return this._http.post(`${serverConfig.externalServices.appRegistryEndpoint.uri}/list`, {filter}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
@@ -202,14 +203,14 @@ export class ProfilesStoreService implements OnDestroy {
         }
     }
 
-    public createSubscription(appGuid: string, authProfileIds: string[]): Observable<any> {
+    public createSubscription(app: 'kmc' | 'EP', appGuid: string, authProfileIds: string[]): Observable<any> {
         const request = {
-            name: "kmc app subscription",
+            name: app === 'kmc' ? "kmc app subscription" : "EPM app subscription",
             appGuid,
             authProfileIds,
-            appLandingPage: window.location.origin + "/index.php/kmcng/actions/persist-login-by-ks",
-            appErrorPage: window.location.origin + "/index.php/kmcng/login",
-            redirectMethod: "HTTP-POST"
+            appLandingPage: app === 'kmc' ? window.location.origin + "/index.php/kmcng/actions/persist-login-by-ks" : serverConfig.epServer.uri + "/sso-redirect",
+            appErrorPage: app === 'kmc' ? window.location.origin + "/index.php/kmcng/login" : serverConfig.epServer.uri + "/sso-redirect",
+            redirectMethod: app === 'kmc' ? "HTTP-POST" : "HTTP-GET"
         }
         try {
             return this._http.post(`${serverConfig.externalServices.appSubscriptionEndpoint.uri}/add`, request, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;

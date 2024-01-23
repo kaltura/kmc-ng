@@ -13,14 +13,14 @@ import { BrowserService } from 'app-shared/kmc-shell/providers';
 import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-store.service";
 
 @Component({
-  selector: 'kSSOConfig',
-  templateUrl: './sso-config.component.html',
-  styleUrls: ['./sso-config.component.scss'],
+  selector: 'kEpSSOConfig',
+  templateUrl: './ep-sso-config.component.html',
+  styleUrls: ['./ep-sso-config.component.scss'],
   providers: [
       KalturaLogger.createLogger('SSOConfigComponent')
   ]
 })
-  export class SsoConfigComponent implements OnInit {
+export class EpSsoConfigComponent implements OnInit {
 
   public _ssoConfigForm: FormGroup;
   public _profilesField: AbstractControl;
@@ -29,11 +29,12 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
 
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
+  public _disableConfig = false;
 
   public profiles = [];
 
-  private kmcApp: App = null;
-  private kmcSubscription: AppSubscription = null;
+  private epApp: App = null;
+  private epSubscription: AppSubscription = null;
 
   public get _saveDisabled(): boolean {
     return this._ssoConfigForm.pristine;
@@ -61,27 +62,27 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
                   // filter only admin profiles with complete status
                   this.profiles = (response.objects as AuthProfile[]).filter(profile => profile.isAdminProfile && this._profilesService.getProfileStatus(profile) === 'complete');
               }
-              // load kmc app from app registry
-              this._profilesService.listApplications('kmc').subscribe(
+              // load EP app from app registry
+              this._profilesService.listApplications('EP').subscribe(
                   (response: LoadApplicationResponse) => {
                       if (response.objects?.length > 0) {
                           // kmc app found
-                          const kmcApp: App = response.objects[0];
-                          this.kmcApp = kmcApp; // save kmc app for subscription filter
+                          const epApp: App = response.objects[0];
+                          this.epApp = epApp; // save EP app for subscription filter
                           // populate domain and org id in the form
                           this._ssoConfigForm.patchValue(
                               {
-                                  domain: kmcApp.organizationDomain?.domain ? kmcApp.organizationDomain.domain : '',
-                                  organizationId:  kmcApp.organizationDomain?.organizationId ? kmcApp.organizationDomain.organizationId : ''
+                                  domain: epApp.organizationDomain?.domain ? epApp.organizationDomain.domain : '',
+                                  organizationId:  epApp.organizationDomain?.organizationId ? epApp.organizationDomain.organizationId : ''
                               },
                               { emitEvent: false }
                           );
                           // load subscriptions with kmc app id in the filter
-                          this._profilesService.listSubscriptions(this.kmcApp.id).subscribe(
+                          this._profilesService.listSubscriptions(this.epApp.id).subscribe(
                               (response: LoadSubscriptionsResponse) => {
                                   if (response.objects?.length > 0) {
                                       const subscription: AppSubscription = response.objects[0];
-                                      this.kmcSubscription = subscription;
+                                      this.epSubscription = subscription;
                                       // populate selected profiles
                                       // filter out profiles that appear in the subscription but are not listed in the loaded profiles (profiles that were deleted after set to the subscription)
                                       let subscriptionProfiles = [];
@@ -108,11 +109,13 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
                               }
                           )
                       } else {
+                          this._disableConfig = true;
                           this._isBusy = false;
                       }
                   },
                   error => {
                       this.displayServerError(error);
+                      this._disableConfig = true;
                   }
               );
           },
@@ -198,12 +201,11 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
     const { profiles, domain, organizationId } = this._ssoConfigForm.value;
 
     // implementation logic
-      // 1. if this.kmcApp.id is empty (no app registry):
-        // 1a. register kmc app with the selected domain and org id
-        // 1b. use the created app id to create a subscription with the selected profiles
-        // 1c. show success message
-      // 2. if this.kmcApp.id exists (kmc app is registered):
-        // 2a. if no subscription profile exists - go to 1b.
+      // 1. if this.epApp.id is empty (no app registry):
+        // 1a. Block UI
+        // 1c. show error message
+      // 2. if this.epApp.id exists (kmc app is registered):
+        // 2a. if no subscription profile exists - create a subscription with the selected profiles
         // 2b. if a subscription profile exists for this app:
             // 2b-1. if the entered domain and org id are equal to kmc app domain and org id - preform subscription update for profiles if needed and show success message
             // 2b-2. if the entered domain or org id are different from the app domain or org id - preform KMC app update for domain and org id and
@@ -217,14 +219,14 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
       }
 
       const createSubscription = () => {
-          this._profilesService.createSubscription('kmc', this.kmcApp.id, profiles).subscribe(
+          this._profilesService.createSubscription('EP', this.epApp.id, profiles).subscribe(
               (subscription: AppSubscription) => {
                   if (subscription.objectType === "KalturaAPIException") { // error handling
                       this.displayServerError(subscription);
                       return;
                   }
                   this._isBusy = false;
-                  this.kmcSubscription = subscription;
+                  this.epSubscription = subscription;
                   this._markFormFieldsAsPristine();
                   displaySuccessMessage();
               },
@@ -235,14 +237,14 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
       }
 
       const updateSubscription = () => {
-          this._profilesService.updateSubscription(this.kmcSubscription.id, profiles).subscribe(
+          this._profilesService.updateSubscription(this.epSubscription.id, profiles).subscribe(
               (subscription: AppSubscription) => {
                   if (subscription.objectType === "KalturaAPIException") { // error handling
                       this.displayServerError(subscription);
                       return;
                   }
                   this._isBusy = false;
-                  this.kmcSubscription = subscription;
+                  this.epSubscription = subscription;
                   this._markFormFieldsAsPristine();
                   displaySuccessMessage();
               },
@@ -253,10 +255,10 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
       }
 
       const deleteSubscription = () => {
-          this._profilesService.deleteSubscription(this.kmcSubscription.id).subscribe(
+          this._profilesService.deleteSubscription(this.epSubscription.id).subscribe(
               () => {
                   this._isBusy = false;
-                  this.kmcSubscription = null;
+                  this.epSubscription = null;
                   this._markFormFieldsAsPristine();
                   this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('app.common.deleteSuccess')});
               },
@@ -266,8 +268,8 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
           )
       }
 
-      if (this.kmcApp?.id?.length) {
-        if (!this.kmcSubscription?.id?.length) {
+      if (this.epApp?.id?.length) {
+        if (!this.epSubscription?.id?.length) {
             this._isBusy = true;
             createSubscription(); // create subscription for the registered app
         } else {
@@ -277,17 +279,17 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
                 return;
             }
             // preform subscription update
-            if (domain !== this.kmcApp.organizationDomain.domain || organizationId !== this.kmcApp.organizationDomain.organizationId) {
+            if (domain !== this.epApp.organizationDomain?.domain || organizationId !== this.epApp.organizationDomain?.organizationId) {
                 // update registered application
                 this._isBusy = true;
-                this._profilesService.updateApplication(this.kmcApp.id, domain, organizationId).subscribe(
+                this._profilesService.updateApplication(this.epApp.id, domain, organizationId).subscribe(
                     (app: App) => {
                         if (app.objectType === "KalturaAPIException") { // error handling
                             this.displayServerError(app);
                             return;
                         }
-                        this.kmcApp = app;
-                        if (!this.compareProfilesArray(profiles, this.kmcSubscription.authProfileIds)) {
+                        this.epApp = app;
+                        if (!this.compareProfilesArray(profiles, this.epSubscription.authProfileIds)) {
                             updateSubscription(); // update existing subscription
                         } else {
                             this._isBusy = false;
@@ -299,7 +301,7 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
                     }
                 )
             } else {
-                if (!this.compareProfilesArray(profiles, this.kmcSubscription.authProfileIds)) {
+                if (!this.compareProfilesArray(profiles, this.epSubscription.authProfileIds)) {
                     this._isBusy = true;
                     updateSubscription(); // update existing subscription
                 }
@@ -314,7 +316,7 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
                       this.displayServerError(app);
                       return;
                   }
-                  this.kmcApp = app;
+                  this.epApp = app;
                   createSubscription(); // create subscription for the registered app
               },
               error => {

@@ -90,6 +90,9 @@ export interface ServerConfig {
         kpfPackageManagerBaseUrl: string,
         kpfPurchaseManagerBaseUrl: string
     },
+    epServer: {
+        uri: string
+    }
     externalServices: {
         appRegistryEndpoint: {
             uri: string;

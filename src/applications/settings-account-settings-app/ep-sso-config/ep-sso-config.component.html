@@ -1,0 +1,95 @@
+<k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+  <div class="kEditProfile">
+    <div class="kSSOConfig">
+      <span class="kTitle">{{'applications.settings.authentication.subscribe.epConfig' | translate}}</span>
+      <div class="kContainer">
+          <div class="kInfo" *ngIf="_disableConfig">
+              <i class="kIconwarning"></i>
+              <span>{{'applications.settings.accountSettings.epDisabled' | translate}}</span>
+          </div>
+        <form class="kProfileForm" [formGroup]="_ssoConfigForm" novalidate>
+          <div class="kRow">
+            <span class="kLabel">{{'applications.settings.authentication.subscribe.profiles' | translate}}</span>
+            <div class="kRequired" [class.kHasError]="_profilesField.invalid && _profilesField.touched">*</div>
+            <div>
+                <kMultiSelect class="kProfilesList"
+                              [class.kHasError]="_profilesField.invalid && _profilesField.touched"
+                              panelStyleClass="kPermissionsListPanel"
+                              menuItemDisplayStyle="flex"
+                              [showHeader]="false"
+                              [options]="profiles"
+                              optionLabel="name"
+                              optionValue="id"
+                              [disabled]="profiles.length === 0 || _disableConfig"
+                              [showToggleAll]="false"
+                              [appendTo]="'body'"
+                              [placeholder]="'applications.settings.authentication.subscribe.profilesPlaceholder' | translate"
+                              (onChange)="_onProfilesSelectionChange($event)"
+                              [formControl]="_profilesField">
+                    <ng-template let-item pTemplate="item">
+                      <span class="kPermissionItem">
+                        {{item.name}}
+                      </span>
+                            </ng-template>
+                </kMultiSelect>
+              <div *ngIf="_profilesField.hasError('required') && _profilesField.touched" class="kError">
+                {{'applications.administration.role.errors.required' | translate}}
+              </div>
+                <div *ngIf="_profilesField.hasError('unsafeValue') && _profilesField.pristine" class="kError">
+                    {{'applications.administration.role.errors.unsafeValue' | translate}}
+                </div>
+            </div>
+          </div>
+
+          <div class="kRow">
+              <div class="labelWithHelpTip">
+                  <span class="kLabel">{{'applications.settings.authentication.subscribe.domain' | translate}}</span>
+                  <kInputHelper>
+                      <span>{{'applications.settings.authentication.subscribe.domain-help' | translate}}</span>
+                  </kInputHelper>
+              </div>
+
+            <div class="kRequired" [class.kHasError]="_domainField.invalid && _domainField.touched">*</div>
+            <div>
+                <input class="kControl" pInputText
+                       [formControl]="_domainField"
+                       [class.disabled]="_disableConfig"
+                       [class.kHasError]="_domainField.invalid && _domainField.touched">
+              <div *ngIf="_domainField.hasError('required') && _domainField.touched" class="kError">
+                {{'applications.administration.role.errors.required' | translate}}
+              </div>
+                <div *ngIf="_domainField.hasError('unsafeValue') && _domainField.pristine" class="kError">
+                    {{'applications.administration.role.errors.unsafeValue' | translate}}
+                </div>
+            </div>
+          </div>
+
+          <div class="kRow">
+              <div class="labelWithHelpTip notRequired">
+                  <span class="kLabel">{{'applications.settings.authentication.subscribe.orgId' | translate}}</span>
+                  <kInputHelper>
+                      <span>{{'applications.settings.authentication.subscribe.orgId-help' | translate}}</span>
+                  </kInputHelper>
+              </div>
+
+            <div>
+                <input class="kControl" pInputText
+                       [formControl]="_organizationIdField"
+                       [class.disabled]="_disableConfig"
+                       [class.kHasError]="_organizationIdField.invalid && _organizationIdField.touched">
+                <div *ngIf="_organizationIdField.hasError('unsafeValue') && _organizationIdField.pristine" class="kError">
+                    {{'applications.administration.role.errors.unsafeValue' | translate}}
+                </div>
+            </div>
+          </div>
+
+            <div class="kSaveBtnContainer kRow">
+                <button pButton class="kButtonBranded kSaveBtn" (click)="_performAction()"
+                        label="{{'applications.settings.accountSettings.apply' | translate}}"
+                        [disabled]="_ssoConfigForm.pristine || _ssoConfigForm.invalid || _disableConfig"></button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</k-area-blocker>

@@ -2649,6 +2649,7 @@
                 "adminEmail": "Email of Account Owner",
                 "adminUserId": "Name of Account Owner",
                 "informationMessage": "Please make sure that the information below is up to date.",
+                "epDisabled": "To configure the SSO profile for your organization, please log into Kaltura Events and return to this window.",
                 "name": "Name of Publisher/Company",
                 "phone": "Phone",
                 "website": "Website",
@@ -2813,7 +2814,8 @@
                 },
                 "subscribe": {
                     "general": "General",
-                    "config": "SSO configuration",
+                    "config": "KMC SSO configuration",
+                    "epConfig": "Kaltura Events SSO configuration",
                     "profiles": "Profiles",
                     "profilesPlaceholder": "Select profiles",
                     "profiles-help": "Select one or more admin profiles",

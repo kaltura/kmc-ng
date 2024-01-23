@@ -56,6 +56,13 @@ export const ServerConfigSchema = {
             required: ['kpfPackageManagerBaseUrl', 'kpfPurchaseManagerBaseUrl'],
             additionalProperties: true
         },
+        epServer: {
+            properties: {
+                uri: {type: ['string', 'null']}
+            },
+            required: ['uri'],
+            additionalProperties: true
+        },
         externalServices: {
             properties: {
                 appRegistryEndpoint: {
