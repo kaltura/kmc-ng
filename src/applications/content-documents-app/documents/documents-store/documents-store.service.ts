@@ -141,7 +141,7 @@ export class DocumentsStore extends FiltersStoreBase<DocumentsFilters> implement
 
             const data: DocumentsFilters = this._getFiltersAsReadonly();
 
-            filter.statusIn = '-1,-2,0,1,2,3,4,5,6,7'; // list all statuses
+            filter.statusIn = '-1,-2,0,1,2,7,4';
 
             // filter 'createdAt'
             if (data.createdAt) {
