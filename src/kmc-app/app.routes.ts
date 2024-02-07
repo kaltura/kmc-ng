@@ -101,6 +101,10 @@ const routes: Routes = <Routes>[
                             loadChildren: () => import('../applications/settings-authentication-app/settings-authentication-app.module').then(m => m.SettingsAuthenticationAppModule)
                         },
                         {
+                            path: 'mr',
+                            loadChildren: () => import('../applications/settings-mr-app/settings-mr-app.module').then(m => m.SettingsMrAppModule)
+                        },
+                        {
                             path: 'accessControl',
                             loadChildren: () => import('../applications/settings-access-control-app/settings-access-control-app.module').then(m => m.SettingsAccessControlAppModule)
                         },

@@ -123,6 +123,10 @@
         margin-bottom: 40px;
     }
 }
+.kLabelWithHelpTip {
+    display: flex;
+    align-items: flex-start;
+}
 :host ::ng-deep .kLoginForm a {
   color: $kGrayscale2;
 }

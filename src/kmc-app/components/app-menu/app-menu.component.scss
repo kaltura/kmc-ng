@@ -295,6 +295,15 @@
     }
 }
 
+@media screen and (max-width: 1200px) {
+    .appSubMenu {
+        .kSubMenuHolder {
+            width: 1024px;
+        }
+        padding-left: 8px;
+    }
+}
+
 // prioritize sticky elements of header above other sticky elements in the page
 :host ::ng-deep .kStickyClass{
     z-index: 550 !important;

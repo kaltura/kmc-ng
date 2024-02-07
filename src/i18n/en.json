@@ -41,6 +41,8 @@
             "settingsAccountInfoMenuTitle": "Account Information",
             "settingsAuthenticationPageTitle": "Settings > Authentication",
             "settingsAuthenticationMenuTitle": "Authentication",
+            "settingsMrPageTitle": "Settings > Media repurposing",
+            "settingsMrMenuTitle": "Media repurposing",
             "settingsAccountSettingsPageTitle": "Settings > Account",
             "settingsAccountSettingsMenuTitle": "Account",
             "settingsIntegrationPageTitle": "Settings > Integration",
@@ -175,7 +177,7 @@
                 "qrCode": "Scan this QR code with your authentication app. You can download an authentication app for both platforms:",
                 "sso": "Login with SSO",
                 "loginWithPassword": "Login with Email and Password",
-                "orgIdErr": "Please enter organization ID"
+                "orgIdErr": "Your organization requires an organization ID"
             },
             "invalidLoginHash": {
                 "title": "Invalid Login Link",
@@ -2720,6 +2722,7 @@
                 "profileName": "Profile name",
                 "deleteError": "Error deleting profile",
                 "addOrganizationId": "Organization ID (optional)",
+                "addOrganizationId_tt": "If you were not provided an Organization ID, leave empty",
                 "organizationId": "Organization ID",
                 "loginError": "Login error occurred",
                 "edit": {
@@ -3503,6 +3506,9 @@
                     "deleteFlavor": "Delete Flavor",
                     "systemNamePlaceholder": "Enter System Name"
                 }
+            },
+            "mr": {
+
             }
         },
         "analytics": {
