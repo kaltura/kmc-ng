@@ -2,18 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { SettingsMrMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
-  selector: 'kMrRules',
-  templateUrl: './rules.component.html',
-  styleUrls: ['./rules.component.scss']
+  selector: 'kMrReview',
+  templateUrl: './review.component.html',
+  styleUrls: ['./review.component.scss']
 })
-export class RulesComponent implements  OnInit{
+export class ReviewComponent implements  OnInit{
 
   constructor(private _mrMainViewService: SettingsMrMainViewService) {
   }
 
     ngOnInit() {
         if (this._mrMainViewService.viewEntered()) {
-            console.log("rules view entered");
+            console.log("review view entered");
         }
     }
 }

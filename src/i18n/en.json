@@ -3508,7 +3508,10 @@
                 }
             },
             "mr": {
-
+                "rules": "Rules",
+                "review": "Review",
+                "logs": "Execution logs",
+                "settings": "Settings"
             }
         },
         "analytics": {

@@ -7,6 +7,7 @@ import {Title} from '@angular/platform-browser';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {ContextualHelpService} from 'app-shared/kmc-shared/contextual-help/contextual-help.service';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {serverConfig} from 'config/server';
 
 @Injectable()
 export class SettingsMrMainViewService extends KmcMainViewBaseService {
@@ -24,9 +25,7 @@ export class SettingsMrMainViewService extends KmcMainViewBaseService {
     }
 
     isAvailable(): boolean {
-        return this._appPermissions.hasPermission(KMCPermissions.FEATURE_MEDIA_REPURPOSING_PERMISSION);
-        // TODO: check for external service URI
-        // return this._appPermissions.hasPermission(KMCPermissions.FEATURE_AUTH_BROKER_PERMISSION) && !!serverConfig.externalServices && !!serverConfig.externalServices.authProfileEndpoint && !!serverConfig.externalServices.authProfileEndpoint.uri;
+        return this._appPermissions.hasPermission(KMCPermissions.FEATURE_MEDIA_REPURPOSING_PERMISSION) && !!serverConfig?.externalServices?.mrEndpoint?.uri;
     }
 
     getRoutePath(): string {

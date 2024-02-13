@@ -114,6 +114,9 @@ export interface ServerConfig {
         },
         userReportsEndpoint: {
             uri: string;
+        },
+        mrEndpoint: {
+            uri: string;
         }
     },
     analyticsServer?: {

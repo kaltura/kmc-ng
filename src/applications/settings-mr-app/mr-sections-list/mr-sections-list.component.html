@@ -1,0 +1,13 @@
+<div class="kSections kSectionsPlaceholder"></div>
+<kSticky #playlistSections stickyId="mrSections" [sticksTo]="'header'" [scrollOffset]="106" [stickyClass]="'kStickySections'">
+    <div class="kSections">
+        <ul>
+            <li *ngFor="let section of _sections" [class.active]="selectedSection === section.key">
+                <div (click)="_navigateToSection(section)">
+                    {{section.label}}
+                </div>
+            </li>
+        </ul>
+    </div>
+</kSticky>
+
