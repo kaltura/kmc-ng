@@ -3511,7 +3511,18 @@
                 "rules": "Rules",
                 "review": "Review",
                 "logs": "Execution logs",
-                "settings": "Settings"
+                "settings": "Settings",
+                "rulesLoadError": "Error loading rules",
+                "deleteError": "Error deleting rule",
+                "created": "Created on",
+                "lastRun": "Last run",
+                "nextRun": "Next run",
+                "notRun": "N/A",
+                "enable": "Enable",
+                "disable": "Disable",
+                "testRun": "Text run",
+                "delete": "Delete rule",
+                "deleteMsg": "Are you sure you want to delete this rule? You can't undo this action."
             }
         },
         "analytics": {

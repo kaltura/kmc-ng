@@ -18,10 +18,12 @@ import { KalturaPrimeNgUIModule } from "@kaltura-ng/kaltura-primeng-ui";
 import { DateFormatModule } from "app-shared/kmc-shared/date-format/date-format.module";
 import { CopyToClipboardModule } from '@kaltura-ng/mc-shared';
 import { RulesComponent } from './rules/rules.component';
-import {MrSectionsList} from './mr-sections-list/mr-sections-list.component';
-import {ReviewComponent} from './review/review.component';
-import {LogsComponent} from './logs/logs.component';
-import {SettingsComponent} from './settings/settings.component';
+import { MrSectionsList } from './mr-sections-list/mr-sections-list.component';
+import { ReviewComponent } from './review/review.component';
+import { LogsComponent } from './logs/logs.component';
+import { SettingsComponent } from './settings/settings.component';
+import { MrStoreService } from './mr-store/mr-store.service';
+import {DeleteRuleComponent} from './rules/delete-rule/delete-rule.component';
 
 @NgModule({
     imports: [
@@ -53,8 +55,10 @@ import {SettingsComponent} from './settings/settings.component';
       ReviewComponent,
       LogsComponent,
       SettingsComponent,
-      MrSectionsList
-  ]
+      MrSectionsList,
+      DeleteRuleComponent
+  ],
+    providers: [MrStoreService]
 })
 export class SettingsMrAppModule {
 }

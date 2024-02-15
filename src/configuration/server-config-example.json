@@ -36,6 +36,9 @@
         },
         "userReportsEndpoint": {
             "uri": "https://user.nvp1.ovp.kaltura.com/api/v1/reports"
+        },
+        "mrEndpoint": {
+            "uri": "https://mr.nvp1.ovp.kaltura.com/api/v1/"
         }
     },
     "externalApps": {
