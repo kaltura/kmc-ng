@@ -3,7 +3,14 @@
 .kTagsWrapper {
     z-index: 500;
 }
-
+.kTitle {
+    color: $kGrayscale1;
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 14px;
+    margin-top: 14px;
+    line-height: 32px;
+}
 .kProfiles {
     font-size: 15px;
     background-color: $appBkgColor;
@@ -67,7 +74,7 @@
         height: auto;
         padding: 0px;
         width: 100%;
-        min-height: calc(100vh - 230px);
+        min-height: calc(100vh - 276px);
         margin-bottom: 34px;
         .status {
             display: flex;
@@ -148,7 +155,7 @@ p-table ::ng-deep tr:not(:last-child) .nameHolder {
 }
 
 :host ::ng-deep p-table .p-datatable-scrollable-wrapper {
-    max-height: calc(100vh - 230px) !important;
+    max-height: calc(100vh - 276px) !important;
     overflow-y: auto !important;
 }
 

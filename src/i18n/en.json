@@ -3522,7 +3522,10 @@
                 "disable": "Disable",
                 "testRun": "Text run",
                 "delete": "Delete rule",
-                "deleteMsg": "Are you sure you want to delete this rule? You can't undo this action."
+                "deleteMsg": "Are you sure you want to delete this rule? You can't undo this action.",
+                "newRule": "Add new rule",
+                "rulesNum": "{{0}} Rules",
+                "newRuleName": "New rule"
             }
         },
         "analytics": {

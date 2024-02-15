@@ -1,0 +1,42 @@
+<k-area-blocker [message]="_blockerMessage">
+    <div class="kNewProfile">
+
+        <div class="kHeader">
+            <span class="kTitle">{{'applications.settings.mr.newRule' | translate}}</span>
+        </div>
+        <div class="kContainer" #scrollableContainer>
+            <form class="kProfileForm" [formGroup]="_newProfileForm" novalidate>
+
+                <div class="kRow">
+                    <span class="kLabel required">{{'applications.settings.authentication.name' | translate}}</span>
+                    <div class="kRequired" [class.kHasError]="_nameField.invalid && _nameField.touched">*</div>
+                    <div>
+                        <input class="kControl" pInputText [maxlength]="255"
+                               [formControl]="_nameField"
+                               [placeholder]="'applications.settings.mr.newRuleName' | translate"
+                               [class.kHasError]="_nameField.invalid && _nameField.touched">
+                        <div *ngIf="_nameField.hasError('required') && _nameField.touched" class="kError">
+                            {{'applications.administration.role.errors.required' | translate}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <span class="kLabel">{{'applications.administration.role.description' | translate}}</span>
+                    <textarea class="kControl" pInputTextarea [maxlength]="512" [formControl]="_descriptionField"></textArea>
+                </div>
+
+             </form>
+        </div>
+
+
+        <div class="kFooter">
+            <button type="button" class="kButtonDefault kBtn" (click)="parentPopupWidget.close()" pButton
+                    label="{{'app.common.cancel' | translate}}"></button>
+            <button type="button" class="kButtonBranded kBtn"
+                    [disabled]="_saveDisabled" (click)="_createProfile()" pButton
+                    label="{{'applications.settings.authentication.new.create' | translate}}"></button>
+        </div>
+
+    </div>
+</k-area-blocker>

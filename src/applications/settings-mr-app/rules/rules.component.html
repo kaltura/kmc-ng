@@ -1,13 +1,14 @@
 <k-area-blocker [message]="_blockerMessage" [bodyScroll]="true" [showLoader]="_isBusy">
     <div class="kProfiles kOverrideFAIcons">
         <div class="kProfilesHolder">
+                <span class="kTitle">{{'applications.settings.mr.rules' | translate}}</span>
             <div class="kFiltersWrapper">
                 <div class="kProfilesTableFilters">
                     <button pButton type="button" class="kButtonBranded kAddProfileBtn"
-                            [label]="'applications.settings.authentication.newProfile' | translate"
+                            [label]="'applications.settings.mr.newRule' | translate"
                             (click)="_addProfile()"></button>
                     <span class="kSelectedProfilesNum">
-                      {{ 'applications.settings.authentication.profilesNum' | translate:{'0': _profilesCount} }}
+                      {{ 'applications.settings.mr.rulesNum' | translate:{'0': _profilesCount} }}
                     </span>
                     <button pButton class="kButtonDefault kRefreshBtn small" (click)="_refresh()" type="text" icon="kIconrefresh"
                             [kTooltip]="'applications.administration.roles.refresh' | translate"></button>
@@ -113,20 +114,14 @@
     </div>
 </k-area-blocker>
 
-<!--<kPopupWidget #editPopup data-aid="rolesEditPopup" [popupWidth]="995" [slider]="true">-->
-<!--    <ng-template>-->
-<!--        <kEditProfile [profile]="_currentEditProfile" [parentPopupWidget]="editPopup" (onRefresh)="_refresh()"></kEditProfile>-->
-<!--    </ng-template>-->
-<!--</kPopupWidget>-->
-
 <kPopupWidget #deletePopup data-aid="deleteProfilePopup" [popupWidth]="600" [popupHeight]="242" [modal]="true" [preventPageScroll]="true" [closeBtn]="false">
     <ng-template>
         <kDeleteRule [parentPopupWidget]="deletePopup" [profile]="_currentEditProfile" (onDelete)="deleteProfile()"></kDeleteRule>
     </ng-template>
 </kPopupWidget>
 
-<!--<kPopupWidget #newPopup data-aid="newProfilePopup" [popupWidth]="750" [popupHeight]="508" [modal]="true" [preventPageScroll]="true">-->
-<!--    <ng-template>-->
-<!--        <kNewProfile [parentPopupWidget]="newPopup" (onProfileCreated)="onProfileCreated($event)"></kNewProfile>-->
-<!--    </ng-template>-->
-<!--</kPopupWidget>-->
+<kPopupWidget #newPopup data-aid="newProfilePopup" [popupWidth]="750" [popupHeight]="360" [modal]="true" [preventPageScroll]="true">
+    <ng-template>
+        <kNewRule [parentPopupWidget]="newPopup" (onProfileCreated)="onProfileCreated($event)"></kNewRule>
+    </ng-template>
+</kPopupWidget>
