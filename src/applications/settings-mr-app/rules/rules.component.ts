@@ -9,6 +9,7 @@ import { SettingsMrMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from "app-shared/kmc-shared/columns-resize-manager";
 import { Menu } from "primeng/menu";
 import { MenuItem } from "primeng/api";
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'kMrRules',
@@ -21,7 +22,6 @@ import { MenuItem } from "primeng/api";
 })
 
 export class RulesComponent implements OnInit, OnDestroy {
-    @ViewChild('editPopup', { static: true }) public editPopup: PopupWidgetComponent;
     @ViewChild('newPopup', { static: true }) public newPopup: PopupWidgetComponent;
     @ViewChild('deletePopup', { static: true }) public deletePopup: PopupWidgetComponent;
     @ViewChild('actionsmenu', { static: true }) private _actionsMenu: Menu;
@@ -40,6 +40,7 @@ export class RulesComponent implements OnInit, OnDestroy {
 
     constructor(private _mrStore: MrStoreService,
                 private _logger: KalturaLogger,
+                private _router: Router,
                 private _mrMainViewService: SettingsMrMainViewService,
                 public _columnsResizeManager: ColumnsResizeManagerService,
                 private _appLocalization: AppLocalization,
@@ -159,7 +160,7 @@ export class RulesComponent implements OnInit, OnDestroy {
         this._currentEditProfile = profile;
         this._analytics.trackClickEvent('Edit_ManagedTasksProfile');
         this._logger.info(`handle edit ManagedTasksProfile action by user`);
-        this.editPopup.open();
+        this._router.navigateByUrl(`/settings/mr/rule/${profile.id}`);
     }
 
     public deleteProfile(): void {
@@ -198,12 +199,7 @@ export class RulesComponent implements OnInit, OnDestroy {
     }
 
     public onProfileCreated(profile: ManagedTasksProfile): void {
-        this._currentEditProfile = profile;
-        // setTimeout(() => {
-        //     this.editPopup.open(); // use a timeout to allow screen refresh and prevent page scroll
-        // });
-
-        this._refresh();
+        this._editProfile(profile);
     }
 
     public _onPaginationChanged(state: any): void {

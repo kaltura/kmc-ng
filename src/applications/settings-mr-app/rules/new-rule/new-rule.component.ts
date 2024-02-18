@@ -22,18 +22,6 @@ import { AppAuthentication } from "app-shared/kmc-shell";
   @Output() onProfileCreated = new EventEmitter<ManagedTasksProfile>();
 
   public _newProfileForm: FormGroup;
-  public _nameField: AbstractControl;
-  public _descriptionField: AbstractControl;
-  public _providerField: AbstractControl;
-  public _adminProfileField: AbstractControl;
-
-  public _providerTypes: Array<{ value: string, label: string }> = [
-      {label: 'Azure', value: 'azure'},
-      {label: 'Okta', value: 'okta'},
-      {label: 'AWS', value: 'aws'},
-      {label: 'Akamai', value: 'akamai'},
-      {label: this._appLocalization.get('applications.content.bulkUpload.objectType.other'), value: 'other'}
-  ];
 
   public _blockerMessage: AreaBlockerMessage = null;
 
@@ -44,8 +32,6 @@ import { AppAuthentication } from "app-shared/kmc-shell";
   constructor(private _fb: FormBuilder,
               private _logger: KalturaLogger,
               private _profilesService: MrStoreService,
-              private _browserService: BrowserService,
-              private _appAuthentication: AppAuthentication,
               private _appLocalization: AppLocalization) {
     this._buildForm();
   }
@@ -56,10 +42,6 @@ import { AppAuthentication } from "app-shared/kmc-shell";
 
   private _prepare(): void {
       this._logger.info(`prepare new rule`);
-      // this._newProfileForm.patchValue(
-      //   { provider: 'azure' },
-      //   { emitEvent: false }
-      // );
   }
 
   private _buildForm(): void {
@@ -67,9 +49,6 @@ import { AppAuthentication } from "app-shared/kmc-shell";
       name: ['', Validators.required],
       description: ['']
     });
-
-    this._nameField = this._newProfileForm.controls['name'];
-    this._descriptionField = this._newProfileForm.controls['description'];
   }
 
     private _markFormFieldsAsTouched() {

@@ -25,6 +25,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { MrStoreService } from './mr-store/mr-store.service';
 import {DeleteRuleComponent} from './rules/delete-rule/delete-rule.component';
 import {NewRuleComponent} from './rules/new-rule/new-rule.component';
+import {RuleComponent} from './rule/rule.component';
 
 @NgModule({
     imports: [
@@ -59,7 +60,8 @@ import {NewRuleComponent} from './rules/new-rule/new-rule.component';
       SettingsComponent,
       MrSectionsList,
       DeleteRuleComponent,
-      NewRuleComponent
+      NewRuleComponent,
+      RuleComponent
   ],
     providers: [MrStoreService]
 })
