@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SettingsMrMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import {MrStoreService} from '../mr-store/mr-store.service';
 
 @Component({
   selector: 'kMrReview',
@@ -8,12 +9,14 @@ import { SettingsMrMainViewService } from 'app-shared/kmc-shared/kmc-views';
 })
 export class ReviewComponent implements  OnInit{
 
-  constructor(private _mrMainViewService: SettingsMrMainViewService) {
+  constructor(private _mrMainViewService: SettingsMrMainViewService,
+              private _mrStore: MrStoreService) {
   }
 
     ngOnInit() {
         if (this._mrMainViewService.viewEntered()) {
             console.log("review view entered");
+            console.log(this._mrStore.rulesIds);
         }
     }
 }

@@ -38,11 +38,10 @@ export class RulesComponent implements OnInit, OnDestroy {
     public _rowTrackBy: Function = (index: number, item: any) => item.id;
     public _items: MenuItem[];
 
-    constructor(public _mrStore: MrStoreService,
+    constructor(private _mrStore: MrStoreService,
                 private _logger: KalturaLogger,
                 private _mrMainViewService: SettingsMrMainViewService,
                 public _columnsResizeManager: ColumnsResizeManagerService,
-                private _browserService: BrowserService,
                 private _appLocalization: AppLocalization,
                 private _analytics: AppAnalytics) {
     }
@@ -68,9 +67,10 @@ export class RulesComponent implements OnInit, OnDestroy {
                         profile.createdAt = new Date(profile.createdAt);
                         profile.updatedAt = new Date(profile.updatedAt);
                     });
-                    const profile = this._profiles[0];
-                    for (let i=0; i<50; i++)
-                        this._profiles.push(profile);
+                    // const profile = this._profiles[0];
+                    // for (let i=0; i<50; i++)
+                    //     this._profiles.push(profile);
+                    this._mrStore.rulesIds = this._profiles.map(profile => profile.id);
                 }
                 this._profilesCount = response.totalCount;
             },

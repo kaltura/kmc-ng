@@ -50,6 +50,7 @@ export type LoadManagedTasksProfilesResponse = {
 @Injectable()
 export class MrStoreService implements OnDestroy {
 
+    public rulesIds = [];
     constructor(private _http: HttpClient,
                 private _appAuthentication: AppAuthentication) {
     }

@@ -74,7 +74,7 @@
         height: auto;
         padding: 0px;
         width: 100%;
-        min-height: calc(100vh - 276px);
+        min-height: calc(100vh - 274px);
         margin-bottom: 34px;
         .status {
             display: flex;
@@ -155,7 +155,7 @@ p-table ::ng-deep tr:not(:last-child) .nameHolder {
 }
 
 :host ::ng-deep p-table .p-datatable-scrollable-wrapper {
-    max-height: calc(100vh - 276px) !important;
+    max-height: calc(100vh - 274px) !important;
     overflow-y: auto !important;
 }
 
