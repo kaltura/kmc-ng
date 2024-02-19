@@ -45,6 +45,9 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   public partnerAdminEmail: string;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
+
+  public _useSSO = false;
+  public _blockDirectLogin = false;
   public _showSSO = false;
   public _showEpSSO = false;
 
@@ -93,6 +96,10 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
       this._logger.info(`form data is not valid, abort action`);
       this.markFormFieldsAsTouched();
     }
+  }
+
+  public onUseSsoChange(): void {
+      console.log("----> onUseSsoChange: "+this._useSSO);
   }
 
   private markFormFieldsAsTouched() {
@@ -165,6 +172,8 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
       .subscribe(response => {
           this._fillAccountOwnersOptions(response.accountOwners);
           this.partnerId = response.partnerData.id;
+          this._useSSO = response.partnerData.useSso;
+          this._blockDirectLogin = response.partnerData.blockDirectLogin;
           this.partnerAdminEmail = response.partnerData.adminEmail;
           this._fillForm(response.partnerData);
           this._updateAreaBlockerState(false, null);

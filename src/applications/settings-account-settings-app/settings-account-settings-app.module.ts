@@ -15,23 +15,25 @@ import { MultiSelectModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { SsoConfigComponent } from "./sso-config/sso-config.component";
 import { ProfilesStoreService } from "../settings-authentication-app/profiles-store/profiles-store.service";
 import { EpSsoConfigComponent } from './ep-sso-config/ep-sso-config.component';
+import {InputSwitchModule} from 'primeng/inputswitch';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routing),
-    FormsModule,
-    ReactiveFormsModule,
-    DropdownModule,
-    MultiSelectModule,
-    InputTextModule,
-    TooltipModule,
-    ButtonModule,
-    AreaBlockerModule,
-    InputHelperModule,
-    TranslateModule,
-    KMCPermissionsModule
-  ],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routing),
+        FormsModule,
+        ReactiveFormsModule,
+        DropdownModule,
+        MultiSelectModule,
+        InputTextModule,
+        TooltipModule,
+        ButtonModule,
+        AreaBlockerModule,
+        InputHelperModule,
+        TranslateModule,
+        KMCPermissionsModule,
+        InputSwitchModule
+    ],
   declarations: [SettingsAccountSettingsComponent, SsoConfigComponent, EpSsoConfigComponent],
     providers:[SettingsAccountSettingsCanDeactivateService, ProfilesStoreService]
 })

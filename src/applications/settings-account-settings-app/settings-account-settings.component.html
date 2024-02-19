@@ -1,4 +1,7 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+    <div class="kAccountSettingsWrapper kContent">
+
+
   <form [formGroup]="accountSettingsForm" novalidate (ngSubmit)="onSubmit()" class="kAccountSettingsWrapper kContent">
     <section class="kFormMetadata">
       <div class="kReadonlyData">{{'applications.settings.accountSettings.partnerID' | translate}}: {{partnerId}} |
@@ -97,17 +100,24 @@
         </div>
       </div>
 
-
     </section>
 
-      <div class="sso" *ngIf="_showSSO">
-        <kSSOConfig></kSSOConfig>
-      </div>
-
-      <div class="epSso" *ngIf="_showSSO && _showEpSSO">
-        <kEpSSOConfig></kEpSSOConfig>
-      </div>
   </form>
 
+    <div class="sso">
+        <span class="kTitle">{{'applications.settings.authentication.subscribe.config' | translate}}</span>
+        <div class="kRow">
+            <span class="kLabel">{{'applications.settings.authentication.edit.metadataUpdate' | translate}}</span>
+            <p-inputSwitch class="kInputSwitch" [(ngModel)]="_useSSO" (onChange)="onUseSsoChange()"></p-inputSwitch>
+        </div>
+        <div *ngIf="_showSSO">
+            <kSSOConfig></kSSOConfig>
+        </div>
 
+        <div *ngIf="_showSSO && _showEpSSO">
+            <kEpSSOConfig></kEpSSOConfig>
+        </div>
+    </div>
+
+    </div>
 </k-area-blocker>

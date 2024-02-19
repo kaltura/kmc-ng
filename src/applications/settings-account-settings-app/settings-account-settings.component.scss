@@ -160,6 +160,33 @@
     width: 100%;
     margin-top: 24px;
     margin-bottom: 24px;
+    padding: 24px;
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    .kTitle {
+        color: $kGrayscale1;
+        font-weight: 700;
+        height: 29px;
+        font-size: 24px;
+        display: block;
+    }
+    .kRow {
+        display: flex;
+        padding-top: 24px;
+        align-items: center;
+        .kLabel {
+            width: 200px;
+            flex: 0 0 auto;
+            height: 18px;
+            color: $kGrayscale1;
+            font-size: 15px;
+            line-height: 18px;
+            &.required {
+                width: 172px;
+            }
+        }
+    }
 }
 .epSso {
     background-color: white;
@@ -172,6 +199,9 @@
 /*********************/
 
 :host ::ng-deep {
+    .p-dropdown.p-focus {
+        border: 1px solid $kGrayscale3;
+    }
   .p-dropdown {
     width: 100% !important;
   }
