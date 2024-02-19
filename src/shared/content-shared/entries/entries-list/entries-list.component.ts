@@ -156,6 +156,18 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         if (this.actionsMenu) {
             this._buildMenu(evt.entry);
             this.actionsMenu.toggle(evt.event);
+            setTimeout(() => {
+                const menu = document.getElementsByClassName('p-menu-list')[0] as any;
+                const menuItems = menu.getElementsByClassName('p-menuitem-link');
+                for (let menuItem of menuItems) {
+                    menuItem.addEventListener('keydown', (event: KeyboardEvent) => {
+                        if (event.key === 'Enter') {
+                            menuItem.dispatchEvent(new Event('click'));
+                        }
+                    }, false);
+                }
+                (menuItems[0] as HTMLAnchorElement).focus();
+            }, 100);
         }
     }
 

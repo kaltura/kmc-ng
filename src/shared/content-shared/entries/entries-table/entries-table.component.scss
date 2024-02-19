@@ -131,9 +131,27 @@
 :host ::ng-deep p-table {
     .p-datatable .p-datatable-thead > tr > th {
         border-left: 1px solid $kGrayscale6;
+        p-tableheadercheckbox .p-checkbox.p-focus {
+            border: 1px solid $kGrayscale3;
+        }
+    }
+    .kMoreActionsButton:focus {
+        border: 1px solid $kGrayscale3 !important;
     }
 }
 
 :host ::ng-deep .kButtonAddToBucket .p-button-text {
   padding: 0;
+}
+
+:host ::ng-deep .p-datatable .p-checkbox-box.p-focus {
+    border: 1px solid $kGrayscale3 !important;
+}
+:host ::ng-deep .p-datatable .p-selectable-row:focus {
+    outline: 1px solid $kGrayscale3 !important;
+}
+:host ::ng-deep .p-menuitem-link {
+    &:focus {
+        border: 1px solid $kGrayscale3 !important;
+    }
 }

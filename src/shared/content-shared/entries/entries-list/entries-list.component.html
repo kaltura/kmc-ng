@@ -29,6 +29,7 @@
             <div class="kFilters">
                 <div class="searchHolder">
                     <input type="text"
+                           tabindex="0"
                            pInputText
                            class="kSearchInput"
                            [(ngModel)]="_query.freetext"
@@ -36,7 +37,7 @@
                            placeholder="{{'applications.content.entries.searchEntries' | translate}}">
                     <i class="kIconsettings-solid dropdown" [class.kSelected]="entriesSearchFilter.selectedSearchField!=='all'" #searchHolder [kTooltip]="searchFieldsTooltip"></i>
                 </div>
-              <div #categoriesFilterBtn class="kCategoriesFilter kDropdown">
+              <div #categoriesFilterBtn class="kCategoriesFilter kDropdown" tabindex="0">
                 <i class="kIconfolder" *ngIf="!_categoriesUpdating"></i>
               <div *ngIf="_categoriesUpdating" class="k-spinner-background kSpinnerBkg" kTooltip="{{'applications.content.categories.categoriesUpdateMsg' | translate}}">
                 <div class="k-spinner-animation kSpinnerAnim"></div>
@@ -44,16 +45,16 @@
                 <span>{{'applications.content.entries.filterCategories' | translate}}</span>
                 <i class="kIcondropdown_arrow_bottom dropdown"></i>
               </div>
-              <div #refineBtn class="kRefine kDropdown">
+              <div #refineBtn class="kRefine kDropdown" tabindex="0">
                 <i class="kIconfilter"></i>
                 <span>{{'applications.content.entries.refine' | translate}}</span>
                 <i class="kIcondropdown_arrow_bottom dropdown"></i>
               </div>
             </div>
           </div>
-          <button *ngIf="showExport" pButton class="kButtonDefault kExportBtn" (click)="_export()" type="text"
+          <button *ngIf="showExport" pButton class="kButtonDefault kExportBtn" (click)="_export()" type="text" tabindex="0"
                   [label]="'applications.content.entryDetails.distribution.export' | translate"></button>
-          <button *ngIf="showReload"
+          <button *ngIf="showReload" tabindex="0"
                   pButton
                   class="kButtonDefault kRefreshBtn small"
                   type="text"

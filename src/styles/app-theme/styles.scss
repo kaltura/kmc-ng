@@ -425,3 +425,8 @@ div, span, tr, td, li {
 .p-datatable p-sorticon {
     vertical-align: unset;
 }
+.p-menu-list .p-menuitem-link {
+    &:focus {
+        border: 1px solid $kGrayscale3 !important;
+    }
+}
