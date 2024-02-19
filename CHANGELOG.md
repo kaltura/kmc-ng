@@ -1,3 +1,13 @@
+<a name="7.19.0"></a>
+# [7.19.0](https://github.com/kaltura/kmc-ng/compare/v7.18.0...v7.19.0) (2024-02-19)
+
+
+### Features
+
+* **settings/account:** configure sso usage and direct login blocking + design changes KMCNG-2567 ([#1063](https://github.com/kaltura/kmc-ng/issues/1063)) ([ca21dde](https://github.com/kaltura/kmc-ng/commit/ca21dde))
+
+
+
 <a name="7.18.0"></a>
 # [7.18.0](https://github.com/kaltura/kmc-ng/compare/v7.17.0...v7.18.0) (2024-01-23)
 

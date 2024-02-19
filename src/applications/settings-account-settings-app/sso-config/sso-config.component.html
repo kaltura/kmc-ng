@@ -77,13 +77,15 @@
             </div>
           </div>
 
-            <div class="kSaveBtnContainer kRow">
-                <button pButton class="kButtonBranded kSaveBtn" (click)="_performAction()"
-                        label="{{'applications.settings.accountSettings.apply' | translate}}"
-                        [disabled]="_ssoConfigForm.pristine || _ssoConfigForm.invalid"></button>
-            </div>
         </form>
       </div>
+        <div class="kSaveBtnContainer kRow">
+            <button pButton class="kButtonDefault kButton kCancelBtn" (click)="parentPopupWidget.close()"
+                    [label]="'applications.settings.myUserSettings.cancel' | translate"></button>
+            <button pButton class="kButtonBranded kSaveBtn" (click)="_performAction()"
+                    label="{{'applications.settings.accountSettings.apply' | translate}}"
+                    [disabled]="_ssoConfigForm.pristine || _ssoConfigForm.invalid"></button>
+        </div>
     </div>
   </div>
 </k-area-blocker>

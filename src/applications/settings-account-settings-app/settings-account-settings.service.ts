@@ -44,6 +44,16 @@ export class SettingsAccountSettingsService {
       partner
     }));
   }
+  /** update the data for current partner */
+  public updatePartnerSSO(useSso: boolean, blockDirectLogin: boolean): Observable<KalturaPartner> {
+    const partner = new KalturaPartner({
+        useSso,
+        blockDirectLogin
+    });
+    return this._kalturaServerClient.request(new PartnerUpdateAction({
+      partner
+    }));
+  }
 
 
   /** Get the account owners list for current partner */

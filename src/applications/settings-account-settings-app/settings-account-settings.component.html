@@ -1,4 +1,7 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+    <div class="kAccountSettingsWrapper kContent">
+
+
   <form [formGroup]="accountSettingsForm" novalidate (ngSubmit)="onSubmit()" class="kAccountSettingsWrapper kContent">
     <section class="kFormMetadata">
       <div class="kReadonlyData">{{'applications.settings.accountSettings.partnerID' | translate}}: {{partnerId}} |
@@ -97,17 +100,61 @@
         </div>
       </div>
 
-
     </section>
 
-      <div class="sso" *ngIf="_showSSO">
-        <kSSOConfig></kSSOConfig>
-      </div>
-
-      <div class="epSso" *ngIf="_showSSO && _showEpSSO">
-        <kEpSSOConfig></kEpSSOConfig>
-      </div>
   </form>
 
+    <div class="sso">
+        <span class="kTitle">{{'applications.settings.authentication.subscribe.ssoConfig' | translate}}</span>
+        <div class="kRow pushDown">
+            <div class="editor" *ngIf="_showSSO">
+                <span class="editorTitle">{{'applications.settings.authentication.subscribe.config' | translate}}</span>
+                <a class="kLink" (click)="ssoConfig.open()">{{'applications.content.syndication.table.actions.edit' | translate}}</a>
+            </div>
+            <div class="editor" *ngIf="_showSSO && _showEpSSO">
+                <span class="editorTitle">{{'applications.settings.authentication.subscribe.epConfig' | translate}}</span>
+                <a class="kLink" (click)="blockConfig.open()">{{'applications.content.syndication.table.actions.edit' | translate}}</a>
+            </div>
+        </div>
+        <div class="kRow pushDown">
+            <div class="labelWithHelpTip">
+                <span class="kLabel">{{'applications.settings.authentication.subscribe.useSso' | translate}}</span>
+                <kInputHelper>
+                    <span>{{'applications.settings.authentication.subscribe.useSso_tt' | translate}}</span>
+                </kInputHelper>
+            </div>
+            <div class="kRow">
+                <p-inputSwitch class="kInputSwitch" [(ngModel)]="_useSSO" (onChange)="onUseSsoChange()"></p-inputSwitch>
+                <div *ngIf="_updatingUseSso" class="k-spinner-animation kSpinnerAnim"></div>
+                <span *ngIf="_updatingUseSso">{{'applications.settings.authentication.edit.metadataUpdate' | translate}}</span>
+            </div>
+        </div>
+
+        <div class="kRow">
+            <div class="labelWithHelpTip">
+                <span class="kLabel">{{'applications.settings.authentication.subscribe.block' | translate}}</span>
+                <kInputHelper>
+                    <span>{{'applications.settings.authentication.subscribe.block_tt' | translate}}</span>
+                </kInputHelper>
+            </div>
+            <div class="kRow">
+                <p-inputSwitch class="kInputSwitch" [disabled]="!_useSSO" [class.disabled]="!_useSSO" [(ngModel)]="_blockDirectLogin" (onChange)="onBlockDirectLoginChange()"></p-inputSwitch>
+                <div *ngIf="_updatingBlockDirectLogin" class="k-spinner-animation kSpinnerAnim"></div>
+                <span *ngIf="_updatingBlockDirectLogin">{{'applications.settings.authentication.edit.metadataUpdate' | translate}}</span>
+            </div>
+        </div>
+    </div>
+  </div>
+
+    <kPopupWidget #ssoConfig data-aid="ssoConfigPopup" [popupWidth]="730" [popupHeight]="420" [modal]="true" [preventPageScroll]="true">
+        <ng-template>
+            <kSSOConfig [parentPopupWidget]="ssoConfig"></kSSOConfig>
+        </ng-template>
+    </kPopupWidget>
+    <kPopupWidget #blockConfig data-aid="blockConfigPopup" [popupWidth]="730" [popupHeight]="420" [modal]="true" [preventPageScroll]="true">
+        <ng-template>
+            <kEpSSOConfig [parentPopupWidget]="blockConfig"></kEpSSOConfig>
+        </ng-template>
+    </kPopupWidget>
 
 </k-area-blocker>
