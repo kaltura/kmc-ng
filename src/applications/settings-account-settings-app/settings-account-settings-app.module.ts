@@ -4,7 +4,7 @@ import {SettingsAccountSettingsComponent} from './settings-account-settings.comp
 import {routing} from "./settings-account-settings-app.routes";
 import {RouterModule} from "@angular/router";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {AreaBlockerModule, TooltipModule, InputHelperModule} from "@kaltura-ng/kaltura-ui";
+import {AreaBlockerModule, TooltipModule, InputHelperModule, PopupWidgetModule} from '@kaltura-ng/kaltura-ui';
 import {TranslateModule} from "@ngx-translate/core";
 import { KMCPermissionsModule } from 'app-shared/kmc-shared/kmc-permissions';
 import { SettingsAccountSettingsCanDeactivateService } from './settings-account-settings-can-deactivate.service';
@@ -32,7 +32,8 @@ import {InputSwitchModule} from 'primeng/inputswitch';
         InputHelperModule,
         TranslateModule,
         KMCPermissionsModule,
-        InputSwitchModule
+        InputSwitchModule,
+        PopupWidgetModule
     ],
   declarations: [SettingsAccountSettingsComponent, SsoConfigComponent, EpSsoConfigComponent],
     providers:[SettingsAccountSettingsCanDeactivateService, ProfilesStoreService]

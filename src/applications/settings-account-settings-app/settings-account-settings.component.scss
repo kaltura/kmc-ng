@@ -180,7 +180,7 @@
     .labelWithHelpTip {
         display: flex;
         align-items: center;
-        width: 308px;
+        width: 306px;
         i {
             color: $kGrayscale3;
         }
@@ -195,6 +195,27 @@
     .kRow {
         display: flex;
         align-items: center;
+        &.pushDown {
+            margin-bottom: 24px;
+        }
+    }
+    .editor {
+        width: 348px;
+        height: 80px;
+        background-color: $kGrayscale7;
+        margin-right: 16px;
+        padding: 16px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        .editorTitle {
+            color: $kGrayscale1;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .kLink {
+            margin-top: 12px;
+        }
     }
     .kInputSwitch.disabled {
         opacity: 0.3;

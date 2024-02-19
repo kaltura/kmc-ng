@@ -106,7 +106,17 @@
 
     <div class="sso">
         <span class="kTitle">{{'applications.settings.authentication.subscribe.ssoConfig' | translate}}</span>
-        <div class="kRow">
+        <div class="kRow pushDown">
+            <div class="editor" *ngIf="_showSSO">
+                <span class="editorTitle">{{'applications.settings.authentication.subscribe.config' | translate}}</span>
+                <a class="kLink" (click)="ssoConfig.open()">{{'applications.content.syndication.table.actions.edit' | translate}}</a>
+            </div>
+            <div class="editor" *ngIf="_showSSO && _showEpSSO">
+                <span class="editorTitle">{{'applications.settings.authentication.subscribe.epConfig' | translate}}</span>
+                <a class="kLink" (click)="blockConfig.open()">{{'applications.content.syndication.table.actions.edit' | translate}}</a>
+            </div>
+        </div>
+        <div class="kRow pushDown">
             <div class="labelWithHelpTip">
                 <span class="kLabel">{{'applications.settings.authentication.subscribe.useSso' | translate}}</span>
                 <kInputHelper>
@@ -119,12 +129,7 @@
                 <span *ngIf="_updatingUseSso">{{'applications.settings.authentication.edit.metadataUpdate' | translate}}</span>
             </div>
         </div>
-        <div *ngIf="_showSSO">
-            <kSSOConfig></kSSOConfig>
-        </div>
-        <div *ngIf="_showSSO && _showEpSSO">
-            <kEpSSOConfig></kEpSSOConfig>
-        </div>
+
         <div class="kRow">
             <div class="labelWithHelpTip">
                 <span class="kLabel">{{'applications.settings.authentication.subscribe.block' | translate}}</span>
@@ -139,6 +144,17 @@
             </div>
         </div>
     </div>
+  </div>
 
-    </div>
+    <kPopupWidget #ssoConfig data-aid="ssoConfigPopup" [popupWidth]="730" [popupHeight]="420" [modal]="true" [preventPageScroll]="true">
+        <ng-template>
+            <kSSOConfig [parentPopupWidget]="ssoConfig"></kSSOConfig>
+        </ng-template>
+    </kPopupWidget>
+    <kPopupWidget #blockConfig data-aid="blockConfigPopup" [popupWidth]="730" [popupHeight]="420" [modal]="true" [preventPageScroll]="true">
+        <ng-template>
+            <kEpSSOConfig [parentPopupWidget]="blockConfig"></kEpSSOConfig>
+        </ng-template>
+    </kPopupWidget>
+
 </k-area-blocker>

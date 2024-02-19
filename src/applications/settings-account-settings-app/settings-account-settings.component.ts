@@ -4,7 +4,7 @@ import {KalturaPartner} from 'kaltura-ngx-client';
 import {SettingsAccountSettingsService} from './settings-account-settings.service';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {SelectItem} from 'primeng/api';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {AreaBlockerMessage, PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {cancelOnDestroy, tag} from '@kaltura-ng/kaltura-common';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
@@ -36,6 +36,7 @@ function phoneValidator(): ValidatorFn {
   ],
 })
 export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
+
   private _pageExitVerificationToken: string;
   public _kmcPermissions = KMCPermissions;
   public accountSettingsForm: FormGroup;
