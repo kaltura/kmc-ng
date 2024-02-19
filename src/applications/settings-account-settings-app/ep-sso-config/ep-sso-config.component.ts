@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import {AreaBlockerMessage, PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {
     App, AppSubscription,
     AuthProfile, LoadApplicationResponse,
@@ -21,7 +21,7 @@ import {SortDirection} from "../../content-rooms-app/rooms/rooms-store/rooms-sto
   ]
 })
 export class EpSsoConfigComponent implements OnInit {
-
+  @Input() parentPopupWidget: PopupWidgetComponent;
   public _ssoConfigForm: FormGroup;
   public _profilesField: AbstractControl;
   public _domainField: AbstractControl;
@@ -216,6 +216,7 @@ export class EpSsoConfigComponent implements OnInit {
               severity: 'success',
               detail: this._appLocalization.get('app.common.updateSuccess')
           });
+          this.parentPopupWidget.close();
       }
 
       const createSubscription = () => {

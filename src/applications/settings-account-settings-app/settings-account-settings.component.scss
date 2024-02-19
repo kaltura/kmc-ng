@@ -160,6 +160,66 @@
     width: 100%;
     margin-top: 24px;
     margin-bottom: 24px;
+    padding: 24px;
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    .kTitle {
+        color: $kGrayscale1;
+        font-weight: 700;
+        font-size: 24px;
+        display: block;
+        margin-bottom: 24px;
+    }
+    .kSpinnerAnim {
+        width: 12px;
+        height: 12px;
+        margin-left: 16px;
+        margin-right: 8px;
+    }
+    .labelWithHelpTip {
+        display: flex;
+        align-items: center;
+        width: 306px;
+        i {
+            color: $kGrayscale3;
+        }
+        .kLabel {
+            width: auto;
+            height: 18px;
+            color: $kGrayscale1;
+            font-size: 15px;
+            line-height: 18px;
+        }
+    }
+    .kRow {
+        display: flex;
+        align-items: center;
+        &.pushDown {
+            margin-bottom: 24px;
+        }
+    }
+    .editor {
+        width: 348px;
+        height: 80px;
+        background-color: $kGrayscale7;
+        margin-right: 16px;
+        padding: 16px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        .editorTitle {
+            color: $kGrayscale1;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .kLink {
+            margin-top: 12px;
+        }
+    }
+    .kInputSwitch.disabled {
+        opacity: 0.3;
+    }
 }
 .epSso {
     background-color: white;
@@ -172,6 +232,9 @@
 /*********************/
 
 :host ::ng-deep {
+    .p-dropdown.p-focus {
+        border: 1px solid $kGrayscale3;
+    }
   .p-dropdown {
     width: 100% !important;
   }

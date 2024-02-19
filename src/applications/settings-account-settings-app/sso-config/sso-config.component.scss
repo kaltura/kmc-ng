@@ -3,24 +3,37 @@
 .kSSOConfig {
     display: flex;
     flex-direction: column;
+    position: relative;
+    height: 420px;
     .kSaveBtnContainer {
-        padding-top: 60px;
-        .kSaveBtn {
-            margin-left: auto;
+        border-top: 1px solid #cccccc;
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 78px;
+        .kCancelBtn {
             width: 125px;
             height: 34px;
             font-weight: 400;
-            margin-right: 2px;
+            margin-right: 8px;
+        }
+        .kSaveBtn {
+            width: 125px;
+            height: 34px;
+            font-weight: 400;
+            margin-left: 8px;
         }
     }
       .kTitle {
           color: $kGrayscale1;
           font-weight: 700;
-          height: 29px;
           font-size: 24px;
-          display: block;
-          margin-left: 24px;
-          margin-top: 24px;
+          text-align: center;
+          border-bottom: 1px solid #cccccc;
+          line-height: 78px;
       }
 
 
@@ -29,16 +42,16 @@
       overflow-y: hidden;
       max-height: calc(100vh - 158px);
       .kProfileForm {
-        padding: 0 28px 28px 28px;
+        padding: 0 24px 0px 0px;
       }
 
       .kRow {
         display: flex;
         padding-top: 24px;
-          width: 710px;
+          width: 706px;
 
         .kLabel {
-          width: 272px;
+          width: 234px;
           flex: 0 0 auto;
           height: 18px;
           color: $kGrayscale1;
@@ -58,7 +71,6 @@
             }
         }
         .kRequired {
-          width: 20px;
           font-size: 24px;
           color: $kGrayscale3;
           &.kHasError {
@@ -67,7 +79,7 @@
           }
         }
         .kRequired, .kLabel {
-          padding: 8px 4px;
+          padding: 8px 16px;
           height: 18px;
         }
         .kControl, kProfilesList {
