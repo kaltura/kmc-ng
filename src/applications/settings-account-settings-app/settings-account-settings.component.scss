@@ -167,25 +167,37 @@
     .kTitle {
         color: $kGrayscale1;
         font-weight: 700;
-        height: 29px;
         font-size: 24px;
         display: block;
+        margin-bottom: 24px;
     }
-    .kRow {
+    .kSpinnerAnim {
+        width: 12px;
+        height: 12px;
+        margin-left: 16px;
+        margin-right: 8px;
+    }
+    .labelWithHelpTip {
         display: flex;
-        padding-top: 24px;
         align-items: center;
+        width: 308px;
+        i {
+            color: $kGrayscale3;
+        }
         .kLabel {
-            width: 200px;
-            flex: 0 0 auto;
+            width: auto;
             height: 18px;
             color: $kGrayscale1;
             font-size: 15px;
             line-height: 18px;
-            &.required {
-                width: 172px;
-            }
         }
+    }
+    .kRow {
+        display: flex;
+        align-items: center;
+    }
+    .kInputSwitch.disabled {
+        opacity: 0.3;
     }
 }
 .epSso {

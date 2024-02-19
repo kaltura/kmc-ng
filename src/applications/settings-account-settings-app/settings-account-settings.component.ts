@@ -36,7 +36,7 @@ function phoneValidator(): ValidatorFn {
   ],
 })
 export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
-    private _pageExitVerificationToken: string;
+  private _pageExitVerificationToken: string;
   public _kmcPermissions = KMCPermissions;
   public accountSettingsForm: FormGroup;
   public nameOfAccountOwnerOptions: SelectItem[] = [];
@@ -45,6 +45,8 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   public partnerAdminEmail: string;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
+  public _updatingUseSso = false;
+  public _updatingBlockDirectLogin = false;
 
   public _useSSO = false;
   public _blockDirectLogin = false;
@@ -99,7 +101,53 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   public onUseSsoChange(): void {
-      console.log("----> onUseSsoChange: "+this._useSSO);
+    this.updateSSOConfiguration(true, false);
+  }
+
+    public onBlockDirectLoginChange(): void {
+      if (this._blockDirectLogin) {
+          this._browserService.confirm({
+              header: this._appLocalization.get('applications.settings.authentication.subscribe.confirmBlockTitle'),
+              message: this._appLocalization.get('applications.settings.authentication.subscribe.confirmBlock'),
+              accept: () => {
+                  this.updateSSOConfiguration(false, true);
+              },
+              reject: () => {
+                  this._blockDirectLogin = false;
+              }
+          });
+      } else {
+          this.updateSSOConfiguration(false, true);
+      }
+    }
+  private updateSSOConfiguration(updateUseSso: boolean, updateBlockDirectLogin: boolean): void {
+      this._updatingUseSso = updateUseSso;
+      this._updatingBlockDirectLogin = updateBlockDirectLogin;
+      this._accountSettingsService
+          .updatePartnerSSO(this._useSSO, this._blockDirectLogin)
+          .pipe(cancelOnDestroy(this))
+          .subscribe(updatedPartner => {
+                  this._updatingUseSso = false;
+                  this._updatingBlockDirectLogin = false;
+                  this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('app.common.updateSuccess')});
+              },
+              error => {
+                  this._updatingUseSso = false;
+                  this._updatingBlockDirectLogin = false;
+                  const blockerMessage = new AreaBlockerMessage(
+                      {
+                          message: this._appLocalization.get('applications.settings.authentication.subscribe.updateError'),
+                          buttons: [
+                              {
+                                  label: this._appLocalization.get('app.common.ok'),
+                                  action: () => {
+                                      this._useSSO = !this._useSSO;
+                                  }
+                              }
+                          ]
+                      }
+                  );
+              });
   }
 
   private markFormFieldsAsTouched() {
@@ -116,6 +164,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
             this.accountSettingsForm.get(inner).markAsUntouched();
             this.accountSettingsForm.get(inner).updateValueAndValidity();
         }
+        this.accountSettingsForm.markAsPristine();
     }
 
     private _updatePageExitVerification(): void {
@@ -139,8 +188,8 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
       .subscribe(updatedPartner => {
           this._logger.info(`handle successful update partner account settings request`);
           this._fillForm(updatedPartner);
-              this._markFormFieldsAsUntouched();
-              this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('app.common.updateSuccess')});
+          this._markFormFieldsAsUntouched();
+          this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('app.common.updateSuccess')});
         },
         error => {
           this._logger.info(`handle failed update partner account settings request`, { errorMessage: error.message });
