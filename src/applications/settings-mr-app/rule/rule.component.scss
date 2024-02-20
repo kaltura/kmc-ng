@@ -1,1 +1,26 @@
 @import 'app-theme/_variables.scss';
+
+.kEntryActionsWrapper {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    .kSaveBtn {
+        margin-right: 0px;
+    }
+}
+.kmcDetailsLayout .kDetailsWrapper .kHeaderDetails {
+    display: flex;
+    align-items: center;
+    padding-top: 0px;
+    padding-left: 8px;
+    .kLabel {
+        color: $kGrayscale2;
+        font-size: 14px;
+    }
+    .kSeparator {
+        color: $kGrayscale4;
+        flex: 0 0 auto;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+}

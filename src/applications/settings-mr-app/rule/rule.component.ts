@@ -6,13 +6,14 @@ import {filter} from 'rxjs/operators';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {KMCPermissions} from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
     selector: 'kMrRule',
     templateUrl: './rule.component.html',
     styleUrls: ['./rule.component.scss']
 })
-export class RuleComponent implements OnInit, OnDestroy {
+export class RuleComponent implements OnInit {
     public rule: ManagedTasksProfile;
     public _isBusy = false;
     public _blockerMessage: AreaBlockerMessage = null;
@@ -28,6 +29,8 @@ export class RuleComponent implements OnInit, OnDestroy {
         if (this._mrMainViewService.viewEntered()) {
             if (this._mrStore.selectedRule) {
                 this.rule = this._mrStore.selectedRule;
+                this.rule.createdAt = new Date(this._mrStore.selectedRule.createdAt);
+                this.rule.updatedAt = new Date(this._mrStore.selectedRule.updatedAt);
             } else {
                 this.loadRule(this._ruleRoute.snapshot.params.id);
             }
@@ -59,6 +62,9 @@ export class RuleComponent implements OnInit, OnDestroy {
                 } else {
                     // success
                     this.rule = response;
+                    this.rule.createdAt = new Date(response.createdAt);
+                    this.rule.updatedAt = new Date(response.updatedAt);
+                    this._isBusy = false;
                 }
             },
             error => {
@@ -67,6 +73,16 @@ export class RuleComponent implements OnInit, OnDestroy {
         )
     }
 
-    ngOnDestroy(): void {}
+    public get _enableSaveBtn(): boolean {
+        return  false;
+    }
+
+    public save(): void {
+
+    }
+
+    public _backToList(): void {
+        this._router.navigateByUrl('settings/mr/rules');
+    }
 }
 

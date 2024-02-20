@@ -3534,7 +3534,9 @@
                 "deleteMsg": "Are you sure you want to delete this rule? You can't undo this action.",
                 "newRule": "Add new rule",
                 "rulesNum": "{{0}} Rules",
-                "newRuleName": "New rule"
+                "newRuleName": "New rule",
+                "creationDate": "Creation date: {{0}}",
+                "updateDate": "Updated at: {{0}}"
             }
         },
         "analytics": {

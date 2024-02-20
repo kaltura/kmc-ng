@@ -1,8 +1,25 @@
-<div class="kmcDetailsLayout">
-    <div class="kContent kDetailsWrapper">
-        <div class="kDetailsMain">
-            <h3>{{rule.name}}</h3>
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
+    <div class="kmcDetailsLayout">
+        <div class="kContent kDetailsWrapper">
+            <kSticky stickyId="ruleHeader" [sticksTo]="'header'" stickyClass="stickyHeader">
+                <div class="kDetailsHeader">
+                    <div class="kContent">
+                        <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
+                        <div class="kTitle">{{ rule?.name }}</div>
+                        <div class="kEntryActionsWrapper">
+                            <button pButton class="kButtonBranded kSaveBtn"
+                                    [label]="'app.common.save' | translate"
+                                    [disabled]="!_enableSaveBtn"
+                                    (click)="save()"></button>
+                        </div>
+                    </div>
+                </div>
+            </kSticky>
+            <div class="kHeaderDetails">
+                <span class="kLabel">{{'applications.settings.mr.creationDate' | translate: [rule?.createdAt.getTime() | kmcDate: 'dateOnly']}}</span>
+                <div class="kSeparator">|</div>
+                <span class="kLabel">{{'applications.settings.mr.updateDate' | translate: [rule?.updatedAt.getTime() | kmcDate: 'dateOnly']}}</span>
+            </div>
         </div>
     </div>
-</div>
-
+</k-area-blocker>
