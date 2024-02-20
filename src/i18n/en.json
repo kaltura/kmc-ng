@@ -3523,6 +3523,7 @@
                 "rulesLoadError": "Error loading rules",
                 "deleteError": "Error deleting rule",
                 "loadError": "Error loading rule",
+                "saveError": "Error saving rule",
                 "created": "Created on",
                 "lastRun": "Last run",
                 "nextRun": "Next run",
@@ -3536,7 +3537,10 @@
                 "rulesNum": "{{0}} Rules",
                 "newRuleName": "New rule",
                 "creationDate": "Creation date: {{0}}",
-                "updateDate": "Updated at: {{0}}"
+                "updateDate": "Updated at: {{0}}",
+                "general": "General",
+                "actions": "Criteria & actions",
+                "settings": "Settings"
             }
         },
         "analytics": {

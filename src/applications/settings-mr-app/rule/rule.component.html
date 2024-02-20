@@ -5,7 +5,7 @@
                 <div class="kDetailsHeader">
                     <div class="kContent">
                         <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
-                        <div class="kTitle">{{ rule?.name }}</div>
+                        <div class="kTitle">{{ _ruleName }}</div>
                         <div class="kEntryActionsWrapper">
                             <button pButton class="kButtonBranded kSaveBtn"
                                     [label]="'app.common.save' | translate"
@@ -20,6 +20,50 @@
                 <div class="kSeparator">|</div>
                 <span class="kLabel">{{'applications.settings.mr.updateDate' | translate: [rule?.updatedAt.getTime() | kmcDate: 'dateOnly']}}</span>
             </div>
+
+            <div class="kDetailsMain">
+                <div class="kSectionsWrapper">
+                    <div class="kSections kSectionsPlaceholder"></div>
+                    <kSticky #ruleSections stickyId="ruleSections" [sticksTo]="'ruleHeader'" [scrollOffset]="120" [stickyClass]="'kStickySections'">
+                    <div class="kSections">
+                        <ul>
+                            <li *ngFor="let section of _sections" [class.active]="_selectedSection === section">
+                                <div (click)="sectionSelected(section)">
+                                    {{'applications.settings.mr.' + section | translate}}
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    </kSticky>
+                </div>
+
+                <div class="kDetailsContent">
+                    <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'general'" *ngIf="rule">
+                        <span class="kTitle">{{'applications.settings.mr.general' | translate}}</span>
+                        <div class="kRow">
+                            <span class="kLabel kLabelWithRequired">{{'applications.settings.authentication.name' | translate}}</span>
+                            <span class="kRequired">*</span>
+                            <div class="inputWithErrorWrapper">
+                                <input class="kControl" pInputText [(ngModel)]="rule.name" [class.kHasError]="rule.name.length === 0" (ngModelChange)="_isDirty = true">
+                                <div *ngIf="rule.name.length === 0" class="kError">{{'applications.administration.role.errors.required' | translate}}</div>
+                            </div>
+                        </div>
+                        <div class="kRow">
+                            <span class="kLabel">{{'applications.administration.role.description' | translate}}</span>
+                            <input class="kControl" pInputText [(ngModel)]="rule.description" (ngModelChange)="_isDirty = true">
+                        </div>
+                    </div>
+                    <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'actions'">
+                        <span class="kTitle">{{'applications.settings.mr.actions' | translate}}</span>
+                    </div>
+                    <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'settings'">
+                        <span class="kTitle">{{'applications.settings.mr.settings' | translate}}</span>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
+
     </div>
 </k-area-blocker>
