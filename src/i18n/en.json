@@ -3522,6 +3522,7 @@
                 "settings": "Settings",
                 "rulesLoadError": "Error loading rules",
                 "deleteError": "Error deleting rule",
+                "loadError": "Error loading rule",
                 "created": "Created on",
                 "lastRun": "Last run",
                 "nextRun": "Next run",

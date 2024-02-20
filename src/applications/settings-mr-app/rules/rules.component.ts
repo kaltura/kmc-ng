@@ -160,6 +160,7 @@ export class RulesComponent implements OnInit, OnDestroy {
         this._currentEditProfile = profile;
         this._analytics.trackClickEvent('Edit_ManagedTasksProfile');
         this._logger.info(`handle edit ManagedTasksProfile action by user`);
+        this._mrStore.selectedRule = profile;
         this._router.navigateByUrl(`/settings/mr/rule/${profile.id}`);
     }
 
