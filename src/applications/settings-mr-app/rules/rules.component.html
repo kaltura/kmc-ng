@@ -59,7 +59,6 @@
                         <tr>
                             <td class="nameHolder">
                                 <span class="kProfileName kTableColumn name" [kTooltip]="profile.name" [showOnEllipsis]="true" (click)="_editProfile(profile)">{{profile.name}}</span>
-                                <span *ngIf="profile.isAdminProfile" class="kProfileName kTableColumn admin" (click)="_editProfile(profile)">{{'applications.settings.authentication.table.admin' | translate}}</span>
                             </td>
                             <td>
                                 <span class="kTableColumn" [kTooltip]="profile.description" [showOnEllipsis]="true">{{profile.description}}</span>
@@ -87,8 +86,7 @@
                             </td>
                             <td [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
                                 <div class="kProfilesTableActions">
-                                    <button type="button" pButton icon="kIconmore"
-                                            [disabled]="profile.partnerId === 0" class="kMoreActionsButton"
+                                    <button type="button" pButton icon="kIconmore" class="kMoreActionsButton"
                                             (click)="_openActionsMenu($event, profile)"></button>
                                 </div>
                             </td>
@@ -107,7 +105,7 @@
                 <p-paginator [rows]="pageSize" (onPageChange)="_onPaginationChanged($event)"
                              [first]="pageIndex * pageSize"
                              [totalRecords]="_profilesCount"
-                             [rowsPerPageOptions]="[2,25,50,75,100]"></p-paginator>
+                             [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
                 <span class="kPaginatorShowRowsLabel">{{'applications.administration.paginator.showRows' | translate}}</span>
             </div>
         </div>

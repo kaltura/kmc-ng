@@ -45,8 +45,29 @@ export type ManagedTasksProfile = {
     updatedAt: Date;
 }
 
+export type ObjectState = {
+    objectType: string;
+    id: string;
+    partnerId: number;
+    managedTasksProfileId: string;
+    managedTasksProfileName: string;
+    status: string;
+    objectId: string;
+    objectName: string;
+    duration: number;
+    plannedExecutionTime: Date;
+    inReview: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 export type LoadManagedTasksProfilesResponse = {
     objects: ManagedTasksProfile[];
+    totalCount: number;
+}
+
+export type LoadObjectStateResponse = {
+    objects: ObjectState[];
     totalCount: number;
 }
 
@@ -62,14 +83,18 @@ export class MrStoreService implements OnDestroy {
 
     // ------------------------- Managed tasks profiles API ---------------------------- //
 
-    public loadProfiles(pageSize: number, pageIndex: number, sortField: string, sortOrder: number): Observable<LoadManagedTasksProfilesResponse> {
+    public loadProfiles(pageSize: number, pageIndex: number, sortField: string, sortOrder: number, idIn: string[] = []): Observable<LoadManagedTasksProfilesResponse> {
         const pager: KalturaPager = {
             pageIndex,
             pageSize
         }
         const orderBy = sortOrder === SortDirection.Desc ? `-${sortField}` : `${sortField}`;
+        const body = {pager, orderBy};
+        if (idIn.length) {
+            Object.assign(body, {idIn});
+        }
         try {
-            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/managedTasksProfile/list`, {pager, orderBy}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadManagedTasksProfilesResponse>;
+            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/managedTasksProfile/list`, body, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadManagedTasksProfilesResponse>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to load managed tasks profiles'));
         }
@@ -103,6 +128,21 @@ export class MrStoreService implements OnDestroy {
             return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/managedTasksProfile/get`, {id}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to load managed tasks profile ' + id));
+        }
+    }
+
+    // ------------------------- Object State API ---------------------------- //
+
+    public loadObjectStates(pageSize: number, pageIndex: number, sortField: string, sortOrder: number): Observable<LoadObjectStateResponse> {
+        const pager: KalturaPager = {
+            pageIndex,
+            pageSize
+        }
+        const orderBy = sortOrder === SortDirection.Desc ? `-${sortField}` : `${sortField}`;
+        try {
+            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/objectState/list`, {pager, orderBy}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadObjectStateResponse>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to load object state list'));
         }
     }
 

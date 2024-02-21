@@ -68,9 +68,6 @@ export class RulesComponent implements OnInit, OnDestroy {
                         profile.createdAt = new Date(profile.createdAt);
                         profile.updatedAt = new Date(profile.updatedAt);
                     });
-                    // const profile = this._profiles[0];
-                    // for (let i=0; i<50; i++)
-                    //     this._profiles.push(profile);
                     this._mrStore.rulesIds = this._profiles.map(profile => profile.id);
                 }
                 this._profilesCount = response.totalCount;
