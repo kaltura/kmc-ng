@@ -3540,7 +3540,21 @@
                 "updateDate": "Updated at: {{0}}",
                 "general": "General",
                 "actions": "Criteria & actions",
-                "settings": "Settings"
+                "settings": "Settings",
+                "criteria": {
+                    "header": "Criteria",
+                    "title": "Add criteria to define how entries would be selected. To perform a rule, all criteria must be met.",
+                    "add": "Add criteria",
+                    "lastPlayed": "Last played date",
+                    "creation": "Creation date",
+                    "plays": "Total number of plays",
+                    "published": "Published to categories",
+                    "unpublished": "Unpublished entries only",
+                    "tags": "Contains tags",
+                    "owner": "Entry owner",
+                    "duration": "Media duration",
+                    "time": "Time"
+                }
             }
         },
         "analytics": {

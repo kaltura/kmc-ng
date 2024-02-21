@@ -1,0 +1,24 @@
+<div class="criteriaContainer">
+    <span class="kTitle">{{'applications.settings.mr.criteria.title' | translate}}</span>
+    <p-splitButton #btn label="{{'applications.settings.mr.criteria.add' | translate}}" [model]="items" (onDropdownClick)="buildMenu()" (onClick)="btn.onDropdownButtonClick($event)"></p-splitButton>
+    <div *ngFor="let field of filter | keyvalue">
+        <ng-container [ngSwitch]="field.key">
+            <div class="criteria" *ngSwitchCase="'lastPlayedAtLessThanOrEqual'">
+                <div class="kRow">
+                    <span class="kLabel">{{'applications.settings.mr.criteria.header' | translate}}</span>
+                    <span class="kLabelWithHelpTip">{{'applications.settings.mr.criteria.lastPlayed' | translate}}</span>
+                    <kInputHelper>
+                        <span>{{'applications.settings.mr.criteria.lastPlayed_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+                <div class="kRow kCenter">
+                    <span class="kLabel">{{'applications.settings.mr.criteria.time' | translate}}</span>
+                    <p-calendar [(ngModel)]="_lastPlayedDate" icon="kIconcalendar" (ngModelChange)="onCriteriaChange(field.key.toString(), _lastPlayedDate)"
+                                [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true"
+                                [dateFormat]="_calendarFormat" showTime="true" readonlyInput="true" ></p-calendar>
+                </div>
+                <span class="kDelete" (click)="deleteCriteria(field.key.toString())">{{'applications.content.table.delete'| translate}}</span>
+            </div>
+        </ng-container>
+    </div>
+</div>

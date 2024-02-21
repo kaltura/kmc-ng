@@ -4,6 +4,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { serverConfig } from "config/server";
 import { AppAuthentication } from "app-shared/kmc-shell";
+import { KalturaMediaEntryFilter } from 'kaltura-ngx-client';
 
 export enum SortDirection {
     Desc = -1,
@@ -33,6 +34,8 @@ export type ManagedTasksProfile = {
     name: string;
     partnerId: number;
     description: string;
+    objectFilter?: any;
+    objectFilterType?: string;
     status: 'deleted' | 'disabled' | 'enabled';
     tasksIds: string[];
     nextRunDate: Date;

@@ -1,0 +1,62 @@
+@import 'app-theme/_variables.scss';
+ :host ::ng-deep p-splitbutton {
+     button {
+         background-color: white;
+         border: 1px solid $kGrayscale4;
+         font-size: 14px;
+         font-weight: 700;
+         color: $kGrayscale1;
+         height: 34px;
+         .pi.pi-chevron-down:before{
+             font-family: "kmcng-icon-pack" !important;
+             content: '\e91e';
+             font-size: 11px;
+         }
+     }
+ }
+:host ::ng-deep .p-calendar .p-inputtext {
+    width: 140px !important;
+}
+.criteriaContainer {
+    display: flex;
+    flex-direction: column;
+    margin-top: 24px;
+    .kTitle {
+        margin-bottom: 24px;
+    }
+    .criteria {
+        width: 100%;
+        max-width: 760px;
+        padding: 0px 16px 24px 16px;
+        margin-top: 24px;
+        box-sizing: border-box;
+        border-radius: 4px;
+        border: 1px solid $kGrayscale4;
+        .kRow {
+            display: flex;
+            margin-top: 24px;
+            &.kCenter {
+                align-items: center;
+            }
+            .kLabel {
+                line-height: 24px;
+                width: 208px;
+            }
+            .kLabelWithHelpTip {
+                line-height: 24px;
+                margin-right: 4px;
+            }
+            kinputhelper {
+                padding-top: 4px;
+            }
+        }
+        .kDelete {
+            color: $kDandger;
+            cursor: pointer;
+            font-weight: 700;
+            margin-left: 208px;
+            margin-top: 24px;
+            display: block;
+        }
+    }
+}
