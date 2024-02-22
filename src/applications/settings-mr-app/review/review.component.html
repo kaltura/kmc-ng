@@ -21,16 +21,20 @@
                          [sortOrder]="sortOrder"
                          [value]="_reviews"
                          [stickyId]="'profilesTable'"
+                         [(selection)]="_selectedReviews"
                          (sortFunction)="onSortChanged($event)" [customSort]="true"
                          (onColResize)="_columnsResizeManager.onColumnResize($event)">
 
                     <ng-template pTemplate="header">
                         <tr>
+                            <th class="selectionColumn" [ngStyle]="{'padding-left': '1.1em', 'width': '42px'}">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
                             <th data-cid="name" [ngStyle]="{'padding-left': '1em'}" pResizableColumn [pSortableColumn]="'objectName'">
                                 {{'applications.settings.authentication.table.name' | translate}}
                                 <p-sortIcon [field]="'objectName'"></p-sortIcon>
                             </th>
-                            <th data-cid="id" [ngStyle]="{'width': '80px'}">
+                            <th data-cid="id" [ngStyle]="{'width': '120px'}" class="hideInLowRes">
                                 {{'applications.content.uploadControl.table.entryId' | translate}}
                             </th>
                             <th data-cid="type" pResizableColumn [ngStyle]="{'width': '60px'}">
@@ -57,10 +61,13 @@
 
                     <ng-template pTemplate="body" let-review>
                         <tr>
+                            <td class="selectionColumn" [ngStyle]="{'padding-left': '1em', 'width': '42px'}">
+                                <p-tableCheckbox [value]="review"></p-tableCheckbox>
+                            </td>
                             <td class="nameHolder">
                                 <span class="kProfileName kTableColumn name" [kTooltip]="review.objectName" [showOnEllipsis]="true">{{review.objectName}}</span>
                             </td>
-                            <td [ngStyle]="{'width': '80px'}">
+                            <td [ngStyle]="{'width': '120px'}" class="hideInLowRes">
                                 <span class="kTableColumn" [kTooltip]="review.id" [showOnEllipsis]="true">{{review.id}}</span>
                             </td>
 

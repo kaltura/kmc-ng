@@ -165,3 +165,8 @@ p-table ::ng-deep tr:not(:last-child) .nameHolder {
     background-color: white;
 }
 
+@media screen and (max-width: 1310px) {
+    .hideInLowRes {
+        display: none;
+    }
+}

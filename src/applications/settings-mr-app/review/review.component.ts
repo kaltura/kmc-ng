@@ -27,6 +27,7 @@ export class ReviewComponent implements OnInit {
     @ViewChild('actionsmenu', { static: true }) private _actionsMenu: Menu;
     public _isBusy = false;
     public _reviews: ObjectState[] = [];
+    public _selectedReviews: ObjectState[] = [];
     public _reviewsCount = 0;
     public _blockerMessage: AreaBlockerMessage = null;
     public pageSize = 25;
@@ -109,10 +110,13 @@ export class ReviewComponent implements OnInit {
     }
 
     private _actionSelected(action: string, review: ObjectState): void {
+        console.log(action);
         switch (action) {
-            case "edit":
+            case "approve":
                 break;
-            case "delete":
+            case "deny":
+                break;
+            case "preform":
                 break;
         }
     }
@@ -120,15 +124,19 @@ export class ReviewComponent implements OnInit {
     private _buildMenu(review: ObjectState): void {
         this._items = [
             {
-                id: 'edit',
-                label: this._appLocalization.get('applications.settings.authentication.table.edit'),
-                command: () => this._actionSelected('edit', review)
+                id: 'approve',
+                label: this._appLocalization.get('applications.settings.mr.approve'),
+                command: () => this._actionSelected('approve', review)
             },
             {
-                id: 'delete',
-                label: this._appLocalization.get('applications.settings.authentication.table.delete'),
-                styleClass: 'kDanger',
-                command: () => this._actionSelected('delete', review)
+                id: 'deny',
+                label: this._appLocalization.get('applications.settings.mr.deny'),
+                command: () => this._actionSelected('deny', review)
+            },
+            {
+                id: 'perform',
+                label: this._appLocalization.get('applications.settings.mr.perform'),
+                command: () => this._actionSelected('perform', review)
             }
         ];
     }

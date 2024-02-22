@@ -3544,6 +3544,9 @@
                 "settings": "Settings",
                 "executionDate": "Execution date",
                 "trigger": "Triggering rule",
+                "approve": "Approve",
+                "deny": "Deny",
+                "perform": "Perform now",
                 "criteria": {
                     "header": "Criteria",
                     "title": "Add criteria to define how entries would be selected. To perform a rule, all criteria must be met.",
