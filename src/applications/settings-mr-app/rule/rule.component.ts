@@ -19,7 +19,7 @@ export class RuleComponent implements OnInit {
     public _blockerMessage: AreaBlockerMessage = null;
     public _isDirty = false;
 
-    public _sections = ['general', 'actions', 'settings'];
+    public _sections = ['general', 'actions', 'scheduling', 'settings'];
     public _selectedSection: string  = 'actions';
 
     constructor(private _mrMainViewService: SettingsMrMainViewService,

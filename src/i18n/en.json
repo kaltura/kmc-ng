@@ -3541,6 +3541,7 @@
                 "updateDate": "Updated at: {{0}}",
                 "general": "General",
                 "actions": "Criteria & actions",
+                "scheduling": "Scheduling",
                 "settings": "Settings",
                 "executionDate": "Execution date",
                 "trigger": "Triggering rule",
@@ -3552,14 +3553,23 @@
                     "title": "Add criteria to define how entries would be selected. To perform a rule, all criteria must be met.",
                     "add": "Add criteria",
                     "lastPlayed": "Last played date",
+                    "lastPlayed_tt": "How much time has passed since the entry was last played",
                     "creation": "Creation date",
+                    "creation_tt": "How much time has passed since the entry was created",
                     "plays": "Total number of plays",
                     "published": "Published to categories",
                     "unpublished": "Unpublished entries only",
                     "tags": "Contains tags",
                     "owner": "Entry owner",
                     "duration": "Media duration",
-                    "time": "Time"
+                    "time": "Time",
+                    "less": "Less than",
+                    "more": "More than",
+                    "ago": "ago",
+                    "days": "Days",
+                    "weeks": "Weeks",
+                    "months": "Months",
+                    "years": "Years"
                 }
             }
         },

@@ -6,8 +6,7 @@ import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 export enum SettingsMrViewSections {
     Rules = 'rules',
     Review = 'review',
-    Logs = 'logs',
-    Settings = 'settings'
+    Logs = 'logs'
 }
 export interface SectionWidgetItem {
     label: string;
@@ -52,10 +51,6 @@ export class MrSectionsList implements OnInit, OnDestroy {
           {
               label: this._appLocalization.get('applications.settings.mr.logs'),
               key: SettingsMrViewSections.Logs
-          },
-          {
-              label: this._appLocalization.get('applications.settings.mr.settings'),
-              key: SettingsMrViewSections.Settings
           }
       ]
   }
