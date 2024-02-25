@@ -16,18 +16,9 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 
             <div class="kRow kCenter">
                 <span class="kLabel">{{'applications.settings.mr.criteria.time' | translate}}</span>
-                <p-checkbox [(ngModel)]="enableLess" binary="true" (onChange)="onCriteriaChange()"></p-checkbox>
-                <span class="kText">{{'applications.settings.mr.criteria.created_less' | translate}}</span>
-                <p-inputNumber class="kInput" [(ngModel)]="createdLessTime" (ngModelChange)="onCriteriaChange()" [disabled]="!enableLess"></p-inputNumber>
-                <p-dropdown [options]="_timeUnitOptions" [style]="{'width':'120px', 'margin-left': '8px'}" [disabled]="!enableLess" [(ngModel)]="createdLessTimeUnit" (ngModelChange)="onCriteriaChange()"></p-dropdown>
-                <span class="kText kLeft">{{'applications.settings.mr.criteria.ago' | translate}}</span>
-            </div>
-            <div class="kRow kCenter">
-                <span class="kLabel"></span>
-                <p-checkbox [(ngModel)]="enableMore" binary="true" (onChange)="onCriteriaChange()"></p-checkbox>
-                <span class="kText">{{'applications.settings.mr.criteria.created_more' | translate}}</span>
-                <p-inputNumber class="kInput" [(ngModel)]="createdMoreTime" (ngModelChange)="onCriteriaChange()" [disabled]="!enableMore"></p-inputNumber>
-                <p-dropdown [options]="_timeUnitOptions" [style]="{'width':'120px', 'margin-left': '8px'}" [disabled]="!enableMore" [(ngModel)]="createdMoreTimeUnit" (ngModelChange)="onCriteriaChange()"></p-dropdown>
+                <p-dropdown [options]="_timeIntervalOptions" [style]="{'width':'120px'}" [(ngModel)]="createdTimeInterval" (ngModelChange)="onCriteriaChange()"></p-dropdown>
+                <p-inputNumber class="kInput" [(ngModel)]="createdTime" (ngModelChange)="onCriteriaChange()"></p-inputNumber>
+                <p-dropdown [options]="_timeUnitOptions" [style]="{'width':'120px', 'margin-left': '8px'}"  [(ngModel)]="createdTimeUnit" (ngModelChange)="onCriteriaChange()"></p-dropdown>
                 <span class="kText kLeft">{{'applications.settings.mr.criteria.ago' | translate}}</span>
             </div>
 
@@ -44,24 +35,25 @@ export class CriteriaCreatedComponent implements OnInit{
         {value: 'year', label: this._appLocalization.get('applications.settings.mr.criteria.years')}
     ];
 
-    public enableLess = true;
-    public createdLessTimeUnit = 'day';
-    public createdLessTime = 1;
+    public _timeIntervalOptions: { value: string, label: string }[] = [
+        {value: 'less', label: this._appLocalization.get('applications.settings.mr.criteria.less')},
+        {value: 'more', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
+    ];
 
-    public enableMore = false;
-    public createdMoreTimeUnit = 'day';
-    public createdMoreTime = 1;
+    public createdTimeUnit = 'day';
+    public createdTime = 0;
+    public createdTimeInterval = 'less';
 
     @Input() set filter(value: any) {
-        if (value['createdAtLessThanOrEqual']) {
-            this.enableLess = true;
-            this.createdLessTime = Math.abs(value['createdAtLessThanOrEqual'].numberOfUnits) || 1;
-            this.createdLessTimeUnit = value['createdAtLessThanOrEqual'].createdLessTimeUnit || 'day';
+        if (value && value['createdAtLessThanOrEqual']) {
+            this.createdTimeInterval = 'less';
+            this.createdTime = Math.abs(value['createdAtLessThanOrEqual'].numberOfUnits) || 0;
+            this.createdTimeUnit = value['createdAtLessThanOrEqual'].createdTimeUnit || 'day';
         }
-        if (value['createdAtGreaterThanOrEqual']) {
-            this.enableMore = true;
-            this.createdMoreTime = Math.abs(value['createdAtGreaterThanOrEqual'].numberOfUnits) || 1;
-            this.createdMoreTimeUnit = value['createdAtGreaterThanOrEqual'].createdLessTimeUnit || 'day';
+        if (value && value['createdAtGreaterThanOrEqual']) {
+            this.createdTimeInterval = 'more';
+            this.createdTime = Math.abs(value['createdAtGreaterThanOrEqual'].numberOfUnits) || 0;
+            this.createdTimeUnit = value['createdAtGreaterThanOrEqual'].createdTimeUnit || 'day';
         }
     }
     @Output() onDelete = new EventEmitter<string>();
@@ -71,25 +63,18 @@ export class CriteriaCreatedComponent implements OnInit{
     }
 
     ngOnInit(): void {
-        setTimeout(() => {
-            this.onCriteriaChange();
-        }, 100);
-
     }
 
     public onCriteriaChange(): void {
         const value = {};
-        if (this.enableLess) {
-            value['createdAtLessThanOrEqual'] = {
-                numberOfUnits: this.createdLessTime * -1,
-                dateUnit: this.createdLessTimeUnit
-            }
-        }
-        if (this.enableMore) {
-            value['createdAtGreaterThanOrEqual'] = {
-                numberOfUnits: this.createdMoreTime * -1,
-                dateUnit: this.createdMoreTimeUnit
-            }
+        const val = {
+            numberOfUnits: this.createdTime * -1,
+            dateUnit: this.createdTimeUnit
+        };
+        if (this.createdTimeInterval === 'less') {
+            value['createdAtLessThanOrEqual'] = val;
+        } else {
+            value['createdAtGreaterThanOrEqual'] = val;
         }
         this.onFilterChange.emit({field: 'created', value});
     }

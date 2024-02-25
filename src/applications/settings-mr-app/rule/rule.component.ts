@@ -120,8 +120,8 @@ export class RuleComponent implements OnInit {
         this.rule.runningCadence.advancedCadence = {};
         // remove empty objectsFilter
         if (Object.keys(this.rule.objectFilter).length === 0) {
-            delete this.rule.objectFilter;
-            delete this.rule.objectFilterType;
+            this.rule.objectFilter = {};
+            this.rule.objectFilterType = '';
         }
         this.updateRule();
     }

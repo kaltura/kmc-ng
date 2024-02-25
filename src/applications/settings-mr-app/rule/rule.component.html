@@ -56,7 +56,7 @@
 
                     <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'actions'" *ngIf="rule">
                         <span class="kTitle">{{'applications.settings.mr.actions' | translate}}</span>
-                        <kRuleCriteria [filter]="rule.objectFilter" (onFilterChange)="onCriteriaChange($event)"></kRuleCriteria>
+                        <kRuleCriteria [filter]="rule.objectFilter || {}" (onFilterChange)="onCriteriaChange($event)"></kRuleCriteria>
                     </div>
 
                     <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'settings'" *ngIf="rule">

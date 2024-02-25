@@ -13,8 +13,6 @@ import {BrowserService} from 'app-shared/kmc-shell';
     ]
 })
 export class CriteriaComponent implements OnInit {
-    @Input() filter: any;
-    @Output() onFilterChange = new EventEmitter<any>();
 
     public items: MenuItem[];
 
@@ -26,26 +24,47 @@ export class CriteriaComponent implements OnInit {
     ];
 
     public _criterias = [];
+    public _filter = {};
 
-    constructor(private _appLocalization: AppLocalization,
-                private _browserService: BrowserService) {
+    @Input() set filter(value: any) {
+        this._filter = value;
+        this._criterias = [];
+        if (this._filter['createdAtLessThanOrEqual'] || this._filter['createdAtGreaterThanOrEqual']) {
+            this._criterias.push('created');
+        }
+        if (this._filter['lastPlayedAtLessThanOrEqual'] || this._filter['lastPlayedAtGreaterThanOrEqual']) {
+            this._criterias.push('played');
+        }
+        if (this._filter['advancedSearch']) {
+            this._criterias.push('plays');
+        }
+        if (this._filter['durationLessThanOrEqual'] || this._filter['durationGreaterThan']) {
+            this._criterias.push('duration');
+        }
+    };
+    @Output() onFilterChange = new EventEmitter<any>();
+
+    constructor(private _appLocalization: AppLocalization) {
     }
 
     ngOnInit() {
+        setTimeout(() => {
+
+        })
     }
 
     public buildMenu(): void {
         this.items = [
             {
                 label: this._appLocalization.get('applications.settings.mr.criteria.creation'),
-                disabled: typeof this.filter['createdAtLessThanOrEqual'] !== 'undefined' || typeof this.filter['createdAtGreaterThanOrEqual'] !== 'undefined',
+                disabled: this._criterias.indexOf('created') > -1,
                 command: () => {
                     this.addFilter('created');
                 }
             },
             {
                 label: this._appLocalization.get('applications.settings.mr.criteria.lastPlayed'),
-                disabled: typeof this.filter['lastPlayedAtLessThanOrEqual'] !== 'undefined' || typeof this.filter['lastPlayedAtGreaterThanOrEqual'] !== 'undefined',
+                disabled: this._criterias.indexOf('played') > -1,
                 command: () => {
                     this.addFilter('played');
                 }
@@ -55,14 +74,14 @@ export class CriteriaComponent implements OnInit {
                 items: [
                     {
                         label: this._appLocalization.get('applications.settings.mr.criteria.plays_less'),
-                        disabled: typeof this.filter['plays_less'] !== 'undefined',
+                        disabled: typeof this._filter['plays_less'] !== 'undefined',
                         command: () => {
                             this.addFilter('plays_less');
                         }
                     },
                     {
                         label: this._appLocalization.get('applications.settings.mr.criteria.plays_more'),
-                        disabled: typeof this.filter['plays_more'] !== 'undefined',
+                        disabled: typeof this._filter['plays_more'] !== 'undefined',
                         command: () => {
                             this.addFilter('plays_more');
                         }
@@ -71,141 +90,60 @@ export class CriteriaComponent implements OnInit {
             },
             {
                 label: this._appLocalization.get('applications.settings.mr.criteria.published'),
-                disabled: typeof this.filter['categoriesIdsMatchOr'] !== 'undefined',
+                disabled: typeof this._filter['categoriesIdsMatchOr'] !== 'undefined',
                 command: () => {
                     this.addFilter('categoriesIdsMatchOr');
                 }
             },
             {
                 label: this._appLocalization.get('applications.settings.mr.criteria.tags'),
-                disabled: typeof this.filter['tagsMultiLikeOr'] !== 'undefined',
+                disabled: typeof this._filter['tagsMultiLikeOr'] !== 'undefined',
                 command: () => {
                     this.addFilter('tagsMultiLikeOr');
                 }
             },
             {
                 label: this._appLocalization.get('applications.settings.mr.criteria.owner'),
-                disabled: typeof this.filter['userIdIn'] !== 'undefined',
+                disabled: typeof this._filter['userIdIn'] !== 'undefined',
                 command: () => {
                     this.addFilter('userIdIn');
                 }
             },
             {
                 label: this._appLocalization.get('applications.settings.mr.criteria.duration'),
-                items: [
-                    {
-                        label: this._appLocalization.get('applications.settings.mr.criteria.duration_less'),
-                        disabled: typeof this.filter['durationLessThanOrEqual'] !== 'undefined',
-                        command: () => {
-                            this.addFilter('durationLessThanOrEqual');
-                        }
-                    },
-                    {
-                        label: this._appLocalization.get('applications.settings.mr.criteria.duration_more'),
-                        disabled: typeof this.filter['durationGreaterThanOrEqual'] !== 'undefined',
-                        command: () => {
-                            this.addFilter('durationGreaterThanOrEqual');
-                        }
-                    }
-                ]
+                disabled: this._criterias.indexOf('duration') > -1,
+                command: () => {
+                    this.addFilter('duration');
+                }
             }
         ];
-       /*this.items = [
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.creation'),
-                items: [
-                    {
-                        label: this._appLocalization.get('applications.settings.mr.criteria.created_less'),
-                        disabled: typeof this.filter['createdAtLessThanOrEqual'] !== 'undefined',
-                        command: () => {
-                            this.addFilter('createdAtLessThanOrEqual');
-                        }
-                    },
-                    {
-                        label: this._appLocalization.get('applications.settings.mr.criteria.created_more'),
-                        disabled: typeof this.filter['createdAtGreaterThanOrEqual'] !== 'undefined',
-                        command: () => {
-                            this.addFilter('createdAtGreaterThanOrEqual');
-                        }
-                    }
-                ]
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.lastPlayed'),
-                disabled: typeof this.filter['lastPlayedAtLessThanOrEqual'] !== 'undefined',
-                command: () => {
-                    this.addFilter('lastPlayedAtLessThanOrEqual');
-                }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.plays'),
-                disabled: typeof this.filter['plays'] !== 'undefined',
-                command: () => {
-                    this.addFilter('plays');
-                }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.published'),
-                disabled: typeof this.filter['categoriesIdsMatchOr'] !== 'undefined',
-                command: () => {
-                    this.addFilter('categoriesIdsMatchOr');
-                }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.unpublished'),
-                disabled: typeof this.filter['categoriesIdsEmpty'] !== 'undefined',
-                command: () => {
-                    this.addFilter('categoriesIdsEmpty');
-                }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.tags'),
-                disabled: typeof this.filter['tagsMultiLikeOr'] !== 'undefined',
-                command: () => {
-                    this.addFilter('tagsMultiLikeOr');
-                }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.owner'),
-                disabled: typeof this.filter['userIdIn'] !== 'undefined',
-                command: () => {
-                    this.addFilter('userIdIn');
-                }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.duration'),
-                disabled: typeof this.filter['durationLessThanOrEqual'] !== 'undefined',
-                command: () => {
-                    this.addFilter('durationLessThanOrEqual');
-                }
-            },
-        ];*/
+    }
+
+    private clearFilterFields(field: string): void {
+        if (field === 'created') {
+            delete this._filter['createdAtLessThanOrEqual'];
+            delete this._filter['createdAtGreaterThanOrEqual'];
+        }
+        if (field === 'played') {
+            delete this._filter['lastPlayedAtLessThanOrEqual'];
+            delete this._filter['lastPlayedAtGreaterThanOrEqual'];
+        }
+        if (field === 'duration') {
+            delete this._filter['durationLessThanOrEqual'];
+            delete this._filter['durationGreaterThan'];
+        }
     }
 
     public onCriteriaChange(event: {field: string, value: any}): void {
-        if (event.field === 'created') {
-            delete this.filter['createdAtLessThanOrEqual'];
-            delete this.filter['createdAtGreaterThanOrEqual'];
-        }
-       if (event.field === 'played') {
-            delete this.filter['lastPlayedAtGreaterThanOrEqual'];
-            delete this.filter['lastPlayedAtLessThanOrEqual'];
-        }
-        Object.assign(this.filter, event.value);
-        this.onFilterChange.emit(this.filter);
+        this.clearFilterFields(event.field);
+        Object.assign(this._filter, event.value);
+        this.onFilterChange.emit(this._filter);
     }
 
     public deleteCriteria(field: string): void {
-        if (field === 'created') {
-            delete this.filter['createdAtLessThanOrEqual'];
-            delete this.filter['createdAtGreaterThanOrEqual'];
-        }
-        if (field === 'played') {
-            delete this.filter['lastPlayedAtLessThanOrEqual'];
-            delete this.filter['lastPlayedAtGreaterThanOrEqual'];
-        }
+        this.clearFilterFields(field);
         this._criterias = this._criterias.filter(criteria => criteria !== field);
-        this.onFilterChange.emit(this.filter);
+        this.onFilterChange.emit(this._filter);
     }
 
     private addFilter(field: string): void {

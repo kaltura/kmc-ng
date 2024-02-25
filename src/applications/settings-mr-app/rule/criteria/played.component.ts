@@ -16,18 +16,9 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 
             <div class="kRow kCenter">
                 <span class="kLabel">{{'applications.settings.mr.criteria.time' | translate}}</span>
-                <p-checkbox [(ngModel)]="enableLess" binary="true" (onChange)="onCriteriaChange()"></p-checkbox>
-                <span class="kText">{{'applications.settings.mr.criteria.lastPlayed_less' | translate}}</span>
-                <p-inputNumber class="kInput" [(ngModel)]="playedLessTime" (ngModelChange)="onCriteriaChange()" [disabled]="!enableLess"></p-inputNumber>
-                <p-dropdown [options]="_timeUnitOptions" [style]="{'width':'120px', 'margin-left': '8px'}" [disabled]="!enableLess" [(ngModel)]="playedLessTimeUnit" (ngModelChange)="onCriteriaChange()"></p-dropdown>
-                <span class="kText kLeft">{{'applications.settings.mr.criteria.ago' | translate}}</span>
-            </div>
-            <div class="kRow kCenter">
-                <span class="kLabel"></span>
-                <p-checkbox [(ngModel)]="enableMore" binary="true" (onChange)="onCriteriaChange()"></p-checkbox>
-                <span class="kText">{{'applications.settings.mr.criteria.lastPlayed_more' | translate}}</span>
-                <p-inputNumber class="kInput" [(ngModel)]="playedMoreTime" (ngModelChange)="onCriteriaChange()" [disabled]="!enableMore"></p-inputNumber>
-                <p-dropdown [options]="_timeUnitOptions" [style]="{'width':'120px', 'margin-left': '8px'}" [disabled]="!enableMore" [(ngModel)]="playedMoreTimeUnit" (ngModelChange)="onCriteriaChange()"></p-dropdown>
+                <p-dropdown [options]="_timeIntervalOptions" [style]="{'width':'120px'}" [(ngModel)]="playedTimeInterval" (ngModelChange)="onCriteriaChange()"></p-dropdown>
+                <p-inputNumber class="kInput" [(ngModel)]="playedTime" (ngModelChange)="onCriteriaChange()"></p-inputNumber>
+                <p-dropdown [options]="_timeUnitOptions" [style]="{'width':'120px', 'margin-left': '8px'}"  [(ngModel)]="playedTimeUnit" (ngModelChange)="onCriteriaChange()"></p-dropdown>
                 <span class="kText kLeft">{{'applications.settings.mr.criteria.ago' | translate}}</span>
             </div>
 
@@ -44,24 +35,25 @@ export class CriteriaPlayedComponent implements OnInit{
         {value: 'year', label: this._appLocalization.get('applications.settings.mr.criteria.years')}
     ];
 
-    public enableLess = true;
-    public playedLessTimeUnit = 'day';
-    public playedLessTime = 1;
+    public _timeIntervalOptions: { value: string, label: string }[] = [
+        {value: 'less', label: this._appLocalization.get('applications.settings.mr.criteria.less')},
+        {value: 'more', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
+    ];
 
-    public enableMore = false;
-    public playedMoreTimeUnit = 'day';
-    public playedMoreTime = 1;
+    public playedTimeUnit = 'day';
+    public playedTime = 0;
+    public playedTimeInterval = 'less';
 
     @Input() set filter(value: any) {
-        if (value['lastPlayedAtLessThanOrEqual']) {
-            this.enableLess = true;
-            this.playedLessTime = Math.abs(value['lastPlayedAtLessThanOrEqual'].numberOfUnits) || 1;
-            this.playedLessTimeUnit = value['lastPlayedAtLessThanOrEqual'].playedLessTimeUnit || 'day';
+        if (value && value['lastPlayedAtLessThanOrEqual']) {
+            this.playedTimeInterval = 'less';
+            this.playedTime = Math.abs(value['lastPlayedAtLessThanOrEqual'].numberOfUnits) || 0;
+            this.playedTimeUnit = value['lastPlayedAtLessThanOrEqual'].dateUnit || 'day';
         }
-        if (value['lastPlayedAtGreaterThanOrEqual']) {
-            this.enableMore = true;
-            this.playedMoreTime = Math.abs(value['lastPlayedAtGreaterThanOrEqual'].numberOfUnits) || 1;
-            this.playedMoreTimeUnit = value['lastPlayedAtGreaterThanOrEqual'].playedLessTimeUnit || 'day';
+        if (value && value['lastPlayedAtGreaterThanOrEqual']) {
+            this.playedTimeInterval = 'more';
+            this.playedTime = Math.abs(value['lastPlayedAtGreaterThanOrEqual'].numberOfUnits) || 0;
+            this.playedTimeUnit = value['lastPlayedAtGreaterThanOrEqual'].dateUnit || 'day';
         }
     }
     @Output() onDelete = new EventEmitter<string>();
@@ -71,25 +63,18 @@ export class CriteriaPlayedComponent implements OnInit{
     }
 
     ngOnInit(): void {
-        setTimeout(() => {
-            this.onCriteriaChange();
-        }, 100);
-
     }
 
     public onCriteriaChange(): void {
         const value = {};
-        if (this.enableLess) {
-            value['lastPlayedAtLessThanOrEqual'] = {
-                numberOfUnits: this.playedLessTime * -1,
-                dateUnit: this.playedLessTimeUnit
-            }
-        }
-        if (this.enableMore) {
-            value['lastPlayedAtGreaterThanOrEqual'] = {
-                numberOfUnits: this.playedMoreTime * -1,
-                dateUnit: this.playedMoreTimeUnit
-            }
+        const val = {
+            numberOfUnits: this.playedTime * -1,
+            dateUnit: this.playedTimeUnit
+        };
+        if (this.playedTimeInterval === 'less') {
+            value['lastPlayedAtLessThanOrEqual'] = val;
+        } else {
+            value['lastPlayedAtGreaterThanOrEqual'] = val;
         }
         this.onFilterChange.emit({field: 'played', value});
     }

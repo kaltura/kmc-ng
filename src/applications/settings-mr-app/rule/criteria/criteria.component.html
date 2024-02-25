@@ -6,8 +6,8 @@
 
     <div *ngFor="let field of _criterias">
         <ng-container [ngSwitch]="true">
-            <kCriteriaCreated *ngSwitchCase="field === 'created'" [filter]="filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaCreated>
-            <kCriteriaPlayed *ngSwitchCase="field === 'played'" [filter]="filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaPlayed>
+            <kCriteriaCreated *ngSwitchCase="field === 'created'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaCreated>
+            <kCriteriaPlayed *ngSwitchCase="field === 'played'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaPlayed>
         </ng-container>
     </div>
 </div>

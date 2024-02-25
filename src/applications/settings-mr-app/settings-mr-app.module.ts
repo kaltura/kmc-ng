@@ -30,6 +30,7 @@ import { RuleComponent } from './rule/rule.component';
 import { CriteriaComponent } from './rule/criteria/criteria.component';
 import { CriteriaCreatedComponent } from './rule/criteria/created.component';
 import { CriteriaPlayedComponent } from './rule/criteria/played.component';
+import { CriteriaDurationComponent } from './rule/criteria/duration.component';
 
 @NgModule({
     imports: [
@@ -69,7 +70,8 @@ import { CriteriaPlayedComponent } from './rule/criteria/played.component';
       RuleComponent,
       CriteriaComponent,
       CriteriaCreatedComponent,
-      CriteriaPlayedComponent
+      CriteriaPlayedComponent,
+      CriteriaDurationComponent
   ],
     providers: [MrStoreService]
 })
