@@ -12,7 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { MenuModule } from 'primeng/menu';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { SplitButtonModule } from 'primeng/splitbutton';
+import { TieredMenuModule } from 'primeng/tieredmenu';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextareaModule } from 'primeng/inputtextarea';
@@ -28,6 +28,8 @@ import { DeleteRuleComponent } from './rules/delete-rule/delete-rule.component';
 import { NewRuleComponent } from './rules/new-rule/new-rule.component';
 import { RuleComponent } from './rule/rule.component';
 import { CriteriaComponent } from './rule/criteria/criteria.component';
+import { CriteriaCreatedComponent } from './rule/criteria/created.component';
+import { CriteriaPlayedComponent } from './rule/criteria/played.component';
 
 @NgModule({
     imports: [
@@ -44,7 +46,7 @@ import { CriteriaComponent } from './rule/criteria/criteria.component';
         CheckboxModule,
         InputNumberModule,
         ButtonModule,
-        SplitButtonModule,
+        TieredMenuModule,
         TableModule,
         MenuModule,
         PaginatorModule,
@@ -65,7 +67,9 @@ import { CriteriaComponent } from './rule/criteria/criteria.component';
       DeleteRuleComponent,
       NewRuleComponent,
       RuleComponent,
-      CriteriaComponent
+      CriteriaComponent,
+      CriteriaCreatedComponent,
+      CriteriaPlayedComponent
   ],
     providers: [MrStoreService]
 })

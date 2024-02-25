@@ -1,44 +1,13 @@
 <div class="criteriaContainer">
     <span class="kTitle">{{'applications.settings.mr.criteria.title' | translate}}</span>
-    <p-splitButton #btn label="{{'applications.settings.mr.criteria.add' | translate}}" [model]="items" (onDropdownClick)="buildMenu()" (onClick)="btn.onDropdownButtonClick($event)"></p-splitButton>
-    <div *ngFor="let field of filter | keyvalue">
+    <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton label="{{'applications.settings.mr.criteria.add' | translate}}" (click)="buildMenu(); menu.toggle($event)"></button>
+    <p-tieredMenu #menu kMenuCloseOnScroll [model]="items" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"
+                  [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'" ></p-tieredMenu>
+
+    <div *ngFor="let field of _criterias">
         <ng-container [ngSwitch]="true">
-
-            <div class="criteria" *ngSwitchCase="field.key === 'createdAtLessThanOrEqual' || field.key === 'createdAtGreaterThanOrEqual'">
-                <div class="kRow">
-                    <span class="kLabel">{{'applications.settings.mr.criteria.header' | translate}}</span>
-                    <span class="kLabelWithHelpTip">{{'applications.settings.mr.criteria.creation' | translate}}</span>
-                    <kInputHelper>
-                        <span>{{'applications.settings.mr.criteria.creation_tt' | translate}}</span>
-                    </kInputHelper>
-                </div>
-                <div class="kRow kCenter">
-                    <span class="kLabel">{{'applications.settings.mr.criteria.time' | translate}}</span>
-                    <p-dropdown [options]="_timeIntervalOptions" [style]="{'width':'120px'}" [(ngModel)]="_lastCreatedTimeInterval" (ngModelChange)="onCriteriaChange('createdAtLessThanOrEqual')"></p-dropdown>
-                    <p-inputNumber class="kInput" [(ngModel)]="_lastCreatedTime" (ngModelChange)="onCriteriaChange('createdAtLessThanOrEqual')"></p-inputNumber>
-                    <p-dropdown [options]="_timeUnitOptions" [style]="{'width':'120px', 'margin-left': '8px'}" [(ngModel)]="_lastCreatedTimeUnit" (ngModelChange)="onCriteriaChange('createdAtLessThanOrEqual')"></p-dropdown>
-                    <span class="kText">{{'applications.settings.mr.criteria.ago' | translate}}</span>
-                </div>
-                <span class="kDelete" (click)="deleteCriteria(field.key.toString())">{{'applications.content.table.delete'| translate}}</span>
-            </div>
-
-            <div class="criteria" *ngSwitchCase="field.key === 'lastPlayedAtLessThanOrEqual' || field.key === 'lastPlayedAtGreaterThanOrEqual'">
-                <div class="kRow">
-                    <span class="kLabel">{{'applications.settings.mr.criteria.header' | translate}}</span>
-                    <span class="kLabelWithHelpTip">{{'applications.settings.mr.criteria.lastPlayed' | translate}}</span>
-                    <kInputHelper>
-                        <span>{{'applications.settings.mr.criteria.lastPlayed_tt' | translate}}</span>
-                    </kInputHelper>
-                </div>
-                <div class="kRow kCenter">
-                    <span class="kLabel">{{'applications.settings.mr.criteria.time' | translate}}</span>
-                    <p-dropdown [options]="_timeIntervalOptions" [style]="{'width':'120px'}" [(ngModel)]="_lastPlayedTimeInterval" (ngModelChange)="onCriteriaChange('lastPlayedAtLessThanOrEqual')"></p-dropdown>
-                    <p-inputNumber class="kInput" [(ngModel)]="_lastPlayedTime" (ngModelChange)="onCriteriaChange('lastPlayedAtLessThanOrEqual')"></p-inputNumber>
-                    <p-dropdown [options]="_timeUnitOptions" [style]="{'width':'120px', 'margin-left': '8px'}" [(ngModel)]="_lastPlayedTimeUnit" (ngModelChange)="onCriteriaChange('lastPlayedAtLessThanOrEqual')"></p-dropdown>
-                    <span class="kText">{{'applications.settings.mr.criteria.ago' | translate}}</span>
-                </div>
-                <span class="kDelete" (click)="deleteCriteria(field.key.toString())">{{'applications.content.table.delete'| translate}}</span>
-            </div>
+            <kCriteriaCreated *ngSwitchCase="field === 'created'" [filter]="filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaCreated>
+            <kCriteriaPlayed *ngSwitchCase="field === 'played'" [filter]="filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaPlayed>
         </ng-container>
     </div>
 </div>
