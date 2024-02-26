@@ -3567,6 +3567,8 @@
                     "tags": "Contains tags",
                     "owner": "Entry owner",
                     "duration": "Media duration",
+                    "durationLabel": "Duration",
+                    "duration_tt": "Add the duration of the media",
                     "duration_less": "Shorter than",
                     "duration_more": "Longer then",
                     "time": "Time",

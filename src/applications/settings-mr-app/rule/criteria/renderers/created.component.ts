@@ -3,7 +3,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 @Component({
     selector: 'kCriteriaCreated',
-    styleUrls: ['./criteria.component.scss'],
+    styleUrls: ['./renderers.scss'],
     template: `
         <div class="criteria">
             <div class="kRow">
@@ -36,25 +36,22 @@ export class CriteriaCreatedComponent implements OnInit{
     ];
 
     public _timeIntervalOptions: { value: string, label: string }[] = [
-        {value: 'less', label: this._appLocalization.get('applications.settings.mr.criteria.less')},
-        {value: 'more', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
+        {value: 'createdAtLessThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.less')},
+        {value: 'createdAtGreaterThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
     ];
 
     public createdTimeUnit = 'day';
     public createdTime = 0;
-    public createdTimeInterval = 'less';
+    public createdTimeInterval = 'createdAtLessThanOrEqual';
 
     @Input() set filter(value: any) {
-        if (value && value['createdAtLessThanOrEqual']) {
-            this.createdTimeInterval = 'less';
-            this.createdTime = Math.abs(value['createdAtLessThanOrEqual'].numberOfUnits) || 0;
-            this.createdTimeUnit = value['createdAtLessThanOrEqual'].createdTimeUnit || 'day';
-        }
-        if (value && value['createdAtGreaterThanOrEqual']) {
-            this.createdTimeInterval = 'more';
-            this.createdTime = Math.abs(value['createdAtGreaterThanOrEqual'].numberOfUnits) || 0;
-            this.createdTimeUnit = value['createdAtGreaterThanOrEqual'].createdTimeUnit || 'day';
-        }
+        ['createdAtLessThanOrEqual', 'createdAtGreaterThanOrEqual'].forEach(key => {
+            if (value && value[key]) {
+                this.createdTimeInterval = key;
+                this.createdTime = Math.abs(value[key].numberOfUnits) || 0;
+                this.createdTimeUnit = value[key].createdTimeUnit || 'day';
+            }
+        });
     }
     @Output() onDelete = new EventEmitter<string>();
     @Output() onFilterChange = new EventEmitter<{field: string, value: any}>();
@@ -67,15 +64,10 @@ export class CriteriaCreatedComponent implements OnInit{
 
     public onCriteriaChange(): void {
         const value = {};
-        const val = {
+        value[this.createdTimeInterval] = {
             numberOfUnits: this.createdTime * -1,
             dateUnit: this.createdTimeUnit
         };
-        if (this.createdTimeInterval === 'less') {
-            value['createdAtLessThanOrEqual'] = val;
-        } else {
-            value['createdAtGreaterThanOrEqual'] = val;
-        }
         this.onFilterChange.emit({field: 'created', value});
     }
 

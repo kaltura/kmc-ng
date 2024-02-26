@@ -3,7 +3,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 
 @Component({
     selector: 'kCriteriaPlayed',
-    styleUrls: ['./criteria.component.scss'],
+    styleUrls: ['./renderers.scss'],
     template: `
         <div class="criteria">
             <div class="kRow">
@@ -36,8 +36,8 @@ export class CriteriaPlayedComponent implements OnInit{
     ];
 
     public _timeIntervalOptions: { value: string, label: string }[] = [
-        {value: 'less', label: this._appLocalization.get('applications.settings.mr.criteria.less')},
-        {value: 'more', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
+        {value: 'lastPlayedAtLessThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.less')},
+        {value: 'lastPlayedAtGreaterThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
     ];
 
     public playedTimeUnit = 'day';
@@ -45,16 +45,13 @@ export class CriteriaPlayedComponent implements OnInit{
     public playedTimeInterval = 'less';
 
     @Input() set filter(value: any) {
-        if (value && value['lastPlayedAtLessThanOrEqual']) {
-            this.playedTimeInterval = 'less';
-            this.playedTime = Math.abs(value['lastPlayedAtLessThanOrEqual'].numberOfUnits) || 0;
-            this.playedTimeUnit = value['lastPlayedAtLessThanOrEqual'].dateUnit || 'day';
-        }
-        if (value && value['lastPlayedAtGreaterThanOrEqual']) {
-            this.playedTimeInterval = 'more';
-            this.playedTime = Math.abs(value['lastPlayedAtGreaterThanOrEqual'].numberOfUnits) || 0;
-            this.playedTimeUnit = value['lastPlayedAtGreaterThanOrEqual'].dateUnit || 'day';
-        }
+        ['lastPlayedAtLessThanOrEqual', 'lastPlayedAtGreaterThanOrEqual'].forEach(key => {
+            if (value && value[key]) {
+                this.playedTimeInterval = key;
+                this.playedTime = Math.abs(value[key].numberOfUnits) || 0;
+                this.playedTimeUnit = value[key].createdTimeUnit || 'day';
+            }
+        });
     }
     @Output() onDelete = new EventEmitter<string>();
     @Output() onFilterChange = new EventEmitter<{field: string, value: any}>();
@@ -67,15 +64,10 @@ export class CriteriaPlayedComponent implements OnInit{
 
     public onCriteriaChange(): void {
         const value = {};
-        const val = {
+        value[this.playedTimeInterval] = {
             numberOfUnits: this.playedTime * -1,
             dateUnit: this.playedTimeUnit
         };
-        if (this.playedTimeInterval === 'less') {
-            value['lastPlayedAtLessThanOrEqual'] = val;
-        } else {
-            value['lastPlayedAtGreaterThanOrEqual'] = val;
-        }
         this.onFilterChange.emit({field: 'played', value});
     }
 

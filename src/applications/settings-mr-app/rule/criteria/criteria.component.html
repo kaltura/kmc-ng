@@ -1,6 +1,6 @@
 <div class="criteriaContainer">
     <span class="kTitle">{{'applications.settings.mr.criteria.title' | translate}}</span>
-    <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton label="{{'applications.settings.mr.criteria.add' | translate}}" (click)="buildMenu(); menu.toggle($event)"></button>
+    <button class="kButtonDefault kActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton label="{{'applications.settings.mr.criteria.add' | translate}}" (click)="buildMenu(); menu.toggle($event)"></button>
     <p-tieredMenu #menu kMenuCloseOnScroll [model]="items" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"
                   [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'" ></p-tieredMenu>
 
@@ -8,6 +8,7 @@
         <ng-container [ngSwitch]="true">
             <kCriteriaCreated *ngSwitchCase="field === 'created'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaCreated>
             <kCriteriaPlayed *ngSwitchCase="field === 'played'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaPlayed>
+            <kCriteriaDuration *ngSwitchCase="field === 'duration'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaDuration>
         </ng-container>
     </div>
 </div>

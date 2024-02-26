@@ -28,9 +28,7 @@ import { DeleteRuleComponent } from './rules/delete-rule/delete-rule.component';
 import { NewRuleComponent } from './rules/new-rule/new-rule.component';
 import { RuleComponent } from './rule/rule.component';
 import { CriteriaComponent } from './rule/criteria/criteria.component';
-import { CriteriaCreatedComponent } from './rule/criteria/created.component';
-import { CriteriaPlayedComponent } from './rule/criteria/played.component';
-import { CriteriaDurationComponent } from './rule/criteria/duration.component';
+import { CriteriaCreatedComponent, CriteriaPlayedComponent, CriteriaDurationComponent } from './rule/criteria/renderers';
 
 @NgModule({
     imports: [
