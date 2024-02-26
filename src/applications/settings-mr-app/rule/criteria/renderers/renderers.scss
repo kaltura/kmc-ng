@@ -16,6 +16,7 @@
         .kLabel {
             line-height: 24px;
             width: 208px;
+            flex: 0 0 auto;
         }
         .kLabelWithHelpTip {
             line-height: 24px;
@@ -46,5 +47,12 @@
         margin-top: 24px;
         display: block;
         display: inline-block;
+    }
+    .kCol {
+        display: flex;
+        flex-direction: column;
+        a {
+            margin-top: 16px;
+        }
     }
 }

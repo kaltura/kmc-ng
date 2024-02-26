@@ -38,6 +38,9 @@ export class CriteriaComponent implements OnInit {
         if (this._filter['advancedSearch']) {
             this._criterias.push('plays');
         }
+        if (this._filter['categoriesIdsMatchOr']) {
+            this._criterias.push('categories');
+        }
         if (this._filter['durationLessThanOrEqual'] || this._filter['durationGreaterThan']) {
             this._criterias.push('duration');
         }
@@ -71,28 +74,16 @@ export class CriteriaComponent implements OnInit {
             },
             {
                 label: this._appLocalization.get('applications.settings.mr.criteria.plays'),
-                items: [
-                    {
-                        label: this._appLocalization.get('applications.settings.mr.criteria.plays_less'),
-                        disabled: typeof this._filter['plays_less'] !== 'undefined',
-                        command: () => {
-                            this.addFilter('plays_less');
-                        }
-                    },
-                    {
-                        label: this._appLocalization.get('applications.settings.mr.criteria.plays_more'),
-                        disabled: typeof this._filter['plays_more'] !== 'undefined',
-                        command: () => {
-                            this.addFilter('plays_more');
-                        }
-                    },
-                ]
+                disabled: this._criterias.indexOf('plays') > -1,
+                command: () => {
+                    this.addFilter('plays');
+                }
             },
             {
                 label: this._appLocalization.get('applications.settings.mr.criteria.published'),
                 disabled: typeof this._filter['categoriesIdsMatchOr'] !== 'undefined',
                 command: () => {
-                    this.addFilter('categoriesIdsMatchOr');
+                    this.addFilter('categories');
                 }
             },
             {
@@ -128,21 +119,37 @@ export class CriteriaComponent implements OnInit {
             delete this._filter['lastPlayedAtLessThanOrEqual'];
             delete this._filter['lastPlayedAtGreaterThanOrEqual'];
         }
+        if (field === 'plays') {
+            delete this._filter['advancedSearch'];
+        }
+        if (field === 'categories') {
+            delete this._filter['categoriesIdsMatchOr'];
+        }
         if (field === 'duration') {
             delete this._filter['durationLessThanOrEqual'];
             delete this._filter['durationGreaterThan'];
         }
     }
 
+    private removeEmptyFields(): void {
+        Object.keys(this._filter).forEach(field => {
+            if (this._filter[field] === '' || this._filter[field] === null || typeof this._filter[field] === "undefined" ) {
+                delete this._filter[field];
+            }
+        })
+    }
+
     public onCriteriaChange(event: {field: string, value: any}): void {
         this.clearFilterFields(event.field);
         Object.assign(this._filter, event.value);
+        this.removeEmptyFields();
         this.onFilterChange.emit(this._filter);
     }
 
     public deleteCriteria(field: string): void {
         this.clearFilterFields(field);
         this._criterias = this._criterias.filter(criteria => criteria !== field);
+        this.removeEmptyFields();
         this.onFilterChange.emit(this._filter);
     }
 

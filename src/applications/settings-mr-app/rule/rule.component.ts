@@ -121,7 +121,7 @@ export class RuleComponent implements OnInit {
         // remove empty objectsFilter
         if (Object.keys(this.rule.objectFilter).length === 0) {
             this.rule.objectFilter = {};
-            // this.rule.objectFilterType = '';
+            this.rule.objectFilterType = '';
         }
         this.updateRule();
     }

@@ -1,0 +1,67 @@
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AppLocalization } from '@kaltura-ng/mc-shared';
+import { KalturaSearchConditionComparison, KalturaMediaEntryCompareAttribute } from 'kaltura-ngx-client';
+
+@Component({
+    selector: 'kCriteriaPlays',
+    styleUrls: ['./renderers.scss'],
+    template: `
+        <div class="criteria">
+            <div class="kRow">
+                <span class="kLabel">{{'applications.settings.mr.criteria.header' | translate}}</span>
+                <span class="kLabelWithHelpTip">{{'applications.settings.mr.criteria.plays' | translate}}</span>
+                <kInputHelper>
+                    <span>{{'applications.settings.mr.criteria.plays_tt' | translate}}</span>
+                </kInputHelper>
+            </div>
+
+            <div class="kRow kCenter">
+                <span class="kLabel">{{'applications.settings.mr.criteria.playsLabel' | translate}}</span>
+                <p-dropdown [options]="_playsIntervalOptions" [style]="{'width':'120px'}" [(ngModel)]="playsInterval" (ngModelChange)="onCriteriaChange()"></p-dropdown>
+                <p-inputNumber class="kInput" [(ngModel)]="numOfPlays" (ngModelChange)="onCriteriaChange()"></p-inputNumber>
+            </div>
+
+            <span class="kDelete" (click)="delete()">{{'applications.content.table.delete'| translate}}</span>
+        </div>
+    `
+})
+export class CriteriaPlaysComponent implements OnInit{
+
+    public _playsIntervalOptions: { value: KalturaSearchConditionComparison, label: string }[] = [
+        {value: KalturaSearchConditionComparison.lessThan, label: this._appLocalization.get('applications.settings.mr.criteria.less')},
+        {value: KalturaSearchConditionComparison.greaterThan, label: this._appLocalization.get('applications.settings.mr.criteria.more')}
+    ];
+
+    public numOfPlays = 0;
+    public playsInterval = KalturaSearchConditionComparison.lessThan;
+
+    @Input() set filter(value: any) {
+        if (value['advancedSearch'] && value['advancedSearch']['attribute'] && value['advancedSearch']['attribute'] === KalturaMediaEntryCompareAttribute.plays) {
+            this.playsInterval = value['advancedSearch']['comparison'];
+            this.numOfPlays = parseInt(value['advancedSearch']['value']);
+        };
+    }
+    @Output() onDelete = new EventEmitter<string>();
+    @Output() onFilterChange = new EventEmitter<{field: string, value: any}>();
+
+    constructor(private _appLocalization: AppLocalization) {
+    }
+
+    ngOnInit(): void {
+    }
+
+    public onCriteriaChange(): void {
+        const value = {};
+        value['advancedSearch'] = {
+            objectType: "KalturaMediaEntryCompareAttributeCondition",
+            comparison: this.playsInterval,
+            attribute: KalturaMediaEntryCompareAttribute.plays,
+            value: this.numOfPlays
+        };
+        this.onFilterChange.emit({field: 'plays', value});
+    }
+
+    public delete(): void {
+        this.onDelete.emit('plays');
+    }
+}

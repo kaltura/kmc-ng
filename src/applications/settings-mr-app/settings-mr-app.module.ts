@@ -16,7 +16,8 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { KalturaPrimeNgUIModule } from "@kaltura-ng/kaltura-primeng-ui";
+import { AutoCompleteModule, KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { CategoriesModule } from "app-shared/content-shared/categories/categories.module";
 import { DateFormatModule } from "app-shared/kmc-shared/date-format/date-format.module";
 import { CopyToClipboardModule, LocalizationModule } from '@kaltura-ng/mc-shared';
 import { RulesComponent } from './rules/rules.component';
@@ -28,7 +29,14 @@ import { DeleteRuleComponent } from './rules/delete-rule/delete-rule.component';
 import { NewRuleComponent } from './rules/new-rule/new-rule.component';
 import { RuleComponent } from './rule/rule.component';
 import { CriteriaComponent } from './rule/criteria/criteria.component';
-import { CriteriaCreatedComponent, CriteriaPlayedComponent, CriteriaDurationComponent } from './rule/criteria/renderers';
+import {
+    CriteriaCreatedComponent,
+    CriteriaPlayedComponent,
+    CriteriaDurationComponent,
+    CriteriaPlaysComponent,
+    CriteriaCategoriesComponent
+} from './rule/criteria/renderers';
+import {CategoriesSelector} from './rule/category-selector/categories-selector.component';
 
 @NgModule({
     imports: [
@@ -42,6 +50,7 @@ import { CriteriaCreatedComponent, CriteriaPlayedComponent, CriteriaDurationComp
         InputSwitchModule,
         PopupWidgetModule,
         InputHelperModule,
+        CategoriesModule,
         CheckboxModule,
         InputNumberModule,
         ButtonModule,
@@ -55,7 +64,8 @@ import { CriteriaCreatedComponent, CriteriaPlayedComponent, CriteriaDurationComp
         KalturaUIModule,
         DateFormatModule,
         KalturaPrimeNgUIModule,
-        LocalizationModule
+        LocalizationModule,
+        AutoCompleteModule
     ],
   declarations: [
       SettingsMrComponent,
@@ -69,7 +79,10 @@ import { CriteriaCreatedComponent, CriteriaPlayedComponent, CriteriaDurationComp
       CriteriaComponent,
       CriteriaCreatedComponent,
       CriteriaPlayedComponent,
-      CriteriaDurationComponent
+      CriteriaDurationComponent,
+      CriteriaPlaysComponent,
+      CriteriaCategoriesComponent,
+      CategoriesSelector
   ],
     providers: [MrStoreService]
 })
