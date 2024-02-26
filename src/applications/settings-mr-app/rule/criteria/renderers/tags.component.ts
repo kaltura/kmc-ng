@@ -1,11 +1,8 @@
 import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {CategoriesSearchService, CategoryData} from 'app-shared/content-shared/categories/categories-search.service';
-import {CategoryTooltipPipe} from 'app-shared/content-shared/categories/category-tooltip.pipe';
 import {Observable, Subject} from 'rxjs';
 import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
 import {ISubscription} from 'rxjs/Subscription';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
-import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {KalturaClient, KalturaFilterPager, KalturaTagFilter, KalturaTaggedObjectType, TagSearchAction} from 'kaltura-ngx-client';
 
 @Component({

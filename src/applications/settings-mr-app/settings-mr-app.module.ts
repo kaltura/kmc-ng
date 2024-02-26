@@ -29,14 +29,9 @@ import { DeleteRuleComponent } from './rules/delete-rule/delete-rule.component';
 import { NewRuleComponent } from './rules/new-rule/new-rule.component';
 import { RuleComponent } from './rule/rule.component';
 import { CriteriaComponent } from './rule/criteria/criteria.component';
-import {
-    CriteriaCreatedComponent,
-    CriteriaPlayedComponent,
-    CriteriaDurationComponent,
-    CriteriaPlaysComponent,
-    CriteriaCategoriesComponent, CriteriaTagsComponent
-} from './rule/criteria/renderers';
-import {CategoriesSelector} from './rule/category-selector/categories-selector.component';
+import { CriteriaCreatedComponent, CriteriaPlayedComponent, CriteriaDurationComponent, CriteriaPlaysComponent,
+         CriteriaCategoriesComponent, CriteriaTagsComponent, CriteriaOwnerComponent } from './rule/criteria/renderers';
+import { CategoriesSelector } from './rule/category-selector/categories-selector.component';
 
 @NgModule({
     imports: [
@@ -83,7 +78,8 @@ import {CategoriesSelector} from './rule/category-selector/categories-selector.c
       CriteriaPlaysComponent,
       CriteriaCategoriesComponent,
       CategoriesSelector,
-      CriteriaTagsComponent
+      CriteriaTagsComponent,
+      CriteriaOwnerComponent
   ],
     providers: [MrStoreService]
 })

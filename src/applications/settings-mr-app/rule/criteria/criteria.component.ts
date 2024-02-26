@@ -44,6 +44,9 @@ export class CriteriaComponent implements OnInit {
         if (this._filter['tagsMultiLikeOr']) {
             this._criterias.push('tags');
         }
+        if (this._filter['userIdIn']) {
+            this._criterias.push('owner');
+        }
         if (this._filter['durationLessThanOrEqual'] || this._filter['durationGreaterThan']) {
             this._criterias.push('duration');
         }
@@ -100,7 +103,7 @@ export class CriteriaComponent implements OnInit {
                 label: this._appLocalization.get('applications.settings.mr.criteria.owner'),
                 disabled: typeof this._filter['userIdIn'] !== 'undefined',
                 command: () => {
-                    this.addFilter('userIdIn');
+                    this.addFilter('owner');
                 }
             },
             {
@@ -130,6 +133,9 @@ export class CriteriaComponent implements OnInit {
         }
         if (field === 'tags') {
             delete this._filter['tagsMultiLikeOr'];
+        }
+        if (field === 'owner') {
+            delete this._filter['userIdIn'];
         }
         if (field === 'duration') {
             delete this._filter['durationLessThanOrEqual'];

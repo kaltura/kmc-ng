@@ -67,7 +67,7 @@ export class CriteriaCategoriesComponent implements OnDestroy{
                 this.categories = response?.items ? response.items : [];
             },
             error => {
-            console.error("Error loading categories ", error);
+                    console.error("Error loading categories ", error);
             })
         }
     }

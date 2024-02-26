@@ -3570,6 +3570,8 @@
                     "tags_tt": "Select tags the rule will apply to. The rule will be performed if the entry contains at least one of the added tags",
                     "tagsLabel": "Tags",
                     "owner": "Entry owner",
+                    "owner_tt": "Select the assigned owner/s of the entry. The rule will be performed if the entry is owned by at least one of the added owners.",
+                    "ownerLabel": "Owner",
                     "duration": "Media duration",
                     "durationLabel": "Duration",
                     "duration_tt": "Add the duration of the media",
