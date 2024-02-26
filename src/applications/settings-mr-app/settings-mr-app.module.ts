@@ -34,7 +34,7 @@ import {
     CriteriaPlayedComponent,
     CriteriaDurationComponent,
     CriteriaPlaysComponent,
-    CriteriaCategoriesComponent
+    CriteriaCategoriesComponent, CriteriaTagsComponent
 } from './rule/criteria/renderers';
 import {CategoriesSelector} from './rule/category-selector/categories-selector.component';
 
@@ -82,7 +82,8 @@ import {CategoriesSelector} from './rule/category-selector/categories-selector.c
       CriteriaDurationComponent,
       CriteriaPlaysComponent,
       CriteriaCategoriesComponent,
-      CategoriesSelector
+      CategoriesSelector,
+      CriteriaTagsComponent
   ],
     providers: [MrStoreService]
 })

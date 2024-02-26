@@ -41,6 +41,9 @@ export class CriteriaComponent implements OnInit {
         if (this._filter['categoriesIdsMatchOr']) {
             this._criterias.push('categories');
         }
+        if (this._filter['tagsMultiLikeOr']) {
+            this._criterias.push('tags');
+        }
         if (this._filter['durationLessThanOrEqual'] || this._filter['durationGreaterThan']) {
             this._criterias.push('duration');
         }
@@ -90,7 +93,7 @@ export class CriteriaComponent implements OnInit {
                 label: this._appLocalization.get('applications.settings.mr.criteria.tags'),
                 disabled: typeof this._filter['tagsMultiLikeOr'] !== 'undefined',
                 command: () => {
-                    this.addFilter('tagsMultiLikeOr');
+                    this.addFilter('tags');
                 }
             },
             {
@@ -124,6 +127,9 @@ export class CriteriaComponent implements OnInit {
         }
         if (field === 'categories') {
             delete this._filter['categoriesIdsMatchOr'];
+        }
+        if (field === 'tags') {
+            delete this._filter['tagsMultiLikeOr'];
         }
         if (field === 'duration') {
             delete this._filter['durationLessThanOrEqual'];

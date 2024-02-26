@@ -11,6 +11,7 @@
             <kCriteriaDuration *ngSwitchCase="field === 'duration'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaDuration>
             <kCriteriaPlays *ngSwitchCase="field === 'plays'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaPlays>
             <kCriteriaCategories *ngSwitchCase="field === 'categories'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaCategories>
+            <kCriteriaTags *ngSwitchCase="field === 'tags'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaTags>
         </ng-container>
     </div>
 </div>

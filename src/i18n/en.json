@@ -3567,6 +3567,8 @@
                     "published_tt": "Select categories the rule will apply to. The rule will be performed if the entry is found in at least one of the selected categories.",
                     "categories": "Categories",
                     "tags": "Contains tags",
+                    "tags_tt": "Select tags the rule will apply to. The rule will be performed if the entry contains at least one of the added tags",
+                    "tagsLabel": "Tags",
                     "owner": "Entry owner",
                     "duration": "Media duration",
                     "durationLabel": "Duration",
