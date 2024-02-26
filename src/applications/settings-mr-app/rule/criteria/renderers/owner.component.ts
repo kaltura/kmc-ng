@@ -90,11 +90,11 @@ export class CriteriaOwnerComponent implements OnDestroy{
         const userIds = [];
         this.owners.forEach(user => userIds.push(user.id));
         value['userIdIn'] = userIds.toString();
-        this.onFilterChange.emit({field: 'owners', value});
+        this.onFilterChange.emit({field: 'owner', value});
     }
 
     public delete(): void {
-        this.onDelete.emit('owners');
+        this.onDelete.emit('owner');
     }
 
     private searchUsers(text : string) {

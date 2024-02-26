@@ -87,21 +87,21 @@ export class CriteriaComponent implements OnInit {
             },
             {
                 label: this._appLocalization.get('applications.settings.mr.criteria.published'),
-                disabled: typeof this._filter['categoriesIdsMatchOr'] !== 'undefined',
+                disabled: this._criterias.indexOf('categories') > -1,
                 command: () => {
                     this.addFilter('categories');
                 }
             },
             {
                 label: this._appLocalization.get('applications.settings.mr.criteria.tags'),
-                disabled: typeof this._filter['tagsMultiLikeOr'] !== 'undefined',
+                disabled: this._criterias.indexOf('tags') > -1,
                 command: () => {
                     this.addFilter('tags');
                 }
             },
             {
                 label: this._appLocalization.get('applications.settings.mr.criteria.owner'),
-                disabled: typeof this._filter['userIdIn'] !== 'undefined',
+                disabled: this._criterias.indexOf('owner') > -1,
                 command: () => {
                     this.addFilter('owner');
                 }
