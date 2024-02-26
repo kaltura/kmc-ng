@@ -106,6 +106,31 @@ export class CriteriaCategoriesComponent implements OnDestroy{
         this.onDelete.emit('categories');
     }
 
+    private searchCategories(text : string) {
+        return Observable.create(
+            observer => {
+
+                const requestSubscription = this._categoriesSearchService.getSuggestions(text)
+                    .pipe(cancelOnDestroy(this))
+                    .subscribe(
+                        result =>
+                        {
+                            observer.next(result);
+                            observer.complete();
+                        },
+                        err =>
+                        {
+                            observer.error(err);
+                        }
+                    );
+
+                return () =>
+                {
+                    requestSubscription.unsubscribe();
+                }
+            });
+    }
+
     public _searchCategories(event) : void {
         this._categoriesProvider.next({ suggestions : [], isLoading : true});
 
@@ -135,32 +160,6 @@ export class CriteriaCategoriesComponent implements OnDestroy{
             },
             (err) => {
                 this._categoriesProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
-            });
-    }
-
-    public searchCategories(text : string)
-    {
-        return Observable.create(
-            observer => {
-
-                const requestSubscription = this._categoriesSearchService.getSuggestions(text)
-                    .pipe(cancelOnDestroy(this))
-                    .subscribe(
-                        result =>
-                        {
-                            observer.next(result);
-                            observer.complete();
-                        },
-                        err =>
-                        {
-                            observer.error(err);
-                        }
-                    );
-
-                return () =>
-                {
-                    requestSubscription.unsubscribe();
-                }
             });
     }
 

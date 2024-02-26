@@ -69,7 +69,7 @@ export class CriteriaTagsComponent implements OnDestroy{
         this.onDelete.emit('tags');
     }
 
-    public searchTags(text: string): Observable<string[]> {
+    private searchTags(text: string): Observable<string[]> {
         return Observable.create(
             observer => {
                 const requestSubscription = this._kalturaServerClient.request(

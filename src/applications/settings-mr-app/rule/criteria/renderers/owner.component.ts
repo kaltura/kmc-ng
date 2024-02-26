@@ -3,7 +3,6 @@ import {Observable, Subject} from 'rxjs';
 import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
 import {ISubscription} from 'rxjs/Subscription';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
-import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {
     ESearchSearchUserAction,
     KalturaClient,
@@ -98,8 +97,7 @@ export class CriteriaOwnerComponent implements OnDestroy{
         this.onDelete.emit('owners');
     }
 
-    private searchUsers(text : string)
-    {
+    private searchUsers(text : string) {
         return Observable.create(
             observer => {
                 const requestSubscription: ISubscription = this._kalturaServerClient.request(
