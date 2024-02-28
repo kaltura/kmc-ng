@@ -19,6 +19,86 @@
     display: flex;
     flex-flow: row wrap;
     margin: 0px;
+    .kBulkOperations {
+        display: flex;
+        align-items: center;
+    }
+    .kSelectedReviewsLabel {
+        font-weight: bold;
+        margin-right: 24px;
+        margin-left: 5px;
+    }
+    .kBulkActions{
+        display: flex;
+        align-items: center;
+        .kBulkDeleteBtn{
+            margin-right: 10px;
+            width: 44px;
+            font-size: 24px;
+        }
+        .kBulkActionsBtn{
+            font-weight: 400;
+            font-size: 15px;
+            ::ng-deep .p-button-icon {
+                font-size: 12px;
+                margin-left: auto;
+                padding-left: 8px;
+            }
+        }
+    }
+    .kBulkCancel {
+        margin-left: 8px;
+    }
+    .kExportBtn {
+        margin-right: 8px;
+        margin-left: 8px;
+        ::ng-deep .p-button-icon {
+            font-size: 24px;
+        }
+    }
+    .kSearchInput {
+        background: $kMagnifyingGlassBkg;
+        margin-right: 16px;
+        margin-left: auto;
+        padding: 9px 4px 8px 38px;
+        width: 200px;
+        &::placeholder {
+            color: $kGrayscale3;
+            opacity: 1;
+        }
+        &:-ms-input-placeholder {
+            color: $kGrayscale3;
+        }
+        &::-ms-input-placeholder {
+            color: $kGrayscale3;
+        }
+    }
+    .kRefine {
+        display: flex;
+        height: 32px;
+        width: 100px;
+        align-items: center;
+        cursor: pointer;
+        color: $kGrayscale1;
+        position: relative;
+        padding: 0 24px 0px 0px;
+        margin-right: 8px;
+        font-weight: 700;
+        i {
+            margin-right: 12px;
+            margin-left: 8px;
+            color: $kGrayscale3;
+        }
+        .kIconfilter {
+            font-size: 24px;
+        }
+        .dropdown {
+            font-size: 10px;
+            position: absolute;
+            right: 4px;
+            top: 12px;
+        }
+    }
     .kProfilesHolder {
         height: 100%;
         border: none;
@@ -39,7 +119,6 @@
         width: 40px;
         outline: 0;
         color: $kGrayscale3;
-        margin-left: auto;
         &:active {
             box-shadow: none;
             transform: rotate(45deg);
@@ -52,6 +131,7 @@
     .kFiltersWrapper {
         display: block;
         height: 66px;
+        overflow: hidden;
     }
     .kProfilesTableFilters {
         color: $kGrayscale1;

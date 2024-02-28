@@ -133,14 +133,23 @@ export class MrStoreService implements OnDestroy {
 
     // ------------------------- Object State API ---------------------------- //
 
-    public loadObjectStates(pageSize: number, pageIndex: number, sortField: string, sortOrder: number): Observable<LoadObjectStateResponse> {
+    public loadObjectStates(pageSize: number, pageIndex: number, sortField: string, sortOrder: number, query: any = {}): Observable<LoadObjectStateResponse> {
         const pager: KalturaPager = {
             pageIndex,
             pageSize
         }
         const orderBy = sortOrder === SortDirection.Desc ? `-${sortField}` : `${sortField}`;
+        const filter = {pager, orderBy};
+        if (query.freetext) {
+            filter['objectName'] = query.freetext;
+        }
+        ['createdAtLessThanOrEqual', 'createdAtGreaterThanOrEqual'].forEach(key => {
+            if (query[key]) {
+                filter[key] = query[key];
+            }
+        })
         try {
-            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/objectState/list`, {pager, orderBy}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadObjectStateResponse>;
+            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/objectState/list`, filter, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadObjectStateResponse>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to load object state list'));
         }

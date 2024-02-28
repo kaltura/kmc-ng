@@ -1,0 +1,34 @@
+<div class="kOverrideFAIcons kRefineFilters">
+  <kScrollToTopContainer #refine class="kTreeContainer">
+      <div class="kFiltersGroupTitle">
+          <span>{{'applications.content.dropFolders.filters.additionalFilters' | translate | uppercase}}</span>
+      </div>
+      <p>{{'applications.settings.mr.filter.added' | translate}}</p>
+    <div class="kDateRange">
+
+      <p-calendar class="kDateRangeFirst" [(ngModel)]="_createdAfter" [readonlyInput]="true" [showIcon]="true"
+                  [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange" [dateFormat]="_calendarFormat"
+                  icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
+      <p-calendar class="kDateRangeLast kPullLeft30" [(ngModel)]="_createdBefore" [readonlyInput]="true" [dateFormat]="_calendarFormat"
+                  [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
+                  icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
+    </div>
+    <a class="kClearDates" (click)="_clearCreatedComponents()" [class.kDisabledLink]="!_createdAfter && !_createdBefore">
+        {{'applications.content.dropFolders.filters.clearDates' | translate}}
+    </a>
+    <span *ngIf="_createdAtFilterError" class="kError">{{_createdAtFilterError}}</span>
+
+
+
+  </kScrollToTopContainer>
+
+  <p>
+    <a class="clearAll" (click)="_clearAllComponents()">
+      {{'applications.content.dropFolders.filters.clearAll' | translate}}
+    </a>
+    <a class="kClose" (click)="_close()">
+      {{'applications.content.bulkUpload.filters.close' | translate}}
+    </a>
+  </p>
+</div>
+

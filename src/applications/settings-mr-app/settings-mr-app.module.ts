@@ -4,12 +4,13 @@ import { SettingsMrComponent } from './settings-mr.component';
 import { routing } from './settings-mr-app.routes';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule, PopupWidgetModule, InputHelperModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule, PopupWidgetModule, InputHelperModule, TagsModule } from '@kaltura-ng/kaltura-ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
+import { CalendarModule } from 'primeng/calendar';
 import { MenuModule } from 'primeng/menu';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TieredMenuModule } from 'primeng/tieredmenu';
@@ -32,6 +33,9 @@ import { CriteriaComponent } from './rule/criteria/criteria.component';
 import { CriteriaCreatedComponent, CriteriaPlayedComponent, CriteriaDurationComponent, CriteriaPlaysComponent,
          CriteriaCategoriesComponent, CriteriaTagsComponent, CriteriaOwnerComponent } from './rule/criteria/renderers';
 import { CategoriesSelector } from './rule/category-selector/categories-selector.component';
+import {KMCPermissionsModule} from 'app-shared/kmc-shared/kmc-permissions';
+import {ReviewTagsComponent} from './review/review-tags/review-tags.component';
+import {ReviewRefineFiltersComponent} from './review/review-refine-filters/review-refine-filters.component';
 
 @NgModule({
     imports: [
@@ -44,9 +48,11 @@ import { CategoriesSelector } from './rule/category-selector/categories-selector
         TooltipModule,
         InputSwitchModule,
         PopupWidgetModule,
+        TagsModule,
         InputHelperModule,
         CategoriesModule,
         CheckboxModule,
+        CalendarModule,
         InputNumberModule,
         ButtonModule,
         TieredMenuModule,
@@ -60,12 +66,15 @@ import { CategoriesSelector } from './rule/category-selector/categories-selector
         DateFormatModule,
         KalturaPrimeNgUIModule,
         LocalizationModule,
-        AutoCompleteModule
+        AutoCompleteModule,
+        KMCPermissionsModule
     ],
   declarations: [
       SettingsMrComponent,
       RulesComponent,
       ReviewComponent,
+      ReviewTagsComponent,
+      ReviewRefineFiltersComponent,
       LogsComponent,
       MrSectionsList,
       DeleteRuleComponent,

@@ -3535,7 +3535,7 @@
                 "deleteMsg": "Are you sure you want to delete this rule? You can't undo this action.",
                 "noCriteriaHeader": "No criteria",
                 "noCriteriaMsg": "All criteria for this rule have been removed. As a result, the rule will be disabled automatically. Do you wish to continue?",
-                "cannotEnable": "No criteria found for this rule. Please define at least one criteria before enabling.",
+                "cannotEnable": "No criteria found for this rule. To enable, please define at least one criteria.",
                 "newRule": "Add new rule",
                 "rulesNum": "{{0}} Rules",
                 "entriesNum": "{{0}} Entries",
@@ -3551,6 +3551,10 @@
                 "approve": "Approve",
                 "deny": "Deny",
                 "perform": "Perform now",
+                "notify": "Notify owner",
+                "filter": {
+                    "added": "Added between"
+                },
                 "criteria": {
                     "header": "Criteria",
                     "title": "Add criteria to define how entries would be selected. To perform a rule, all criteria must be met.",
