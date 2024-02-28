@@ -115,8 +115,26 @@ export class RuleComponent implements OnInit {
     }
 
     public save(): void {
+        // check for missing criteria in enabled rule
+        if (this.rule.status === 'enabled' && Object.keys(this.rule.objectFilter).length === 0) {
+            this._browserService.confirm(
+                {
+                    header: this._appLocalization.get('applications.settings.mr.noCriteriaHeader'),
+                    message: this._appLocalization.get('applications.settings.mr.noCriteriaMsg'),
+                    accept: () => {
+                        this.rule.status = 'disabled';
+                        this.doSave();
+                    }
+                }
+            );
+        } else {
+            this.doSave();
+        }
+    }
+
+    private doSave(): void {
         delete this.rule.partnerId; // remove partner as it is read only and cannot be saved
-        this.rule.runningCadence.advancedCadence = {};
+        this.rule.runningCadence.advancedCadence = {}; // TODO: handle scheduling
         // remove empty objectsFilter
         if (Object.keys(this.rule.objectFilter).length === 0) {
             this.rule.objectFilter = {};

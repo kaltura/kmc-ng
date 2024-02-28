@@ -41,6 +41,7 @@ export class RulesComponent implements OnInit, OnDestroy {
     constructor(private _mrStore: MrStoreService,
                 private _logger: KalturaLogger,
                 private _router: Router,
+                private _browserService: BrowserService,
                 private _mrMainViewService: SettingsMrMainViewService,
                 public _columnsResizeManager: ColumnsResizeManagerService,
                 private _appLocalization: AppLocalization,
@@ -129,12 +130,30 @@ export class RulesComponent implements OnInit, OnDestroy {
 
     private _actionSelected(action: string, profile: ManagedTasksProfile): void {
         switch (action) {
+            case "enable-disable":
+                this.toggleStatus(profile);
+                break;
             case "edit":
                 this._editProfile(profile);
                 break;
             case "delete":
                 this.deletePopup.open();
                 break;
+        }
+    }
+
+    private toggleStatus(profile: ManagedTasksProfile): void {
+        // prevent enabling profile wi no criteria
+        if (profile.status === 'disabled' && (typeof profile.objectFilter === "undefined" || Object.keys(profile.objectFilter).length === 0)) {
+            this._browserService.alert(
+                {
+                    header: this._appLocalization.get('applications.settings.mr.noCriteriaHeader'),
+                    message: this._appLocalization.get('applications.settings.mr.cannotEnable')
+                }
+            );
+        } else {
+            this._currentEditProfile.status = profile.status === 'enabled' ? 'disabled' : 'enabled';
+            this.updateProfile(this._currentEditProfile);
         }
     }
 
@@ -161,28 +180,29 @@ export class RulesComponent implements OnInit, OnDestroy {
         this._router.navigateByUrl(`/settings/mr/rule/${profile.id}`);
     }
 
+    private displayError(error: string): void {
+        this._isBusy = false;
+        this._blockerMessage = new AreaBlockerMessage({
+            message: error?.length ? error : this._appLocalization.get('applications.settings.mr.deleteError'),
+            buttons: [
+                {
+                    label: this._appLocalization.get('app.common.close'),
+                    action: () => {
+                        this._blockerMessage = null;
+                    }
+                }
+            ]
+        });
+    }
+
     public deleteProfile(): void {
         this._blockerMessage = null;
         this._isBusy = true;
-        const displayError = (error: string) => {
-            this._isBusy = false;
-            this._blockerMessage = new AreaBlockerMessage({
-                message: error?.length ? error : this._appLocalization.get('applications.settings.mr.deleteError'),
-                buttons: [
-                    {
-                        label: this._appLocalization.get('app.common.close'),
-                        action: () => {
-                            this._blockerMessage = null;
-                        }
-                    }
-                ]
-            });
-        }
         this._mrStore.deleteProfile(this._currentEditProfile.id).subscribe(
             (response) => {
                 if (response && response.objectType && response.objectType === "KalturaAPIException") {
                     // error returned from the server in the response
-                    displayError(response.message ? response.message : '');
+                    this.displayError(response.message ? response.message : '');
                 } else {
                     // success
                     this._currentEditProfile = null;
@@ -191,7 +211,28 @@ export class RulesComponent implements OnInit, OnDestroy {
                 }
             },
             error => {
-                displayError('');
+                this.displayError('');
+            }
+        )
+    }
+
+    private updateProfile(profile: ManagedTasksProfile): void {
+        this._blockerMessage = null;
+        this._isBusy = true;
+        delete profile.partnerId;
+        profile.runningCadence.advancedCadence = {}; // TODO: handle scheduling
+        this._mrStore.updateProfile(profile).subscribe(
+            (response) => {
+                if (response && response.objectType && response.objectType === "KalturaAPIException") {
+                    // error returned from the server in the response
+                    this.displayError(response.message ? response.message : this._appLocalization.get('applications.settings.mr.saveError'));
+                } else {
+                    // success
+                    this._refresh();
+                }
+            },
+            error => {
+                this.displayError(this._appLocalization.get('applications.settings.mr.saveError'));
             }
         )
     }
