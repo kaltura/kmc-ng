@@ -3554,7 +3554,8 @@
                 "notify": "Notify owner",
                 "filter": {
                     "added": "Added between",
-                    "action": "Action between"
+                    "action": "Action between",
+                    "mediaType": "Media type"
                 },
                 "criteria": {
                     "header": "Criteria",

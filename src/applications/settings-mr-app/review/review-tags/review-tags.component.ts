@@ -37,6 +37,7 @@ export class ReviewTagsComponent implements OnInit, OnDestroy {
         this._syncTagOfFreetext(query);
         this._syncTagOfCreatedAt(query);
         this._syncTagOfActionAt(query);
+        this._syncTagOfMediaType(query);
     }
 
     private _syncTagOfFreetext(query: any): void {
@@ -95,6 +96,30 @@ export class ReviewTagsComponent implements OnInit, OnDestroy {
             }
             this._filterTags.push({type: 'actionAt', value: null, label: 'Action between', tooltip});
         }
+    }
+
+    private _syncTagOfMediaType(query: any): void {
+        const previousItem = this._filterTags.findIndex(item => item.type === 'mediaType');
+        if (previousItem !== -1) {
+            this._filterTags.splice(previousItem, 1);
+        }
+        let tooltip = '';
+        if (query.objectSubTypeIn.indexOf("1") > -1) {
+            tooltip = 'Video';
+        }
+        if (query.objectSubTypeIn.indexOf("2") > -1) {
+            tooltip += ', Image';
+        }
+        if (query.objectSubTypeIn.indexOf("5") > -1) {
+            tooltip += ', Audio';
+        }
+        if (query.objectSubTypeIn.indexOf("201") > -1) {
+            tooltip += ', Live';
+        }
+        if (tooltip.indexOf(', ') === 0) {
+            tooltip = tooltip.substring(2, tooltip.length);
+        }
+        this._filterTags.push({type: 'mediaType', value: null, label: 'Media Type', tooltip});
     }
 
     public onTagsChange(event): void {

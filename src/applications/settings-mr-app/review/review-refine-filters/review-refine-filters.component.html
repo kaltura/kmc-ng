@@ -39,6 +39,15 @@
         </a>
         <span *ngIf="_actionAtFilterError" class="kError">{{ _actionAtFilterError }}</span>
 
+        <p>{{ 'applications.settings.mr.filter.mediaType' | translate }}</p>
+        <div class="checkBoxes">
+            <p-checkbox name="mediaType" value="1" label="{{'applications.content.entryType.video' | translate}}" [(ngModel)]="_mediaTypes" (ngModelChange)="onMediaTypeChange()"></p-checkbox>
+            <p-checkbox name="mediaType" value="2" label="{{'applications.content.entryType.image' | translate}}" [(ngModel)]="_mediaTypes" (ngModelChange)="onMediaTypeChange()"></p-checkbox>
+            <p-checkbox name="mediaType" value="5" label="{{'applications.content.entryType.audio' | translate}}" [(ngModel)]="_mediaTypes" (ngModelChange)="onMediaTypeChange()"></p-checkbox>
+            <p-checkbox name="mediaType" value="201" label="{{'applications.content.entryType.live' | translate}}" [(ngModel)]="_mediaTypes" (ngModelChange)="onMediaTypeChange()"></p-checkbox>
+        </div>
+
+
     </kScrollToTopContainer>
 
     <p>

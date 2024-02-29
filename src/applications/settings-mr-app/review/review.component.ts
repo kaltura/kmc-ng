@@ -216,6 +216,9 @@ export class ReviewComponent implements OnInit {
             delete this._query.plannedExecutionTimeLessThanOrEqual;
             delete this._query.plannedExecutionTimeGreaterThanOrEqual;
         }
+        if (type === 'mediaType') {
+            delete this._query.objectSubTypeIn;
+        }
         this._refresh();
     }
 

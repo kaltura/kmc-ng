@@ -23,9 +23,10 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
     public _actionBefore: Date = null;
     public _actionAtFilterError: string = null;
 
-
     public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
     public _calendarFormat = this._browserService.getCurrentDateFormat(true);
+
+    public _mediaTypes: number[] = [];
 
     constructor(private _browserService: BrowserService,
                 private _appLocalization: AppLocalization) {
@@ -43,6 +44,9 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
         }
         if (this.query.plannedExecutionTimeGreaterThanOrEqual) {
             this._actionAfter = new Date(this.query.plannedExecutionTimeGreaterThanOrEqual);
+        }
+        if (this.query.objectSubTypeIn) {
+            this._mediaTypes = this.query.objectSubTypeIn;
         }
     }
 
@@ -63,7 +67,8 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
         this._actionBefore = null;
         this._actionAfter = null;
         this._actionAtFilterError = '';
-        this.onFilterRemoved.emit(['createdAtLessThanOrEqual', 'createdAtGreaterThanOrEqual', 'plannedExecutionTimeLessThanOrEqual', 'plannedExecutionTimeGreaterThanOrEqual']);
+        this._mediaTypes = [];
+        this.onFilterRemoved.emit(['createdAtLessThanOrEqual', 'createdAtGreaterThanOrEqual', 'plannedExecutionTimeLessThanOrEqual', 'plannedExecutionTimeGreaterThanOrEqual', 'objectSubTypeIn']);
     }
 
     public _clearCreatedComponents(): void {
@@ -88,6 +93,15 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
     public _onActionChanged(filter: string): void {
         this._actionAtFilterError = this._actionBefore && this._actionAfter && this._actionBefore < this._actionAfter ? this._appLocalization.get('applications.content.entryDetails.errors.datesRangeError') : '';
         this.onFilterAdded.emit({filter, value: filter === 'plannedExecutionTimeLessThanOrEqual' ? this._actionBefore.toString() : this._actionAfter.toString()});
+    }
+
+    public onMediaTypeChange(): void {
+        if (this._mediaTypes.length) {
+            this.onFilterAdded.emit({filter: 'objectSubTypeIn', value: this._mediaTypes});
+        } else {
+            this.onFilterRemoved.emit(['objectSubTypeIn']);
+        }
+
     }
 
     public _close() {

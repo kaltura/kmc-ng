@@ -34,6 +34,14 @@
   margin-right: -20px;
   position: relative;
   overflow: visible;
+    .checkBoxes {
+        display: flex;
+        flex-direction: column;
+        padding-left: 24px;
+        p-checkbox {
+            margin-bottom: 12px;
+        }
+    }
 }
 
 .kDateRange {
