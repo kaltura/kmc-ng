@@ -39,18 +39,18 @@ export class ReviewTagsComponent implements OnInit, OnDestroy {
   }
 
   private _syncTagOfFreetext(query: any): void {
-    const previousItem = this._filterTags.findIndex(item => item.type === 'freetext');
+    const previousItem = this._filterTags.findIndex(item => item.type === 'objectName');
     if (previousItem !== -1) {
       this._filterTags.splice(
         previousItem,
         1);
     }
 
-    const currentFreetextValue = query['freetext'];
+    const currentFreetextValue = query['objectName'];
 
     if (currentFreetextValue) {
       this._filterTags.push({
-        type: 'freetext',
+        type: 'objectName',
         value: currentFreetextValue,
         label: currentFreetextValue,
         tooltip: this._appLocalization.get(`applications.content.filters.freeText`)
@@ -74,7 +74,7 @@ export class ReviewTagsComponent implements OnInit, OnDestroy {
             } else if (createdAtLessThanOrEqual) {
                 tooltip = `Until ${(new DatePipe(this._browserService)).transform(new Date(createdAtLessThanOrEqual).getTime(), 'longDateOnly')}`;
             }
-            this._filterTags.push({type: 'createdAt', value: null, label: 'Dates', tooltip});
+            this._filterTags.push({type: 'createdAt', value: null, label: 'Added between', tooltip});
         }
     }
 

@@ -16,7 +16,7 @@
                         <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
                     </div>
                     <input type="text" pInputText class="kSearchInput" [class.kHidden]="_selectedReviews.length"
-                           [(ngModel)]="_query.freetext"
+                           [(ngModel)]="_freeTextSearch"
                            (keyup.enter)="_onFreetextChanged()"
                            placeholder="{{'applications.content.dropFolders.search' | translate}}">
                     <div #refineBtn class="kRefine kDropdown" [class.kHidden]="_selectedReviews.length">

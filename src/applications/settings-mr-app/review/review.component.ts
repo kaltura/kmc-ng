@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {SettingsMrMainViewService} from 'app-shared/kmc-shared/kmc-views';
 import {
+    KalturaPager,
     LoadManagedTasksProfilesResponse,
     LoadObjectStateResponse, ManagedTasksProfile,
     MrStoreService,
@@ -41,9 +42,9 @@ export class ReviewComponent implements OnInit {
     public _rowTrackBy: Function = (index: number, item: any) => item.id;
     public _items: MenuItem[];
     public _bulkActionsMenu: MenuItem[] = [];
-    public _query: any = {
-        freetext: ''
-    };
+    public _query: any = {};
+
+    public _freeTextSearch = '';
 
     constructor(private _mrMainViewService: SettingsMrMainViewService,
                 public _columnsResizeManager: ColumnsResizeManagerService,
@@ -80,7 +81,14 @@ export class ReviewComponent implements OnInit {
         this._blockerMessage = null;
         this._isBusy = true;
         this._reviews = [];
-        this._mrStore.loadObjectStates(pageSize, pageIndex, sortField, sortOrder, this._query).subscribe(
+        const pager: KalturaPager = {
+            pageIndex,
+            pageSize
+        }
+        const orderBy = sortOrder === SortDirection.Desc ? `-${sortField}` : `${sortField}`;
+        let filter = {pager, orderBy};
+        filter = Object.assign(filter, this._query);
+        this._mrStore.loadObjectStates(filter).subscribe(
             (response: LoadObjectStateResponse) => {
                 if (response.objects?.length) {
                     this._reviews = response.objects as ObjectState[];
@@ -190,17 +198,15 @@ export class ReviewComponent implements OnInit {
     }
 
     public onAllTagsRemoved(): void {
-        this._query = {
-            freetext: ''
-        };
+        this._freeTextSearch = '';
+        this._query = {};
         this._refresh();
     }
 
     public onTagRemoved(type: string): void {
-        if (type === 'freetext') {
-            this._query = {
-                freetext: ''
-            };
+        if (type === 'objectName') {
+            this._freeTextSearch = '';
+            delete this._query.objectName;
         }
         if (type === 'createdAt') {
             delete this._query.createdAtLessThanOrEqual;
@@ -234,18 +240,17 @@ export class ReviewComponent implements OnInit {
 
     public _onFreetextChanged(): void {
         // prevent searching for empty strings
-        if (this._query.freetext.length > 0 && this._query.freetext.trim().length === 0){
-            this._query.freetext = '';
+        if (this._freeTextSearch.length  === 0){
+            delete this._query.objectName;
         }else {
-            this._refresh();
+            this._query.objectName = this._freeTextSearch;
         }
+        this._refresh();
         this.updateTags();
     }
 
     public onFilterChange(event) {
-        const freeText = this._query.freetext;
         this._query = Object.assign({}, event);
-        this._query.freetext = freeText;
         this.updateTags();
         this._refresh();
     }
