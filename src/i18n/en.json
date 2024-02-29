@@ -3553,7 +3553,8 @@
                 "perform": "Perform now",
                 "notify": "Notify owner",
                 "filter": {
-                    "added": "Added between"
+                    "added": "Added between",
+                    "action": "Action between"
                 },
                 "criteria": {
                     "header": "Criteria",

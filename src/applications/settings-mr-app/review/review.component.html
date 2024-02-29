@@ -149,8 +149,8 @@
 <p-tieredMenu #menu kMenuCloseOnScroll [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"
               [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'"></p-tieredMenu>
 
-<kPopupWidget #refinePopup data-aid="reviewsRefinePopup" [popupWidth]="350" [popupHeight]="300" [closeBtn]="false" [targetRef]="refineBtn" [targetOffset]="{'x':-224, 'y': -20}">
+<kPopupWidget #refinePopup data-aid="reviewsRefinePopup" [popupWidth]="350" [popupHeight]="600" [closeBtn]="false" [targetRef]="refineBtn" [targetOffset]="{'x':-224, 'y': -20}">
     <ng-template>
-        <k-review-refine-filters [parentPopupWidget]="refinePopup" [query]="_query" (onFilterChange)="onFilterChange($event)"></k-review-refine-filters>
+        <k-review-refine-filters [parentPopupWidget]="refinePopup" [query]="_query" (onFilterAdded)="onFilterAdded($event)" (onFilterRemoved)="onFilterRemoved($event)"></k-review-refine-filters>
     </ng-template>
 </kPopupWidget>

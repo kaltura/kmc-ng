@@ -212,6 +212,10 @@ export class ReviewComponent implements OnInit {
             delete this._query.createdAtLessThanOrEqual;
             delete this._query.createdAtGreaterThanOrEqual;
         }
+        if (type === 'actionAt') {
+            delete this._query.plannedExecutionTimeLessThanOrEqual;
+            delete this._query.plannedExecutionTimeGreaterThanOrEqual;
+        }
         this._refresh();
     }
 
@@ -249,10 +253,24 @@ export class ReviewComponent implements OnInit {
         this.updateTags();
     }
 
-    public onFilterChange(event) {
-        this._query = Object.assign({}, event);
+    public onFilterAdded(event: {filter: string, value: any}) {
+        this._query[event.filter] = event.value;
         this.updateTags();
         this._refresh();
+    }
+
+    public onFilterRemoved(filters: string[]) {
+        let needRefresh = false;
+        filters.forEach(filter => {
+            if (this._query[filter]) {
+                delete this._query[filter];
+                needRefresh = true;
+            }
+        })
+        if (needRefresh) {
+            this.updateTags();
+            this._refresh();
+        }
     }
 }
 

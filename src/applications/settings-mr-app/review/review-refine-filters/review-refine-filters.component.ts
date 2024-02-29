@@ -12,11 +12,18 @@ import {BrowserService} from 'app-shared/kmc-shell/providers';
 export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
     @Input() parentPopupWidget: PopupWidgetComponent;
     @Input() query: any;
-    @Output() onFilterChange = new EventEmitter<any>();
+    @Output() onFilterAdded = new EventEmitter<{filter: string, value: any}>();
+    @Output() onFilterRemoved = new EventEmitter<string[]>();
 
     public _createdAfter: Date = null;
     public _createdBefore: Date = null;
     public _createdAtFilterError: string = null;
+
+    public _actionAfter: Date = null;
+    public _actionBefore: Date = null;
+    public _actionAtFilterError: string = null;
+
+
     public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
     public _calendarFormat = this._browserService.getCurrentDateFormat(true);
 
@@ -30,6 +37,12 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
         }
         if (this.query.createdAtGreaterThanOrEqual) {
             this._createdAfter = new Date(this.query.createdAtGreaterThanOrEqual);
+        }
+        if (this.query.plannedExecutionTimeLessThanOrEqual) {
+            this._actionBefore = new Date(this.query.plannedExecutionTimeLessThanOrEqual);
+        }
+        if (this.query.plannedExecutionTimeGreaterThanOrEqual) {
+            this._actionAfter = new Date(this.query.plannedExecutionTimeGreaterThanOrEqual);
         }
     }
 
@@ -47,30 +60,34 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
         this._createdBefore = null;
         this._createdAfter = null;
         this._createdAtFilterError = '';
-        this._onCreatedChanged();
+        this._actionBefore = null;
+        this._actionAfter = null;
+        this._actionAtFilterError = '';
+        this.onFilterRemoved.emit(['createdAtLessThanOrEqual', 'createdAtGreaterThanOrEqual', 'plannedExecutionTimeLessThanOrEqual', 'plannedExecutionTimeGreaterThanOrEqual']);
     }
 
     public _clearCreatedComponents(): void {
         this._createdBefore = null;
         this._createdAfter = null;
         this._createdAtFilterError = '';
-        this._onCreatedChanged();
+        this.onFilterRemoved.emit(['createdAtLessThanOrEqual', 'createdAtGreaterThanOrEqual']);
     }
 
-    public _onCreatedChanged(): void {
+    public _clearActionComponents(): void {
+        this._actionBefore = null;
+        this._actionAfter = null;
+        this._actionAtFilterError = '';
+        this.onFilterRemoved.emit(['plannedExecutionTimeLessThanOrEqual', 'plannedExecutionTimeGreaterThanOrEqual']);
+    }
+
+    public _onCreatedChanged(filter: string): void {
         this._createdAtFilterError = this._createdBefore && this._createdAfter && this._createdBefore < this._createdAfter ? this._appLocalization.get('applications.content.entryDetails.errors.datesRangeError') : '';
-        const changes: any = {}
-        if (this._createdBefore) {
-            changes.createdAtLessThanOrEqual = this._createdBefore.toString();
-        } else {
-            delete changes.createdAtLessThanOrEqual;
-        }
-        if (this._createdAfter) {
-            changes.createdAtGreaterThanOrEqual = this._createdAfter.toString();
-        } else {
-            delete changes._createdAfter;
-        }
-        this.onFilterChange.emit(changes);
+        this.onFilterAdded.emit({filter, value: filter === 'createdAtLessThanOrEqual' ? this._createdBefore.toString() : this._createdAfter.toString()});
+    }
+
+    public _onActionChanged(filter: string): void {
+        this._actionAtFilterError = this._actionBefore && this._actionAfter && this._actionBefore < this._actionAfter ? this._appLocalization.get('applications.content.entryDetails.errors.datesRangeError') : '';
+        this.onFilterAdded.emit({filter, value: filter === 'plannedExecutionTimeLessThanOrEqual' ? this._actionBefore.toString() : this._actionAfter.toString()});
     }
 
     public _close() {
