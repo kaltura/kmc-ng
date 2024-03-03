@@ -3555,7 +3555,12 @@
                 "filter": {
                     "added": "Added between",
                     "action": "Action between",
-                    "mediaType": "Media type"
+                    "mediaType": "Media type",
+                    "status": "Approval status",
+                    "auto": "Auto",
+                    "pending": "Pending approval",
+                    "rejected": "Rejected",
+                    "approved": "Approved"
                 },
                 "criteria": {
                     "header": "Criteria",

@@ -68,6 +68,18 @@
         </div>
 
 
+        <div class="filterTitleToggle" (click)="_statusOpened = !_statusOpened">
+            <i class="kIcontree-arrow-right" [class.open]="_statusOpened"></i>
+            <span class="kFilterLabel">{{ 'applications.settings.mr.filter.status' | translate }}</span>
+        </div>
+        <div class="checkBoxes" [class.open]="_statusOpened">
+            <p-checkbox name="status" value="auto" label="{{'applications.settings.mr.filter.auto' | translate}}" [(ngModel)]="_status" (ngModelChange)="onStatusTypeChange()"></p-checkbox>
+            <p-checkbox name="status" value="pendingApproval" label="{{'applications.settings.mr.filter.pending' | translate}}" [(ngModel)]="_status" (ngModelChange)="onStatusTypeChange()"></p-checkbox>
+            <p-checkbox name="status" value="rejected" label="{{'applications.settings.mr.filter.rejected' | translate}}" [(ngModel)]="_status" (ngModelChange)="onStatusTypeChange()"></p-checkbox>
+            <p-checkbox name="status" value="approved" label="{{'applications.settings.mr.filter.approved' | translate}}" [(ngModel)]="_status" (ngModelChange)="onStatusTypeChange()"></p-checkbox>
+        </div>
+
+
     </kScrollToTopContainer>
 
     <p>

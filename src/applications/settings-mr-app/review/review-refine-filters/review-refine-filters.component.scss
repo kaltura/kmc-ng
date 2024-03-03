@@ -30,14 +30,15 @@
 }
 
 .kTreeContainer {
-    height: 555px;
+    height: 355px;
+    width: 338px;
     border-bottom: 1px solid $kGrayscale6;
     margin-left: -20px;
     padding-left: 20px;
     margin-right: -20px;
     position: relative;
-    overflow: visible;
-
+    overflow-y: auto;
+    overflow-x: hidden;
     .kFilterLabel {
         font-size: 14px;
         font-weight: 700;

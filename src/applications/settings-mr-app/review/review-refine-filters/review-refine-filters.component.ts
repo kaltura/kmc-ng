@@ -35,6 +35,8 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
     public _filterDurationLess = false;
     public _durationOpen =false;
 
+    public _status: string[] = [];
+    public _statusOpened = false;
 
     constructor(private _browserService: BrowserService,
                 private _appLocalization: AppLocalization) {
@@ -55,14 +57,21 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
         }
         if (this.query.objectSubTypeIn) {
             this._mediaTypes = this.query.objectSubTypeIn;
+            this._mediaTypeOpened = true;
         }
         if (typeof this.query.objectDurationLessThan !== "undefined") {
             this._filterDurationLess = true;
             this._durationLess = this.query.objectDurationLessThan;
+            this._durationOpen = true;
         }
         if (typeof this.query.objectDurationGreaterThan !== "undefined") {
             this._filterDurationMore = true;
             this._durationMore = this.query.objectDurationGreaterThan;
+            this._durationOpen = true;
+        }
+        if (this.query.statusIn) {
+            this._status = this.query.statusIn;
+            this._statusOpened = true;
         }
     }
 
@@ -86,7 +95,8 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
         this._mediaTypes = [];
         this._filterDurationLess = false;
         this._filterDurationMore = false;
-        this.onFilterRemoved.emit(['createdAtLessThanOrEqual', 'createdAtGreaterThanOrEqual', 'plannedExecutionTimeLessThanOrEqual', 'plannedExecutionTimeGreaterThanOrEqual', 'objectSubTypeIn', 'objectDurationLessThan', 'objectDurationGreaterThan']);
+        this._status = [];
+        this.onFilterRemoved.emit(['createdAtLessThanOrEqual', 'createdAtGreaterThanOrEqual', 'plannedExecutionTimeLessThanOrEqual', 'plannedExecutionTimeGreaterThanOrEqual', 'objectSubTypeIn', 'objectDurationLessThan', 'objectDurationGreaterThan', 'statusIn']);
     }
 
     public _clearCreatedComponents(): void {
@@ -135,6 +145,14 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
             } else {
                 this.onFilterRemoved.emit(['objectDurationGreaterThan']);
             }
+        }
+    }
+
+    public onStatusTypeChange(): void {
+        if (this._status.length) {
+            this.onFilterAdded.emit({filter: 'statusIn', value: this._status});
+        } else {
+            this.onFilterRemoved.emit(['statusIn']);
         }
     }
 

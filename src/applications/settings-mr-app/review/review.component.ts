@@ -223,6 +223,9 @@ export class ReviewComponent implements OnInit {
             delete this._query.objectDurationLessThan;
             delete this._query.objectDurationGreaterThan;
         }
+        if (type === 'status') {
+            delete this._query.statusIn;
+        }
         this._refresh();
     }
 

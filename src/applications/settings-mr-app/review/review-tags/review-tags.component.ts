@@ -39,6 +39,7 @@ export class ReviewTagsComponent implements OnInit, OnDestroy {
         this._syncTagOfActionAt(query);
         this._syncTagOfMediaType(query);
         this._syncTagOfDuration(query);
+        this._syncTagOfStatus(query);
     }
 
     private _syncTagOfFreetext(query: any): void {
@@ -122,6 +123,32 @@ export class ReviewTagsComponent implements OnInit, OnDestroy {
                 tooltip = tooltip.substring(2, tooltip.length);
             }
             this._filterTags.push({type: 'mediaType', value: null, label: 'Media Type', tooltip});
+        }
+    }
+
+    private _syncTagOfStatus(query: any): void {
+        const previousItem = this._filterTags.findIndex(item => item.type === 'status');
+        if (previousItem !== -1) {
+            this._filterTags.splice(previousItem, 1);
+        }
+        if (query.statusIn) {
+            let tooltip = '';
+            if (query.statusIn.indexOf("auto") > -1) {
+                tooltip = 'Auto';
+            }
+            if (query.statusIn.indexOf("pendingApproval") > -1) {
+                tooltip += ', Pending approval';
+            }
+            if (query.statusIn.indexOf("rejected") > -1) {
+                tooltip += ', Rejected';
+            }
+            if (query.statusIn.indexOf("approved") > -1) {
+                tooltip += ', Approved';
+            }
+            if (tooltip.indexOf(', ') === 0) {
+                tooltip = tooltip.substring(2, tooltip.length);
+            }
+            this._filterTags.push({type: 'status', value: null, label: 'Approval status', tooltip});
         }
     }
 
