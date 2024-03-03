@@ -229,6 +229,9 @@ export class ReviewComponent implements OnInit {
         if (type === 'rules') {
             delete this._query.managedTasksProfileIdIn;
         }
+        if (type === 'owner') {
+            delete this._query.ownerIdIn;
+        }
         this._refresh();
     }
 

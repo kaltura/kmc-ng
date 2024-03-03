@@ -18,13 +18,12 @@
     line-height: 40px;
     letter-spacing: 0.1em;
     font-size: 13px;
-    border-top: 1px solid $kGrayscale6;
     border-bottom: 1px solid $kGrayscale6;
     margin-left: -12px;
     padding-left: 20px;
     margin-right: -20px;
     margin-bottom: 8px;
-    margin-top: 8px;
+    margin-top: 6px;
     display: inline-block;
     width: 330px;
 }
@@ -45,11 +44,13 @@
         line-height: 40px;
     }
     .filterTitleToggle {
-        margin-top: 8px;
         margin-bottom: 4px;
         cursor: pointer;
         display: inline-flex;
         align-items: center;
+        &.marginTop {
+            margin-top: 8px;
+        }
         i {
             color: $kGrayscale3;
             margin-right: 8px;
@@ -64,12 +65,19 @@
         padding-left: 24px;
         overflow: hidden;
         max-height: 0px;
+        position: relative;
         &.open {
-            max-height: 200px;
+            max-height: 300px;
+            &.noHide {
+                overflow: visible;
+            }
         }
         transition: max-height 0.25s ease-in-out;
         p-checkbox {
             margin-bottom: 12px;
+        }
+        ::ng-deep .p-autocomplete-input-token input {
+            width: 260px;
         }
         .kCheckBoxWrapper {
             display: flex;

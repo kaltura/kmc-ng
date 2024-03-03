@@ -38,6 +38,7 @@ export class ReviewTagsComponent implements OnInit, OnDestroy {
         this._syncTagOfCreatedAt(query);
         this._syncTagOfActionAt(query);
         this._syncTagOfMediaType(query);
+        this._syncTagOfOwner(query);
         this._syncTagOfDuration(query);
         this._syncTagOfStatus(query);
         this._syncTagOfRules(query, customTooltip);
@@ -124,6 +125,21 @@ export class ReviewTagsComponent implements OnInit, OnDestroy {
                 tooltip = tooltip.substring(2, tooltip.length);
             }
             this._filterTags.push({type: 'mediaType', value: null, label: 'Media Type', tooltip});
+        }
+    }
+
+    private _syncTagOfOwner(query: any): void {
+        const previousItem = this._filterTags.findIndex(item => item.type === 'owner');
+        if (previousItem !== -1) {
+            this._filterTags.splice(previousItem, 1);
+        }
+        if (query.ownerIdIn && query.ownerIdIn.length) {
+            let tooltip = '';
+            query.ownerIdIn.forEach(owner => tooltip += owner + ', ');
+            if (tooltip.length) {
+                tooltip = tooltip.substring(0, tooltip.length -2);
+            }
+            this._filterTags.push({type: 'owner', value: null, label: 'Owner', tooltip});
         }
     }
 

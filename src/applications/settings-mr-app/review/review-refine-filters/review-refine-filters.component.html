@@ -39,7 +39,7 @@
         </a>
         <span *ngIf="_actionAtFilterError" class="kError">{{ _actionAtFilterError }}</span>
 
-        <div class="filterTitleToggle" (click)="_mediaTypeOpened = !_mediaTypeOpened">
+        <div class="filterTitleToggle marginTop" (click)="_mediaTypeOpened = !_mediaTypeOpened">
             <i class="kIcontree-arrow-right" [class.open]="_mediaTypeOpened"></i>
             <span class="kFilterLabel">{{ 'applications.settings.mr.filter.mediaType' | translate }}</span>
         </div>
@@ -48,6 +48,28 @@
             <p-checkbox name="mediaType" value="2" label="{{'applications.content.entryType.image' | translate}}" [(ngModel)]="_mediaTypes" (ngModelChange)="onMediaTypeChange()"></p-checkbox>
             <p-checkbox name="mediaType" value="5" label="{{'applications.content.entryType.audio' | translate}}" [(ngModel)]="_mediaTypes" (ngModelChange)="onMediaTypeChange()"></p-checkbox>
             <p-checkbox name="mediaType" value="201" label="{{'applications.content.entryType.live' | translate}}" [(ngModel)]="_mediaTypes" (ngModelChange)="onMediaTypeChange()"></p-checkbox>
+        </div>
+
+        <div class="filterTitleToggle" (click)="_ownerOpen = !_ownerOpen">
+            <i class="kIcontree-arrow-right" [class.open]="_ownerOpen"></i>
+            <span class="kFilterLabel">{{ 'applications.settings.mr.filter.owner' | translate }}</span>
+        </div>
+        <div class="checkBoxes noHide" [class.open]="_ownerOpen" #wrapper>
+            <kAutoComplete
+                [(ngModel)]="_owners"
+                (ngModelChange)="onOwnerChange()"
+                suggestionItemField="item"
+                suggestionLabelField="name"
+                [tooltipResolver]="'__tooltip'"
+                [classField]="'__class'"
+                field="id"
+                [allowMultiple]="true"
+                [limitToSuggestions]="false"
+                [minLength]="3"
+                suggestionSelectableField="isSelectable"
+                [suggestionsProvider]="_usersProvider"
+                (completeMethod)="_searchUsers($event, 'editors')">
+            </kAutoComplete>
         </div>
 
         <div class="filterTitleToggle" (click)="_durationOpen = !_durationOpen">
@@ -77,7 +99,6 @@
             <p-checkbox name="status" value="rejected" label="{{'applications.settings.mr.filter.rejected' | translate}}" [(ngModel)]="_status" (ngModelChange)="onStatusTypeChange()"></p-checkbox>
             <p-checkbox name="status" value="approved" label="{{'applications.settings.mr.filter.approved' | translate}}" [(ngModel)]="_status" (ngModelChange)="onStatusTypeChange()"></p-checkbox>
         </div>
-
 
         <div class="filterTitleToggle" (click)="_profilesOpened = !_profilesOpened">
             <i class="kIcontree-arrow-right" [class.open]="_profilesOpened"></i>

@@ -3560,7 +3560,8 @@
                     "auto": "Auto",
                     "pending": "Pending approval",
                     "rejected": "Rejected",
-                    "approved": "Approved"
+                    "approved": "Approved",
+                    "owner": "Owner"
                 },
                 "criteria": {
                     "header": "Criteria",
