@@ -193,8 +193,8 @@ export class ReviewComponent implements OnInit {
         console.log("preform bulk action: "+action); // TODO: implementation
     }
 
-    public updateTags(): void {
-        this.tags.updateTags(this._query);
+    public updateTags(customTooltip = ''): void {
+        this.tags.updateTags(this._query, customTooltip);
     }
 
     public onAllTagsRemoved(): void {
@@ -225,6 +225,9 @@ export class ReviewComponent implements OnInit {
         }
         if (type === 'status') {
             delete this._query.statusIn;
+        }
+        if (type === 'rules') {
+            delete this._query.managedTasksProfileIdIn;
         }
         this._refresh();
     }
@@ -263,9 +266,9 @@ export class ReviewComponent implements OnInit {
         this.updateTags();
     }
 
-    public onFilterAdded(event: {filter: string, value: any}) {
+    public onFilterAdded(event: {filter: string, value: any, customTooltip?: string}) {
         this._query[event.filter] = event.value;
-        this.updateTags();
+        this.updateTags(event.customTooltip || '');
         this._refresh();
     }
 

@@ -1,8 +1,9 @@
 import {Component, Input, Output, OnDestroy, OnInit, EventEmitter} from '@angular/core';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {subApplicationsConfig} from 'config/sub-applications';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {AreaBlockerMessage, PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell/providers';
+import {LoadManagedTasksProfilesResponse, ManagedTasksProfile, MrStoreService} from '../../mr-store/mr-store.service';
 
 @Component({
     selector: 'k-review-refine-filters',
@@ -12,7 +13,7 @@ import {BrowserService} from 'app-shared/kmc-shell/providers';
 export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
     @Input() parentPopupWidget: PopupWidgetComponent;
     @Input() query: any;
-    @Output() onFilterAdded = new EventEmitter<{filter: string, value: any}>();
+    @Output() onFilterAdded = new EventEmitter<{filter: string, value: any, customTooltip?: string}>();
     @Output() onFilterRemoved = new EventEmitter<string[]>();
 
     public _createdAfter: Date = null;
@@ -38,11 +39,17 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
     public _status: string[] = [];
     public _statusOpened = false;
 
+    public _profiles: ManagedTasksProfile[] = [];
+    public _rules: string[] = [];
+    public _profilesOpened = false;
+
     constructor(private _browserService: BrowserService,
+                private _mrStore: MrStoreService,
                 private _appLocalization: AppLocalization) {
     }
 
     ngOnInit() {
+        this.loadProfiles();
         if (this.query.createdAtLessThanOrEqual) {
             this._createdBefore = new Date(this.query.createdAtLessThanOrEqual);
         }
@@ -73,6 +80,23 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
             this._status = this.query.statusIn;
             this._statusOpened = true;
         }
+        if (this.query.managedTasksProfileIdIn) {
+            this._rules = this.query.managedTasksProfileIdIn;
+            this._profilesOpened = true;
+        }
+    }
+
+    private loadProfiles(): void {
+        this._mrStore.loadProfiles(500, 0, 'createdAt', -1).subscribe(
+            (response: LoadManagedTasksProfilesResponse) => {
+                if (response.objects?.length) {
+                    this._profiles = response.objects as ManagedTasksProfile[];
+                }
+            },
+            error => {
+                console.log("Error loading rules: " + error.message)
+            }
+        )
     }
 
     // keep for cancelOnDestroy operator
@@ -96,7 +120,8 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
         this._filterDurationLess = false;
         this._filterDurationMore = false;
         this._status = [];
-        this.onFilterRemoved.emit(['createdAtLessThanOrEqual', 'createdAtGreaterThanOrEqual', 'plannedExecutionTimeLessThanOrEqual', 'plannedExecutionTimeGreaterThanOrEqual', 'objectSubTypeIn', 'objectDurationLessThan', 'objectDurationGreaterThan', 'statusIn']);
+        this._rules = [];
+        this.onFilterRemoved.emit(['createdAtLessThanOrEqual', 'createdAtGreaterThanOrEqual', 'plannedExecutionTimeLessThanOrEqual', 'plannedExecutionTimeGreaterThanOrEqual', 'objectSubTypeIn', 'objectDurationLessThan', 'objectDurationGreaterThan', 'statusIn', 'managedTasksProfileIdIn']);
     }
 
     public _clearCreatedComponents(): void {
@@ -153,6 +178,25 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
             this.onFilterAdded.emit({filter: 'statusIn', value: this._status});
         } else {
             this.onFilterRemoved.emit(['statusIn']);
+        }
+    }
+
+    public onRulesChange(): void {
+        if (this._rules.length) {
+            let tooltip = '';
+            this._rules.forEach(id => {
+                this._profiles.forEach(profile => {
+                    if (profile.id === id) {
+                        tooltip += profile.name + ', ';
+                    }
+                })
+            })
+            if (tooltip.length) {
+                tooltip = tooltip.substring(0, tooltip.length -2);
+            }
+            this.onFilterAdded.emit({filter: 'managedTasksProfileIdIn', value: this._rules, customTooltip: tooltip});
+        } else {
+            this.onFilterRemoved.emit(['managedTasksProfileIdIn']);
         }
     }
 

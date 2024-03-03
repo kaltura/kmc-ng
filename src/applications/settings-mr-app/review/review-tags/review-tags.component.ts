@@ -33,13 +33,14 @@ export class ReviewTagsComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
     }
 
-    public updateTags(query: any): void {
+    public updateTags(query: any, customTooltip=''): void {
         this._syncTagOfFreetext(query);
         this._syncTagOfCreatedAt(query);
         this._syncTagOfActionAt(query);
         this._syncTagOfMediaType(query);
         this._syncTagOfDuration(query);
         this._syncTagOfStatus(query);
+        this._syncTagOfRules(query, customTooltip);
     }
 
     private _syncTagOfFreetext(query: any): void {
@@ -149,6 +150,16 @@ export class ReviewTagsComponent implements OnInit, OnDestroy {
                 tooltip = tooltip.substring(2, tooltip.length);
             }
             this._filterTags.push({type: 'status', value: null, label: 'Approval status', tooltip});
+        }
+    }
+
+    private _syncTagOfRules(query: any, customTooltip = ''): void {
+        const previousItem = this._filterTags.findIndex(item => item.type === 'rules');
+        if (previousItem !== -1) {
+            this._filterTags.splice(previousItem, 1);
+        }
+        if (query.managedTasksProfileIdIn) {
+            this._filterTags.push({type: 'rules', value: null, label: 'Rules', tooltip: customTooltip});
         }
     }
 
