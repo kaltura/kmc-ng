@@ -1,15 +1,18 @@
 @import "app-theme/_variables.scss";
 
 .kRefineFilters {
-  margin: 12px;
+    margin: 12px;
 }
+
 .kTypeFilter {
     margin-top: 24px;
 }
+
 .kClearDates {
     margin-top: 4px;
     display: block;
 }
+
 .kFiltersGroupTitle {
     color: $kGrayscale3;
     line-height: 40px;
@@ -27,66 +30,113 @@
 }
 
 .kTreeContainer {
-  height: 555px;
-  border-bottom: 1px solid $kGrayscale6;
-  margin-left: -20px;
-  padding-left: 20px;
-  margin-right: -20px;
-  position: relative;
-  overflow: visible;
+    height: 555px;
+    border-bottom: 1px solid $kGrayscale6;
+    margin-left: -20px;
+    padding-left: 20px;
+    margin-right: -20px;
+    position: relative;
+    overflow: visible;
+
+    .kFilterLabel {
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 40px;
+    }
+    .filterTitleToggle {
+        margin-top: 8px;
+        margin-bottom: 4px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        i {
+            color: $kGrayscale3;
+            margin-right: 8px;
+            &.open {
+                transform: rotate(90deg);
+            }
+        }
+    }
     .checkBoxes {
         display: flex;
         flex-direction: column;
         padding-left: 24px;
+        overflow: hidden;
+        max-height: 0px;
+        &.open {
+            max-height: 200px;
+        }
+        transition: max-height 0.25s ease-in-out;
         p-checkbox {
             margin-bottom: 12px;
+        }
+        .kCheckBoxWrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            .kLeft {
+                margin-left: 8px;
+                color: $kGrayscale2;
+            }
+            p-checkbox {
+                margin-bottom: 0px;
+                width: 122px;
+            }
+            .kInput {
+                width: 60px;
+                margin-left: 8px;
+                ::ng-deep input {
+                    width: 60px;
+                }
+            }
         }
     }
 }
 
 .kDateRange {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .kClose {
-  float: right;
+    float: right;
 }
 
 .kError {
-  font-size: 14px;
-  color: $kDandger;
+    font-size: 14px;
+    color: $kDandger;
 }
 
 /* prevent calendars from being cut by the popup widget borders */
 :host ::ng-deep .kPullLeft30 .p-datepicker {
-  margin-left: -30px;
-  left: 0px !important;
+    margin-left: -30px;
+    left: 0px !important;
 }
 
 :host ::ng-deep .kPullLeft90 .p-datepicker {
-  margin-left: -90px;
-  left: 0px !important;
+    margin-left: -90px;
+    left: 0px !important;
 }
 
 :host ::ng-deep .kDateRange .kDateRangeFirst .p-calendar.p-calendar-w-btn {
-  border-bottom-left-radius: 3px;
-  border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
 }
 
 :host ::ng-deep .p-calendar.p-calendar-w-btn {
-  border-radius: 0px;
+    border-radius: 0px;
 }
 
 :host ::ng-deep .p-calendar .p-inputtext {
-  width: 120px;
+    width: 120px;
 }
 
 :host ::ng-deep .kDateRange .kDateRangeLast .p-calendar.p-calendar-w-btn {
-  border-left: 0px solid $kGrayscale4;
-  border-bottom-right-radius: 3px;
-  border-top-right-radius: 3px;
+    border-left: 0px solid $kGrayscale4;
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
 }
+
 :host ::ng-deep .ui-chkbox-label {
     margin-left: 8px;
     font-size: 14px;

@@ -219,6 +219,10 @@ export class ReviewComponent implements OnInit {
         if (type === 'mediaType') {
             delete this._query.objectSubTypeIn;
         }
+        if (type === 'duration') {
+            delete this._query.objectDurationLessThan;
+            delete this._query.objectDurationGreaterThan;
+        }
         this._refresh();
     }
 
@@ -265,7 +269,7 @@ export class ReviewComponent implements OnInit {
     public onFilterRemoved(filters: string[]) {
         let needRefresh = false;
         filters.forEach(filter => {
-            if (this._query[filter]) {
+            if (typeof this._query[filter] !== "undefined") {
                 delete this._query[filter];
                 needRefresh = true;
             }

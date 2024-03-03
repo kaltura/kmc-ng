@@ -3,7 +3,7 @@
         <div class="kFiltersGroupTitle">
             <span>{{ 'applications.content.dropFolders.filters.additionalFilters' | translate | uppercase }}</span>
         </div>
-        <p>{{ 'applications.settings.mr.filter.added' | translate }}</p>
+        <span class="kFilterLabel">{{ 'applications.settings.mr.filter.added' | translate }}</span>
         <div class="kDateRange">
             <p-calendar class="kDateRangeFirst" [(ngModel)]="_createdAfter" [readonlyInput]="true" [showIcon]="true"
                         [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
@@ -21,7 +21,7 @@
         </a>
         <span *ngIf="_createdAtFilterError" class="kError">{{ _createdAtFilterError }}</span>
 
-        <p>{{ 'applications.settings.mr.filter.action' | translate }}</p>
+        <span class="kFilterLabel">{{ 'applications.settings.mr.filter.action' | translate }}</span>
         <div class="kDateRange">
             <p-calendar class="kDateRangeFirst" [(ngModel)]="_actionAfter" [readonlyInput]="true" [showIcon]="true"
                         [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
@@ -39,12 +39,32 @@
         </a>
         <span *ngIf="_actionAtFilterError" class="kError">{{ _actionAtFilterError }}</span>
 
-        <p>{{ 'applications.settings.mr.filter.mediaType' | translate }}</p>
-        <div class="checkBoxes">
+        <div class="filterTitleToggle" (click)="_mediaTypeOpened = !_mediaTypeOpened">
+            <i class="kIcontree-arrow-right" [class.open]="_mediaTypeOpened"></i>
+            <span class="kFilterLabel">{{ 'applications.settings.mr.filter.mediaType' | translate }}</span>
+        </div>
+        <div class="checkBoxes" [class.open]="_mediaTypeOpened">
             <p-checkbox name="mediaType" value="1" label="{{'applications.content.entryType.video' | translate}}" [(ngModel)]="_mediaTypes" (ngModelChange)="onMediaTypeChange()"></p-checkbox>
             <p-checkbox name="mediaType" value="2" label="{{'applications.content.entryType.image' | translate}}" [(ngModel)]="_mediaTypes" (ngModelChange)="onMediaTypeChange()"></p-checkbox>
             <p-checkbox name="mediaType" value="5" label="{{'applications.content.entryType.audio' | translate}}" [(ngModel)]="_mediaTypes" (ngModelChange)="onMediaTypeChange()"></p-checkbox>
             <p-checkbox name="mediaType" value="201" label="{{'applications.content.entryType.live' | translate}}" [(ngModel)]="_mediaTypes" (ngModelChange)="onMediaTypeChange()"></p-checkbox>
+        </div>
+
+        <div class="filterTitleToggle" (click)="_durationOpen = !_durationOpen">
+            <i class="kIcontree-arrow-right" [class.open]="_durationOpen"></i>
+            <span class="kFilterLabel">{{ 'applications.settings.mr.criteria.durationLabel' | translate }}</span>
+        </div>
+        <div class="checkBoxes" [class.open]="_durationOpen">
+            <div class="kCheckBoxWrapper">
+                <p-checkbox name="duration" [binary]="true" label="{{'applications.settings.mr.criteria.duration_less' | translate}}" [(ngModel)]="_filterDurationLess" (ngModelChange)="onDurationChange('less')"></p-checkbox>
+                <p-inputNumber class="kInput" [(ngModel)]="_durationLess" (ngModelChange)="onDurationChange('less')"></p-inputNumber>
+                <span class="kLeft">{{'applications.settings.mr.criteria.sec' | translate}}</span>
+            </div>
+            <div class="kCheckBoxWrapper">
+                <p-checkbox name="duration" [binary]="true" label="{{'applications.settings.mr.criteria.duration_more' | translate}}" [(ngModel)]="_filterDurationMore" (ngModelChange)="onDurationChange('more')"></p-checkbox>
+                <p-inputNumber class="kInput" [(ngModel)]="_durationMore" (ngModelChange)="onDurationChange('more')"></p-inputNumber>
+                <span class="kLeft">{{'applications.settings.mr.criteria.sec' | translate}}</span>
+            </div>
         </div>
 
 

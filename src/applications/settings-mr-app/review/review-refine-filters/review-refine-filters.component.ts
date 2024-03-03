@@ -27,6 +27,14 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
     public _calendarFormat = this._browserService.getCurrentDateFormat(true);
 
     public _mediaTypes: number[] = [];
+    public _mediaTypeOpened = false;
+
+    public _durationMore = 0;
+    public _filterDurationMore = false;
+    public _durationLess = 0;
+    public _filterDurationLess = false;
+    public _durationOpen =false;
+
 
     constructor(private _browserService: BrowserService,
                 private _appLocalization: AppLocalization) {
@@ -48,6 +56,14 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
         if (this.query.objectSubTypeIn) {
             this._mediaTypes = this.query.objectSubTypeIn;
         }
+        if (typeof this.query.objectDurationLessThan !== "undefined") {
+            this._filterDurationLess = true;
+            this._durationLess = this.query.objectDurationLessThan;
+        }
+        if (typeof this.query.objectDurationGreaterThan !== "undefined") {
+            this._filterDurationMore = true;
+            this._durationMore = this.query.objectDurationGreaterThan;
+        }
     }
 
     // keep for cancelOnDestroy operator
@@ -68,7 +84,9 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
         this._actionAfter = null;
         this._actionAtFilterError = '';
         this._mediaTypes = [];
-        this.onFilterRemoved.emit(['createdAtLessThanOrEqual', 'createdAtGreaterThanOrEqual', 'plannedExecutionTimeLessThanOrEqual', 'plannedExecutionTimeGreaterThanOrEqual', 'objectSubTypeIn']);
+        this._filterDurationLess = false;
+        this._filterDurationMore = false;
+        this.onFilterRemoved.emit(['createdAtLessThanOrEqual', 'createdAtGreaterThanOrEqual', 'plannedExecutionTimeLessThanOrEqual', 'plannedExecutionTimeGreaterThanOrEqual', 'objectSubTypeIn', 'objectDurationLessThan', 'objectDurationGreaterThan']);
     }
 
     public _clearCreatedComponents(): void {
@@ -101,7 +119,23 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
         } else {
             this.onFilterRemoved.emit(['objectSubTypeIn']);
         }
+    }
 
+    public onDurationChange(mode: string): void {
+        if (mode === 'less') {
+            if (this._filterDurationLess) {
+                this.onFilterAdded.emit({filter: 'objectDurationLessThan', value: this._durationLess});
+            } else {
+                this.onFilterRemoved.emit(['objectDurationLessThan']);
+            }
+        }
+        if (mode === 'more') {
+            if (this._filterDurationMore) {
+                this.onFilterAdded.emit({filter: 'objectDurationGreaterThan', value: this._durationMore});
+            } else {
+                this.onFilterRemoved.emit(['objectDurationGreaterThan']);
+            }
+        }
     }
 
     public _close() {
