@@ -3524,6 +3524,10 @@
                 "deleteError": "Error deleting rule",
                 "loadError": "Error loading rule",
                 "saveError": "Error saving rule",
+                "statusError": "Error updating status",
+                "statusSuccess": "Status updated",
+                "preformError": "Error updating execution date",
+                "preformSuccess": "Execution should start momentarily",
                 "created": "Created on",
                 "lastRun": "Last run",
                 "nextRun": "Next run",
@@ -3552,6 +3556,7 @@
                 "deny": "Deny",
                 "perform": "Perform now",
                 "notify": "Notify owner",
+                "delete": "Remove",
                 "filter": {
                     "added": "Added between",
                     "action": "Action between",

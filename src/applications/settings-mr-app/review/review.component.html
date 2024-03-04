@@ -10,8 +10,8 @@
                     <div [class.kHidden]="!_selectedReviews.length" class="kBulkOperations">
                         <span class="kSelectedReviewsLabel">• {{_selectedReviews.length}} {{'applications.content.entries.selected' | translate}}</span>
                         <div class="kBulkActions">
-                            <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_bulkAction('delete')"></button>
-                            <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton label="{{'applications.content.entries.bulkActions' | translate}}" (click)="menu.toggle($event)"></button>
+<!--                            <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_bulkAction('delete')" [kTooltip]="'applications.settings.mr.delete' | translate"></button>-->
+                            <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton label="{{'applications.content.categories.bulkActions' | translate}}" (click)="menu.toggle($event)"></button>
                         </div>
                         <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
                     </div>
@@ -76,7 +76,7 @@
                                 <p-sortIcon [field]="'plannedExecutionTime'"></p-sortIcon>
                             </th>
 
-                            <th data-cid="status" [ngStyle]="{'width': '60px'}">
+                            <th data-cid="status" [ngStyle]="{'width': '80px'}">
                                 {{'applications.settings.authentication.table.status' | translate}}
                             </th>
                             <th [ngStyle]="{'overflow': 'hidden', 'width': '80px'}"></th>
@@ -113,7 +113,7 @@
                                   {{review.plannedExecutionTime | kmcDate}}
                               </span>
                             </td>
-                            <td [ngStyle]="{'width': '60px'}">
+                            <td [ngStyle]="{'width': '80px'}">
                                 <span class="kTableColumn">
                                   {{review.status.charAt(0).toUpperCase() + review.status.slice(1)}}
                               </span>

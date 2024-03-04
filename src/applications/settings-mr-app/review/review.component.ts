@@ -1,13 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {SettingsMrMainViewService} from 'app-shared/kmc-shared/kmc-views';
-import {
-    KalturaPager,
-    LoadManagedTasksProfilesResponse,
-    LoadObjectStateResponse, ManagedTasksProfile,
-    MrStoreService,
-    ObjectState,
-    SortDirection
-} from '../mr-store/mr-store.service';
+import {KalturaPager, LoadManagedTasksProfilesResponse, LoadObjectStateResponse, MrStoreService, ObjectState, SortDirection} from '../mr-store/mr-store.service';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
@@ -15,7 +8,7 @@ import {ColumnsResizeManagerService, ResizableColumnsTableName} from 'app-shared
 import {Menu} from 'primeng/menu';
 import {MenuItem} from 'primeng/api';
 import {ReviewTagsComponent} from './review-tags/review-tags.component';
-import {query} from '@angular/animations';
+import {BrowserService} from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kMrReview',
@@ -49,6 +42,7 @@ export class ReviewComponent implements OnInit {
     constructor(private _mrMainViewService: SettingsMrMainViewService,
                 public _columnsResizeManager: ColumnsResizeManagerService,
                 private _appLocalization: AppLocalization,
+                private _browserService: BrowserService,
                 private _logger: KalturaLogger,
                 private _mrStore: MrStoreService) {
     }
@@ -59,22 +53,46 @@ export class ReviewComponent implements OnInit {
             this._bulkActionsMenu = [
                 {
                     label: this._appLocalization.get('applications.settings.mr.approve'),
-                    command: () => this._bulkAction('approve')
+                    command: () => this.bulkUpdateEntryStatus('approved')
                 },
                 {
                     label: this._appLocalization.get('applications.settings.mr.deny'),
-                    command: () => this._bulkAction('deny')
+                    command: () => this.bulkUpdateEntryStatus('rejected')
                 },
                 {
                     label: this._appLocalization.get('applications.settings.mr.perform'),
-                    command: () => this._bulkAction('perform')
+                    command: () => this.bulkPerformNow()
                 },
                 {
                     label: this._appLocalization.get('applications.settings.mr.notify'),
-                    command: () => this._bulkAction('notify')
+                    command: () => console.log('bulk notify action')
                 }
             ];
         }
+    }
+
+    private displayError(message: string, retryAction?: Function): void {
+        this._isBusy = false;
+        this._blockerMessage = new AreaBlockerMessage({
+            message,
+            buttons: [
+                {
+                    label: this._appLocalization.get('app.common.retry'),
+                    action: () => {
+                        this._logger.info(`user confirmed, retry action`);
+                        this._blockerMessage = null;
+                        retryAction();
+                    }
+                },
+                {
+                    label: this._appLocalization.get('app.common.cancel'),
+                    action: () => {
+                        this._logger.info(`user didn't confirm, abort action, dismiss dialog`);
+                        this._blockerMessage = null;
+                    }
+                }
+            ]
+        });
     }
 
     public _loadReviews(pageSize: number, pageIndex: number, sortField: string, sortOrder: number): void {
@@ -86,7 +104,7 @@ export class ReviewComponent implements OnInit {
             pageSize
         }
         const orderBy = sortOrder === SortDirection.Desc ? `-${sortField}` : `${sortField}`;
-        let filter = {pager, orderBy};
+        let filter = {pager, orderBy, inReview: true};
         filter = Object.assign(filter, this._query);
         this._mrStore.loadObjectStates(filter).subscribe(
             (response: LoadObjectStateResponse) => {
@@ -119,41 +137,69 @@ export class ReviewComponent implements OnInit {
                 this._reviewsCount = response.totalCount;
             },
             error => {
-                this._isBusy = false;
-                this._blockerMessage = new AreaBlockerMessage({
-                    message: this._appLocalization.get('applications.settings.mr.rulesLoadError'),
-                    buttons: [
-                        {
-                            label: this._appLocalization.get('app.common.retry'),
-                            action: () => {
-                                this._logger.info(`user confirmed, retry action`);
-                                this._blockerMessage = null;
-                                this._refresh();
-                            }
-                        },
-                        {
-                            label: this._appLocalization.get('app.common.cancel'),
-                            action: () => {
-                                this._logger.info(`user didn't confirm, abort action, dismiss dialog`);
-                                this._blockerMessage = null;
-                            }
-                        }
-                    ]
-                });
+                this.displayError(this._appLocalization.get('applications.settings.mr.rulesLoadError'), this._refresh);
             }
         )
     }
 
-    private _actionSelected(action: string, review: ObjectState): void {
-        console.log(action);
-        switch (action) {
-            case "approve":
-                break;
-            case "deny":
-                break;
-            case "preform":
-                break;
-        }
+    private updateEntryStatus(review: ObjectState, status: string): void {
+        this._blockerMessage = null;
+        this._isBusy = true;
+        this._mrStore.updateReviewStatus(review, status).subscribe(
+            (updatedReview: ObjectState) => {
+                this._isBusy = false;
+                review.status = updatedReview.status;
+                this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('applications.settings.mr.statusSuccess')});
+            },
+            error => {
+                this.displayError(this._appLocalization.get('applications.settings.mr.statusError'), () => this.updateEntryStatus(review, status));
+            }
+        );
+    }
+
+    private bulkUpdateEntryStatus(status: string): void {
+        this._blockerMessage = null;
+        this._isBusy = true;
+        this._mrStore.bulkUpdateStatus(this._selectedReviews.map(review => review.id), status).subscribe(
+            (success) => {
+                this._isBusy = false;
+                this._refresh();
+                this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('applications.settings.mr.statusSuccess')});
+            },
+            error => {
+                this.displayError(this._appLocalization.get('applications.settings.mr.statusError'), () => this.bulkUpdateEntryStatus(status));
+            }
+        );
+    }
+
+    private performNow(review: ObjectState): void {
+        this._blockerMessage = null;
+        this._isBusy = true;
+        this._mrStore.performReview(review).subscribe(
+            (updatedReview: ObjectState) => {
+                this._isBusy = false;
+                review.plannedExecutionTime = updatedReview.plannedExecutionTime;
+                this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('applications.settings.mr.preformSuccess')});
+            },
+            error => {
+                this.displayError(this._appLocalization.get('applications.settings.mr.preformError'), () => this.performNow(review));
+            }
+        );
+    }
+
+    private bulkPerformNow(): void {
+        this._blockerMessage = null;
+        this._isBusy = true;
+        this._mrStore.bulkPerformNow(this._selectedReviews.map(review => review.id)).subscribe(
+            (success) => {
+                this._isBusy = false;
+                this._refresh();
+                this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('applications.settings.mr.preformSuccess')});
+            },
+            error => {
+                this.displayError(this._appLocalization.get('applications.settings.mr.preformError'), this.bulkPerformNow);
+            }
+        );
     }
 
     private _buildMenu(review: ObjectState): void {
@@ -161,21 +207,20 @@ export class ReviewComponent implements OnInit {
             {
                 id: 'approve',
                 label: this._appLocalization.get('applications.settings.mr.approve'),
-                command: () => this._actionSelected('approve', review)
+                command: () => this.updateEntryStatus(review,'approved')
             },
             {
                 id: 'deny',
                 label: this._appLocalization.get('applications.settings.mr.deny'),
-                command: () => this._actionSelected('deny', review)
+                command: () => this.updateEntryStatus(review, 'rejected')
             },
             {
                 id: 'perform',
                 label: this._appLocalization.get('applications.settings.mr.perform'),
-                command: () => this._actionSelected('perform', review)
+                command: () => this.performNow(review)
             }
         ];
     }
-
 
     public _refresh(): void {
         this._loadReviews(this.pageSize, this.pageIndex, this.sortField, this.sortOrder);
@@ -187,10 +232,6 @@ export class ReviewComponent implements OnInit {
 
     public _export(): void {
         console.log("export"); // TODO: implementation
-    }
-
-    public _bulkAction(action: string): void {
-        console.log("preform bulk action: "+action); // TODO: implementation
     }
 
     public updateTags(customTooltip = ''): void {
@@ -289,4 +330,3 @@ export class ReviewComponent implements OnInit {
         }
     }
 }
-

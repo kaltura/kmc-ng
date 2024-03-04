@@ -141,6 +141,38 @@ export class MrStoreService implements OnDestroy {
         }
     }
 
+    public updateReviewStatus(review: ObjectState, status: string): Observable<ObjectState> {
+        try {
+            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/objectState/update`, {id: review.id, status}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<ObjectState>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to update object state status'));
+        }
+    }
+
+    public performReview(review: ObjectState): Observable<ObjectState> {
+        try {
+            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/objectState/update`, {id: review.id, plannedExecutionTime: new Date()}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<ObjectState>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to update object state plannedExecutionTime'));
+        }
+    }
+
+    public bulkUpdateStatus(ids: string[], status: string): Observable<any> {
+        try {
+            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/objectState/bulkUpdate`, {ids, status}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to bulk update object states status'));
+        }
+    }
+
+    public bulkPerformNow(ids: string[]): Observable<any> {
+        try {
+            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/objectState/bulkUpdate`, {ids, plannedExecutionTime: new Date()}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to bulk update object states plannedExecutionTime'));
+        }
+    }
+
     // ------------------------- Common ---------------------------- //
     private getHttpOptions() {
         const ks = this._appAuthentication.appUser.ks;
