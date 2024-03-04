@@ -104,7 +104,7 @@ export class ReviewComponent implements OnInit {
             pageSize
         }
         const orderBy = sortOrder === SortDirection.Desc ? `-${sortField}` : `${sortField}`;
-        let filter = {pager, orderBy, inReview: true};
+        let filter = { pager, orderBy, inReview: true };
         filter = Object.assign(filter, this._query);
         this._mrStore.loadObjectStates(filter).subscribe(
             (response: LoadObjectStateResponse) => {

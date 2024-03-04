@@ -244,6 +244,7 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
   width: 0 !important;
   height: 0 !important;
   padding: 0 !important;
+  overflow: hidden !important;
 }
 .kMoreActionsButton {
   color: $kGrayscale3 !important;

@@ -52,15 +52,45 @@
                             <span class="kLabel">{{'applications.administration.role.description' | translate}}</span>
                             <input class="kControl" pInputText [(ngModel)]="rule.description" (ngModelChange)="_isDirty = true">
                         </div>
+                        <div class="kRow kRowWithHelptip">
+                            <div class="labelWithHelpTip">
+                                <span class="kLabel">{{'applications.settings.mr.requireApproval' | translate}}</span>
+                                <kInputHelper>
+                                    <span>{{'applications.settings.mr.requireApproval_tt' | translate}}</span>
+                                </kInputHelper>
+                            </div>
+                            <p-inputSwitch (onChange)="_isDirty = true" [(ngModel)]="rule.audit.auditApproval"></p-inputSwitch>
+                        </div>
+                        <div class="kRow">
+                            <span class="kSubtitle">{{'applications.settings.mr.scheduling' | translate}}</span>
+                        </div>
+                        <div class="kRow">
+                            <span class="kLabel">{{'applications.settings.mr.startDate' | translate}}</span>
+                            <p-calendar [(ngModel)]="rule.nextRunDate" [readonlyInput]="true" [showIcon]="true"
+                                        [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
+                                        [dateFormat]="_calendarFormat" icon="kIconcalendar" (onSelect)="_isDirty = true"></p-calendar>
+                        </div>
+                        <div class="kRow">
+                            <span class="kLabel">{{'applications.settings.mr.every' | translate}}</span>
+
+                        </div>
+                        <div class="kRow">
+                            <span class="kLabel">{{'applications.settings.mr.period' | translate}}</span>
+
+                        </div>
+                    </div>
+
+                    <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'criterrias'" *ngIf="rule">
+                        <span class="kTitle">{{'applications.settings.mr.criterrias' | translate}}</span>
+                        <kRuleCriteria [filter]="rule.objectFilter || {}" (onFilterChange)="onCriteriaChange($event)"></kRuleCriteria>
                     </div>
 
                     <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'actions'" *ngIf="rule">
                         <span class="kTitle">{{'applications.settings.mr.actions' | translate}}</span>
-                        <kRuleCriteria [filter]="rule.objectFilter || {}" (onFilterChange)="onCriteriaChange($event)"></kRuleCriteria>
                     </div>
 
-                    <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'settings'" *ngIf="rule">
-                        <span class="kTitle">{{'applications.settings.mr.settings' | translate}}</span>
+                    <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'notifications'" *ngIf="rule">
+                        <span class="kTitle">{{'applications.settings.mr.notifications' | translate}}</span>
                     </div>
                 </div>
             </div>

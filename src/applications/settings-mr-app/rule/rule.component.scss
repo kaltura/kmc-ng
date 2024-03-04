@@ -21,6 +21,9 @@
         margin-right: 0px;
     }
 }
+.kmcDetailsLayout {
+    min-height: 0px;
+}
 .kmcDetailsLayout .kDetailsWrapper .kHeaderDetails {
     display: flex;
     align-items: center;
@@ -60,6 +63,22 @@
             display: flex;
             width: 100%;
             padding-top: 24px;
+            .kSubtitle {
+                font-size: 14px;
+                font-weight: 700;
+                margin-left: 4px;
+            }
+            &.kRowWithHelptip {
+                align-items: center;
+                .labelWithHelpTip {
+                    width: 216px;
+                    display: flex;
+                    align-items: center;
+                    .kLabel {
+                        width: auto;
+                    }
+                }
+            }
             input {
                 width: 100%;
                 max-width: 500px;

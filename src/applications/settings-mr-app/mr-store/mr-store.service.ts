@@ -43,6 +43,10 @@ export type ManagedTasksProfile = {
     runningCadence: RunningCadence;
     createdAt: Date;
     updatedAt: Date;
+    audit: {
+        auditApproval: boolean;
+        reviewPeriod: number;
+    }
 }
 
 export type ObjectState = {

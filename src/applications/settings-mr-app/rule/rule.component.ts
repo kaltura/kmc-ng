@@ -5,7 +5,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {BrowserService} from 'app-shared/kmc-shell';
-import {KalturaMediaEntryFilter} from 'kaltura-ngx-client';
+
+import {KMCPermissions} from 'app-shared/kmc-shared/kmc-permissions';
+import {subApplicationsConfig} from 'config/sub-applications';
 
 @Component({
     selector: 'kMrRule',
@@ -19,8 +21,11 @@ export class RuleComponent implements OnInit {
     public _blockerMessage: AreaBlockerMessage = null;
     public _isDirty = false;
 
-    public _sections = ['general', 'actions', 'scheduling', 'settings'];
-    public _selectedSection: string  = 'actions';
+    public _sections = ['general', 'criterrias', 'actions', 'notifications'];
+    public _selectedSection: string  = 'general';
+
+    public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
+    public _calendarFormat = this._browserService.getCurrentDateFormat(true);
 
     constructor(private _mrMainViewService: SettingsMrMainViewService,
                 private _router: Router,
@@ -58,6 +63,7 @@ export class RuleComponent implements OnInit {
         this.rule = response;
         this.rule.createdAt = new Date(response.createdAt);
         this.rule.updatedAt = new Date(response.updatedAt);
+        this.rule.nextRunDate = new Date(response.nextRunDate);
         this._ruleName = response.name;
         if (typeof response.objectFilter === "undefined") {
             this.rule.objectFilter = {};
@@ -162,5 +168,7 @@ export class RuleComponent implements OnInit {
             this._router.navigateByUrl('settings/mr/rules');
         }
     }
+
+    protected readonly _kmcPermissions = KMCPermissions;
 }
 

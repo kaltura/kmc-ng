@@ -89,7 +89,11 @@ import { AppAuthentication } from "app-shared/kmc-shell";
         description,
         runningCadence: {
             cadence: "once a week"
-        }
+        },
+        audit: {
+            auditApproval: false,
+            reviewPeriod: 1
+        },
     }
 
     this._profilesService.createProfile(newProfile)
