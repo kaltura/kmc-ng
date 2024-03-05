@@ -85,13 +85,11 @@
                         <kRuleCriteria [filter]="rule.objectFilter || {}" (onFilterChange)="onCriteriaChange($event)"></kRuleCriteria>
                     </div>
 
-                    <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'actions'" *ngIf="rule">
-                        <span class="kTitle">{{'applications.settings.mr.actions' | translate}}</span>
+                    <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'action' && _selectedSection !== 'notifications'" *ngIf="rule">
+                        <span class="kTitle">{{_selectedSection === 'action' ? ('applications.settings.mr.action' | translate) : ('applications.settings.mr.notifications' | translate)}}</span>
+                        <kRuleActions [profileId]="rule.id" [selectedTab]="_selectedSection" (onActionsChange)="onActionChange($event)"></kRuleActions>
                     </div>
 
-                    <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'notifications'" *ngIf="rule">
-                        <span class="kTitle">{{'applications.settings.mr.notifications' | translate}}</span>
-                    </div>
                 </div>
             </div>
 

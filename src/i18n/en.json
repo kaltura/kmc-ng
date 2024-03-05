@@ -3553,7 +3553,7 @@
                 "creationDate": "Creation date: {{0}}",
                 "updateDate": "Updated at: {{0}}",
                 "general": "General",
-                "actions": "Actions",
+                "action": "Actions",
                 "criterrias": "Criteria",
                 "notifications": "Notifications",
                 "executionDate": "Execution date",
@@ -3614,6 +3614,20 @@
                     "sec": "Seconds",
                     "min": "Minutes",
                     "hour": "Hours"
+                },
+                "actions": {
+                    "title": "Add actions to be taken on entries that meet the criteria set in the Criteria tab.",
+                    "add": "Add actions",
+                    "flavours": "Keep selected flavors",
+                    "categories": "Add / remove categories",
+                    "addCat": "Add categories",
+                    "removeCat": "Remove categories",
+                    "tags": "Add / remove tags",
+                    "addTags": "Add tags",
+                    "removeTags": "Remove tags",
+                    "owner": "Change owner",
+                    "unpublish": "Unpublish",
+                    "delete": "Delete entry"
                 }
             }
         },

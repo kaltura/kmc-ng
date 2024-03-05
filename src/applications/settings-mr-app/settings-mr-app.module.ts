@@ -36,6 +36,7 @@ import { CategoriesSelector } from './rule/category-selector/categories-selector
 import {KMCPermissionsModule} from 'app-shared/kmc-shared/kmc-permissions';
 import {ReviewTagsComponent} from './review/review-tags/review-tags.component';
 import {ReviewRefineFiltersComponent} from './review/review-refine-filters/review-refine-filters.component';
+import {RuleActionsComponent} from './rule/actions/actions.component';
 
 @NgModule({
     imports: [
@@ -80,6 +81,7 @@ import {ReviewRefineFiltersComponent} from './review/review-refine-filters/revie
       DeleteRuleComponent,
       NewRuleComponent,
       RuleComponent,
+      RuleActionsComponent,
       CriteriaComponent,
       CriteriaCreatedComponent,
       CriteriaPlayedComponent,

@@ -1,0 +1,22 @@
+@import 'app-theme/_variables.scss';
+.kActionsBtn{
+    font-weight: 400;
+    font-size: 15px;
+    width: 140px;
+    ::ng-deep .p-button-label {
+        flex: 0 0 auto;
+    }
+    ::ng-deep .p-button-icon {
+        font-size: 12px;
+        margin-left: auto;
+    }
+}
+
+.actionsContainer {
+    display: flex;
+    flex-direction: column;
+    margin-top: 24px;
+    .kTitle {
+        margin-bottom: 24px;
+    }
+}

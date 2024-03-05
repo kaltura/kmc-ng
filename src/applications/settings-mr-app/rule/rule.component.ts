@@ -8,6 +8,7 @@ import {BrowserService} from 'app-shared/kmc-shell';
 
 import {KMCPermissions} from 'app-shared/kmc-shared/kmc-permissions';
 import {subApplicationsConfig} from 'config/sub-applications';
+import {Action} from './actions/actions.component';
 
 @Component({
     selector: 'kMrRule',
@@ -21,11 +22,13 @@ export class RuleComponent implements OnInit {
     public _blockerMessage: AreaBlockerMessage = null;
     public _isDirty = false;
 
-    public _sections = ['general', 'criterrias', 'actions', 'notifications'];
+    public _sections = ['general', 'criterrias', 'action', 'notifications'];
     public _selectedSection: string  = 'general';
 
     public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
     public _calendarFormat = this._browserService.getCurrentDateFormat(true);
+
+    private actions: Action[] = [];
 
     constructor(private _mrMainViewService: SettingsMrMainViewService,
                 private _router: Router,
@@ -117,6 +120,11 @@ export class RuleComponent implements OnInit {
 
     public onCriteriaChange(filter: any): void {
         this.rule.objectFilter = filter;
+        this._isDirty = true;
+    }
+
+    public onActionChange(actions: Action[]): void {
+        this.actions = actions;
         this._isDirty = true;
     }
 
