@@ -20,7 +20,7 @@ export type AdvancedCadence = {
     day?: 'SUN'| 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT';
     dayNumber?: number;
     numberOfUnits?: number;
-    dateUnit?: 'week' | 'month' | 'year';
+    dateUnit?: 'day' | 'week' | 'month' | 'year';
 }
 
 export type RunningCadence = {

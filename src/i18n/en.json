@@ -3537,10 +3537,6 @@
                 "testRun": "Text run",
                 "delete": "Delete rule",
                 "requireApproval": "Requires admin approval",
-                "scheduling": "Scheduling",
-                "every": "Every",
-                "period": "Review period",
-                "startDate": "Start date",
                 "requireApproval_tt": "When enabled, admin must actively approve each entry during the review period or rule actions will not be performed.",
                 "deleteMsg": "Are you sure you want to delete this rule? You can't undo this action.",
                 "noCriteriaHeader": "No criteria",
@@ -3614,6 +3610,19 @@
                     "sec": "Seconds",
                     "min": "Minutes",
                     "hour": "Hours"
+                },
+                "schedule": {
+                    "daily": "Daily",
+                    "weekly": "Weekly",
+                    "monthly": "Monthly",
+                    "scheduling": "Scheduling",
+                    "repeat": "Repeat",
+                    "every": "Every",
+                    "period": "Review period",
+                    "period_tt": "Review period tooltip",
+                    "startDate": "Start date",
+                    "on": "On day",
+                    "of": "of the month"
                 },
                 "actions": {
                     "title": "Add actions to be taken on entries that meet the criteria set in the Criteria tab.",

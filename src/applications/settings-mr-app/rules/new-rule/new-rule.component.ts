@@ -88,11 +88,16 @@ import { AppAuthentication } from "app-shared/kmc-shell";
         name,
         description,
         runningCadence: {
-            cadence: "once a week"
+            cadence: "advanced",
+            advancedCadence: {
+                dateUnit: 'month',
+                numberOfUnits: 1,
+                dayNumber: 1
+            }
         },
         audit: {
             auditApproval: false,
-            reviewPeriod: 1
+            reviewPeriod: 7
         },
     }
 

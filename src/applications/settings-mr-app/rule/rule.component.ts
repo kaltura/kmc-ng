@@ -28,6 +28,17 @@ export class RuleComponent implements OnInit {
     public _createdAtDateRange: string = subApplicationsConfig.shared.datesRange;
     public _calendarFormat = this._browserService.getCurrentDateFormat(true);
 
+    public _timeUnitOptions: { value: string, label: string }[] = [
+        {value: 'day', label: this._appLocalization.get('applications.settings.mr.schedule.daily')},
+        {value: 'week', label: this._appLocalization.get('applications.settings.mr.schedule.weekly')},
+        {value: 'month', label: this._appLocalization.get('applications.settings.mr.schedule.monthly')}
+    ];
+    public _everyDay: { value: number, label: string }[] = [];
+    public _everyWeek: { value: number, label: string }[] = [];
+    public _everyMonth: { value: number, label: string }[] = [];
+    public _reviewPeriod: { value: number, label: string }[] = [];
+    public _daysOfWeek: { value: string, label: string }[] = [{value: 'SUN', label: 'Sunday'}, {value: 'MON', label: 'Monday'}, {value: 'TUE', label: 'Tuesday'}, {value: 'WED', label: 'Wednesday'}, {value: 'THU', label: 'Thursday'}, {value: 'FRI', label: 'Friday'}, {value: 'SAT', label: 'Saturday'}];
+
     private actions: Action[] = [];
 
     constructor(private _mrMainViewService: SettingsMrMainViewService,
@@ -44,6 +55,14 @@ export class RuleComponent implements OnInit {
                 this.handleSuccessResponse(this._mrStore.selectedRule);
             } else {
                 this.loadRule(this._ruleRoute.snapshot.params.id);
+            }
+            for (let i = 1; i < 91; i++)
+                this._reviewPeriod.push({value: i, label: i.toString()});
+            for (let i = 1; i < 31; i++)
+                this._everyDay.push({value: i, label: i.toString()});
+            for (let i = 1; i < 51; i++) {
+                this._everyWeek.push({value: i, label: i.toString()});
+                this._everyMonth.push({value: i, label: i.toString()});
             }
         }
     }
@@ -148,7 +167,17 @@ export class RuleComponent implements OnInit {
 
     private doSave(): void {
         delete this.rule.partnerId; // remove partner as it is read only and cannot be saved
-        this.rule.runningCadence.advancedCadence = {}; // TODO: handle scheduling
+        // fix advancedCadence
+        if (this.rule.runningCadence.advancedCadence.dateUnit === 'day') {
+            delete this.rule.runningCadence.advancedCadence.day;
+            delete this.rule.runningCadence.advancedCadence.dayNumber;
+        }
+        if (this.rule.runningCadence.advancedCadence.dateUnit === 'week') {
+            delete this.rule.runningCadence.advancedCadence.dayNumber;
+        }
+        if (this.rule.runningCadence.advancedCadence.dateUnit === 'month') {
+            delete this.rule.runningCadence.advancedCadence.day;
+        }
         // remove empty objectsFilter
         if (Object.keys(this.rule.objectFilter).length === 0) {
             this.rule.objectFilter = {};

@@ -90,6 +90,9 @@
                 line-height: 18px;
                 padding: 8px 4px;
                 flex: 0 0 auto;
+                &.autoWidth {
+                    width: auto;
+                }
             }
             .kLabelWithRequired {
                 width: 188px;
