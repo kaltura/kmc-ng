@@ -37,6 +37,7 @@ import {KMCPermissionsModule} from 'app-shared/kmc-shared/kmc-permissions';
 import {ReviewTagsComponent} from './review/review-tags/review-tags.component';
 import {ReviewRefineFiltersComponent} from './review/review-refine-filters/review-refine-filters.component';
 import {RuleActionsComponent} from './rule/actions/actions.component';
+import {OwnerSelector} from './rule/owner-selector/owner-selector.component';
 
 @NgModule({
     imports: [
@@ -82,6 +83,7 @@ import {RuleActionsComponent} from './rule/actions/actions.component';
       NewRuleComponent,
       RuleComponent,
       RuleActionsComponent,
+      OwnerSelector,
       CriteriaComponent,
       CriteriaCreatedComponent,
       CriteriaPlayedComponent,

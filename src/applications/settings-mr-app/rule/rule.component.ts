@@ -147,6 +147,11 @@ export class RuleComponent implements OnInit {
         this._isDirty = true;
     }
 
+    public ownerSelected(owner: string): void {
+        this.rule.ownerId = owner;
+        this._isDirty = true;
+    }
+
     public save(): void {
         // check for missing criteria in enabled rule
         if (this.rule.status === 'enabled' && Object.keys(this.rule.objectFilter).length === 0) {

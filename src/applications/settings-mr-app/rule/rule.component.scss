@@ -68,6 +68,12 @@
                 font-weight: 700;
                 margin-left: 4px;
             }
+            &.kCenter {
+                align-items: center;
+                .link {
+                    margin-left: 8px;
+                }
+            }
             &.kRowWithHelptip {
                 align-items: center;
                 .labelWithHelpTip {

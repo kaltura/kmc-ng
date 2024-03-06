@@ -32,6 +32,7 @@ export type ManagedTasksProfile = {
     objectType: string;
     id: string;
     name: string;
+    ownerId: string;
     partnerId: number;
     description: string;
     objectFilter?: any;

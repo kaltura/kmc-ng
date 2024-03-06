@@ -52,14 +52,10 @@
                             <span class="kLabel">{{'applications.administration.role.description' | translate}}</span>
                             <input class="kControl" pInputText [(ngModel)]="rule.description" (ngModelChange)="_isDirty = true">
                         </div>
-                        <div class="kRow kRowWithHelptip">
-                            <div class="labelWithHelpTip">
-                                <span class="kLabel">{{'applications.settings.mr.requireApproval' | translate}}</span>
-                                <kInputHelper>
-                                    <span>{{'applications.settings.mr.requireApproval_tt' | translate}}</span>
-                                </kInputHelper>
-                            </div>
-                            <p-inputSwitch (onChange)="_isDirty = true" [(ngModel)]="rule.audit.auditApproval"></p-inputSwitch>
+                        <div class="kRow kCenter">
+                            <span class="kLabel">{{'applications.settings.mr.owner' | translate}}</span>
+                            <span class="kLabel autoWidth">{{rule.ownerId}}</span>
+                            <a class="link" (click)="ownerPopup.open()">{{'applications.settings.mr.actions.owner' | translate}}</a>
                         </div>
                         <div class="kRow">
                             <span class="kSubtitle">{{'applications.settings.mr.schedule.scheduling' | translate}}</span>
@@ -98,6 +94,10 @@
                             <p-dropdown [options]="_everyDay" [style]="{'width':'60px', 'margin-right': '4px'}"  [(ngModel)]="rule.runningCadence.advancedCadence.dayNumber" (ngModelChange)="_isDirty = true"></p-dropdown>
                             <span class="kLabel autoWidth">{{'applications.settings.mr.schedule.of' | translate}}</span>
                         </div>
+
+                        <div class="kRow">
+                            <span class="kSubtitle">{{'applications.settings.mr.review' | translate}}</span>
+                        </div>
                         <div class="kRow kRowWithHelptip">
                             <div class="labelWithHelpTip">
                                 <span class="kLabel">{{'applications.settings.mr.schedule.period' | translate}}</span>
@@ -107,6 +107,15 @@
                             </div>
                             <p-dropdown [options]="_reviewPeriod" [style]="{'width':'60px', 'margin-right': '4px'}"  [(ngModel)]="rule.audit.reviewPeriod" (ngModelChange)="_isDirty = true"></p-dropdown>
                             <span class="kLabel autoWidth">{{'applications.settings.mr.criteria.days' | translate}}</span>
+                        </div>
+                        <div class="kRow kRowWithHelptip">
+                            <div class="labelWithHelpTip">
+                                <span class="kLabel">{{'applications.settings.mr.requireApproval' | translate}}</span>
+                                <kInputHelper>
+                                    <span>{{'applications.settings.mr.requireApproval_tt' | translate}}</span>
+                                </kInputHelper>
+                            </div>
+                            <p-inputSwitch (onChange)="_isDirty = true" [(ngModel)]="rule.audit.auditApproval"></p-inputSwitch>
                         </div>
                     </div>
 
@@ -128,3 +137,9 @@
 
     </div>
 </k-area-blocker>
+
+<kPopupWidget #ownerPopup data-aid="ownerPopup" [popupWidth]="550" [popupHeight]="264" [modal]="true">
+    <ng-template>
+        <kOwnersSelector [parentPopupWidget]="ownerPopup" (ownerSelected)="ownerSelected($event)"></kOwnersSelector>
+    </ng-template>
+</kPopupWidget>

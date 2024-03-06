@@ -3559,6 +3559,8 @@
                 "perform": "Perform now",
                 "notify": "Notify owner",
                 "delete": "Remove",
+                "owner": "Rule owner",
+                "newOwner": "Set a new owner for this rule",
                 "filter": {
                     "added": "Added between",
                     "action": "Action between",
