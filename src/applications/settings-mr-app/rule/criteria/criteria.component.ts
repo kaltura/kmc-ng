@@ -1,8 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {KalturaLogger, LogLevels} from '@kaltura-ng/kaltura-logger';
 import {MenuItem} from 'primeng/api';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
-import {BrowserService} from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kRuleCriteria',
@@ -12,7 +11,7 @@ import {BrowserService} from 'app-shared/kmc-shell';
         KalturaLogger.createLogger('RuleCriteriaComponent')
     ]
 })
-export class CriteriaComponent implements OnInit {
+export class CriteriaComponent {
 
     public items: MenuItem[];
 
@@ -54,12 +53,6 @@ export class CriteriaComponent implements OnInit {
     @Output() onFilterChange = new EventEmitter<any>();
 
     constructor(private _appLocalization: AppLocalization) {
-    }
-
-    ngOnInit() {
-        setTimeout(() => {
-
-        })
     }
 
     public buildMenu(): void {

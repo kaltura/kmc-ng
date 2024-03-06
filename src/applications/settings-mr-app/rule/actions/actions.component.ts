@@ -3,11 +3,12 @@ import {KalturaLogger, LogLevels} from '@kaltura-ng/kaltura-logger';
 import {MenuItem} from 'primeng/api';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {BrowserService} from 'app-shared/kmc-shell';
+import {Task} from '../../mr-store/mr-store.service';
 
 export type Action = {
-    type: 'flavours' | 'addCategory' | 'removeCategory' | 'addTags' | 'removeTags' | 'owner' | 'unpublish' | 'delete';
+    type: 'flavours' | 'addCategory' | 'removeCategory' | 'addTags' | 'removeTags' | 'owner' | 'delete' | 'notification' | '';
     requires: 'add' | 'delete' | 'update' | 'none';
-    action: any;
+    task: Task | null;
     isNotification: boolean;
 }
 @Component({
@@ -21,11 +22,23 @@ export type Action = {
 export class RuleActionsComponent implements OnInit {
 
     @Input() profileId: string;
+    @Input() set ruleActions(value: Task[]) {
+        this.actions = [];
+        value.forEach(task => {
+            this.actions.push({
+                type: this.getActionType(task),
+                requires: 'update',
+                task,
+                isNotification: typeof task.taskParams?.sendNotificationTaskParams !== "undefined"
+            })
+        })
+    };
     @Input() selectedTab: string;
-    @Output() onActionsChange = new EventEmitter<any>();
+    @Output() onActionsChange = new EventEmitter<Action[]>();
 
     public items: MenuItem[];
     public actions: Action[] = [];
+    public actionsOnSave: Action[] = [];
 
     constructor(private _appLocalization: AppLocalization) {
     }
@@ -89,13 +102,6 @@ export class RuleActionsComponent implements OnInit {
                 }
             },
             {
-                label: this._appLocalization.get('applications.settings.mr.actions.unpublish'),
-                disabled: this.actions.filter(action => action.type === 'unpublish').length > 0,
-                command: () => {
-                    this.addAction('unpublish');
-                }
-            },
-            {
                 label: this._appLocalization.get('applications.settings.mr.actions.delete'),
                 disabled: this.actions.filter(action => action.type === 'delete').length > 0,
                 command: () => {
@@ -105,8 +111,49 @@ export class RuleActionsComponent implements OnInit {
         ];
     }
 
-    private addAction(type: string): void {
-        console.log("Add action: " + type);
+    private getActionType(task: Task): Action['type'] {
+        let type: Action['type'] = '';
+        // 'flavours' | 'addCategory' | 'removeCategory' | 'addTags' | 'removeTags' | 'owner' | 'delete'
+        if (task.taskParams?.deleteFlavorsTaskParams?.flavorParamsIds) {
+            type = 'flavours';
+        }
+        return type;
+    }
+
+    private addAction(type: Action['type']): void {
+        this.actions.push({
+            type,
+            requires: 'add',
+            task: null,
+            isNotification: type !== 'notification'
+        })
+    }
+
+    public onActionChange(action: Action): void {
+        if (action.requires === 'delete') {
+            this.actions = this.actions.filter(ac => ac.type !== action['type']);
+            if (action.task?.id) {
+                // existing task, need API call to delete
+                this.actionsOnSave.push(action);
+            } else {
+                // remove the 'add' action from actionsOnSave
+                const index = this.actionsOnSave.findIndex(ac => ac.task.type === action.task.type && ac.requires === 'delete');
+                if (index > -1) {
+                    this.actionsOnSave.splice(index, 1);
+                }
+            }
+        }
+        if (action.requires === 'add' || action.requires === 'update') {
+            // check if we have this action in the actionsOnSave array. Add if not found, update if found
+            const index = this.actionsOnSave.findIndex(ac => ac.task.type === action.task.type && ac.requires === action.requires);
+            if (index > -1) {
+                Object.assign(this.actionsOnSave[index], action);
+            } else {
+                this.actionsOnSave.push(action);
+            }
+        }
+        this.onActionsChange.emit(this.actionsOnSave);
+        console.log("actionsOnSave", this.actionsOnSave);
     }
 
 }

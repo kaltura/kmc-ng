@@ -4,7 +4,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { serverConfig } from "config/server";
 import { AppAuthentication } from "app-shared/kmc-shell";
-import { KalturaMediaEntryFilter } from 'kaltura-ngx-client';
+import {KalturaMediaEntry, KalturaMediaEntryFilter} from 'kaltura-ngx-client';
 
 export enum SortDirection {
     Desc = -1,
@@ -75,6 +75,36 @@ export type LoadObjectStateResponse = {
     objects: ObjectState[];
     totalCount: number;
 }
+
+export type Task = {
+    id?: string;
+    type: 'deleteEntry' | 'deleteFlavors' | 'sendNotification' | 'modifyEntry' | 'generateReport';
+    managedTasksProfileId?: string;
+    status?: 'deleted' | 'disabled' | 'enabled';
+    taskParams?: {
+        deleteFlavorsTaskParams?: {
+            actionType: 'deleteList' | 'keepList';
+            flavorParamsIds: string;
+        },
+        deleteEntryTaskParams?: {
+            recycleBin: boolean;
+        },
+        modifyEntryTaskParams?: {
+            kalturaEntry: KalturaMediaEntry,
+            addToCategoryIds: string;
+            removeFromCategoryIds: string;
+        }
+        sendNotificationTaskParams?: {
+
+        }
+    }
+}
+
+export type LoadTasksResponse = {
+    objects: Task[];
+    totalCount: number;
+}
+
 
 @Injectable()
 export class MrStoreService implements OnDestroy {
@@ -175,6 +205,16 @@ export class MrStoreService implements OnDestroy {
             return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/objectState/bulkUpdate`, {ids, plannedExecutionTime: new Date()}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to bulk update object states plannedExecutionTime'));
+        }
+    }
+
+    // ------------------------- Task API ---------------------------- //
+
+    public loadTasks(managedTasksProfileId: string): Observable<LoadTasksResponse> {
+        try {
+            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/task/list`, {managedTasksProfileId}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadTasksResponse>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to load tasks list'));
         }
     }
 

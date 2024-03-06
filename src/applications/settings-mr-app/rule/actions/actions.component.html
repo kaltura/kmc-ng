@@ -5,14 +5,8 @@
                   [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'" ></p-tieredMenu>
 
     <div *ngFor="let action of actions">
-<!--        <ng-container [ngSwitch]="true">-->
-<!--            <kCriteriaCreated *ngSwitchCase="field === 'created'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaCreated>-->
-<!--            <kCriteriaPlayed *ngSwitchCase="field === 'played'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaPlayed>-->
-<!--            <kCriteriaDuration *ngSwitchCase="field === 'duration'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaDuration>-->
-<!--            <kCriteriaPlays *ngSwitchCase="field === 'plays'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaPlays>-->
-<!--            <kCriteriaCategories *ngSwitchCase="field === 'categories'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaCategories>-->
-<!--            <kCriteriaTags *ngSwitchCase="field === 'tags'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaTags>-->
-<!--            <kCriteriaOwner *ngSwitchCase="field === 'owner'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaOwner>-->
-<!--        </ng-container>-->
+        <ng-container [ngSwitch]="true">
+            <kActionFlavours *ngSwitchCase="action.type === 'flavours'" [action]="action" [profileId]="profileId" (onActionChange)="onActionChange($event)"></kActionFlavours>
+        </ng-container>
     </div>
 </div>

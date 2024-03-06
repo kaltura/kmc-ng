@@ -9,6 +9,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
+import { MultiSelectModule as PrimeMultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
 import { MenuModule } from 'primeng/menu';
@@ -17,7 +18,7 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { AutoCompleteModule, KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
+import {AutoCompleteModule, KalturaPrimeNgUIModule, MultiSelectModule} from '@kaltura-ng/kaltura-primeng-ui';
 import { CategoriesModule } from "app-shared/content-shared/categories/categories.module";
 import { DateFormatModule } from "app-shared/kmc-shared/date-format/date-format.module";
 import { CopyToClipboardModule, LocalizationModule } from '@kaltura-ng/mc-shared';
@@ -38,6 +39,7 @@ import {ReviewTagsComponent} from './review/review-tags/review-tags.component';
 import {ReviewRefineFiltersComponent} from './review/review-refine-filters/review-refine-filters.component';
 import {RuleActionsComponent} from './rule/actions/actions.component';
 import {OwnerSelector} from './rule/owner-selector/owner-selector.component';
+import {ActionFlavourComponent} from './rule/actions/renderers/flavours.component';
 
 @NgModule({
     imports: [
@@ -56,6 +58,7 @@ import {OwnerSelector} from './rule/owner-selector/owner-selector.component';
         CheckboxModule,
         CalendarModule,
         InputNumberModule,
+        PrimeMultiSelectModule,
         ButtonModule,
         TieredMenuModule,
         TableModule,
@@ -69,7 +72,8 @@ import {OwnerSelector} from './rule/owner-selector/owner-selector.component';
         KalturaPrimeNgUIModule,
         LocalizationModule,
         AutoCompleteModule,
-        KMCPermissionsModule
+        KMCPermissionsModule,
+        MultiSelectModule
     ],
   declarations: [
       SettingsMrComponent,
@@ -92,7 +96,8 @@ import {OwnerSelector} from './rule/owner-selector/owner-selector.component';
       CriteriaCategoriesComponent,
       CategoriesSelector,
       CriteriaTagsComponent,
-      CriteriaOwnerComponent
+      CriteriaOwnerComponent,
+      ActionFlavourComponent
   ],
     providers: [MrStoreService]
 })

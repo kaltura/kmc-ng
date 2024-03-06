@@ -3638,7 +3638,11 @@
                     "removeTags": "Remove tags",
                     "owner": "Change owner",
                     "unpublish": "Unpublish",
-                    "delete": "Delete entry"
+                    "delete": "Delete entry",
+                    "value": "Action value",
+                    "flavour": "Flavors",
+                    "selectFlavours": "Select flavours",
+                    "flavoursError": "At least one flavour must be kept"
                 }
             }
         },

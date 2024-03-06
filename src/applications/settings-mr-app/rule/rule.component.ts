@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SettingsMrMainViewService} from 'app-shared/kmc-shared/kmc-views';
-import {ManagedTasksProfile, MrStoreService} from '../mr-store/mr-store.service';
+import {ManagedTasksProfile, MrStoreService, Task} from '../mr-store/mr-store.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
@@ -39,6 +39,7 @@ export class RuleComponent implements OnInit {
     public _reviewPeriod: { value: number, label: string }[] = [];
     public _daysOfWeek: { value: string, label: string }[] = [{value: 'SUN', label: 'Sunday'}, {value: 'MON', label: 'Monday'}, {value: 'TUE', label: 'Tuesday'}, {value: 'WED', label: 'Wednesday'}, {value: 'THU', label: 'Thursday'}, {value: 'FRI', label: 'Friday'}, {value: 'SAT', label: 'Saturday'}];
 
+    public ruleActions: Task[] = [];
     private actions: Action[] = [];
 
     constructor(private _mrMainViewService: SettingsMrMainViewService,
@@ -64,6 +65,8 @@ export class RuleComponent implements OnInit {
                 this._everyWeek.push({value: i, label: i.toString()});
                 this._everyMonth.push({value: i, label: i.toString()});
             }
+            // load actions in the background without blocking UI
+            this.loadActions(this._ruleRoute.snapshot.params.id);
         }
     }
     private displayError(message: string): void {
@@ -105,6 +108,19 @@ export class RuleComponent implements OnInit {
                 } else {
                     // success
                     this.handleSuccessResponse(response)
+                }
+            },
+            error => {
+                this.displayError(this._appLocalization.get('applications.settings.mr.loadError'));
+            }
+        )
+    }
+
+    private loadActions(ruleId: string): void {
+        this._mrStore.loadTasks(ruleId).subscribe(
+            (response) => {
+                if (response.objects) {
+                    this.ruleActions = response.objects;
                 }
             },
             error => {
