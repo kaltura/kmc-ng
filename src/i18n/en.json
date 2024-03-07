@@ -3642,7 +3642,12 @@
                     "value": "Action value",
                     "flavour": "Flavors",
                     "selectFlavours": "Select flavours",
-                    "flavoursError": "At least one flavour must be kept"
+                    "flavoursError": "At least one flavour must be kept",
+                    "categoriesError": "At least one category must be selected",
+                    "addCategory": "Add to category",
+                    "removeCategory": "Remove from categories",
+                    "category": "Categories",
+                    "ownerError": "Owner must be selected"
                 }
             }
         },

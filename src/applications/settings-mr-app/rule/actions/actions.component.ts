@@ -130,6 +130,7 @@ export class RuleActionsComponent implements OnInit {
     }
 
     public onActionChange(action: Action): void {
+        const index = this.actionsOnSave.findIndex(ac => ac.type === action.type && ac.requires === action.requires);
         if (action.requires === 'delete') {
             this.actions = this.actions.filter(ac => ac.type !== action['type']);
             if (action.task?.id) {
@@ -137,7 +138,6 @@ export class RuleActionsComponent implements OnInit {
                 this.actionsOnSave.push(action);
             } else {
                 // remove the 'add' action from actionsOnSave
-                const index = this.actionsOnSave.findIndex(ac => ac.task.type === action.task.type && ac.requires === 'delete');
                 if (index > -1) {
                     this.actionsOnSave.splice(index, 1);
                 }
@@ -145,7 +145,6 @@ export class RuleActionsComponent implements OnInit {
         }
         if (action.requires === 'add' || action.requires === 'update') {
             // check if we have this action in the actionsOnSave array. Add if not found, update if found
-            const index = this.actionsOnSave.findIndex(ac => ac.task.type === action.task.type && ac.requires === action.requires);
             if (index > -1) {
                 Object.assign(this.actionsOnSave[index], action);
             } else {

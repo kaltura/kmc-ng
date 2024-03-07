@@ -5,11 +5,10 @@ import {
     FlavorParamsListAction,
     KalturaClient,
     KalturaDetachedResponseProfile,
-    KalturaFilterPager, KalturaFlavorParams,
+    KalturaFilterPager,
     KalturaResponseProfileType
 } from 'kaltura-ngx-client';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
-import {KMCPermissions} from 'app-shared/kmc-shared/kmc-permissions';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 
 @Component({
@@ -132,6 +131,4 @@ export class ActionFlavourComponent implements OnInit, OnDestroy{
 
     ngOnDestroy(): void {
     }
-
-    protected readonly _kmcPermissions = KMCPermissions;
 }

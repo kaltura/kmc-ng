@@ -7,6 +7,8 @@
     <div *ngFor="let action of actions">
         <ng-container [ngSwitch]="true">
             <kActionFlavours *ngSwitchCase="action.type === 'flavours'" [action]="action" [profileId]="profileId" (onActionChange)="onActionChange($event)"></kActionFlavours>
+            <kActionCategory *ngSwitchCase="action.type === 'addCategory' || action.type === 'removeCategory'" [type]="action.type" [action]="action" [profileId]="profileId" (onActionChange)="onActionChange($event)"></kActionCategory>
+            <kActionOwner *ngSwitchCase="action.type === 'owner'" [action]="action" [profileId]="profileId" (onActionChange)="onActionChange($event)"></kActionOwner>
         </ng-container>
     </div>
 </div>

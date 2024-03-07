@@ -90,9 +90,9 @@ export type Task = {
             recycleBin: boolean;
         },
         modifyEntryTaskParams?: {
-            kalturaEntry: KalturaMediaEntry,
-            addToCategoryIds: string;
-            removeFromCategoryIds: string;
+            kalturaEntry?: any,
+            addToCategoryIds?: string;
+            removeFromCategoryIds?: string;
         }
         sendNotificationTaskParams?: {
 
