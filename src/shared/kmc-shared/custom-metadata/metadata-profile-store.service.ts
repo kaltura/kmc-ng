@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { PartnerProfileStore } from '../partner-profile';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs';
-import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaFilterPager } from 'kaltura-ngx-client';
 import { KalturaMetadataObjectType } from 'kaltura-ngx-client';
 import { MetadataProfileListAction } from 'kaltura-ngx-client';
 import { MetadataProfile } from './metadata-profile';
@@ -183,9 +183,13 @@ export class MetadataProfileStore extends PartnerProfileStore implements OnDestr
 
             }
         }
+        const pager = new KalturaFilterPager({
+             pageSize: 500
+         });
 
         return <any>this._kalturaServerClient.request(new MetadataProfileListAction({
-            filter: metadataProfilesFilter
+            filter: metadataProfilesFilter,
+            pager
         }));
     }
 }
