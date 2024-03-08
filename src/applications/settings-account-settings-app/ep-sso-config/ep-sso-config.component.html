@@ -73,7 +73,7 @@
               </div>
 
             <div>
-                <input class="kControl" pInputText
+                <input class="kControl" pInputText  [placeholder]="'applications.settings.authentication.organizationIdPh' | translate"
                        [formControl]="_organizationIdField"
                        [class.disabled]="_disableConfig"
                        [class.kHasError]="_organizationIdField.invalid && _organizationIdField.touched">

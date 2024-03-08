@@ -175,7 +175,7 @@
                 "qrCode": "Scan this QR code with your authentication app. You can download an authentication app for both platforms:",
                 "sso": "Login with SSO",
                 "loginWithPassword": "Login with Email and Password",
-                "orgIdErr": "Please enter organization ID"
+                "orgIdErr": "Your organization requires an organization ID"
             },
             "invalidLoginHash": {
                 "title": "Invalid Login Link",
@@ -253,7 +253,8 @@
                 "invalidOtp": "Invalid authenticator code",
                 "updatePasswordMissingOtp": "You password was updated successfully.\nPlease login again with your new password.",
                 "ssoForbidden": "SSO Feature not available",
-                "ssoNotFound": "SSO Login failed"
+                "ssoNotFound": "SSO Login failed",
+                "abError": "Your username or organization ID is incorrect"
             },
             "send": "Send",
             "wait": "Wait…",
@@ -2721,6 +2722,7 @@
                 "deleteError": "Error deleting profile",
                 "addOrganizationId": "Organization ID (optional)",
                 "organizationId": "Organization ID",
+                "organizationIdPh": "If you were not provided an organization ID, leave empty",
                 "loginError": "Login error occurred",
                 "edit": {
                     "titleAdd": "Add profile",

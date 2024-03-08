@@ -69,7 +69,7 @@
 
             <div>
                 <input class="kControl" pInputText
-                       [formControl]="_organizationIdField"
+                       [formControl]="_organizationIdField" [placeholder]="'applications.settings.authentication.organizationIdPh' | translate"
                        [class.kHasError]="_organizationIdField.invalid && _organizationIdField.touched">
                 <div *ngIf="_organizationIdField.hasError('unsafeValue') && _organizationIdField.pristine" class="kError">
                     {{'applications.administration.role.errors.unsafeValue' | translate}}

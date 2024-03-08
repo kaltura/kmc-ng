@@ -346,7 +346,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
                   if (parsedResponse?.objectType === "KalturaAPIException") {
                       this._inProgress = false;
                       this._missingOrgId = parsedResponse.code === "ORGANIZATION_ID_MISSING";
-                      this._errorMessage = parsedResponse.code === "ORGANIZATION_ID_MISSING" ? this._appLocalization.get('app.login.login.orgIdErr') : this._appLocalization.get('app.login.error.ssoNotFound');
+                      this._errorMessage = parsedResponse.code === "ORGANIZATION_ID_MISSING" ? this._appLocalization.get('app.login.login.orgIdErr') : this._appLocalization.get('app.login.error.abError');
                   }
               } else {
                   if (response.indexOf('"objectType":"AuthProfile"') > -1) {
