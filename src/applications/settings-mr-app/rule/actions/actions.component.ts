@@ -1,13 +1,12 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {KalturaLogger, LogLevels} from '@kaltura-ng/kaltura-logger';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {MenuItem} from 'primeng/api';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
-import {BrowserService} from 'app-shared/kmc-shell';
 import {Task} from '../../mr-store/mr-store.service';
 
 export type Action = {
     type: 'flavours' | 'addCategory' | 'removeCategory' | 'addTags' | 'removeTags' | 'owner' | 'delete' | 'notification' | '';
-    requires: 'add' | 'delete' | 'update' | 'none';
+    requires: 'create' | 'delete' | 'update';
     task: Task | null;
     isNotification: boolean;
 }
@@ -117,13 +116,31 @@ export class RuleActionsComponent implements OnInit {
         if (task.taskParams?.deleteFlavorsTaskParams?.flavorParamsIds) {
             type = 'flavours';
         }
+        if (task.taskParams?.modifyEntryTaskParams?.addToCategoryIds) {
+            type = 'addCategory';
+        }
+        if (task.taskParams?.modifyEntryTaskParams?.removeFromCategoryIds) {
+            type = 'removeCategory';
+        }
+        if (task.taskParams?.modifyEntryTaskParams?.addTags) {
+            type = 'addTags';
+        }
+        if (task.taskParams?.modifyEntryTaskParams?.removeTags) {
+            type = 'removeTags';
+        }
+        if (task.taskParams?.modifyEntryTaskParams?.kalturaEntry?.userId) {
+            type = 'owner';
+        }
+        if (task.taskParams?.deleteEntryTaskParams) {
+            type = 'delete';
+        }
         return type;
     }
 
     private addAction(type: Action['type']): void {
         this.actions.push({
             type,
-            requires: 'add',
+            requires: 'create',
             task: null,
             isNotification: type !== 'notification'
         })
@@ -137,13 +154,13 @@ export class RuleActionsComponent implements OnInit {
                 // existing task, need API call to delete
                 this.actionsOnSave.push(action);
             } else {
-                // remove the 'add' action from actionsOnSave
+                // remove the 'create' action from actionsOnSave
                 if (index > -1) {
                     this.actionsOnSave.splice(index, 1);
                 }
             }
         }
-        if (action.requires === 'add' || action.requires === 'update') {
+        if (action.requires === 'create' || action.requires === 'update') {
             // check if we have this action in the actionsOnSave array. Add if not found, update if found
             if (index > -1) {
                 Object.assign(this.actionsOnSave[index], action);
@@ -152,7 +169,6 @@ export class RuleActionsComponent implements OnInit {
             }
         }
         this.onActionsChange.emit(this.actionsOnSave);
-        console.log("actionsOnSave", this.actionsOnSave);
     }
 
 }

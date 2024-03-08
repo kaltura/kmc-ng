@@ -75,6 +75,10 @@ export type LoadObjectStateResponse = {
     objects: ObjectState[];
     totalCount: number;
 }
+export type RequestObject = {
+    action: 'create' | 'update' | 'delete';
+    dto: Task;
+}
 
 export type Task = {
     id?: string;
@@ -93,6 +97,8 @@ export type Task = {
             kalturaEntry?: any,
             addToCategoryIds?: string;
             removeFromCategoryIds?: string;
+            addTags?: string;
+            removeTags?: string;
         }
         sendNotificationTaskParams?: {
 
@@ -215,6 +221,14 @@ export class MrStoreService implements OnDestroy {
             return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/task/list`, {managedTasksProfileId}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadTasksResponse>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to load tasks list'));
+        }
+    }
+
+    public saveActions(requests: RequestObject[]): Observable<any> {
+        try {
+            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/task/multiRequest`, {requests}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to save actions'));
         }
     }
 

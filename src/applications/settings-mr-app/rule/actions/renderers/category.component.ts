@@ -1,15 +1,8 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {Action} from '../actions.component';
-import {
-    FlavorParamsListAction,
-    KalturaClient,
-    KalturaDetachedResponseProfile,
-    KalturaFilterPager,
-    KalturaResponseProfileType
-} from 'kaltura-ngx-client';
+import {CategoryListAction, KalturaCategory, KalturaCategoryFilter, KalturaClient} from 'kaltura-ngx-client';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {CategoriesSearchService, CategoryData} from 'app-shared/content-shared/categories/categories-search.service';
 import {CategoryTooltipPipe} from 'app-shared/content-shared/categories/category-tooltip.pipe';
 import {ISubscription} from 'rxjs/Subscription';
@@ -23,7 +16,10 @@ import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
         <div class="action">
             <div class="kRow">
                 <span class="kLabel">{{'applications.settings.mr.actions.value' | translate}}</span>
-                <span class="kText">{{this.type === 'addCategory' ? ('applications.settings.mr.actions.addCategory' | translate) : ('applications.settings.mr.actions.removeCategory' | translate)}}</span>
+                <span class="kLabelWithHelpTip">{{this.type === 'addCategory' ? ('applications.settings.mr.actions.addCategory' | translate) : ('applications.settings.mr.actions.removeCategory' | translate)}}</span>
+                <kInputHelper>
+                    <span>{{this.type === 'addCategory' ? ('applications.settings.mr.actions.addCategory_tt' | translate) : ('applications.settings.mr.actions.removeCategory_tt' | translate)}}</span>
+                </kInputHelper>
             </div>
             <div class="kRow">
                 <span class="kLabel">{{'applications.settings.mr.actions.category' | translate}}</span>
@@ -60,12 +56,40 @@ import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
 })
 export class ActionCategoryComponent implements OnDestroy{
     @Input() type: 'removeCategory' | 'addCategory';
-    @Input() action: Action;
+    @Input() set ruleAction(value: Action) {
+        this.action = value;
+        // use timeout to verify type is set already
+        setTimeout(() => {
+            let categoryIds = [];
+            if (this.type === 'addCategory') {
+                categoryIds = this.action.task?.taskParams?.modifyEntryTaskParams?.addToCategoryIds?.split(',') || [];
+            } else {
+                categoryIds = this.action.task?.taskParams?.modifyEntryTaskParams?.removeFromCategoryIds?.split(',') || [];
+            }
+            if (categoryIds.length) {
+                this._kalturaServerClient
+                    .request(new CategoryListAction({
+                        filter: new KalturaCategoryFilter({ idIn: categoryIds.toString() })
+                    }))
+                    .subscribe(
+                        response => {
+                            if (response.objects?.length) {
+                                this.categories = this.parseAndCacheCategories(response.objects);
+                            }
+                        },
+                        error => {
+                            console.error("Error loading categories: " + error.message);
+                        }
+                    );
+            }
+        }, 100)
+    };
     @Input() profileId: string;
     @Output() onActionChange = new EventEmitter<Action>();
 
     public hasError = false;
 
+    public action: Action;
     public categories: CategoryData[] = [];
     private _categoriesTooltipPipe: CategoryTooltipPipe;
     private _searchCategoriesSubscription : ISubscription;
@@ -75,6 +99,7 @@ export class ActionCategoryComponent implements OnDestroy{
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
 
     constructor(private _appLocalization: AppLocalization,
+                private _kalturaServerClient: KalturaClient,
                 private _categoriesSearchService : CategoriesSearchService) {
         this._categoriesTooltipPipe  = new CategoryTooltipPipe(this._appLocalization);
     }
@@ -144,6 +169,34 @@ export class ActionCategoryComponent implements OnDestroy{
         }
     }
 
+    private parseAndCacheCategories(kalturaCategories: KalturaCategory[]): CategoryData[] {
+        const result = [];
+        if (kalturaCategories) {
+            kalturaCategories.map((category) => {
+                const fullIdPath = (category.fullIds ? category.fullIds.split('>') : []).map((item: any) => Number(item));
+                const newCategoryData = {
+                    id: category.id,
+                    name: category.name,
+                    fullIdPath: fullIdPath,
+                    referenceId: category.referenceId,
+                    parentId: category.parentId !== 0 ? category.parentId : null,
+                    sortValue: category.partnerSortValue,
+                    fullName: category.fullName,
+                    childrenCount: category.directSubCategoriesCount,
+                    membersCount: category.membersCount,
+                    appearInList: category.appearInList,
+                    privacy: category.privacy,
+                    privacyContext: category.privacyContext,
+                    privacyContexts: category.privacyContexts,
+                    contributionPolicy: category.contributionPolicy,
+                    partnerSortValue: category.partnerSortValue
+                };
+                result.push(newCategoryData);
+            });
+        }
+        return result;
+    }
+
     public validate(): void {
         this.hasError = this.categories.length === 0;
         if (!this.hasError) {
@@ -154,7 +207,7 @@ export class ActionCategoryComponent implements OnDestroy{
                     this.action.task .taskParams.modifyEntryTaskParams['removeFromCategoryIds'] = this.categories.map(category => category.id).toString();
                 }
             }
-            if (this.action.requires === 'add') {
+            if (this.action.requires === 'create') {
                 // new action - create task
                 this.action.task = {
                     managedTasksProfileId: this.profileId,

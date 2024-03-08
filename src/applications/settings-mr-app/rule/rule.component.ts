@@ -138,9 +138,26 @@ export class RuleComponent implements OnInit {
                     // error returned from the server in the response
                     this.displayError(response.message ? response.message : this._appLocalization.get('applications.settings.mr.saveError'));
                 } else {
-                    // success
-                    this.handleSuccessResponse(response);
-                    this._isDirty = false;
+                    // success. update rule actions if needed
+                    if (this.actions.length) {
+                        let multiRequest = [];
+                        this.actions.forEach(ac => multiRequest.push({action: ac.requires, dto: ac.task}));
+                        this._mrStore.saveActions(multiRequest).subscribe(
+                            tasks => {
+                                console.log("actions: ", this.actions);
+                                console.log("tasks: ",tasks);
+                                // TODO: map returned tasks to actions. remove deleted actions. update the task and change requires from 'create' to 'update'
+                                this.handleSuccessResponse(response);
+                                this._isDirty = false;
+                            },
+                            error => {
+                                this.displayError(error.message ? error.message : this._appLocalization.get('applications.settings.mr.saveError'));
+                            }
+                        );
+                    } else {
+                        this.handleSuccessResponse(response);
+                        this._isDirty = false;
+                    }
                 }
             },
             error => {

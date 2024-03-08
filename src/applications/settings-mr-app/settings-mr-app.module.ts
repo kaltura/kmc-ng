@@ -39,9 +39,7 @@ import {ReviewTagsComponent} from './review/review-tags/review-tags.component';
 import {ReviewRefineFiltersComponent} from './review/review-refine-filters/review-refine-filters.component';
 import {RuleActionsComponent} from './rule/actions/actions.component';
 import {OwnerSelector} from './rule/owner-selector/owner-selector.component';
-import {ActionFlavourComponent} from './rule/actions/renderers/flavours.component';
-import {ActionCategoryComponent} from './rule/actions/renderers/category.component';
-import {ActionOwnerComponent} from './rule/actions/renderers/owner.component';
+import {ActionFlavourComponent, ActionCategoryComponent, ActionOwnerComponent, ActionDeleteComponent, ActionTagsComponent} from './rule/actions/renderers';
 
 @NgModule({
     imports: [
@@ -101,7 +99,9 @@ import {ActionOwnerComponent} from './rule/actions/renderers/owner.component';
       CriteriaOwnerComponent,
       ActionFlavourComponent,
       ActionCategoryComponent,
-      ActionOwnerComponent
+      ActionOwnerComponent,
+      ActionDeleteComponent,
+      ActionTagsComponent
   ],
     providers: [MrStoreService]
 })

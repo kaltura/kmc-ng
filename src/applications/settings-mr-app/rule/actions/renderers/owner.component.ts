@@ -1,23 +1,17 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {Action} from '../actions.component';
 import {
     ESearchSearchUserAction,
-    FlavorParamsListAction,
     KalturaClient,
-    KalturaDetachedResponseProfile, KalturaESearchItemType,
+    KalturaESearchItemType,
     KalturaESearchOperatorType, KalturaESearchUserFieldName,
     KalturaESearchUserItem,
     KalturaESearchUserOperator,
     KalturaESearchUserParams, KalturaESearchUserResponse, KalturaESearchUserResult,
     KalturaFilterPager,
-    KalturaResponseProfileType,
-    KalturaUser
+    KalturaUser, KalturaUserFilter, UserListAction
 } from 'kaltura-ngx-client';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {CategoriesSearchService, CategoryData} from 'app-shared/content-shared/categories/categories-search.service';
-import {CategoryTooltipPipe} from 'app-shared/content-shared/categories/category-tooltip.pipe';
 import {ISubscription} from 'rxjs/Subscription';
 import {Observable, Subject} from 'rxjs';
 import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
@@ -29,7 +23,10 @@ import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
         <div class="action">
             <div class="kRow">
                 <span class="kLabel">{{'applications.settings.mr.actions.value' | translate}}</span>
-                <span class="kText">{{'applications.settings.mr.actions.owner' | translate}}</span>
+                <span class="kLabelWithHelpTip">{{'applications.settings.mr.actions.owner' | translate}}</span>
+                <kInputHelper>
+                    <span>{{'applications.settings.mr.actions.owner_tt' | translate}}</span>
+                </kInputHelper>
             </div>
             <div class="kRow">
                 <span class="kLabel">{{'applications.settings.mr.filter.owner' | translate}}</span>
@@ -59,11 +56,30 @@ import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
     `
 })
 export class ActionOwnerComponent implements OnDestroy{
-    @Input() action: Action;
+    @Input() set ruleAction(value: Action) {
+        this.action = value;
+        const userId = value.task?.taskParams?.modifyEntryTaskParams?.kalturaEntry?.userId;
+        if (userId) {
+            // load users from their IDs
+            this._kalturaServerClient.request(new UserListAction({
+                filter: new KalturaUserFilter({
+                    idIn: userId
+                })
+            }))
+                .pipe(cancelOnDestroy(this))
+                .subscribe(response => {
+                        this.owners = response?.objects ? response.objects : [];
+                    },
+                    error => {
+                        console.error("Error loading users ", error);
+                    })
+        }
+    };
     @Input() profileId: string;
     @Output() onActionChange = new EventEmitter<Action>();
 
     public hasError = false;
+    public action: Action;
 
     public owners: KalturaUser[] = [];
     private _searchUsersSubscription: ISubscription;
@@ -174,7 +190,7 @@ export class ActionOwnerComponent implements OnDestroy{
             const updateOwner = () => {
                 this.action.task.taskParams.modifyEntryTaskParams.kalturaEntry.userId = this.owners[0].id;
             }
-            if (this.action.requires === 'add') {
+            if (this.action.requires === 'create') {
                 // new action - create task
                 this.action.task = {
                     managedTasksProfileId: this.profileId,

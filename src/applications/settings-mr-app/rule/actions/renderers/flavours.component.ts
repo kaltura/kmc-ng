@@ -19,7 +19,10 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
             <div class="action">
                 <div class="kRow">
                     <span class="kLabel">{{'applications.settings.mr.actions.value' | translate}}</span>
-                    <span class="kText">{{'applications.settings.mr.actions.flavours' | translate}}</span>
+                    <span class="kLabelWithHelpTip">{{'applications.settings.mr.actions.flavours' | translate}}</span>
+                    <kInputHelper>
+                        <span>{{'applications.settings.mr.actions.flavours_tt' | translate}}</span>
+                    </kInputHelper>
                 </div>
                 <div class="kRow">
                     <span class="kLabel">{{'applications.settings.mr.actions.flavour' | translate}}</span>
@@ -81,6 +84,11 @@ export class ActionFlavourComponent implements OnInit, OnDestroy{
                 response => {
                     if (response?.objects) {
                         this.flavours = response.objects;
+                        this.selectedFlavours = [];
+                        const selectedFlavourIds = this.action.task?.taskParams?.deleteFlavorsTaskParams?.flavorParamsIds?.split(',') || [];
+                        selectedFlavourIds.forEach(id=> {
+                            this.selectedFlavours.push(parseInt(id));
+                        })
                     }
                     this._isBusy = false;
                 },
@@ -104,7 +112,7 @@ export class ActionFlavourComponent implements OnInit, OnDestroy{
     public validate(): void {
         this.hasError = this.selectedFlavours.length === 0;
         if (!this.hasError) {
-            if (this.action.requires === 'add') {
+            if (this.action.requires === 'create') {
                 // new action - create task
                 this.action.task = {
                     managedTasksProfileId: this.profileId,
