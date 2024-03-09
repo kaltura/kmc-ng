@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {SettingsMrMainViewService} from 'app-shared/kmc-shared/kmc-views';
 import {ManagedTasksProfile, MrStoreService, Task} from '../mr-store/mr-store.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -8,7 +8,7 @@ import {BrowserService} from 'app-shared/kmc-shell';
 
 import {KMCPermissions} from 'app-shared/kmc-shared/kmc-permissions';
 import {subApplicationsConfig} from 'config/sub-applications';
-import {Action} from './actions/actions.component';
+import {Action, RuleActionsComponent} from './actions/actions.component';
 
 @Component({
     selector: 'kMrRule',
@@ -16,6 +16,7 @@ import {Action} from './actions/actions.component';
     styleUrls: ['./rule.component.scss']
 })
 export class RuleComponent implements OnInit {
+    @ViewChild('actionsComponent', { static: false }) actionsComponent: RuleActionsComponent;
     public rule: ManagedTasksProfile;
     public _ruleName: string = '';
     public _isBusy = false;
@@ -117,6 +118,7 @@ export class RuleComponent implements OnInit {
     }
 
     private loadActions(ruleId: string): void {
+        this.ruleActions = [];
         this._mrStore.loadTasks(ruleId).subscribe(
             (response) => {
                 if (response.objects) {
@@ -144,9 +146,17 @@ export class RuleComponent implements OnInit {
                         this.actions.forEach(ac => multiRequest.push({action: ac.requires, dto: ac.task}));
                         this._mrStore.saveActions(multiRequest).subscribe(
                             tasks => {
-                                console.log("actions: ", this.actions);
-                                console.log("tasks: ",tasks);
-                                // TODO: map returned tasks to actions. remove deleted actions. update the task and change requires from 'create' to 'update'
+                                this.actions = this.actions.filter(ac => ac.requires !== 'delete');
+                                this.actions.forEach(action => {
+                                    if (action.requires === 'create') {
+                                        action.requires = 'update';
+                                        const updatedTask = this.findTaskByActionType(action.type, tasks.results);
+                                        if (typeof updatedTask !== "undefined") {
+                                            action.task = updatedTask;
+                                        }
+                                    }
+                                });
+                                this.actionsComponent.resetActionsOnSave();
                                 this.handleSuccessResponse(response);
                                 this._isDirty = false;
                             },
@@ -164,6 +174,33 @@ export class RuleComponent implements OnInit {
                 this.displayError(this._appLocalization.get('applications.settings.mr.saveError'));
             }
         )
+    }
+
+    private findTaskByActionType(actionType: Action['type'], tasks: Task[]): Task | undefined {
+        switch (actionType) {
+            case 'delete':
+                return tasks.find(task => task.type === 'deleteEntry');
+                break;
+            case 'flavours':
+                return tasks.find(task => task.taskParams?.deleteFlavorsTaskParams?.flavorParamsIds?.length > 0);
+                break;
+            case 'addTags':
+                return tasks.find(task => task.taskParams?.modifyEntryTaskParams?.addTags?.length > 0);
+                break;
+            case 'removeTags':
+                return tasks.find(task => task.taskParams?.modifyEntryTaskParams?.removeTags?.length > 0);
+                break;
+            case 'addCategory':
+                return tasks.find(task => task.taskParams?.modifyEntryTaskParams?.addToCategoryIds?.length > 0);
+                break;
+            case 'removeCategory':
+                return tasks.find(task => task.taskParams?.modifyEntryTaskParams?.removeFromCategoryIds?.length > 0);
+                break;
+            case 'owner':
+                return tasks.find(task => task.taskParams?.modifyEntryTaskParams?.kalturaEntry?.userId?.length > 0);
+                break;
+        }
+        return undefined;
     }
 
     public get _enableSaveBtn(): boolean {
@@ -244,6 +281,5 @@ export class RuleComponent implements OnInit {
         }
     }
 
-    protected readonly _kmcPermissions = KMCPermissions;
 }
 

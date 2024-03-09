@@ -1,17 +1,7 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared';
+import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import {Action} from '../actions.component';
-import {
-    CategoryListAction,
-    KalturaCategory,
-    KalturaCategoryFilter,
-    KalturaClient, KalturaFilterPager,
-    KalturaTagFilter, KalturaTaggedObjectType,
-    TagSearchAction
-} from 'kaltura-ngx-client';
+import {KalturaClient, KalturaFilterPager, KalturaTagFilter, KalturaTaggedObjectType, TagSearchAction} from 'kaltura-ngx-client';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
-import {CategoriesSearchService, CategoryData} from 'app-shared/content-shared/categories/categories-search.service';
-import {CategoryTooltipPipe} from 'app-shared/content-shared/categories/category-tooltip.pipe';
 import {ISubscription} from 'rxjs/Subscription';
 import {Observable, Subject} from 'rxjs';
 import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
@@ -145,9 +135,9 @@ export class ActionTagsComponent implements OnDestroy{
         if (!this.hasError) {
             const updateTags = () => {
                 if (this.type === 'addTags') {
-                    this.action.task .taskParams.modifyEntryTaskParams['addTags'] = this.tags.toString();
+                    this.action.task.taskParams.modifyEntryTaskParams['addTags'] = this.tags.toString();
                 } else {
-                    this.action.task .taskParams.modifyEntryTaskParams['removeTags'] = this.tags.toString();
+                    this.action.task.taskParams.modifyEntryTaskParams['removeTags'] = this.tags.toString();
                 }
             }
             if (this.action.requires === 'create') {

@@ -126,7 +126,7 @@
 
                     <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'action' && _selectedSection !== 'notifications'" *ngIf="rule">
                         <span class="kTitle">{{_selectedSection === 'action' ? ('applications.settings.mr.action' | translate) : ('applications.settings.mr.notifications' | translate)}}</span>
-                        <kRuleActions [ruleActions]="ruleActions" [profileId]="rule.id" [selectedTab]="_selectedSection" (onActionsChange)="onActionChange($event)"></kRuleActions>
+                        <kRuleActions #actionsComponent [ruleActions]="ruleActions" [profileId]="rule.id" [selectedTab]="_selectedSection" (onActionsChange)="onActionChange($event)"></kRuleActions>
                     </div>
 
                 </div>

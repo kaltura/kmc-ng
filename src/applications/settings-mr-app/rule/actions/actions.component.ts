@@ -159,8 +159,7 @@ export class RuleActionsComponent implements OnInit {
                     this.actionsOnSave.splice(index, 1);
                 }
             }
-        }
-        if (action.requires === 'create' || action.requires === 'update') {
+        } else if (action.requires === 'create' || action.requires === 'update') {
             // check if we have this action in the actionsOnSave array. Add if not found, update if found
             if (index > -1) {
                 Object.assign(this.actionsOnSave[index], action);
@@ -169,6 +168,10 @@ export class RuleActionsComponent implements OnInit {
             }
         }
         this.onActionsChange.emit(this.actionsOnSave);
+    }
+
+    public resetActionsOnSave(): void {
+        this.actionsOnSave = [];
     }
 
 }
