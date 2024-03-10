@@ -5,10 +5,9 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {Task} from '../../mr-store/mr-store.service';
 
 export type Action = {
-    type: 'flavours' | 'addCategory' | 'removeCategory' | 'addTags' | 'removeTags' | 'owner' | 'delete' | 'notification' | '';
+    type: 'flavours' | 'addCategory' | 'removeCategory' | 'addTags' | 'removeTags' | 'owner' | 'delete' | 'notificationHeadsUp' | 'notificationProfileScan' | 'notificationExecutionSummary' | '';
     requires: 'create' | 'delete' | 'update';
     task: Task | null;
-    isNotification: boolean;
 }
 @Component({
     selector: 'kRuleActions',
@@ -27,10 +26,12 @@ export class RuleActionsComponent implements OnInit {
             this.actions.push({
                 type: this.getActionType(task),
                 requires: 'update',
-                task,
-                isNotification: typeof task.taskParams?.sendNotificationTaskParams !== "undefined"
+                task
             })
         })
+        for (const type of this._notificationTypes) {
+            this._notifications[type] = this.actions.find(action => action.task?.taskParams?.sendNotificationTaskParams?.notificationType === type);
+        };
     };
     @Input() selectedTab: string;
     @Output() onActionsChange = new EventEmitter<Action[]>();
@@ -38,12 +39,14 @@ export class RuleActionsComponent implements OnInit {
     public items: MenuItem[];
     public actions: Action[] = [];
     public actionsOnSave: Action[] = [];
+    public _notificationTypes: ('profileScan' | 'headsUp' | 'executionSummary')[]  = ['profileScan','headsUp','executionSummary'];
+
+    public _notifications = {};
 
     constructor(private _appLocalization: AppLocalization) {
     }
 
     ngOnInit() {
-        // this.loadActions();
     }
 
     public buildMenu(): void {
@@ -141,8 +144,7 @@ export class RuleActionsComponent implements OnInit {
         this.actions.push({
             type,
             requires: 'create',
-            task: null,
-            isNotification: type !== 'notification'
+            task: null
         })
     }
 

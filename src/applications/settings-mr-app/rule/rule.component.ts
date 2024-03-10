@@ -199,6 +199,15 @@ export class RuleComponent implements OnInit {
             case 'owner':
                 return tasks.find(task => task.taskParams?.modifyEntryTaskParams?.kalturaEntry?.userId?.length > 0);
                 break;
+            case 'notificationProfileScan':
+                return tasks.find(task => task.taskParams?.sendNotificationTaskParams?.notificationType === 'profileScan');
+                break;
+            case 'notificationHeadsUp':
+                return tasks.find(task => task.taskParams?.sendNotificationTaskParams?.notificationType === 'headsUp');
+                break;
+            case 'notificationExecutionSummary':
+                return tasks.find(task => task.taskParams?.sendNotificationTaskParams?.notificationType === 'executionSummary');
+                break;
         }
         return undefined;
     }
@@ -214,6 +223,7 @@ export class RuleComponent implements OnInit {
 
     public onActionChange(actions: Action[]): void {
         this.actions = actions;
+        console.log(this.actions);
         this._isDirty = true;
     }
 

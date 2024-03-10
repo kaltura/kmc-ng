@@ -3550,8 +3550,8 @@
                 "updateDate": "Updated at: {{0}}",
                 "general": "General",
                 "action": "Actions",
-                "criterrias": "Criteria",
                 "notifications": "Notifications",
+                "criterrias": "Criteria",
                 "executionDate": "Execution date",
                 "trigger": "Triggering rule",
                 "approve": "Approve",
@@ -3658,6 +3658,21 @@
                     "category": "Categories",
                     "ownerError": "Owner must be selected",
                     "recycle": "Move to recycle bin"
+                },
+                "notification": {
+                    "profileScan": "Notify after rule run",
+                    "headsUp": "Notify before actions are performed",
+                    "executionSummary": "Notify after actions are performed ",
+                    "edit": "Edit",
+                    "editTitle": "Edit Email notifications",
+                    "scheduling": "Email scheduling",
+                    "daysBefore": "days before run",
+                    "sendTo": "Send to",
+                    "rule": "Rule owner",
+                    "entry": "Entry owner",
+                    "custom": "Custom list",
+                    "subject": "Email subject",
+                    "body": "Body"
                 }
             }
         },

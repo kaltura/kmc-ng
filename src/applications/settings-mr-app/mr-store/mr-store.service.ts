@@ -101,7 +101,14 @@ export type Task = {
             removeTags?: string;
         }
         sendNotificationTaskParams?: {
-
+            notificationType?: 'headsUp' | 'executionSummary' | 'profileScan' | 'executionSummary' | 'CUSTOM';
+            recipients?: {
+                userIds?: string[];
+                groupIds?: string[];
+                managedTasksProfileOwner?: boolean;
+            }
+            messageSubject?: string;
+            messageBody?: string;
         }
     }
 }
