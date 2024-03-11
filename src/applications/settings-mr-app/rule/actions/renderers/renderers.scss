@@ -70,15 +70,31 @@
     .kLeft {
         margin-left: 8px;
     }
+    input {
+        width: 100%;
+    }
     .kInput {
         width: 60px;
-        margin-left: 8px;
         ::ng-deep input {
             width: 60px;
         }
     }
     kinputhelper {
         padding-top: 4px;
+    }
+    textarea.threeRows {
+        height: 72px;
+        width: 100%;
+    }
+}
+.kCol {
+    display: flex;
+    flex-direction: column;
+    a {
+        margin-top: 16px;
+    }
+    p-checkbox {
+        margin-bottom: 16px;
     }
 }
 .kForm {
@@ -110,12 +126,5 @@
         margin-top: 24px;
         display: block;
         display: inline-block;
-    }
-    .kCol {
-        display: flex;
-        flex-direction: column;
-        a {
-            margin-top: 16px;
-        }
     }
 }

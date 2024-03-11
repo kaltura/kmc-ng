@@ -1,8 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {MenuItem} from 'primeng/api';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {Task} from '../../mr-store/mr-store.service';
+import {ActionNotificationComponent} from './renderers';
 
 export type Action = {
     type: 'flavours' | 'addCategory' | 'removeCategory' | 'addTags' | 'removeTags' | 'owner' | 'delete' | 'notificationHeadsUp' | 'notificationProfileScan' | 'notificationExecutionSummary' | '';
@@ -18,7 +19,7 @@ export type Action = {
     ]
 })
 export class RuleActionsComponent implements OnInit {
-
+    @ViewChild('notifications', { static: false }) notificationsComponent: ActionNotificationComponent;
     @Input() profileId: string;
     @Input() set ruleActions(value: Task[]) {
         this.actions = [];
@@ -137,13 +138,13 @@ export class RuleActionsComponent implements OnInit {
         if (task.taskParams?.deleteEntryTaskParams) {
             type = 'delete';
         }
-        if (task.taskParams?.sendNotificationTaskParams.notificationType === 'headsUp') {
+        if (task.taskParams?.sendNotificationTaskParams?.notificationType === 'headsUp') {
             type = 'notificationHeadsUp';
         }
-        if (task.taskParams?.sendNotificationTaskParams.notificationType === 'profileScan') {
+        if (task.taskParams?.sendNotificationTaskParams?.notificationType === 'profileScan') {
             type = 'notificationProfileScan';
         }
-        if (task.taskParams?.sendNotificationTaskParams.notificationType === 'executionSummary') {
+        if (task.taskParams?.sendNotificationTaskParams?.notificationType === 'executionSummary') {
             type = 'notificationExecutionSummary';
         }
         return type;
@@ -183,6 +184,7 @@ export class RuleActionsComponent implements OnInit {
 
     public resetActionsOnSave(): void {
         this.actionsOnSave = [];
+        this.notificationsComponent.onNotificationsSaved();
     }
 
 }

@@ -16,5 +16,5 @@
 </div>
 
 <div class="actionsContainer" [class.kHidden]="selectedTab !== 'notifications'">
-    <kActionNotification *ngFor="let type of _notificationTypes" [type]="type" [ruleAction]="_notifications[type]" [profileId]="profileId" (onActionChange)="onActionChange($event)"></kActionNotification>
+    <kActionNotification #notifications *ngFor="let type of _notificationTypes" [type]="type" [ruleAction]="_notifications[type]" [profileId]="profileId" (onActionChange)="onActionChange($event)"></kActionNotification>
 </div>
