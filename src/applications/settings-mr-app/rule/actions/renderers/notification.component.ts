@@ -39,9 +39,8 @@ import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-p
                 <div class="footer">
                     <button type="button" class="kButtonDefault" (click)="this.revert();editPopup.close()" pButton
                             label="{{'app.common.cancel' | translate}}"></button>
-                    <button pButton type="button" class="kButtonBranded"
-                            [label]="'app.common.apply' | translate"
-                            (click)="editPopup.close()"></button>
+                    <button pButton type="button" class="kButtonBranded" [label]="'app.common.apply' | translate"
+                            (click)="this.validate();editPopup.close()"></button>
                 </div>
             </div>
         </kPopupWidget>

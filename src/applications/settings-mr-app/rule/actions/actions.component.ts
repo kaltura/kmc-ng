@@ -137,6 +137,15 @@ export class RuleActionsComponent implements OnInit {
         if (task.taskParams?.deleteEntryTaskParams) {
             type = 'delete';
         }
+        if (task.taskParams?.sendNotificationTaskParams.notificationType === 'headsUp') {
+            type = 'notificationHeadsUp';
+        }
+        if (task.taskParams?.sendNotificationTaskParams.notificationType === 'profileScan') {
+            type = 'notificationProfileScan';
+        }
+        if (task.taskParams?.sendNotificationTaskParams.notificationType === 'executionSummary') {
+            type = 'notificationExecutionSummary';
+        }
         return type;
     }
 
