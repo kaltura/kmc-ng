@@ -58,6 +58,14 @@ export enum ButtonType
     Browse = 19,
     Load = 20,
     Add = 21,
+    Menu = 22,
+    Register = 23,
+    Login = 24,
+    Link = 25,
+    Toggle = 26,
+    Thumbnail = 27,
+    Download = 28,
+    Share = 29
 }
 
 @Injectable()
@@ -122,20 +130,27 @@ export class AppAnalytics {
                     case '/administration/roles/list':
                         this.trackEvent(EventType.PageLoad, PageType.Admin, 'Administration_roles');
                         break;
+                    case '/settings/authentication/list':
+                        this.trackEvent(EventType.PageLoad, PageType.List, 'KMC_authentication_profiles');
+                        break;
                 }
             });
     }
 
-    public trackClickEvent(buttonName: string): void {
+    public trackClickEvent(buttonName: string, eventVar3 = null): void {
         let buttonType: ButtonType;
         switch (buttonName) {
             case 'Create':
             case 'Generate_SIP_user':
+            case 'newProfile':
             case 'Generate_passphrase_encryption':
                 buttonType = ButtonType.Create;
                 break;
             case 'Change_account':
             case 'Bulk_actions':
+            case 'selectProvider':
+            case 'selectKalturaAttribute':
+            case 'NameID':
                 buttonType = ButtonType.Choose;
                 break;
             case 'Change_log':
@@ -144,6 +159,7 @@ export class AppAnalytics {
             case 'KMC_overview':
             case 'Login':
             case 'Login_with_SSO':
+            case 'authenticationTab':
             case 'Sign_up':
                 buttonType = ButtonType.Navigate;
                 break;
@@ -160,6 +176,8 @@ export class AppAnalytics {
             case 'Add_user':
             case 'Add_role':
             case 'Captions_enrich':
+            case 'addKalturaAttribute':
+            case 'addCustomAttribute':
                 buttonType = ButtonType.Add;
                 break;
             case 'View_analytics':
@@ -172,15 +190,46 @@ export class AppAnalytics {
                 break;
             case 'Delete':
             case 'Bulk_delete':
+            case 'deleteProfile':
                 buttonType = ButtonType.Delete;
+                break;
+           case 'editProfile':
+                buttonType = ButtonType.Edit;
+                break;
+           case 'cancelProfileCreation':
+           case 'cancelProfileEdit':
+                buttonType = ButtonType.Close;
+                break;
+           case 'createProfile':
+           case 'SaveProfileEdit':
+                buttonType = ButtonType.Save;
+                break;
+           case 'createConfigGuideClick':
+           case 'editConfigGuideClick':
+                buttonType = ButtonType.Link;
+                break;
+           case 'downloadMetadataXML':
+           case 'downloadMetadataURL':
+                buttonType = ButtonType.Download;
+                break;
+           case 'showAdvancedSettings':
+                buttonType = ButtonType.Expand;
+                break;
+           case 'hideAdvancedSettings':
+                buttonType = ButtonType.Collapse;
+                break;
+           case 'createNewGroups':
+           case 'removeFromExistingGroups':
+           case 'syncAllUserGroups':
+                buttonType = ButtonType.Toggle;
                 break;
         }
         if (buttonType) {
-            this.trackEvent(EventType.ButtonClicked, buttonType, buttonName);
+            this.trackEvent(EventType.ButtonClicked, buttonType, buttonName, eventVar3);
         }
     }
 
-    private trackEvent(eventType: EventType, eventVar1: ButtonType | PageType, eventVar2: string): void {
+    private trackEvent(eventType: EventType, eventVar1: ButtonType | PageType, eventVar2: string, eventVar3: string = null): void {
         if (!this._enabled) {
             return;
         }
@@ -207,6 +256,9 @@ export class AppAnalytics {
                 buttonType: eventVar1,
                 buttonName: eventVar2
             };
+            if (eventVar3) {
+                payload['buttonValue'] = eventVar3;
+            }
         }
         Object.assign(payload, {
             kalturaApplication: ApplicationType.KMC,
