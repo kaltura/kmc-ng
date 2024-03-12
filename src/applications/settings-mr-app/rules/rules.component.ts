@@ -110,11 +110,12 @@ export class RulesComponent implements OnInit, OnDestroy {
                 label: profile.status === 'enabled' ? this._appLocalization.get('applications.settings.mr.disable') : this._appLocalization.get('applications.settings.mr.enable'),
                 command: () => this._actionSelected('enable-disable', profile)
             },
+            // {
+            //     id: 'test-run',
+            //     label: this._appLocalization.get('applications.settings.mr.testRun'),
+            //     command: () => this._actionSelected('test-run', profile)
+            // },
             {
-                id: 'test-run',
-                label: this._appLocalization.get('applications.settings.mr.testRun'),
-                command: () => this._actionSelected('test-run', profile)
-            },            {
                 id: 'edit',
                 label: this._appLocalization.get('applications.settings.authentication.table.edit'),
                 command: () => this._actionSelected('edit', profile)
