@@ -59,7 +59,7 @@ export type ObjectState = {
     status: string;
     objectId: string;
     objectName: string;
-    duration: number;
+    objectDuration: number;
     plannedExecutionTime: Date;
     inReview: boolean;
     createdAt: Date;
@@ -102,9 +102,11 @@ export type Task = {
         }
         sendNotificationTaskParams?: {
             notificationType?: 'headsUp' | 'executionSummary' | 'profileScan' | 'executionSummary' | 'CUSTOM';
+            daysToWait?: number;
             recipients?: {
                 userIds?: string[];
                 groupIds?: string[];
+                objectOwner?: boolean;
                 managedTasksProfileOwner?: boolean;
             }
             messageSubject?: string;

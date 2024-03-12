@@ -162,7 +162,7 @@ export class RuleActionsComponent implements OnInit {
         const index = this.actionsOnSave.findIndex(ac => ac.type === action.type && ac.requires === action.requires);
         if (action.requires === 'delete') {
             this.actions = this.actions.filter(ac => ac.type !== action['type']);
-            if (action.task?.id) {
+            if (action.task?.id && index === -1) {
                 // existing task, need API call to delete
                 this.actionsOnSave.push(action);
             } else {
@@ -179,6 +179,7 @@ export class RuleActionsComponent implements OnInit {
                 this.actionsOnSave.push(action);
             }
         }
+
         this.onActionsChange.emit(this.actionsOnSave);
     }
 

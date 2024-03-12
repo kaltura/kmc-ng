@@ -64,9 +64,9 @@
                             <th data-cid="type" pResizableColumn [ngStyle]="{'width': '60px'}">
                                 {{'applications.content.table.type' | translate}}
                             </th>
-                            <th data-cid="duration" pResizableColumn [pSortableColumn]="'duration'" [ngStyle]="{'width': '70px'}">
+                            <th data-cid="duration" pResizableColumn [pSortableColumn]="'objectDuration'" [ngStyle]="{'width': '70px'}">
                                 {{'applications.content.table.duration' | translate}}
-                                <p-sortIcon [field]="'duration'"></p-sortIcon>
+                                <p-sortIcon [field]="'objectDuration'"></p-sortIcon>
                             </th>
                             <th data-cid="trigger" pResizableColumn [ngStyle]="{'width': '100px'}">
                                 {{'applications.settings.mr.trigger' | translate}}
@@ -96,11 +96,11 @@
                             </td>
 
                             <td [ngStyle]="{'width': '60px'}">
-                                <i class="kTableColumn" [ngClass]="{'kIconvideo-small': review.objectType === 'entry'}"></i>
+                                <i class="kTableColumn" [class]="getMediaType(review.objectSubType) | entryType: false" [kTooltip]="getMediaType(review.objectSubType) | entryType: true"></i>
                             </td>
                             <td [ngStyle]="{'width': '70px'}">
                               <span class="kTableColumn">
-                                  {{review.duration | kTime}}
+                                  {{(review.objectDuration ? review.objectDuration : 0) | kTime}}
                               </span>
                             </td>
                             <td [ngStyle]="{'width': '100px'}">

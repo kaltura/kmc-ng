@@ -47,6 +47,7 @@ import {
     ActionTagsComponent,
     ActionNotificationComponent
 } from './rule/actions/renderers';
+import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
 
 @NgModule({
     imports: [
@@ -80,7 +81,8 @@ import {
         LocalizationModule,
         AutoCompleteModule,
         KMCPermissionsModule,
-        MultiSelectModule
+        MultiSelectModule,
+        EntriesModule
     ],
   declarations: [
       SettingsMrComponent,

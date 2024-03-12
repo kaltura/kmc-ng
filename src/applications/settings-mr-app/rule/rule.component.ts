@@ -176,37 +176,37 @@ export class RuleComponent implements OnInit {
         )
     }
 
-    private findTaskByActionType(actionType: Action['type'], tasks: Task[]): Task | undefined {
+    private findTaskByActionType(actionType: Action['type'], tasks: (Task | null)[]): Task | undefined {
         switch (actionType) {
             case 'delete':
-                return tasks.find(task => task.type === 'deleteEntry');
+                return tasks.find(task => task?.type === 'deleteEntry');
                 break;
             case 'flavours':
-                return tasks.find(task => task.taskParams?.deleteFlavorsTaskParams?.flavorParamsIds?.length > 0);
+                return tasks.find(task => task?.taskParams?.deleteFlavorsTaskParams?.flavorParamsIds?.length > 0);
                 break;
             case 'addTags':
-                return tasks.find(task => task.taskParams?.modifyEntryTaskParams?.addTags?.length > 0);
+                return tasks.find(task => task?.taskParams?.modifyEntryTaskParams?.addTags?.length > 0);
                 break;
             case 'removeTags':
-                return tasks.find(task => task.taskParams?.modifyEntryTaskParams?.removeTags?.length > 0);
+                return tasks.find(task => task?.taskParams?.modifyEntryTaskParams?.removeTags?.length > 0);
                 break;
             case 'addCategory':
-                return tasks.find(task => task.taskParams?.modifyEntryTaskParams?.addToCategoryIds?.length > 0);
+                return tasks.find(task => task?.taskParams?.modifyEntryTaskParams?.addToCategoryIds?.length > 0);
                 break;
             case 'removeCategory':
-                return tasks.find(task => task.taskParams?.modifyEntryTaskParams?.removeFromCategoryIds?.length > 0);
+                return tasks.find(task => task?.taskParams?.modifyEntryTaskParams?.removeFromCategoryIds?.length > 0);
                 break;
             case 'owner':
-                return tasks.find(task => task.taskParams?.modifyEntryTaskParams?.kalturaEntry?.userId?.length > 0);
+                return tasks.find(task => task?.taskParams?.modifyEntryTaskParams?.kalturaEntry?.userId?.length > 0);
                 break;
             case 'notificationProfileScan':
-                return tasks.find(task => task.taskParams?.sendNotificationTaskParams?.notificationType === 'profileScan');
+                return tasks.find(task => task?.taskParams?.sendNotificationTaskParams?.notificationType === 'profileScan');
                 break;
             case 'notificationHeadsUp':
-                return tasks.find(task => task.taskParams?.sendNotificationTaskParams?.notificationType === 'headsUp');
+                return tasks.find(task => task?.taskParams?.sendNotificationTaskParams?.notificationType === 'headsUp');
                 break;
             case 'notificationExecutionSummary':
-                return tasks.find(task => task.taskParams?.sendNotificationTaskParams?.notificationType === 'executionSummary');
+                return tasks.find(task => task?.taskParams?.sendNotificationTaskParams?.notificationType === 'executionSummary');
                 break;
         }
         return undefined;
@@ -223,7 +223,7 @@ export class RuleComponent implements OnInit {
 
     public onActionChange(actions: Action[]): void {
         this.actions = actions;
-        console.log(this.actions);
+        // console.log(this.actions);
         this._isDirty = true;
     }
 

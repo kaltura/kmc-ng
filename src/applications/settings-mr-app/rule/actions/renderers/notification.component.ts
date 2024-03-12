@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Action} from '../actions.component';
-import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 import {
     ESearchSearchUserAction, KalturaClient, KalturaESearchItemType,
     KalturaESearchOperatorType, KalturaESearchUserFieldName, KalturaESearchUserItem,
@@ -12,6 +11,7 @@ import {ISubscription} from 'rxjs/Subscription';
 import {Observable, Subject} from 'rxjs';
 import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
+import {notificationTemplates} from './notification.templates';
 
 @Component({
     selector: 'kActionNotification',
@@ -34,7 +34,7 @@ import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
                     <div class="kForm" *ngIf="action">
                         <div [class.kHidden]="type !== 'headsUp'" class="kRow kCenter">
                             <span class="kLabel">{{'applications.settings.mr.notification.scheduling' | translate}}</span>
-                            <p-inputNumber class="kInput" [(ngModel)]="daysBeforeRun" (ngModelChange)="validate()"></p-inputNumber>
+                            <p-inputNumber class="kInput" [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.daysToWait" (ngModelChange)="validate()"></p-inputNumber>
                             <span class="kText kLeft">{{'applications.settings.mr.notification.daysBefore' | translate}}</span>
                         </div>
                         <div class="kRow">
@@ -42,7 +42,7 @@ import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
                             <div class="kCol">
                                 <p-checkbox [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.recipients.managedTasksProfileOwner" (ngModelChange)="validate()"
                                             label="{{'applications.settings.mr.notification.rule' | translate}}" binary="true"></p-checkbox>
-                                <p-checkbox [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.recipients.managedTasksProfileOwner" (ngModelChange)="validate()"
+                                <p-checkbox [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.recipients.objectOwner" (ngModelChange)="validate()"
                                             label="{{'applications.settings.mr.notification.entry' | translate}}" binary="true"></p-checkbox>
                                 <p-checkbox [(ngModel)]="sendToCustomUsers" (ngModelChange)="validate()"
                                             label="{{'applications.settings.mr.notification.custom' | translate}}" binary="true"></p-checkbox>
@@ -100,7 +100,6 @@ export class ActionNotificationComponent implements OnDestroy{
     @Output() onActionChange = new EventEmitter<Action>();
 
     public selected = false;
-    public daysBeforeRun = 3;
 
     public action: Action;
     private originalAction: Action;
@@ -129,7 +128,7 @@ export class ActionNotificationComponent implements OnDestroy{
 
     public validate(): void {
         if (this.selected) {
-            if (!this.action) {
+            if (!this.action || (this.action.requires === 'delete' && !this.action.task.id)) {
                 this.action = {
                     requires: 'create',
                     type: this.getNotificationType(),
@@ -138,12 +137,13 @@ export class ActionNotificationComponent implements OnDestroy{
                         type: 'sendNotification',
                         taskParams: {
                             sendNotificationTaskParams: {
+                                daysToWait: 3,
                                 notificationType: this.type,
                                 recipients: {
                                     managedTasksProfileOwner: true
                                 },
-                                messageSubject: 'Message subject. TODO: add tokens',
-                                messageBody: 'Message body. TODO: add tokens'
+                                messageSubject: notificationTemplates.subject[this.type],
+                                messageBody: notificationTemplates.body[this.type]
                             }
                         }
                     }
@@ -151,6 +151,9 @@ export class ActionNotificationComponent implements OnDestroy{
                 this.originalAction = JSON.parse(JSON.stringify((this.action))); // save for revert
             } else {
                 // update
+                if (this.action.task?.id) {
+                    this.action.requires = 'update';
+                }
                 if (this.sendToCustomUsers) {
                     if (this.owners.length) {
                         this.action.task.taskParams.sendNotificationTaskParams.recipients.userIds = this.owners.map(user => user.id);
@@ -174,9 +177,11 @@ export class ActionNotificationComponent implements OnDestroy{
     }
 
     public onNotificationsSaved(): void {
-        this.originalAction = JSON.parse(JSON.stringify(this.action));
-        this.loadUsers();
-        this.sendToCustomUsers = this.action?.task?.taskParams?.sendNotificationTaskParams?.recipients?.userIds?.length > 0;
+        if (this.action) {
+            this.originalAction = JSON.parse(JSON.stringify(this.action));
+            this.loadUsers();
+            this.sendToCustomUsers = this.action?.task?.taskParams?.sendNotificationTaskParams?.recipients?.userIds?.length > 0;
+        }
     }
 
     // --------------------------- users auto complete code --------------------------

@@ -3660,9 +3660,9 @@
                     "recycle": "Move to recycle bin"
                 },
                 "notification": {
-                    "profileScan": "Notify after rule run",
-                    "headsUp": "Notify before actions are performed",
-                    "executionSummary": "Notify after actions are performed ",
+                    "profileScan": "Post entries scan notification",
+                    "headsUp": "Pre-action notification",
+                    "executionSummary": "Post-action notification",
                     "edit": "Edit",
                     "editTitle": "Edit Email notifications",
                     "scheduling": "Email scheduling",

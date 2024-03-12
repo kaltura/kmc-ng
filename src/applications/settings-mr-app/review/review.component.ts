@@ -329,4 +329,8 @@ export class ReviewComponent implements OnInit {
             this._refresh();
         }
     }
+
+    public getMediaType(type: string): number {
+        return parseInt(type);
+    }
 }
