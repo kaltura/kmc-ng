@@ -140,7 +140,7 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
   }
 
   public _addProfile(): void {
-    this._analytics.trackClickEvent('newProfile');
+    this._analytics.trackClickEvent('authentication_newSAMLProfile');
     this._logger.info(`handle add authentication profile action by user`);
     this._currentEditProfile = null;
     this.newPopup.open();
@@ -148,13 +148,13 @@ export class ProfilesListComponent implements OnInit, OnDestroy {
 
   public _editProfile(profile: AuthProfile): void {
     this._currentEditProfile = profile;
-    this._analytics.trackClickEvent('editProfile');
+    this._analytics.trackClickEvent('authentication_editProfile');
     this._logger.info(`handle edit authentication profile action by user`);
     this.editPopup.open();
   }
 
   public deleteProfile(): void {
-      this._analytics.trackClickEvent('deleteProfile');
+      this._analytics.trackClickEvent('authentication_deleteProfile');
       this._blockerMessage = null;
       this._isBusy = true;
       const displayError = (error: string) => {

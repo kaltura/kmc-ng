@@ -142,15 +142,15 @@ export class AppAnalytics {
         switch (buttonName) {
             case 'Create':
             case 'Generate_SIP_user':
-            case 'newProfile':
+            case 'authentication_newSAMLProfile':
             case 'Generate_passphrase_encryption':
                 buttonType = ButtonType.Create;
                 break;
             case 'Change_account':
             case 'Bulk_actions':
-            case 'selectProvider':
-            case 'selectKalturaAttribute':
-            case 'NameID':
+            case 'SAML_selectProvider':
+            case 'SAML_selectKalturaAttribute':
+            case 'SAML_NameID':
                 buttonType = ButtonType.Choose;
                 break;
             case 'Change_log':
@@ -176,8 +176,8 @@ export class AppAnalytics {
             case 'Add_user':
             case 'Add_role':
             case 'Captions_enrich':
-            case 'addKalturaAttribute':
-            case 'addCustomAttribute':
+            case 'SAML_addKalturaAttribute':
+            case 'SAML_addCustomAttribute':
                 buttonType = ButtonType.Add;
                 break;
             case 'View_analytics':
@@ -190,37 +190,39 @@ export class AppAnalytics {
                 break;
             case 'Delete':
             case 'Bulk_delete':
-            case 'deleteProfile':
+            case 'authentication_deleteProfile':
                 buttonType = ButtonType.Delete;
                 break;
-           case 'editProfile':
+           case 'authentication_editProfile':
                 buttonType = ButtonType.Edit;
                 break;
-           case 'cancelProfileCreation':
-           case 'cancelProfileEdit':
+           case 'authentication_cancelProfileCreation':
+           case 'SAML_cancelProfileEdit':
                 buttonType = ButtonType.Close;
                 break;
-           case 'createProfile':
-           case 'SaveProfileEdit':
+           case 'SAML_createProfile':
+           case 'SAML_SaveProfileEdit':
                 buttonType = ButtonType.Save;
                 break;
-           case 'createConfigGuideClick':
-           case 'editConfigGuideClick':
+           case 'SAML_createConfigGuideClick':
+           case 'SAML_editConfigGuideClick':
                 buttonType = ButtonType.Link;
                 break;
-           case 'downloadMetadataXML':
-           case 'downloadMetadataURL':
+           case 'SAML_downloadMetadataXML':
+           case 'SAML_downloadMetadataURL':
                 buttonType = ButtonType.Download;
                 break;
-           case 'showAdvancedSettings':
+           case 'SAML_showAdvancedSettings':
                 buttonType = ButtonType.Expand;
                 break;
-           case 'hideAdvancedSettings':
+           case 'SAML_hideAdvancedSettings':
                 buttonType = ButtonType.Collapse;
                 break;
-           case 'createNewGroups':
-           case 'removeFromExistingGroups':
-           case 'syncAllUserGroups':
+           case 'SAML_createNewGroups':
+           case 'SAML_removeFromExistingGroups':
+           case 'SAML_signSamlRequest':
+           case 'SAML_Encrypt':
+           case 'SAML_syncAllUserGroups':
                 buttonType = ButtonType.Toggle;
                 break;
         }

@@ -112,7 +112,7 @@ import { serverConfig } from "config/server";
       this._markFormFieldsAsPristine();
 
     const { name, description, provider, adminProfile } = this._newProfileForm.value;
-    this._analytics.trackClickEvent('createProfile', adminProfile ? 'yes' : 'no');
+    this._analytics.trackClickEvent('SAML_createProfile', adminProfile ? 'admin' : 'non_admin');
     const newProfile = {
         partnerId: this._appAuthentication.appUser.partnerId,
         name,
@@ -169,17 +169,17 @@ import { serverConfig } from "config/server";
     }
 
     public cancel(): void {
-        this._analytics.trackClickEvent('cancelProfileCreation');
+        this._analytics.trackClickEvent('authentication_cancelProfileCreation');
         this.parentPopupWidget.close();
     }
 
     public sendAnalytics(): void {
         const selectedProvider = this._providerField.value;
-        this._analytics.trackClickEvent('selectProvider', selectedProvider);
+        this._analytics.trackClickEvent('SAML_selectProvider', selectedProvider);
     }
 
   public openHelp(): void {
-      this._analytics.trackClickEvent('createConfigGuideClick');
+      this._analytics.trackClickEvent('SAML_createConfigGuideClick');
       this._browserService.openLink('https://knowledge.kaltura.com/help/creating-and-managing-sso-profiles');
   }
 
