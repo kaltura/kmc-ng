@@ -168,7 +168,13 @@ export class RuleActionsComponent implements OnInit {
             } else {
                 // remove the 'create' action from actionsOnSave
                 if (index > -1) {
-                    this.actionsOnSave.splice(index, 1);
+                    if (action.type.indexOf('notification') === 0) {
+                        if (!action.task?.id) {
+                            this.actionsOnSave.splice(index, 1);
+                        }
+                    } else {
+                        this.actionsOnSave.splice(index, 1);
+                    }
                 }
             }
         } else if (action.requires === 'create' || action.requires === 'update') {
