@@ -137,7 +137,7 @@ export class ReviewComponent implements OnInit {
                 this._reviewsCount = response.totalCount;
             },
             error => {
-                this.displayError(this._appLocalization.get('applications.settings.mr.rulesLoadError'), this._refresh);
+                this.displayError(this._appLocalization.get('applications.settings.mr.rulesLoadError'), () => this._refresh());
             }
         )
     }
@@ -197,7 +197,7 @@ export class ReviewComponent implements OnInit {
                 this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('applications.settings.mr.preformSuccess')});
             },
             error => {
-                this.displayError(this._appLocalization.get('applications.settings.mr.preformError'), this.bulkPerformNow);
+                this.displayError(this._appLocalization.get('applications.settings.mr.preformError'), () => this.bulkPerformNow());
             }
         );
     }

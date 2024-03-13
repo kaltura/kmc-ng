@@ -3520,9 +3520,11 @@
             "mr": {
                 "rules": "Rules",
                 "review": "Review",
-                "logs": "Execution logs",
+                "logs": "Reports",
                 "settings": "Settings",
                 "rulesLoadError": "Error loading rules",
+                "reportDownloadError": "Error downloading report",
+                "reportsLoadError": "Error loading reports",
                 "deleteError": "Error deleting rule",
                 "loadError": "Error loading rule",
                 "saveError": "Error saving rule",
@@ -3547,6 +3549,7 @@
                 "newRule": "Add new rule",
                 "rulesNum": "{{0}} Rules",
                 "entriesNum": "{{0}} Entries",
+                "reportsNum": "{{0}} Reports",
                 "newRuleName": "New rule",
                 "creationDate": "Creation date: {{0}}",
                 "updateDate": "Updated at: {{0}}",
@@ -3675,6 +3678,16 @@
                     "custom": "Custom list",
                     "subject": "Email subject",
                     "body": "Body"
+                },
+                "report": {
+                    "rule": "Rule",
+                    "date": "Date",
+                    "items": "Number of items",
+                    "type": "Type",
+                    "download": "Download report",
+                    "scan": "Scan",
+                    "test": "Test",
+                    "action": "Action"
                 }
             }
         },

@@ -120,6 +120,20 @@ export type LoadTasksResponse = {
     totalCount: number;
 }
 
+export type Report = {
+    createdAt: Date;
+    id: string;
+    managedTasksProfileId: string;
+    managedTasksProfileName: string;
+    requestedDate: Date;
+    status: 'ready' | 'error' | 'processing';
+    type: 'executionSummary' | 'watchProfileResults' | 'profileDryRun';
+}
+
+export type LoadReportsResponse = {
+    objects: Report[];
+    totalCount: number;
+}
 
 @Injectable()
 export class MrStoreService implements OnDestroy {
@@ -238,6 +252,24 @@ export class MrStoreService implements OnDestroy {
             return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/task/multiRequest`, {requests}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to save actions'));
+        }
+    }
+
+    // ------------------------- Reports API ---------------------------- //
+
+    public loadReports(filter: any = {}): Observable<LoadReportsResponse> {
+        try {
+            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/report/list`, filter, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadReportsResponse>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to load reports list'));
+        }
+    }
+
+    public downloadReport(id: string): Observable<LoadReportsResponse> {
+        try {
+            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/report/serve`, {id}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadReportsResponse>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to serve report'));
         }
     }
 
