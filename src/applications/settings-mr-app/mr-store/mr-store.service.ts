@@ -126,6 +126,7 @@ export type Report = {
     managedTasksProfileId: string;
     managedTasksProfileName: string;
     requestedDate: Date;
+    objectsCount: number;
     status: 'ready' | 'error' | 'processing';
     type: 'executionSummary' | 'watchProfileResults' | 'profileDryRun';
 }

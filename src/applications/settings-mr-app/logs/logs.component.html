@@ -18,109 +18,10 @@
 
             </div>
 
-<!--            <div class="kTagsWrapper">-->
-<!--                <k-review-tags #tags (onAllTagsRemoved)="onAllTagsRemoved()" (onTagRemoved)="onTagRemoved($event)"></k-review-tags>-->
-<!--            </div>-->
+            <div class="kTagsWrapper">
+                <k-logs-tags #tags (onAllTagsRemoved)="onAllTagsRemoved()" (onTagRemoved)="onTagRemoved($event)"></k-logs-tags>
+            </div>
 
-<!--            <div class="kReviewsTable" [class.noResults]="!_reviews?.length">-->
-<!--                <p-table kStickyHeader [scrollable]="true" stickyClass="stickyHeader" scrollHeight="400px" dataKey="id"-->
-<!--                         [rowTrackBy]="_rowTrackBy"-->
-<!--                         [sticksTo]="'profilesFilters'"-->
-<!--                         [resizableColumns]="true"-->
-<!--                         [sortField]="sortField"-->
-<!--                         [sortOrder]="sortOrder"-->
-<!--                         [value]="_reviews"-->
-<!--                         [stickyId]="'profilesTable'"-->
-<!--                         [(selection)]="_selectedReviews"-->
-<!--                         (sortFunction)="onSortChanged($event)" [customSort]="true"-->
-<!--                         (onColResize)="_columnsResizeManager.onColumnResize($event)">-->
-
-<!--                    <ng-template pTemplate="header">-->
-<!--                        <tr>-->
-<!--                            <th class="selectionColumn" [ngStyle]="{'padding-left': '1.1em', 'width': '42px'}">-->
-<!--                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>-->
-<!--                            </th>-->
-<!--                            <th data-cid="name" [ngStyle]="{'padding-left': '1em'}" pResizableColumn [pSortableColumn]="'objectName'">-->
-<!--                                {{'applications.settings.authentication.table.name' | translate}}-->
-<!--                                <p-sortIcon [field]="'objectName'"></p-sortIcon>-->
-<!--                            </th>-->
-<!--                            <th data-cid="id" [ngStyle]="{'width': '120px'}" class="hideInLowRes">-->
-<!--                                {{'applications.content.uploadControl.table.entryId' | translate}}-->
-<!--                            </th>-->
-<!--                            <th data-cid="type" pResizableColumn [ngStyle]="{'width': '60px'}">-->
-<!--                                {{'applications.content.table.type' | translate}}-->
-<!--                            </th>-->
-<!--                            <th data-cid="duration" pResizableColumn [pSortableColumn]="'objectDuration'" [ngStyle]="{'width': '70px'}">-->
-<!--                                {{'applications.content.table.duration' | translate}}-->
-<!--                                <p-sortIcon [field]="'objectDuration'"></p-sortIcon>-->
-<!--                            </th>-->
-<!--                            <th data-cid="trigger" pResizableColumn [ngStyle]="{'width': '100px'}">-->
-<!--                                {{'applications.settings.mr.trigger' | translate}}-->
-<!--                            </th>-->
-<!--                            <th data-cid="plannedExecutionTime" pResizableColumn [pSortableColumn]="'plannedExecutionTime'" [ngStyle]="{'width': '140px'}">-->
-<!--                                {{'applications.settings.mr.executionDate' | translate}}-->
-<!--                                <p-sortIcon [field]="'plannedExecutionTime'"></p-sortIcon>-->
-<!--                            </th>-->
-
-<!--                            <th data-cid="status" [ngStyle]="{'width': '80px'}">-->
-<!--                                {{'applications.settings.authentication.table.status' | translate}}-->
-<!--                            </th>-->
-<!--                            <th [ngStyle]="{'overflow': 'hidden', 'width': '80px'}"></th>-->
-<!--                        </tr>-->
-<!--                    </ng-template>-->
-
-<!--                    <ng-template pTemplate="body" let-review>-->
-<!--                        <tr>-->
-<!--                            <td class="selectionColumn" [ngStyle]="{'padding-left': '1em', 'width': '42px'}">-->
-<!--                                <p-tableCheckbox [value]="review"></p-tableCheckbox>-->
-<!--                            </td>-->
-<!--                            <td class="nameHolder">-->
-<!--                                <span class="kProfileName kTableColumn name" [kTooltip]="review.objectName" [showOnEllipsis]="true">{{review.objectName}}</span>-->
-<!--                            </td>-->
-<!--                            <td [ngStyle]="{'width': '120px'}" class="hideInLowRes">-->
-<!--                                <span class="kTableColumn" [kTooltip]="review.id" [showOnEllipsis]="true">{{review.id}}</span>-->
-<!--                            </td>-->
-
-<!--                            <td [ngStyle]="{'width': '60px'}">-->
-<!--                                <i class="kTableColumn" [class]="getMediaType(review.objectSubType) | entryType: false" [kTooltip]="getMediaType(review.objectSubType) | entryType: true"></i>-->
-<!--                            </td>-->
-<!--                            <td [ngStyle]="{'width': '70px'}">-->
-<!--                              <span class="kTableColumn">-->
-<!--                                  {{(review.objectDuration ? review.objectDuration : 0) | kTime}}-->
-<!--                              </span>-->
-<!--                            </td>-->
-<!--                            <td [ngStyle]="{'width': '100px'}">-->
-<!--                              <span class="kTableColumn">-->
-<!--                                  {{review.managedTasksProfileName}}-->
-<!--                              </span>-->
-<!--                            </td>-->
-<!--                            <td [ngStyle]="{'width': '140px'}">-->
-<!--                              <span class="kTableColumn">-->
-<!--                                  {{review.plannedExecutionTime | kmcDate}}-->
-<!--                              </span>-->
-<!--                            </td>-->
-<!--                            <td [ngStyle]="{'width': '80px'}">-->
-<!--                                <span class="kTableColumn">-->
-<!--                                  {{review.status.charAt(0).toUpperCase() + review.status.slice(1)}}-->
-<!--                              </span>-->
-<!--                            </td>-->
-<!--                            <td [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">-->
-<!--                                <div class="kProfilesTableActions">-->
-<!--                                    <button type="button" pButton icon="kIconmore" class="kMoreActionsButton"-->
-<!--                                            (click)="_openActionsMenu($event, review)"></button>-->
-<!--                                </div>-->
-<!--                            </td>-->
-<!--                        </tr>-->
-<!--                    </ng-template>-->
-
-<!--                    <ng-template pTemplate="emptymessage">-->
-<!--                        <div class="emptymessage">-->
-<!--                            <div class="kEmptyMessage">{{'applications.content.table.noResults' | translate}}</div>-->
-<!--                        </div>-->
-<!--                    </ng-template>-->
-<!--                </p-table>-->
-<!--                <p-menu #actionsmenu [popup]="true" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>-->
-<!--            </div>-->
             <div class="kReviewsTable" [class.noResults]="!_reports?.length">
                 <p-table kStickyHeader [scrollable]="true" stickyClass="stickyHeader" scrollHeight="400px" dataKey="id"
                          [rowTrackBy]="_rowTrackBy"
@@ -142,9 +43,9 @@
                                 {{'applications.settings.mr.report.date' | translate}}
                                 <p-sortIcon [field]="'requestedDate'"></p-sortIcon>
                             </th>
-                            <th data-cid="items" pResizableColumn [pSortableColumn]="'createdAt'" [ngStyle]="{'width': '120px'}">
+                            <th data-cid="items" pResizableColumn [pSortableColumn]="'objectsCount'" [ngStyle]="{'width': '120px'}">
                                 {{'applications.settings.mr.report.items' | translate}}
-                                <p-sortIcon [field]="'createdAt'"></p-sortIcon>
+                                <p-sortIcon [field]="'objectsCount'"></p-sortIcon>
                             </th>
                             <th data-cid="type" pResizableColumn [pSortableColumn]="'type'" [ngStyle]="{'width': '80px'}">
                                 {{'applications.settings.mr.report.type' | translate}}
@@ -170,7 +71,7 @@
                             </td>
                             <td [ngStyle]="{'width': '120px'}">
                               <span class="kTableColumn">
-                                  items
+                                  {{report.objectsCount}}
                               </span>
                             </td>
                             <td [ngStyle]="{'width': '80px'}">
@@ -211,11 +112,8 @@
     </div>
 </k-area-blocker>
 
-<!--<p-tieredMenu #menu kMenuCloseOnScroll [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"-->
-<!--              [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'"></p-tieredMenu>-->
-
-<!--<kPopupWidget #refinePopup data-aid="reviewsRefinePopup" [popupWidth]="350" [popupHeight]="400" [closeBtn]="false" [targetRef]="refineBtn" [targetOffset]="{'x':-224, 'y': -20}">-->
-<!--    <ng-template>-->
-<!--        <k-review-refine-filters [parentPopupWidget]="refinePopup" [query]="_query" (onFilterAdded)="onFilterAdded($event)" (onFilterRemoved)="onFilterRemoved($event)"></k-review-refine-filters>-->
-<!--    </ng-template>-->
-<!--</kPopupWidget>-->
+<kPopupWidget #refinePopup data-aid="reportsRefinePopup" [popupWidth]="350" [popupHeight]="400" [closeBtn]="false" [targetRef]="refineBtn" [targetOffset]="{'x':-224, 'y': -20}">
+    <ng-template>
+        <k-logs-refine-filters [parentPopupWidget]="refinePopup" [query]="_query" (onFilterAdded)="onFilterAdded($event)" (onFilterRemoved)="onFilterRemoved($event)"></k-logs-refine-filters>
+    </ng-template>
+</kPopupWidget>

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {SettingsMrMainViewService} from 'app-shared/kmc-shared/kmc-views';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {
@@ -11,6 +11,7 @@ import {
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {ColumnsResizeManagerService, ResizableColumnsTableName} from 'app-shared/kmc-shared/columns-resize-manager';
+import {ReviewTagsComponent} from '../review/review-tags/review-tags.component';
 
 @Component({
     selector: 'kMrLogs',
@@ -35,6 +36,8 @@ export class LogsComponent implements OnInit {
     public _reports: Report[] = [];
     public _reportsCount = 0;
     public _rowTrackBy: Function = (index: number, item: any) => item.id;
+
+    @ViewChild('tags', { static: true }) private tags: ReviewTagsComponent;
 
     constructor(private _mrMainViewService: SettingsMrMainViewService,
                 public _columnsResizeManager: ColumnsResizeManagerService,
@@ -161,6 +164,67 @@ export class LogsComponent implements OnInit {
             }
         );
     }
+
+    public updateTags(customTooltip = ''): void {
+        this.tags.updateTags(this._query, customTooltip);
+    }
+
+    public onFilterAdded(event: {filter: string, value: any, customTooltip?: string}) {
+        this._query[event.filter] = event.value;
+        this.updateTags(event.customTooltip || '');
+        this._refresh();
+    }
+
+    public onFilterRemoved(filters: string[]) {
+        let needRefresh = false;
+        filters.forEach(filter => {
+            if (typeof this._query[filter] !== "undefined") {
+                delete this._query[filter];
+                needRefresh = true;
+            }
+        })
+        if (needRefresh) {
+            this.updateTags();
+            this._refresh();
+        }
+    }
+
+    public onAllTagsRemoved(): void {
+        this._query = {};
+        this._refresh();
+    }
+
+    public onTagRemoved(type: string): void {
+        if (type === 'objectName') {
+            delete this._query.objectName;
+        }
+        if (type === 'createdAt') {
+            delete this._query.createdAtLessThanOrEqual;
+            delete this._query.createdAtGreaterThanOrEqual;
+        }
+        if (type === 'actionAt') {
+            delete this._query.plannedExecutionTimeLessThanOrEqual;
+            delete this._query.plannedExecutionTimeGreaterThanOrEqual;
+        }
+        if (type === 'mediaType') {
+            delete this._query.objectSubTypeIn;
+        }
+        if (type === 'duration') {
+            delete this._query.objectDurationLessThan;
+            delete this._query.objectDurationGreaterThan;
+        }
+        if (type === 'status') {
+            delete this._query.statusIn;
+        }
+        if (type === 'rules') {
+            delete this._query.managedTasksProfileIdIn;
+        }
+        if (type === 'owner') {
+            delete this._query.ownerIdIn;
+        }
+        this._refresh();
+    }
+
 
     public _refresh(): void {
         this._loadReports(this.pageSize, this.pageIndex, this.sortField, this.sortOrder);

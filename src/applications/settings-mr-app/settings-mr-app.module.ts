@@ -48,6 +48,8 @@ import {
     ActionNotificationComponent
 } from './rule/actions/renderers';
 import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
+import {LogsRefineFiltersComponent} from './logs/logs-refine-filters/logs-refine-filters.component';
+import {LogsTagsComponent} from './logs/logs-tags/logs-tags.component';
 
 @NgModule({
     imports: [
@@ -111,7 +113,9 @@ import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
       ActionOwnerComponent,
       ActionDeleteComponent,
       ActionTagsComponent,
-      ActionNotificationComponent
+      ActionNotificationComponent,
+      LogsRefineFiltersComponent,
+      LogsTagsComponent
   ],
     providers: [MrStoreService]
 })
