@@ -191,7 +191,7 @@
                 <kInputHelper *ngIf="attribute.kalturaAttribute==='Core_User_Email'">
                     <span>{{'applications.settings.authentication.edit.email_tt' | translate}}</span>
                 </kInputHelper>
-                <p-dropdown *ngIf="attribute.isKalturaAttribute && attribute.kalturaAttribute!=='Core_User_Email'" class="kControl" [(ngModel)]="attribute.kalturaAttribute" appendTo="body" [options]="_kalturaUserAttributes" (ngModelChange)="formPristine=false" [placeholder]="'applications.settings.authentication.edit.attributePh' | translate"></p-dropdown>
+                <p-dropdown *ngIf="attribute.isKalturaAttribute && attribute.kalturaAttribute!=='Core_User_Email'" class="kControl" [(ngModel)]="attribute.kalturaAttribute" appendTo="body" [options]="_kalturaUserAttributes" (ngModelChange)="formPristine=false" [placeholder]="'applications.settings.authentication.edit.attributePh' | translate" (onChange)="sendAttributeAnalytics(attribute.kalturaAttribute)"></p-dropdown>
                 <input *ngIf="!attribute.isKalturaAttribute" class="kControl customAttribute" pInputText [(ngModel)]="attribute.kalturaAttribute" (ngModelChange)="formPristine=false">
                 <i *ngIf="attribute.kalturaAttribute!=='Core_User_Email'" class="kIconremove kRemove" [kTooltip]="'applications.settings.authentication.edit.remove' | translate" (click)="removeAttribute(index)"></i>
             </div>
@@ -200,7 +200,7 @@
                 <button type="button" class="kButtonDefault" pButton icon="kIconplus" label="{{'applications.settings.authentication.edit.addCustom' | translate}}" (click)="addAttribute(false)"></button>
             </div>
             <div class="kAttributeRow lastRow" *ngIf="!showAdvancedSettings">
-                <span class="link" (click)="showAdvancedSettings=true">{{'applications.settings.authentication.edit.show' | translate}}</span>
+                <span class="link" (click)="showAdvancedSettings=true; sendAdvancedAnalytics(true)">{{'applications.settings.authentication.edit.show' | translate}}</span>
             </div>
 
 
@@ -227,7 +227,7 @@
                     </kInputHelper>
                 </div>
                 <div>
-                    <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.createNewGroups" (onChange)="formPristine=false"></p-inputSwitch>
+                    <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.createNewGroups" (onChange)="formPristine=false; sendGroupAnalytics('create')"></p-inputSwitch>
                 </div>
             </div>
 
@@ -239,7 +239,7 @@
                     </kInputHelper>
                 </div>
                 <div>
-                    <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.removeFromExistingGroups" (onChange)="formPristine=false"></p-inputSwitch>
+                    <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.removeFromExistingGroups" (onChange)="formPristine=false; sendGroupAnalytics('remove')"></p-inputSwitch>
                 </div>
             </div>
 
@@ -252,7 +252,7 @@
                     </kInputHelper>
                 </div>
                 <div>
-                    <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.userGroupsSyncAll" (onChange)="formPristine=false"></p-inputSwitch>
+                    <p-inputSwitch class="kInputSwitch" [(ngModel)]="_profile.userGroupsSyncAll" (onChange)="formPristine=false; sendGroupAnalytics('sync')"></p-inputSwitch>
                 </div>
             </div>
             <div class="kContainer noScroll" *ngIf="!_profile.userGroupsSyncAll">
@@ -284,13 +284,13 @@
                     </kInputHelper>
                 </div>
                 <div class="format">
-                    <p-dropdown class="kControl" [(ngModel)]="_profile.authStrategyConfig.identifierFormat" appendTo="body" [options]="_formatOptions" (ngModelChange)="formPristine=false" [placeholder]="'applications.settings.authentication.edit.formatPh' | translate"></p-dropdown>
+                    <p-dropdown class="kControl" [(ngModel)]="_profile.authStrategyConfig.identifierFormat" appendTo="body" [options]="_formatOptions" (ngModelChange)="formPristine=false; sendFormatAnalytics()" [placeholder]="'applications.settings.authentication.edit.formatPh' | translate"></p-dropdown>
                 </div>
                 <i *ngIf="_profile.authStrategyConfig?.identifierFormat" class="kIconremove kRemove" [kTooltip]="'applications.settings.authentication.edit.removeFormat' | translate" (click)="removeIdentifierFormat()"></i>
             </div>
 
             <div class="kAttributeRow lastRow">
-                <span class="link" (click)="showAdvancedSettings=false">{{'applications.settings.authentication.edit.hide' | translate}}</span>
+                <span class="link" (click)="showAdvancedSettings=false; sendAdvancedAnalytics(false)">{{'applications.settings.authentication.edit.hide' | translate}}</span>
             </div>
         </div>
 

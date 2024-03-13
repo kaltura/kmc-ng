@@ -255,7 +255,8 @@
                 "invalidOtp": "Invalid authenticator code",
                 "updatePasswordMissingOtp": "You password was updated successfully.\nPlease login again with your new password.",
                 "ssoForbidden": "SSO Feature not available",
-                "ssoNotFound": "SSO Login failed"
+                "ssoNotFound": "SSO Login failed",
+                "abError": "Your username or organization ID is incorrect"
             },
             "send": "Send",
             "wait": "Wait…",
@@ -2724,6 +2725,7 @@
                 "addOrganizationId": "Organization ID (optional)",
                 "addOrganizationId_tt": "If you were not provided an Organization ID, leave empty",
                 "organizationId": "Organization ID",
+                "organizationIdPh": "If you were not provided an organization ID, leave empty",
                 "loginError": "Login error occurred",
                 "edit": {
                     "titleAdd": "Add profile",
@@ -3945,7 +3947,7 @@
         "AY": "Aymara",
         "AZ": "Azerbaijani",
         "BA": "Bashkir",
-        "BE": "Byelorussian",
+        "BE": "Belarusian",
         "BG": "Bulgarian",
         "BH": "Bihari",
         "BI": "Bislama",
@@ -4077,7 +4079,7 @@
         "TS": "Tsonga",
         "TT": "Tatar",
         "TW": "Twi",
-        "UG": "Uighur",
+        "UG": "Uyghur",
         "UN": "Undefined",
         "UK": "Ukrainian",
         "UR": "Urdu",
