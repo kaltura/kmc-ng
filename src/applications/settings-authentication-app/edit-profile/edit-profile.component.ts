@@ -3,7 +3,7 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {AreaBlockerMessage, PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {AuthProfile, ProfilesStoreService} from '../profiles-store/profiles-store.service';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
-import {BrowserService} from 'app-shared/kmc-shell/providers';
+import {AppAnalytics, BrowserService} from 'app-shared/kmc-shell/providers';
 import {serverConfig} from "config/server";
 import {tag} from "@kaltura-ng/kaltura-common";
 
@@ -56,6 +56,7 @@ export class EditProfileComponent implements OnInit {
     constructor(private _logger: KalturaLogger,
                 private _profilesService: ProfilesStoreService,
                 private _browserService: BrowserService,
+                private _analytics: AppAnalytics,
                 private _appLocalization: AppLocalization) {
         this.kalturaAttributes.forEach(value => {
            this._kalturaUserAttributes.push({label: _appLocalization.get('applications.settings.authentication.edit.attributes.' + value) + ' (' + value + ')', value});
@@ -139,6 +140,7 @@ export class EditProfileComponent implements OnInit {
     }
 
     public _updateProfile(): void {
+        this._analytics.trackClickEvent('SAML_SaveProfileEdit');
         this._blockerMessage = null;
         this._logger.info(`send updated profile to the server`);
         this.formPristine = true; // mark form as pristine to prevent multiple "Save" button clicks
@@ -210,6 +212,7 @@ export class EditProfileComponent implements OnInit {
     }
 
     public openHelp(): void {
+        this._analytics.trackClickEvent('SAML_editConfigGuideClick');
         this._browserService.openLink('https://knowledge.kaltura.com/help/create-and-manage-saml-profiles#create');
     }
 
@@ -218,8 +221,10 @@ export class EditProfileComponent implements OnInit {
         const url = this._profilesService.getProfileMetadataUrl(this._profile.id);
         if (action === 'url') { // open URL in a new tab
             this._browserService.openLink(url);
+            this._analytics.trackClickEvent('SAML_downloadMetadataXML');
         } else { // download metadata as xml
             this._browserService.download(url, `${this._profile.name}_metadata.xml`, 'text/xml');
+            this._analytics.trackClickEvent('SAML_downloadMetadataURL');
         }
     }
 
@@ -241,6 +246,12 @@ export class EditProfileComponent implements OnInit {
     }
 
     private generateKeys(property: string): void {
+        // send analytics
+        if (property === 'sign') {
+            this._analytics.trackClickEvent('SAML_signSamlRequest', this._profile.authStrategyConfig.enableRequestSign ? 'On' : 'Off');
+        } else {
+            this._analytics.trackClickEvent('SAML_Encrypt', this._profile.authStrategyConfig.enableAssertsDecryption ? 'On' : 'Off');
+        }
         // we need to update the profile before generating PvKeys and before loading metadata
         this.formPristine = true;
         const enableRequestSign = this._profile.authStrategyConfig.enableRequestSign;
@@ -290,11 +301,43 @@ export class EditProfileComponent implements OnInit {
     public addAttribute(isKalturaAttribute): void {
         this.formPristine = false;
         this.userAttributeMappings.push({idpAttribute: '', kalturaAttribute: '', isKalturaAttribute});
+        if (isKalturaAttribute) {
+            this._analytics.trackClickEvent('SAML_addKalturaAttribute');
+        } else {
+            this._analytics.trackClickEvent('SAML_addCustomAttribute');
+        }
     }
 
     public removeAttribute(index): void {
         this.formPristine = false;
         this.userAttributeMappings.splice(index, 1);
+    }
+
+    public sendAttributeAnalytics(attribute: string): void {
+        this._analytics.trackClickEvent('SAML_selectKalturaAttribute', attribute);
+    }
+    public sendAdvancedAnalytics(show: boolean): void {
+        this._analytics.trackClickEvent(show? 'SAML_showAdvancedSettings' : 'SAML_hideAdvancedSettings');
+    }
+    public sendGroupAnalytics(type: 'create' | 'remove' | 'sync'): void {
+        let name = '';
+        let state = '';
+        if (type === 'create') {
+            name = 'SAML_createNewGroups';
+            state = this._profile.createNewGroups ? 'On' : 'Off';
+        }
+        if (type === 'remove') {
+            name = 'SAML_removeFromExistingGroups';
+            state = this._profile.removeFromExistingGroups ? 'On' : 'Off';
+        }
+        if (type === 'sync') {
+            name = 'SAML_syncAllUserGroups';
+            state = this._profile.userGroupsSyncAll ? 'On' : 'Off';
+        }
+        this._analytics.trackClickEvent(name, state);
+    }
+    public sendFormatAnalytics(): void {
+        this._analytics.trackClickEvent('SAML_NameID' ,this._profile.authStrategyConfig.identifierFormat);
     }
 
     public addGroup(): void {
@@ -314,6 +357,7 @@ export class EditProfileComponent implements OnInit {
 
     public _cancel(): void {
         this._logger.info(`handle cancel editing by the user, show confirmation`);
+        this._analytics.trackClickEvent('SAML_cancelProfileEdit');
         if (!this.formPristine) {
             this._browserService.confirm({
                 header: this._appLocalization.get('applications.settings.metadata.discardChanges'),

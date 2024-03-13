@@ -27,7 +27,7 @@
 
                 <div class="kRow">
                     <span class="kLabel">{{'applications.settings.authentication.new.provider' | translate}}</span>
-                    <p-dropdown class="kControl" [formControl]="_providerField" appendTo="body" [options]="_providerTypes"></p-dropdown>
+                    <p-dropdown (onChange)="sendAnalytics()" class="kControl" [formControl]="_providerField" appendTo="body" [options]="_providerTypes"></p-dropdown>
                 </div>
 
                 <div class="kRow center">
@@ -56,7 +56,7 @@
         </div>
 
         <div class="kFooter">
-            <button type="button" class="kButtonDefault kBtn" (click)="parentPopupWidget.close()" pButton
+            <button type="button" class="kButtonDefault kBtn" (click)="cancel()" pButton
                     label="{{'app.common.cancel' | translate}}"></button>
             <button type="button" class="kButtonBranded kBtn" [kTooltip]="'applications.settings.authentication.new.create_tt' | translate"
                     [disabled]="_saveDisabled" (click)="_createProfile()" pButton

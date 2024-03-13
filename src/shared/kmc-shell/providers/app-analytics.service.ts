@@ -58,6 +58,14 @@ export enum ButtonType
     Browse = 19,
     Load = 20,
     Add = 21,
+    Menu = 22,
+    Register = 23,
+    Login = 24,
+    Link = 25,
+    Toggle = 26,
+    Thumbnail = 27,
+    Download = 28,
+    Share = 29
 }
 
 @Injectable()
@@ -122,20 +130,27 @@ export class AppAnalytics {
                     case '/administration/roles/list':
                         this.trackEvent(EventType.PageLoad, PageType.Admin, 'Administration_roles');
                         break;
+                    case '/settings/authentication/list':
+                        this.trackEvent(EventType.PageLoad, PageType.List, 'KMC_authentication_profiles');
+                        break;
                 }
             });
     }
 
-    public trackClickEvent(buttonName: string): void {
+    public trackClickEvent(buttonName: string, eventVar3 = null): void {
         let buttonType: ButtonType;
         switch (buttonName) {
             case 'Create':
             case 'Generate_SIP_user':
+            case 'authentication_newSAMLProfile':
             case 'Generate_passphrase_encryption':
                 buttonType = ButtonType.Create;
                 break;
             case 'Change_account':
             case 'Bulk_actions':
+            case 'SAML_selectProvider':
+            case 'SAML_selectKalturaAttribute':
+            case 'SAML_NameID':
                 buttonType = ButtonType.Choose;
                 break;
             case 'Change_log':
@@ -144,6 +159,7 @@ export class AppAnalytics {
             case 'KMC_overview':
             case 'Login':
             case 'Login_with_SSO':
+            case 'authenticationTab':
             case 'Sign_up':
                 buttonType = ButtonType.Navigate;
                 break;
@@ -160,6 +176,8 @@ export class AppAnalytics {
             case 'Add_user':
             case 'Add_role':
             case 'Captions_enrich':
+            case 'SAML_addKalturaAttribute':
+            case 'SAML_addCustomAttribute':
                 buttonType = ButtonType.Add;
                 break;
             case 'View_analytics':
@@ -172,15 +190,48 @@ export class AppAnalytics {
                 break;
             case 'Delete':
             case 'Bulk_delete':
+            case 'authentication_deleteProfile':
                 buttonType = ButtonType.Delete;
+                break;
+           case 'authentication_editProfile':
+                buttonType = ButtonType.Edit;
+                break;
+           case 'authentication_cancelProfileCreation':
+           case 'SAML_cancelProfileEdit':
+                buttonType = ButtonType.Close;
+                break;
+           case 'SAML_createProfile':
+           case 'SAML_SaveProfileEdit':
+                buttonType = ButtonType.Save;
+                break;
+           case 'SAML_createConfigGuideClick':
+           case 'SAML_editConfigGuideClick':
+                buttonType = ButtonType.Link;
+                break;
+           case 'SAML_downloadMetadataXML':
+           case 'SAML_downloadMetadataURL':
+                buttonType = ButtonType.Download;
+                break;
+           case 'SAML_showAdvancedSettings':
+                buttonType = ButtonType.Expand;
+                break;
+           case 'SAML_hideAdvancedSettings':
+                buttonType = ButtonType.Collapse;
+                break;
+           case 'SAML_createNewGroups':
+           case 'SAML_removeFromExistingGroups':
+           case 'SAML_signSamlRequest':
+           case 'SAML_Encrypt':
+           case 'SAML_syncAllUserGroups':
+                buttonType = ButtonType.Toggle;
                 break;
         }
         if (buttonType) {
-            this.trackEvent(EventType.ButtonClicked, buttonType, buttonName);
+            this.trackEvent(EventType.ButtonClicked, buttonType, buttonName, eventVar3);
         }
     }
 
-    private trackEvent(eventType: EventType, eventVar1: ButtonType | PageType, eventVar2: string): void {
+    private trackEvent(eventType: EventType, eventVar1: ButtonType | PageType, eventVar2: string, eventVar3: string = null): void {
         if (!this._enabled) {
             return;
         }
@@ -207,6 +258,9 @@ export class AppAnalytics {
                 buttonType: eventVar1,
                 buttonName: eventVar2
             };
+            if (eventVar3) {
+                payload['buttonValue'] = eventVar3;
+            }
         }
         Object.assign(payload, {
             kalturaApplication: ApplicationType.KMC,

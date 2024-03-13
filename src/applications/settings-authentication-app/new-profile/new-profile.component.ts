@@ -5,7 +5,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AuthProfile, ProfilesStoreService } from '../profiles-store/profiles-store.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { BrowserService } from 'app-shared/kmc-shell/providers';
+import {AppAnalytics, BrowserService} from 'app-shared/kmc-shell/providers';
 import { tag } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from "app-shared/kmc-shell";
 import { serverConfig } from "config/server";
@@ -46,6 +46,7 @@ import { serverConfig } from "config/server";
               private _logger: KalturaLogger,
               private _profilesService: ProfilesStoreService,
               private _browserService: BrowserService,
+              private _analytics: AppAnalytics,
               private _appAuthentication: AppAuthentication,
               private _appLocalization: AppLocalization) {
     this._buildForm();
@@ -98,6 +99,7 @@ import { serverConfig } from "config/server";
     }
 
   public _createProfile(): void {
+
     this._blockerMessage = null;
     this._logger.info(`send create profile to the server`);
 
@@ -110,6 +112,7 @@ import { serverConfig } from "config/server";
       this._markFormFieldsAsPristine();
 
     const { name, description, provider, adminProfile } = this._newProfileForm.value;
+    this._analytics.trackClickEvent('SAML_createProfile', adminProfile ? 'admin' : 'non_admin');
     const newProfile = {
         partnerId: this._appAuthentication.appUser.partnerId,
         name,
@@ -165,7 +168,18 @@ import { serverConfig } from "config/server";
         });
     }
 
+    public cancel(): void {
+        this._analytics.trackClickEvent('authentication_cancelProfileCreation');
+        this.parentPopupWidget.close();
+    }
+
+    public sendAnalytics(): void {
+        const selectedProvider = this._providerField.value;
+        this._analytics.trackClickEvent('SAML_selectProvider', selectedProvider);
+    }
+
   public openHelp(): void {
+      this._analytics.trackClickEvent('SAML_createConfigGuideClick');
       this._browserService.openLink('https://knowledge.kaltura.com/help/creating-and-managing-sso-profiles');
   }
 
