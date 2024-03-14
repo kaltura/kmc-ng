@@ -3040,6 +3040,13 @@
                     "uploadOut": "Opt-out groups",
                     "uploadError": "Must fill in at least one group"
                 },
+                "teams": {
+                    "title": "Teams Integration",
+                    "subTitle": "Teams integrated accounts",
+                    "loadError": "An error occurred while loading teams integration profiles.",
+                    "updateError": "An error occurred during teams integration update.",
+                    "add": "Create new integration"
+                },
                 "webex": {
                     "title": "Webex integration",
                     "explanation": "Webex integrated accounts",
