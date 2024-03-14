@@ -39,6 +39,8 @@ export class ReviewComponent implements OnInit {
 
     public _freeTextSearch = '';
 
+    private savedCustomTooltip = '';
+
     constructor(private _mrMainViewService: SettingsMrMainViewService,
                 public _columnsResizeManager: ColumnsResizeManagerService,
                 private _appLocalization: AppLocalization,
@@ -235,6 +237,9 @@ export class ReviewComponent implements OnInit {
     }
 
     public updateTags(customTooltip = ''): void {
+        if (customTooltip.length) {
+            this.savedCustomTooltip = customTooltip;
+        }
         this.tags.updateTags(this._query, customTooltip);
     }
 

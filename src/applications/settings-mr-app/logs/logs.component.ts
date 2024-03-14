@@ -37,6 +37,8 @@ export class LogsComponent implements OnInit {
     public _reportsCount = 0;
     public _rowTrackBy: Function = (index: number, item: any) => item.id;
 
+    private savedCustomTooltip = '';
+
     @ViewChild('tags', { static: true }) private tags: ReviewTagsComponent;
 
     constructor(private _mrMainViewService: SettingsMrMainViewService,
@@ -166,7 +168,10 @@ export class LogsComponent implements OnInit {
     }
 
     public updateTags(customTooltip = ''): void {
-        this.tags.updateTags(this._query, customTooltip);
+        if (customTooltip.length) {
+            this.savedCustomTooltip = customTooltip;
+        }
+        this.tags.updateTags(this._query, this.savedCustomTooltip);
     }
 
     public onFilterAdded(event: {filter: string, value: any, customTooltip?: string}) {
@@ -195,32 +200,15 @@ export class LogsComponent implements OnInit {
     }
 
     public onTagRemoved(type: string): void {
-        if (type === 'objectName') {
-            delete this._query.objectName;
-        }
         if (type === 'createdAt') {
-            delete this._query.createdAtLessThanOrEqual;
-            delete this._query.createdAtGreaterThanOrEqual;
+            delete this._query.requestedDateGreaterThanOrEqual;
+            delete this._query.requestedDateLessThanOrEqual;
         }
-        if (type === 'actionAt') {
-            delete this._query.plannedExecutionTimeLessThanOrEqual;
-            delete this._query.plannedExecutionTimeGreaterThanOrEqual;
-        }
-        if (type === 'mediaType') {
-            delete this._query.objectSubTypeIn;
-        }
-        if (type === 'duration') {
-            delete this._query.objectDurationLessThan;
-            delete this._query.objectDurationGreaterThan;
-        }
-        if (type === 'status') {
-            delete this._query.statusIn;
+        if (type === 'type') {
+            delete this._query.typeIn;
         }
         if (type === 'rules') {
             delete this._query.managedTasksProfileIdIn;
-        }
-        if (type === 'owner') {
-            delete this._query.ownerIdIn;
         }
         this._refresh();
     }

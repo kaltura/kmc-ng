@@ -221,7 +221,22 @@ export class RulesComponent implements OnInit, OnDestroy {
         this._blockerMessage = null;
         this._isBusy = true;
         delete profile.partnerId;
-        profile.runningCadence.advancedCadence = {}; // TODO: handle scheduling
+        // fix advancedCadence
+        if (profile.runningCadence.advancedCadence.dateUnit === 'day') {
+            delete profile.runningCadence.advancedCadence.day;
+            delete profile.runningCadence.advancedCadence.dayNumber;
+        }
+        if (profile.runningCadence.advancedCadence.dateUnit === 'week') {
+            delete profile.runningCadence.advancedCadence.dayNumber;
+        }
+        if (profile.runningCadence.advancedCadence.dateUnit === 'month') {
+            delete profile.runningCadence.advancedCadence.day;
+        }
+        // remove empty objectsFilter
+        if (Object.keys(profile.objectFilter).length === 0) {
+            profile.objectFilter = {};
+            profile.objectFilterType = '';
+        }
         this._mrStore.updateProfile(profile).subscribe(
             (response) => {
                 if (response && response.objectType && response.objectType === "KalturaAPIException") {
