@@ -34,6 +34,7 @@ import { WebexProfilesTableComponent } from "./webex/profiles-table/profiles-tab
 import { WebexGenerateCodeComponent } from "./webex/generate-code/generate-code.component";
 import { EditWebexProfileComponent } from "./webex/edit-profile/edit-profile.component";
 import {TeamsComponent} from './teams/teams.component';
+import {TeamsProfilesTableComponent} from './teams/profiles-table/profiles-table.component';
 
 @NgModule({
   imports: [
@@ -76,7 +77,8 @@ import {TeamsComponent} from './teams/teams.component';
     EditWebexProfileComponent,
     GenerateCodeComponent,
     EditZoomProfileComponent,
-    TeamsComponent
+    TeamsComponent,
+    TeamsProfilesTableComponent
   ]
 })
 export class SettingsIntegrationSettingsAppModule {

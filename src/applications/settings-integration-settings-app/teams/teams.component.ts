@@ -53,9 +53,9 @@ export class TeamsComponent implements OnInit, OnDestroy {
   public _onActionSelected({action, profile}: { action: string, profile: TeamsIntegration }) {
     switch (action) {
       case 'edit':
-        // this._logger.info(`handle edit profile action by user`, { userId: profile.defaultUserId, accountId: profile.accountId });
-        // this._currentProfile = profile;
-        // this.editProfile.open();
+        this._logger.info('handle edit profile action by user');
+        this._currentProfile = profile;
+        this.editProfile.open();
         break;
       case 'enable':
         // this._logger.info(`handle enable profile action by user`, { userId: profile.defaultUserId, accountId: profile.accountId });
