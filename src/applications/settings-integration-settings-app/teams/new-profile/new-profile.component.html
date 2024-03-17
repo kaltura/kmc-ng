@@ -1,0 +1,94 @@
+<k-area-blocker [message]="_blockerMessage">
+    <div class="kNewProfile">
+
+        <div class="kHeader">
+            <span class="kTitle">{{'applications.settings.integrationSettings.teams.new' | translate}}</span>
+        </div>
+        <div class="kContainer" #scrollableContainer>
+            <form class="kProfileForm" [formGroup]="_newProfileForm" novalidate>
+
+                <div class="kRow">
+                    <div class="labelWithHelpTip">
+                        <span class="kLabel">{{'applications.settings.authentication.name' | translate}}</span>
+                        <kInputHelper>
+                            <span>{{'applications.settings.integrationSettings.teams.name_tt' | translate}}</span>
+                        </kInputHelper>
+                        <div class="kRequired" [class.kHasError]="_newProfileForm.get('name').invalid && _newProfileForm.get('name').touched">*</div>
+                    </div>
+                    <div>
+                        <input class="kControl" pInputText [maxlength]="255"
+                               formControlName="name"
+                               [class.kHasError]="_newProfileForm.get('name').invalid && _newProfileForm.get('name').touched">
+                        <div *ngIf="_newProfileForm.get('name').hasError('required') && _newProfileForm.get('name').touched" class="kError">
+                            {{'applications.administration.role.errors.required' | translate}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <div class="labelWithHelpTip">
+                        <span class="kLabel">{{'applications.settings.integrationSettings.teams.tenantId' | translate}}</span>
+                        <kInputHelper>
+                            <span>{{'applications.settings.integrationSettings.teams.tenantId_tt' | translate}}</span>
+                        </kInputHelper>
+                        <div class="kRequired" [class.kHasError]="_newProfileForm.get('tenantId').invalid && _newProfileForm.get('tenantId').touched">*</div>
+                    </div>
+                    <div>
+                        <input class="kControl" pInputText [maxlength]="255"
+                               formControlName="tenantId"
+                               [class.kHasError]="_newProfileForm.get('tenantId').invalid && _newProfileForm.get('tenantId').touched">
+                        <div *ngIf="_newProfileForm.get('tenantId').hasError('required') && _newProfileForm.get('tenantId').touched" class="kError">
+                            {{'applications.administration.role.errors.required' | translate}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <div class="labelWithHelpTip">
+                        <span class="kLabel">{{'applications.settings.integrationSettings.teams.appClientId' | translate}}</span>
+                        <kInputHelper>
+                            <span>{{'applications.settings.integrationSettings.teams.appClientId_tt' | translate}}</span>
+                        </kInputHelper>
+                        <div class="kRequired" [class.kHasError]="_newProfileForm.get('appClientId').invalid && _newProfileForm.get('appClientId').touched">*</div>
+                    </div>
+                    <div>
+                        <input class="kControl" pInputText [maxlength]="255"
+                               formControlName="appClientId"
+                               [class.kHasError]="_newProfileForm.get('appClientId').invalid && _newProfileForm.get('appClientId').touched">
+                        <div *ngIf="_newProfileForm.get('appClientId').hasError('required') && _newProfileForm.get('appClientId').touched" class="kError">
+                            {{'applications.administration.role.errors.required' | translate}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kRow">
+                    <div class="labelWithHelpTip">
+                        <span class="kLabel">{{'applications.settings.integrationSettings.teams.appClientSecret' | translate}}</span>
+                        <kInputHelper>
+                            <span>{{'applications.settings.integrationSettings.teams.appClientSecret_tt' | translate}}</span>
+                        </kInputHelper>
+                        <div class="kRequired" [class.kHasError]="_newProfileForm.get('appClientSecret').invalid && _newProfileForm.get('appClientSecret').touched">*</div>
+                    </div>
+                    <div>
+                        <input class="kControl" pInputText [maxlength]="255"
+                               formControlName="appClientSecret"
+                               [class.kHasError]="_newProfileForm.get('appClientSecret').invalid && _newProfileForm.get('appClientSecret').touched">
+                        <div *ngIf="_newProfileForm.get('appClientSecret').hasError('required') && _newProfileForm.get('appClientSecret').touched" class="kError">
+                            {{'applications.administration.role.errors.required' | translate}}
+                        </div>
+                    </div>
+                </div>
+
+             </form>
+        </div>
+
+        <div class="kFooter">
+            <button type="button" class="kButtonDefault kBtn" (click)="parentPopupWidget.close()" pButton
+                    label="{{'app.common.cancel' | translate}}"></button>
+            <button type="button" class="kButtonBranded kBtn"
+                    [disabled]="_saveDisabled" (click)="_createProfile()" pButton
+                    label="{{'applications.settings.authentication.new.create' | translate}}"></button>
+        </div>
+
+    </div>
+</k-area-blocker>

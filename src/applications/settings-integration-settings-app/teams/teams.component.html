@@ -14,10 +14,9 @@
     </div>
 </k-area-blocker>
 
-<kPopupWidget #newIntergationPopup data-aid="newIntergationPopup" [popupWidth]="380" [popupHeight]="320" [modal]="true" [preventPageScroll]="true" [closeOnClickOutside]="false">
+<kPopupWidget #newIntergationPopup data-aid="newIntergationPopup" [popupWidth]="680" [popupHeight]="470" [modal]="true" [preventPageScroll]="true" [closeOnClickOutside]="false">
     <ng-template>
-<!--        <kWebexGenerateCode (onClose)="integrationCodePopup.close()"></kWebexGenerateCode>-->
-        <span>newIntergationPopup</span>
+        <kNewTeamsProfile [parentPopupWidget]="newIntergationPopup" (onProfileCreated)="onProfileCreated($event)"></kNewTeamsProfile>
     </ng-template>
 </kPopupWidget>
 

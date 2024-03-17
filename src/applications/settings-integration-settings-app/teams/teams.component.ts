@@ -135,6 +135,10 @@ export class TeamsComponent implements OnInit, OnDestroy {
           );
   }
 
+  public onProfileCreated(profile: TeamsIntegration): void {
+      debugger;
+  }
+
   private _updateAreaBlockerState(isBusy: boolean, areaBlocker: AreaBlockerMessage): void {
     this._logger.debug(`update areablocker state`, { isBusy, message: areaBlocker ? areaBlocker.message : null });
     this._isBusy = isBusy;

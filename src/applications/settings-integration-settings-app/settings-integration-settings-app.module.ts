@@ -33,8 +33,9 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { WebexProfilesTableComponent } from "./webex/profiles-table/profiles-table.component";
 import { WebexGenerateCodeComponent } from "./webex/generate-code/generate-code.component";
 import { EditWebexProfileComponent } from "./webex/edit-profile/edit-profile.component";
-import {TeamsComponent} from './teams/teams.component';
-import {TeamsProfilesTableComponent} from './teams/profiles-table/profiles-table.component';
+import { TeamsComponent } from './teams/teams.component';
+import { TeamsProfilesTableComponent } from './teams/profiles-table/profiles-table.component';
+import { TeamsNewProfileComponent } from './teams/new-profile/new-profile.component';
 
 @NgModule({
   imports: [
@@ -78,7 +79,8 @@ import {TeamsProfilesTableComponent} from './teams/profiles-table/profiles-table
     GenerateCodeComponent,
     EditZoomProfileComponent,
     TeamsComponent,
-    TeamsProfilesTableComponent
+    TeamsProfilesTableComponent,
+    TeamsNewProfileComponent
   ]
 })
 export class SettingsIntegrationSettingsAppModule {

@@ -33,16 +33,17 @@ export type TeamsIntegrationSettings = {
 }
 
 export type TeamsIntegration = {
-    appClientId: string;
-    createdAt: Date;
-    id: string;
     name: string;
-    objectType: string
-    partnerId: number;
-    settings: TeamsIntegrationSettings;
-    status: 'enabled' | 'disabled';
     tenantId: string;
-    updatedAt: Date;
+    appClientId: string;
+    appClientSecret: string;
+    createdAt?: Date;
+    id?: string;
+    objectType?: string
+    partnerId?: number;
+    settings?: TeamsIntegrationSettings;
+    status?: 'enabled' | 'disabled';
+    updatedAt?: Date;
 }
 
 export type LoadTeamsIntegrationResponse = {
@@ -64,6 +65,14 @@ export class TeamsService implements OnDestroy {
             return this._http.post(`${serverConfig.externalServices.vendorIntegrationsEndpoint.uri}/teams-integration/list`, filter, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadTeamsIntegrationResponse>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to load teams integrations list'));
+        }
+    }
+
+    public createProfile(profile: TeamsIntegration): Observable<any> {
+        try {
+            return this._http.post(`${serverConfig.externalServices.vendorIntegrationsEndpoint.uri}/teams-integration/add`, profile, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<TeamsIntegration>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to create new teams integrations profile'));
         }
     }
 
