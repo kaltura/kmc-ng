@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {SettingsMrMainViewService} from 'app-shared/kmc-shared/kmc-views';
 import {KalturaPager, LoadManagedTasksProfilesResponse, LoadObjectStateResponse, MrStoreService, ObjectState, SortDirection} from '../mr-store/mr-store.service';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {AreaBlockerMessage, PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {ColumnsResizeManagerService, ResizableColumnsTableName} from 'app-shared/kmc-shared/columns-resize-manager';
@@ -22,10 +22,13 @@ import {BrowserService} from 'app-shared/kmc-shell';
 export class ReviewComponent implements OnInit {
     @ViewChild('actionsmenu', { static: true }) private _actionsMenu: Menu;
     @ViewChild('tags', { static: true }) private tags: ReviewTagsComponent;
+    @ViewChild('notifyPopup', { static: true }) public notifyPopup: PopupWidgetComponent;
 
     public _isBusy = false;
     public _reviews: ObjectState[] = [];
     public _selectedReviews: ObjectState[] = [];
+    public _selectedReview: ObjectState;
+    public _notifySingleOwner = true;
     public _reviewsCount = 0;
     public _blockerMessage: AreaBlockerMessage = null;
     public pageSize = 25;
@@ -67,7 +70,10 @@ export class ReviewComponent implements OnInit {
                 },
                 {
                     label: this._appLocalization.get('applications.settings.mr.notify'),
-                    command: () => console.log('bulk notify action')
+                    command: () => {
+                        this._notifySingleOwner = false;
+                        this.notifyPopup.open();
+                    }
                 }
             ];
         }
@@ -204,6 +210,22 @@ export class ReviewComponent implements OnInit {
         );
     }
 
+    public notifyOwners(event: {subject: string, body: string}) {
+        this.notifyPopup.close();
+        this._blockerMessage = null;
+        this._isBusy = true;
+        const reviews = this._notifySingleOwner ? [this._selectedReview.id] : this._selectedReviews.map(review => review.id);
+        this._mrStore.notifyOwners(reviews, event.subject, event.body).subscribe(
+            (success) => {
+                this._isBusy = false;
+                this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('applications.settings.mr.notifySuccess')});
+            },
+            error => {
+                this.displayError(this._appLocalization.get('applications.settings.mr.notifyError'), () => this.notifyOwners(event));
+            }
+        );
+    }
+
     private _buildMenu(review: ObjectState): void {
         this._items = [
             {
@@ -220,6 +242,14 @@ export class ReviewComponent implements OnInit {
                 id: 'perform',
                 label: this._appLocalization.get('applications.settings.mr.perform'),
                 command: () => this.performNow(review)
+            },
+            {
+                id: 'notify',
+                label: this._appLocalization.get('applications.settings.mr.notify'),
+                command: () => {
+                    this._notifySingleOwner = true;
+                    this.notifyPopup.open();
+                }
             }
         ];
     }
@@ -282,6 +312,7 @@ export class ReviewComponent implements OnInit {
     }
 
     public _openActionsMenu(event: any, review: ObjectState): void {
+        this._selectedReview = review;
         if (this._actionsMenu) {
             this._buildMenu(review);
             this._actionsMenu.toggle(event);

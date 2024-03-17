@@ -1,0 +1,46 @@
+<div class="kNotify">
+
+    <div class="kHeader">
+        <span class="kTitle">{{'applications.settings.mr.notification.editTitle' | translate}}</span>
+    </div>
+    <div class="kContainer" #scrollableContainer>
+        <form class="kProfileForm" [formGroup]="_notifyForm" novalidate>
+
+            <div class="kRow">
+                <span class="kLabel required">{{'applications.settings.mr.notification.subject' | translate}}</span>
+                <div class="kRequired" [class.kHasError]="_notifyForm.get('subject').invalid && _notifyForm.get('subject').touched">*</div>
+                <div>
+                    <input class="kControl" pInputText [maxlength]="255"
+                           formControlName="subject"
+                           [class.kHasError]="_notifyForm.get('subject').invalid && _notifyForm.get('subject').touched">
+                    <div *ngIf="_notifyForm.get('subject').hasError('required') && _notifyForm.get('subject').touched" class="kError">
+                        {{'applications.administration.role.errors.required' | translate}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="kRow">
+                <span class="kLabel required">{{'applications.settings.mr.notification.body' | translate}}</span>
+                <div class="kRequired" [class.kHasError]="_notifyForm.get('body').invalid && _notifyForm.get('body').touched">*</div>
+                <div>
+                    <textarea class=" kControl threeRows" pInputTextarea formControlName="body" [class.kHasError]="_notifyForm.get('body').invalid && _notifyForm.get('body').touched">
+                    </textarea>
+                    <div *ngIf="_notifyForm.get('body').hasError('required') && _notifyForm.get('body').touched" class="kError">
+                        {{'applications.administration.role.errors.required' | translate}}
+                    </div>
+                </div>
+            </div>
+
+         </form>
+    </div>
+
+    <div class="kFooter">
+        <button type="button" class="kButtonDefault kBtn" (click)="parentPopupWidget.close()" pButton
+                label="{{'app.common.cancel' | translate}}"></button>
+        <button type="button" class="kButtonBranded kBtn"
+                [disabled]="_saveDisabled" (click)="notify()" pButton
+                label="{{'applications.settings.mr.notify' | translate}}"></button>
+    </div>
+
+</div>
+

@@ -238,6 +238,14 @@ export class MrStoreService implements OnDestroy {
         }
     }
 
+    public notifyOwners(ids: string[], textBody: string, subject: string): Observable<any> {
+        try {
+            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/objectState/notifyOwners`, {ids, textBody, subject}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to send notify owners request'));
+        }
+    }
+
     // ------------------------- Task API ---------------------------- //
 
     public loadTasks(managedTasksProfileId: string): Observable<LoadTasksResponse> {

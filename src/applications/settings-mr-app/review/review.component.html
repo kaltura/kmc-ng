@@ -154,3 +154,9 @@
         <k-review-refine-filters [parentPopupWidget]="refinePopup" [query]="_query" (onFilterAdded)="onFilterAdded($event)" (onFilterRemoved)="onFilterRemoved($event)"></k-review-refine-filters>
     </ng-template>
 </kPopupWidget>
+
+<kPopupWidget #notifyPopup data-aid="notifyPopup"  [popupWidth]="630" [popupHeight]="480" [modal]="true" [preventPageScroll]="true">
+    <ng-template>
+        <kNotifyOwner [parentPopupWidget]="notifyPopup" (onNotify)="notifyOwners($event)"></kNotifyOwner>
+    </ng-template>
+</kPopupWidget>
