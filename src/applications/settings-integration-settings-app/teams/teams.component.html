@@ -22,7 +22,7 @@
 
 <kPopupWidget #editProfile data-aid="editProfile" [popupWidth]="995" [slider]="true">
     <ng-template>
-<!--        <kWebexEditProfile [profile]="_currentProfile" [parentPopup]="editProfile" (onSave)="saveProfile($event)"></kWebexEditProfile>-->
+        <kTeamsEditProfile [profile]="_currentProfile" [parentPopup]="editProfile" (onSave)="saveProfile($event)"></kTeamsEditProfile>
         <span>edit</span>
     </ng-template>
 </kPopupWidget>

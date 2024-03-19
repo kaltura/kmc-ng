@@ -3056,7 +3056,16 @@
                     "appClientId": "Application (client) ID",
                     "appClientId_tt": "Application (client) ID tooltip",
                     "appClientSecret": "Application (client) Secret",
-                    "appClientSecret_tt": "Application (client) Secret tooltip"
+                    "appClientSecret_tt": "Application (client) Secret tooltip",
+                    "delete": "Delete integration",
+                    "deleteDisabled": "Profile is enabled. Please disable before deletion.",
+                    "deleteMsg": "Are you sure you want to delete the selected Teams integration?",
+                    "deleteError": "An error occurred while deleting teams integration.",
+                    "deleteSuccess": "Integration deleted successfully",
+                    "edit": "Edit Teams account",
+                    "categories": "Publish to categories",
+                    "categories_tt": "Publish to categories tooltip",
+                    "transcripts": "Upload Teams transcripts"
                 },
                 "webex": {
                     "title": "Webex integration",

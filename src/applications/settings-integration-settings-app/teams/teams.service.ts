@@ -68,7 +68,7 @@ export class TeamsService implements OnDestroy {
         }
     }
 
-    public createProfile(profile: TeamsIntegration): Observable<any> {
+    public createProfile(profile: {teamsIntegration: TeamsIntegration}): Observable<TeamsIntegration> {
         try {
             return this._http.post(`${serverConfig.externalServices.vendorIntegrationsEndpoint.uri}/teams-integration/add`, profile, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<TeamsIntegration>;
         } catch (ex) {
@@ -76,9 +76,26 @@ export class TeamsService implements OnDestroy {
         }
     }
 
-    public updateProfile(profile: TeamsIntegration): Observable<any> {
+    public updateProfile(event: {id: string, teamsIntegration: TeamsIntegration}): Observable<TeamsIntegration> {
         try {
-            return this._http.post(`${serverConfig.externalServices.vendorIntegrationsEndpoint.uri}/teams-integration/update`, profile, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<TeamsIntegration>;
+            return this._http.post(`${serverConfig.externalServices.vendorIntegrationsEndpoint.uri}/teams-integration/update`, event, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<TeamsIntegration>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to update teams integrations profile'));
+        }
+    }
+
+    public changeProfileStatus(id: string, status: 'enabled' | 'disabled'): Observable<TeamsIntegration> {
+        const action = status === 'enabled' ? 'enable' : 'disable';
+        try {
+            return this._http.post(`${serverConfig.externalServices.vendorIntegrationsEndpoint.uri}/teams-integration/${action}`, {id}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<TeamsIntegration>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to enable teams integrations profile'));
+        }
+    }
+
+    public deleteProfile(id: string): Observable<any> {
+        try {
+            return this._http.post(`${serverConfig.externalServices.vendorIntegrationsEndpoint.uri}/teams-integration/delete`, {id}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<TeamsIntegration>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to update teams integrations profile'));
         }

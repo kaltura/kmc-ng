@@ -1,0 +1,161 @@
+@import 'app-theme/_variables.scss';
+
+.kEditAccessControlProfile {
+    ::ng-deep .p-dropdown{
+        min-width: 240px;
+        width: 240px;
+    }
+  .kHeader {
+    height: 72px;
+    width: 100%;
+    padding: 0 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+
+    .kTitle {
+      color: $kGrayscale1;
+      font-size: 15px;
+    }
+
+    .kButtons {
+      display: flex;
+      margin-left: auto;
+
+      .kCancel {
+        font-size: 15px;
+        color: $kGrayscale1;
+        align-self: center;
+        margin-right: 24px;
+      }
+
+      .kSaveButton {
+        width: 100px;
+        height: 34px;
+      }
+    }
+  }
+
+    form {
+        height: calc(100vh - 200px);
+        overflow-y: auto;
+    }
+
+    .kContainer {
+        display: flex;
+        flex-direction: column;
+        padding: 24px 220px 24px 24px;
+        .kSubTitle{
+            color: $kGrayscale1;
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 48px;
+            margin-bottom: 16px;
+        }
+        .kInvalid {
+            color: $kDandger;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+        .separator {
+            width: 100%;
+            height: 1px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: $kGrayscale4;
+        }
+        .kRow {
+            display: flex;
+            margin-bottom: 20px;
+            color: $kGrayscale1;
+            &.marginTop {
+                margin-top: 20px;
+            }
+            .kLabel {
+                width: 240px;
+                padding-right: 12px;
+                box-sizing: border-box;
+                flex: 0 0 auto;
+                display: flex;
+                align-items: center;
+                font-size: 15px;
+                line-height: 20px;
+            }
+            .kSwitchValue {
+                margin-left: 8px;
+            }
+            input {
+                width: 100%;
+                opacity: 1;
+                padding-left: 8px;
+            }
+            kAutoComplete {
+                width: 100%;
+                ::ng-deep .ui-autocomplete {
+                    width: 100%;
+                }
+            }
+            p-radioButton {
+                margin-right: 24px;
+                color: $kGrayscale1;
+                font-size: 15px;
+                display: flex;
+                ::ng-deep .ui-radiobutton-label {
+                    font-weight: normal !important;
+                    white-space: nowrap;
+                }
+            }
+            .kRadios {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                p-radioButton {
+                    margin-bottom: 16px;
+                }
+            }
+            .uploadInOut {
+                flex: 0 0 auto;
+                width: 150px;
+                padding-top: 8px;
+            }
+            .kError {
+                font-size: 14px;
+                color: $kDandger;
+                margin-top: 4px;
+            }
+            .labelWithHelpTip {
+                align-items: center;
+                align-self: flex-start;
+                display: flex;
+                width: 240px;
+                height: 32px;
+                flex: 0 0 auto;
+                font-size: 15px;
+                .kLabel {
+                    width: auto;
+                }
+                .kRequired {
+                    width: 20px;
+                    flex: 0 0 auto;
+                    font-size: 24px;
+                    margin-left: auto;
+                    color: $kGrayscale3;
+                    padding: 8px 4px;
+                    height: 18px;
+                    &.kHasError {
+                        color: $kDandger;
+                        font-weight: bold;
+                    }
+                }
+            }
+            .inputWrapper {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    }
+}
+

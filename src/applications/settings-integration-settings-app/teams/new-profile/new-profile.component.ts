@@ -71,10 +71,12 @@ import {TeamsIntegration, TeamsService} from '../teams.service';
 
     const { name, tenantId, appClientId, appClientSecret } = this._newProfileForm.value;
     const newProfile = {
-        name,
-        tenantId,
-        appClientId,
-        appClientSecret
+        teamsIntegration: {
+            name,
+            tenantId,
+            appClientId,
+            appClientSecret
+        }
     }
 
     this._teamsService.createProfile(newProfile)
