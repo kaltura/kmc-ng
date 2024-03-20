@@ -5,6 +5,9 @@
         min-width: 240px;
         width: 240px;
     }
+    ::ng-deep .p-radiobutton-label {
+        white-space: nowrap;
+    }
   .kHeader {
     height: 72px;
     width: 100%;
@@ -65,6 +68,7 @@
             margin-top: 20px;
             margin-bottom: 20px;
             background-color: $kGrayscale4;
+            flex: 0 0 auto;
         }
         .kRow {
             display: flex;

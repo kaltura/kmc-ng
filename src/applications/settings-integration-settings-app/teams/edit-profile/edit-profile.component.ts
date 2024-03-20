@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {
     KalturaClient,
     KalturaFilterPager,
@@ -41,14 +41,13 @@ export class EditTeamsProfileComponent implements OnDestroy {
         if (value) {
             this._profile = value;
             this._buildForm();
+            this._setInitialValue(this._profile);
         }
     }
 
     @Output() onSave = new EventEmitter<TeamsIntegration>();
 
     public _profileForm: FormGroup;
-    public formValid = true;
-
     public _profile: TeamsIntegration;
 
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
@@ -70,14 +69,14 @@ export class EditTeamsProfileComponent implements OnDestroy {
                 private _categoriesSearchService: CategoriesSearchService,
                 private _logger: KalturaLogger) {
         this._participationOptions = [
-            {value: 2, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.participation1')},
-            {value: 1, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.participation2')},
-            {value: 0, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.participation3')}
+            {value: 0, label: this._appLocalization.get('applications.settings.integrationSettings.teams.users1')},
+            {value: 1, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts3')},
+            {value: 3, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts4')}
         ];
         this._hostsOptions = [
-            {value: 2, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts1')},
-            {value: 1, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts2')},
-            {value: 0, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts3')},
+            {value: 0, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts1')},
+            {value: 1, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts3')},
+            {value: 2, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts2')},
             {value: 3, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts4')},
             {value: 4, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts5')}
         ];
@@ -89,219 +88,117 @@ export class EditTeamsProfileComponent implements OnDestroy {
         this._groupsProvider.complete();
     }
 
+    private getRole(roles: ('co-editors' | 'co-publishers' | 'co-viewers')[]): number {
+        let role = 0;
+        if (roles.indexOf('co-publishers') > -1) {
+            role = 1;
+        }
+        if (roles.indexOf('co-viewers') > -1) {
+            role = 2;
+        }
+        if (roles.indexOf('co-editors') > -1) {
+            role = 3;
+        }
+        if (roles.indexOf('co-editors') > -1 && roles.indexOf('co-publishers') > -1) {
+            role = 4;
+        }
+        return  role;
+    }
+
+    private getRolesById(id: number): string[] {
+        let roles = [];
+        if (id === 1) {
+            roles = ['co-publishers'];
+        }
+        if (id ===2) {
+            roles = ['co-viewers'];
+        }
+        if (id ===3) {
+            roles = ['co-editors'];
+        }
+        if (id ===4) {
+            roles = ['co-editors', 'co-publishers'];
+        }
+        return  roles;
+    }
+
     private _setInitialValue(profile: TeamsIntegration): void {
         let optInGroupNames = [];
-        /*
-        if (profile.optInGroupNames) {
-            profile.optInGroupNames.split(this.groupsDelimiter).forEach(groupName => optInGroupNames.push({id: groupName}));
+        if (this._profile.settings?.userGroupsInclude?.length) {
+            this._profile.settings.userGroupsInclude.forEach(groupName => optInGroupNames.push({id: groupName}));
         }
         let optOutGroupNames = [];
-        if (profile.optOutGroupNames) {
-            profile.optOutGroupNames.split(this.groupsDelimiter).forEach(groupName => optOutGroupNames.push({id: groupName}));
+        if (this._profile.settings?.userGroupsExclude?.length) {
+            this._profile.settings.userGroupsExclude.forEach(groupName => optOutGroupNames.push({id: groupName}));
         }
         this._profileForm.setValue({
-            enabled: profile.enableRecordingUpload === KalturaNullableBoolean.trueValue,
-            accountId: profile.accountId || '',
-            defaultUserId: profile.defaultUserId ? [{screenName: profile.defaultUserId}] : [],
+            name: this._profile.name,
+            tenantId: this._profile.tenantId,
+            appClientId: this._profile.appClientId,
+            categories: this._profile.settings?.categories || [],
+            upload: this._profile.settings?.userGroupsInclude?.length ? 1 : this._profile.settings?.userGroupsExclude?.length ? 2 : 0,
             uploadIn: optInGroupNames,
             uploadOut: optOutGroupNames,
-            description: profile.zoomAccountDescription || '',
-            deleteContent: profile.deletionPolicy === KalturaNullableBoolean.trueValue,
-            transcription: profile.enableZoomTranscription === KalturaNullableBoolean.trueValue,
-            userId: profile.zoomUserMatchingMode !== KalturaZoomUsersMatching.cmsMatching,
-            createUser: profile.createUserIfNotExist === KalturaNullableBoolean.trueValue,
-            postfix: profile.zoomUserMatchingMode,
-            userPostfix: profile.zoomUserPostfix,
-            participation: profile.handleParticipantsMode,
-            altHosts: profile.handleAlternativeHostsMode,
-            coHosts: profile.handleCohostsMode,
-            upload: profile.groupParticipationType || 0,
-            categories: profile.zoomCategory ? [{name: profile.zoomCategory}] : [],
-            webinarCategory: profile.zoomWebinarCategory ? [{name: profile.zoomWebinarCategory}] : [],
-            uploadMeeting: typeof profile.enableMeetingUpload === "undefined" || profile.enableMeetingUpload === KalturaNullableBoolean.trueValue,
-            uploadWebinar: profile.enableWebinarUploads === KalturaNullableBoolean.trueValue
+            transcripts: this._profile.settings?.uploadTranscripts ? true : false,
+            coOrganizerRoles: this.getRole(this._profile.settings?.coOrganizerRoles || []),
+            presentersRoles: this.getRole(this._profile.settings?.presentersRoles || []),
+            attendeesRoles: this.getRole(this._profile.settings?.attendeesRoles || []),
+            userId: this._profile.settings?.userIdSource === 'upn' ? true : false,
+            postfix: this._profile.settings?.userIdSuffixMethod === 'append' ? 2 : this._profile.settings?.userIdSuffixMethod === 'remove' ? 1 : 0,
+            userPostfix: this._profile.settings?.userIdSuffix || '',
+            createUser: this._profile.settings?.userNotFoundMethod === 'create' ? true : false,
+            defaultUserId: this._profile.settings?.defaultUserId ? [{id: this._profile.settings?.defaultUserId}] : [],
         });
 
-         */
-        this.validate();
+        this._profileForm.controls['tenantId'].disable();
+        this._profileForm.controls['appClientId'].disable();
+        if (this._profile.settings?.userNotFoundMethod === 'create') {
+            this._profileForm.controls['defaultUserId'].disable();
+        }
+
     }
 
     private _buildForm(): void {
         this._profileForm = this._fb.group({
-            name: [this._profile.name, Validators.required],
-            tenantId: [this._profile.tenantId],
-            appClientId: [this._profile.appClientId],
-            appClientSecret: [this._profile.appClientSecret, Validators.required],
-            categories: [this._profile.settings?.categoryIds || []],
+            name: ['', Validators.required],
+            tenantId: [''],
+            appClientId: [''],
+            categories: [[]],
             upload: [0],
             uploadIn: [[]],
             uploadOut: [[]],
             transcripts: true,
-            // enabled: false,
-            // accountId: [''],
-            // defaultUserId: [[]],
-            // uploadIn: [[]],
-            // uploadOut: [[]],
-            // description: [''],
-            // deleteContent: false,
-            // transcription: false,
-            // createUser: false,
-            // userId: false,
-            // postfix: null,
-            // userPostfix: [''],
-            // participation: null,
-            // altHosts: null,
-            // coHosts: null,
-            // upload: null,
-            // categories: [[]],
-            // webinarCategory: [[]],
-            // uploadMeeting: false,
-            // uploadWebinar: false
+            coOrganizerRoles: null,
+            presentersRoles: null,
+            attendeesRoles: null,
+            userId: true,
+            postfix: 0,
+            userPostfix: [''],
+            createUser: true,
+            defaultUserId: [''],
         });
-        this._profileForm.controls['tenantId'].disable();
-        this._profileForm.controls['appClientId'].disable();
-/*
-        this._recordingUpload = this._profileForm.controls['enabled'];
-        this._accountId = this._profileForm.controls['accountId'];
-        this._accountId.disable();
-        this._defaultUserId = this._profileForm.controls['defaultUserId'];
-        this._uploadIn = this._profileForm.controls['uploadIn'];
-        this._uploadOut = this._profileForm.controls['uploadOut'];
-        this._description = this._profileForm.controls['description'];
-        this._deleteContent = this._profileForm.controls['deleteContent'];
-        this._transcription = this._profileForm.controls['transcription'];
-        this._userId = this._profileForm.controls['userId'];
-        this._createUser = this._profileForm.controls['createUser'];
-        this._postfix = this._profileForm.controls['postfix'];
-        this._userPostfix = this._profileForm.controls['userPostfix'];
-        this._participation = this._profileForm.controls['participation'];
-        this._altHosts = this._profileForm.controls['altHosts'];
-        this._coHosts = this._profileForm.controls['coHosts'];
-        this._upload = this._profileForm.controls['upload'];
-        this._categories = this._profileForm.controls['categories'];
-        this._webinarCategory = this._profileForm.controls['webinarCategory'];
-        this._uploadMeeting = this._profileForm.controls['uploadMeeting'];
-        this._uploadWebinar = this._profileForm.controls['uploadWebinar'];
-        if (!this._enableMeetingUpload) {
-            this._uploadMeeting.disable();
-        }
 
-        this._recordingUpload.valueChanges
-            .pipe(cancelOnDestroy(this))
-            .subscribe(value => {
-                if (value) {
-                    this._description.enable();
-                    this._deleteContent.enable();
-                    this._transcription.enable();
-                    this._userId.enable();
-                    this._defaultUserId.enable();
-                    this._uploadIn.enable();
-                    this._uploadOut.enable();
-                    this._createUser.enable();
-                    this._postfix.enable();
-                    this._userPostfix.enable();
-                    this._participation.enable();
-                    this._altHosts.enable();
-                    this._coHosts.enable();
-                    this._upload.enable();
-                    this._categories.enable();
-                    this._webinarCategory.enable();
-                    if (this._enableMeetingUpload) {
-                        this._uploadMeeting.enable();
-                    }
-                    this._uploadWebinar.enable();
-                } else {
-                    this._description.disable();
-                    this._deleteContent.disable();
-                    this._transcription.disable();
-                    this._userId.disable();
-                    this._createUser.disable();
-                    this._postfix.disable();
-                    this._userPostfix.disable();
-                    this._participation.disable();
-                    this._altHosts.disable();
-                    this._coHosts.disable();
-                    this._upload.disable();
-                    this._categories.disable();
-                    this._defaultUserId.disable();
-                    this._uploadIn.disable();
-                    this._uploadOut.disable();
-                    this._webinarCategory.disable();
-                    this._uploadMeeting.disable();
-                    this._uploadWebinar.disable();
-                }
-            });
-        this._userId.valueChanges
+        this._profileForm.controls['userId'].valueChanges
             .pipe(cancelOnDestroy(this))
             .subscribe(value => {
                 if (value === false) {
-                    this._postfix.disable();
-                    this._userPostfix.disable();
-                    this._profileForm.patchValue({
-                        postfix: KalturaZoomUsersMatching.cmsMatching
-                    });
-                } else if (this._profileForm.controls['enabled'].value){
-                    this._postfix.enable();
-                    this._profileForm.patchValue({
-                        postfix: KalturaZoomUsersMatching.doNotModify
-                    });
-                    this._userPostfix.enable();
+                    this._profileForm.controls['postfix'].disable();
+                    this._profileForm.controls['userPostfix'].disable();
+                } else {
+                    this._profileForm.controls['postfix'].enable();
+                    this._profileForm.controls['userPostfix'].enable();
                 }
             });
 
-        this._postfix.valueChanges
-            .pipe(cancelOnDestroy(this))
-            .subscribe(value => {
-                if (value === KalturaZoomUsersMatching.addPostfix && (this._profileForm.controls['enabled'].value)) {
-                    this._userPostfix.enable();
-                } else {
-                    this._userPostfix.disable();
-                }
-            });
-        this._createUser.valueChanges
+        this._profileForm.controls['createUser'].valueChanges
             .pipe(cancelOnDestroy(this))
             .subscribe(value => {
                 if (value) {
-                    this._defaultUserId.disable();
-                } else if (this._profileForm.controls['enabled'].value) {
-                    this._defaultUserId.enable();
+                    this._profileForm.controls['defaultUserId'].disable();
+                } else {
+                    this._profileForm.controls['defaultUserId'].enable();
                 }
-                this.validate();
             });
-        this._defaultUserId.valueChanges
-            .pipe(cancelOnDestroy(this))
-            .subscribe(value => {
-                this.validate();
-            });
-        this._upload.valueChanges
-            .pipe(cancelOnDestroy(this))
-            .subscribe(value => {
-                this.validate();
-            });
-        this._uploadIn.valueChanges
-            .pipe(cancelOnDestroy(this))
-            .subscribe(value => {
-                this.validate();
-            });
-        this._uploadOut.valueChanges
-            .pipe(cancelOnDestroy(this))
-            .subscribe(value => {
-                this.validate();
-            });
-
- */
-    }
-
-    private validate(): void {
-        const formValue = this._profileForm.getRawValue();
-        this.formValid = this._profileForm.valid;
-        // this.formValid = formValue.defaultUserId.length || (!formValue.defaultUserId.length && formValue.createUser);
-        // if (this.formValid && formValue.upload === 1) {
-        //     this.formValid = formValue.uploadIn !== null && formValue.uploadIn.length > 0;
-        // }
-        // if (this.formValid && formValue.upload === 2) {
-        //     this.formValid = formValue.uploadOut !== null && formValue.uploadOut.length > 0;
-        // }
     }
 
     public openHelpLink(): void {
@@ -311,51 +208,45 @@ export class EditTeamsProfileComponent implements OnDestroy {
     public _save(): void {
         this._logger.info(`handle 'save' action by the user`);
         const formValue = this._profileForm.getRawValue();
-        console.log(formValue);
-        return;
-        /*
-        this._profile.enableRecordingUpload = formValue.enabled ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
-        this._profile.zoomAccountDescription = formValue.description;
-        this._profile.defaultUserId = formValue.defaultUserId.length ? formValue.defaultUserId[0].screenName : '';
-        if (formValue.uploadIn.length) {
-            let optInGroups = [];
-            formValue.uploadIn.forEach(group => optInGroups.push(group.id));
-            this._profile.optInGroupNames = optInGroups.join(this.groupsDelimiter);
-        } else {
-            this._profile.optInGroupNames = null;
-        }
-        if (formValue.uploadOut.length) {
-            let optOutGroups = [];
-            formValue.uploadOut.forEach(group => optOutGroups.push(group.id));
-            this._profile.optOutGroupNames = optOutGroups.join(this.groupsDelimiter);
-        } else {
-            this._profile.optOutGroupNames = null;
-        }
-        this._profile.zoomCategory = formValue.categories.length ? (formValue.categories[0].fullName ? formValue.categories[0].fullName : formValue.categories[0].name) : '';
-        this._profile.zoomWebinarCategory = formValue.webinarCategory.length ? formValue.webinarCategory[0].name : '';
-        if (this._showDeleteContent) {
-            this._profile.deletionPolicy = formValue.deleteContent ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
-        }
-        this._profile.createUserIfNotExist = formValue.createUser ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
-        if (this._showTranscription) {
-            this._profile.enableZoomTranscription = formValue.transcription ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
-        }
-        if (this._enableMeetingUpload) {
-            this._profile.enableMeetingUpload = formValue.uploadMeeting ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
-        }
-        this._profile.enableWebinarUploads = formValue.uploadWebinar ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
-        if (formValue.userId) {
-            this._profile.zoomUserMatchingMode = formValue.postfix;
-        } else {
-            this._profile.zoomUserMatchingMode = KalturaZoomUsersMatching.cmsMatching;
-        }
-        this._profile.zoomUserPostfix = formValue.userPostfix;
-        this._profile.handleParticipantsMode = formValue.participation;
-        this._profile.handleAlternativeHostsMode = formValue.altHosts;
-        this._profile.handleCohostsMode = formValue.coHosts;
-        this._profile.groupParticipationType = formValue.upload;
 
-         */
+        this._profile.name = formValue.name;
+        this._profile.settings = {
+            uploadRecordings: true,
+            uploadTranscripts: formValue.transcripts,
+            categories: formValue.categories
+        }
+
+        Object.assign(this._profile.settings, {userGroupsInclude: [], userGroupsExclude: []});
+        if (formValue.upload === 1 && formValue.uploadIn.length) {
+            Object.assign(this._profile.settings, {userGroupsInclude: formValue.uploadIn.map(user => user.id ? user.id : user)});
+        }
+        if (formValue.upload === 2 && formValue.uploadOut.length) {
+            Object.assign(this._profile.settings, {userGroupsExclude: formValue.uploadOut.map(user => user.id ? user.id : user)});
+        }
+
+        Object.assign(this._profile.settings, {coOrganizerRoles: this.getRolesById(formValue.coOrganizerRoles)});
+        Object.assign(this._profile.settings, {presentersRoles: this.getRolesById(formValue.presentersRoles)});
+        Object.assign(this._profile.settings, {attendeesRoles: this.getRolesById(formValue.attendeesRoles)});
+
+        const userIdSource = formValue.userId ? 'upn' : 'azure-id';
+        Object.assign(this._profile.settings, {userIdSource});
+
+        if (formValue.postfix > 0) {
+            const userIdSuffixMethod = formValue.postfix === 1 ? 'remove' : 'append';
+            Object.assign(this._profile.settings, {userIdSuffixMethod});
+        }
+
+        if (formValue.userPostfix?.length) {
+            Object.assign(this._profile.settings, {userIdSuffix: formValue.userPostfix});
+        }
+
+        const userNotFoundMethod = formValue.createUser ? 'create' : 'assign-default';
+        Object.assign(this._profile.settings, {userNotFoundMethod});
+
+        if (formValue.defaultUserId?.length) {
+            Object.assign(this._profile.settings, {defaultUserId: formValue.defaultUserId[0].id});
+        }
+
         this.onSave.emit(this._profile);
         this.parentPopup.close();
     }
@@ -371,7 +262,7 @@ export class EditTeamsProfileComponent implements OnDestroy {
         }
         this._searchCategoriesSubscription = this.searchCategories(event.query).subscribe(data => {
                 const suggestions = [];
-                const profileCategories = this._profile.settings?.categoryIds && this._profile.settings?.categoryIds.length ? this._profile.settings.categoryIds : [];
+                const profileCategories = this._profile.settings?.categories && this._profile.settings?.categories.length ? this._profile.settings.categories : [];
                 (data || []).forEach(suggestedCategory => {
                     const label = suggestedCategory.fullName + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
                     const isSelectable = !profileCategories.find(category => {

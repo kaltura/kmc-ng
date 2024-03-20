@@ -19,17 +19,17 @@ export type KalturaPager = {
 export type TeamsIntegrationSettings = {
     uploadRecordings: boolean;
     uploadTranscripts: boolean;
-    categoryIds?: string[];
-    userGroupsInclude?: string[];
-    userGroupsExclude?: string[];
+    categories?: string[];
+    userGroupsInclude?: any[];
+    userGroupsExclude?: any[];
     userIdSource?: 'upn' | 'azure-id';
     userIdSuffixMethod?: 'remove' | 'append';
     userIdSuffix?: string;
     userNotFoundMethod?: 'create' | 'assign-default';
     defaultUserId?: string;
-    attendeesRoles? : 'co-editors' | 'co-publishers' | 'co-viewers';
-    presentersRoles? : 'co-editors' | 'co-publishers' | 'co-viewers';
-    coOrganizerRoles? : 'co-editors' | 'co-publishers' | 'co-viewers';
+    attendeesRoles? : ('co-editors' | 'co-publishers' | 'co-viewers')[];
+    presentersRoles? : ('co-editors' | 'co-publishers' | 'co-viewers')[];
+    coOrganizerRoles? : ('co-editors' | 'co-publishers' | 'co-viewers')[];
 }
 
 export type TeamsIntegration = {

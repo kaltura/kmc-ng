@@ -99,6 +99,12 @@ export class TeamsComponent implements OnInit, OnDestroy {
                                     message: this._appLocalization.get('applications.settings.integrationSettings.teams.deleteError'),
                                     buttons: [
                                         {
+                                            label: this._appLocalization.get('app.common.close'),
+                                            action: () => {
+                                                this._blockerMessage = null;
+                                            }
+                                        },
+                                        {
                                             label: this._appLocalization.get('app.common.retry'),
                                             action: () => {
                                                 this._logger.info(`user selected retry, retry action`);
@@ -140,6 +146,12 @@ export class TeamsComponent implements OnInit, OnDestroy {
                         message: this._appLocalization.get('applications.settings.integrationSettings.teams.loadError'),
                         buttons: [
                             {
+                                label: this._appLocalization.get('app.common.close'),
+                                action: () => {
+                                    this._blockerMessage = null;
+                                }
+                            },
+                            {
                                 label: this._appLocalization.get('app.common.retry'),
                                 action: () => {
                                     this._logger.info(`user selected retry, retry action`);
@@ -169,6 +181,12 @@ export class TeamsComponent implements OnInit, OnDestroy {
                         message: this._appLocalization.get('applications.settings.integrationSettings.teams.updateError'),
                         buttons: [
                             {
+                                label: this._appLocalization.get('app.common.close'),
+                                action: () => {
+                                    this._blockerMessage = null;
+                                }
+                            },
+                            {
                                 label: this._appLocalization.get('app.common.retry'),
                                 action: () => {
                                     this._logger.info(`user selected retry, retry action`);
@@ -197,6 +215,12 @@ export class TeamsComponent implements OnInit, OnDestroy {
                     const blockerMessage = new AreaBlockerMessage({
                         message: this._appLocalization.get('applications.settings.integrationSettings.teams.updateError'),
                         buttons: [
+                            {
+                                label: this._appLocalization.get('app.common.close'),
+                                action: () => {
+                                    this._blockerMessage = null;
+                                }
+                            },
                             {
                                 label: this._appLocalization.get('app.common.retry'),
                                 action: () => {

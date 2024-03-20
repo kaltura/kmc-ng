@@ -59,12 +59,18 @@ export class TeamsProfilesTableComponent {
             }
         });
     }
-      // this._items.push({
-      //     label: this._appLocalization.get('applications.settings.integrationSettings.teams.download'),
-      //     command: () => {
-      //         this.onActionSelected.emit({action: 'download', profile});
-      //     }
-      // });
+      this._items.push({
+          label: this._appLocalization.get('applications.settings.integrationSettings.teams.updateSecret'),
+          command: () => {
+              this.onActionSelected.emit({action: 'secret', profile});
+          }
+      });
+      this._items.push({
+          label: this._appLocalization.get('applications.settings.integrationSettings.teams.download'),
+          command: () => {
+              this.onActionSelected.emit({action: 'download', profile});
+          }
+      });
       this._items.push({
           label: this._appLocalization.get('applications.settings.authentication.table.delete'),
           styleClass: 'kDanger',
