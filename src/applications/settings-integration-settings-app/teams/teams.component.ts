@@ -1,5 +1,4 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {KalturaNullableBoolean} from 'kaltura-ngx-client';
 import {LoadTeamsIntegrationResponse, TeamsIntegration, TeamsService} from './teams.service';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
@@ -78,6 +77,30 @@ export class TeamsComponent implements OnInit, OnDestroy {
         }
     }
 
+    private displayError(message: string, retryAction?: Function): void {
+        this._isBusy = false;
+        let buttons = [
+            {
+                label: this._appLocalization.get('app.common.close'),
+                action: () => {
+                    this._logger.info(`user didn't confirm, abort action, dismiss dialog`);
+                    this._blockerMessage = null;
+                }
+            }
+        ];
+        if (retryAction) {
+            buttons.unshift({
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => {
+                    this._logger.info(`user confirmed, retry action`);
+                    this._blockerMessage = null;
+                    retryAction();
+                }
+            });
+        }
+        this._blockerMessage = new AreaBlockerMessage({ message, buttons });
+    }
+
     private deleteProfile(): void {
         if (this._currentProfile.status === 'enabled') {
             this._browserService.alert({
@@ -95,10 +118,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
                         this._teamsService.deleteProfile(this._currentProfile.id).subscribe(
                             success => {
                                 if ((success as any).objectType === 'KalturaAPIException') {
-                                    this._browserService.alert({
-                                        header: this._appLocalization.get('app.common.error'),
-                                        message: (success as any).message
-                                    });
+                                    this.displayError((success as any).message, () => this.deleteProfile());
                                 } else {
                                     this._updateAreaBlockerState(false, null);
                                     this._loadTeamsIntegrationProfiles();
@@ -109,25 +129,8 @@ export class TeamsComponent implements OnInit, OnDestroy {
                                 }
                             },
                             error => {
-                                const blockerMessage = new AreaBlockerMessage({
-                                    message: this._appLocalization.get('applications.settings.integrationSettings.teams.deleteError'),
-                                    buttons: [
-                                        {
-                                            label: this._appLocalization.get('app.common.close'),
-                                            action: () => {
-                                                this._blockerMessage = null;
-                                            }
-                                        },
-                                        {
-                                            label: this._appLocalization.get('app.common.retry'),
-                                            action: () => {
-                                                this._logger.info(`user selected retry, retry action`);
-                                                this.deleteProfile();
-                                            }
-                                        }
-                                    ]
-                                });
-                                this._updateAreaBlockerState(false, blockerMessage);
+                                const errorMsg = error?.message ? error.message : this._appLocalization.get('applications.settings.integrationSettings.teams.deleteError');
+                                this.displayError(errorMsg, () => this.deleteProfile());
                             }
                         );
                     },
@@ -150,10 +153,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
             .subscribe(
                 (response: LoadTeamsIntegrationResponse) => {
                     if ((response as any).objectType === 'KalturaAPIException') {
-                        this._browserService.alert({
-                            header: this._appLocalization.get('app.common.error'),
-                            message: (response as any).message
-                        });
+                        this.displayError((response as any).message, () => this._loadTeamsIntegrationProfiles());
                     } else {
                         this._logger.info(`handle successful loading teams integration profiles`);
                         this._updateAreaBlockerState(false, null);
@@ -162,26 +162,8 @@ export class TeamsComponent implements OnInit, OnDestroy {
                     }
                 },
                 error => {
-                    this._logger.warn(`handle failed loading teams integration profiles, show alert`, {errorMessage: error.message});
-                    const blockerMessage = new AreaBlockerMessage({
-                        message: this._appLocalization.get('applications.settings.integrationSettings.teams.loadError'),
-                        buttons: [
-                            {
-                                label: this._appLocalization.get('app.common.close'),
-                                action: () => {
-                                    this._blockerMessage = null;
-                                }
-                            },
-                            {
-                                label: this._appLocalization.get('app.common.retry'),
-                                action: () => {
-                                    this._logger.info(`user selected retry, retry action`);
-                                    this._loadTeamsIntegrationProfiles();
-                                }
-                            }
-                        ]
-                    });
-                    this._updateAreaBlockerState(false, blockerMessage);
+                    const errorMsg = error?.message ? error.message : this._appLocalization.get('applications.settings.integrationSettings.teams.deleteError');
+                    this.displayError(errorMsg, () => this._loadTeamsIntegrationProfiles());
                 }
             );
     }
@@ -194,36 +176,15 @@ export class TeamsComponent implements OnInit, OnDestroy {
             .subscribe(
                 (profile: TeamsIntegration) => {
                     if (profile.objectType === 'KalturaAPIException') {
-                        this._browserService.alert({
-                            header: this._appLocalization.get('app.common.error'),
-                            message: (profile as any).message
-                        });
+                        this.displayError((profile as any).message, () => this.updateProfile(profile));
                     } else {
                         this._logger.info(`handle successful update teams integration profiles`);
                         this._loadTeamsIntegrationProfiles();
                     }
                 },
                 error => {
-                    this._logger.warn(`handle failed updating teams integration profile, show alert`, {errorMessage: error.message});
-                    const blockerMessage = new AreaBlockerMessage({
-                        message: this._appLocalization.get('applications.settings.integrationSettings.teams.updateError'),
-                        buttons: [
-                            {
-                                label: this._appLocalization.get('app.common.close'),
-                                action: () => {
-                                    this._blockerMessage = null;
-                                }
-                            },
-                            {
-                                label: this._appLocalization.get('app.common.retry'),
-                                action: () => {
-                                    this._logger.info(`user selected retry, retry action`);
-                                    this.updateProfile(profile);
-                                }
-                            }
-                        ]
-                    });
-                    this._updateAreaBlockerState(false, blockerMessage);
+                    const errorMsg = error?.message ? error.message : this._appLocalization.get('applications.settings.integrationSettings.teams.deleteError');
+                    this.displayError(errorMsg, () => this.updateProfile(profile));
                 }
             );
     }
@@ -236,36 +197,15 @@ export class TeamsComponent implements OnInit, OnDestroy {
             .subscribe(
                 (profile: TeamsIntegration) => {
                     if (profile.objectType === 'KalturaAPIException') {
-                        this._browserService.alert({
-                            header: this._appLocalization.get('app.common.error'),
-                            message: (profile as any).message
-                        });
+                        this.displayError((profile as any).message, () => this.changeProfileStatus(profile, status));
                     } else {
                         this._logger.info(`handle successful status update for teams integration profiles`);
                         this._loadTeamsIntegrationProfiles();
                     }
                 },
                 error => {
-                    this._logger.warn(`handle failed updating teams integration profile, show alert`, {errorMessage: error.message});
-                    const blockerMessage = new AreaBlockerMessage({
-                        message: this._appLocalization.get('applications.settings.integrationSettings.teams.updateError'),
-                        buttons: [
-                            {
-                                label: this._appLocalization.get('app.common.close'),
-                                action: () => {
-                                    this._blockerMessage = null;
-                                }
-                            },
-                            {
-                                label: this._appLocalization.get('app.common.retry'),
-                                action: () => {
-                                    this._logger.info(`user selected retry, retry action`);
-                                    this.changeProfileStatus(profile, status);
-                                }
-                            }
-                        ]
-                    });
-                    this._updateAreaBlockerState(false, blockerMessage);
+                    const errorMsg = error?.message ? error.message : this._appLocalization.get('applications.settings.integrationSettings.teams.deleteError');
+                    this.displayError(errorMsg, () => this.changeProfileStatus(profile, status));
                 }
             );
     }
