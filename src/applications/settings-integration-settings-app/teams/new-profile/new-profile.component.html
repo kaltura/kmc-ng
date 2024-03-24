@@ -10,7 +10,7 @@
                 <div class="kRow">
                     <div class="labelWithHelpTip">
                         <span class="kLabel">{{'applications.settings.authentication.name' | translate}}</span>
-                        <kInputHelper>
+                        <kInputHelper [placement]="{x: 'right', y: 'bottom'}">
                             <span>{{'applications.settings.integrationSettings.teams.name_tt' | translate}}</span>
                         </kInputHelper>
                         <div class="kRequired" [class.kHasError]="_newProfileForm.get('name').invalid && _newProfileForm.get('name').touched">*</div>

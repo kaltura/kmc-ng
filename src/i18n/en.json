@@ -3063,6 +3063,7 @@
                     "deleteMsg": "Are you sure you want to delete the selected Teams integration?",
                     "deleteError": "An error occurred while deleting teams integration.",
                     "deleteSuccess": "Integration deleted successfully",
+                    "secretSuccess": "Secret updated successfully",
                     "edit": "Edit Teams account",
                     "categories": "Publish to categories",
                     "categories_tt": "Publish to categories tooltip",
@@ -3076,7 +3077,9 @@
                     "upn": "Teams UPN",
                     "azure": "Azure user ID",
                     "azure_tt": "Azure user ID tooltip",
-                    "createUser": "Create new user based on teams user"
+                    "createUser": "Create new user based on teams user",
+                    "secret": "Update Secret",
+                    "update": "Update"
                 },
                 "webex": {
                     "title": "Webex integration",

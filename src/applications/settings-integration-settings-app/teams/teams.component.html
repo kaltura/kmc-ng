@@ -20,6 +20,12 @@
     </ng-template>
 </kPopupWidget>
 
+<kPopupWidget #updateSecretPopup data-aid="updateSecretPopup" [popupWidth]="560" [popupHeight]="290" [modal]="true" [preventPageScroll]="true" [closeOnClickOutside]="false">
+    <ng-template>
+        <kUpdateProfileSecret [parentPopupWidget]="updateSecretPopup" (onProfileSecretUpdated)="onProfileSecretUpdated($event)"></kUpdateProfileSecret>
+    </ng-template>
+</kPopupWidget>
+
 <kPopupWidget #editProfile data-aid="editProfile" [popupWidth]="995" [slider]="true">
     <ng-template>
         <kTeamsEditProfile [profile]="_currentProfile" [parentPopup]="editProfile" (onSave)="saveProfile($event)"></kTeamsEditProfile>

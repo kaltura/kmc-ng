@@ -146,7 +146,7 @@ export class EditTeamsProfileComponent implements OnDestroy {
             userId: this._profile.settings?.userIdSource === 'upn' ? true : false,
             postfix: this._profile.settings?.userIdSuffixMethod === 'append' ? 2 : this._profile.settings?.userIdSuffixMethod === 'remove' ? 1 : 0,
             userPostfix: this._profile.settings?.userIdSuffix || '',
-            createUser: this._profile.settings?.userNotFoundMethod === 'create' ? true : false,
+            createUser: this._profile.settings?.defaultUserId ? false : true,
             defaultUserId: this._profile.settings?.defaultUserId ? [{id: this._profile.settings?.defaultUserId}] : [],
         });
 

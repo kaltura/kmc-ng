@@ -30,6 +30,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
     public totalCount = 0;
 
     @ViewChild('editProfile', {static: true}) editProfilePopup: PopupWidgetComponent;
+    @ViewChild('updateSecretPopup', {static: true}) updateSecretPopup: PopupWidgetComponent;
 
     constructor(private _appLocalization: AppLocalization,
                 private _logger: KalturaLogger,
@@ -68,6 +69,9 @@ export class TeamsComponent implements OnInit, OnDestroy {
                 break;
             case 'delete':
                 this.deleteProfile();
+                break;
+            case 'secret':
+                this.updateSecretPopup.open();
                 break;
             default:
                 break;
@@ -241,6 +245,10 @@ export class TeamsComponent implements OnInit, OnDestroy {
             this.editProfilePopup.open(); // use a timeout to allow screen refresh and prevent page scroll
         });
         this._loadTeamsIntegrationProfiles();
+    }
+
+    public onProfileSecretUpdated(profile: TeamsIntegration): void {
+        this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('applications.settings.integrationSettings.teams.secretSuccess')});
     }
 
     private _updateAreaBlockerState(isBusy: boolean, areaBlocker: AreaBlockerMessage): void {

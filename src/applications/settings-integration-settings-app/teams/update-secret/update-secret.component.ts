@@ -5,26 +5,26 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { tag } from '@kaltura-ng/kaltura-common';
-import {TeamsIntegration, TeamsIntegrationSettings, TeamsService} from '../teams.service';
+import {TeamsIntegration, TeamsService} from '../teams.service';
 
 @Component({
-  selector: 'kNewTeamsProfile',
-  templateUrl: './new-profile.component.html',
-  styleUrls: ['./new-profile.component.scss'],
+  selector: 'kUpdateProfileSecret',
+  templateUrl: './update-secret.component.html',
+  styleUrls: ['./update-secret.component.scss'],
   providers: [
-      KalturaLogger.createLogger('NewRuleComponent')
+      KalturaLogger.createLogger('UpdateProfileSecretComponent')
   ]
 })
-  export class TeamsNewProfileComponent {
+  export class TeamsUpdateProfileSecretComponent {
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @Output() onProfileCreated = new EventEmitter<TeamsIntegration>();
+  @Output() onProfileSecretUpdated = new EventEmitter<TeamsIntegration>();
 
-  public _newProfileForm: FormGroup;
+  public _profileForm: FormGroup;
 
   public _blockerMessage: AreaBlockerMessage = null;
 
     public get _saveDisabled(): boolean {
-        return this._newProfileForm.pristine || !this._newProfileForm.valid;
+        return this._profileForm.pristine || !this._profileForm.valid;
     }
 
   constructor(private _fb: FormBuilder,
@@ -35,33 +35,30 @@ import {TeamsIntegration, TeamsIntegrationSettings, TeamsService} from '../teams
   }
 
   private _buildForm(): void {
-    this._newProfileForm = this._fb.group({
-      name: ['', Validators.required],
-      tenantId: ['', Validators.required],
-      appClientId: ['', Validators.required],
-      appClientSecret: ['', Validators.required]
+    this._profileForm = this._fb.group({
+        appClientSecret: ['', Validators.required]
     });
   }
 
   private updateFormStatus(status: 'touched' | 'pristine'): void {
-      for (const controlName in this._newProfileForm.controls) {
-          if (this._newProfileForm.controls.hasOwnProperty(controlName)) {
+      for (const controlName in this._profileForm.controls) {
+          if (this._profileForm.controls.hasOwnProperty(controlName)) {
               if (status === 'touched') {
-                  this._newProfileForm.get(controlName).markAsTouched();
+                  this._profileForm.get(controlName).markAsTouched();
               } else {
-                  this._newProfileForm.get(controlName).markAsPristine();
+                  this._profileForm.get(controlName).markAsPristine();
               }
-              this._newProfileForm.get(controlName).updateValueAndValidity();
+              this._profileForm.get(controlName).updateValueAndValidity();
           }
       }
-      this._newProfileForm.updateValueAndValidity();
+      this._profileForm.updateValueAndValidity();
   }
 
-  public _createProfile(): void {
+  public _updateSecret(): void {
     this._blockerMessage = null;
-    this._logger.info(`send create Teams profile to the server`);
+    this._logger.info(`send update secret to the server`);
 
-      if (!this._newProfileForm.valid) {
+      if (!this._profileForm.valid) {
           this.updateFormStatus('touched');
           this._logger.info(`abort action, profile has invalid data`);
           return;
@@ -69,24 +66,9 @@ import {TeamsIntegration, TeamsIntegrationSettings, TeamsService} from '../teams
 
       this.updateFormStatus('pristine');
 
-    const { name, tenantId, appClientId, appClientSecret } = this._newProfileForm.value;
-    // default settings object
-      const settings: TeamsIntegrationSettings = {
-          uploadRecordings: true,
-          uploadTranscripts: false,
-          userIdSource: 'upn'
-      }
-    const newProfile = {
-        teamsIntegration: {
-            name,
-            tenantId,
-            appClientId,
-            appClientSecret,
-            settings
-        }
-    }
-
-    this._teamsService.createProfile(newProfile)
+    const { appClientSecret } = this._profileForm.value;
+/*
+    this._teamsService.updateProfileSecret(newProfile)
       .pipe(tag('block-shell'))
       .subscribe(
           (profile: TeamsIntegration) => {
@@ -94,13 +76,13 @@ import {TeamsIntegration, TeamsIntegrationSettings, TeamsService} from '../teams
                   this.displayServerError(profile);
                   return;
               }
-              this.onProfileCreated.emit(profile);
+              this.onProfileSecretUpdated.emit(profile);
               this.parentPopupWidget.close();
           },
           error => {
               this.displayServerError(error);
           }
-      );
+      );*/
   }
 
     private displayServerError = error => {
