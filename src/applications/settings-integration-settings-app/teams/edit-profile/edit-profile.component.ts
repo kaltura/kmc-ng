@@ -131,12 +131,16 @@ export class EditTeamsProfileComponent implements OnDestroy {
         if (this._profile.settings?.userGroupsExclude?.length) {
             this._profile.settings.userGroupsExclude.forEach(groupName => optOutGroupNames.push({id: groupName}));
         }
+        let categories = [];
+        if (this._profile.settings?.categories?.length) {
+            this._profile.settings.categories.forEach(category => categories.push({name: category}));
+        }
         this._profileForm.setValue({
             name: this._profile.name,
             tenantId: this._profile.tenantId,
             appClientId: this._profile.appClientId,
-            categories: this._profile.settings?.categories || [],
             upload: this._profile.settings?.userGroupsInclude?.length ? 1 : this._profile.settings?.userGroupsExclude?.length ? 2 : 0,
+            categories,
             uploadIn: optInGroupNames,
             uploadOut: optOutGroupNames,
             transcripts: this._profile.settings?.uploadTranscripts ? true : false,
@@ -213,7 +217,7 @@ export class EditTeamsProfileComponent implements OnDestroy {
         this._profile.settings = {
             uploadRecordings: true,
             uploadTranscripts: formValue.transcripts,
-            categories: formValue.categories
+            categories: formValue.categories.map(category => category.fullName ? category.fullName : category.name)
         }
 
         Object.assign(this._profile.settings, {userGroupsInclude: [], userGroupsExclude: []});
