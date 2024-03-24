@@ -5,6 +5,9 @@
         min-width: 240px;
         width: 240px;
     }
+    ::ng-deep .p-inputswitch.p-disabled {
+        opacity: 0.3;
+    }
   .kHeader {
     height: 72px;
     width: 100%;

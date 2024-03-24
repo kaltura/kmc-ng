@@ -8,6 +8,9 @@
     ::ng-deep .p-radiobutton-label {
         white-space: nowrap;
     }
+    ::ng-deep .p-inputswitch.p-disabled {
+        opacity: 0.3;
+    }
   .kHeader {
     height: 72px;
     width: 100%;

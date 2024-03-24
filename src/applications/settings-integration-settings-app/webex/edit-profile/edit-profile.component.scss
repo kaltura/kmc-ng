@@ -1,6 +1,9 @@
 @import 'app-theme/_variables.scss';
 
 .kEditAccessControlProfile {
+    ::ng-deep .p-inputswitch.p-disabled {
+        opacity: 0.3;
+    }
   .kHeader {
     height: 72px;
     width: 100%;
