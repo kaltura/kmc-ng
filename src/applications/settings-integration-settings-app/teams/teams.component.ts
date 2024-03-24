@@ -94,9 +94,19 @@ export class TeamsComponent implements OnInit, OnDestroy {
                         this._updateAreaBlockerState(true, null);
                         this._teamsService.deleteProfile(this._currentProfile.id).subscribe(
                             success => {
-                                this._updateAreaBlockerState(false, null);
-                                this._loadTeamsIntegrationProfiles();
-                                this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('applications.settings.integrationSettings.teams.deleteSuccess')});
+                                if ((success as any).objectType === 'KalturaAPIException') {
+                                    this._browserService.alert({
+                                        header: this._appLocalization.get('app.common.error'),
+                                        message: (success as any).message
+                                    });
+                                } else {
+                                    this._updateAreaBlockerState(false, null);
+                                    this._loadTeamsIntegrationProfiles();
+                                    this._browserService.showToastMessage({
+                                        severity: 'success',
+                                        detail: this._appLocalization.get('applications.settings.integrationSettings.teams.deleteSuccess')
+                                    });
+                                }
                             },
                             error => {
                                 const blockerMessage = new AreaBlockerMessage({
@@ -139,10 +149,17 @@ export class TeamsComponent implements OnInit, OnDestroy {
             .pipe(cancelOnDestroy(this))
             .subscribe(
                 (response: LoadTeamsIntegrationResponse) => {
-                    this._logger.info(`handle successful loading teams integration profiles`);
-                    this._updateAreaBlockerState(false, null);
-                    this._profiles = response.objects || [];
-                    this.totalCount = this._profiles.length;
+                    if ((response as any).objectType === 'KalturaAPIException') {
+                        this._browserService.alert({
+                            header: this._appLocalization.get('app.common.error'),
+                            message: (response as any).message
+                        });
+                    } else {
+                        this._logger.info(`handle successful loading teams integration profiles`);
+                        this._updateAreaBlockerState(false, null);
+                        this._profiles = response.objects || [];
+                        this.totalCount = this._profiles.length;
+                    }
                 },
                 error => {
                     this._logger.warn(`handle failed loading teams integration profiles, show alert`, {errorMessage: error.message});
@@ -176,8 +193,15 @@ export class TeamsComponent implements OnInit, OnDestroy {
             .pipe(cancelOnDestroy(this))
             .subscribe(
                 (profile: TeamsIntegration) => {
-                    this._logger.info(`handle successful update teams integration profiles`);
-                    this._loadTeamsIntegrationProfiles();
+                    if (profile.objectType === 'KalturaAPIException') {
+                        this._browserService.alert({
+                            header: this._appLocalization.get('app.common.error'),
+                            message: (profile as any).message
+                        });
+                    } else {
+                        this._logger.info(`handle successful update teams integration profiles`);
+                        this._loadTeamsIntegrationProfiles();
+                    }
                 },
                 error => {
                     this._logger.warn(`handle failed updating teams integration profile, show alert`, {errorMessage: error.message});
@@ -211,8 +235,15 @@ export class TeamsComponent implements OnInit, OnDestroy {
             .pipe(cancelOnDestroy(this))
             .subscribe(
                 (profile: TeamsIntegration) => {
-                    this._logger.info(`handle successful status update for teams integration profiles`);
-                    this._loadTeamsIntegrationProfiles();
+                    if (profile.objectType === 'KalturaAPIException') {
+                        this._browserService.alert({
+                            header: this._appLocalization.get('app.common.error'),
+                            message: (profile as any).message
+                        });
+                    } else {
+                        this._logger.info(`handle successful status update for teams integration profiles`);
+                        this._loadTeamsIntegrationProfiles();
+                    }
                 },
                 error => {
                     this._logger.warn(`handle failed updating teams integration profile, show alert`, {errorMessage: error.message});
