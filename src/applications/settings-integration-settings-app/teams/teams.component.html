@@ -1,0 +1,36 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+    <div class="kContainer">
+        <div class="kTitle">
+            <span>{{'applications.settings.integrationSettings.teams.title' | translate}}</span>
+        </div>
+        <div class="kGenerateCode">
+            <button type="button" class="kButtonDefault" (click)="newIntergationPopup.open()" pButton
+                    label="{{'applications.settings.integrationSettings.teams.add' | translate}}"></button>
+        </div>
+        <div class="kExplanation">{{'applications.settings.integrationSettings.teams.subTitle' | translate}}</div>
+      <div class="tableHolder">
+          <kTeamsProfilesTable [_profiles]="_profiles" (onActionSelected)="_onActionSelected($event)"></kTeamsProfilesTable>
+      </div>
+    </div>
+</k-area-blocker>
+
+<kPopupWidget #newIntergationPopup data-aid="newIntergationPopup" [popupWidth]="680" [popupHeight]="470" [modal]="true" [preventPageScroll]="true" [closeOnClickOutside]="false">
+    <ng-template>
+        <kNewTeamsProfile [parentPopupWidget]="newIntergationPopup" (onProfileCreated)="onProfileCreated($event)"></kNewTeamsProfile>
+    </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #updateSecretPopup data-aid="updateSecretPopup" [popupWidth]="560" [popupHeight]="290" [modal]="true" [preventPageScroll]="true" [closeOnClickOutside]="false">
+    <ng-template>
+        <kUpdateProfileSecret [parentPopupWidget]="updateSecretPopup" (onProfileSecretUpdated)="onProfileSecretUpdated($event)"></kUpdateProfileSecret>
+    </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #editProfile data-aid="editProfile" [popupWidth]="995" [slider]="true">
+    <ng-template>
+        <kTeamsEditProfile [profile]="_currentProfile" [parentPopup]="editProfile" (onSave)="saveProfile($event)"></kTeamsEditProfile>
+        <span>edit</span>
+    </ng-template>
+</kPopupWidget>
+
+

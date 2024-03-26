@@ -117,6 +117,9 @@ export interface ServerConfig {
         },
         mrEndpoint: {
             uri: string;
+        },
+        vendorIntegrationsEndpoint: {
+            uri: string;
         }
     },
     analyticsServer?: {
