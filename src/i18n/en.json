@@ -2790,7 +2790,7 @@
                     "group": "Group attribute statements",
                     "group_tt": "Map the providers attributes to your Kaltura schema:",
                     "groupName": "Group attribute name",
-                    "groupName_tt": "Name of the attribute that contains the user groups as it appears in the SAML assertion.",
+                    "groupName_tt": "Name of the custom attribute that the SAML assertion groups are mapped to.",
                     "addGroup": "Add group attribute",
                     "createGroups": "Create new groups",
                     "createGroups_tt": "Create groups in Kaltura that exist in the IdP and do not exist in Kaltura during the sync.",
