@@ -1,0 +1,145 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
+    <div class="kmcDetailsLayout">
+        <div class="kContent kDetailsWrapper">
+            <kSticky stickyId="ruleHeader" [sticksTo]="'header'" stickyClass="stickyHeader">
+                <div class="kDetailsHeader">
+                    <div class="kContent">
+                        <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
+                        <div class="kTitle">{{ _ruleName }}</div>
+                        <div class="kEntryActionsWrapper">
+                            <button pButton class="kButtonBranded kSaveBtn"
+                                    [label]="'app.common.save' | translate"
+                                    [disabled]="!_enableSaveBtn"
+                                    (click)="save()"></button>
+                        </div>
+                    </div>
+                </div>
+            </kSticky>
+            <div class="kHeaderDetails">
+                <span class="kLabel">{{'applications.settings.mr.creationDate' | translate: [rule?.createdAt.getTime() | kmcDate: 'dateOnly']}}</span>
+                <div class="kSeparator">|</div>
+                <span class="kLabel">{{'applications.settings.mr.updateDate' | translate: [rule?.updatedAt.getTime() | kmcDate: 'dateOnly']}}</span>
+            </div>
+
+            <div class="kDetailsMain">
+                <div class="kSectionsWrapper">
+                    <div class="kSections kSectionsPlaceholder"></div>
+                    <kSticky #ruleSections stickyId="ruleSections" [sticksTo]="'ruleHeader'" [scrollOffset]="120" [stickyClass]="'kStickySections'">
+                    <div class="kSections">
+                        <ul>
+                            <li *ngFor="let section of _sections" [class.active]="_selectedSection === section">
+                                <div (click)="sectionSelected(section)">
+                                    {{'applications.settings.mr.' + section | translate}}
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    </kSticky>
+                </div>
+
+                <div class="kDetailsContent">
+                    <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'general'" *ngIf="rule">
+                        <span class="kTitle">{{'applications.settings.mr.general' | translate}}</span>
+                        <div class="kRow">
+                            <span class="kLabel kLabelWithRequired">{{'applications.settings.authentication.name' | translate}}</span>
+                            <span class="kRequired">*</span>
+                            <div class="inputWithErrorWrapper">
+                                <input class="kControl" pInputText [(ngModel)]="rule.name" [class.kHasError]="rule.name.length === 0" (ngModelChange)="_isDirty = true">
+                                <div *ngIf="rule.name.length === 0" class="kError">{{'applications.administration.role.errors.required' | translate}}</div>
+                            </div>
+                        </div>
+                        <div class="kRow">
+                            <span class="kLabel">{{'applications.administration.role.description' | translate}}</span>
+                            <input class="kControl" pInputText [(ngModel)]="rule.description" (ngModelChange)="_isDirty = true">
+                        </div>
+                        <div class="kRow kCenter">
+                            <span class="kLabel">{{'applications.settings.mr.owner' | translate}}</span>
+                            <span class="kLabel autoWidth">{{rule.ownerId}}</span>
+                            <a class="link" (click)="ownerPopup.open()">{{'applications.settings.mr.actions.owner' | translate}}</a>
+                        </div>
+                        <div class="kRow">
+                            <span class="kSubtitle">{{'applications.settings.mr.schedule.scheduling' | translate}}</span>
+                        </div>
+                        <div class="kRow">
+                            <span class="kLabel">{{'applications.settings.mr.schedule.startDate' | translate}}</span>
+                            <p-calendar [(ngModel)]="rule.nextRunDate" [readonlyInput]="true" [showIcon]="true"
+                                        [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
+                                        [dateFormat]="_calendarFormat" icon="kIconcalendar" (onSelect)="_isDirty = true"></p-calendar>
+                        </div>
+                        <div class="kRow">
+                            <span class="kLabel">{{'applications.settings.mr.schedule.repeat' | translate}}</span>
+                            <p-dropdown [options]="_timeUnitOptions" [style]="{'width':'142px'}"  [(ngModel)]="rule.runningCadence.advancedCadence.dateUnit" (ngModelChange)="_isDirty = true"></p-dropdown>
+                        </div>
+                        <div class="kRow" *ngIf="rule.runningCadence.advancedCadence.dateUnit === 'day'">
+                            <span class="kLabel">{{'applications.settings.mr.schedule.every' | translate}}</span>
+                            <p-dropdown [options]="_everyDay" [style]="{'width':'60px', 'margin-right': '4px'}"  [(ngModel)]="rule.runningCadence.advancedCadence.numberOfUnits" (ngModelChange)="_isDirty = true"></p-dropdown>
+                            <span class="kLabel autoWidth">{{'applications.settings.mr.criteria.days' | translate}}</span>
+                        </div>
+                        <div class="kRow" *ngIf="rule.runningCadence.advancedCadence.dateUnit === 'week'">
+                            <span class="kLabel">{{'applications.settings.mr.schedule.every' | translate}}</span>
+                            <p-dropdown [options]="_everyWeek" [style]="{'width':'60px', 'margin-right': '4px'}"  [(ngModel)]="rule.runningCadence.advancedCadence.numberOfUnits" (ngModelChange)="_isDirty = true"></p-dropdown>
+                            <span class="kLabel autoWidth">{{'applications.settings.mr.criteria.weeks' | translate}}</span>
+                        </div>
+                        <div class="kRow" *ngIf="rule.runningCadence.advancedCadence.dateUnit === 'week'">
+                            <span class="kLabel">{{'applications.settings.mr.schedule.on' | translate}}</span>
+                            <p-dropdown [options]="_daysOfWeek" [style]="{'width':'142px', 'margin-right': '4px'}"  [(ngModel)]="rule.runningCadence.advancedCadence.day" (ngModelChange)="_isDirty = true"></p-dropdown>
+                        </div>
+                        <div class="kRow" *ngIf="rule.runningCadence.advancedCadence.dateUnit === 'month'">
+                            <span class="kLabel">{{'applications.settings.mr.schedule.every' | translate}}</span>
+                            <p-dropdown [options]="_everyMonth" [style]="{'width':'60px', 'margin-right': '4px'}"  [(ngModel)]="rule.runningCadence.advancedCadence.numberOfUnits" (ngModelChange)="_isDirty = true"></p-dropdown>
+                            <span class="kLabel autoWidth">{{'applications.settings.mr.criteria.months' | translate}}</span>
+                        </div>
+                        <div class="kRow" *ngIf="rule.runningCadence.advancedCadence.dateUnit === 'month'">
+                            <span class="kLabel">{{'applications.settings.mr.schedule.on' | translate}}</span>
+                            <p-dropdown [options]="_everyDay" [style]="{'width':'60px', 'margin-right': '4px'}"  [(ngModel)]="rule.runningCadence.advancedCadence.dayNumber" (ngModelChange)="_isDirty = true"></p-dropdown>
+                            <span class="kLabel autoWidth">{{'applications.settings.mr.schedule.of' | translate}}</span>
+                        </div>
+
+                        <div class="kRow">
+                            <span class="kSubtitle">{{'applications.settings.mr.review' | translate}}</span>
+                        </div>
+                        <div class="kRow kRowWithHelptip">
+                            <div class="labelWithHelpTip">
+                                <span class="kLabel">{{'applications.settings.mr.schedule.period' | translate}}</span>
+                                <kInputHelper>
+                                    <span>{{'applications.settings.mr.schedule.period_tt' | translate}}</span>
+                                </kInputHelper>
+                            </div>
+                            <p-dropdown [options]="_reviewPeriod" [style]="{'width':'60px', 'margin-right': '4px'}"  [(ngModel)]="rule.audit.reviewPeriod" (ngModelChange)="_isDirty = true"></p-dropdown>
+                            <span class="kLabel autoWidth">{{'applications.settings.mr.criteria.days' | translate}}</span>
+                        </div>
+                        <div class="kRow kRowWithHelptip">
+                            <div class="labelWithHelpTip">
+                                <span class="kLabel">{{'applications.settings.mr.requireApproval' | translate}}</span>
+                                <kInputHelper>
+                                    <span>{{'applications.settings.mr.requireApproval_tt' | translate}}</span>
+                                </kInputHelper>
+                            </div>
+                            <p-inputSwitch (onChange)="_isDirty = true" [(ngModel)]="rule.audit.auditApproval"></p-inputSwitch>
+                        </div>
+                    </div>
+
+                    <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'criterrias'" *ngIf="rule">
+                        <span class="kTitle">{{'applications.settings.mr.criterrias' | translate}}</span>
+                        <kRuleCriteria [filter]="rule.objectFilter || {}" (onFilterChange)="onCriteriaChange($event)"></kRuleCriteria>
+                    </div>
+
+                    <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'action' && _selectedSection !== 'notifications'" *ngIf="rule">
+                        <span class="kTitle">{{_selectedSection === 'action' ? ('applications.settings.mr.action' | translate) : ('applications.settings.mr.notifications' | translate)}}</span>
+                        <kRuleActions #actionsComponent [ruleActions]="ruleActions" [profileId]="rule.id" [selectedTab]="_selectedSection" (onActionsChange)="onActionChange($event)"></kRuleActions>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</k-area-blocker>
+
+<kPopupWidget #ownerPopup data-aid="ownerPopup" [popupWidth]="550" [popupHeight]="264" [modal]="true">
+    <ng-template>
+        <kOwnersSelector [parentPopupWidget]="ownerPopup" (ownerSelected)="ownerSelected($event)"></kOwnersSelector>
+    </ng-template>
+</kPopupWidget>

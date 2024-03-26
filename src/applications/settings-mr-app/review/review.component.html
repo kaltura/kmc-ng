@@ -1,0 +1,162 @@
+<k-area-blocker [message]="_blockerMessage" [bodyScroll]="true" [showLoader]="_isBusy">
+    <div class="kProfiles kOverrideFAIcons">
+        <div class="kProfilesHolder">
+            <span class="kTitle">{{'applications.settings.mr.review' | translate}}</span>
+            <div class="kFiltersWrapper">
+                <div class="kProfilesTableFilters">
+                    <span class="kSelectedProfilesNum">
+                      {{ 'applications.settings.mr.entriesNum' | translate:{'0': _reviewsCount} }}
+                    </span>
+                    <div [class.kHidden]="!_selectedReviews.length" class="kBulkOperations">
+                        <span class="kSelectedReviewsLabel">• {{_selectedReviews.length}} {{'applications.content.entries.selected' | translate}}</span>
+                        <div class="kBulkActions">
+<!--                            <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_bulkAction('delete')" [kTooltip]="'applications.settings.mr.delete' | translate"></button>-->
+                            <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton label="{{'applications.content.categories.bulkActions' | translate}}" (click)="menu.toggle($event)"></button>
+                        </div>
+                        <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
+                    </div>
+                    <input type="text" pInputText class="kSearchInput" [class.kHidden]="_selectedReviews.length"
+                           [(ngModel)]="_freeTextSearch"
+                           (keyup.enter)="_onFreetextChanged()"
+                           placeholder="{{'applications.content.dropFolders.search' | translate}}">
+                    <div #refineBtn class="kRefine kDropdown" [class.kHidden]="_selectedReviews.length">
+                        <i class="kIconfilter"></i>
+                        <span>{{'applications.content.bulkUpload.list.refine' | translate}}</span>
+                        <i class="kIcondropdown_arrow_bottom dropdown"></i>
+                    </div>
+<!--                    <button pButton class="kButtonDefault kExportBtn" (click)="_export()" type="text" [class.kHidden]="_selectedReviews.length"-->
+<!--                            [label]="'applications.content.entryDetails.distribution.export' | translate"></button>-->
+                    <button pButton class="kButtonDefault kRefreshBtn small" (click)="_refresh()" type="text" icon="kIconrefresh" [class.kHidden]="_selectedReviews.length"
+                            [kTooltip]="'applications.administration.roles.refresh' | translate"></button>
+                </div>
+
+            </div>
+
+            <div class="kTagsWrapper">
+                <k-review-tags #tags (onAllTagsRemoved)="onAllTagsRemoved()" (onTagRemoved)="onTagRemoved($event)"></k-review-tags>
+            </div>
+
+            <div class="kReviewsTable" [class.noResults]="!_reviews?.length">
+                <p-table kStickyHeader [scrollable]="true" stickyClass="stickyHeader" scrollHeight="400px" dataKey="id"
+                         [rowTrackBy]="_rowTrackBy"
+                         [sticksTo]="'profilesFilters'"
+                         [resizableColumns]="true"
+                         [sortField]="sortField"
+                         [sortOrder]="sortOrder"
+                         [value]="_reviews"
+                         [stickyId]="'profilesTable'"
+                         [(selection)]="_selectedReviews"
+                         (sortFunction)="onSortChanged($event)" [customSort]="true"
+                         (onColResize)="_columnsResizeManager.onColumnResize($event)">
+
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th class="selectionColumn" [ngStyle]="{'padding-left': '1.1em', 'width': '42px'}">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th data-cid="name" [ngStyle]="{'padding-left': '1em'}" pResizableColumn [pSortableColumn]="'objectName'">
+                                {{'applications.settings.authentication.table.name' | translate}}
+                                <p-sortIcon [field]="'objectName'"></p-sortIcon>
+                            </th>
+                            <th data-cid="id" [ngStyle]="{'width': '120px'}" class="hideInLowRes">
+                                {{'applications.content.uploadControl.table.entryId' | translate}}
+                            </th>
+                            <th data-cid="type" pResizableColumn [ngStyle]="{'width': '60px'}">
+                                {{'applications.content.table.type' | translate}}
+                            </th>
+                            <th data-cid="duration" pResizableColumn [pSortableColumn]="'objectDuration'" [ngStyle]="{'width': '70px'}">
+                                {{'applications.content.table.duration' | translate}}
+                                <p-sortIcon [field]="'objectDuration'"></p-sortIcon>
+                            </th>
+                            <th data-cid="trigger" pResizableColumn [ngStyle]="{'width': '100px'}">
+                                {{'applications.settings.mr.trigger' | translate}}
+                            </th>
+                            <th data-cid="plannedExecutionTime" pResizableColumn [pSortableColumn]="'plannedExecutionTime'" [ngStyle]="{'width': '140px'}">
+                                {{'applications.settings.mr.executionDate' | translate}}
+                                <p-sortIcon [field]="'plannedExecutionTime'"></p-sortIcon>
+                            </th>
+
+                            <th data-cid="status" [ngStyle]="{'width': '80px'}">
+                                {{'applications.settings.authentication.table.status' | translate}}
+                            </th>
+                            <th [ngStyle]="{'overflow': 'hidden', 'width': '80px'}"></th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-review>
+                        <tr>
+                            <td class="selectionColumn" [ngStyle]="{'padding-left': '1em', 'width': '42px'}">
+                                <p-tableCheckbox [value]="review"></p-tableCheckbox>
+                            </td>
+                            <td class="nameHolder">
+                                <span class="kProfileName kTableColumn name" [kTooltip]="review.objectName" [showOnEllipsis]="true">{{review.objectName}}</span>
+                            </td>
+                            <td [ngStyle]="{'width': '120px'}" class="hideInLowRes">
+                                <span class="kTableColumn" [kTooltip]="review.id" [showOnEllipsis]="true">{{review.id}}</span>
+                            </td>
+
+                            <td [ngStyle]="{'width': '60px'}">
+                                <i class="kTableColumn" [class]="getMediaType(review.objectSubType) | entryType: false" [kTooltip]="getMediaType(review.objectSubType) | entryType: true"></i>
+                            </td>
+                            <td [ngStyle]="{'width': '70px'}">
+                              <span class="kTableColumn">
+                                  {{(review.objectDuration ? review.objectDuration : 0) | kTime}}
+                              </span>
+                            </td>
+                            <td [ngStyle]="{'width': '100px'}">
+                              <span class="kTableColumn">
+                                  {{review.managedTasksProfileName}}
+                              </span>
+                            </td>
+                            <td [ngStyle]="{'width': '140px'}">
+                              <span class="kTableColumn">
+                                  {{review.plannedExecutionTime | kmcDate}}
+                              </span>
+                            </td>
+                            <td [ngStyle]="{'width': '80px'}">
+                                <span class="kTableColumn">
+                                  {{review.status.charAt(0).toUpperCase() + review.status.slice(1)}}
+                              </span>
+                            </td>
+                            <td [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
+                                <div class="kProfilesTableActions">
+                                    <button type="button" pButton icon="kIconmore" class="kMoreActionsButton"
+                                            (click)="_openActionsMenu($event, review)"></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <div class="emptymessage">
+                            <div class="kEmptyMessage">{{'applications.content.table.noResults' | translate}}</div>
+                        </div>
+                    </ng-template>
+                </p-table>
+                <p-menu #actionsmenu [popup]="true" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+            </div>
+            <div class="kProfilesTableFooter" #footer>
+                <p-paginator [rows]="pageSize" (onPageChange)="_onPaginationChanged($event)"
+                             [first]="pageIndex * pageSize"
+                             [totalRecords]="_reviewsCount"
+                             [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
+                <span class="kPaginatorShowRowsLabel">{{'applications.administration.paginator.showRows' | translate}}</span>
+            </div>
+        </div>
+    </div>
+</k-area-blocker>
+
+<p-tieredMenu #menu kMenuCloseOnScroll [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"
+              [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'"></p-tieredMenu>
+
+<kPopupWidget #refinePopup data-aid="reviewsRefinePopup" [popupWidth]="350" [popupHeight]="400" [closeBtn]="false" [targetRef]="refineBtn" [targetOffset]="{'x':-224, 'y': -20}">
+    <ng-template>
+        <k-review-refine-filters [parentPopupWidget]="refinePopup" [query]="_query" (onFilterAdded)="onFilterAdded($event)" (onFilterRemoved)="onFilterRemoved($event)"></k-review-refine-filters>
+    </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #notifyPopup data-aid="notifyPopup"  [popupWidth]="630" [popupHeight]="480" [modal]="true" [preventPageScroll]="true">
+    <ng-template>
+        <kNotifyOwner [parentPopupWidget]="notifyPopup" (onNotify)="notifyOwners($event)"></kNotifyOwner>
+    </ng-template>
+</kPopupWidget>

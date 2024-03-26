@@ -1,0 +1,130 @@
+@import 'app-theme/_variables.scss';
+.notification {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    a {
+        margin-left: 8px;
+    }
+}
+.emailSettings {
+    position: relative;
+    height: 582px;
+    display: flex;
+    flex-direction: column;
+    .header {
+        height: 76px;
+        border-bottom: 1px solid $kGrayscale4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        span {
+            font-size: 24px;
+            font-weight: 700;
+            color: $kGrayscale1;
+        }
+    }
+    .footer {
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        width: 100%;
+        height: 72px;
+        border-top: 1px solid $kGrayscale4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        button {
+            height: 34px;
+            margin-left: 8px;
+            margin-right: 8px;
+            min-width: 80px;
+        }
+    }
+}
+.kRow {
+    display: flex;
+    margin-top: 24px;
+    &.kHidden {
+        margin-top: 0px;
+    }
+    &.kCenter {
+        align-items: center;
+    }
+    .kLabel {
+        line-height: 24px;
+        width: 208px;
+        flex: 0 0 auto;
+    }
+    .kLabelWithHelpTip {
+        line-height: 24px;
+        margin-right: 4px;
+    }
+    .kText {
+        line-height: 24px;
+    }
+    .kError {
+        color: $kDandger;
+        margin-top: 4px;
+    }
+    .kLeft {
+        margin-left: 8px;
+    }
+    input {
+        width: 100%;
+    }
+    .kInput {
+        width: 60px;
+        ::ng-deep input {
+            width: 60px;
+        }
+    }
+    kinputhelper {
+        padding-top: 4px;
+    }
+    textarea.threeRows {
+        height: 108px;
+        width: 100%;
+    }
+}
+.kCol {
+    display: flex;
+    flex-direction: column;
+    a {
+        margin-top: 16px;
+    }
+    p-checkbox {
+        margin-bottom: 16px;
+    }
+}
+.kForm {
+    display: flex;
+    flex-direction: column;
+    padding: 0px 24px 24px 24px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.action {
+    width: 100%;
+    max-width: 760px;
+    padding: 0px 16px 24px 16px;
+    margin-top: 24px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 1px solid $kGrayscale4;
+    ::ng-deep .p-multiselect {
+        width: 360px;
+    }
+    ::ng-deep .p-multiselect-header {
+        min-height: 0px;
+    }
+    .kDelete {
+        color: $kDandger;
+        cursor: pointer;
+        font-weight: 700;
+        margin-left: 208px;
+        margin-top: 24px;
+        display: block;
+        display: inline-block;
+    }
+}

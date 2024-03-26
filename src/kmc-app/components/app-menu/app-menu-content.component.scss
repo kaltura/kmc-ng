@@ -50,6 +50,7 @@ a {
   }
     a {
         display: block;
+        white-space: nowrap;
     }
 }
 
@@ -65,4 +66,17 @@ a {
       font-size: 11px;
     }
   }
+}
+@media screen and (max-width: 1200px) {
+    .subMenuContainer {
+        &.kLeft {
+            margin-right: 12px;
+        }
+        &.kRight {
+            margin-left: 12px;
+        }
+        a{
+            font-size: 11px;
+        }
+    }
 }

@@ -1,0 +1,115 @@
+@import 'app-theme/_variables.scss';
+
+.kNewProfile {
+    width: 100%;
+
+
+    display: flex;
+    flex-direction: column;
+
+    .kHeader {
+        height: 78px;
+        width: 100%;
+        text-align: center;
+        padding-top: 24px;
+        box-sizing: border-box;
+        border-bottom: 1px solid $kGrayscale4;
+
+        .kTitle {
+            color: #333333;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    }
+
+    .kContainer {
+        flex: 1 1 auto;
+        height: 220px;
+        overflow: hidden;
+        .kProfileForm {
+            padding: 0 28px 28px 28px;
+        }
+
+        .kRow {
+            display: flex;
+            padding-top: 24px;
+            &.center {
+                align-items: center;
+            }
+            .kLabel {
+                flex: 0 0 auto;
+                width: 180px;
+                flex: 0 0 auto;
+                height: 18px;
+                color: $kGrayscale1;
+                font-size: 15px;
+                line-height: 18px;
+                &.required {
+                    width: 152px;
+                }
+            }
+            .labelWithHelpTip {
+                display: flex;
+                align-items: center;
+                width: 188px;
+                .kLabel {
+                    width: auto;
+                }
+            }
+            .kRequired {
+                width: 20px;
+                flex: 0 0 auto;
+                font-size: 24px;
+                color: $kGrayscale3;
+                &.kHasError {
+                    color: $kDandger;
+                    font-weight: bold;
+                }
+            }
+
+            .kRequired, .kLabel {
+                padding: 8px 4px;
+                height: 18px;
+            }
+
+            .kControl {
+                height: 34px;
+                width: 500px;
+
+                &.kHasError {
+                    border: 1px solid $kDandger;
+                    background: initial;
+                }
+            }
+            textarea.kControl {
+                height: 76px;
+            }
+            .kError {
+                color: $kDandger;
+                padding-top: 8px;
+            }
+        }
+    }
+
+    .kFooter {
+        padding: 15px 0;
+        border-top: 1px solid $kGrayscale4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .kBtn {
+            min-width: 100px;
+            height: 34px;
+            font-size: 14px;
+            min-width: 150px;
+            margin-left: 8px;
+            margin-right: 8px;
+
+            &:disabled {
+                border-width: 1px;
+            }
+        }
+    }
+
+}

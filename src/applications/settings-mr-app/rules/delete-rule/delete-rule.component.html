@@ -1,0 +1,16 @@
+<div class="kDeleteProfile">
+    <div class="kHeader">
+      <span class="kTitle">{{('applications.settings.mr.delete') | translate}}</span>
+    </div>
+
+    <div class="kContainer">
+      <span>
+        {{('applications.settings.mr.deleteMsg') | translate}}
+      </span>
+    </div>
+
+    <div class="kFooter">
+      <button type="button" class="kButtonDefault kBtn" (click)="parentPopupWidget.close()" pButton label="{{'app.common.cancel' | translate}}"></button>
+      <button type="button" class="kButtonBranded kBtn" (click)="delete()" pButton label="{{'applications.content.table.delete' | translate}}"></button>
+    </div>
+</div>

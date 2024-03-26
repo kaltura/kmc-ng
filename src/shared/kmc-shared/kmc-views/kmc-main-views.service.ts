@@ -32,6 +32,7 @@ import {
     AnalyticsNewMainViewService,
     SettingsReachMainViewService,
     SettingsAuthenticationMainViewService,
+    SettingsMrMainViewService,
 } from './main-views';
 import { Observable } from 'rxjs';
 import { AppUser } from "app-shared/kmc-shell";
@@ -87,6 +88,7 @@ export class KmcMainViewsService {
         private _settingsMyUserSettingsMain: SettingsMyUserSettingsMainViewService,
         private _settingsAccountInformationMain: SettingsAccountInformationMainViewService,
         private _settingsAuthenticationMain: SettingsAuthenticationMainViewService,
+        private _settingsMrMain: SettingsMrMainViewService,
         private _appLocalization: AppLocalization
     ) {
         this._logger = logger.subLogger('KmcMainViewsService');
@@ -332,6 +334,15 @@ export class KmcMainViewsService {
                             this._settingsAuthenticationMain.open();
                         },
                         menuTitle: this._settingsAuthenticationMain.getViewMetadata().menu,
+                        'position': 'left'
+                    },
+                    {
+                        isAvailable: this._settingsMrMain.isAvailable(),
+                        isActiveView:  (path) => this._settingsMrMain.isActiveView(path),
+                        open: () => {
+                            this._settingsMrMain.open();
+                        },
+                        menuTitle: this._settingsMrMain.getViewMetadata().menu,
                         'position': 'left'
                     }
                 ]

@@ -1,0 +1,32 @@
+<div class="kFloater kOverrideFAIcons">
+    <div class="kHeader">
+        <span class="kTitle">{{'applications.content.entryDetails.users.changeOwner' | translate}}</span>
+    </div>
+
+    <div class="kContainer">
+                        <span
+                            class="kLabel">{{'applications.settings.mr.newOwner' | translate}}</span>
+        <kAutoComplete
+            [(ngModel)]="owners"
+            suggestionItemField="item"
+            suggestionLabelField="name"
+            [tooltipResolver]="'__tooltip'"
+            [classField]="'__class'"
+            field="id"
+            [allowMultiple]="false"
+            [limitToSuggestions]="false"
+            [minLength]="3"
+            suggestionSelectableField="isSelectable"
+            [suggestionsProvider]="_usersProvider"
+            (completeMethod)="_searchUsers($event, 'editors')">
+        </kAutoComplete>
+    </div>
+
+    <div class="kFooter">
+        <button type="button" class="kButtonDefault" (click)="parentPopupWidget.close()" pButton
+                label="{{'app.common.cancel' | translate}}"></button>
+        <button pButton type="button" class="kButtonBranded"
+                [label]="'app.common.apply' | translate"
+                (click)="_saveAndClose()" [disabled]="owners.length === 0"></button>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+<div class="kOverrideFAIcons kRefineFilters">
+    <kScrollToTopContainer #refine class="kTreeContainer">
+        <div class="kFiltersGroupTitle">
+            <span>{{ 'applications.content.dropFolders.filters.additionalFilters' | translate | uppercase }}</span>
+        </div>
+        <span class="kFilterLabel">{{ 'applications.settings.mr.report.date' | translate }}</span>
+        <div class="kDateRange">
+            <p-calendar class="kDateRangeFirst" [(ngModel)]="_createdAfter" [readonlyInput]="true" [showIcon]="true"
+                        [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
+                        [dateFormat]="_calendarFormat"
+                        icon="kIconcalendar" (onSelect)="_onCreatedChanged('requestedDateGreaterThanOrEqual')"></p-calendar>
+            <p-calendar class="kDateRangeLast kPullLeft100" [(ngModel)]="_createdBefore" [readonlyInput]="true"
+                        [dateFormat]="_calendarFormat"
+                        [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true"
+                        [yearRange]="_createdAtDateRange"
+                        icon="kIconcalendar" (onSelect)="_onCreatedChanged('requestedDateLessThanOrEqual')"></p-calendar>
+        </div>
+        <a class="kClearDates" (click)="_clearCreatedComponents()"
+           [class.kDisabledLink]="!_createdAfter && !_createdBefore">
+            {{ 'applications.content.dropFolders.filters.clearDates' | translate }}
+        </a>
+        <span *ngIf="_createdAtFilterError" class="kError">{{ _createdAtFilterError }}</span>
+
+        <div class="filterTitleToggle marginTop" (click)="_typeOpened = !_typeOpened">
+            <i class="kIcontree-arrow-right" [class.open]="_typeOpened"></i>
+            <span class="kFilterLabel">{{ 'applications.settings.mr.report.type' | translate }}</span>
+        </div>
+        <div class="checkBoxes" [class.open]="_typeOpened">
+            <p-checkbox name="type" value="watchProfileResults" label="{{'applications.settings.mr.report.scan' | translate}}" [(ngModel)]="_type" (ngModelChange)="onTypeChange()"></p-checkbox>
+            <p-checkbox name="type" value="profileDryRun" label="{{'applications.settings.mr.report.test' | translate}}" [(ngModel)]="_type" (ngModelChange)="onTypeChange()"></p-checkbox>
+            <p-checkbox name="type" value="executionSummary" label="{{'applications.settings.mr.report.action' | translate}}" [(ngModel)]="_type" (ngModelChange)="onTypeChange()"></p-checkbox>
+        </div>
+
+        <div class="filterTitleToggle" (click)="_profilesOpened = !_profilesOpened">
+            <i class="kIcontree-arrow-right" [class.open]="_profilesOpened"></i>
+            <span class="kFilterLabel">{{ 'applications.settings.mr.rules' | translate }}</span>
+        </div>
+        <div class="checkBoxes" [class.open]="_profilesOpened">
+            <p-checkbox *ngFor="let rule of _profiles" name="rules" value="{{rule.id}}" label="{{rule.name}}" [(ngModel)]="_rules" (ngModelChange)="onRulesChange()"></p-checkbox>
+        </div>
+
+
+    </kScrollToTopContainer>
+
+    <p>
+        <a class="clearAll" (click)="_clearAllComponents()">
+            {{ 'applications.content.dropFolders.filters.clearAll' | translate }}
+        </a>
+        <a class="kClose" (click)="_close()">
+            {{ 'applications.content.bulkUpload.filters.close' | translate }}
+        </a>
+    </p>
+</div>
+

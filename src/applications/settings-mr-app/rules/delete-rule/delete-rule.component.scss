@@ -1,0 +1,59 @@
+@import 'app-theme/_variables.scss';
+
+.kDeleteProfile {
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+
+    .kTitle {
+      color: #333333;
+      font-size: 24px;
+      font-weight: bold;
+    }
+  }
+
+  .kContainer {
+      height: 100px;
+      font-size: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 120px;
+      box-sizing: border-box;
+      .confirm {
+          margin-top: 24px;
+          margin-bottom: 8px;
+      }
+      input {
+        width: 100%;
+      }
+    }
+
+  .kFooter {
+    padding: 15px 0;
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .kBtn {
+      min-width: 100px;
+      height: 34px;
+      font-size: 14px;
+      min-width: 172px;
+      margin-left: 8px;
+      margin-right: 8px;
+      &.kButtonBranded:not(:disabled) {
+          color: white;
+          background-color: $kDandger;
+      }
+      &:disabled {
+        border-width: 1px;
+      }
+    }
+  }
+}

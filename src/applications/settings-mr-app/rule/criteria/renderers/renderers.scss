@@ -1,0 +1,58 @@
+@import 'app-theme/_variables.scss';
+.criteria {
+    width: 100%;
+    max-width: 760px;
+    padding: 0px 16px 24px 16px;
+    margin-top: 24px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 1px solid $kGrayscale4;
+    .kRow {
+        display: flex;
+        margin-top: 24px;
+        &.kCenter {
+            align-items: center;
+        }
+        .kLabel {
+            line-height: 24px;
+            width: 208px;
+            flex: 0 0 auto;
+        }
+        .kLabelWithHelpTip {
+            line-height: 24px;
+            margin-right: 4px;
+        }
+        .kText {
+            line-height: 24px;
+        }
+        .kLeft {
+            margin-left: 8px;
+        }
+        .kInput {
+            width: 60px;
+            margin-left: 8px;
+            ::ng-deep input {
+                width: 60px;
+            }
+        }
+        kinputhelper {
+            padding-top: 4px;
+        }
+    }
+    .kDelete {
+        color: $kDandger;
+        cursor: pointer;
+        font-weight: 700;
+        margin-left: 208px;
+        margin-top: 24px;
+        display: block;
+        display: inline-block;
+    }
+    .kCol {
+        display: flex;
+        flex-direction: column;
+        a {
+            margin-top: 16px;
+        }
+    }
+}

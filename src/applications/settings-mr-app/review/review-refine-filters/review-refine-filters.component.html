@@ -1,0 +1,123 @@
+<div class="kOverrideFAIcons kRefineFilters">
+    <kScrollToTopContainer #refine class="kTreeContainer">
+        <div class="kFiltersGroupTitle">
+            <span>{{ 'applications.content.dropFolders.filters.additionalFilters' | translate | uppercase }}</span>
+        </div>
+        <span class="kFilterLabel">{{ 'applications.settings.mr.filter.added' | translate }}</span>
+        <div class="kDateRange">
+            <p-calendar class="kDateRangeFirst" [(ngModel)]="_createdAfter" [readonlyInput]="true" [showIcon]="true"
+                        [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
+                        [dateFormat]="_calendarFormat"
+                        icon="kIconcalendar" (onSelect)="_onCreatedChanged('createdAtGreaterThanOrEqual')"></p-calendar>
+            <p-calendar class="kDateRangeLast kPullLeft100" [(ngModel)]="_createdBefore" [readonlyInput]="true"
+                        [dateFormat]="_calendarFormat"
+                        [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true"
+                        [yearRange]="_createdAtDateRange"
+                        icon="kIconcalendar" (onSelect)="_onCreatedChanged('createdAtLessThanOrEqual')"></p-calendar>
+        </div>
+        <a class="kClearDates" (click)="_clearCreatedComponents()"
+           [class.kDisabledLink]="!_createdAfter && !_createdBefore">
+            {{ 'applications.content.dropFolders.filters.clearDates' | translate }}
+        </a>
+        <span *ngIf="_createdAtFilterError" class="kError">{{ _createdAtFilterError }}</span>
+
+        <span class="kFilterLabel">{{ 'applications.settings.mr.filter.action' | translate }}</span>
+        <div class="kDateRange">
+            <p-calendar class="kDateRangeFirst" [(ngModel)]="_actionAfter" [readonlyInput]="true" [showIcon]="true"
+                        [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
+                        [dateFormat]="_calendarFormat"
+                        icon="kIconcalendar" (onSelect)="_onActionChanged('plannedExecutionTimeGreaterThanOrEqual')"></p-calendar>
+            <p-calendar class="kDateRangeLast kPullLeft100" [(ngModel)]="_actionBefore" [readonlyInput]="true"
+                        [dateFormat]="_calendarFormat"
+                        [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true"
+                        [yearRange]="_createdAtDateRange"
+                        icon="kIconcalendar" (onSelect)="_onActionChanged('plannedExecutionTimeLessThanOrEqual')"></p-calendar>
+        </div>
+        <a class="kClearDates" (click)="_clearActionComponents()"
+           [class.kDisabledLink]="!_actionAfter && !_actionBefore">
+            {{ 'applications.content.dropFolders.filters.clearDates' | translate }}
+        </a>
+        <span *ngIf="_actionAtFilterError" class="kError">{{ _actionAtFilterError }}</span>
+
+        <div class="filterTitleToggle marginTop" (click)="_mediaTypeOpened = !_mediaTypeOpened">
+            <i class="kIcontree-arrow-right" [class.open]="_mediaTypeOpened"></i>
+            <span class="kFilterLabel">{{ 'applications.settings.mr.filter.mediaType' | translate }}</span>
+        </div>
+        <div class="checkBoxes" [class.open]="_mediaTypeOpened">
+            <p-checkbox name="mediaType" value="1" label="{{'applications.content.entryType.video' | translate}}" [(ngModel)]="_mediaTypes" (ngModelChange)="onMediaTypeChange()"></p-checkbox>
+            <p-checkbox name="mediaType" value="2" label="{{'applications.content.entryType.image' | translate}}" [(ngModel)]="_mediaTypes" (ngModelChange)="onMediaTypeChange()"></p-checkbox>
+            <p-checkbox name="mediaType" value="5" label="{{'applications.content.entryType.audio' | translate}}" [(ngModel)]="_mediaTypes" (ngModelChange)="onMediaTypeChange()"></p-checkbox>
+            <p-checkbox name="mediaType" value="201" label="{{'applications.content.entryType.live' | translate}}" [(ngModel)]="_mediaTypes" (ngModelChange)="onMediaTypeChange()"></p-checkbox>
+        </div>
+
+        <div class="filterTitleToggle" (click)="_ownerOpen = !_ownerOpen">
+            <i class="kIcontree-arrow-right" [class.open]="_ownerOpen"></i>
+            <span class="kFilterLabel">{{ 'applications.settings.mr.filter.owner' | translate }}</span>
+        </div>
+        <div class="checkBoxes noHide" [class.open]="_ownerOpen" #wrapper>
+            <kAutoComplete
+                [(ngModel)]="_owners"
+                (ngModelChange)="onOwnerChange()"
+                suggestionItemField="item"
+                suggestionLabelField="name"
+                [tooltipResolver]="'__tooltip'"
+                [classField]="'__class'"
+                field="id"
+                [allowMultiple]="true"
+                [limitToSuggestions]="false"
+                [minLength]="3"
+                suggestionSelectableField="isSelectable"
+                [suggestionsProvider]="_usersProvider"
+                (completeMethod)="_searchUsers($event, 'editors')">
+            </kAutoComplete>
+        </div>
+
+        <div class="filterTitleToggle" (click)="_durationOpen = !_durationOpen">
+            <i class="kIcontree-arrow-right" [class.open]="_durationOpen"></i>
+            <span class="kFilterLabel">{{ 'applications.settings.mr.criteria.durationLabel' | translate }}</span>
+        </div>
+        <div class="checkBoxes" [class.open]="_durationOpen">
+            <div class="kCheckBoxWrapper">
+                <p-checkbox name="duration" [binary]="true" label="{{'applications.settings.mr.criteria.duration_less' | translate}}" [(ngModel)]="_filterDurationLess" (ngModelChange)="onDurationChange('less')"></p-checkbox>
+                <p-inputNumber class="kInput" [(ngModel)]="_durationLess" (ngModelChange)="onDurationChange('less')"></p-inputNumber>
+                <span class="kLeft">{{'applications.settings.mr.criteria.sec' | translate}}</span>
+            </div>
+            <div class="kCheckBoxWrapper">
+                <p-checkbox name="duration" [binary]="true" label="{{'applications.settings.mr.criteria.duration_more' | translate}}" [(ngModel)]="_filterDurationMore" (ngModelChange)="onDurationChange('more')"></p-checkbox>
+                <p-inputNumber class="kInput" [(ngModel)]="_durationMore" (ngModelChange)="onDurationChange('more')"></p-inputNumber>
+                <span class="kLeft">{{'applications.settings.mr.criteria.sec' | translate}}</span>
+            </div>
+        </div>
+
+        <div class="filterTitleToggle" (click)="_statusOpened = !_statusOpened">
+            <i class="kIcontree-arrow-right" [class.open]="_statusOpened"></i>
+            <span class="kFilterLabel">{{ 'applications.settings.mr.filter.status' | translate }}</span>
+        </div>
+        <div class="checkBoxes" [class.open]="_statusOpened">
+            <p-checkbox name="status" value="auto" label="{{'applications.settings.mr.filter.auto' | translate}}" [(ngModel)]="_status" (ngModelChange)="onStatusTypeChange()"></p-checkbox>
+            <p-checkbox name="status" value="pendingApproval" label="{{'applications.settings.mr.filter.pending' | translate}}" [(ngModel)]="_status" (ngModelChange)="onStatusTypeChange()"></p-checkbox>
+            <p-checkbox name="status" value="rejected" label="{{'applications.settings.mr.filter.rejected' | translate}}" [(ngModel)]="_status" (ngModelChange)="onStatusTypeChange()"></p-checkbox>
+            <p-checkbox name="status" value="approved" label="{{'applications.settings.mr.filter.approved' | translate}}" [(ngModel)]="_status" (ngModelChange)="onStatusTypeChange()"></p-checkbox>
+        </div>
+
+        <div class="filterTitleToggle" (click)="_profilesOpened = !_profilesOpened">
+            <i class="kIcontree-arrow-right" [class.open]="_profilesOpened"></i>
+            <span class="kFilterLabel">{{ 'applications.settings.mr.rules' | translate }}</span>
+        </div>
+        <div class="checkBoxes" [class.open]="_profilesOpened">
+            <p-checkbox *ngFor="let rule of _profiles" name="rules" value="{{rule.id}}" label="{{rule.name}}" [(ngModel)]="_rules" (ngModelChange)="onRulesChange()"></p-checkbox>
+        </div>
+
+
+    </kScrollToTopContainer>
+
+    <p>
+        <a class="clearAll" (click)="_clearAllComponents()">
+            {{ 'applications.content.dropFolders.filters.clearAll' | translate }}
+        </a>
+        <a class="kClose" (click)="_close()">
+            {{ 'applications.content.bulkUpload.filters.close' | translate }}
+        </a>
+    </p>
+</div>
+

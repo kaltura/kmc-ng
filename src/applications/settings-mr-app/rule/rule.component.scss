@@ -1,0 +1,136 @@
+@import 'app-theme/_variables.scss';
+:host ::ng-deep .stickyHeader{
+    background-color: white;
+    height: 55px;
+    z-index: 500;
+    left: 0px;
+    right: 0px;
+    padding-top: 11px;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.2);
+    width: 100% !important;
+}
+:host ::ng-deep .kStickySections{
+    border-top: 2px solid $kGrayscale6;
+}
+.kEntryActionsWrapper {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    .kSaveBtn {
+        margin-right: 0px;
+    }
+}
+.kmcDetailsLayout {
+    min-height: 0px;
+}
+.kmcDetailsLayout .kDetailsWrapper .kHeaderDetails {
+    display: flex;
+    align-items: center;
+    padding-top: 0px;
+    .kLabel {
+        color: $kGrayscale2;
+        font-size: 14px;
+    }
+    .kSeparator {
+        color: $kGrayscale4;
+        flex: 0 0 auto;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+}
+.kmcDetailsLayout .kDetailsWrapper .kDetailsMain{
+    display: flex;
+    height: auto;
+    .kDetailsContent {
+        min-height: calc(100vh - 240px);
+    }
+    .kSectionsPlaceholder {
+        height: 0%;
+    }
+    .kSections {
+        background-color: white;
+    }
+    .ruleDetails {
+        padding: 24px;
+        .kTitle {
+            font-size: 20px;
+            font-weight: 700;
+            color: $kGrayscale1;
+            display: block;
+        }
+        .kRow {
+            display: flex;
+            width: 100%;
+            padding-top: 24px;
+            .kSubtitle {
+                font-size: 14px;
+                font-weight: 700;
+                margin-left: 4px;
+            }
+            &.kCenter {
+                align-items: center;
+                .link {
+                    margin-left: 8px;
+                }
+            }
+            &.kRowWithHelptip {
+                align-items: center;
+                .labelWithHelpTip {
+                    width: 216px;
+                    display: flex;
+                    align-items: center;
+                    .kLabel {
+                        width: auto;
+                    }
+                }
+            }
+            input {
+                width: 100%;
+                max-width: 500px;
+            }
+            .kLabel {
+                width: 208px;
+                color: $kGrayscale1;
+                font-size: 15px;
+                line-height: 18px;
+                padding: 8px 4px;
+                flex: 0 0 auto;
+                &.autoWidth {
+                    width: auto;
+                }
+            }
+            .kLabelWithRequired {
+                width: 188px;
+            }
+            .kRequired {
+                width: 20px;
+                text-align: center;
+                color: $kGrayscale1;
+                font-size: 15px;
+                line-height: 18px;
+                padding: 8px 4px;
+                flex: 0 0 auto;
+                box-sizing: border-box;
+            }
+            .kError {
+                color: $kDandger;
+                padding-top: 4px;
+            }
+            .inputWithErrorWrapper {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    }
+}
+.kmcDetailsLayout .kDetailsWrapper .kDetailsHeader .kBackBtn {
+    margin-left: -40px;
+    margin-right: 16px;
+}
+@media screen and (max-width: 1090px) {
+    .kmcDetailsLayout .kDetailsWrapper .kDetailsHeader .kBackBtn {
+        margin-left: 0px;
+    }
+}
