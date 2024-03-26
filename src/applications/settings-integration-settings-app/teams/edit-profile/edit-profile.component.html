@@ -1,0 +1,225 @@
+<div class="kEditAccessControlProfile">
+    <div class="kHeader">
+        <span class="kTitle">{{'applications.settings.integrationSettings.teams.edit' | translate}}</span>
+        <div class="kButtons">
+            <a class="kCancel" (click)="parentPopup.close()">
+                {{'applications.settings.accessControl.cancel' | translate}}
+            </a>
+            <button pButton type="button" class="kButtonBranded kSaveButton"
+                    [disabled]="(_profileForm.touched && !_profileForm.valid) || _profileForm.pristine"
+                    [label]="'applications.settings.accessControl.save' | translate"
+                    (click)="_save()"></button>
+        </div>
+    </div>
+    <form class="kContainer" [formGroup]="_profileForm" novalidate>
+
+        <div class="kRow">
+            <div class="labelWithHelpTip">
+                <span class="kLabel">{{'applications.settings.authentication.name' | translate}}</span>
+                <kInputHelper [placement]="{x: 'right', y: 'bottom'}">
+                    <span>{{'applications.settings.integrationSettings.teams.name_tt' | translate}}</span>
+                </kInputHelper>
+                <div class="kRequired" [class.kHasError]="_profileForm.get('name').invalid && _profileForm.get('name').touched">*</div>
+            </div>
+            <div class="inputWrapper">
+                <input class="kControl" pInputText [maxlength]="255" formControlName="name"
+                       [class.kHasError]="_profileForm.get('name').invalid && _profileForm.get('name').touched">
+                <div *ngIf="_profileForm.get('name').hasError('required') && _profileForm.get('name').touched" class="kError">
+                    {{'applications.administration.role.errors.required' | translate}}
+                </div>
+            </div>
+        </div>
+
+        <div class="kRow">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.teams.tenantId' | translate}}</span>
+            </div>
+            <input formControlName="tenantId" pInputText>
+        </div>
+
+        <div class="kRow">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.teams.appClientId' | translate}}</span>
+            </div>
+            <input formControlName="appClientId" pInputText>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="kRow marginTop">
+            <div class="labelWithHelpTip">
+                <span class="kLabel">{{'applications.settings.integrationSettings.teams.categories' | translate}}</span>
+                <kInputHelper>
+                    <span>{{'applications.settings.integrationSettings.teams.categories_tt' | translate}}</span>
+                </kInputHelper>
+            </div>
+            <kAutoComplete formControlName="categories"
+                           field="name"
+                           [tooltipResolver]="_categoriesTooltipResolver"
+                           suggestionItemField="item"
+                           suggestionLabelField="name"
+                           suggestionSelectableField="isSelectable"
+                           [allowMultiple]="true"
+                           [minLength]="3"
+                           [suggestionsProvider]="_categoriesProvider"
+                           (completeMethod)="_searchCategories($event)">
+            </kAutoComplete>
+        </div>
+
+        <div class="kRow">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.upload' | translate}}</span>
+            </div>
+            <p-radioButton name="upload"
+                           [value]="0"
+                           formControlName="upload"
+                           [label]="'applications.settings.integrationSettings.zoom.uploadAll' | translate"></p-radioButton>
+            <p-radioButton name="upload"
+                           [value]="1"
+                           formControlName="upload"
+                           [label]="'applications.settings.integrationSettings.zoom.uploadIn' | translate"></p-radioButton>
+            <p-radioButton name="upload"
+                           [value]="2"
+                           formControlName="upload"
+                           [label]="'applications.settings.integrationSettings.zoom.uploadOut' | translate"></p-radioButton>
+        </div>
+
+        <div class="kRow" *ngIf="_profileForm.get('upload').value !== 0">
+            <div class="kLabel"></div>
+            <div class="kRow">
+                <span class="uploadInOut">{{_profileForm.get('upload').value === 1 ? ('applications.settings.integrationSettings.zoom.uploadIn' | translate) : ('applications.settings.integrationSettings.zoom.uploadOut' | translate)}}</span>
+                <div class="kRadios">
+                    <kAutoComplete *ngIf="_profileForm.get('upload').value === 1" formControlName="uploadIn"
+                                   field="id"
+                                   [tooltipResolver]="_groupsTooltipResolver"
+                                   suggestionItemField="item"
+                                   suggestionLabelField="name"
+                                   suggestionSelectableField="isSelectable"
+                                   [allowMultiple]="true"
+                                   [minLength]="3"
+                                   [suggestionsProvider]="_groupsProvider"
+                                   (completeMethod)="_searchGroups($event, 'optIn')">
+                    </kAutoComplete>
+                    <kAutoComplete *ngIf="_profileForm.get('upload').value === 2" formControlName="uploadOut"
+                                   field="id"
+                                   [tooltipResolver]="_groupsTooltipResolver"
+                                   suggestionItemField="item"
+                                   suggestionLabelField="name"
+                                   suggestionSelectableField="isSelectable"
+                                   [allowMultiple]="true"
+                                   [minLength]="3"
+                                   [suggestionsProvider]="_groupsProvider"
+                                   (completeMethod)="_searchGroups($event, 'optOut')">
+                    </kAutoComplete>
+                    <span class="kError" *ngIf="(_profileForm.get('upload').value === 1 && !_profileForm.get('uploadIn').value.length) || (_profileForm.get('upload').value === 2 && !_profileForm.get('uploadOut').value.length)">{{'applications.settings.integrationSettings.zoom.uploadError' | translate}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="kRow" [class.marginTop]="_profileForm.get('upload').value === 0">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.teams.transcripts' | translate}}</span>
+            </div>
+            <p-inputSwitch class="kControl" formControlName="transcripts"></p-inputSwitch>
+            <span class="kSwitchValue">
+              {{_profileForm.get('transcripts').value ? ('app.common.yes' | translate) : ('app.common.no' | translate)}}
+            </span>
+        </div>
+
+        <span class="kSubTitle">{{'applications.settings.integrationSettings.zoom.permissions' | translate}}</span>
+
+        <div class="kRow">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.teams.organizers' | translate}}</span>
+            </div>
+            <p-dropdown class="kControl" formControlName="coOrganizerRoles" [options]="_hostsOptions"></p-dropdown>
+        </div>
+        <div class="kRow">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.teams.presenters' | translate}}</span>
+            </div>
+            <p-dropdown class="kControl" formControlName="presentersRoles" [options]="_hostsOptions"></p-dropdown>
+        </div>
+        <div class="kRow">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.teams.users' | translate}}</span>
+            </div>
+            <p-dropdown class="kControl" formControlName="attendeesRoles" [options]="_participationOptions"></p-dropdown>
+        </div>
+
+        <span class="kSubTitle">{{'applications.settings.integrationSettings.zoom.owner' | translate}}</span>
+
+        <div class="kRow" style="align-items: flex-start">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.user' | translate}}</span>
+            </div>
+            <div class="kRadios">
+                <p-radioButton name="userId"
+                               [value]="true"
+                               formControlName="userId"
+                               [label]="'applications.settings.integrationSettings.teams.upn' | translate"></p-radioButton>
+                <div class="kRow" style="margin-left: 36px; margin-bottom: 0px">
+                    <p-radioButton name="postfix"
+                                   [value]="0"
+                                   formControlName="postfix"
+                                   [label]="'applications.settings.integrationSettings.zoom.postfix1' | translate"></p-radioButton>
+                    <p-radioButton name="postfix" [ngStyle]="{'marginLeft': '24px'}"
+                                   [value]="1"
+                                   formControlName="postfix"
+                                   [label]="'applications.settings.integrationSettings.zoom.postfix2' | translate"></p-radioButton>
+                    <p-radioButton name="postfix" [ngStyle]="{'marginLeft': '24px'}"
+                                   [value]="2"
+                                   formControlName="postfix"
+                                   [label]="'applications.settings.integrationSettings.zoom.postfix3' | translate"></p-radioButton>
+                </div>
+                <div class="kRow" style="margin-left: 36px; margin-bottom: 24px">
+                    <div class="kLabel" style="width: auto">
+                        <span>{{'applications.settings.integrationSettings.zoom.post' | translate}}</span>
+                    </div>
+                    <input formControlName="userPostfix" placeholder="@kaltura.com" pInputText>
+                </div>
+                <div class="kRow" style="align-items: flex-start; margin-bottom: 0px">
+                    <p-radioButton name="userId" [ngStyle]="{'marginRight': '0px'}"
+                                   [value]="false"
+                                   formControlName="userId"
+                                   [label]="'applications.settings.integrationSettings.teams.azure' | translate"></p-radioButton>
+                    <kInputHelper class="kHelp" trigger="click">
+                        <span>{{'applications.settings.integrationSettings.teams.azure_tt' | translate}}</span>
+                    </kInputHelper>
+                </div>
+            </div>
+        </div>
+
+        <div class="kRow" style="align-items: flex-start">
+            <div class="kLabel">
+                <span>{{'applications.settings.integrationSettings.zoom.create' | translate}}</span>
+            </div>
+            <div class="kRadios">
+                <p-radioButton name="createUser"
+                           [value]="true"
+                           formControlName="createUser"
+                           [label]="'applications.settings.integrationSettings.teams.createUser' | translate"></p-radioButton>
+                <div class="kRow" style="margin-bottom: 0px; margin-top: 12px; align-items: flex-start">
+                    <p-radioButton name="createUser" [ngStyle]="{'marginRight': '8px'}"
+                                   [value]="false"
+                                   formControlName="createUser"
+                                   [label]="'applications.settings.integrationSettings.zoom.user2' | translate"></p-radioButton>
+                    <div class="kRadios">
+                        <kAutoComplete formControlName="defaultUserId"
+                                       field="id"
+                                       [tooltipResolver]="_usersTooltipResolver"
+                                       suggestionItemField="item"
+                                       suggestionLabelField="name"
+                                       [allowMultiple]="false"
+                                       [minLength]="3"
+                                       [suggestionsProvider]="_usersProvider"
+                                       (completeMethod)="_searchUsers($event)">
+                        </kAutoComplete>
+                        <span *ngIf="!_profileForm.get('createUser').value && !_profileForm.get('defaultUserId').value.length" class="kInvalid">{{'applications.settings.integrationSettings.zoom.invalid' | translate}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>

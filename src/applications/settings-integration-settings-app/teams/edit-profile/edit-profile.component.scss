@@ -1,6 +1,13 @@
 @import 'app-theme/_variables.scss';
 
 .kEditAccessControlProfile {
+    ::ng-deep .p-dropdown{
+        min-width: 240px;
+        width: 240px;
+    }
+    ::ng-deep .p-radiobutton-label {
+        white-space: nowrap;
+    }
     ::ng-deep .p-inputswitch.p-disabled {
         opacity: 0.3;
     }
@@ -58,13 +65,23 @@
             font-size: 14px;
             margin-top: 8px;
         }
+        .separator {
+            width: 100%;
+            height: 1px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: $kGrayscale4;
+            flex: 0 0 auto;
+        }
         .kRow {
             display: flex;
-            margin-bottom: 16px;
-            align-items: center;
+            margin-bottom: 20px;
             color: $kGrayscale1;
+            &.marginTop {
+                margin-top: 20px;
+            }
             .kLabel {
-                width: 200px;
+                width: 240px;
                 padding-right: 12px;
                 box-sizing: border-box;
                 flex: 0 0 auto;
@@ -108,11 +125,42 @@
             .uploadInOut {
                 flex: 0 0 auto;
                 width: 150px;
+                padding-top: 8px;
             }
             .kError {
                 font-size: 14px;
                 color: $kDandger;
                 margin-top: 4px;
+            }
+            .labelWithHelpTip {
+                align-items: center;
+                align-self: flex-start;
+                display: flex;
+                width: 240px;
+                height: 32px;
+                flex: 0 0 auto;
+                font-size: 15px;
+                .kLabel {
+                    width: auto;
+                }
+                .kRequired {
+                    width: 20px;
+                    flex: 0 0 auto;
+                    font-size: 24px;
+                    margin-left: auto;
+                    color: $kGrayscale3;
+                    padding: 8px 4px;
+                    height: 18px;
+                    &.kHasError {
+                        color: $kDandger;
+                        font-weight: bold;
+                    }
+                }
+            }
+            .inputWrapper {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
             }
         }
     }
