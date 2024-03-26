@@ -1,3 +1,23 @@
+<a name="7.20.0"></a>
+# [7.20.0](https://github.com/kaltura/kmc-ng/compare/v7.19.0...v7.20.0) (2024-03-26)
+
+
+### Bug Fixes
+
+* **content/bulk-upload:** remove the created between filter from the UI SUP-37903 ([d1e2ec5](https://github.com/kaltura/kmc-ng/commit/d1e2ec5))
+* **content/entry:** list more than 30 custom metadata schemas SUP-40363 ([eb6ec10](https://github.com/kaltura/kmc-ng/commit/eb6ec10))
+* **content/entry:** remove "clipped from" from entry details if the entry is a room recording KMCNG-2593 ([3b5afe8](https://github.com/kaltura/kmc-ng/commit/3b5afe8))
+* **languages:** fix typos in language names SUP-41799 ([6779c01](https://github.com/kaltura/kmc-ng/commit/6779c01))
+* **settings/authentication:** tooltip change KMCNG-2597 ([0d3daea](https://github.com/kaltura/kmc-ng/commit/0d3daea))
+
+
+### Features
+
+* Media repurposing KMCNG-2559 ([#1065](https://github.com/kaltura/kmc-ng/issues/1065)) ([749f44e](https://github.com/kaltura/kmc-ng/commit/749f44e))
+* **settings/integration:** Teams Integration KMCNG-2584 ([#1066](https://github.com/kaltura/kmc-ng/issues/1066)) ([9cbfe09](https://github.com/kaltura/kmc-ng/commit/9cbfe09))
+
+
+
 <a name="7.19.0"></a>
 # [7.19.0](https://github.com/kaltura/kmc-ng/compare/v7.18.0...v7.19.0) (2024-02-19)
 
