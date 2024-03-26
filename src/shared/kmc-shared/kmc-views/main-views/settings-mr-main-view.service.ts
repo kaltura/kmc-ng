@@ -25,7 +25,7 @@ export class SettingsMrMainViewService extends KmcMainViewBaseService {
     }
 
     isAvailable(): boolean {
-        return this._appPermissions.hasPermission(KMCPermissions.FEATURE_MEDIA_REPURPOSING_PERMISSION) && !!serverConfig?.externalServices?.mrEndpoint?.uri;
+        return this._appPermissions.hasPermission(KMCPermissions.FEATURE_MEDIA_REPURPOSING_NG_PERMISSION) && !!serverConfig?.externalServices?.mrEndpoint?.uri;
     }
 
     getRoutePath(): string {
