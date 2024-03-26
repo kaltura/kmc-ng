@@ -13,7 +13,7 @@
 
 ### Features
 
-* Media repurposing KMCNG-2559 ([#1065](https://github.com/kaltura/kmc-ng/issues/1065)) ([749f44e](https://github.com/kaltura/kmc-ng/commit/749f44e))
+* **settings/media-automation:** Media Automation KMCNG-2559 ([#1065](https://github.com/kaltura/kmc-ng/issues/1065)) ([749f44e](https://github.com/kaltura/kmc-ng/commit/749f44e))
 * **settings/integration:** Teams Integration KMCNG-2584 ([#1066](https://github.com/kaltura/kmc-ng/issues/1066)) ([9cbfe09](https://github.com/kaltura/kmc-ng/commit/9cbfe09))
 
 
