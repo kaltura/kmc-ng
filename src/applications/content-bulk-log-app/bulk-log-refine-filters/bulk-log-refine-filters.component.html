@@ -4,20 +4,20 @@
       <div class="kFiltersGroupTitle">
         <span>{{'applications.content.bulkUpload.filters.additionalFilters' | translate | uppercase}}</span>
       </div>
-      <p>{{'applications.content.bulkUpload.filters.createdBetween' | translate}}</p>
-      <div class="kDateRange">
+<!--      <p>{{'applications.content.bulkUpload.filters.createdBetween' | translate}}</p>-->
+<!--      <div class="kDateRange">-->
 
-        <p-calendar class="kDateRangeFirst" [(ngModel)]="_uploadedAfter" [readonlyInput]="true" [showIcon]="true"
-                    [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange" [dateFormat]="_calendarFormat"
-                    icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
-        <p-calendar class="kDateRangeLast kPullLeft90" [(ngModel)]="_uploadedBefore" [readonlyInput]="true" [dateFormat]="_calendarFormat"
-                    [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
-                    icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
-      </div>
-      <a class="kClearAll" (click)="_clearCreatedComponents()" [class.kDisabledLink]="!_uploadedAfter && !_uploadedBefore">
-        {{'applications.content.bulkUpload.filters.clearDates' | translate}}
-      </a>
-      <span *ngIf="_createdAtFilterError" class="kError">{{_createdAtFilterError}}</span>
+<!--        <p-calendar class="kDateRangeFirst" [(ngModel)]="_uploadedAfter" [readonlyInput]="true" [showIcon]="true"-->
+<!--                    [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange" [dateFormat]="_calendarFormat"-->
+<!--                    icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>-->
+<!--        <p-calendar class="kDateRangeLast kPullLeft90" [(ngModel)]="_uploadedBefore" [readonlyInput]="true" [dateFormat]="_calendarFormat"-->
+<!--                    [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"-->
+<!--                    icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>-->
+<!--      </div>-->
+<!--      <a class="kClearAll" (click)="_clearCreatedComponents()" [class.kDisabledLink]="!_uploadedAfter && !_uploadedBefore">-->
+<!--        {{'applications.content.bulkUpload.filters.clearDates' | translate}}-->
+<!--      </a>-->
+<!--      <span *ngIf="_createdAtFilterError" class="kError">{{_createdAtFilterError}}</span>-->
         <div *ngFor="let treeInstance of _primeLists">
           <p-tree [value]="treeInstance.items"
                   [selectionMode]="'checkbox'"
