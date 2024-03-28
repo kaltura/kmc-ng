@@ -1609,6 +1609,7 @@
                     "catSelect": "Select one or several categories.",
                     "offlineMsg": "Offline Message",
                     "refId": "Reference ID",
+                    "broadcastEntryId": "Broadcast Entry ID",
                     "jumpTo": "Jump to",
                     "add": "Add",
                     "delete": "Delete",

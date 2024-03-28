@@ -53,7 +53,8 @@ export class RoomMetadataWidget extends RoomWidget implements OnDestroy {
       name: ['', Validators.required],
       description: '',
       tags: null,
-      categories: [null, categoriesValidator]
+      categories: [null, categoriesValidator],
+      broadcastEntryId: '',
     });
   }
 
@@ -83,6 +84,9 @@ export class RoomMetadataWidget extends RoomWidget implements OnDestroy {
       const metadataFormValue = this.metadataForm.value;
       newData.name = metadataFormValue.name;
       newData.description = metadataFormValue.description;
+      if (newData instanceof KalturaRoomEntry) {
+          newData.broadcastEntryId = metadataFormValue.broadcastEntryId;
+      }
       newData.tags = (metadataFormValue.tags || []).join(',');
 
       // save changes in entry categories
@@ -131,6 +135,7 @@ export class RoomMetadataWidget extends RoomWidget implements OnDestroy {
     this.metadataForm.reset({
       name: this.data.name,
       description: this.data.description,
+      broadcastEntryId: (this.data as KalturaRoomEntry).broadcastEntryId ? (this.data as KalturaRoomEntry).broadcastEntryId : '',
       tags: this.data.tags ? this.data.tags.split(', ') : null,
       categories: this._entryCategories,
     });
@@ -182,6 +187,7 @@ export class RoomMetadataWidget extends RoomWidget implements OnDestroy {
                 description: this.data.description || null,
                 tags: (this.data.tags ? this.data.tags.split(',').map(item => item.trim()) : null), // for backward compatibility we handle values separated with ',{space}'
                 categories: this._entryCategories,
+                broadcastEntryId: (this.data as KalturaRoomEntry).broadcastEntryId ? (this.data as KalturaRoomEntry).broadcastEntryId : '',
                 offlineMessage: this.data instanceof KalturaLiveStreamEntry ? (this.data.offlineMessage || null) : '',
                 referenceId: this.data.referenceId || null
             }
