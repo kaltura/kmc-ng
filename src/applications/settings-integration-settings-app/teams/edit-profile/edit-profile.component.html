@@ -116,7 +116,7 @@
             </div>
         </div>
 
-        <div class="kRow" [class.marginTop]="_profileForm.get('upload').value === 0">
+        <div class="kRow kHidden" [class.marginTop]="_profileForm.get('upload').value === 0">
             <div class="kLabel">
                 <span>{{'applications.settings.integrationSettings.teams.transcripts' | translate}}</span>
             </div>
@@ -183,9 +183,9 @@
                                    [value]="false"
                                    formControlName="userId"
                                    [label]="'applications.settings.integrationSettings.teams.azure' | translate"></p-radioButton>
-                    <kInputHelper class="kHelp" trigger="click">
-                        <span>{{'applications.settings.integrationSettings.teams.azure_tt' | translate}}</span>
-                    </kInputHelper>
+<!--                    <kInputHelper class="kHelp" trigger="click">-->
+<!--                        <span>{{'applications.settings.integrationSettings.teams.azure_tt' | translate}}</span>-->
+<!--                    </kInputHelper>-->
                 </div>
             </div>
         </div>

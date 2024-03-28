@@ -48,7 +48,6 @@
         height: calc(100vh - 200px);
         overflow-y: auto;
     }
-
     .kContainer {
         display: flex;
         flex-direction: column;
@@ -77,6 +76,9 @@
             display: flex;
             margin-bottom: 20px;
             color: $kGrayscale1;
+            &.kHidden {
+                margin-bottom: 0px;
+            }
             &.marginTop {
                 margin-top: 20px;
             }

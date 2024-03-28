@@ -70,8 +70,8 @@ export class EditTeamsProfileComponent implements OnDestroy {
                 private _logger: KalturaLogger) {
         this._participationOptions = [
             {value: 0, label: this._appLocalization.get('applications.settings.integrationSettings.teams.users1')},
-            {value: 1, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts3')},
-            {value: 3, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts4')}
+            {value: 2, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts2')},
+            {value: 1, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts3')}
         ];
         this._hostsOptions = [
             {value: 0, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts1')},
