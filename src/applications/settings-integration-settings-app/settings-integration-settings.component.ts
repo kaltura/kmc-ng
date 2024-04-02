@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 import { SettingsIntegrationSettingsMainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
@@ -9,7 +9,10 @@ import { SettingsIntegrationSettingsMainViewService } from 'app-shared/kmc-share
 })
 export class SettingsIntegrationSettingsComponent {
   public _kmcPermissions = KMCPermissions;
-  constructor(settingsIntegrationSettingsMainViewService: SettingsIntegrationSettingsMainViewService) {
+  public _enableTeamsIntegration = false;
+  constructor(settingsIntegrationSettingsMainViewService: SettingsIntegrationSettingsMainViewService,
+              _appPermissions: KMCPermissionsService) {
       settingsIntegrationSettingsMainViewService.viewEntered();
+      this._enableTeamsIntegration = _appPermissions.hasPermission(KMCPermissions.FEATURE_TEAMS_RECORDING_UPLOAD_PERMISSION)
   }
 }
