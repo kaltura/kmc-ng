@@ -197,6 +197,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
             .subscribe(
                 (profile: TeamsIntegration) => {
                     if (profile.objectType === 'KalturaAPIException') {
+                        this._loadTeamsIntegrationProfiles();
                         this.displayError((profile as any).message, () => this.changeProfileStatus(profile, status));
                     } else {
                         this._logger.info(`handle successful status update for teams integration profiles`);
