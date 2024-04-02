@@ -117,7 +117,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
                         this._updateAreaBlockerState(true, null);
                         this._teamsService.deleteProfile(this._currentProfile.id).subscribe(
                             success => {
-                                if ((success as any).objectType === 'KalturaAPIException') {
+                                if (success && (success as any).objectType === 'KalturaAPIException') {
                                     this.displayError((success as any).message, () => this.deleteProfile());
                                 } else {
                                     this._updateAreaBlockerState(false, null);
