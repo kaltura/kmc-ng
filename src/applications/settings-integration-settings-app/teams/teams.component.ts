@@ -77,7 +77,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
         }
     }
 
-    private displayError(message: string, retryAction?: Function): void {
+    private displayError(message: string, retryAction?: Function, closeAction?: Function): void {
         this._isBusy = false;
         let buttons = [
             {
@@ -85,6 +85,9 @@ export class TeamsComponent implements OnInit, OnDestroy {
                 action: () => {
                     this._logger.info(`user didn't confirm, abort action, dismiss dialog`);
                     this._blockerMessage = null;
+                    if (closeAction) {
+                        closeAction();
+                    }
                 }
             }
         ];
@@ -94,7 +97,9 @@ export class TeamsComponent implements OnInit, OnDestroy {
                 action: () => {
                     this._logger.info(`user confirmed, retry action`);
                     this._blockerMessage = null;
-                    retryAction();
+                    if (retryAction) {
+                        retryAction();
+                    }
                 }
             });
         }
@@ -195,10 +200,9 @@ export class TeamsComponent implements OnInit, OnDestroy {
         this._teamsService.changeProfileStatus(profile.id, status)
             .pipe(cancelOnDestroy(this))
             .subscribe(
-                (profile: TeamsIntegration) => {
-                    if (profile.objectType === 'KalturaAPIException') {
-                        this._loadTeamsIntegrationProfiles();
-                        this.displayError((profile as any).message, () => this.changeProfileStatus(profile, status));
+                (response: TeamsIntegration) => {
+                    if (response.objectType === 'KalturaAPIException') {
+                        this.displayError((response as any).message, () => this.changeProfileStatus(profile, status), () => this._loadTeamsIntegrationProfiles());
                     } else {
                         this._logger.info(`handle successful status update for teams integration profiles`);
                         this._loadTeamsIntegrationProfiles();
@@ -206,7 +210,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
                 },
                 error => {
                     const errorMsg = error?.message ? error.message : this._appLocalization.get('applications.settings.integrationSettings.teams.deleteError');
-                    this.displayError(errorMsg, () => this.changeProfileStatus(profile, status));
+                    this.displayError(errorMsg, () => this.changeProfileStatus(profile, status), () => this._loadTeamsIntegrationProfiles());
                 }
             );
     }
