@@ -161,7 +161,9 @@ export class RuleComponent implements OnInit {
                                 this._isDirty = false;
                             },
                             error => {
+                                this.actionsComponent.resetActionsOnSave();
                                 this.displayError(error.message ? error.message : this._appLocalization.get('applications.settings.mr.saveError'));
+                                this._isDirty = false;
                             }
                         );
                     } else {

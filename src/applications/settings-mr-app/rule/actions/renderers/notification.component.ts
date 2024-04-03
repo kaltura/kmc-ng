@@ -137,7 +137,6 @@ export class ActionNotificationComponent implements OnDestroy{
                         type: 'sendNotification',
                         taskParams: {
                             sendNotificationTaskParams: {
-                                daysToWait: 3,
                                 notificationType: this.type,
                                 recipients: {
                                     managedTasksProfileOwner: true
@@ -147,6 +146,9 @@ export class ActionNotificationComponent implements OnDestroy{
                             }
                         }
                     }
+                }
+                if (this.type === 'headsUp') {
+                    this.action.task.taskParams.sendNotificationTaskParams.daysToWait = 3;
                 }
                 this.originalAction = JSON.parse(JSON.stringify((this.action))); // save for revert
             } else {
