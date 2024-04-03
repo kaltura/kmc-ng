@@ -3083,7 +3083,8 @@
                     "azure_tt": "Azure user ID tooltip",
                     "createUser": "Create new user based on teams user",
                     "secret": "Update Secret",
-                    "update": "Update"
+                    "update": "Update",
+                    "docLink": "Teams integration article"
                 },
                 "webex": {
                     "title": "Webex integration",

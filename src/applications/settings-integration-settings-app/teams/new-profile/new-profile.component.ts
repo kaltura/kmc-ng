@@ -6,6 +6,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { tag } from '@kaltura-ng/kaltura-common';
 import {TeamsIntegration, TeamsIntegrationSettings, TeamsService} from '../teams.service';
+import {BrowserService} from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kNewTeamsProfile',
@@ -30,6 +31,7 @@ import {TeamsIntegration, TeamsIntegrationSettings, TeamsService} from '../teams
   constructor(private _fb: FormBuilder,
               private _logger: KalturaLogger,
               private _teamsService: TeamsService,
+              private _browserService: BrowserService,
               private _appLocalization: AppLocalization) {
     this._buildForm();
   }
@@ -118,4 +120,7 @@ import {TeamsIntegration, TeamsIntegrationSettings, TeamsService} from '../teams
         });
     }
 
+    public openHelp(): void {
+        this._browserService.openLink('https://knowledge.kaltura.com/help/kaltura-video-integration-with-teams');
+    }
 }

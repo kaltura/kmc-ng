@@ -24,7 +24,7 @@
 
     .kContainer {
         flex: 1 1 auto;
-        height: 330px;
+        height: 292px;
         overflow: auto;
         .kProfileForm {
             padding: 24px 28px 28px 28px;
@@ -80,7 +80,21 @@
             }
         }
     }
-
+    .doc {
+        display: flex;
+        padding: 28px;
+        padding-bottom: 16px;
+        span {
+            margin-right: 4px;
+            font-size: 14px;
+        }
+        .link {
+            text-decoration: none;
+            color: $kPrimary;
+            cursor: pointer;
+            font-weight: normal;
+        }
+    }
     .kFooter {
         padding: 15px 0;
         border-top: 1px solid $kGrayscale4;

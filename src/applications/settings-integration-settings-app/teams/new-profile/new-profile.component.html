@@ -79,6 +79,12 @@
              </form>
         </div>
 
+        <div class="doc">
+            <span>{{'applications.settings.authentication.new.doc' | translate}}</span>
+            <span class="link" (click)="openHelp()">{{'applications.settings.integrationSettings.teams.docLink' | translate}}</span>
+            <span>{{'applications.settings.authentication.new.doc2' | translate}}</span>
+        </div>
+
         <div class="kFooter">
             <button type="button" class="kButtonDefault kBtn" (click)="parentPopupWidget.close()" pButton
                     label="{{'app.common.cancel' | translate}}"></button>

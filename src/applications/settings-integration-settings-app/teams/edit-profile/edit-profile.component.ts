@@ -310,6 +310,10 @@ export class EditTeamsProfileComponent implements OnDestroy {
         return value.name;
     };
 
+    public openHelp(): void {
+        this._browserService.openLink('https://knowledge.kaltura.com/help/kaltura-video-integration-with-teams');
+    }
+
     /* ---------------------------- categories auto complete code ends ------------------------- */
 
     /* ---------------------------- groups auto complete code starts ------------------------- */

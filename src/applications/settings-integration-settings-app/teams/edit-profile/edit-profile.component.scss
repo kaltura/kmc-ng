@@ -43,7 +43,21 @@
       }
     }
   }
-
+    .doc {
+        display: flex;
+        padding: 16px;
+        padding-left: 24px;
+        span {
+            margin-right: 4px;
+            font-size: 14px;
+        }
+        .link {
+            text-decoration: none;
+            color: $kPrimary;
+            cursor: pointer;
+            font-weight: normal;
+        }
+    }
     form {
         height: calc(100vh - 200px);
         overflow-y: auto;
