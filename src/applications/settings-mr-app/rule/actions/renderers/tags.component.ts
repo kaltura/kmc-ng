@@ -145,6 +145,7 @@ export class ActionTagsComponent implements OnDestroy{
                 this.action.task = {
                     managedTasksProfileId: this.profileId,
                     type: 'modifyEntry',
+                    status: 'enabled',
                     taskParams: {
                         modifyEntryTaskParams: {}
                     }

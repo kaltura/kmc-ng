@@ -54,6 +54,7 @@ export class ActionDeleteComponent implements OnInit{
             this.action.task = {
                 managedTasksProfileId: this.profileId,
                 type: 'deleteEntry',
+                status: 'enabled',
                 taskParams: {
                     deleteEntryTaskParams: {
                         recycleBin: this.recycleAvailable ? this.recycle : false

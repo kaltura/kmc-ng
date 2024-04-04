@@ -135,6 +135,7 @@ export class ActionNotificationComponent implements OnDestroy{
                     task: {
                         managedTasksProfileId: this.profileId,
                         type: 'sendNotification',
+                        status: 'enabled',
                         taskParams: {
                             sendNotificationTaskParams: {
                                 notificationType: this.type,

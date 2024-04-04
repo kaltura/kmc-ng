@@ -195,6 +195,7 @@ export class ActionOwnerComponent implements OnDestroy{
                 this.action.task = {
                     managedTasksProfileId: this.profileId,
                     type: 'modifyEntry',
+                    status: 'enabled',
                     taskParams: {
                         modifyEntryTaskParams: {
                             kalturaEntry: {}

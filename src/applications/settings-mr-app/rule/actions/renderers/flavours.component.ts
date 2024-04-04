@@ -117,6 +117,7 @@ export class ActionFlavourComponent implements OnInit, OnDestroy{
                 this.action.task = {
                     managedTasksProfileId: this.profileId,
                     type: 'deleteFlavors',
+                    status: 'enabled',
                     taskParams: {
                         deleteFlavorsTaskParams: {
                             actionType: 'keepList',

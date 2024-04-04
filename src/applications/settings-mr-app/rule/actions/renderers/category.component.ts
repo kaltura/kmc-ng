@@ -212,6 +212,7 @@ export class ActionCategoryComponent implements OnDestroy{
                 this.action.task = {
                     managedTasksProfileId: this.profileId,
                     type: 'modifyEntry',
+                    status: 'enabled',
                     taskParams: {
                         modifyEntryTaskParams: {}
                     }
