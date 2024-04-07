@@ -234,6 +234,24 @@ export class RuleComponent implements OnInit {
         this._isDirty = true;
     }
 
+    public onTimeUnitChange(): void {
+        this._isDirty = true;
+        // set default values when changing date unit
+        switch (this.rule.runningCadence.advancedCadence.dateUnit) {
+            case 'day':
+                this.rule.runningCadence.advancedCadence.numberOfUnits = 1
+                break;
+            case 'week':
+                this.rule.runningCadence.advancedCadence.numberOfUnits = 1;
+                this.rule.runningCadence.advancedCadence.day = 'SUN';
+                break;
+            case 'month':
+                this.rule.runningCadence.advancedCadence.numberOfUnits = 1;
+                this.rule.runningCadence.advancedCadence.dayNumber = 1
+                break;
+        }
+    }
+
     public save(): void {
         // check for missing criteria in enabled rule
         if (this.rule.status === 'enabled' && Object.keys(this.rule.objectFilter).length === 0) {

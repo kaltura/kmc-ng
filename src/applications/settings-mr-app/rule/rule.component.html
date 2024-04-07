@@ -68,7 +68,7 @@
                         </div>
                         <div class="kRow">
                             <span class="kLabel">{{'applications.settings.mr.schedule.repeat' | translate}}</span>
-                            <p-dropdown [options]="_timeUnitOptions" [style]="{'width':'142px'}"  [(ngModel)]="rule.runningCadence.advancedCadence.dateUnit" (ngModelChange)="_isDirty = true"></p-dropdown>
+                            <p-dropdown [options]="_timeUnitOptions" [style]="{'width':'142px'}"  [(ngModel)]="rule.runningCadence.advancedCadence.dateUnit" (ngModelChange)="onTimeUnitChange()"></p-dropdown>
                         </div>
                         <div class="kRow" *ngIf="rule.runningCadence.advancedCadence.dateUnit === 'day'">
                             <span class="kLabel">{{'applications.settings.mr.schedule.every' | translate}}</span>
@@ -82,7 +82,7 @@
                         </div>
                         <div class="kRow" *ngIf="rule.runningCadence.advancedCadence.dateUnit === 'week'">
                             <span class="kLabel">{{'applications.settings.mr.schedule.on' | translate}}</span>
-                            <p-dropdown [options]="_daysOfWeek" [style]="{'width':'142px', 'margin-right': '4px'}"  [(ngModel)]="rule.runningCadence.advancedCadence.day" (ngModelChange)="_isDirty = true"></p-dropdown>
+                            <p-dropdown [options]="_daysOfWeek" [style]="{'width':'142px', 'margin-right': '4px'}" [(ngModel)]="rule.runningCadence.advancedCadence.day" (ngModelChange)="_isDirty = true"></p-dropdown>
                         </div>
                         <div class="kRow" *ngIf="rule.runningCadence.advancedCadence.dateUnit === 'month'">
                             <span class="kLabel">{{'applications.settings.mr.schedule.every' | translate}}</span>
