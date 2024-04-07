@@ -114,6 +114,8 @@
 .kError {
     font-size: 14px;
     color: $kDandger;
+    display: block;
+    margin-top: 2px;
 }
 
 /* prevent calendars from being cut by the popup widget borders */

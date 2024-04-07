@@ -184,14 +184,18 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
     public onDurationChange(mode: string): void {
         if (mode === 'less') {
             if (this._filterDurationLess) {
-                this.onFilterAdded.emit({filter: 'objectDurationLessThan', value: this._durationLess});
+                if (this._durationLess !== null) {
+                    this.onFilterAdded.emit({filter: 'objectDurationLessThan', value: this._durationLess});
+                }
             } else {
                 this.onFilterRemoved.emit(['objectDurationLessThan']);
             }
         }
         if (mode === 'more') {
             if (this._filterDurationMore) {
-                this.onFilterAdded.emit({filter: 'objectDurationGreaterThan', value: this._durationMore});
+                if (this._durationMore !== null) {
+                    this.onFilterAdded.emit({filter: 'objectDurationGreaterThan', value: this._durationMore});
+                }
             } else {
                 this.onFilterRemoved.emit(['objectDurationGreaterThan']);
             }
