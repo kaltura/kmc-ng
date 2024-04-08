@@ -235,14 +235,10 @@ export class EditTeamsProfileComponent implements OnDestroy {
         const userIdSource = formValue.userId ? 'upn' : 'azure-id';
         Object.assign(this._profile.settings, {userIdSource});
 
-        if (formValue.postfix > 0) {
-            const userIdSuffixMethod = formValue.postfix === 1 ? 'remove' : 'append';
-            Object.assign(this._profile.settings, {userIdSuffixMethod});
-        }
+        const userIdSuffixMethod = formValue.postfix === 0 ? 'none' : formValue.postfix === 1 ? 'remove' : 'append';
+        Object.assign(this._profile.settings, {userIdSuffixMethod});
 
-        if (formValue.userPostfix?.length) {
-            Object.assign(this._profile.settings, {userIdSuffix: formValue.userPostfix});
-        }
+        Object.assign(this._profile.settings, {userIdSuffix: formValue.userPostfix?.length ? formValue.userPostfix : ''});
 
         const userNotFoundMethod = formValue.createUser ? 'create' : 'assign-default';
         Object.assign(this._profile.settings, {userNotFoundMethod});

@@ -3078,7 +3078,7 @@
                     "users1": "None",
                     "users2": "Co-Viewers",
                     "users3": "Co-Publishers",
-                    "upn": "Teams UPN",
+                    "upn": "Microsoft User Principle Name",
                     "azure": "Azure user ID",
                     "azure_tt": "Azure user ID tooltip",
                     "createUser": "Create new user based on teams user",
