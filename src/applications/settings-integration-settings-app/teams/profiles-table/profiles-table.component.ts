@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { Menu } from 'primeng/menu';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { MenuItem } from 'primeng/api';
-import {KalturaWebexAPIIntegrationSetting} from "kaltura-ngx-client";
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {Menu} from 'primeng/menu';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {MenuItem} from 'primeng/api';
 import {TeamsIntegration} from '../teams.service';
+import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kTeamsProfilesTable',
@@ -21,7 +21,8 @@ export class TeamsProfilesTableComponent {
   @Output() onActionSelected = new EventEmitter<{ action: string, profile: TeamsIntegration }>();
   @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
 
-  constructor(private _appLocalization: AppLocalization) {
+  constructor(private _appLocalization: AppLocalization,
+              private _analytics: AppAnalytics,) {
   }
 
   public rowTrackBy: Function = (index: number, item: any) => item;
@@ -38,6 +39,7 @@ export class TeamsProfilesTableComponent {
       {
         label: this._appLocalization.get('applications.settings.integrationSettings.zoom.edit'),
         command: () => {
+          this._analytics.trackButtonClickEvent(ButtonType.Edit, 'Teams_edit');
           this.openEditScreen(profile);
         }
       }
@@ -47,6 +49,7 @@ export class TeamsProfilesTableComponent {
         this._items.push({
             label: this._appLocalization.get('applications.settings.integrationSettings.zoom.disable'),
             command: () => {
+                this._analytics.trackButtonClickEvent(ButtonType.Toggle, 'Teams_disable');
                 this.onActionSelected.emit({action: 'disable', profile});
             }
         });
@@ -55,6 +58,7 @@ export class TeamsProfilesTableComponent {
         this._items.push({
             label: this._appLocalization.get('applications.settings.integrationSettings.zoom.enable'),
             command: () => {
+                this._analytics.trackButtonClickEvent(ButtonType.Toggle, 'Teams_enable');
                 this.onActionSelected.emit({action: 'enable', profile});
             }
         });
@@ -69,6 +73,7 @@ export class TeamsProfilesTableComponent {
       this._items.push({
           label: this._appLocalization.get('applications.settings.integrationSettings.teams.download'),
           command: () => {
+              this._analytics.trackButtonClickEvent(ButtonType.Download, 'Teams_download_logs');
               this.onActionSelected.emit({action: 'download', profile});
           }
       });
@@ -78,6 +83,7 @@ export class TeamsProfilesTableComponent {
           label: this._appLocalization.get('applications.settings.authentication.table.delete'),
           styleClass: 'kDanger',
           command: () => {
+              this._analytics.trackButtonClickEvent(ButtonType.Delete, 'Teams_delete');
               this.onActionSelected.emit({action: 'delete', profile});
           }
       });

@@ -1,12 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { tag } from '@kaltura-ng/kaltura-common';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {AreaBlockerMessage, PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {tag} from '@kaltura-ng/kaltura-common';
 import {TeamsIntegration, TeamsIntegrationSettings, TeamsService} from '../teams.service';
-import {BrowserService} from 'app-shared/kmc-shell';
+import {AppAnalytics, BrowserService, ButtonType, PageType} from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kNewTeamsProfile',
@@ -30,9 +29,11 @@ import {BrowserService} from 'app-shared/kmc-shell';
 
   constructor(private _fb: FormBuilder,
               private _logger: KalturaLogger,
+              private _analytics: AppAnalytics,
               private _teamsService: TeamsService,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization) {
+    this._analytics.trackPageLoadEvent(PageType.Create, 'Teams_add_new_modal');
     this._buildForm();
   }
 
@@ -68,7 +69,7 @@ import {BrowserService} from 'app-shared/kmc-shell';
           this._logger.info(`abort action, profile has invalid data`);
           return;
       }
-
+      this._analytics.trackButtonClickEvent(ButtonType.Create, 'Teams_create_integration');
       this.updateFormStatus('pristine');
 
     const { name, tenantId, appClientId, appClientSecret } = this._newProfileForm.value;
@@ -121,6 +122,7 @@ import {BrowserService} from 'app-shared/kmc-shell';
     }
 
     public openHelp(): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Browse, 'Teams_guide', 'new');
         this._browserService.openLink('https://knowledge.kaltura.com/help/kaltura-video-integration-with-teams');
     }
 }

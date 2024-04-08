@@ -133,6 +133,9 @@ export class AppAnalytics {
                     case '/settings/authentication/list':
                         this.trackEvent(EventType.PageLoad, PageType.List, 'KMC_authentication_profiles');
                         break;
+                    case '/settings/integrationSettings':
+                        this.trackEvent(EventType.PageLoad, PageType.List, 'KMC_settings_integration');
+                        break;
                 }
             });
     }
@@ -229,6 +232,14 @@ export class AppAnalytics {
         if (buttonType) {
             this.trackEvent(EventType.ButtonClicked, buttonType, buttonName, eventVar3);
         }
+    }
+
+    public trackPageLoadEvent(type: PageType, name: string): void {
+        this.trackEvent(EventType.PageLoad, type, name);
+    }
+
+    public trackButtonClickEvent(type: ButtonType, name: string, value: string = null): void {
+        this.trackEvent(EventType.ButtonClicked, type, name, value);
     }
 
     private trackEvent(eventType: EventType, eventVar1: ButtonType | PageType, eventVar2: string, eventVar3: string = null): void {

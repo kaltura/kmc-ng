@@ -6,6 +6,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { tag } from '@kaltura-ng/kaltura-common';
 import {TeamsIntegration, TeamsService} from '../teams.service';
+import {AppAnalytics, ButtonType, PageType} from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kUpdateProfileSecret',
@@ -28,9 +29,11 @@ import {TeamsIntegration, TeamsService} from '../teams.service';
     }
 
   constructor(private _fb: FormBuilder,
+              private _analytics: AppAnalytics,
               private _logger: KalturaLogger,
               private _teamsService: TeamsService,
               private _appLocalization: AppLocalization) {
+    this._analytics.trackPageLoadEvent(PageType.Edit, 'Teams_update_secret_modal');
     this._buildForm();
   }
 
@@ -63,7 +66,7 @@ import {TeamsIntegration, TeamsService} from '../teams.service';
           this._logger.info(`abort action, profile has invalid data`);
           return;
       }
-
+      this._analytics.trackButtonClickEvent(ButtonType.Save, 'Teams_update_secret');
       this.updateFormStatus('pristine');
 
     const { appClientSecret } = this._profileForm.value;

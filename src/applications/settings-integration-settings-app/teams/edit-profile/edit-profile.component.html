@@ -65,6 +65,7 @@
                            suggestionSelectableField="isSelectable"
                            [allowMultiple]="true"
                            [minLength]="3"
+                           (change)="sendCategoryAnalytics()"
                            [suggestionsProvider]="_categoriesProvider"
                            (completeMethod)="_searchCategories($event)">
             </kAutoComplete>
@@ -77,14 +78,17 @@
             <p-radioButton name="upload"
                            [value]="0"
                            formControlName="upload"
+                           (onClick)="sendUploadAnalytics('all')"
                            [label]="'applications.settings.integrationSettings.zoom.uploadAll' | translate"></p-radioButton>
             <p-radioButton name="upload"
                            [value]="1"
                            formControlName="upload"
+                           (onClick)="sendUploadAnalytics('opt_in')"
                            [label]="'applications.settings.integrationSettings.zoom.uploadIn' | translate"></p-radioButton>
             <p-radioButton name="upload"
                            [value]="2"
                            formControlName="upload"
+                           (onClick)="sendUploadAnalytics('opt_out')"
                            [label]="'applications.settings.integrationSettings.zoom.uploadOut' | translate"></p-radioButton>
         </div>
 
@@ -124,7 +128,7 @@
             <div class="kLabel">
                 <span>{{'applications.settings.integrationSettings.teams.transcripts' | translate}}</span>
             </div>
-            <p-inputSwitch class="kControl" formControlName="transcripts"></p-inputSwitch>
+            <p-inputSwitch class="kControl" formControlName="transcripts" (onChange)="sendTranscriptAnalytics()"></p-inputSwitch>
             <span class="kSwitchValue">
               {{_profileForm.get('transcripts').value ? ('app.common.yes' | translate) : ('app.common.no' | translate)}}
             </span>
@@ -136,19 +140,19 @@
             <div class="kLabel">
                 <span>{{'applications.settings.integrationSettings.teams.organizers' | translate}}</span>
             </div>
-            <p-dropdown class="kControl" formControlName="coOrganizerRoles" [options]="_hostsOptions"></p-dropdown>
+            <p-dropdown class="kControl" formControlName="coOrganizerRoles" [options]="_hostsOptions" (onChange)="sendOrganizersAnalytics()"></p-dropdown>
         </div>
         <div class="kRow">
             <div class="kLabel">
                 <span>{{'applications.settings.integrationSettings.teams.presenters' | translate}}</span>
             </div>
-            <p-dropdown class="kControl" formControlName="presentersRoles" [options]="_hostsOptions"></p-dropdown>
+            <p-dropdown class="kControl" formControlName="presentersRoles" [options]="_hostsOptions" (onChange)="sendPresentersAnalytics()"></p-dropdown>
         </div>
         <div class="kRow">
             <div class="kLabel">
                 <span>{{'applications.settings.integrationSettings.teams.users' | translate}}</span>
             </div>
-            <p-dropdown class="kControl" formControlName="attendeesRoles" [options]="_participationOptions"></p-dropdown>
+            <p-dropdown class="kControl" formControlName="attendeesRoles" [options]="_participationOptions" (onChange)="sendUsersAnalytics()"></p-dropdown>
         </div>
 
         <span class="kSubTitle">{{'applications.settings.integrationSettings.zoom.owner' | translate}}</span>
@@ -160,6 +164,7 @@
             <div class="kRadios">
                 <p-radioButton name="userId"
                                [value]="true"
+                               (onClick)="sendOwnerAnalytics('UPN')"
                                formControlName="userId"
                                [label]="'applications.settings.integrationSettings.teams.upn' | translate"></p-radioButton>
                 <div class="kRow" style="margin-left: 36px; margin-bottom: 0px">
@@ -185,6 +190,7 @@
                 <div class="kRow" style="align-items: flex-start; margin-bottom: 0px">
                     <p-radioButton name="userId" [ngStyle]="{'marginRight': '0px'}"
                                    [value]="false"
+                                   (onClick)="sendOwnerAnalytics('Azure')"
                                    formControlName="userId"
                                    [label]="'applications.settings.integrationSettings.teams.azure' | translate"></p-radioButton>
 <!--                    <kInputHelper class="kHelp" trigger="click">-->
@@ -201,11 +207,13 @@
             <div class="kRadios">
                 <p-radioButton name="createUser"
                            [value]="true"
+                           (onClick)="sendNoUserAnalytics('create_teams_based')"
                            formControlName="createUser"
                            [label]="'applications.settings.integrationSettings.teams.createUser' | translate"></p-radioButton>
-                <div class="kRow" style="margin-bottom: 0px; margin-top: 12px; align-items: flex-start">
+                <div class="kRow" style="margin-bottom: 0px; margin-top: 12px; align-items: flex-start; margin-bottom: 24px">
                     <p-radioButton name="createUser" [ngStyle]="{'marginRight': '8px'}"
                                    [value]="false"
+                                   (onClick)="sendNoUserAnalytics('use_default_user')"
                                    formControlName="createUser"
                                    [label]="'applications.settings.integrationSettings.zoom.user2' | translate"></p-radioButton>
                     <div class="kRadios">

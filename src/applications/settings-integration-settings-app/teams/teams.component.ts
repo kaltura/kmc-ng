@@ -3,7 +3,7 @@ import {LoadTeamsIntegrationResponse, TeamsIntegration, TeamsService} from './te
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
-import {BrowserService} from 'app-shared/kmc-shell';
+import {AppAnalytics, BrowserService, ButtonType} from 'app-shared/kmc-shell';
 import {KMCPermissions} from 'app-shared/kmc-shared/kmc-permissions';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {SettingsIntegrationSettingsMainViewService} from 'app-shared/kmc-shared/kmc-views';
@@ -33,6 +33,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
 
     constructor(private _appLocalization: AppLocalization,
                 private _logger: KalturaLogger,
+                private _analytics: AppAnalytics,
                 private _teamsService: TeamsService,
                 private _browserService: BrowserService,
                 private _settingsIntegrationSettingsMainView: SettingsIntegrationSettingsMainViewService) {
@@ -225,6 +226,10 @@ export class TeamsComponent implements OnInit, OnDestroy {
 
     public onProfileSecretUpdated(profile: TeamsIntegration): void {
         this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('applications.settings.integrationSettings.teams.secretSuccess')});
+    }
+
+    public trackAnalytics(): void {
+       this._analytics.trackButtonClickEvent(ButtonType.Add, 'Teams_initiate_new_integration');
     }
 
     private _updateAreaBlockerState(isBusy: boolean, areaBlocker: AreaBlockerMessage): void {

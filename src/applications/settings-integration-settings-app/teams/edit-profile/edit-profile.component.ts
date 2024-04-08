@@ -26,7 +26,7 @@ import { SuggestionsProviderData } from "@kaltura-ng/kaltura-primeng-ui";
 import { ISubscription } from "rxjs/Subscription";
 import { Observable } from "rxjs";
 import { CategoriesSearchService } from "app-shared/content-shared/categories/categories-search.service";
-import { BrowserService } from "app-shared/kmc-shell";
+import {AppAnalytics, BrowserService, ButtonType, PageType} from 'app-shared/kmc-shell';
 import { TeamsIntegration } from '../teams.service';
 
 @Component({
@@ -64,10 +64,12 @@ export class EditTeamsProfileComponent implements OnDestroy {
 
     constructor(private _appLocalization: AppLocalization,
                 private _fb: FormBuilder,
+                private _analytics: AppAnalytics,
                 private _browserService: BrowserService,
                 private _kalturaServerClient: KalturaClient,
                 private _categoriesSearchService: CategoriesSearchService,
                 private _logger: KalturaLogger) {
+        this._analytics.trackPageLoadEvent(PageType.Edit, 'Teams_edit_form');
         this._participationOptions = [
             {value: 0, label: this._appLocalization.get('applications.settings.integrationSettings.teams.users1')},
             {value: 2, label: this._appLocalization.get('applications.settings.integrationSettings.zoom.hosts2')},
@@ -205,6 +207,48 @@ export class EditTeamsProfileComponent implements OnDestroy {
             });
     }
 
+    public sendCategoryAnalytics(): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Add, 'Teams_add_category');
+    }
+
+    public sendUploadAnalytics(key: string): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'Teams_recording_management', key);
+    }
+
+    public sendOwnerAnalytics(key: string): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'Teams_set_owner', key);
+    }
+
+    public sendNoUserAnalytics(key: string): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'Teams_no_user', key);
+    }
+
+    public sendTranscriptAnalytics(): void {
+        const key = this._profileForm.controls['transcripts'].value ? 'enable' : 'disable';
+        this._analytics.trackButtonClickEvent(ButtonType.Toggle, 'Teams_upload_transcripts', key);
+    }
+
+    public sendOrganizersAnalytics(): void {
+        const selectedOption = this._hostsOptions.find(item => item.value === this._profileForm.controls['coOrganizerRoles'].value);
+        if (selectedOption) {
+            this._analytics.trackButtonClickEvent(ButtonType.Choose, 'Teams_assign_co_organizers', selectedOption.label);
+        }
+    }
+
+    public sendPresentersAnalytics(): void {
+        const selectedOption = this._hostsOptions.find(item => item.value === this._profileForm.controls['presentersRoles'].value);
+        if (selectedOption) {
+            this._analytics.trackButtonClickEvent(ButtonType.Choose, 'Teams_assign_presenters', selectedOption.label);
+        }
+    }
+
+    public sendUsersAnalytics(): void {
+        const selectedOption = this._participationOptions.find(item => item.value === this._profileForm.controls['attendeesRoles'].value);
+        if (selectedOption) {
+            this._analytics.trackButtonClickEvent(ButtonType.Choose, 'Teams_assign_users', selectedOption.label);
+        }
+    }
+
     public openHelpLink(): void {
         this._browserService.openLink('https://marketplace.zoom.us/docs/api-reference/zoom-api/users/user');
     }
@@ -307,6 +351,7 @@ export class EditTeamsProfileComponent implements OnDestroy {
     };
 
     public openHelp(): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Browse, 'Teams_guide', 'edit');
         this._browserService.openLink('https://knowledge.kaltura.com/help/kaltura-video-integration-with-teams');
     }
 
