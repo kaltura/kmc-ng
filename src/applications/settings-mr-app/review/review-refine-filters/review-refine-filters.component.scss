@@ -64,15 +64,14 @@
         flex-direction: column;
         padding-left: 24px;
         overflow: hidden;
-        max-height: 0px;
+        height: 0px;
         position: relative;
         &.open {
-            max-height: 300px;
+            height: auto;
             &.noHide {
                 overflow: visible;
             }
         }
-        transition: max-height 0.25s ease-in-out;
         p-checkbox {
             margin-bottom: 12px;
         }
