@@ -49,7 +49,7 @@ export class CriteriaCreatedComponent implements OnInit{
             if (value && value[key]) {
                 this.createdTimeInterval = key;
                 this.createdTime = Math.abs(value[key].numberOfUnits) || 0;
-                this.createdTimeUnit = value[key].createdTimeUnit || 'day';
+                this.createdTimeUnit = value[key].dateUnit || 'day';
             }
         });
     }

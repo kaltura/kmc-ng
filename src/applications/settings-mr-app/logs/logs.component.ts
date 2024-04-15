@@ -12,6 +12,7 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {ColumnsResizeManagerService, ResizableColumnsTableName} from 'app-shared/kmc-shared/columns-resize-manager';
 import {ReviewTagsComponent} from '../review/review-tags/review-tags.component';
+import {BrowserService} from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kMrLogs',
@@ -43,6 +44,7 @@ export class LogsComponent implements OnInit {
 
     constructor(private _mrMainViewService: SettingsMrMainViewService,
                 public _columnsResizeManager: ColumnsResizeManagerService,
+                private _browserService: BrowserService,
                 private _appLocalization: AppLocalization,
                 private _logger: KalturaLogger,
                 private _mrStore: MrStoreService) {
@@ -158,11 +160,15 @@ export class LogsComponent implements OnInit {
     public download(id: string): void {
         this._isBusy = true;
         this._mrStore.downloadReport(id).subscribe(
-            success => {
+            data => {
                 this._isBusy = false;
+                this._browserService.download(data, id + '.csv', 'text/csv');
             },
             error => {
-                this.displayError(this._appLocalization.get('applications.settings.mr.reportDownloadError'), () => this.download(id));
+                // temp solution until BE supports text/csv content-type for the request
+                this._isBusy = false;
+                this._browserService.download(error?.error?.text || '', id + '.csv', 'text/csv');
+                // this.displayError(this._appLocalization.get('applications.settings.mr.reportDownloadError'), () => this.download(id));
             }
         );
     }

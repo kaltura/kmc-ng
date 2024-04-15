@@ -42,14 +42,14 @@ export class CriteriaPlayedComponent implements OnInit{
 
     public playedTimeUnit = 'day';
     public playedTime = 0;
-    public playedTimeInterval = 'less';
+    public playedTimeInterval = 'lastPlayedAtLessThanOrEqual';
 
     @Input() set filter(value: any) {
         ['lastPlayedAtLessThanOrEqual', 'lastPlayedAtGreaterThanOrEqual'].forEach(key => {
             if (value && value[key]) {
                 this.playedTimeInterval = key;
                 this.playedTime = Math.abs(value[key].numberOfUnits) || 0;
-                this.playedTimeUnit = value[key].createdTimeUnit || 'day';
+                this.playedTimeUnit = value[key].dateUnit || 'day';
             }
         });
     }

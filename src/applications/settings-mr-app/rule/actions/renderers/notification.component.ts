@@ -128,7 +128,7 @@ export class ActionNotificationComponent implements OnDestroy{
 
     public validate(): void {
         if (this.selected) {
-            if (!this.action || (this.action.requires === 'delete' && !this.action.task.id)) {
+            if (!this.action || this.action.requires === 'delete') {
                 this.action = {
                     requires: 'create',
                     type: this.getNotificationType(),

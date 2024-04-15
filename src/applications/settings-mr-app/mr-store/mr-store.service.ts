@@ -274,9 +274,9 @@ export class MrStoreService implements OnDestroy {
         }
     }
 
-    public downloadReport(id: string): Observable<LoadReportsResponse> {
+    public downloadReport(id: string): Observable<string> {
         try {
-            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/report/serve`, {id}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadReportsResponse>;
+            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/report/serve`, {id}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<string>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to serve report'));
         }
@@ -289,6 +289,16 @@ export class MrStoreService implements OnDestroy {
             headers: new HttpHeaders({
                 'authorization': `KS ${ks}`,
                 'Content-Type': 'application/json',
+            })
+        };
+    }
+
+    private getHttpDownloadOptions() {
+        const ks = this._appAuthentication.appUser.ks;
+        return {
+            headers: new HttpHeaders({
+                'authorization': `KS ${ks}`,
+                'Content-Type': 'text/csv',
             })
         };
     }

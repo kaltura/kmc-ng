@@ -3671,7 +3671,7 @@
                     "repeat": "Repeat",
                     "every": "Every",
                     "period": "Review period",
-                    "period_tt": "Review period tooltip",
+                    "period_tt": "Set a time period (in days) to review queued entries with one or more actions scheduled to be performed",
                     "startDate": "Start date",
                     "on": "On day",
                     "of": "of the month"
