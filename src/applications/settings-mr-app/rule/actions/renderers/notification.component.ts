@@ -42,7 +42,7 @@ import {notificationTemplates} from './notification.templates';
                             <div class="kCol">
                                 <p-checkbox [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.recipients.managedTasksProfileOwner" (ngModelChange)="validate()"
                                             label="{{'applications.settings.mr.notification.rule' | translate}}" binary="true"></p-checkbox>
-                                <p-checkbox [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.recipients.objectOwner" (ngModelChange)="validate()"
+                                <p-checkbox [class.kHidden]="type === 'executionSummary'" [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.recipients.objectOwner" (ngModelChange)="validate()"
                                             label="{{'applications.settings.mr.notification.entry' | translate}}" binary="true"></p-checkbox>
                                 <p-checkbox [(ngModel)]="sendToCustomUsers" (ngModelChange)="validate()"
                                             label="{{'applications.settings.mr.notification.custom' | translate}}" binary="true"></p-checkbox>
