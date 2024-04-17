@@ -126,12 +126,13 @@
   }
 
   .kUsersNeedMore {
+    display: none; /* hidden for now */
     height: 66px;
     border-radius: 3px;
     background-color: #D9D9D9;
     margin-bottom: 20px;
     color: #222;
-    display: flex;
+    /* display: flex; */
     align-items: center;
     padding: 0 21px;
     font-size: 15px;

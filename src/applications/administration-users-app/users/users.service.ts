@@ -42,7 +42,7 @@ export interface ExtendedKalturaUser extends KalturaUser {
 interface UsersData {
   users: { items: ExtendedKalturaUser[], totalCount: number };
   roles: { items: KalturaUserRole[], totalCount: number };
-  partnerInfo: { adminLoginUsersQuota: number, adminUserId: string };
+  partnerInfo: { adminLoginUsersQuota: number, adminUserId: string, excludedAdminRoleName: string };
 }
 
 @Injectable()
@@ -51,7 +51,7 @@ export class UsersStore implements OnDestroy {
     data: new BehaviorSubject<UsersData>({
       users: { items: [], totalCount: 0 },
       roles: { items: [], totalCount: 0 },
-      partnerInfo: { adminLoginUsersQuota: 0, adminUserId: null }
+      partnerInfo: { adminLoginUsersQuota: 0, adminUserId: null, excludedAdminRoleName: null }
     }),
     state: new BehaviorSubject<{ loading?: boolean, error?: string }>({})
   };
@@ -141,7 +141,8 @@ export class UsersStore implements OnDestroy {
               },
               partnerInfo: {
                 adminLoginUsersQuota: partnerInfo.result.adminLoginUsersQuota,
-                adminUserId: partnerInfo.result.adminUserId
+                adminUserId: partnerInfo.result.adminUserId,
+                excludedAdminRoleName: partnerInfo.result.excludedAdminRoleName
               }
             });
             this._users.state.next({ loading: false, error: null });
