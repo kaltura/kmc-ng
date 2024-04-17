@@ -1,3 +1,20 @@
+<a name="7.20.1"></a>
+## [7.20.1](https://github.com/kaltura/kmc-ng/compare/v7.20.0...v7.20.1) (2024-04-17)
+
+
+### Bug Fixes
+
+* **settings/automation-manager:** bug fixes ([4b096dc](https://github.com/kaltura/kmc-ng/commit/4b096dc))
+* **settings/automation-manager:** bug fixes KMCNG-2618, KMCNG-2620, KMCNG-2625, KMCNG-2626, KMCNG-2627 ([4c52b67](https://github.com/kaltura/kmc-ng/commit/4c52b67))
+* **settings/automation-manager:** bug fixes KMCNG-2624 ([9e63fa1](https://github.com/kaltura/kmc-ng/commit/9e63fa1))
+* **settings/integration:** fix create teams profile form tooltips KMCNG-2606 ([4ffed23](https://github.com/kaltura/kmc-ng/commit/4ffed23))
+* **settings/integration:** fix teams profile delete endless spinner KMCNG-2602 ([37c0b51](https://github.com/kaltura/kmc-ng/commit/37c0b51))
+* **settings/integration:** fix teams profile wrong status KMCNG-2603 ([998d709](https://github.com/kaltura/kmc-ng/commit/998d709))
+* **settings/integration:** fix teams profile wrong status KMCNG-2603 ([2ca3db5](https://github.com/kaltura/kmc-ng/commit/2ca3db5))
+* **settings/integration:** handle teams integration permissions KMCNG-2604 ([446bcac](https://github.com/kaltura/kmc-ng/commit/446bcac))
+
+
+
 <a name="7.20.0"></a>
 # [7.20.0](https://github.com/kaltura/kmc-ng/compare/v7.19.0...v7.20.0) (2024-03-26)
 
