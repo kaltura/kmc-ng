@@ -51,6 +51,7 @@ import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
 import {LogsRefineFiltersComponent} from './logs/logs-refine-filters/logs-refine-filters.component';
 import {LogsTagsComponent} from './logs/logs-tags/logs-tags.component';
 import {NotifyOwnerComponent} from './review/notify-owner/notify-owner.component';
+import {StatusPipe} from './review/review-tags/status.pipe';
 
 @NgModule({
     imports: [
@@ -117,7 +118,8 @@ import {NotifyOwnerComponent} from './review/notify-owner/notify-owner.component
       ActionNotificationComponent,
       LogsRefineFiltersComponent,
       LogsTagsComponent,
-      NotifyOwnerComponent
+      NotifyOwnerComponent,
+      StatusPipe
   ],
     providers: [MrStoreService]
 })

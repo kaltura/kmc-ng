@@ -76,7 +76,7 @@
                                 <p-sortIcon [field]="'plannedExecutionTime'"></p-sortIcon>
                             </th>
 
-                            <th data-cid="status" [ngStyle]="{'width': '80px'}">
+                            <th data-cid="status" [ngStyle]="{'width': '90px'}">
                                 {{'applications.settings.authentication.table.status' | translate}}
                             </th>
                             <th [ngStyle]="{'overflow': 'hidden', 'width': '80px'}"></th>
@@ -113,9 +113,9 @@
                                   {{review.plannedExecutionTime | kmcDate}}
                               </span>
                             </td>
-                            <td [ngStyle]="{'width': '80px'}">
+                            <td [ngStyle]="{'width': '90px'}">
                                 <span class="kTableColumn">
-                                  {{review.status.charAt(0).toUpperCase() + review.status.slice(1)}}
+                                  {{review.status | status}}
                               </span>
                             </td>
                             <td [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
