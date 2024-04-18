@@ -1,5 +1,9 @@
 <div class="actionsContainer" [class.kHidden]="selectedTab === 'notifications'">
     <span class="kTitle">{{'applications.settings.mr.actions.title' | translate}}</span>
+    <div class="kInfo" *ngIf="_showMessage">
+        <i class="kIconwarning"></i>
+        <span>{{'applications.settings.mr.actions.informationMessage' | translate}}</span>
+    </div>
     <button class="kButtonDefault kActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton label="{{'applications.settings.mr.actions.add' | translate}}" (click)="buildMenu(); menu.toggle($event)"></button>
     <p-tieredMenu #menu kMenuCloseOnScroll [model]="items" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"
                   [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'" ></p-tieredMenu>

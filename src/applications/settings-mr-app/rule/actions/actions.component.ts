@@ -33,6 +33,8 @@ export class RuleActionsComponent implements OnInit {
         for (const type of this._notificationTypes) {
             this._notifications[type] = this.actions.find(action => action.task?.taskParams?.sendNotificationTaskParams?.notificationType === type);
         };
+        this._showMessage = this.actions.filter(action => action.type === 'delete' || action.type === 'owner' || action.type === 'removeTags'
+            || action.type === 'addTags' || action.type === 'removeCategory' || action.type === 'addCategory' || action.type === 'flavours').length > 0;
     };
     @Input() selectedTab: string;
     @Output() onActionsChange = new EventEmitter<Action[]>();
@@ -41,6 +43,7 @@ export class RuleActionsComponent implements OnInit {
     public actions: Action[] = [];
     public actionsOnSave: Action[] = [];
     public _notificationTypes: ('profileScan' | 'headsUp' | 'executionSummary')[]  = ['profileScan','headsUp','executionSummary'];
+    public _showMessage = false;
 
     public _notifications = {};
 
@@ -54,13 +57,14 @@ export class RuleActionsComponent implements OnInit {
         this.items = [
             {
                 label: this._appLocalization.get('applications.settings.mr.actions.flavours'),
-                disabled: this.actions.filter(action => action.type === 'flavours').length > 0,
+                disabled: this.actions.filter(action => action.type === 'flavours' || action.type === 'delete').length > 0,
                 command: () => {
                     this.addAction('flavours');
                 }
             },
             {
                 label: this._appLocalization.get('applications.settings.mr.actions.categories'),
+                disabled: this.actions.filter(action => action.type === 'delete').length > 0,
                 items: [
                     {
                         label: this._appLocalization.get('applications.settings.mr.actions.addCat'),
@@ -80,6 +84,7 @@ export class RuleActionsComponent implements OnInit {
             },
             {
                 label: this._appLocalization.get('applications.settings.mr.actions.tags'),
+                disabled: this.actions.filter(action => action.type === 'delete').length > 0,
                 items: [
                     {
                         label: this._appLocalization.get('applications.settings.mr.actions.addTags'),
@@ -99,14 +104,15 @@ export class RuleActionsComponent implements OnInit {
             },
             {
                 label: this._appLocalization.get('applications.settings.mr.actions.owner'),
-                disabled: this.actions.filter(action => action.type === 'owner').length > 0,
+                disabled: this.actions.filter(action => action.type === 'owner' || action.type === 'delete').length > 0,
                 command: () => {
                     this.addAction('owner');
                 }
             },
             {
                 label: this._appLocalization.get('applications.settings.mr.actions.delete'),
-                disabled: this.actions.filter(action => action.type === 'delete').length > 0,
+                disabled: this.actions.filter(action => action.type === 'delete' || action.type === 'owner' || action.type === 'removeTags'
+                    || action.type === 'addTags' || action.type === 'removeCategory' || action.type === 'addCategory' || action.type === 'flavours').length > 0,
                 command: () => {
                     this.addAction('delete');
                 }
@@ -151,6 +157,7 @@ export class RuleActionsComponent implements OnInit {
     }
 
     private addAction(type: Action['type']): void {
+        this._showMessage = true;
         this.actions.push({
             type,
             requires: 'create',
@@ -162,6 +169,8 @@ export class RuleActionsComponent implements OnInit {
         const index = this.actionsOnSave.findIndex(ac => ac.type === action.type && ac.requires === action.requires);
         if (action.requires === 'delete') {
             this.actions = this.actions.filter(ac => ac.type !== action['type']);
+            this._showMessage = this.actions.filter(action => action.type === 'delete' || action.type === 'owner' || action.type === 'removeTags'
+                || action.type === 'addTags' || action.type === 'removeCategory' || action.type === 'addCategory' || action.type === 'flavours').length > 0;
             if (action.task?.id && index === -1) {
                 // existing task, need API call to delete
                 this.actionsOnSave.push(action);

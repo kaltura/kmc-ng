@@ -3678,6 +3678,7 @@
                 },
                 "actions": {
                     "title": "Add actions to be taken on entries that meet the criteria set in the Criteria tab.",
+                    "informationMessage": "Delete action cannot be performed along with additional actions in the same rule",
                     "add": "Add actions",
                     "flavours": "Keep selected flavors",
                     "categories": "Add / remove categories",
