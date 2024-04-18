@@ -8,6 +8,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
+import {globalConfig} from 'config/global';
 
 @Component({
     selector: 'kAnalyticsFrame',
@@ -111,6 +112,8 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             ks: this.appAuthentication.appUser.ks,
             pid: this.appAuthentication.appUser.partnerId,
             locale: this._appLocalization.selectedLanguage,
+            hostAppName: 'kmc',
+            hostAppVersion: globalConfig.client.appVersion,
             liveEntryUsersReports: this._browserService.getFromLocalStorage('kmc_analytics_live_entry_users_reports') || 'All',
             dateFormat: this._browserService.getFromLocalStorage('kmc_date_format') || 'month-day-year',
             live: {
