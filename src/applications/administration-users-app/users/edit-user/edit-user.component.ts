@@ -270,7 +270,18 @@ export class EditUserComponent implements OnInit, OnDestroy {
         },
         error => {
           this._isBusy = false;
-          if (error.code === 'INVALID_USER_ID') {
+          if (error.code === 'ADMIN_LOGIN_USERS_QUOTA_EXCEEDED') {
+              this._blockerMessage = new AreaBlockerMessage({
+                  message: this._appLocalization.get('applications.administration.users.quotaError'),
+                  buttons: [{
+                      label: this._appLocalization.get('app.common.ok'),
+                      action: () => {
+                          this._blockerMessage = null;
+                          this.parentPopupWidget.close();
+                      }
+                  }]
+              });
+          } else if (error.code === 'INVALID_USER_ID') {
               this._usersStore.addUser(this._userForm.value)
                   .pipe(cancelOnDestroy(this))
                   .pipe(tag('block-shell'))
@@ -281,6 +292,9 @@ export class EditUserComponent implements OnInit, OnDestroy {
                       },
                       addUserError => {
                           let errorMessage = addUserError.message;
+                          if (addUserError.code === 'ADMIN_LOGIN_USERS_QUOTA_EXCEEDED') {
+                              errorMessage = this._appLocalization.get('applications.administration.users.quotaError');
+                          }
                           if (addUserError.code === 'INVALID_FIELD_VALUE') {
                               switch (addUserError.args['FIELD_NAME']) {
                                   case 'email':
@@ -301,6 +315,9 @@ export class EditUserComponent implements OnInit, OnDestroy {
                                   label: this._appLocalization.get('app.common.ok'),
                                   action: () => {
                                       this._blockerMessage = null;
+                                      if (addUserError.code === 'ADMIN_LOGIN_USERS_QUOTA_EXCEEDED') {
+                                          this.parentPopupWidget.close();
+                                      }
                                   }
                               }]
                           });

@@ -1,20 +1,20 @@
 <k-area-blocker [message]="_blockerMessage">
   <div class="kUsers kOverrideFAIcons">
     <div #usersTableHolder class="kUsersHolder kContent">
-      <div class="kUsersHeader">
-        <div class="kUsersNeedMore">
-          <span class="kCurrentStatus">{{'applications.administration.users.currentStatus' | translate}}</span>
-          {{_usersInfo}}
-          <span class="kMoreUsers">
-            {{'applications.administration.users.moreUsers' | translate}}
-            <a class="kClickHere" (click)="_upgradeAccount()">{{'applications.administration.users.clickHere' | translate}}</a>
-            {{'applications.administration.users.usersUpgrade' | translate}}
-          </span>
-        </div>
-      </div>
+<!--      <div class="kUsersHeader">-->
+<!--        <div class="kUsersNeedMore">-->
+<!--          <span class="kCurrentStatus">{{'applications.administration.users.currentStatus' | translate}}</span>-->
+<!--          {{_usersInfo}}-->
+<!--          <span class="kMoreUsers">-->
+<!--            {{'applications.administration.users.moreUsers' | translate}}-->
+<!--            <a class="kClickHere" (click)="_upgradeAccount()">{{'applications.administration.users.clickHere' | translate}}</a>-->
+<!--            {{'applications.administration.users.usersUpgrade' | translate}}-->
+<!--          </span>-->
+<!--        </div>-->
+<!--      </div>-->
       <kSticky stickyId="usersFilters" [sticksTo]="'header'" [scrollOffset]="166">
         <div class="kUsersTableFilters kContent">
-          <button [disabled]="_usersTotalCount >= _partnerInfo.adminLoginUsersQuota || (_kmcPermissions.ADMIN_USER_ADD | kDisabledIfNotPermitted)"
+          <button [disabled]="_kmcPermissions.ADMIN_USER_ADD | kDisabledIfNotPermitted"
                   pButton
                   type="button"
                   label="{{'applications.administration.users.addUser' | translate}}"

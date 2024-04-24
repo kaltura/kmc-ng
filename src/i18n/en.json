@@ -2602,6 +2602,7 @@
                 "accountSpecificDetails": "Account Specific Details",
                 "required": "This field is required.",
                 "emailFormat": "Invalid email format",
+                "quotaError": "You've reached the maximum number of users for your license. To add a user, please delete or upgrade your license.",
                 "publisherIdFormat": "Invalid publisher ID format",
                 "userAlreadyExist": "{{0}} is already listed in the system and is associated with another KMC account. \nDo you want to associate this user with this account as well?",
                 "alreadyExist": "User already exists",
