@@ -53,6 +53,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   public _blockDirectLogin = false;
   public _showSSO = false;
   public _showEpSSO = false;
+  public _authBrokerEnabled = false;
 
   constructor(private _accountSettingsService: SettingsAccountSettingsService,
               private _appLocalization: AppLocalization,
@@ -66,6 +67,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
               private _fb: FormBuilder) {
       this._showSSO = this._settingsAuthenticationMain.isAvailable() && _appAuthentication.appUser.isAdmin;
       this._showEpSSO = this._permissionsService.hasPermission(KMCPermissions.FEATURE_EVENT_PLATFORM_PERMISSION);
+      this._authBrokerEnabled = this._permissionsService.hasPermission(KMCPermissions.FEATURE_AUTH_BROKER_PERMISSION);
   }
 
   ngOnInit() {

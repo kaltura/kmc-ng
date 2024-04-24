@@ -116,7 +116,7 @@
                 <a class="kLink" (click)="blockConfig.open()">{{'applications.content.syndication.table.actions.edit' | translate}}</a>
             </div>
         </div>
-        <div class="kRow pushDown">
+        <div class="kRow pushDown" *ngIf="_authBrokerEnabled">
             <div class="labelWithHelpTip">
                 <span class="kLabel">{{'applications.settings.authentication.subscribe.useSso' | translate}}</span>
                 <kInputHelper>
@@ -130,7 +130,7 @@
             </div>
         </div>
 
-        <div class="kRow">
+        <div class="kRow" *ngIf="_authBrokerEnabled">
             <div class="labelWithHelpTip">
                 <span class="kLabel">{{'applications.settings.authentication.subscribe.block' | translate}}</span>
                 <kInputHelper>
