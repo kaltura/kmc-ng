@@ -22,6 +22,7 @@ import { CustomMenuItem } from 'app-shared/content-shared/entries/entries-list/e
 import { KalturaDocumentEntry, KalturaEntryStatus } from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import {AppAuthentication} from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kDocument',
@@ -73,6 +74,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
               public _documentStore: DocumentStore,
               private _documentsStore: DocumentsStore,
               private _appLocalization: AppLocalization,
+              private _appAuthentication: AppAuthentication,
               private _DocumentsStore: DocumentsStore,
               private _logger: KalturaLogger,
               widget1: DocumentSectionsListWidget,
@@ -240,7 +242,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
                         };
                         break;
                     case 'download':
-                        item.command = () => this._browserService.openLink(document.downloadUrl);;
+                        item.command = () => this._browserService.openLink(document.downloadUrl + '/ks/' + this._appAuthentication.appUser.ks);
                         item.disabled = document.status !== KalturaEntryStatus.ready || !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DOWNLOAD);
                         break;
                     default:

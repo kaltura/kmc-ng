@@ -17,6 +17,7 @@ import {
     CategoriesStatusMonitorService
 } from "app-shared/content-shared/categories-status/categories-status-monitor.service";
 import {CategoriesModes} from "app-shared/content-shared/categories/categories-mode-type";
+import {AppAuthentication} from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kDocumentsList',
@@ -48,6 +49,7 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
 
   constructor(public _documentsStore: DocumentsStore,
               private _appLocalization: AppLocalization,
+              private _appAuthentication: AppAuthentication,
               private _router: Router,
               private _appEvents: AppEventsService,
               private _browserService: BrowserService,
@@ -249,7 +251,7 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
               this._contentDocumentViewService.open({ document: event.document, section: ContentDocumentViewSections.Metadata });
               break;
           case 'download':
-              this._browserService.openLink(event.document.downloadUrl);
+              this._browserService.openLink(event.document.downloadUrl + '/ks/' + this._appAuthentication.appUser.ks);
               break;
           case 'delete':
               this._browserService.confirm(
