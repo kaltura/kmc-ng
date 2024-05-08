@@ -92,7 +92,7 @@
                                 <span class="kProfileName kTableColumn name" [kTooltip]="review.objectName" [showOnEllipsis]="true">{{review.objectName}}</span>
                             </td>
                             <td [ngStyle]="{'width': '120px'}" class="hideInLowRes">
-                                <span class="kTableColumn" [kTooltip]="review.id" [showOnEllipsis]="true">{{review.id}}</span>
+                                <span class="kTableColumn" [kTooltip]="review.objectId" [showOnEllipsis]="true">{{review.objectId}}</span>
                             </td>
 
                             <td [ngStyle]="{'width': '60px'}">
@@ -114,7 +114,7 @@
                               </span>
                             </td>
                             <td [ngStyle]="{'width': '90px'}">
-                                <span class="kTableColumn">
+                                <span class="kTableColumn" [kTooltip]="review.status | status" [showOnEllipsis]="true">
                                   {{review.status | status}}
                               </span>
                             </td>
