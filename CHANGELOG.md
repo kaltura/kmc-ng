@@ -1,3 +1,20 @@
+<a name="7.20.2"></a>
+## [7.20.2](https://github.com/kaltura/kmc-ng/compare/v7.20.1...v7.20.2) (2024-05-08)
+
+
+### Bug Fixes
+
+* **administration/users:** update users creation logic KMCNG-2617, SUP-41888 ([6cac47f](https://github.com/kaltura/kmc-ng/commit/6cac47f))
+* **content/document:** fix download link SUP-42422 ([9802c37](https://github.com/kaltura/kmc-ng/commit/9802c37))
+* **content/entry:** add Spanish (Latin America) language to captions language dropdown KMCNG-2608 ([a20c4c6](https://github.com/kaltura/kmc-ng/commit/a20c4c6))
+* **content/entry:** limit dropdown height and all a vertical scroll SUP-40363 ([757e64f](https://github.com/kaltura/kmc-ng/commit/757e64f))
+* **settings/account-settings:** hide SSO admin configurations from KMC UI when Auth Broker toggle is turned off KMCNG-2595 ([cabc75b](https://github.com/kaltura/kmc-ng/commit/cabc75b))
+* **settings/media-repurposing:** bug fixes KMCNG-2633, KMCNG-2633 ([681fb4f](https://github.com/kaltura/kmc-ng/commit/681fb4f))
+* **settings/mr:** mutually exclusive actions KMCNG-2591 ([8030eda](https://github.com/kaltura/kmc-ng/commit/8030eda))
+* **settings/mr:** updated review statuses KMCNG-2590 ([4c9345a](https://github.com/kaltura/kmc-ng/commit/4c9345a))
+
+
+
 <a name="7.20.1"></a>
 ## [7.20.1](https://github.com/kaltura/kmc-ng/compare/v7.20.0...v7.20.1) (2024-04-17)
 
