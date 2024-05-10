@@ -7,6 +7,7 @@ import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { MenuItem } from 'primeng/api';
+import { AppAuthentication } from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kPlaylistEntriesTable',
@@ -48,17 +49,21 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
     public _youtubeExternalSourceType = KalturaExternalMediaSourceType.youtube;
     public _sortBy: string;
     public _sortDirection: number;
+    public _loadThumbnailWithKs = false;
+    public _ks = '';
 
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
               private _widgetService: ManualContentWidget,
+              private _appAuthentication: AppAuthentication,
               private _permissionsService: KMCPermissionsService,
               private _contentEntryViewService: ContentEntryViewService) {
   }
 
   ngOnInit() {
       this.assignEmptyMessage();
-
+      this._ks = this._appAuthentication.appUser.ks;
+      this._loadThumbnailWithKs = this._appAuthentication.appUser.partnerInfo.loadThumbnailWithKs;
   }
 
   ngAfterViewInit() {
