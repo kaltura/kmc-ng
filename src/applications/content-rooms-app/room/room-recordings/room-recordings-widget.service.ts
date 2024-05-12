@@ -51,15 +51,10 @@ export class RoomRecordingsWidget extends RoomWidget {
     }
 
     public reloadRecordings() {
-        if (!this._roomStore.room.redirectEntryId) {
-            this._logger.info('No redirectEntryId found on room entry. Aborting...');
-            this._recordings.next({items: []});
-            return;
-        }
         super._showLoader();
         this._recordings.next({items: []});
         const defaultPageSize = this._browserService.getFromLocalStorage('rooms.list.pageSize') || 50;
-        const filter = new KalturaMediaEntryFilter({idIn: this._roomStore.room.redirectEntryId, orderBy: this.sortDirection === 1 ? `+${this.sortBy}` : `-${this.sortBy}`});
+        const filter = new KalturaMediaEntryFilter({rootEntryIdEqual: this._roomStore.room.id, adminTagsLike: 'kalturameeting', orderBy: this.sortDirection === 1 ? `+${this.sortBy}` : `-${this.sortBy}`});
         let pager: KalturaFilterPager = new KalturaFilterPager({pageIndex: 1, pageSize: defaultPageSize});
         this._kalturaServerClient.request(new BaseEntryListAction({filter, pager})
             .setRequestOptions(
