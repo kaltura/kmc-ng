@@ -238,7 +238,7 @@ export class MrStoreService implements OnDestroy {
         }
     }
 
-    public notifyOwners(ids: string[], textBody: string, subject: string): Observable<any> {
+    public notifyOwners(ids: string[], subject: string, textBody: string): Observable<any> {
         try {
             return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/objectState/notifyOwners`, {ids, textBody, subject}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
         } catch (ex) {
