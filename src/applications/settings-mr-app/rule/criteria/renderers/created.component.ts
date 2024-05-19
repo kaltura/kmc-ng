@@ -36,13 +36,13 @@ export class CriteriaCreatedComponent implements OnInit{
     ];
 
     public _timeIntervalOptions: { value: string, label: string }[] = [
-        {value: 'createdAtLessThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.less')},
-        {value: 'createdAtGreaterThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
+        {value: 'createdAtGreaterThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.less')},
+        {value: 'createdAtLessThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
     ];
 
     public createdTimeUnit = 'day';
     public createdTime = 0;
-    public createdTimeInterval = 'createdAtLessThanOrEqual';
+    public createdTimeInterval = 'createdAtGreaterThanOrEqual';
 
     @Input() set filter(value: any) {
         ['createdAtLessThanOrEqual', 'createdAtGreaterThanOrEqual'].forEach(key => {
