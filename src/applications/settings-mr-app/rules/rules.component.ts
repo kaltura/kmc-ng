@@ -26,6 +26,7 @@ export class RulesComponent implements OnInit, OnDestroy {
     @ViewChild('deletePopup', { static: true }) public deletePopup: PopupWidgetComponent;
     @ViewChild('actionsmenu', { static: true }) private _actionsMenu: Menu;
 
+    private MAX_ALLOWED_PROFILES = 20;
     public _isBusy = false;
     public _profiles: ManagedTasksProfile[] = [];
     public _profilesCount = 0;
@@ -167,10 +168,14 @@ export class RulesComponent implements OnInit, OnDestroy {
     }
 
     public _addProfile(): void {
-        this._analytics.trackClickEvent('Add_ManagedTasksProfile');
-        this._logger.info(`handle add ManagedTasksProfile action by user`);
-        this._currentEditProfile = null;
-        this.newPopup.open();
+        if (this._profilesCount >= this.MAX_ALLOWED_PROFILES) {
+            this.displayError(this._appLocalization.get('applications.settings.mr.maxRulesErr'));
+        } else {
+            this._analytics.trackClickEvent('Add_ManagedTasksProfile');
+            this._logger.info(`handle add ManagedTasksProfile action by user`);
+            this._currentEditProfile = null;
+            this.newPopup.open();
+        }
     }
 
     public _editProfile(profile: ManagedTasksProfile): void {

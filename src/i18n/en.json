@@ -3563,6 +3563,7 @@
             },
             "mr": {
                 "rules": "Rules",
+                "maxRulesErr": "You've reached the maximum number of rules for your license. To add additional rules, please delete one of the rules on your account or contact your Kaltura administrator.",
                 "review": "Review",
                 "logs": "Reports",
                 "settings": "Settings",
