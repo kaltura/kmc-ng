@@ -37,7 +37,7 @@ export class CriteriaComponent {
         if (this._filter['advancedSearch']) {
             this._criterias.push('plays');
         }
-        if (this._filter['categoriesIdsMatchOr']) {
+        if (this._filter['categoriesIdsMatchOr'] || this._filter['categoriesIdsNotContains']) {
             this._criterias.push('categories');
         }
         if (this._filter['tagsMultiLikeOr']) {
@@ -79,7 +79,7 @@ export class CriteriaComponent {
                 }
             },
             {
-                label: this._appLocalization.get('applications.settings.mr.criteria.published'),
+                label: this._appLocalization.get('applications.settings.mr.criteria.categories'),
                 disabled: this._criterias.indexOf('categories') > -1,
                 command: () => {
                     this.addFilter('categories');
@@ -123,6 +123,7 @@ export class CriteriaComponent {
         }
         if (field === 'categories') {
             delete this._filter['categoriesIdsMatchOr'];
+            delete this._filter['categoriesIdsNotContains'];
         }
         if (field === 'tags') {
             delete this._filter['tagsMultiLikeOr'];

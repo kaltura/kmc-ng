@@ -14,7 +14,7 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
         <div class="criteria">
             <div class="kRow">
                 <span class="kLabel">{{'applications.settings.mr.criteria.header' | translate}}</span>
-                <span class="kLabelWithHelpTip">{{'applications.settings.mr.criteria.published' | translate}}</span>
+                <span class="kLabelWithHelpTip">{{'applications.settings.mr.criteria.categories' | translate}}</span>
                 <kInputHelper>
                     <span>{{'applications.settings.mr.criteria.published_tt' | translate}}</span>
                 </kInputHelper>
@@ -22,24 +22,26 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
 
             <div class="kRow kCenter">
                 <span class="kLabel">{{'applications.settings.mr.criteria.categories' | translate}}</span>
-                <div class="kCol">
-                    <kAutoComplete [(ngModel)]="categories"
-                                   (ngModelChange)="onCriteriaChange()"
-                                   field="name"
-                                   suggestionItemField="item"
-                                   suggestionLabelField="name"
-                                   suggestionSelectableField="isSelectable"
-                                   [allowMultiple]="true"
-                                   [tooltipResolver]="_categoriesTooltipResolver"
-                                   [minLength]="3"
-                                   [suggestionsProvider]="_categoriesProvider"
-                                   (completeMethod)="_searchCategories($event)">
-                    </kAutoComplete>
-                    <a (click)="categoriesPopup.open()" class="kLink">
-                        {{'applications.content.entryDetails.metadata.browse' | translate}}
-                    </a>
+                <div class="kRow">
+                    <p-dropdown [options]="_publishOptions" [style]="{'width':'150px', 'margin-right': '16px'}" [(ngModel)]="_published" (ngModelChange)="onCriteriaChange()"></p-dropdown>
+                    <div class="kCol">
+                        <kAutoComplete [(ngModel)]="categories"
+                                       (ngModelChange)="onCriteriaChange()"
+                                       field="name"
+                                       suggestionItemField="item"
+                                       suggestionLabelField="name"
+                                       suggestionSelectableField="isSelectable"
+                                       [allowMultiple]="true"
+                                       [tooltipResolver]="_categoriesTooltipResolver"
+                                       [minLength]="3"
+                                       [suggestionsProvider]="_categoriesProvider"
+                                       (completeMethod)="_searchCategories($event)">
+                        </kAutoComplete>
+                        <a (click)="categoriesPopup.open()" class="kLink">
+                            {{'applications.content.entryDetails.metadata.browse' | translate}}
+                        </a>
+                    </div>
                 </div>
-
             </div>
 
             <span class="kDelete" (click)="delete()">{{'applications.content.table.delete'| translate}}</span>
@@ -56,11 +58,17 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
 export class CriteriaCategoriesComponent implements OnDestroy{
 
     public categories: CategoryData[] = [];
+    public _publishOptions: { value: string, label: string }[] = [
+        {value: 'categoriesIdsMatchOr', label: this._appLocalization.get('applications.settings.mr.criteria.published')},
+        {value: 'categoriesIdsNotContains', label: this._appLocalization.get('applications.settings.mr.criteria.notPublished')}
+    ];
+    public _published = 'categoriesIdsMatchOr';
 
     @Input() set filter(value: any) {
-        if (value && value['categoriesIdsMatchOr']) {
+        if (value && (value['categoriesIdsMatchOr'] || value['categoriesIdsNotContains'])) {
+            this._published = value['categoriesIdsMatchOr'] ? 'categoriesIdsMatchOr' : 'categoriesIdsNotContains'; // set dropdown value
             // load categories from their IDs
-            const categoriesFilter = value['categoriesIdsMatchOr'].split(',');
+            const categoriesFilter = value['categoriesIdsMatchOr'] ? value['categoriesIdsMatchOr'].split(',') : value['categoriesIdsNotContains'].split(',') ;
             const categoryIDs: number[] = [];
             categoriesFilter.forEach(id => categoryIDs.push(parseInt(id)));
             this._categoriesSearchService.getCategories(categoryIDs).subscribe(response => {
@@ -98,7 +106,7 @@ export class CriteriaCategoriesComponent implements OnDestroy{
         const cats = [];
         const value = {};
         this.categories.forEach(category => cats.push(category.id));
-        value['categoriesIdsMatchOr'] = cats.toString();
+        value[this._published] = cats.toString();
         this.onFilterChange.emit({field: 'categories', value});
     }
 
