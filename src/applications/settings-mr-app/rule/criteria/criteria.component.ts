@@ -43,7 +43,7 @@ export class CriteriaComponent {
         if (this._filter['tagsMultiLikeOr']) {
             this._criterias.push('tags');
         }
-        if (this._filter['userIdIn']) {
+        if (this._filter['userIdIn'] || this._filter['userIdNotIn']) {
             this._criterias.push('owner');
         }
         if (this._filter['durationLessThanOrEqual'] || this._filter['durationGreaterThan']) {
@@ -130,6 +130,7 @@ export class CriteriaComponent {
         }
         if (field === 'owner') {
             delete this._filter['userIdIn'];
+            delete this._filter['userIdNotIn'];
         }
         if (field === 'duration') {
             delete this._filter['durationLessThanOrEqual'];

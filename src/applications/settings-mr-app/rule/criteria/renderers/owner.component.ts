@@ -14,6 +14,7 @@ import {
     KalturaFilterPager,
     KalturaUser, KalturaUserFilter, UserListAction
 } from 'kaltura-ngx-client';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
 
 @Component({
     selector: 'kCriteriaOwner',
@@ -30,22 +31,25 @@ import {
 
             <div class="kRow kCenter">
                 <span class="kLabel">{{'applications.settings.mr.criteria.ownerLabel' | translate}}</span>
-                <div class="kCol">
-                    <kAutoComplete
-                        [(ngModel)]="owners"
-                        (ngModelChange)="onCriteriaChange()"
-                        suggestionItemField="item"
-                        suggestionLabelField="name"
-                        [tooltipResolver]="'__tooltip'"
-                        [classField]="'__class'"
-                        field="id"
-                        [allowMultiple]="true"
-                        [limitToSuggestions]="false"
-                        [minLength]="3"
-                        suggestionSelectableField="isSelectable"
-                        [suggestionsProvider]="_usersProvider"
-                        (completeMethod)="_searchUsers($event, 'editors')">
-                    </kAutoComplete>
+                <div class="kRow">
+                    <p-dropdown [options]="_ownerOptions" [style]="{'width':'150px', 'margin-right': '16px'}" [(ngModel)]="_owner" (ngModelChange)="onCriteriaChange()"></p-dropdown>
+                    <div class="kCol">
+                        <kAutoComplete
+                            [(ngModel)]="owners"
+                            (ngModelChange)="onCriteriaChange()"
+                            suggestionItemField="item"
+                            suggestionLabelField="name"
+                            [tooltipResolver]="'__tooltip'"
+                            [classField]="'__class'"
+                            field="id"
+                            [allowMultiple]="true"
+                            [limitToSuggestions]="false"
+                            [minLength]="3"
+                            suggestionSelectableField="isSelectable"
+                            [suggestionsProvider]="_usersProvider"
+                            (completeMethod)="_searchUsers($event, 'editors')">
+                        </kAutoComplete>
+                    </div>
                 </div>
 
             </div>
@@ -57,13 +61,19 @@ import {
 export class CriteriaOwnerComponent implements OnDestroy{
 
     public owners: KalturaUser[] = [];
+    public _ownerOptions: { value: string, label: string }[] = [
+        {value: 'userIdIn', label: this._appLocalization.get('applications.settings.mr.criteria.ownerIs')},
+        {value: 'userIdNotIn', label: this._appLocalization.get('applications.settings.mr.criteria.ownerIsNot')}
+    ];
+    public _owner = 'userIdIn';
 
     @Input() set filter(value: any) {
-        if (value && value['userIdIn']) {
+        if (value && (value['userIdIn'] || value['userIdNotIn'])) {
+            this._owner = value['userIdIn'] ? 'userIdIn' : 'userIdNotIn'; // set dropdown value
             // load users from their IDs
             this._kalturaServerClient.request(new UserListAction({
                 filter: new KalturaUserFilter({
-                    idIn: value['userIdIn']
+                    idIn: value['userIdIn'] ? value['userIdIn'] : value['userIdNotIn']
                 })
             }))
                 .pipe(cancelOnDestroy(this))
@@ -81,7 +91,8 @@ export class CriteriaOwnerComponent implements OnDestroy{
     private _searchUsersSubscription: ISubscription;
     public _usersProvider = new Subject<SuggestionsProviderData>();
 
-    constructor(private _kalturaServerClient: KalturaClient) {
+    constructor(private _kalturaServerClient: KalturaClient,
+                private _appLocalization: AppLocalization) {
     }
 
 
@@ -89,7 +100,7 @@ export class CriteriaOwnerComponent implements OnDestroy{
         const value = {};
         const userIds = [];
         this.owners.forEach(user => userIds.push(user.id));
-        value['userIdIn'] = userIds.toString();
+        value[this._owner] = userIds.toString();
         this.onFilterChange.emit({field: 'owner', value});
     }
 

@@ -3648,6 +3648,8 @@
                     "tagsLabel": "Tags",
                     "owner": "Entry owner",
                     "owner_tt": "Select the assigned owner/s of the entry. The rule will be performed if the entry is owned by at least one of the added owners.",
+                    "ownerIs": "Is",
+                    "ownerIsNot": "Isn't",
                     "ownerLabel": "Owner",
                     "duration": "Media duration",
                     "durationLabel": "Duration",
