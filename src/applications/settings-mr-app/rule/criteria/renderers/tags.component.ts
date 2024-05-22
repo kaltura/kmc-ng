@@ -3,7 +3,8 @@ import {Observable, Subject} from 'rxjs';
 import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
 import {ISubscription} from 'rxjs/Subscription';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
-import {KalturaClient, KalturaFilterPager, KalturaTagFilter, KalturaTaggedObjectType, TagSearchAction} from 'kaltura-ngx-client';
+import {KalturaClient, KalturaFilterPager,  KalturaMediaEntryMatchAttribute, KalturaTagFilter, KalturaTaggedObjectType, TagSearchAction} from 'kaltura-ngx-client';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
 
 @Component({
     selector: 'kCriteriaTags',
@@ -20,18 +21,21 @@ import {KalturaClient, KalturaFilterPager, KalturaTagFilter, KalturaTaggedObject
 
             <div class="kRow kCenter">
                 <span class="kLabel">{{'applications.settings.mr.criteria.tagsLabel' | translate}}</span>
-                <div class="kCol">
-                    <kAutoComplete
-                        [(ngModel)]="tags"
-                        (ngModelChange)="onCriteriaChange()"
-                        suggestionItemField="item"
-                        suggestionSelectableField="isSelectable"
-                        [allowMultiple]="true"
-                        [limitToSuggestions]="false"
-                        [minLength]="3"
-                        [suggestionsProvider]="_tagsProvider"
-                        (completeMethod)="_searchTags($event)">
-                    </kAutoComplete>
+                <div class="kRow">
+                    <p-dropdown [options]="_tagsOptions" [style]="{'width':'150px', 'margin-right': '16px'}" [(ngModel)]="_tags" (ngModelChange)="onCriteriaChange()"></p-dropdown>
+                    <div class="kCol">
+                        <kAutoComplete
+                            [(ngModel)]="tags"
+                            (ngModelChange)="onCriteriaChange()"
+                            suggestionItemField="item"
+                            suggestionSelectableField="isSelectable"
+                            [allowMultiple]="true"
+                            [limitToSuggestions]="false"
+                            [minLength]="3"
+                            [suggestionsProvider]="_tagsProvider"
+                            (completeMethod)="_searchTags($event)">
+                        </kAutoComplete>
+                    </div>
                 </div>
 
             </div>
@@ -43,10 +47,20 @@ import {KalturaClient, KalturaFilterPager, KalturaTagFilter, KalturaTaggedObject
 export class CriteriaTagsComponent implements OnDestroy{
 
     public tags: string[] = [];
+    public _tagsOptions: { value: string, label: string }[] = [
+        {value: 'tagsIn', label: this._appLocalization.get('applications.settings.mr.criteria.tagsIn')},
+        {value: 'tagsNotIn', label: this._appLocalization.get('applications.settings.mr.criteria.tagsNotIn')}
+    ];
+    public _tags = 'tagsIn';
 
     @Input() set filter(value: any) {
-        if (value && value['tagsMultiLikeOr']) {
-            this.tags = value['tagsMultiLikeOr'].split(',');
+        if (value['advancedSearch'] && value['advancedSearch']['items'] && value['advancedSearch']['items'].length) {
+            value['advancedSearch']['items'].forEach((advancedSearch: any) => {
+                if (advancedSearch['attribute'] && advancedSearch['attribute'] === KalturaMediaEntryMatchAttribute.tags) {
+                    this._tags = advancedSearch['not'] === true ? 'tagsNotIn' : 'tagsIn';
+                    this.tags = advancedSearch['value'].split(',');
+                }
+            });
         }
     }
     @Output() onDelete = new EventEmitter<string>();
@@ -55,13 +69,18 @@ export class CriteriaTagsComponent implements OnDestroy{
     private _searchTagsSubscription: ISubscription;
     public _tagsProvider = new Subject<SuggestionsProviderData>();
 
-    constructor(private _kalturaServerClient: KalturaClient,) {
+    constructor(private _kalturaServerClient: KalturaClient,
+                private _appLocalization: AppLocalization) {
     }
 
 
     public onCriteriaChange(): void {
-        const value = {};
-        value['tagsMultiLikeOr'] = this.tags.toString();
+        const value = {
+            objectType: "KalturaMediaEntryMatchAttributeCondition",
+            not: this._tags === 'tagsIn' ? false : true,
+            attribute: KalturaMediaEntryMatchAttribute.tags,
+            value: this.tags.toString()
+        };
         this.onFilterChange.emit({field: 'tags', value});
     }
 

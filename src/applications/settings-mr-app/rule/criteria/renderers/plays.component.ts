@@ -36,10 +36,14 @@ export class CriteriaPlaysComponent implements OnInit{
     public playsInterval = KalturaSearchConditionComparison.lessThan;
 
     @Input() set filter(value: any) {
-        if (value['advancedSearch'] && value['advancedSearch']['attribute'] && value['advancedSearch']['attribute'] === KalturaMediaEntryCompareAttribute.plays) {
-            this.playsInterval = value['advancedSearch']['comparison'];
-            this.numOfPlays = parseInt(value['advancedSearch']['value']);
-        };
+        if (value['advancedSearch'] && value['advancedSearch']['items'] && value['advancedSearch']['items'].length) {
+            value['advancedSearch']['items'].forEach((advancedSearch: any) => {
+                if (advancedSearch['attribute'] && advancedSearch['attribute'] === KalturaMediaEntryCompareAttribute.plays) {
+                    this.playsInterval = advancedSearch['comparison'];
+                    this.numOfPlays = parseInt(advancedSearch['value']);
+                }
+            });
+        }
     }
     @Output() onDelete = new EventEmitter<string>();
     @Output() onFilterChange = new EventEmitter<{field: string, value: any}>();
@@ -51,8 +55,7 @@ export class CriteriaPlaysComponent implements OnInit{
     }
 
     public onCriteriaChange(): void {
-        const value = {};
-        value['advancedSearch'] = {
+        const value = {
             objectType: "KalturaMediaEntryCompareAttributeCondition",
             comparison: this.playsInterval,
             attribute: KalturaMediaEntryCompareAttribute.plays,
