@@ -1,7 +1,8 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {KalturaLogger, LogLevels} from '@kaltura-ng/kaltura-logger';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {MenuItem} from 'primeng/api';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {KalturaMediaEntryCompareAttribute, KalturaMediaEntryMatchAttribute, KalturaSearchOperatorType} from 'kaltura-ngx-client';
 
 @Component({
     selector: 'kRuleCriteria',
@@ -35,15 +36,22 @@ export class CriteriaComponent {
             this._criterias.push('played');
         }
         if (this._filter['advancedSearch']) {
-            this._criterias.push('plays');
+            if (this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
+                this._filter['advancedSearch']['items'].forEach(search => {
+                    if (search['attribute'] === KalturaMediaEntryCompareAttribute.plays) {
+                        this._criterias.push('plays');
+                    }
+                    if (search['attribute'] === KalturaMediaEntryMatchAttribute.tags) {
+                        delete this._filter['tagsMultiLikeOr']; // remove old filter from old rules to prevent tags filter duplication
+                        this._criterias.push('tags');
+                    }
+                })
+            }
         }
-        if (this._filter['categoriesIdsMatchOr']) {
+        if (this._filter['categoriesIdsMatchOr'] || this._filter['categoriesIdsNotContains']) {
             this._criterias.push('categories');
         }
-        if (this._filter['tagsMultiLikeOr']) {
-            this._criterias.push('tags');
-        }
-        if (this._filter['userIdIn']) {
+        if (this._filter['userIdIn'] || this._filter['userIdNotIn']) {
             this._criterias.push('owner');
         }
         if (this._filter['durationLessThanOrEqual'] || this._filter['durationGreaterThan']) {
@@ -79,7 +87,7 @@ export class CriteriaComponent {
                 }
             },
             {
-                label: this._appLocalization.get('applications.settings.mr.criteria.published'),
+                label: this._appLocalization.get('applications.settings.mr.criteria.categories'),
                 disabled: this._criterias.indexOf('categories') > -1,
                 command: () => {
                     this.addFilter('categories');
@@ -119,16 +127,29 @@ export class CriteriaComponent {
             delete this._filter['lastPlayedAtGreaterThanOrEqual'];
         }
         if (field === 'plays') {
-            delete this._filter['advancedSearch'];
+            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
+                this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search['attribute'] !== KalturaMediaEntryCompareAttribute.plays);
+            }
+            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length === 0) {
+                delete this._filter['advancedSearch'];
+            }
         }
         if (field === 'categories') {
             delete this._filter['categoriesIdsMatchOr'];
+            delete this._filter['categoriesIdsNotContains'];
         }
         if (field === 'tags') {
-            delete this._filter['tagsMultiLikeOr'];
+            delete this._filter['tagsMultiLikeOr']; // remove old filter from old rules to prevent tags filter duplication
+            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
+                this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search['attribute'] !== KalturaMediaEntryMatchAttribute.tags);
+            }
+            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length === 0) {
+                delete this._filter['advancedSearch'];
+            }
         }
         if (field === 'owner') {
             delete this._filter['userIdIn'];
+            delete this._filter['userIdNotIn'];
         }
         if (field === 'duration') {
             delete this._filter['durationLessThanOrEqual'];
@@ -146,7 +167,25 @@ export class CriteriaComponent {
 
     public onCriteriaChange(event: {field: string, value: any}): void {
         this.clearFilterFields(event.field);
-        Object.assign(this._filter, event.value);
+        if (event.field === 'plays' || event.field === 'tags') {
+            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
+                // remove old plays filter before adding the new one
+                if (event.field === 'plays') {
+                    this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter((search: any) => search['attribute'] !== KalturaMediaEntryCompareAttribute.plays);
+                } else {
+                    this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter((search: any) => search['attribute'] !== KalturaMediaEntryMatchAttribute.tags);
+                }
+            } else {
+                this._filter['advancedSearch'] = {
+                    objectType: "KalturaSearchOperator",
+                    type: KalturaSearchOperatorType.searchAnd,
+                    items: []
+                };
+            }
+            this._filter['advancedSearch'].items.push(event.value);
+        } else {
+            Object.assign(this._filter, event.value);
+        }
         this.removeEmptyFields();
         this.onFilterChange.emit(this._filter);
     }
