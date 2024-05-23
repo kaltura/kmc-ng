@@ -1,3 +1,22 @@
+<a name="7.21.0"></a>
+# [7.21.0](https://github.com/kaltura/kmc-ng/compare/v7.20.2...v7.21.0) (2024-05-23)
+
+
+### Bug Fixes
+
+* **content/playlist:** support load thumbnail with ks in playlist thumbnails PSVAMB-51801 ([47483d3](https://github.com/kaltura/kmc-ng/commit/47483d3))
+* **content/room:** load room recordings according to admin tag SUP-42078 ([e66e398](https://github.com/kaltura/kmc-ng/commit/e66e398))
+* **settings/media-repurposing:** fix criteria filters KMCNG-2641 ([86117d2](https://github.com/kaltura/kmc-ng/commit/86117d2))
+* **settings/media-repurposing:** prevent creating more than 20 rules per partner KMCNG-2635 ([9423c79](https://github.com/kaltura/kmc-ng/commit/9423c79))
+* **settings/media-repurposing:** review send notification to owner fix KMCNG-2622 ([cf2d15f](https://github.com/kaltura/kmc-ng/commit/cf2d15f))
+
+
+### Features
+
+* **settings/media-repurposing:** add exclude categories, owner, tags to rule criteria KMCNG-2637 ([#1068](https://github.com/kaltura/kmc-ng/issues/1068)) ([2e80dce](https://github.com/kaltura/kmc-ng/commit/2e80dce))
+
+
+
 <a name="7.20.2"></a>
 ## [7.20.2](https://github.com/kaltura/kmc-ng/compare/v7.20.1...v7.20.2) (2024-05-08)
 
