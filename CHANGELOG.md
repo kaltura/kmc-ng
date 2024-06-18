@@ -1,3 +1,13 @@
+<a name="7.21.1"></a>
+## [7.21.1](https://github.com/kaltura/kmc-ng/compare/v7.21.0...v7.21.1) (2024-06-18)
+
+
+### Bug Fixes
+
+* **settings/media-repurposing:** child entries deletion KMCNG-2650 ([1c3e8bd](https://github.com/kaltura/kmc-ng/commit/1c3e8bd))
+
+
+
 <a name="7.21.0"></a>
 # [7.21.0](https://github.com/kaltura/kmc-ng/compare/v7.20.2...v7.21.0) (2024-05-23)
 
