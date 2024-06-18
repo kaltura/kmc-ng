@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Action} from '../actions.component';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
 
 @Component({
     selector: 'kActionDelete',
@@ -13,6 +14,13 @@ import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-p
                 <kInputHelper>
                     <span>{{'applications.settings.mr.actions.delete_tt' | translate}}</span>
                 </kInputHelper>
+            </div>
+            <div class="kRow">
+                <span class="kLabelWithHelpTip">{{'applications.settings.mr.actions.linked' | translate}}</span>
+                <kInputHelper>
+                    <span>{{'applications.settings.mr.actions.linked_tt' | translate}}</span>
+                </kInputHelper>
+                <p-dropdown [options]="_deleteOptions" [style]="{'width':'210px', 'margin-left': '91px'}" [(ngModel)]="_deleteOption" (ngModelChange)="validate()"></p-dropdown>
             </div>
             <div class="kRow">
                 <span class="kLabel"></span>
@@ -29,15 +37,23 @@ export class ActionDeleteComponent implements OnInit{
     @Input() set ruleAction(value: Action){
         this.action = value;
         this.recycle = this.action?.task?.taskParams?.deleteEntryTaskParams?.recycleBin === true ? true : false;
+        this._deleteOption = this.action?.task?.taskParams?.deleteEntryTaskParams?.dualScreenOptions?.behavior || 'applyAction';
     };
     @Input() profileId: string;
     @Output() onActionChange = new EventEmitter<Action>();
+
+    public _deleteOptions: { value: string, label: string }[] = [
+        {value: 'applyAction', label: this._appLocalization.get('applications.settings.mr.actions.applyAction')},
+        {value: 'expose', label: this._appLocalization.get('applications.settings.mr.actions.expose')}
+    ];
+    public _deleteOption = 'applyAction';
 
     public recycleAvailable = this._permissionsService.hasPermission(KMCPermissions.FEATURE_RECYCLE_BIN);
     public recycle = false;
     private action: Action;
 
-    constructor(private _permissionsService: KMCPermissionsService) {
+    constructor(private _appLocalization: AppLocalization,
+                private _permissionsService: KMCPermissionsService) {
     }
 
     ngOnInit(): void {
@@ -57,13 +73,17 @@ export class ActionDeleteComponent implements OnInit{
                 status: 'enabled',
                 taskParams: {
                     deleteEntryTaskParams: {
-                        recycleBin: this.recycleAvailable ? this.recycle : false
+                        recycleBin: this.recycleAvailable ? this.recycle : false,
+                        dualScreenOptions: {
+                            behavior: this._deleteOption as 'applyAction' | 'expose'
+                        }
                     }
                 }
             }
         } else {
             // existing task
             this.action.task.taskParams.deleteEntryTaskParams.recycleBin = this.recycleAvailable ? this.recycle : false;
+            this.action.task.taskParams.deleteEntryTaskParams.dualScreenOptions.behavior = this._deleteOption as 'applyAction' | 'expose';
         }
         this.onActionChange.emit(this.action);
     }

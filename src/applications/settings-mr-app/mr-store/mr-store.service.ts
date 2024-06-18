@@ -92,6 +92,10 @@ export type Task = {
         },
         deleteEntryTaskParams?: {
             recycleBin: boolean;
+            dualScreenOptions: {
+                behavior: 'applyAction' | 'expose',
+                tag?: string
+            }
         },
         modifyEntryTaskParams?: {
             kalturaEntry?: any,
