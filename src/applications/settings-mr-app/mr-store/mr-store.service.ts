@@ -218,6 +218,14 @@ export class MrStoreService implements OnDestroy {
         }
     }
 
+    public dismissReview(review: ObjectState): Observable<ObjectState> {
+        try {
+            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/objectState/update`, {id: review.id, inReview: false}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<ObjectState>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to update object state inReview'));
+        }
+    }
+
     public performReview(review: ObjectState): Observable<ObjectState> {
         try {
             return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/objectState/update`, {id: review.id, plannedExecutionTime: new Date()}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<ObjectState>;
@@ -229,6 +237,14 @@ export class MrStoreService implements OnDestroy {
     public bulkUpdateStatus(ids: string[], status: string): Observable<any> {
         try {
             return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/objectState/bulkUpdate`, {ids, status}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to bulk update object states status'));
+        }
+    }
+
+    public bulkDismiss(ids: string[]): Observable<any> {
+        try {
+            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/objectState/bulkUpdate`, {ids, inReview: false}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to bulk update object states status'));
         }
