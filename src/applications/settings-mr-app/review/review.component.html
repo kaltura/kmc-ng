@@ -76,10 +76,10 @@
                                 <p-sortIcon [field]="'plannedExecutionTime'"></p-sortIcon>
                             </th>
 
-                            <th data-cid="status" [ngStyle]="{'width': '90px'}">
+                            <th data-cid="status" [ngStyle]="{'width': '100px'}">
                                 {{'applications.settings.authentication.table.status' | translate}}
                             </th>
-                            <th [ngStyle]="{'overflow': 'hidden', 'width': '80px'}"></th>
+                            <th [ngStyle]="{'overflow': 'hidden', 'width': '70px'}"></th>
                         </tr>
                     </ng-template>
 
@@ -113,12 +113,13 @@
                                   {{review.plannedExecutionTime | kmcDate}}
                               </span>
                             </td>
-                            <td [ngStyle]="{'width': '90px'}">
+                            <td [ngStyle]="{'width': '100px'}">
                                 <span class="kTableColumn" [kTooltip]="review.status | status" [showOnEllipsis]="true">
                                   {{review.status | status}}
-                              </span>
+                                </span>
+                                <i class="kIconwarning" *ngIf="review.status === ERROR_STATUS" [kTooltip]="'applications.settings.mr.removeEntry_tt' | translate"></i>
                             </td>
-                            <td [ngStyle]="{'overflow': 'hidden', 'width': '80px'}">
+                            <td [ngStyle]="{'overflow': 'hidden', 'width': '70px'}">
                                 <div class="kProfilesTableActions">
                                     <button type="button" pButton icon="kIconmore" class="kMoreActionsButton"
                                             (click)="_openActionsMenu($event, review)"></button>

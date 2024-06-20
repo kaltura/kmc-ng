@@ -39,6 +39,7 @@ export class ReviewComponent implements OnInit {
     public _items: MenuItem[];
     public _bulkActionsMenu: MenuItem[] = [];
     public _query: any = {};
+    public ERROR_STATUS = 'error';
 
     public _freeTextSearch = '';
 
@@ -74,6 +75,10 @@ export class ReviewComponent implements OnInit {
                         this._notifySingleOwner = false;
                         this.notifyPopup.open();
                     }
+                },
+                {
+                    label: this._appLocalization.get('applications.settings.mr.bulkRemove'),
+                    command: () => this.bulkDismiss()
                 }
             ];
         }
@@ -150,6 +155,26 @@ export class ReviewComponent implements OnInit {
         )
     }
 
+    private dismissReview(review: ObjectState): void {
+        this._browserService.confirm({
+            header: this._appLocalization.get('applications.settings.mr.removeEntryTitle'),
+            message: this._appLocalization.get('applications.settings.mr.removeEntryMsg'),
+            accept: () => {
+                this._blockerMessage = null;
+                this._isBusy = true;
+                this._mrStore.dismissReview(review).subscribe(
+                    (updatedReview: ObjectState) => {
+                        this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('applications.settings.mr.dismissSuccess')});
+                        this._refresh()
+                    },
+                    error => {
+                        this.displayError(this._appLocalization.get('applications.settings.mr.statusError'), () => this.dismissReview(review));
+                    }
+                );
+            }
+        });
+    }
+
     private updateEntryStatus(review: ObjectState, status: string): void {
         this._blockerMessage = null;
         this._isBusy = true;
@@ -178,6 +203,33 @@ export class ReviewComponent implements OnInit {
                 this.displayError(this._appLocalization.get('applications.settings.mr.statusError'), () => this.bulkUpdateEntryStatus(status));
             }
         );
+    }
+
+    private bulkDismiss(): void {
+        this._browserService.confirm({
+            header: this._appLocalization.get('applications.settings.mr.bulkRemove'),
+            message: this._appLocalization.get('applications.settings.mr.bulkRemoveMsg'),
+            accept: () => {
+                const entryIds = this._selectedReviews.filter(review => review.status === this.ERROR_STATUS).map(review => review.id);
+                if (entryIds.length) {
+                    this._blockerMessage = null;
+                    this._isBusy = true;
+                    this._mrStore.bulkDismiss(entryIds).subscribe(
+                        (success) => {
+                            this._selectedReviews = [];
+                            this._refresh();
+                            this._browserService.showToastMessage({
+                                severity: 'success',
+                                detail: this._appLocalization.get('applications.settings.mr.bulkDismissSuccess')
+                            });
+                        },
+                        error => {
+                            this.displayError(this._appLocalization.get('applications.settings.mr.statusError'), () => this.bulkDismiss());
+                        }
+                    );
+                }
+            }
+        });
     }
 
     private performNow(review: ObjectState): void {
@@ -252,6 +304,13 @@ export class ReviewComponent implements OnInit {
                 }
             }
         ];
+        if (review.status === this.ERROR_STATUS) {
+            this._items.push({
+                id: 'dismiss',
+                label: this._appLocalization.get('applications.settings.mr.remove'),
+                command: () => this.dismissReview(review)
+            });
+        }
     }
 
     public _refresh(): void {
