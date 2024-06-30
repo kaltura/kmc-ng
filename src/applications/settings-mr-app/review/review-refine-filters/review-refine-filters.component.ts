@@ -2,7 +2,7 @@ import {Component, Input, Output, OnDestroy, OnInit, EventEmitter} from '@angula
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {subApplicationsConfig} from 'config/sub-applications';
 import {AreaBlockerMessage, PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
-import {BrowserService} from 'app-shared/kmc-shell/providers';
+import {AppAnalytics, BrowserService, ButtonType} from 'app-shared/kmc-shell/providers';
 import {LoadManagedTasksProfilesResponse, ManagedTasksProfile, MrStoreService} from '../../mr-store/mr-store.service';
 import {Observable, Subject} from 'rxjs';
 import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
@@ -60,6 +60,7 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
 
     constructor(private _browserService: BrowserService,
                 private _mrStore: MrStoreService,
+                private _analytics: AppAnalytics,
                 private _kalturaServerClient: KalturaClient,
                 private _appLocalization: AppLocalization) {
     }
@@ -156,11 +157,13 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
     }
 
     public _onCreatedChanged(filter: string): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Filter, 'AM_review_refine_added_between', null, 'Automation_manager');
         this._createdAtFilterError = this._createdBefore && this._createdAfter && this._createdBefore < this._createdAfter ? this._appLocalization.get('applications.content.entryDetails.errors.datesRangeError') : '';
         this.onFilterAdded.emit({filter, value: filter === 'createdAtLessThanOrEqual' ? this._createdBefore.toString() : this._createdAfter.toString()});
     }
 
     public _onActionChanged(filter: string): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Filter, 'AM_review_refine_actions_between', null, 'Automation_manager');
         this._actionAtFilterError = this._actionBefore && this._actionAfter && this._actionBefore < this._actionAfter ? this._appLocalization.get('applications.content.entryDetails.errors.datesRangeError') : '';
         this.onFilterAdded.emit({filter, value: filter === 'plannedExecutionTimeLessThanOrEqual' ? this._actionBefore.toString() : this._actionAfter.toString()});
     }
@@ -168,6 +171,7 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
     public onMediaTypeChange(): void {
         if (this._mediaTypes.length) {
             this.onFilterAdded.emit({filter: 'objectSubTypeIn', value: this._mediaTypes});
+            this._analytics.trackButtonClickEvent(ButtonType.Filter, 'AM_review_refine_media_type', this._mediaTypes.toString(), 'Automation_manager');
         } else {
             this.onFilterRemoved.emit(['objectSubTypeIn']);
         }
@@ -176,15 +180,19 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
     public onOwnerChange(): void {
         if (this._owners.length) {
             this.onFilterAdded.emit({filter: 'ownerIdIn', value: this._owners.map(owner =>  owner.id)});
+            this._analytics.trackButtonClickEvent(ButtonType.Filter, 'AM_review_refine_owner', null, 'Automation_manager');
         } else {
             this.onFilterRemoved.emit(['ownerIdIn']);
         }
     }
 
-    public onDurationChange(mode: string): void {
+    public onDurationChange(mode: string, reportAnalytics: boolean): void {
         if (mode === 'less') {
             if (this._filterDurationLess) {
                 if (this._durationLess !== null) {
+                    if (reportAnalytics) {
+                        this._analytics.trackButtonClickEvent(ButtonType.Filter, 'AM_review_refine_shorter', this._durationLess.toString(), 'Automation_manager');
+                    }
                     this.onFilterAdded.emit({filter: 'objectDurationLessThan', value: this._durationLess});
                 }
             } else {
@@ -194,6 +202,7 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
         if (mode === 'more') {
             if (this._filterDurationMore) {
                 if (this._durationMore !== null) {
+                    this._analytics.trackButtonClickEvent(ButtonType.Filter, 'AM_review_refine_longer', this._durationMore.toString(), 'Automation_manager');
                     this.onFilterAdded.emit({filter: 'objectDurationGreaterThan', value: this._durationMore});
                 }
             } else {
@@ -204,6 +213,7 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
 
     public onStatusTypeChange(): void {
         if (this._status.length) {
+            this._analytics.trackButtonClickEvent(ButtonType.Filter, 'AM_review_refine_status', this._status.toString(), 'Automation_manager');
             this.onFilterAdded.emit({filter: 'statusIn', value: this._status});
         } else {
             this.onFilterRemoved.emit(['statusIn']);
@@ -223,6 +233,7 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
             if (tooltip.length) {
                 tooltip = tooltip.substring(0, tooltip.length -2);
             }
+            this._analytics.trackButtonClickEvent(ButtonType.Filter, 'AM_review_refine_rule', tooltip.length ? tooltip.replace(/ /g,'') : null, 'Automation_manager');
             this.onFilterAdded.emit({filter: 'managedTasksProfileIdIn', value: this._rules, customTooltip: tooltip});
         } else {
             this.onFilterRemoved.emit(['managedTasksProfileIdIn']);

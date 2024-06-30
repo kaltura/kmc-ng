@@ -78,13 +78,13 @@
         </div>
         <div class="checkBoxes" [class.open]="_durationOpen">
             <div class="kCheckBoxWrapper">
-                <p-checkbox name="duration" [binary]="true" label="{{'applications.settings.mr.criteria.duration_less' | translate}}" [(ngModel)]="_filterDurationLess" (ngModelChange)="onDurationChange('less')"></p-checkbox>
-                <p-inputNumber class="kInput" [(ngModel)]="_durationLess" (ngModelChange)="onDurationChange('less')"></p-inputNumber>
+                <p-checkbox name="duration" [binary]="true" label="{{'applications.settings.mr.criteria.duration_less' | translate}}" [(ngModel)]="_filterDurationLess" (ngModelChange)="onDurationChange('less', false)"></p-checkbox>
+                <p-inputNumber class="kInput" [(ngModel)]="_durationLess" (ngModelChange)="onDurationChange('less', true)"></p-inputNumber>
                 <span class="kLeft">{{'applications.settings.mr.criteria.sec' | translate}}</span>
             </div>
             <div class="kCheckBoxWrapper">
-                <p-checkbox name="duration" [binary]="true" label="{{'applications.settings.mr.criteria.duration_more' | translate}}" [(ngModel)]="_filterDurationMore" (ngModelChange)="onDurationChange('more')"></p-checkbox>
-                <p-inputNumber class="kInput" [(ngModel)]="_durationMore" (ngModelChange)="onDurationChange('more')"></p-inputNumber>
+                <p-checkbox name="duration" [binary]="true" label="{{'applications.settings.mr.criteria.duration_more' | translate}}" [(ngModel)]="_filterDurationMore" (ngModelChange)="onDurationChange('more', false)"></p-checkbox>
+                <p-inputNumber class="kInput" [(ngModel)]="_durationMore" (ngModelChange)="onDurationChange('more', true)"></p-inputNumber>
                 <span class="kLeft">{{'applications.settings.mr.criteria.sec' | translate}}</span>
             </div>
         </div>

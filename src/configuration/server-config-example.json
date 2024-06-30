@@ -12,6 +12,9 @@
         "kpfPackageManagerBaseUrl": "https://kpf-dev.kaltura.com/package-manager",
         "kpfPurchaseManagerBaseUrl": "https://kpf-dev.kaltura.com/purchase-manager"
     },
+    "analyticsServer": {
+        "uri":"analytics.www.kaltura.com"
+    },
     "epServer": {
         "uri": "https://epm.nvp1.ovp.kaltura.com"
     },

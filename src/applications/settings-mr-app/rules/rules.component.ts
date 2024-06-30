@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ManagedTasksProfile, LoadManagedTasksProfilesResponse, SortDirection, MrStoreService } from '../mr-store/mr-store.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AppAnalytics, BrowserService } from 'app-shared/kmc-shell/providers';
+import {AppAnalytics, BrowserService, ButtonType, PageType} from 'app-shared/kmc-shell/providers';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { SettingsMrMainViewService } from 'app-shared/kmc-shared/kmc-views';
@@ -155,6 +155,7 @@ export class RulesComponent implements OnInit, OnDestroy {
             );
         } else {
             this._currentEditProfile.status = profile.status === 'enabled' ? 'disabled' : 'enabled';
+            this._analytics.trackButtonClickEvent(ButtonType.Toggle, profile.status === 'enabled' ? 'AM_rules_rule_enable' : 'AM_rules_rule_disable', null, 'Automation_manager');
             this.updateProfile(this._currentEditProfile);
         }
     }
@@ -171,16 +172,17 @@ export class RulesComponent implements OnInit, OnDestroy {
         if (this._profilesCount >= this.MAX_ALLOWED_PROFILES) {
             this.displayError(this._appLocalization.get('applications.settings.mr.maxRulesErr'));
         } else {
-            this._analytics.trackClickEvent('Add_ManagedTasksProfile');
             this._logger.info(`handle add ManagedTasksProfile action by user`);
             this._currentEditProfile = null;
             this.newPopup.open();
         }
     }
 
-    public _editProfile(profile: ManagedTasksProfile): void {
+    public _editProfile(profile: ManagedTasksProfile, sendAnalytics = true): void {
         this._currentEditProfile = profile;
-        this._analytics.trackClickEvent('Edit_ManagedTasksProfile');
+        if (sendAnalytics) {
+            this._analytics.trackButtonClickEvent(ButtonType.Edit, 'AM_rules_rule_edit', profile.name, 'Automation_manager');
+        }
         this._logger.info(`handle edit ManagedTasksProfile action by user`);
         this._mrStore.selectedRule = profile;
         this._router.navigateByUrl(`/settings/mr/rule/${profile.id}`);
@@ -204,6 +206,7 @@ export class RulesComponent implements OnInit, OnDestroy {
     public deleteProfile(): void {
         this._blockerMessage = null;
         this._isBusy = true;
+        this._analytics.trackButtonClickEvent(ButtonType.Delete, 'AM_rules_rule_delete',null, 'Automation_manager');
         this._mrStore.deleteProfile(this._currentEditProfile.id).subscribe(
             (response) => {
                 if (response && response.objectType && response.objectType === "KalturaAPIException") {
@@ -259,7 +262,7 @@ export class RulesComponent implements OnInit, OnDestroy {
     }
 
     public onProfileCreated(profile: ManagedTasksProfile): void {
-        this._editProfile(profile);
+        this._editProfile(profile, false);
     }
 
     public _onPaginationChanged(state: any): void {

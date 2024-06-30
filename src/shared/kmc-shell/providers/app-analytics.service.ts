@@ -234,15 +234,15 @@ export class AppAnalytics {
         }
     }
 
-    public trackPageLoadEvent(type: PageType, name: string): void {
-        this.trackEvent(EventType.PageLoad, type, name);
+    public trackPageLoadEvent(type: PageType, name: string, feature: string = null): void {
+        this.trackEvent(EventType.PageLoad, type, name, null, feature);
     }
 
-    public trackButtonClickEvent(type: ButtonType, name: string, value: string = null): void {
-        this.trackEvent(EventType.ButtonClicked, type, name, value);
+    public trackButtonClickEvent(type: ButtonType, name: string, value: string = null, feature: string = null): void {
+        this.trackEvent(EventType.ButtonClicked, type, name, value, feature);
     }
 
-    private trackEvent(eventType: EventType, eventVar1: ButtonType | PageType, eventVar2: string, eventVar3: string = null): void {
+    private trackEvent(eventType: EventType, eventVar1: ButtonType | PageType, eventVar2: string, eventVar3: string = null, feature: string = null): void {
         if (!this._enabled) {
             return;
         }
@@ -277,6 +277,9 @@ export class AppAnalytics {
             kalturaApplication: ApplicationType.KMC,
             kalturaApplicationVer: globalConfig.client.appVersion
         });
+        if (feature) {
+            Object.assign(payload, { feature });
+        }
         if (pid) {
             Object.assign(payload, { partnerId: pid });
         }

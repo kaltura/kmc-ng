@@ -12,7 +12,7 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {ColumnsResizeManagerService, ResizableColumnsTableName} from 'app-shared/kmc-shared/columns-resize-manager';
 import {ReviewTagsComponent} from '../review/review-tags/review-tags.component';
-import {BrowserService} from 'app-shared/kmc-shell';
+import {AppAnalytics, BrowserService, ButtonType, PageType} from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kMrLogs',
@@ -47,11 +47,13 @@ export class LogsComponent implements OnInit {
                 private _browserService: BrowserService,
                 private _appLocalization: AppLocalization,
                 private _logger: KalturaLogger,
-                private _mrStore: MrStoreService) {
+                private _mrStore: MrStoreService,
+                private _analytics: AppAnalytics) {
     }
 
     ngOnInit() {
         if (this._mrMainViewService.viewEntered()) {
+            this._analytics.trackPageLoadEvent(PageType.Edit, 'Reports_tab_load', 'Automation_manager');
             this._loadReports(this.pageSize, this.pageIndex, this.sortField, this.sortOrder);
         }
     }
@@ -159,6 +161,7 @@ export class LogsComponent implements OnInit {
 
     public download(id: string): void {
         this._isBusy = true;
+        this._analytics.trackButtonClickEvent(ButtonType.Download, 'AM_download_report', null, 'Automation_manager');
         this._mrStore.downloadReport(id).subscribe(
             data => {
                 this._isBusy = false;
