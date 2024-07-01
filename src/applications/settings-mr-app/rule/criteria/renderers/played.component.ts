@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
+import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kCriteriaPlayed',
@@ -56,7 +57,7 @@ export class CriteriaPlayedComponent implements OnInit{
     @Output() onDelete = new EventEmitter<string>();
     @Output() onFilterChange = new EventEmitter<{field: string, value: any}>();
 
-    constructor(private _appLocalization: AppLocalization) {
+    constructor(private _analytics: AppAnalytics, private _appLocalization: AppLocalization) {
     }
 
     ngOnInit(): void {
@@ -68,6 +69,7 @@ export class CriteriaPlayedComponent implements OnInit{
             numberOfUnits: this.playedTime * -1,
             dateUnit: this.playedTimeUnit
         };
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_last_played_type', this.playedTimeInterval === 'lastPlayedAtGreaterThanOrEqual' ? 'less than' : 'more than' , 'Automation_manager');
         this.onFilterChange.emit({field: 'played', value});
     }
 

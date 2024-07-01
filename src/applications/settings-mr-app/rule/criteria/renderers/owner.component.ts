@@ -15,6 +15,7 @@ import {
     KalturaUser, KalturaUserFilter, UserListAction
 } from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kCriteriaOwner',
@@ -92,6 +93,7 @@ export class CriteriaOwnerComponent implements OnDestroy{
     public _usersProvider = new Subject<SuggestionsProviderData>();
 
     constructor(private _kalturaServerClient: KalturaClient,
+                private _analytics: AppAnalytics,
                 private _appLocalization: AppLocalization) {
     }
 
@@ -101,6 +103,7 @@ export class CriteriaOwnerComponent implements OnDestroy{
         const userIds = [];
         this.owners.forEach(user => userIds.push(user.id));
         value[this._owner] = userIds.toString();
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_tags_type', this._owner === 'userIdIn' ? 'is' : 'isn’t' , 'Automation_manager');
         this.onFilterChange.emit({field: 'owner', value});
     }
 

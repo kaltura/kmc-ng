@@ -3,6 +3,7 @@ import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {MenuItem} from 'primeng/api';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {KalturaMediaEntryCompareAttribute, KalturaMediaEntryMatchAttribute, KalturaSearchOperatorType} from 'kaltura-ngx-client';
+import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kRuleCriteria',
@@ -60,7 +61,8 @@ export class CriteriaComponent {
     };
     @Output() onFilterChange = new EventEmitter<any>();
 
-    constructor(private _appLocalization: AppLocalization) {
+    constructor(private _analytics: AppAnalytics,
+                private _appLocalization: AppLocalization) {
     }
 
     public buildMenu(): void {
@@ -69,6 +71,7 @@ export class CriteriaComponent {
                 label: this._appLocalization.get('applications.settings.mr.criteria.creation'),
                 disabled: this._criterias.indexOf('created') > -1,
                 command: () => {
+                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_creation_date', null , 'Automation_manager');
                     this.addFilter('created');
                 }
             },
@@ -76,6 +79,7 @@ export class CriteriaComponent {
                 label: this._appLocalization.get('applications.settings.mr.criteria.lastPlayed'),
                 disabled: this._criterias.indexOf('played') > -1,
                 command: () => {
+                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_last_played', null , 'Automation_manager');
                     this.addFilter('played');
                 }
             },
@@ -83,6 +87,7 @@ export class CriteriaComponent {
                 label: this._appLocalization.get('applications.settings.mr.criteria.plays'),
                 disabled: this._criterias.indexOf('plays') > -1,
                 command: () => {
+                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_num_plays', null , 'Automation_manager');
                     this.addFilter('plays');
                 }
             },
@@ -90,6 +95,7 @@ export class CriteriaComponent {
                 label: this._appLocalization.get('applications.settings.mr.criteria.categories'),
                 disabled: this._criterias.indexOf('categories') > -1,
                 command: () => {
+                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_categories', null , 'Automation_manager');
                     this.addFilter('categories');
                 }
             },
@@ -97,6 +103,7 @@ export class CriteriaComponent {
                 label: this._appLocalization.get('applications.settings.mr.criteria.tags'),
                 disabled: this._criterias.indexOf('tags') > -1,
                 command: () => {
+                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_tags', null , 'Automation_manager');
                     this.addFilter('tags');
                 }
             },
@@ -104,6 +111,7 @@ export class CriteriaComponent {
                 label: this._appLocalization.get('applications.settings.mr.criteria.owner'),
                 disabled: this._criterias.indexOf('owner') > -1,
                 command: () => {
+                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_owner', null , 'Automation_manager');
                     this.addFilter('owner');
                 }
             },
@@ -111,6 +119,7 @@ export class CriteriaComponent {
                 label: this._appLocalization.get('applications.settings.mr.criteria.duration'),
                 disabled: this._criterias.indexOf('duration') > -1,
                 command: () => {
+                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_duration', null , 'Automation_manager');
                     this.addFilter('duration');
                 }
             }

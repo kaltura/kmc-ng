@@ -6,6 +6,8 @@ import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
 import {ISubscription} from 'rxjs/Subscription';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
+import {KalturaSearchConditionComparison} from 'kaltura-ngx-client';
 
 @Component({
     selector: 'kCriteriaCategories',
@@ -90,6 +92,7 @@ export class CriteriaCategoriesComponent implements OnDestroy{
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
 
     constructor(private _appLocalization: AppLocalization,
+                private _analytics: AppAnalytics,
                 private _categoriesSearchService : CategoriesSearchService) {
         this._categoriesTooltipPipe  = new CategoryTooltipPipe(this._appLocalization);
     }
@@ -107,6 +110,7 @@ export class CriteriaCategoriesComponent implements OnDestroy{
         const value = {};
         this.categories.forEach(category => cats.push(category.id));
         value[this._published] = cats.toString();
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_categories_type', this._published === 'categoriesIdsMatchOr' ? 'Published_in' : 'not_published_in' , 'Automation_manager');
         this.onFilterChange.emit({field: 'categories', value});
     }
 
