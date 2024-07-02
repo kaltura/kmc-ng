@@ -1,3 +1,13 @@
+<a name="7.21.2"></a>
+## [7.21.2](https://github.com/kaltura/kmc-ng/compare/v7.21.1...v7.21.2) (2024-07-02)
+
+
+### Bug Fixes
+
+* **settings/media-repurposing:** remove errored entries from review bucketKMCNG-2589 ([#1069](https://github.com/kaltura/kmc-ng/issues/1069)) ([a865d98](https://github.com/kaltura/kmc-ng/commit/a865d98))
+
+
+
 <a name="7.21.1"></a>
 ## [7.21.1](https://github.com/kaltura/kmc-ng/compare/v7.21.0...v7.21.1) (2024-06-18)
 
