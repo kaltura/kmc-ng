@@ -7,7 +7,6 @@ import {ISubscription} from 'rxjs/Subscription';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
-import {KalturaSearchConditionComparison} from 'kaltura-ngx-client';
 
 @Component({
     selector: 'kCriteriaCategories',
