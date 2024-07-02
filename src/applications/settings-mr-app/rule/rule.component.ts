@@ -4,7 +4,7 @@ import {ManagedTasksProfile, MrStoreService, Task} from '../mr-store/mr-store.se
 import {ActivatedRoute, Router} from '@angular/router';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
-import {BrowserService} from 'app-shared/kmc-shell';
+import {AppAnalytics, BrowserService, ButtonType} from 'app-shared/kmc-shell';
 
 import {KMCPermissions} from 'app-shared/kmc-shared/kmc-permissions';
 import {subApplicationsConfig} from 'config/sub-applications';
@@ -48,6 +48,7 @@ export class RuleComponent implements OnInit {
                 private _browserService: BrowserService,
                 private _appLocalization: AppLocalization,
                 private _ruleRoute: ActivatedRoute,
+                private _analytics: AppAnalytics,
                 private _mrStore: MrStoreService) {
     }
 
@@ -230,12 +231,14 @@ export class RuleComponent implements OnInit {
     }
 
     public ownerSelected(owner: string): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_general_change_owner', null, 'Automation_manager');
         this.rule.ownerId = owner;
         this._isDirty = true;
     }
 
     public onTimeUnitChange(): void {
         this._isDirty = true;
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_general_repeat', this.rule.runningCadence.advancedCadence.dateUnit, 'Automation_manager');
         // set default values when changing date unit
         switch (this.rule.runningCadence.advancedCadence.dateUnit) {
             case 'day':
@@ -250,6 +253,26 @@ export class RuleComponent implements OnInit {
                 this.rule.runningCadence.advancedCadence.dayNumber = 1
                 break;
         }
+    }
+
+    public onEveryChange(): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_general_every', this.rule.runningCadence.advancedCadence.numberOfUnits.toString() , 'Automation_manager');
+        this._isDirty = true;
+    }
+
+    public onReviewPeriodChange(): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Add, 'AM_general_review_period', this.rule.audit.reviewPeriod.toString() , 'Automation_manager');
+        this._isDirty = true;
+    }
+
+    public onAdminApprovalChange(): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Toggle, 'AM_general_requires_admin', this.rule.audit.auditApproval ? 'on' : 'off' , 'Automation_manager');
+        this._isDirty = true;
+    }
+
+    public onOnChange(timeUnit: 'week' | 'month'): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_general_on', timeUnit === 'week' ? this.rule.runningCadence.advancedCadence.day : this.rule.runningCadence.advancedCadence.dayNumber.toString() , 'Automation_manager');
+        this._isDirty = true;
     }
 
     public save(): void {

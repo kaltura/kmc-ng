@@ -10,6 +10,7 @@ import {
 } from 'kaltura-ngx-client';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kActionFlavours',
@@ -55,6 +56,7 @@ export class ActionFlavourComponent implements OnInit, OnDestroy{
     public hasError = false;
 
     constructor(private _kalturaServerClient: KalturaClient,
+                private _analytics: AppAnalytics,
                 private _appLocalization: AppLocalization) {
     }
 
@@ -129,6 +131,7 @@ export class ActionFlavourComponent implements OnInit, OnDestroy{
                 // existing task
                 this.action.task.taskParams.deleteFlavorsTaskParams.flavorParamsIds = this.selectedFlavours.toString();
             }
+            this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_actions_keep_flavors_selected', this.selectedFlavours.toString() , 'Automation_manager');
             this.onActionChange.emit(this.action);
         }
     }

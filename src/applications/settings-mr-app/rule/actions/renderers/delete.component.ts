@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Action} from '../actions.component';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kActionDelete',
@@ -53,18 +54,19 @@ export class ActionDeleteComponent implements OnInit{
     private action: Action;
 
     constructor(private _appLocalization: AppLocalization,
+                private _analytics: AppAnalytics,
                 private _permissionsService: KMCPermissionsService) {
     }
 
     ngOnInit(): void {
         setTimeout(() => {
             if (this.action.requires === 'create') {
-                this.validate();
+                this.validate(false);
             }
         }, 100);
     }
 
-    public validate(): void {
+    public validate(sendAnalytics = true): void {
         if (this.action.requires === 'create') {
             // new action - create task
             this.action.task = {
@@ -84,6 +86,9 @@ export class ActionDeleteComponent implements OnInit{
             // existing task
             this.action.task.taskParams.deleteEntryTaskParams.recycleBin = this.recycleAvailable ? this.recycle : false;
             this.action.task.taskParams.deleteEntryTaskParams.dualScreenOptions.behavior = this._deleteOption as 'applyAction' | 'expose';
+        }
+        if (sendAnalytics) {
+            this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_actions_delete_linked_entries', this._deleteOption === 'expose' ? 'stand_alone' : 'secondary', 'Automation_manager');
         }
         this.onActionChange.emit(this.action);
     }

@@ -2,7 +2,7 @@ import {Component, Input, Output, OnDestroy, OnInit, EventEmitter} from '@angula
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {subApplicationsConfig} from 'config/sub-applications';
 import {AreaBlockerMessage, PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
-import {BrowserService} from 'app-shared/kmc-shell/providers';
+import {AppAnalytics, BrowserService, ButtonType} from 'app-shared/kmc-shell/providers';
 import {LoadManagedTasksProfilesResponse, ManagedTasksProfile, MrStoreService} from '../../mr-store/mr-store.service';
 import {Observable, Subject} from 'rxjs';
 import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
@@ -43,6 +43,7 @@ export class LogsRefineFiltersComponent implements OnInit, OnDestroy {
 
     constructor(private _browserService: BrowserService,
                 private _mrStore: MrStoreService,
+                private _analytics: AppAnalytics,
                 private _kalturaServerClient: KalturaClient,
                 private _appLocalization: AppLocalization) {
     }
@@ -100,12 +101,14 @@ export class LogsRefineFiltersComponent implements OnInit, OnDestroy {
     }
 
     public _onCreatedChanged(filter: string): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Filter, 'AM_reports_time_filter', null, 'Automation_manager');
         this._createdAtFilterError = this._createdBefore && this._createdAfter && this._createdBefore < this._createdAfter ? this._appLocalization.get('applications.content.entryDetails.errors.datesRangeError') : '';
         this.onFilterAdded.emit({filter, value: filter === 'requestedDateLessThanOrEqual' ? this._createdBefore.toString() : this._createdAfter.toString()});
     }
 
     public onTypeChange(): void {
         if (this._type.length) {
+            this._analytics.trackButtonClickEvent(ButtonType.Filter, 'AM_reports_type_filter', this._type.toString(), 'Automation_manager');
             this.onFilterAdded.emit({filter: 'typeIn', value: this._type});
         } else {
             this.onFilterRemoved.emit(['typeIn']);
@@ -125,6 +128,7 @@ export class LogsRefineFiltersComponent implements OnInit, OnDestroy {
             if (tooltip.length) {
                 tooltip = tooltip.substring(0, tooltip.length -2);
             }
+            this._analytics.trackButtonClickEvent(ButtonType.Filter, 'AM_reports_rule_filter', tooltip.length ? tooltip.replace(/ /g,'') : null, 'Automation_manager');
             this.onFilterAdded.emit({filter: 'managedTasksProfileIdIn', value: this._rules, customTooltip: tooltip});
         } else {
             this.onFilterRemoved.emit(['managedTasksProfileIdIn']);

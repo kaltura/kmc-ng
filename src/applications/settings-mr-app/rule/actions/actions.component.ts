@@ -4,6 +4,7 @@ import {MenuItem} from 'primeng/api';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {Task} from '../../mr-store/mr-store.service';
 import {ActionNotificationComponent} from './renderers';
+import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
 
 export type Action = {
     type: 'flavours' | 'addCategory' | 'removeCategory' | 'addTags' | 'removeTags' | 'owner' | 'delete' | 'notificationHeadsUp' | 'notificationProfileScan' | 'notificationExecutionSummary' | '';
@@ -47,7 +48,7 @@ export class RuleActionsComponent implements OnInit {
 
     public _notifications = {};
 
-    constructor(private _appLocalization: AppLocalization) {
+    constructor(private _analytics: AppAnalytics, private _appLocalization: AppLocalization) {
     }
 
     ngOnInit() {
@@ -59,6 +60,7 @@ export class RuleActionsComponent implements OnInit {
                 label: this._appLocalization.get('applications.settings.mr.actions.flavours'),
                 disabled: this.actions.filter(action => action.type === 'flavours' || action.type === 'delete').length > 0,
                 command: () => {
+                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_actions_keep_flavors', null , 'Automation_manager');
                     this.addAction('flavours');
                 }
             },
@@ -70,6 +72,7 @@ export class RuleActionsComponent implements OnInit {
                         label: this._appLocalization.get('applications.settings.mr.actions.addCat'),
                         disabled: this.actions.filter(action => action.type === 'addCategory').length > 0,
                         command: () => {
+                            this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_actions_add_category', null , 'Automation_manager');
                             this.addAction('addCategory');
                         }
                     },
@@ -77,6 +80,7 @@ export class RuleActionsComponent implements OnInit {
                         label: this._appLocalization.get('applications.settings.mr.actions.removeCat'),
                         disabled: this.actions.filter(action => action.type === 'removeCategory').length > 0,
                         command: () => {
+                            this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_actions_remove_category', null , 'Automation_manager');
                             this.addAction('removeCategory');
                         }
                     }
@@ -90,6 +94,7 @@ export class RuleActionsComponent implements OnInit {
                         label: this._appLocalization.get('applications.settings.mr.actions.addTags'),
                         disabled: this.actions.filter(action => action.type === 'addTags').length > 0,
                         command: () => {
+                            this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_actions_add_tag', null , 'Automation_manager');
                             this.addAction('addTags');
                         }
                     },
@@ -97,6 +102,7 @@ export class RuleActionsComponent implements OnInit {
                         label: this._appLocalization.get('applications.settings.mr.actions.removeTags'),
                         disabled: this.actions.filter(action => action.type === 'removeTags').length > 0,
                         command: () => {
+                            this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_actions_remove_tag', null , 'Automation_manager');
                             this.addAction('removeTags');
                         }
                     }
@@ -106,6 +112,7 @@ export class RuleActionsComponent implements OnInit {
                 label: this._appLocalization.get('applications.settings.mr.actions.owner'),
                 disabled: this.actions.filter(action => action.type === 'owner' || action.type === 'delete').length > 0,
                 command: () => {
+                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_actions_change_owner', null , 'Automation_manager');
                     this.addAction('owner');
                 }
             },
@@ -114,6 +121,7 @@ export class RuleActionsComponent implements OnInit {
                 disabled: this.actions.filter(action => action.type === 'delete' || action.type === 'owner' || action.type === 'removeTags'
                     || action.type === 'addTags' || action.type === 'removeCategory' || action.type === 'addCategory' || action.type === 'flavours').length > 0,
                 command: () => {
+                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_actions_delete_entry', null , 'Automation_manager');
                     this.addAction('delete');
                 }
             }

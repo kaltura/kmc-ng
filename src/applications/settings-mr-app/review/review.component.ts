@@ -8,7 +8,7 @@ import {ColumnsResizeManagerService, ResizableColumnsTableName} from 'app-shared
 import {Menu} from 'primeng/menu';
 import {MenuItem} from 'primeng/api';
 import {ReviewTagsComponent} from './review-tags/review-tags.component';
-import {BrowserService} from 'app-shared/kmc-shell';
+import {AppAnalytics, BrowserService, ButtonType, PageType} from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kMrReview',
@@ -50,11 +50,13 @@ export class ReviewComponent implements OnInit {
                 private _appLocalization: AppLocalization,
                 private _browserService: BrowserService,
                 private _logger: KalturaLogger,
-                private _mrStore: MrStoreService) {
+                private _mrStore: MrStoreService,
+                private _analytics: AppAnalytics) {
     }
 
     ngOnInit() {
         if (this._mrMainViewService.viewEntered()) {
+            this._analytics.trackPageLoadEvent(PageType.Edit, 'Review_tab_load', 'Automation_manager');
             this._loadReviews(this.pageSize, this.pageIndex, this.sortField, this.sortOrder);
             this._bulkActionsMenu = [
                 {
@@ -162,6 +164,7 @@ export class ReviewComponent implements OnInit {
             accept: () => {
                 this._blockerMessage = null;
                 this._isBusy = true;
+                this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_review_remove_errored_entry', null, 'Automation_manager');
                 this._mrStore.dismissReview(review).subscribe(
                     (updatedReview: ObjectState) => {
                         this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('applications.settings.mr.dismissSuccess')});
@@ -178,6 +181,7 @@ export class ReviewComponent implements OnInit {
     private updateEntryStatus(review: ObjectState, status: string): void {
         this._blockerMessage = null;
         this._isBusy = true;
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, status === 'approved' ? 'AM_review_approve' : 'AM_review_deny', null, 'Automation_manager');
         this._mrStore.updateReviewStatus(review, status).subscribe(
             (updatedReview: ObjectState) => {
                 this._isBusy = false;
@@ -193,6 +197,7 @@ export class ReviewComponent implements OnInit {
     private bulkUpdateEntryStatus(status: string): void {
         this._blockerMessage = null;
         this._isBusy = true;
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, status === 'approved' ? 'AM_review_bulk_approve' : 'AM_review_bulk_deny', this._selectedReviews.length.toString(), 'Automation_manager');
         this._mrStore.bulkUpdateStatus(this._selectedReviews.map(review => review.id), status).subscribe(
             (success) => {
                 this._isBusy = false;
@@ -214,6 +219,7 @@ export class ReviewComponent implements OnInit {
                 if (entryIds.length) {
                     this._blockerMessage = null;
                     this._isBusy = true;
+                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_review_bulk_remove_errored_entries', this._selectedReviews.length.toString(), 'Automation_manager');
                     this._mrStore.bulkDismiss(entryIds).subscribe(
                         (success) => {
                             this._selectedReviews = [];
@@ -235,6 +241,7 @@ export class ReviewComponent implements OnInit {
     private performNow(review: ObjectState): void {
         this._blockerMessage = null;
         this._isBusy = true;
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_review_perform_now', null, 'Automation_manager');
         this._mrStore.performReview(review).subscribe(
             (updatedReview: ObjectState) => {
                 this._isBusy = false;
@@ -250,6 +257,7 @@ export class ReviewComponent implements OnInit {
     private bulkPerformNow(): void {
         this._blockerMessage = null;
         this._isBusy = true;
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_review_bulk_preform_now', this._selectedReviews.length.toString(), 'Automation_manager');
         this._mrStore.bulkPerformNow(this._selectedReviews.map(review => review.id)).subscribe(
             (success) => {
                 this._isBusy = false;
@@ -266,6 +274,7 @@ export class ReviewComponent implements OnInit {
         this.notifyPopup.close();
         this._blockerMessage = null;
         this._isBusy = true;
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, this._notifySingleOwner ? 'AM_review_perform_now_notify_owner' : 'AM_review_bulk_notify_owner', this._notifySingleOwner ? null : this._selectedReviews.length.toString(), 'Automation_manager');
         const reviews = this._notifySingleOwner ? [this._selectedReview.id] : this._selectedReviews.map(review => review.id);
         this._mrStore.notifyOwners(reviews, event.subject, event.body).subscribe(
             (success) => {
@@ -388,6 +397,7 @@ export class ReviewComponent implements OnInit {
 
     public onSortChanged(event): void {
         if (event.field !== this.sortField || event.order !== this.sortOrder) {
+            this._analytics.trackButtonClickEvent(ButtonType.Filter, 'AM_review_sort', event.field, 'Automation_manager');
             this.sortField = event.field;
             this.sortOrder = event.order;
             this._refresh();
@@ -400,6 +410,7 @@ export class ReviewComponent implements OnInit {
             delete this._query.objectName;
         }else {
             this._query.objectName = this._freeTextSearch;
+            this._analytics.trackButtonClickEvent(ButtonType.Search, 'AM_review_search', this._freeTextSearch, 'Automation_manager');
         }
         this._refresh();
         this.updateTags();

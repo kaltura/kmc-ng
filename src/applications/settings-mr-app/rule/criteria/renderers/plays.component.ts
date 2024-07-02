@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaSearchConditionComparison, KalturaMediaEntryCompareAttribute } from 'kaltura-ngx-client';
+import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kCriteriaPlays',
@@ -48,7 +49,7 @@ export class CriteriaPlaysComponent implements OnInit{
     @Output() onDelete = new EventEmitter<string>();
     @Output() onFilterChange = new EventEmitter<{field: string, value: any}>();
 
-    constructor(private _appLocalization: AppLocalization) {
+    constructor(private _analytics: AppAnalytics, private _appLocalization: AppLocalization) {
     }
 
     ngOnInit(): void {
@@ -61,6 +62,7 @@ export class CriteriaPlaysComponent implements OnInit{
             attribute: KalturaMediaEntryCompareAttribute.plays,
             value: this.numOfPlays
         };
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_num_plays_type', this.playsInterval === KalturaSearchConditionComparison.lessThan ? 'less than' : 'more than' , 'Automation_manager');
         this.onFilterChange.emit({field: 'plays', value});
     }
 

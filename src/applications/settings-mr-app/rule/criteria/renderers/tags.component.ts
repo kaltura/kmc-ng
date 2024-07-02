@@ -5,6 +5,7 @@ import {ISubscription} from 'rxjs/Subscription';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {KalturaClient, KalturaFilterPager,  KalturaMediaEntryMatchAttribute, KalturaTagFilter, KalturaTaggedObjectType, TagSearchAction} from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kCriteriaTags',
@@ -70,6 +71,7 @@ export class CriteriaTagsComponent implements OnDestroy{
     public _tagsProvider = new Subject<SuggestionsProviderData>();
 
     constructor(private _kalturaServerClient: KalturaClient,
+                private _analytics: AppAnalytics,
                 private _appLocalization: AppLocalization) {
     }
 
@@ -81,6 +83,7 @@ export class CriteriaTagsComponent implements OnDestroy{
             attribute: KalturaMediaEntryMatchAttribute.tags,
             value: this.tags.toString()
         };
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_tags_type', this._tags === 'tagsIn' ? 'contains' : 'doesn’t_contain' , 'Automation_manager');
         this.onFilterChange.emit({field: 'tags', value});
     }
 

@@ -12,6 +12,7 @@ import {Observable, Subject} from 'rxjs';
 import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {notificationTemplates} from './notification.templates';
+import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kActionNotification',
@@ -19,7 +20,7 @@ import {notificationTemplates} from './notification.templates';
     template: `
         <div class="notification">
             <div class="kRow">
-                <p-checkbox [(ngModel)]="selected" (ngModelChange)="validate()"
+                <p-checkbox [(ngModel)]="selected" (ngModelChange)="this.sendMainAnalytics(); validate()"
                             label="{{'applications.settings.mr.notification.' + this.type | translate}}"
                             binary="true"></p-checkbox>
                 <a [class.kDisabledLink]="!selected" (click)="editPopup.open()">{{'applications.settings.mr.notification.edit' | translate}}</a>
@@ -34,17 +35,19 @@ import {notificationTemplates} from './notification.templates';
                     <div class="kForm" *ngIf="action">
                         <div [class.kHidden]="type !== 'headsUp'" class="kRow kCenter">
                             <span class="kLabel">{{'applications.settings.mr.notification.scheduling' | translate}}</span>
-                            <p-inputNumber class="kInput" [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.daysToWait" (ngModelChange)="validate()"></p-inputNumber>
+                            <p-inputNumber class="kInput" [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.daysToWait" (ngModelChange)="this.sendBeforeAnalytics(); validate()"></p-inputNumber>
                             <span class="kText kLeft">{{'applications.settings.mr.notification.daysBefore' | translate}}</span>
                         </div>
                         <div class="kRow">
                             <span class="kLabel">{{'applications.settings.mr.notification.sendTo' | translate}}</span>
                             <div class="kCol">
-                                <p-checkbox [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.recipients.managedTasksProfileOwner" (ngModelChange)="validate()"
+                                <p-checkbox [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.recipients.managedTasksProfileOwner"
+                                            (ngModelChange)="sendAnalytics('_send_to_rule_owner', action.task.taskParams.sendNotificationTaskParams.recipients.managedTasksProfileOwner); validate()"
                                             label="{{'applications.settings.mr.notification.rule' | translate}}" binary="true"></p-checkbox>
-                                <p-checkbox [class.kHidden]="type === 'executionSummary'" [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.recipients.objectOwner" (ngModelChange)="validate()"
+                                <p-checkbox [class.kHidden]="type === 'executionSummary'" [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.recipients.objectOwner"
+                                            (ngModelChange)="sendAnalytics('_send_to_entry_owner', action.task.taskParams.sendNotificationTaskParams.recipients.objectOwner); validate()"
                                             label="{{'applications.settings.mr.notification.entry' | translate}}" binary="true"></p-checkbox>
-                                <p-checkbox [(ngModel)]="sendToCustomUsers" (ngModelChange)="validate()"
+                                <p-checkbox [(ngModel)]="sendToCustomUsers" (ngModelChange)="sendAnalytics('_send_to_custom', sendToCustomUsers); validate()"
                                             label="{{'applications.settings.mr.notification.custom' | translate}}" binary="true"></p-checkbox>
                                 <kAutoComplete
                                     [disabled]="!sendToCustomUsers"
@@ -109,7 +112,13 @@ export class ActionNotificationComponent implements OnDestroy{
     private _searchUsersSubscription: ISubscription;
     public _usersProvider = new Subject<SuggestionsProviderData>();
 
-    constructor(private _kalturaServerClient: KalturaClient) {
+    private analyticsEvents = {
+        profileScan: 'AM_notifications_post_scan',
+        headsUp: 'AM_notifications_pre_action',
+        executionSummary: 'AM_notifications_post_action'
+    }
+
+    constructor(private _analytics: AppAnalytics, private _kalturaServerClient: KalturaClient) {
     }
 
     private getNotificationType():  'notificationHeadsUp' | 'notificationProfileScan' | 'notificationExecutionSummary' {
@@ -170,7 +179,20 @@ export class ActionNotificationComponent implements OnDestroy{
             // remove notification
             this.action.requires = 'delete';
         }
+
         this.onActionChange.emit(this.action);
+    }
+
+    public sendMainAnalytics(): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Toggle, this.analyticsEvents[this.type], this.selected ? 'enable' : 'disable' , 'Automation_manager');
+    }
+
+    public sendBeforeAnalytics(): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_notifications_pre_action_days_before', this.action.task.taskParams.sendNotificationTaskParams.daysToWait.toString() , 'Automation_manager');
+    }
+
+    public sendAnalytics(postFix: string, enabled: boolean): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Toggle, this.analyticsEvents[this.type] + postFix, enabled ? 'enable' : 'disable' , 'Automation_manager');
     }
 
     public revert(): void {
