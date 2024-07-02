@@ -3,8 +3,8 @@
 
 
 ### Bug Fixes
+* **settings/media-repurposing:** send product analytics
 
-* **settings/media-repurposing:** remove errored entries from review bucketKMCNG-2589 ([#1069](https://github.com/kaltura/kmc-ng/issues/1069)) ([a865d98](https://github.com/kaltura/kmc-ng/commit/a865d98))
 
 
 
@@ -15,7 +15,7 @@
 ### Bug Fixes
 
 * **settings/media-repurposing:** child entries deletion KMCNG-2650 ([1c3e8bd](https://github.com/kaltura/kmc-ng/commit/1c3e8bd))
-
+* **settings/media-repurposing:** remove errored entries from review bucketKMCNG-2589 ([#1069](https://github.com/kaltura/kmc-ng/issues/1069)) ([a865d98](https://github.com/kaltura/kmc-ng/commit/a865d98))
 
 
 <a name="7.21.0"></a>
