@@ -59,7 +59,7 @@ import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
                                     [classField]="'__class'"
                                     field="id"
                                     [allowMultiple]="true"
-                                    [limitToSuggestions]="false"
+                                    [limitToSuggestions]="true"
                                     [minLength]="3"
                                     suggestionSelectableField="isSelectable"
                                     [suggestionsProvider]="_usersProvider"
