@@ -166,3 +166,8 @@ p-table ::ng-deep tr:not(:last-child) .nameHolder {
     background-color: white;
 }
 
+:host ::ng-deep p-table {
+    .p-datatable .p-datatable-thead > tr > th {
+        border-left: 1px solid $kGrayscale6;
+    }
+}

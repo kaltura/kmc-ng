@@ -48,17 +48,28 @@
                          [(selection)]="_selectedReviews"
                          (sortFunction)="onSortChanged($event)" [customSort]="true"
                          (onColResize)="_columnsResizeManager.onColumnResize($event)">
-
+                    <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                            <col [ngStyle]="{'padding-left': '1.1em'}">
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                        </colgroup>
+                    </ng-template>
                     <ng-template pTemplate="header">
                         <tr>
-                            <th class="selectionColumn" [ngStyle]="{'padding-left': '1.1em', 'width': '42px'}">
+                            <th class="selectionColumn" [ngStyle]="{'padding-left': '1.1em', 'width': '42px'}" pResizableColumn>
                                 <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                             </th>
                             <th data-cid="name" [ngStyle]="{'padding-left': '1em'}" pResizableColumn [pSortableColumn]="'objectName'">
                                 {{'applications.settings.authentication.table.name' | translate}}
                                 <p-sortIcon [field]="'objectName'"></p-sortIcon>
                             </th>
-                            <th data-cid="id" [ngStyle]="{'width': '120px'}" class="hideInLowRes">
+                            <th data-cid="id" [ngStyle]="{'width': '120px'}" class="hideInLowRes" pResizableColumn>
                                 {{'applications.content.uploadControl.table.entryId' | translate}}
                             </th>
                             <th data-cid="type" pResizableColumn [ngStyle]="{'width': '60px'}">
@@ -76,7 +87,7 @@
                                 <p-sortIcon [field]="'plannedExecutionTime'"></p-sortIcon>
                             </th>
 
-                            <th data-cid="status" [ngStyle]="{'width': '100px'}">
+                            <th data-cid="status" [ngStyle]="{'width': '100px'}" pResizableColumn>
                                 {{'applications.settings.authentication.table.status' | translate}}
                             </th>
                             <th [ngStyle]="{'overflow': 'hidden', 'width': '70px'}"></th>

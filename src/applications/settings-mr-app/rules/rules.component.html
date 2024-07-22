@@ -26,14 +26,23 @@
                          [stickyId]="'profilesTable'"
                          (sortFunction)="onSortChanged($event)" [customSort]="true"
                          (onColResize)="_columnsResizeManager.onColumnResize($event)">
-
+                    <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                            <col [ngStyle]="{'padding-left': '1em'}">
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                        </colgroup>
+                    </ng-template>
                     <ng-template pTemplate="header">
                         <tr>
                             <th data-cid="name" [ngStyle]="{'padding-left': '1em'}" pResizableColumn [pSortableColumn]="'name'">
                                 {{'applications.settings.authentication.table.name' | translate}}
                                 <p-sortIcon [field]="'name'"></p-sortIcon>
                             </th>
-                            <th data-cid="description">
+                            <th data-cid="description" pResizableColumn>
                                 {{'applications.settings.authentication.table.description' | translate}}
                             </th>
                             <th data-cid="created" pResizableColumn [pSortableColumn]="'createdAt'" [ngStyle]="{'width': '100px'}">
@@ -48,7 +57,7 @@
                                 {{'applications.settings.mr.nextRun' | translate}}
                                 <p-sortIcon [field]="'nextRunDate'"></p-sortIcon>
                             </th>
-                            <th data-cid="status" [ngStyle]="{'width': '70px'}">
+                            <th data-cid="status" [ngStyle]="{'width': '70px'}" pResizableColumn>
                                 {{'applications.settings.authentication.table.status' | translate}}
                             </th>
                             <th [ngStyle]="{'overflow': 'hidden', 'width': '80px'}"></th>

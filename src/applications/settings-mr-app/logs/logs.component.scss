@@ -208,7 +208,11 @@ p-table ::ng-deep tr:not(:last-child) .nameHolder {
     z-index: 1;
     background-color: white;
 }
-
+:host ::ng-deep p-table {
+    .p-datatable .p-datatable-thead > tr > th {
+        border-left: 1px solid $kGrayscale6;
+    }
+}
 @media screen and (max-width: 1310px) {
     .hideInLowRes {
         display: none;

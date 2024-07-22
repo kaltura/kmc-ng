@@ -33,10 +33,18 @@
                          [stickyId]="'profilesTable'"
                          (sortFunction)="onSortChanged($event)" [customSort]="true"
                          (onColResize)="_columnsResizeManager.onColumnResize($event)">
-
+                    <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                            <col [ngStyle]="{'padding-left': '1em'}">
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                        </colgroup>
+                    </ng-template>
                     <ng-template pTemplate="header">
                         <tr>
-                            <th data-cid="rule" [ngStyle]="{'padding-left': '1em'}">
+                            <th data-cid="rule" [ngStyle]="{'padding-left': '1em'}" pResizableColumn>
                                 {{'applications.settings.mr.report.rule' | translate}}
                             </th>
                             <th data-cid="date" pResizableColumn [pSortableColumn]="'requestedDate'" [ngStyle]="{'width': '120px'}">
@@ -51,14 +59,14 @@
                                 {{'applications.settings.mr.report.type' | translate}}
                                 <p-sortIcon [field]="'type'"></p-sortIcon>
                             </th>
-                            <th data-cid="download" [ngStyle]="{'width': '180px'}">
+                            <th data-cid="download" [ngStyle]="{'width': '180px'}" pResizableColumn>
                             </th>
                         </tr>
                     </ng-template>
 
                     <ng-template pTemplate="body" let-report>
                         <tr>
-                            <td [ngStyle]="{'padding-left': '1em'}">
+                            <td [ngStyle]="{'padding-left': '1em'}" >
                               <span class="kTableColumn">
                                   {{report.managedTasksProfileName}}
                               </span>
