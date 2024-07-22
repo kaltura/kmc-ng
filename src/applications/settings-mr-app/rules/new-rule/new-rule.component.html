@@ -23,7 +23,14 @@
 
                 <div class="kRow">
                     <span class="kLabel">{{'applications.administration.role.description' | translate}}</span>
-                    <textarea class="kControl" pInputTextarea [maxlength]="512" formControlName="description"></textArea>
+                    <div class="inputWithDoc">
+                        <textarea class="kControl" pInputTextarea [maxlength]="512" formControlName="description"></textArea>
+                        <div class="doc">
+                            <span>{{'applications.settings.mr.newRuleDoc' | translate}}</span>
+                            <span class="link" (click)="openHelp()">{{'applications.settings.mr.newRuleDocLink' | translate}}</span>
+                            <span>{{'applications.settings.mr.newRuleDoc2' | translate}}</span>
+                        </div>
+                    </div>
                 </div>
 
              </form>

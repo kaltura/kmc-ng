@@ -32,6 +32,7 @@ export class NewRuleComponent implements OnInit {
     constructor(private _fb: FormBuilder,
                 private _logger: KalturaLogger,
                 private _analytics: AppAnalytics,
+                private _browserService: BrowserService,
                 private _profilesService: MrStoreService,
                 private _appLocalization: AppLocalization) {
         this._buildForm();
@@ -133,5 +134,10 @@ export class NewRuleComponent implements OnInit {
             ]
         });
     };
+
+    public openHelp(): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Browse, 'AM_new_rule_guide', 'new');
+        this._browserService.openLink('https://knowledge.kaltura.com/help/automation-manager');
+    }
 
 }

@@ -88,6 +88,24 @@
                 color: $kDandger;
                 padding-top: 8px;
             }
+            .inputWithDoc {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                .doc {
+                    display: flex;
+                    span {
+                        margin-right: 4px;
+                        font-size: 14px;
+                    }
+                    .link {
+                        text-decoration: none;
+                        color: $kPrimary;
+                        cursor: pointer;
+                        font-weight: normal;
+                    }
+                }
+            }
         }
     }
 
