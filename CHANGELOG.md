@@ -1,3 +1,17 @@
+<a name="7.21.3"></a>
+## [7.21.3](https://github.com/kaltura/kmc-ng/compare/v7.21.2...v7.21.3) (2024-07-23)
+
+
+### Bug Fixes
+
+* **settings-media-repurposing:** Add link to Automation Manager guide from KMC KMCNG-2632 ([4826ec9](https://github.com/kaltura/kmc-ng/commit/4826ec9))
+* **settings-media-repurposing:** columns in Automation Manager tables are not resizable KMCNG-2654 ([3e34e60](https://github.com/kaltura/kmc-ng/commit/3e34e60))
+* **settings-media-repurposing:** prevent entering invalid user ID in custom list KMCNG-2653 ([5061664](https://github.com/kaltura/kmc-ng/commit/5061664))
+* **settings-media-repurposing:** Review tab UI changes KMCNG-2658 ([bc89272](https://github.com/kaltura/kmc-ng/commit/bc89272))
+* **settings/teams-integration:** display error indication and help link KMCNG-2657 ([ed5988c](https://github.com/kaltura/kmc-ng/commit/ed5988c))
+
+
+
 <a name="7.21.2"></a>
 ## [7.21.2](https://github.com/kaltura/kmc-ng/compare/v7.21.1...v7.21.2) (2024-07-02)
 
