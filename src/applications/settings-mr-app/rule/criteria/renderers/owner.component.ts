@@ -103,7 +103,7 @@ export class CriteriaOwnerComponent implements OnDestroy{
         const userIds = [];
         this.owners.forEach(user => userIds.push(user.id));
         value[this._owner] = userIds.toString();
-        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_tags_type', this._owner === 'userIdIn' ? 'is' : 'isn’t' , 'Automation_manager');
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_owner_type', this._owner === 'userIdIn' ? 'is' : 'isn’t' , 'Automation_manager');
         this.onFilterChange.emit({field: 'owner', value});
     }
 

@@ -159,9 +159,9 @@ export class LogsComponent implements OnInit {
         }
     }
 
-    public download(id: string): void {
+    public download(id: string, type: string): void {
         this._isBusy = true;
-        this._analytics.trackButtonClickEvent(ButtonType.Download, 'AM_download_report', null, 'Automation_manager');
+        this._analytics.trackButtonClickEvent(ButtonType.Download, 'AM_download_report', type, 'Automation_manager');
         this._mrStore.downloadReport(id).subscribe(
             data => {
                 this._isBusy = false;
