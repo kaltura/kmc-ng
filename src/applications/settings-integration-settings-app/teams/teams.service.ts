@@ -44,6 +44,10 @@ export type TeamsIntegration = {
     settings?: TeamsIntegrationSettings;
     status?: 'enabled' | 'disabled';
     updatedAt?: Date;
+    lastError?: {
+        code: string,
+        message: string
+    }
 }
 
 export type LoadTeamsIntegrationResponse = {

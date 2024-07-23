@@ -38,5 +38,23 @@
         height: 100%;
         overflow-y: auto;
     }
+    .errorsFound {
+        display: flex;
+        align-items: center;
+        margin-top: 24px;
+        font-size: 14px;
+        color: $kGrayscale1;
+        gap: 4px;
+        i {
+            color: $kGrayscale3;
+            margin-right: 4px;
+        }
+        .link {
+            text-decoration: none;
+            color: $kPrimary;
+            cursor: pointer;
+            font-weight: normal;
+        }
+    }
 }
 

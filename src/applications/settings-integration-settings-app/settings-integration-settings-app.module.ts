@@ -37,32 +37,34 @@ import { TeamsComponent } from './teams/teams.component';
 import { TeamsProfilesTableComponent } from './teams/profiles-table/profiles-table.component';
 import { TeamsNewProfileComponent } from './teams/new-profile/new-profile.component';
 import { EditTeamsProfileComponent } from './teams/edit-profile/edit-profile.component';
-import {TeamsUpdateProfileSecretComponent} from './teams/update-secret/update-secret.component';
+import { TeamsUpdateProfileSecretComponent } from './teams/update-secret/update-secret.component';
+import { LocalizationModule } from '@kaltura-ng/mc-shared';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routing),
-    ReactiveFormsModule,
-    DropdownModule,
-    InputTextModule,
-    InputSwitchModule,
-    RadioButtonModule,
-    ButtonModule,
-    AreaBlockerModule,
-    TranslateModule,
-    AutoCompleteModule,
-    TooltipModule,
-    MenuModule,
-    InputTextareaModule,
-    PopupWidgetModule,
-    StickyModule,
-    CategoriesModule,
-    KMCPermissionsModule,
-    InputHelperModule,
-    KMCPermissionsModule,
-    TableModule
-  ],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routing),
+        ReactiveFormsModule,
+        DropdownModule,
+        InputTextModule,
+        InputSwitchModule,
+        RadioButtonModule,
+        ButtonModule,
+        AreaBlockerModule,
+        TranslateModule,
+        AutoCompleteModule,
+        TooltipModule,
+        MenuModule,
+        InputTextareaModule,
+        PopupWidgetModule,
+        StickyModule,
+        CategoriesModule,
+        KMCPermissionsModule,
+        InputHelperModule,
+        KMCPermissionsModule,
+        TableModule,
+        LocalizationModule
+    ],
   declarations: [
     SettingsIntegrationSettingsComponent,
     AccountInfoComponent,

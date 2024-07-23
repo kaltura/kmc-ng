@@ -12,7 +12,15 @@
     }
 
     .kPrivacyContextLabel {
-
+        .kHelpTip{
+            font-size: 15px;
+            margin-left: 4px;
+            cursor: pointer;
+            color: $kDandger;
+            &:hover{
+                color: $kGrayscale1;
+            }
+        }
     }
 
     .kActionsColumn {

@@ -40,8 +40,9 @@
                         </span>
                 </td>
                 <td class="kPrivacyContextLabel" [ngStyle]="{'width': '14%'}">
-                        <span class="kTableColumn">
+                        <span class="kTableColumn" >
                             {{profile.status === 'enabled' ? ('applications.settings.integrationSettings.zoom.enabled' | translate) : ('applications.settings.integrationSettings.zoom.disabled' | translate)}}
+                            <i *ngIf="profile.lastError" class="kIconInfo_Full kHelpTip" [kTooltip]="profile.lastError.message"></i>
                         </span>
                 </td>
 

@@ -11,6 +11,12 @@
       <div class="tableHolder">
           <kTeamsProfilesTable [_profiles]="_profiles" (onActionSelected)="_onActionSelected($event)"></kTeamsProfilesTable>
       </div>
+
+      <div class="errorsFound" *ngIf="_errorsFound">
+          <i class="kIconInfo_Full"></i>
+          <span>{{'applications.settings.integrationSettings.teams.error1' | translate}}</span>
+          <span class="link" (click)="openErrorsHelp()">{{'applications.settings.integrationSettings.teams.error2' | translate}}</span>
+      </div>
     </div>
 </k-area-blocker>
 

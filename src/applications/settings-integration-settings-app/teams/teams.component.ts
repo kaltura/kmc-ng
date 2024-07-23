@@ -27,6 +27,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
     public _isBusy = false;
     public _kmcPermissions = KMCPermissions;
     public totalCount = 0;
+    public _errorsFound = false;
 
     @ViewChild('editProfile', {static: true}) editProfilePopup: PopupWidgetComponent;
     @ViewChild('updateSecretPopup', {static: true}) updateSecretPopup: PopupWidgetComponent;
@@ -165,6 +166,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
                         this._updateAreaBlockerState(false, null);
                         this._profiles = response.objects || [];
                         this.totalCount = this._profiles.length;
+                        this._errorsFound = this._profiles.find(profile => profile.lastError?.message?.length) !== undefined;
                     }
                 },
                 error => {
@@ -230,6 +232,11 @@ export class TeamsComponent implements OnInit, OnDestroy {
 
     public trackAnalytics(): void {
        this._analytics.trackButtonClickEvent(ButtonType.Add, 'Teams_initiate_new_integration');
+    }
+
+    public openErrorsHelp(): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Browse, 'Teams_errors_guide');
+        this._browserService.openLink('https://knowledge.kaltura.com/help/kaltura-video-integration-with-teams#troubleshooting');
     }
 
     private _updateAreaBlockerState(isBusy: boolean, areaBlocker: AreaBlockerMessage): void {

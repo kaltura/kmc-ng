@@ -3085,7 +3085,9 @@
                     "createUser": "Create new user based on teams user",
                     "secret": "Update Secret",
                     "update": "Update",
-                    "docLink": "Teams integration article"
+                    "docLink": "Teams integration article",
+                    "error1":"We've detected an error on at least one integration. For help in troubleshooting, ",
+                    "error2": "click here"
                 },
                 "webex": {
                     "title": "Webex integration",
