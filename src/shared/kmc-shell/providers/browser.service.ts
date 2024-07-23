@@ -111,7 +111,7 @@ export class BrowserService implements IAppStorage {
                 observer.next(xhr.response);
                 observer.complete();
             };
-            xhr.open('GET', url);
+            xhr.open('POST', url);
             xhr.responseType = 'blob';
             xhr.send();
         });
