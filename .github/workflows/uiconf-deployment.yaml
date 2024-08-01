@@ -13,8 +13,9 @@ jobs:
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         run: |
-          curl -X POST \
-          -H "Accept: application/vnd.github.v3+json" \
-          -H "Authorization: token $ACCESS_TOKEN" \
-          https://api.github.com/repos/kaltura/ovp-statboy/actions/workflows/deploy-uicof.yaml/dispatches \
-          -d "{\"ref\":\"master\", \"inputs\":{\"env\":\"testenv\"}}"
+          curl -L \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer $ACCESS_TOKEN" \
+          https://api.github.com/repos/kaltura/ovp-statboy/actions/workflows/deploy-uiconf.yaml/dispatches \
+          -d '{"ref":"master","inputs":{"env":"testenv"}}'
