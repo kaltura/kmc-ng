@@ -3,7 +3,7 @@
 [![Gitter chat](https://badges.gitter.im/kaltura-ng/kmc-ng.png)](https://gitter.im/kaltura-ng/kmc-ng)
 
 
-> Kaltura Management Console HTML5 based application (a.k.a KMCng). Replaces the legacy [KMC flash based application](https://kmc.kaltura.com/index.php/kmc/kmc).
+> Kaltura   Management Console HTML5 based application (a.k.a KMCng). Replaces the legacy [KMC flash based application](https://kmc.kaltura.com/index.php/kmc/kmc).
 
 Thank you for your interest in the kmc-ng project.
 
