@@ -13,10 +13,8 @@ jobs:
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         APP_NAME: "kmc-ng"
-        TAG: ${{ github.event.release.tag_name }}
+        TAG: ${{ github.ref_name }}
       run: |
-        echo $APP_NAME
-        echo $TAG
         curl -L \
         -X POST \
         -H "Accept: application/vnd.github+json" \
