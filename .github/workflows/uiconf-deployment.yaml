@@ -16,6 +16,11 @@ jobs:
     - name: print release
       run: |
           echo ${{ github.event.release.tag_name }}
+    - name: info
+      run: |
+        pwd
+        ls -ltr
+        git branch --show-current
 #      - name: Trigger workflow in private repository
 #        env:
 #          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
