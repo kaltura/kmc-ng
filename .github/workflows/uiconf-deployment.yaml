@@ -20,4 +20,4 @@ jobs:
         -H "Accept: application/vnd.github+json" \
         -H "Authorization: Bearer $ACCESS_TOKEN" \
         https://api.github.com/repos/kaltura/ovp-statboy/actions/workflows/deploy-uiconf.yaml/dispatches \
-        -d '{"ref":"workflow-uiconf-trigger","inputs":{"env":"nvq2","app_name":"$APP_NAME","tag":"$TAG"}}'
+        -d '{"ref":"workflow-uiconf-trigger","inputs":{"env":"nvq2","app_name":"\$APP_NAME","tag":"\$TAG"}}'
