@@ -15,7 +15,7 @@ jobs:
         APP_NAME: "kmc-ng"
         TAG: ${{ github.ref_name }}
       run: |
-         echo ${{ github.repository }}
+         echo ${{ github.event.repository.name }}
 #        curl -L \
 #        -X POST \
 #        -H "Accept: application/vnd.github+json" \
