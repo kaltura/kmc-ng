@@ -1,9 +1,8 @@
 name: Trigger Private Repository Workflow
 
 on:
-#  release:
-#    types: [created]
-  workflow_dispatch:
+  release:
+    types: [created]
 
 jobs:
   trigger-workflow:
@@ -15,10 +14,11 @@ jobs:
         APP_NAME: "kmc-ng"
         TAG: ${{ github.ref_name }}
         REPO_NAME: ${{ github.event.repository.name }}
+        REPO_TYPE: "public"
       run: |
         curl -L \
         -X POST \
         -H "Accept: application/vnd.github+json" \
         -H "Authorization: Bearer $ACCESS_TOKEN" \
         https://api.github.com/repos/kaltura/ovp-statboy/actions/workflows/deploy-uiconf.yaml/dispatches \
-        -d "{\"ref\":\"workflow-uiconf-trigger\",\"inputs\":{\"app_name\":\"$APP_NAME\",\"tag\":\"$TAG\",\"repo_name\":\"$REPO_NAME\"}}"
+        -d "{\"ref\":\"master\",\"inputs\":{\"app_name\":\"$APP_NAME\",\"tag\":\"$TAG\",\"repo_name\":\"$REPO_NAME\",\"repo_type\":\"$REPO_TYPE\"}}"
