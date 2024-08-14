@@ -73,7 +73,7 @@ import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
                         </div>
                         <div class="kRow">
                             <span class="kLabel">{{'applications.settings.mr.notification.body' | translate}}</span>
-                            <textarea class="threeRows" pInputTextarea [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.messageBody" (ngModelChange)="validate()"></textarea>
+                            <div [contentEditable]="true" class="threeRows" [innerHTML]="action.task.taskParams.sendNotificationTaskParams.messageBody" (input)="onMessageBodyChang($event)"></div>
                         </div>
                     </div>
 
@@ -133,6 +133,11 @@ export class ActionNotificationComponent implements OnDestroy{
                 return 'notificationExecutionSummary';
                 break;
         }
+    }
+
+    public onMessageBodyChang(event): void {
+        this.action.task.taskParams.sendNotificationTaskParams.messageBody = event.target.innerHTML;
+        this.validate();
     }
 
     public validate(): void {
