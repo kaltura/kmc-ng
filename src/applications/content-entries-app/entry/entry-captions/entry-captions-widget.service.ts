@@ -33,11 +33,12 @@ import { NewEntryCaptionFile } from './new-entry-caption-file';
 import { EntryWidget } from '../entry-widget';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
-import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { filter, map, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { of } from 'rxjs';
+import { KalturaStreamContainer } from 'kaltura-ngx-client/lib/api/types/KalturaStreamContainer';
 
 export interface CaptionRow {
     uploading: boolean;
@@ -57,6 +58,13 @@ export interface CaptionRow {
     displayOnPlayer?: boolean;
 }
 
+export interface LiveCaptions {
+    adminTag: string;
+    captionFormat: 'POP' | 'ROL' | null;
+    inputDelay: number;
+    streams: KalturaStreamContainer[];
+}
+
 @Injectable()
 export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     private _idGenerator = new FriendlyHashId();
@@ -70,6 +78,13 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
 
     public _captions$ = this._captions.asObservable();
     public currentCaption: CaptionRow;
+
+    public liveCaptions: LiveCaptions = {
+        adminTag: '',
+        captionFormat: null,
+        inputDelay: -1,
+        streams: []
+    };
 
     private _entryId: string = '';
 
@@ -345,6 +360,9 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
 
   // save data
   protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
+      console.log('----------------------------');
+        console.log(this.liveCaptions);
+      console.log('----------------------------');
     if (this._captions.getValue().items) {
       // check for added and removed captions
       if (this.captionsListDiffer) {
@@ -425,6 +443,11 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
           }
         }
       });
+    }
+
+    // handle live captions save
+    if (this.liveCaptions.adminTag.length) {
+        data.adminTags = data.adminTags?.length > 0 ? data.adminTags + `,${this.liveCaptions.adminTag}` : this.liveCaptions.adminTag;
     }
   }
 

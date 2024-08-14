@@ -1,0 +1,31 @@
+@import 'app-theme/_variables.scss';
+
+.kLiveCaptions {
+    display: flex;
+    padding: 24px;
+    padding-top: 0px;
+    flex-direction: column;
+    .kRow {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 24px;
+        button{
+            font-weight: bold;
+        }
+    }
+	.kTitle{
+		color: $kGrayscale1;
+		font-size: 16px;
+		font-weight: 700;
+	}
+    .containers {
+        display: flex;
+        flex-direction: column;
+    }
+	.kError{
+		color: $kDandger;
+	}
+
+}
+

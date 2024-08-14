@@ -1897,7 +1897,11 @@
                     "remove": "Remove",
                     "noLabel": "Since no label was provided, the caption language will be used in the Player Captions menu",
                     "pending": "Pending",
-                    "displayOnPlayer": "Display on Player"
+                    "displayOnPlayer": "Display on Player",
+                    "reachCaptions": "Reach captions",
+                    "userIngested": "User ingested captions",
+                    "specialCharacters": "CEA-708 Special Characters Support",
+                    "containers": "Captions containers"
                 },
                 "live": {
                     "goLive": "Go Live",

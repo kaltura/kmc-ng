@@ -1,0 +1,28 @@
+<!--<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [bodyScroll]="true">-->
+    <div class="kLiveCaptions">
+        <div class="kRow">
+            <p-radioButton class="kRadio" name="privacy" [value]="_liveCaptionsType.Reach" [(ngModel)]="_captionsType"
+                           (ngModelChange)="onCaptionTypeChange()"
+                           label="{{'applications.content.entryDetails.captions.reachCaptions' | translate}}"></p-radioButton>
+            <p-radioButton class="kRadio" name="privacy" [value]="_liveCaptionsType.UserIngested" [(ngModel)]="_captionsType"
+                           (ngModelChange)="onCaptionTypeChange()"
+                           label="{{'applications.content.entryDetails.captions.userIngested' | translate}}"></p-radioButton>
+        </div>
+        <div class="kRow" *ngIf="_captionsType === _liveCaptionsType.Reach && _requestCaptionsAvailable">
+            <button type="button" class="kButtonDefault" pButton
+                    label="{{'applications.content.entryDetails.captions.request' | translate}}"
+                    (click)="_requestCaptions()"></button>
+        </div>
+
+        <div class="kRow" *ngIf="_captionsType === _liveCaptionsType.UserIngested">
+            <p-inputSwitch class="kControl kInputSwitch"
+                           (onChange)="onSpecialCharactersChange()"
+                           [(ngModel)]="_specialCharacters"></p-inputSwitch>
+            <span>{{'applications.content.entryDetails.captions.specialCharacters' | translate}}</span>
+        </div>
+        <div class="containers" *ngIf="_captionsType === _liveCaptionsType.UserIngested">
+            <span class="kTitle">{{'applications.content.entryDetails.captions.containers' | translate}}</span>
+        </div>
+    </div>
+
+<!--</k-area-blocker>-->
