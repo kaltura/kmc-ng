@@ -1,0 +1,21 @@
+name: Trigger Private Repository Workflow
+
+on:
+#  release:
+#    types: [created]
+  workflow_dispatch:
+
+jobs:
+  trigger-workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger workflow in private repository
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        run: |
+          curl -L \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer $ACCESS_TOKEN" \
+          https://api.github.com/repos/kaltura/ovp-statboy/actions/workflows/deploy-uiconf.yaml/dispatches \
+          -d '{"ref":"master","inputs":{"env":"testenv"}}'
