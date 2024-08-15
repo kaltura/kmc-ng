@@ -60,9 +60,13 @@ export interface CaptionRow {
 
 export interface LiveCaptions {
     adminTag: string;
-    captionFormat: 'POP' | 'ROL' | null;
-    inputDelay: number;
     streams: KalturaStreamContainer[];
+}
+
+export interface StreamContainer {
+    id: string;
+    protocol: 'CEA-608' | 'CEA-708';
+    language: string;
 }
 
 @Injectable()
@@ -81,10 +85,9 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
 
     public liveCaptions: LiveCaptions = {
         adminTag: '',
-        captionFormat: null,
-        inputDelay: -1,
         streams: []
     };
+    public _protocolError = false;
 
     private _entryId: string = '';
 
@@ -360,9 +363,6 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
 
   // save data
   protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
-      console.log('----------------------------');
-        console.log(this.liveCaptions);
-      console.log('----------------------------');
     if (this._captions.getValue().items) {
       // check for added and removed captions
       if (this.captionsListDiffer) {
@@ -448,6 +448,25 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     // handle live captions save
     if (this.liveCaptions.adminTag.length) {
         data.adminTags = data.adminTags?.length > 0 ? data.adminTags + `,${this.liveCaptions.adminTag}` : this.liveCaptions.adminTag;
+    } else {
+        // remove previous admin tags
+        if (data.adminTags?.length) {
+            const adminTags = data.adminTags.split(',');
+            data.adminTags = adminTags.filter(tag => tag !== 'prioritize_reach_captions' && tag !== 'extract_closed_caption_feature').join(',');
+        } else {
+            data.adminTags = '';
+        }
+    }
+    if (this.liveCaptions.streams.length) {
+        // replace all streams of type closedCaptions with this.liveCaptions.streams
+        if (!data.streams || data.streams.length === 0) {
+            // no streams yet, use the updated streams
+            data.streams = [...this.liveCaptions.streams];
+        } else {
+            // keep non closed captions streams and concat the updated streams
+            const nonClosedCaptionsStreams = data.streams.filter(stream => stream.type !== 'closedCaptions'); // remove any closedCaptions streams
+            data.streams = [...nonClosedCaptionsStreams, ...this.liveCaptions.streams];
+        }
     }
   }
 
@@ -457,6 +476,22 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         } else {
             return throwError(new Error('cannot generate caption preview url. missing caption id'));
         }
+    }
+
+    public validate(): void {
+        super.updateState({
+            isValid: !this._protocolError,
+            isDirty: true
+        });
+    }
+
+    protected onValidate(wasActivated: boolean) : Observable<{ isValid : boolean}>
+    {
+        return Observable.create(observer =>
+        {
+            observer.next({ isValid: !this._protocolError });
+            observer.complete()
+        });
     }
 
     public setDirty() {

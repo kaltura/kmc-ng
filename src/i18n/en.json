@@ -1901,7 +1901,12 @@
                     "reachCaptions": "Reach captions",
                     "userIngested": "User ingested captions",
                     "specialCharacters": "CEA-708 Special Characters Support",
-                    "containers": "Captions containers"
+                    "containers": "Captions containers",
+                    "protocol": "Protocol",
+                    "language": "Language",
+                    "addStream": "Add container",
+                    "streamError": "Max allowed CEA-608 protocols is 4. Max allowed CEA-708 protocols is 63.",
+                    "remove": "Remove container"
                 },
                 "live": {
                     "goLive": "Go Live",

@@ -10,22 +10,40 @@
         align-items: center;
         gap: 24px;
         margin-bottom: 24px;
-        button{
+        button {
             font-weight: bold;
         }
+    }
+    .kIndent {
+        margin-left: 24px;
     }
 	.kTitle{
 		color: $kGrayscale1;
 		font-size: 16px;
 		font-weight: 700;
+        margin-bottom: 24px;
 	}
+    .kLabel {
+        color: $kGrayscale1;
+        font-size: 15px;
+        font-weight: 700;
+        width: 200px;
+    }
     .containers {
         display: flex;
         flex-direction: column;
+        padding-left: 24px;
     }
 	.kError{
 		color: $kDandger;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 24px;
 	}
-
+    .kRemove{
+        color: $kDandger;
+        cursor: pointer;
+        font-size: 24px;
+    }
 }
 
