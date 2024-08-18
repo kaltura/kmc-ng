@@ -1,50 +1,48 @@
-<!--<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [bodyScroll]="true">-->
-    <div class="kLiveCaptions">
-        <div class="kRow">
-            <p-radioButton class="kRadio" name="privacy" [value]="_liveCaptionsType.Reach" [(ngModel)]="_captionsType"
-                           (ngModelChange)="onCaptionTypeChange()"
-                           label="{{'applications.content.entryDetails.captions.reachCaptions' | translate}}"></p-radioButton>
-        </div>
-        <div class="kRow">
-            <button type="button" class="kButtonDefault kIndent" pButton [disabled]="!_requestCaptionsAvailable || _captionsType !== _liveCaptionsType.Reach"
-                    label="{{'applications.content.entryDetails.captions.request' | translate}}"
-                    (click)="_requestCaptions()"></button>
-        </div>
-
-        <div class="kRow">
-            <p-radioButton class="kRadio" name="privacy" [value]="_liveCaptionsType.UserIngested" [(ngModel)]="_captionsType"
-                           (ngModelChange)="onCaptionTypeChange()"
-                           label="{{'applications.content.entryDetails.captions.userIngested' | translate}}"></p-radioButton>
-        </div>
-        <div class="kRow kIndent" *ngIf="_captionsType === _liveCaptionsType.UserIngested">
-            <p-inputSwitch class="kControl kInputSwitch"
-                           (onChange)="onSpecialCharactersChange()"
-                           [(ngModel)]="_specialCharacters"></p-inputSwitch>
-            <span>{{'applications.content.entryDetails.captions.specialCharacters' | translate}}</span>
-        </div>
-        <div class="containers" *ngIf="_captionsType === _liveCaptionsType.UserIngested">
-            <span class="kTitle">{{'applications.content.entryDetails.captions.containers' | translate}}</span>
-            <div class="kRow">
-                <span class="kLabel">{{'applications.content.entryDetails.captions.protocol' | translate}}</span>
-                <span class="kLabel">{{'applications.content.entryDetails.captions.language' | translate}}</span>
-            </div>
-
-            <span *ngIf="_widgetService._protocolError.length" class="kError">{{'applications.content.entryDetails.captions.streamError' + _widgetService._protocolError | translate}}</span>
-
-            <div class="kRow" *ngFor="let container of _containers">
-                <div class="kLabel">
-                    <p-dropdown [options]="_protocols" [(ngModel)]="container.protocol" (onChange)="onStreamUpdated()"></p-dropdown>
-                </div>
-                <div class="kLabel">
-                    <p-dropdown [options]="_languages" [(ngModel)]="container.language" (onChange)="onStreamUpdated()"></p-dropdown>
-                </div>
-                <i class="kIconremove kRemove" [kTooltip]="'applications.content.entryDetails.captions.remove' | translate" (click)="removeContainer(container.id)"></i>
-            </div>
-
-            <div class="kRow">
-                <button type="button" [disabled]="_addStreamDisabled" class="kButtonDefault" pButton icon="kIconplus" label="{{'applications.content.entryDetails.captions.addStream' | translate}}" (click)="addStream()"></button>
-            </div>
-        </div>
+<div class="kLiveCaptions">
+    <div class="kRow">
+        <p-radioButton class="kRadio" name="privacy" [value]="_liveCaptionsType.Reach" [(ngModel)]="_captionsType"
+                       (ngModelChange)="onCaptionTypeChange()"
+                       label="{{'applications.content.entryDetails.captions.reachCaptions' | translate}}"></p-radioButton>
+    </div>
+    <div class="kRow">
+        <button type="button" class="kButtonDefault kIndent" pButton [disabled]="!_requestCaptionsAvailable || _captionsType !== _liveCaptionsType.Reach"
+                label="{{'applications.content.entryDetails.captions.request' | translate}}"
+                (click)="_requestCaptions()"></button>
     </div>
 
-<!--</k-area-blocker>-->
+    <div class="kRow">
+        <p-radioButton class="kRadio" name="privacy" [value]="_liveCaptionsType.UserIngested" [(ngModel)]="_captionsType"
+                       (ngModelChange)="onCaptionTypeChange()"
+                       label="{{'applications.content.entryDetails.captions.userIngested' | translate}}"></p-radioButton>
+    </div>
+    <div class="kRow kIndent" *ngIf="_captionsType === _liveCaptionsType.UserIngested">
+        <p-inputSwitch class="kControl kInputSwitch"
+                       (onChange)="onSpecialCharactersChange()"
+                       [(ngModel)]="_specialCharacters"></p-inputSwitch>
+        <span>{{'applications.content.entryDetails.captions.specialCharacters' | translate}}</span>
+    </div>
+    <div class="containers" *ngIf="_captionsType === _liveCaptionsType.UserIngested">
+        <span class="kTitle">{{'applications.content.entryDetails.captions.containers' | translate}}</span>
+        <div class="kRow">
+            <span class="kLabel">{{'applications.content.entryDetails.captions.protocol' | translate}}</span>
+            <span class="kLabel">{{'applications.content.entryDetails.captions.language' | translate}}</span>
+        </div>
+
+        <span *ngIf="_widgetService._protocolError.length" class="kError">{{'applications.content.entryDetails.captions.streamError' + _widgetService._protocolError | translate}}</span>
+
+        <div class="kRow" *ngFor="let container of _containers">
+            <div class="kLabel">
+                <p-dropdown [options]="_protocols" [(ngModel)]="container.protocol" (onChange)="onStreamUpdated()"></p-dropdown>
+            </div>
+            <div class="kLabel">
+                <p-dropdown [options]="_languages" [(ngModel)]="container.language" (onChange)="onStreamUpdated()"></p-dropdown>
+            </div>
+            <i class="kIconremove kRemove" [kTooltip]="'applications.content.entryDetails.captions.remove' | translate" (click)="removeContainer(container.id)"></i>
+        </div>
+
+        <div class="kRow">
+            <button type="button" [disabled]="_addStreamDisabled" class="kButtonDefault" pButton icon="kIconplus" label="{{'applications.content.entryDetails.captions.addStream' | translate}}" (click)="addStream()"></button>
+        </div>
+    </div>
+</div>
+
