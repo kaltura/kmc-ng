@@ -1905,7 +1905,8 @@
                     "protocol": "Protocol",
                     "language": "Language",
                     "addStream": "Add container",
-                    "streamError": "Max allowed CEA-608 protocols is 4. Max allowed CEA-708 protocols is 63.",
+                    "streamError608": "Max allowed CEA-608 protocols is 4",
+                    "streamError708": "Max allowed CEA-708 protocols is 63",
                     "remove": "Remove container"
                 },
                 "live": {

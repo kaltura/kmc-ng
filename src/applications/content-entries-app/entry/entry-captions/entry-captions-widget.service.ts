@@ -87,7 +87,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         adminTag: '',
         streams: []
     };
-    public _protocolError = false;
+    public _protocolError = '';
 
     private _entryId: string = '';
 
@@ -467,6 +467,11 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
             const nonClosedCaptionsStreams = data.streams.filter(stream => stream.type !== 'closedCaptions'); // remove any closedCaptions streams
             data.streams = [...nonClosedCaptionsStreams, ...this.liveCaptions.streams];
         }
+    } else {
+        // keep non closed captions
+        const nonClosedCaptionsStreams = data.streams.filter(stream => stream.type !== 'closedCaptions'); // remove any closedCaptions streams
+        data.streams = nonClosedCaptionsStreams.length ? [...nonClosedCaptionsStreams] : null;
+        delete data.streams;
     }
   }
 
@@ -480,7 +485,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
 
     public validate(): void {
         super.updateState({
-            isValid: !this._protocolError,
+            isValid: !this._protocolError.length,
             isDirty: true
         });
     }
@@ -489,7 +494,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     {
         return Observable.create(observer =>
         {
-            observer.next({ isValid: !this._protocolError });
+            observer.next({ isValid: !this._protocolError.length });
             observer.complete()
         });
     }

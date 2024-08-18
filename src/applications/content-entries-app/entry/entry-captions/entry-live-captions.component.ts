@@ -110,21 +110,24 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
 
     public onStreamUpdated(): void {
         const ccStreams = this._containers.filter(container => container.protocol === 'CEA-608');
-        const serviceStreams = this._containers.filter(container => container.protocol === 'CEA-608');
+        const serviceStreams = this._containers.filter(container => container.protocol === 'CEA-708');
         // validation
-        this._widgetService._protocolError = ccStreams.length > 4 || serviceStreams.length > 63;
+        this._widgetService._protocolError = '';
+        if (ccStreams.length > 4) {
+            this._widgetService._protocolError = '608';
+        } else if (serviceStreams.length > 63) {
+            this._widgetService._protocolError = '708';
+        }
         this._widgetService.validate();
         // update IDs
-        let ccCounter = 1;
-        let serviceCounter = 1;
-        this._containers.forEach(container => {
-            if (container.protocol === 'CEA-608') {
-                container.id = `CC${ccCounter}`;
-                ccCounter++;
-            } else {
-                container.id = `SERVICE${serviceCounter}`;
-                serviceCounter++;
-            }
+        let counter = 1;
+        ccStreams.forEach(container => {
+            container.id = `CC${counter}`;
+            counter++;
+        })
+        serviceStreams.forEach(container => {
+            container.id = `SERVICE${counter}`;
+            counter++;
         })
         // update widget with the updated streams
         this.updateEntryStreams();

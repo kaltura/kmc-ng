@@ -29,9 +29,10 @@
                 <span class="kLabel">{{'applications.content.entryDetails.captions.language' | translate}}</span>
             </div>
 
-            <span *ngIf="_widgetService._protocolError" class="kError">{{'applications.content.entryDetails.captions.streamError' | translate}}</span>
+            <span *ngIf="_widgetService._protocolError.length" class="kError">{{'applications.content.entryDetails.captions.streamError' + _widgetService._protocolError | translate}}</span>
 
             <div class="kRow" *ngFor="let container of _containers">
+                <span>{{container.id}}</span>
                 <div class="kLabel">
                     <p-dropdown [options]="_protocols" [(ngModel)]="container.protocol" (onChange)="onStreamUpdated()"></p-dropdown>
                 </div>
