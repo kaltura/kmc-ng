@@ -2,11 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {EntryCaptionsWidget, StreamContainer} from './entry-captions-widget.service';
 import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KMCPermissions} from 'app-shared/kmc-shared/kmc-permissions';
-import {KalturaLiveStreamEntry, KalturaMediaType, KalturaStreamContainer} from 'kaltura-ngx-client';
+import {KalturaLiveStreamEntry, KalturaStreamContainer} from 'kaltura-ngx-client';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {SelectItem} from 'primeng/api';
 import {LanguageOptionsService} from 'app-shared/kmc-shared/language-options';
-import {contains} from 'jquery';
 
 export enum LiveCaptionsType {
     Reach = 0,

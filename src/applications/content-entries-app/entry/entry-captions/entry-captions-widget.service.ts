@@ -38,7 +38,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { filter, map, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { of } from 'rxjs';
-import { KalturaStreamContainer } from 'kaltura-ngx-client/lib/api/types/KalturaStreamContainer';
+import { KalturaStreamContainer } from 'kaltura-ngx-client';
 
 export interface CaptionRow {
     uploading: boolean;
