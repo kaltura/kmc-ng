@@ -1,3 +1,13 @@
+<a name="7.21.4"></a>
+## [7.21.4](https://github.com/kaltura/kmc-ng/compare/v7.21.3...v7.21.4) (2024-08-19)
+
+
+### Bug Fixes
+
+* **settings/media-repurposing:** in notification templates use <br> instead of line breaks KMCNG-2661 ([1d72d43](https://github.com/kaltura/kmc-ng/commit/1d72d43))
+
+
+
 <a name="7.21.3"></a>
 ## [7.21.3](https://github.com/kaltura/kmc-ng/compare/v7.21.2...v7.21.3) (2024-07-23)
 
