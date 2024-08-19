@@ -6,6 +6,9 @@
 
 * **settings/media-repurposing:** in notification templates use <br> instead of line breaks KMCNG-2661 ([1d72d43](https://github.com/kaltura/kmc-ng/commit/1d72d43))
 
+### Features
+
+* **content/entry:** update the "Captions" tab for KMC Live entries - KMCNG-2660
 
 
 <a name="7.21.3"></a>
