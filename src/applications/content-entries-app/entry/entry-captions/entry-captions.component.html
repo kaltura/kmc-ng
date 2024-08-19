@@ -9,8 +9,9 @@
                 (click)="_addCaption()"></button>
         <button type="button" class="kButtonDefault" pButton
                 label="{{'applications.content.entryDetails.captions.request' | translate}}"
-                *ngIf="_requestCaptionsAvailable"
+                *ngIf="_requestCaptionsAvailable && !_isLive"
                 (click)="_requestCaptions()"></button>
+        <kEntryLiveCaptions *ngIf="_isLive"></kEntryLiveCaptions>
         <div class="kTable" *ngIf="!_isLive">
             <p-table scrollHeight="100%"
                      [value]="(_widgetService._captions$ | async)?.items"
