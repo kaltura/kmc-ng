@@ -73,7 +73,7 @@ import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
                         </div>
                         <div class="kRow">
                             <span class="kLabel">{{'applications.settings.mr.notification.body' | translate}}</span>
-                            <div [contentEditable]="true" class="threeRows" [innerHTML]="action.task.taskParams.sendNotificationTaskParams.messageBody" (input)="onMessageBodyChang($event)"></div>
+                            <div [contentEditable]="true" class="threeRows" [innerHTML]="action.task.taskParams.sendNotificationTaskParams.messageBody" (blur)="onMessageBodyChange($event)"></div>
                         </div>
                     </div>
 
@@ -135,7 +135,7 @@ export class ActionNotificationComponent implements OnDestroy{
         }
     }
 
-    public onMessageBodyChang(event): void {
+    public onMessageBodyChange(event): void {
         this.action.task.taskParams.sendNotificationTaskParams.messageBody = event.target.innerHTML;
         this.validate();
     }
