@@ -223,7 +223,7 @@ export class EditProfileComponent implements OnInit {
             this._browserService.openLink(url);
             this._analytics.trackClickEvent('SAML_downloadMetadataXML');
         } else { // download metadata as xml
-            this._browserService.download(url, `${this._profile.name}_metadata.xml`, 'text/xml');
+            this._browserService.download(url, `${this._profile.name}_metadata.xml`, 'text/xml', true);
             this._analytics.trackClickEvent('SAML_downloadMetadataURL');
         }
     }

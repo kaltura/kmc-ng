@@ -104,14 +104,14 @@ export class BrowserService implements IAppStorage {
         this._recordInitialQueryParams();
     }
 
-    private _downloadContent(url: string): void {
+    private _downloadContent(url: string, useGET = false): void {
         return Observable.create(observer => {
             const xhr = new XMLHttpRequest();
             xhr.onload = () => {
                 observer.next(xhr.response);
                 observer.complete();
             };
-            xhr.open('POST', url);
+            xhr.open(useGET ? 'GET' : 'POST', url);
             xhr.responseType = 'blob';
             xhr.send();
         });
@@ -325,14 +325,14 @@ export class BrowserService implements IAppStorage {
         return copied;
     }
 
-    public download(data, filename, type): void {
+    public download(data, filename, type, useGET = false): void {
         let file;
         if (typeof data === 'string' && /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(data)) { // if data is url
             if (this.isIE11()) {
                 this.openLink(data);
                 return;
             }
-            file = this._downloadContent(data);
+            file = this._downloadContent(data, useGET);
         } else {
             file = of(new Blob([data], {type: type}));
         }
