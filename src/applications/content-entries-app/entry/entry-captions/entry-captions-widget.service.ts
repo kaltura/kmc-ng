@@ -471,7 +471,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     } else {
         // keep non closed captions
         const nonClosedCaptionsStreams = data.streams.filter(stream => stream.type !== 'closedCaptions'); // remove any closedCaptions streams
-        data.streams = nonClosedCaptionsStreams.length ? [...nonClosedCaptionsStreams] : null;
+        data.streams = nonClosedCaptionsStreams.length ? [...nonClosedCaptionsStreams] : [];
     }
   }
 
