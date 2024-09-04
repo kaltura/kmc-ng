@@ -138,6 +138,10 @@ export class EntryClips implements OnInit, OnDestroy {
                                 // download entry
                                 this._browserService.openLink(entry.downloadUrl);
                                 break;
+                            case 'edit':
+                                // edit entry
+                                unisphereWorkspace.getModule('unisphere.module.content-repurposing', 'application')?.closeWidget();
+                                break;
                             default:
                                 break;
                         }
