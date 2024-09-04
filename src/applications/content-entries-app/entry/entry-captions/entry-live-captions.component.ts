@@ -60,7 +60,8 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
                         this._containers.push({
                             id: stream.id,
                             protocol: stream.id.startsWith('CC') ? 'CEA-608' : 'CEA-708',
-                            language: stream.language.toUpperCase()
+                            language: stream.language.toUpperCase(),
+                            label: stream.label
                         })
                     })
                     this.setAddStreamDisabled();
@@ -93,7 +94,8 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
         const newContainer: StreamContainer = {
             id: ccStreams.length < 4 ? `CC${ccStreams.length + 1}` : `SERVICE${serviceStreams.length + 1}`,
             protocol: ccStreams.length < 4 ? 'CEA-608' : 'CEA-708',
-            language: 'EN'
+            language: 'EN',
+            label: 'English'
         }
         this._containers.push(newContainer);
         this.setAddStreamDisabled();
@@ -104,6 +106,11 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
         this._containers = this._containers.filter(container => container.id !== id);
         this._widgetService.setDirty();
         // update widget with the updated streams
+        this.onStreamUpdated();
+    }
+
+    public onLanguageUpdated(container: StreamContainer): void {
+        container.label = this._languages.find(language => language.value === container.language)?.label || container.label;
         this.onStreamUpdated();
     }
 
@@ -138,6 +145,7 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
         this._containers.forEach(container => this._widgetService.liveCaptions.streams.push(new KalturaStreamContainer({
             id: container.id,
             language: container.language.toLowerCase(),
+            label: container.label,
             type: 'closedCaptions'
         })))
     }

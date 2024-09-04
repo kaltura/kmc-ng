@@ -67,6 +67,7 @@ export interface StreamContainer {
     id: string;
     protocol: 'CEA-608' | 'CEA-708';
     language: string;
+    label: string;
 }
 
 @Injectable()
@@ -471,7 +472,6 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         // keep non closed captions
         const nonClosedCaptionsStreams = data.streams.filter(stream => stream.type !== 'closedCaptions'); // remove any closedCaptions streams
         data.streams = nonClosedCaptionsStreams.length ? [...nonClosedCaptionsStreams] : null;
-        delete data.streams;
     }
   }
 
