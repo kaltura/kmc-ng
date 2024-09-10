@@ -13,6 +13,7 @@ import {PreviewAndEmbedEvent} from 'app-shared/kmc-shared/events';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {KalturaMediaEntry} from 'kaltura-ngx-client';
 import {WindowClosedEvent} from 'app-shared/kmc-shared/events/window-closed.event';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
     selector: 'kEntryClips',
@@ -27,6 +28,7 @@ export class EntryClips implements OnInit, OnDestroy {
     public _loading = false;
     public _loadingError = null;
     public _clipAndTrimEnabled = false;
+    public _contentLabAvailable = false;
 
     private unisphereModuleContext: any;
     private unisphereCallbackUnsubscribe: Function;
@@ -34,6 +36,7 @@ export class EntryClips implements OnInit, OnDestroy {
 
     constructor(public _widgetService: EntryClipsWidget,
                 private _bootstrapService: AppBootstrap,
+                private _appPermissions: KMCPermissionsService,
                 private _appAuthentication: AppAuthentication,
                 private _browserService: BrowserService,
                 private _appEvents: AppEventsService,
@@ -70,7 +73,7 @@ export class EntryClips implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._widgetService.attachForm();
-
+        this._contentLabAvailable = this._appPermissions.hasPermission(KMCPermissions.FEATURE_CONTENT_LAB);
         combineLatest(
             this._widgetService.data$,
             this._store.hasSource.value$
@@ -83,7 +86,7 @@ export class EntryClips implements OnInit, OnDestroy {
                             entry: this._widgetService.data,
                             hasSource: this._store.hasSource.value()
                         });
-                        if (this._widgetService.data?.id) {
+                        if (this._widgetService.data?.id && this._contentLabAvailable) {
                             this.loadContentLab(this._widgetService.data.id);
                         }
                     }else {

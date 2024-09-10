@@ -8,7 +8,7 @@
                         (click)="_clipAndTrimEnabled && clipAndTrim.open()" icon="kIconmovies"
                         label="{{'applications.content.entryDetails.clips.clipTrim' | translate}}"></button>
             </div>
-            <div id="contentLabButton"></div>
+            <div *ngIf="_contentLabAvailable" id="contentLabButton"></div>
         </div>
         <div class="kTable">
             <p-table dataKey="id"
