@@ -4,7 +4,8 @@ import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { KalturaPlaylist } from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { WindowClosedEvent } from 'app-shared/kmc-shared/events/window-closed.event';
 
 @Component({
   selector: 'kPreviewEmbed',
@@ -17,7 +18,7 @@ export class PreviewEmbedComponent implements OnDestroy {
 
   public _media: KalturaPlaylist | KalturaMediaEntry;
 
-  constructor(appEvents: AppEventsService) {
+  constructor(private appEvents: AppEventsService) {
     appEvents.event(PreviewAndEmbedEvent)
 	    .pipe(cancelOnDestroy(this))
 	    .subscribe(({media}) =>
@@ -31,7 +32,8 @@ export class PreviewEmbedComponent implements OnDestroy {
         });
   }
 
-  public close(): void{
+  public close(): void {
+    this.appEvents.publish(new WindowClosedEvent('preview'));
     this.previewEmbedPopup.close();
   }
 

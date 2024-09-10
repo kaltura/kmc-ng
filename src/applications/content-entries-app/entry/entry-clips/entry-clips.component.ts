@@ -5,10 +5,14 @@ import {EntryClipsWidget} from './entry-clips-widget.service';
 import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
 import { ClipAndTrimAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { EntryStore } from '../entry-store.service';
-import { merge } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { serverConfig } from 'config/server';
 import { AppAuthentication, AppBootstrap, BrowserService } from 'app-shared/kmc-shell';
+import {PreviewAndEmbedEvent} from 'app-shared/kmc-shared/events';
+import {AppEventsService} from 'app-shared/kmc-shared';
+import {KalturaMediaEntry} from 'kaltura-ngx-client';
+import {WindowClosedEvent} from 'app-shared/kmc-shared/events/window-closed.event';
 
 @Component({
     selector: 'kEntryClips',
@@ -23,15 +27,16 @@ export class EntryClips implements OnInit, OnDestroy {
     public _loading = false;
     public _loadingError = null;
     public _clipAndTrimEnabled = false;
-    public _clipAndTrimDisabledReason: string = null;
 
-    private unisphereInfoUnsubscribe: Function;
+    private unisphereModuleContext: any;
     private unisphereCallbackUnsubscribe: Function;
+    private sharedEntryId = '';
 
     constructor(public _widgetService: EntryClipsWidget,
                 private _bootstrapService: AppBootstrap,
                 private _appAuthentication: AppAuthentication,
                 private _browserService: BrowserService,
+                private _appEvents: AppEventsService,
                 private _clipAndTrimAppViewService: ClipAndTrimAppViewService,
                 logger: KalturaLogger,
                 private _store: EntryStore) {
@@ -66,7 +71,7 @@ export class EntryClips implements OnInit, OnDestroy {
     ngOnInit() {
         this._widgetService.attachForm();
 
-        merge(
+        combineLatest(
             this._widgetService.data$,
             this._store.hasSource.value$
         )
@@ -86,61 +91,66 @@ export class EntryClips implements OnInit, OnDestroy {
                     }
                 }
             );
+
+        this._appEvents
+            .event(WindowClosedEvent)
+            .pipe(cancelOnDestroy(this))
+            .subscribe(({window}) => {
+                if (window === 'preview') {
+                    this.unisphereModuleContext?.selectClip(this.sharedEntryId); // set selected clip
+                    setTimeout(() => {
+                        this.unisphereModuleContext?.openWidget(); // open widget
+                    }, 100);
+
+                }
+            });
     }
 
     private loadContentLab(entryId: string): void {
-        this._bootstrapService.unisphereWorkspace$.pipe(cancelOnDestroy(this)).subscribe(unisphereWorkspace => {
+        this._bootstrapService.unisphereWorkspace$
+            .pipe(cancelOnDestroy(this))
+            .subscribe(unisphereWorkspace => {
                 if (unisphereWorkspace) {
-                    unisphereWorkspace.getService('unisphere.service.pub-sub')?.emit({
-                        type: 'unisphere.event.workspace.load-module',
-                        version: '1.0.0',
-                        payload: {
-                            id: 'unisphere.module.content-repurposing',
-                            context: 'application',
-                            settings: {
-                                ks: this._appAuthentication.appUser.ks,
-                                pid: this._appAuthentication.appUser.partnerId.toString(),
-                                uiconfId: serverConfig.kalturaServer.previewUIConfV7.toString(),
-                                analyticsServerURI: serverConfig.analyticsServer.uri,
-                                hostAppName: 'kmc',
-                                hostAppVersion: globalConfig.client.appVersion,
-                                kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
-                                kalturaServerProxyURI: '',
-                                entryId,
-                                buttonLabel: '',
-                                eventSessionContextId: '',
-                            }
-                        }
-                    })
+                    const contextSettings = {
+                        ks: this._appAuthentication.appUser.ks,
+                        pid: this._appAuthentication.appUser.partnerId.toString(),
+                        uiconfId: serverConfig.kalturaServer.previewUIConfV7.toString(),
+                        analyticsServerURI: serverConfig.analyticsServer.uri,
+                        hostAppName: 'kmc',
+                        hostAppVersion: globalConfig.client.appVersion,
+                        kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
+                        kalturaServerProxyURI: '',
+                        entryId,
+                        buttonLabel: '',
+                        eventSessionContextId: '',
+                    }
 
-                    this.unisphereInfoUnsubscribe = unisphereWorkspace.getService('unisphere.service.pub-sub')?.subscribe('unisphere.event.workspace.module-info-updated', (data) => {
-                        if (data.type === 'unisphere.event.workspace.module-info-updated') {
-                            const isModuleContextLoaded = data.payload?.name === 'unisphere.module.content-repurposing' && data.payload?.status === 'loaded';
-                            if (!isModuleContextLoaded) {
-                                return;
-                            }
-                            console?.log(' module loaded, assigning area.');
-                            const moduleContext = unisphereWorkspace.getModule('unisphere.module.content-repurposing', 'application');
-                            if (moduleContext) {
-                                moduleContext.assignArea('contentLabButton')
-                            }
-                        }
-                    })
+                    if (!this.unisphereModuleContext) {
+                        unisphereWorkspace.loadModuleContext('unisphere.module.content-repurposing', 'application', contextSettings).then((data: any) => {
+                            this.unisphereModuleContext = data.moduleContext;
+                            this.unisphereModuleContext.assignArea('contentLabButton');
+                        }).catch(error => {
+                            console.error('failed to load module: ' + error.message)
+                        });
+                    }
 
                     this.unisphereCallbackUnsubscribe = unisphereWorkspace.getService('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-repurposing.message-host-app', (data) => {
                         const { action, entry } = data.payload;
                         switch (action) {
                             case 'entry':
                                 // navigate to entry
+                                document.body.style.overflowY = "auto";
                                 this._widgetService.navigateToEntry(entry.id)
                                 break;
                             case 'download':
                                 // download entry
                                 this._browserService.openLink(entry.downloadUrl);
                                 break;
-                            case 'edit':
+                            case 'share':
                                 // edit entry
-                                unisphereWorkspace.getModule('unisphere.module.content-repurposing', 'application')?.closeWidget();
+                                this.sharedEntryId = entry.id;
+                                this.unisphereModuleContext?.closeWidget(); // close widget
+                                this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaMediaEntry(entry)));
                                 break;
                             default:
                                 break;
@@ -154,9 +164,6 @@ export class EntryClips implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        if (this.unisphereInfoUnsubscribe) {
-            this.unisphereInfoUnsubscribe();
-        }
         if (this.unisphereCallbackUnsubscribe) {
             this.unisphereCallbackUnsubscribe();
         }

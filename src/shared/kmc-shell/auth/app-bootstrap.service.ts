@@ -114,20 +114,20 @@ export class AppBootstrap implements CanActivate {
                         theme: 'light',
                         language: 'en',
                     },
-                    devOverrides: {
-                            modules: {
-                            "unisphere.module.content-repurposing": {
-                                application: {
-                                    version: "1.0.0",
-                                        url: "http://localhost:8020/index.dev.esm.js"
-                                },
-                                showcase: {
-                                    version: "1.0.0",
-                                        url: "http://localhost:8020/index.dev.esm.js"
-                                }
-                            }
-                        }
-                    }
+                    // devOverrides: {
+                    //         modules: {
+                    //         "unisphere.module.content-repurposing": {
+                    //             application: {
+                    //                 version: "1.0.0",
+                    //                     url: "http://localhost:8020/index.dev.esm.js"
+                    //             },
+                    //             showcase: {
+                    //                 version: "1.0.0",
+                    //                     url: "http://localhost:8020/index.dev.esm.js"
+                    //             }
+                    //         }
+                    //     }
+                    // }
 
                 }).then((workspace: any) => {
                     console.log("[unisphere.kmc] workspace loaded");
