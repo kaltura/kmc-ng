@@ -116,7 +116,7 @@ export class AppBootstrap implements CanActivate {
                     },
                     // devOverrides: {
                     //         modules: {
-                    //         "unisphere.module.content-repurposing": {
+                    //         "unisphere.module.content-lab": {
                     //             application: {
                     //                 version: "1.0.0",
                     //                     url: "http://localhost:8020/index.dev.esm.js"
