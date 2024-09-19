@@ -1,0 +1,22 @@
+name: Upload Assets
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        required: true
+        description: tag to download assets from
+
+jobs:
+  upload-assets-to-s3:
+    name: Upload assets to s3
+    strategy:
+      matrix:
+        asset_target:
+          - { bucket: 'ovp-kalt-static-content', assets: '["kmc-ng"]'}
+    uses: kaltura/ovp-pipelines/.github/workflows/assets.yml@assets-test
+    with:
+      tag: ${{ github.event.inputs.tag}}
+      assets-to-upload: ${{ matrix.asset_target.assets }}
+      bucket: ${{ matrix.asset_target.bucket }}
+      bucket-key-prefix: ${{ matrix.asset_target.path }}
