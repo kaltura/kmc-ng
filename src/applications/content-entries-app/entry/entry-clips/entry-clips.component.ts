@@ -137,7 +137,7 @@ export class EntryClips implements OnInit, OnDestroy {
                         });
                     }
 
-                    this.unisphereCallbackUnsubscribe = unisphereWorkspace.getService('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-repurposing.message-host-app', (data) => {
+                    this.unisphereCallbackUnsubscribe = unisphereWorkspace.getService('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-lab.message-host-app', (data) => {
                         const { action, entry } = data.payload;
                         switch (action) {
                             case 'entry':
