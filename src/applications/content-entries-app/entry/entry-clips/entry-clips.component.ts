@@ -129,8 +129,8 @@ export class EntryClips implements OnInit, OnDestroy {
                     }
 
                     if (!this.unisphereModuleContext) {
-                        unisphereWorkspace.loadModuleContext('unisphere.module.content-lab', 'application', contextSettings).then((data: any) => {
-                            this.unisphereModuleContext = data.moduleContext;
+                        unisphereWorkspace.loadElement('unisphere.module.content-lab', 'application', contextSettings).then((data: any) => {
+                            this.unisphereModuleContext = data.element;
                             this.unisphereModuleContext.assignArea('contentLabButton');
                         }).catch(error => {
                             console.error('failed to load module: ' + error.message)
