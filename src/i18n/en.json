@@ -3274,6 +3274,7 @@
                     "services": "{{0}} Services",
                     "title": "Services",
                     "captions": "Captions",
+                    "liveCaptions": "Live Captions",
                     "translations": "Translations",
                     "alignment": "Alignment",
                     "audioDescription": "Audio Description",
