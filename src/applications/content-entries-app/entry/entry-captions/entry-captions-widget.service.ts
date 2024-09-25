@@ -448,14 +448,14 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
 
     // handle live captions save
     if (this.liveCaptions.adminTag.length) {
-        data.adminTags = data.adminTags?.length > 0 ? data.adminTags + `,${this.liveCaptions.adminTag}` : this.liveCaptions.adminTag;
+        const adminTags = this.data.adminTags.split(',');
+        const clearedAdminTags = adminTags.filter(tag => tag !== 'prioritize_ingested_captions' && tag !== 'extract_closed_caption_feature').join(',');
+        data.adminTags = clearedAdminTags.length > 0 ? clearedAdminTags + `,${this.liveCaptions.adminTag}` : this.liveCaptions.adminTag;
     } else {
         // remove previous admin tags
-        if (data.adminTags?.length) {
-            const adminTags = data.adminTags.split(',');
-            data.adminTags = adminTags.filter(tag => tag !== 'prioritize_reach_captions' && tag !== 'extract_closed_caption_feature').join(',');
-        } else {
-            data.adminTags = '';
+        if (this.data.adminTags?.length) {
+            const adminTags = this.data.adminTags.split(',');
+            data.adminTags = adminTags.filter(tag => tag !== 'prioritize_ingested_captions' && tag !== 'extract_closed_caption_feature').join(',');
         }
     }
     if (this.liveCaptions.streams.length) {
