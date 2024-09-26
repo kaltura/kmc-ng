@@ -152,7 +152,7 @@ export class MrStoreService implements OnDestroy {
 
     // ------------------------- Managed tasks profiles API ---------------------------- //
 
-    public loadProfiles(pageSize: number, pageIndex: number, sortField: string, sortOrder: number, idIn: string[] = []): Observable<LoadManagedTasksProfilesResponse> {
+    public loadProfiles(pageSize: number, pageIndex: number, sortField: string, sortOrder: number, idIn: string[] = [], includeAllStatuses = false): Observable<LoadManagedTasksProfilesResponse> {
         const pager: KalturaPager = {
             pageIndex,
             pageSize
@@ -161,6 +161,9 @@ export class MrStoreService implements OnDestroy {
         const body = {pager, orderBy};
         if (idIn.length) {
             Object.assign(body, {idIn});
+        }
+        if (includeAllStatuses) {
+            Object.assign(body, {statusIn: ["enabled", "disabled", "deleted"]});
         }
         try {
             return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/managedTasksProfile/list`, body, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadManagedTasksProfilesResponse>;

@@ -67,7 +67,7 @@ export class LogsRefineFiltersComponent implements OnInit, OnDestroy {
     }
 
     private loadProfiles(): void {
-        this._mrStore.loadProfiles(500, 0, 'createdAt', -1).subscribe(
+        this._mrStore.loadProfiles(500, 0, 'createdAt', -1, [], true).subscribe(
             (response: LoadManagedTasksProfilesResponse) => {
                 if (response.objects?.length) {
                     this._profiles = response.objects as ManagedTasksProfile[];

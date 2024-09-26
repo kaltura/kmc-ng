@@ -104,7 +104,7 @@ export class LogsComponent implements OnInit {
                             profileIds.push(report.managedTasksProfileId);
                         }
                     });
-                    this._mrStore.loadProfiles(500,0,'createdAt', SortDirection.Desc, profileIds).subscribe(
+                    this._mrStore.loadProfiles(500,0,'createdAt', SortDirection.Desc, profileIds, true).subscribe(
                         (response: LoadManagedTasksProfilesResponse) => {
                             if (response.objects?.length) {
                                 response.objects.forEach(profile => {
