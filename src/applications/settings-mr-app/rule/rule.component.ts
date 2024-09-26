@@ -163,7 +163,7 @@ export class RuleComponent implements OnInit {
                             },
                             error => {
                                 this.actionsComponent.resetActionsOnSave();
-                                this.displayError(error.message ? error.message : this._appLocalization.get('applications.settings.mr.saveError'));
+                                this.displayError(error.error?.message ? error.error.message : this._appLocalization.get('applications.settings.mr.saveError'));
                                 this._isDirty = false;
                             }
                         );
