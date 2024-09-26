@@ -50,7 +50,7 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
             .pipe(cancelOnDestroy(this))
             .subscribe(entry => {
                 this._requestCaptionsAvailable = this._reachAppViewService.isAvailable({ page: ReachPages.entry, entry });
-                this._captionsType = entry.adminTags?.indexOf('prioritize_ingested_captions') > -1 ? LiveCaptionsType.Reach : LiveCaptionsType.UserIngested;
+                this._captionsType = entry.adminTags?.indexOf('prioritize_ingested_captions') > -1 ? LiveCaptionsType.UserIngested : LiveCaptionsType.Reach;
                 this._specialCharacters = entry.adminTags?.indexOf('extract_closed_caption_feature') > -1;
                 let streams = (entry as KalturaLiveStreamEntry).streams.filter(stream => stream.type === 'closedCaptions');
                 if (streams?.length) {
@@ -74,12 +74,20 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
     }
 
     public onCaptionTypeChange(): void {
-        this._widgetService.liveCaptions.adminTag = this._captionsType === LiveCaptionsType.Reach ? 'prioritize_ingested_captions' : '';
+        this._widgetService.liveCaptions.adminTag = this._captionsType !== LiveCaptionsType.Reach ? 'prioritize_ingested_captions' : '';
+        if (this._specialCharacters && this._widgetService.liveCaptions.adminTag.length) {
+            this._widgetService.liveCaptions.adminTag += ',extract_closed_caption_feature';
+        }
         this._widgetService.setDirty();
     }
 
     public onSpecialCharactersChange(): void {
-        this._widgetService.liveCaptions.adminTag = this._specialCharacters ? 'extract_closed_caption_feature' : '';
+        const specialCharacters = this._specialCharacters ? ['extract_closed_caption_feature'] : [];
+        if (this._specialCharacters) {
+            this._widgetService.liveCaptions.adminTag = this._widgetService.liveCaptions.adminTag.split(',').concat(['extract_closed_caption_feature']).join(',');
+        } else {
+            this._widgetService.liveCaptions.adminTag = this._widgetService.liveCaptions.adminTag.split(',').filter(tag => tag !== 'extract_closed_caption_feature').join(',');
+        }
         this._widgetService.setDirty();
     }
 
