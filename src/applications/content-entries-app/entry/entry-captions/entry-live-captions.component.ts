@@ -50,8 +50,8 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
             .pipe(cancelOnDestroy(this))
             .subscribe(entry => {
                 this._requestCaptionsAvailable = this._reachAppViewService.isAvailable({ page: ReachPages.entry, entry });
-                this._captionsType = entry.adminTags?.indexOf('prioritize_ingested_captions') > -1 ? LiveCaptionsType.UserIngested : LiveCaptionsType.Reach;
-                this._specialCharacters = entry.adminTags?.indexOf('extract_closed_caption_feature') > -1;
+                this._captionsType = entry?.adminTags?.indexOf('prioritize_ingested_captions') > -1 ? LiveCaptionsType.UserIngested : LiveCaptionsType.Reach;
+                this._specialCharacters = entry?.adminTags?.indexOf('extract_closed_caption_feature') > -1;
                 let streams = (entry as KalturaLiveStreamEntry).streams.filter(stream => stream.type === 'closedCaptions');
                 if (streams?.length) {
                     this._containers = [];
