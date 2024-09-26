@@ -49,22 +49,24 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
         this._widgetService.data$
             .pipe(cancelOnDestroy(this))
             .subscribe(entry => {
-                this._requestCaptionsAvailable = this._reachAppViewService.isAvailable({ page: ReachPages.entry, entry });
-                this._captionsType = entry?.adminTags?.indexOf('prioritize_ingested_captions') > -1 ? LiveCaptionsType.UserIngested : LiveCaptionsType.Reach;
-                this._specialCharacters = entry?.adminTags?.indexOf('extract_closed_caption_feature') > -1;
-                let streams = (entry as KalturaLiveStreamEntry).streams.filter(stream => stream.type === 'closedCaptions');
-                if (streams?.length) {
-                    this._containers = [];
-                    streams = streams.sort((a, b) => a.id.localeCompare(b.id)); // sort by ID
-                    streams.forEach(stream => {
-                        this._containers.push({
-                            id: stream.id,
-                            protocol: stream.id.startsWith('CC') ? 'CEA-608' : 'CEA-708',
-                            language: stream.language.toUpperCase(),
-                            label: stream.label
+                if (entry) {
+                    this._requestCaptionsAvailable = this._reachAppViewService.isAvailable({page: ReachPages.entry, entry});
+                    this._captionsType = entry?.adminTags?.indexOf('prioritize_ingested_captions') > -1 ? LiveCaptionsType.UserIngested : LiveCaptionsType.Reach;
+                    this._specialCharacters = entry?.adminTags?.indexOf('extract_closed_caption_feature') > -1;
+                    let streams = (entry as KalturaLiveStreamEntry).streams.filter(stream => stream.type === 'closedCaptions');
+                    if (streams?.length) {
+                        this._containers = [];
+                        streams = streams.sort((a, b) => a.id.localeCompare(b.id)); // sort by ID
+                        streams.forEach(stream => {
+                            this._containers.push({
+                                id: stream.id,
+                                protocol: stream.id.startsWith('CC') ? 'CEA-608' : 'CEA-708',
+                                language: stream.language.toUpperCase(),
+                                label: stream.label
+                            })
                         })
-                    })
-                    this.setAddStreamDisabled();
+                        this.setAddStreamDisabled();
+                    }
                 }
             });
     }
