@@ -1,0 +1,25 @@
+name: Upload Assets
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        required: true
+        description: tag to download assets from
+
+jobs:
+  trigger-workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger workflow in private repository
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          TAG: ${{ inputs.tag }}
+          ASSET: ${{ github.event.repository.name }}
+        run: |
+          curl -L \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer $ACCESS_TOKEN" \
+          https://api.github.com/repos/kaltura/ovp-statboy/actions/workflows/upload-assests-to-s3.yaml/dispatches \
+          -d "{\"ref\":\"upload-to-s3\",\"inputs\":{\"tag\":\"$TAG\",\"asset\":\"$ASSET\",\"external\":\"true\"}}"

@@ -50,7 +50,7 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
             .pipe(cancelOnDestroy(this))
             .subscribe(entry => {
                 this._requestCaptionsAvailable = this._reachAppViewService.isAvailable({ page: ReachPages.entry, entry });
-                this._captionsType = entry.adminTags?.indexOf('prioritize_reach_captions') > -1 ? LiveCaptionsType.Reach : LiveCaptionsType.UserIngested;
+                this._captionsType = entry.adminTags?.indexOf('prioritize_ingested_captions') > -1 ? LiveCaptionsType.UserIngested : LiveCaptionsType.Reach;
                 this._specialCharacters = entry.adminTags?.indexOf('extract_closed_caption_feature') > -1;
                 let streams = (entry as KalturaLiveStreamEntry).streams.filter(stream => stream.type === 'closedCaptions');
                 if (streams?.length) {
@@ -60,7 +60,8 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
                         this._containers.push({
                             id: stream.id,
                             protocol: stream.id.startsWith('CC') ? 'CEA-608' : 'CEA-708',
-                            language: stream.language.toUpperCase()
+                            language: stream.language.toUpperCase(),
+                            label: stream.label
                         })
                     })
                     this.setAddStreamDisabled();
@@ -73,12 +74,20 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
     }
 
     public onCaptionTypeChange(): void {
-        this._widgetService.liveCaptions.adminTag = this._captionsType === LiveCaptionsType.Reach ? 'prioritize_reach_captions' : '';
+        this._widgetService.liveCaptions.adminTag = this._captionsType !== LiveCaptionsType.Reach ? 'prioritize_ingested_captions' : '';
+        if (this._specialCharacters && this._widgetService.liveCaptions.adminTag.length) {
+            this._widgetService.liveCaptions.adminTag += ',extract_closed_caption_feature';
+        }
         this._widgetService.setDirty();
     }
 
     public onSpecialCharactersChange(): void {
-        this._widgetService.liveCaptions.adminTag = this._specialCharacters ? 'extract_closed_caption_feature' : '';
+        const specialCharacters = this._specialCharacters ? ['extract_closed_caption_feature'] : [];
+        if (this._specialCharacters) {
+            this._widgetService.liveCaptions.adminTag = this._widgetService.liveCaptions.adminTag.split(',').concat(['extract_closed_caption_feature']).join(',');
+        } else {
+            this._widgetService.liveCaptions.adminTag = this._widgetService.liveCaptions.adminTag.split(',').filter(tag => tag !== 'extract_closed_caption_feature').join(',');
+        }
         this._widgetService.setDirty();
     }
 
@@ -93,7 +102,8 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
         const newContainer: StreamContainer = {
             id: ccStreams.length < 4 ? `CC${ccStreams.length + 1}` : `SERVICE${serviceStreams.length + 1}`,
             protocol: ccStreams.length < 4 ? 'CEA-608' : 'CEA-708',
-            language: 'EN'
+            language: 'EN',
+            label: 'English'
         }
         this._containers.push(newContainer);
         this.setAddStreamDisabled();
@@ -104,6 +114,11 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
         this._containers = this._containers.filter(container => container.id !== id);
         this._widgetService.setDirty();
         // update widget with the updated streams
+        this.onStreamUpdated();
+    }
+
+    public onLanguageUpdated(container: StreamContainer): void {
+        container.label = this._languages.find(language => language.value === container.language)?.label || container.label;
         this.onStreamUpdated();
     }
 
@@ -138,6 +153,7 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
         this._containers.forEach(container => this._widgetService.liveCaptions.streams.push(new KalturaStreamContainer({
             id: container.id,
             language: container.language.toLowerCase(),
+            label: container.label,
             type: 'closedCaptions'
         })))
     }

@@ -24,18 +24,26 @@
     <div class="containers" *ngIf="_captionsType === _liveCaptionsType.UserIngested">
         <span class="kTitle">{{'applications.content.entryDetails.captions.containers' | translate}}</span>
         <div class="kRow">
+            <span class="kId">{{'applications.content.entryDetails.captions.id' | translate}}</span>
             <span class="kLabel">{{'applications.content.entryDetails.captions.protocol' | translate}}</span>
             <span class="kLabel">{{'applications.content.entryDetails.captions.language' | translate}}</span>
+            <span class="kLabel">{{'applications.content.entryDetails.captions.label' | translate}}</span>
         </div>
 
         <span *ngIf="_widgetService._protocolError.length" class="kError">{{'applications.content.entryDetails.captions.streamError' + _widgetService._protocolError | translate}}</span>
 
         <div class="kRow" *ngFor="let container of _containers">
-            <div class="kLabel">
+            <div class="kId">
+                <span class="idReadOnly">{{container.id}}</span>
+            </div>
+             <div class="kLabel">
                 <p-dropdown [options]="_protocols" [(ngModel)]="container.protocol" (onChange)="onStreamUpdated()"></p-dropdown>
             </div>
             <div class="kLabel">
-                <p-dropdown [options]="_languages" [(ngModel)]="container.language" (onChange)="onStreamUpdated()"></p-dropdown>
+                <p-dropdown [options]="_languages" [(ngModel)]="container.language" (onChange)="onLanguageUpdated(container)"></p-dropdown>
+            </div>
+            <div class="kLabel">
+                <input class="kInput" pInputText [(ngModel)]="container.label" (ngModelChange)="onStreamUpdated()" [maxlength]="16">
             </div>
             <i class="kIconremove kRemove" [kTooltip]="'applications.content.entryDetails.captions.remove' | translate" (click)="removeContainer(container.id)"></i>
         </div>

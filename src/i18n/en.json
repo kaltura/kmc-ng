@@ -1863,6 +1863,7 @@
                     "add": "Add Caption",
                     "request": "Captions & Enrich",
                     "label": "Label",
+                    "id": "ID",
                     "type": "File Type",
                     "language": "Language",
                     "status": "Status",
@@ -1905,8 +1906,8 @@
                     "protocol": "Protocol",
                     "language": "Language",
                     "addStream": "Add container",
-                    "streamError608": "Max allowed CEA-608 protocols is 4",
-                    "streamError708": "Max allowed CEA-708 protocols is 63",
+                    "streamError608": "Max allowed CEA-608 containers is 4",
+                    "streamError708": "Max allowed CEA-708 containers is 63",
                     "remove": "Remove container"
                 },
                 "live": {
@@ -3273,6 +3274,7 @@
                     "services": "{{0}} Services",
                     "title": "Services",
                     "captions": "Captions",
+                    "liveCaptions": "Live Captions",
                     "translations": "Translations",
                     "alignment": "Alignment",
                     "audioDescription": "Audio Description",
