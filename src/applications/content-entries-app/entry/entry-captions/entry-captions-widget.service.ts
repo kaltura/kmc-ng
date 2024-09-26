@@ -447,17 +447,17 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     }
 
     // handle live captions save
-    if (this.liveCaptions.adminTag.length) {
-        const adminTags = this.data.adminTags.split(',');
-        const clearedAdminTags = adminTags.filter(tag => tag !== 'prioritize_ingested_captions' && tag !== 'extract_closed_caption_feature').join(',');
-        data.adminTags = clearedAdminTags.length > 0 ? clearedAdminTags + `,${this.liveCaptions.adminTag}` : this.liveCaptions.adminTag;
-    } else {
-        // remove previous admin tags
-        if (this.data.adminTags?.length) {
-            const adminTags = this.data.adminTags.split(',');
-            data.adminTags = adminTags.filter(tag => tag !== 'prioritize_ingested_captions' && tag !== 'extract_closed_caption_feature').join(',');
-        }
-    }
+      if (this.liveCaptions.adminTag.length) {
+          const adminTags = this.data?.adminTags.split(',') || [];
+          const clearedAdminTags = adminTags.filter(tag => tag !== 'prioritize_ingested_captions' && tag !== 'extract_closed_caption_feature').join(',');
+          data.adminTags = clearedAdminTags.length > 0 ? clearedAdminTags + `,${this.liveCaptions.adminTag}` : this.liveCaptions.adminTag;
+      } else {
+          // remove previous admin tags
+          if (this.data.adminTags?.length) {
+              const adminTags = this.data?.adminTags.split(',') || [];
+              data.adminTags = adminTags.filter(tag => tag !== 'prioritize_ingested_captions' && tag !== 'extract_closed_caption_feature').join(',');
+          }
+      }
     if (this.liveCaptions.streams.length) {
         // replace all streams of type closedCaptions with this.liveCaptions.streams
         if (!data.streams || data.streams.length === 0) {
