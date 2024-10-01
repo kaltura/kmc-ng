@@ -15,6 +15,7 @@ import {
     StudioV7MainViewService,
     StudioV3MainViewService,
     StudioV2MainViewService,
+    UpgradePlayerMainViewService,
     UsageDashboardMainViewService,
     LiveAnalyticsMainViewService,
     AdminUsersMainViewService,
@@ -72,6 +73,7 @@ export class KmcMainViewsService {
         private _studioV2Main: StudioV2MainViewService,
         private _studioV3Main: StudioV3MainViewService,
         private _studioV7Main: StudioV7MainViewService,
+        private _upgradePlayerMain: UpgradePlayerMainViewService,
         private _servicesDashboardMain: ServicesDashboardMainViewService,
         private _analyticsMainViewService: AnalyticsMainViewService,
         private _analyticsNewMainViewService: AnalyticsNewMainViewService,
@@ -215,6 +217,14 @@ export class KmcMainViewsService {
                             this._studioV2Main.open();
                         },
                         menuTitle: this._studioV2Main.getViewMetadata().menu
+                    },
+                    {
+                        isAvailable: this._upgradePlayerMain.isAvailable(),
+                        isActiveView:  (path) => this._upgradePlayerMain.isActiveView(path),
+                        open: () => {
+                            this._upgradePlayerMain.open();
+                        },
+                        menuTitle: this._upgradePlayerMain.getViewMetadata().menu
                     }
                 ]
             },

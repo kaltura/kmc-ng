@@ -25,6 +25,9 @@ export class AppBootstrap implements CanActivate {
     private _bootstrapStatusSource = new BehaviorSubject<BoostrappingStatus>(BoostrappingStatus.Bootstrapping);
     bootstrapStatus$ = this._bootstrapStatusSource.asObservable();
 
+    private _unisphereWorkspaceSource = new BehaviorSubject<any>(null);
+    unisphereWorkspace$ = this._unisphereWorkspaceSource.asObservable();
+
     constructor(private appLocalization: AppLocalization,
                 private auth: AppAuthentication,
                 private _browserService: BrowserService) {
@@ -94,6 +97,44 @@ export class AppBootstrap implements CanActivate {
                     bootstrapFailure(error);
                 }
             );
+
+            const loadUnisphereWorkspace = async (loaderUrl: string, options: any) => {
+                const loaderPath = loaderUrl;
+                const { loader } = await import(/* webpackIgnore: true */ loaderPath);
+                return loader(options)
+            }
+
+            loadUnisphereWorkspace(`${serverConfig.externalServices.unisphereLoaderEndpoint.uri}/loader/index.esm.js`,
+                {
+                    serverUrl: serverConfig.externalServices.unisphereLoaderEndpoint.uri,
+                    application: 'kmc',
+                    workspaceVersion: '1.0.0',
+                    modules: [],
+                    ui: {
+                        theme: 'light',
+                        language: 'en',
+                    },
+                    // devOverrides: {
+                    //         modules: {
+                    //         "unisphere.module.content-lab": {
+                    //             application: {
+                    //                 version: "1.0.0",
+                    //                     url: "http://localhost:8020/index.dev.esm.js"
+                    //             },
+                    //             showcase: {
+                    //                 version: "1.0.0",
+                    //                     url: "http://localhost:8020/index.dev.esm.js"
+                    //             }
+                    //         }
+                    //     }
+                    // }
+
+                }).then((workspace: any) => {
+                    console.log("[unisphere.kmc] workspace loaded");
+                    this._unisphereWorkspaceSource.next(workspace);
+            }, (error) => {
+                console.error('[unisphere.kmc] Error loading the Unisphere workspace:', error);
+            });
         }
     }
 

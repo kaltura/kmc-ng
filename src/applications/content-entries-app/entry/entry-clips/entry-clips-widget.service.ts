@@ -97,7 +97,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
     }
   }
 
-  public navigateToEntry(entry: KalturaMediaEntry): void {
+  public navigateToEntry(entry: KalturaMediaEntry | string): void {
     this._store.openEntry(entry);
   }
 

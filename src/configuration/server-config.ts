@@ -120,7 +120,10 @@ export interface ServerConfig {
         },
         vendorIntegrationsEndpoint: {
             uri: string;
-        }
+        },
+        unisphereLoaderEndpoint?: {
+            uri?: string;
+        };
     },
     analyticsServer?: {
         uri?: string
