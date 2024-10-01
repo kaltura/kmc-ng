@@ -14,6 +14,7 @@ import {
     KalturaVendorCatalogItem,
     KalturaVendorCatalogItemListResponse,
     KalturaVendorChapteringCatalogItemFilter,
+    KalturaVendorLiveCaptionCatalogItemFilter,
     KalturaVendorServiceFeature,
     KalturaVendorTranslationCatalogItemFilter,
     VendorCatalogItemListAction
@@ -126,6 +127,9 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
             switch (this._selectedFeature) {
                 case KalturaVendorServiceFeature.translation:
                     filter = new KalturaVendorTranslationCatalogItemFilter({});
+                    break;
+                case KalturaVendorServiceFeature.liveCaption:
+                    filter = new KalturaVendorLiveCaptionCatalogItemFilter({});
                     break;
                 case KalturaVendorServiceFeature.alignment:
                     filter = new KalturaVendorAlignmentCatalogItemFilter({});
