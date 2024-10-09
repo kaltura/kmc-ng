@@ -22,4 +22,4 @@ jobs:
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer $ACCESS_TOKEN" \
           https://api.github.com/repos/kaltura/ovp-statboy/actions/workflows/upload-assets-to-s3.yaml/dispatches \
-          -d "{\"ref\":\"upload-to-s3\",\"inputs\":{\"tag\":\"$TAG\",\"asset\":\"$ASSET\",\"external\":\"true\"}}"
+          -d "{\"ref\":\"upload-to-s3\",\"inputs\":{\"tag\":\"$TAG\",\"asset\":\"$ASSET\"}}"
