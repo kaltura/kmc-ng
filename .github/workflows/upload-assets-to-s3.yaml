@@ -1,11 +1,8 @@
 name: Upload Assets
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        required: true
-        description: tag to download assets from
+  release:
+    types: [created]
 
 jobs:
   trigger-workflow:
