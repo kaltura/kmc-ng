@@ -31,7 +31,7 @@ export class UpgradePlayerMainViewService extends KmcMainViewBaseService {
         this._logger.info(`handle isAvailable action by user`,
             { isViewPermitted });
 
-        return isViewPermitted;
+        return false; // isViewPermitted;
     }
 
     getRoutePath(): string {
