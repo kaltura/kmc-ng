@@ -2,7 +2,7 @@ name: Trigger Private Repository Workflow
 
 on:
   release:
-    types: [published]
+    types: [released]
 
 jobs:
   trigger-workflow:
