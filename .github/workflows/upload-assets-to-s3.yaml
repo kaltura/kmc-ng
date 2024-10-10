@@ -2,7 +2,7 @@ name: Upload Assets
 
 on:
   release:
-    types: [published]
+    types: [released]
 
 jobs:
   trigger-workflow:
