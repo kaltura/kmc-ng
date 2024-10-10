@@ -2,7 +2,7 @@ name: Upload Assets
 
 on:
   release:
-    types: [created]
+    types: [published]
 
 jobs:
   trigger-workflow:
@@ -11,7 +11,7 @@ jobs:
       - name: Trigger workflow in private repository
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          TAG: ${{ inputs.tag }}
+          TAG: ${{ github.ref_name }}
           ASSET: ${{ github.event.repository.name }}
         run: |
           curl -L \
