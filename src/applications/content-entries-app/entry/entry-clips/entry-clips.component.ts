@@ -5,8 +5,15 @@ import {EntryClipsWidget} from './entry-clips-widget.service';
 import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
 import { ClipAndTrimAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { EntryStore } from '../entry-store.service';
-import { Observable, merge } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
+import { serverConfig } from 'config/server';
+import { AppAuthentication, AppBootstrap, BrowserService } from 'app-shared/kmc-shell';
+import {PreviewAndEmbedEvent} from 'app-shared/kmc-shared/events';
+import {AppEventsService} from 'app-shared/kmc-shared';
+import {KalturaMediaEntry} from 'kaltura-ngx-client';
+import {WindowClosedEvent} from 'app-shared/kmc-shared/events/window-closed.event';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
     selector: 'kEntryClips',
@@ -21,9 +28,18 @@ export class EntryClips implements OnInit, OnDestroy {
     public _loading = false;
     public _loadingError = null;
     public _clipAndTrimEnabled = false;
-    public _clipAndTrimDisabledReason: string = null;
+    public _contentLabAvailable = false;
+
+    private unisphereModuleContext: any;
+    private unisphereCallbackUnsubscribe: Function;
+    private sharedEntryId = '';
 
     constructor(public _widgetService: EntryClipsWidget,
+                private _bootstrapService: AppBootstrap,
+                private _appPermissions: KMCPermissionsService,
+                private _appAuthentication: AppAuthentication,
+                private _browserService: BrowserService,
+                private _appEvents: AppEventsService,
                 private _clipAndTrimAppViewService: ClipAndTrimAppViewService,
                 logger: KalturaLogger,
                 private _store: EntryStore) {
@@ -57,8 +73,8 @@ export class EntryClips implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._widgetService.attachForm();
-
-        merge(
+        this._contentLabAvailable = this._appPermissions.hasPermission(KMCPermissions.FEATURE_CONTENT_LAB);
+        combineLatest(
             this._widgetService.data$,
             this._store.hasSource.value$
         )
@@ -70,14 +86,91 @@ export class EntryClips implements OnInit, OnDestroy {
                             entry: this._widgetService.data,
                             hasSource: this._store.hasSource.value()
                         });
+                        if (this._widgetService.data?.id && this._contentLabAvailable) {
+                            this.loadContentLab(this._widgetService.data.id);
+                        }
                     }else {
                         this._clipAndTrimEnabled = false;
                     }
                 }
             );
+
+        this._appEvents
+            .event(WindowClosedEvent)
+            .pipe(cancelOnDestroy(this))
+            .subscribe(({window}) => {
+                if (window === 'preview') {
+                    this.unisphereModuleContext?.selectClip(this.sharedEntryId); // set selected clip
+                    setTimeout(() => {
+                        this.unisphereModuleContext?.openWidget(); // open widget
+                    }, 100);
+
+                }
+            });
+    }
+
+    private loadContentLab(entryId: string): void {
+        this._bootstrapService.unisphereWorkspace$
+            .pipe(cancelOnDestroy(this))
+            .subscribe(unisphereWorkspace => {
+                if (unisphereWorkspace) {
+                    const contextSettings = {
+                        ks: this._appAuthentication.appUser.ks,
+                        pid: this._appAuthentication.appUser.partnerId.toString(),
+                        uiconfId: serverConfig.kalturaServer.previewUIConfV7.toString(),
+                        analyticsServerURI: serverConfig.analyticsServer.uri,
+                        hostAppName: 'kmc',
+                        hostAppVersion: globalConfig.client.appVersion,
+                        kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
+                        kalturaServerProxyURI: '',
+                        clipsOverride: '',
+                        entryId,
+                        buttonLabel: '',
+                        eventSessionContextId: '',
+                    }
+
+                    if (!this.unisphereModuleContext) {
+                        unisphereWorkspace.loadElement('unisphere.module.content-lab', 'application', contextSettings).then((data: any) => {
+                            this.unisphereModuleContext = data.element;
+                            this.unisphereModuleContext.assignArea('contentLabButton');
+                        }).catch(error => {
+                            console.error('failed to load module: ' + error.message)
+                        });
+                    }
+
+                    this.unisphereCallbackUnsubscribe = unisphereWorkspace.getService('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-lab.message-host-app', (data) => {
+                        const { action, entry } = data.payload;
+                        switch (action) {
+                            case 'entry':
+                                // navigate to entry
+                                document.body.style.overflowY = "auto";
+                                this._widgetService.navigateToEntry(entry.id)
+                                break;
+                            case 'download':
+                                // download entry
+                                this._browserService.openLink(entry.downloadUrl);
+                                break;
+                            case 'share':
+                                // edit entry
+                                this.sharedEntryId = entry.id;
+                                this.unisphereModuleContext?.closeWidget(); // close widget
+                                this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaMediaEntry(entry)));
+                                break;
+                            default:
+                                break;
+                        }
+                    })
+                }
+            },
+            error => {
+                // TODO - handle unisphere workspace load error
+            })
     }
 
     ngOnDestroy() {
+        if (this.unisphereCallbackUnsubscribe) {
+            this.unisphereCallbackUnsubscribe();
+        }
         this._widgetService.detachForm();
     }
 }

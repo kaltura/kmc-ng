@@ -9,13 +9,12 @@
 	}
   .kButtons{
     display: flex;
+    gap: 16px;
     padding-left: 24px;
-    padding-top: 12px;
-    margin-bottom: 20px;
+    align-items: center;
     button{
       height: 32px;
       font-weight: 400;
-      margin-right: 20px;
     }
   }
 	.kTable{

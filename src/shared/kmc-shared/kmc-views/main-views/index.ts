@@ -11,6 +11,7 @@ export * from './content-drop-folders-main-view.service';
 export * from './studio-v2-main-view.service';
 export * from './studio-v3-main-view.service';
 export * from './studio-v7-main-view.service';
+export * from './upgrade-player-main-view.service';
 export * from './usage-dashboard-main-view.service';
 export * from './live-analytics-main-view.service';
 export * from './admin-users-main-view.service';
