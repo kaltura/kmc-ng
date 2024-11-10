@@ -111,11 +111,11 @@ export class RulesComponent implements OnInit, OnDestroy {
                 label: profile.status === 'enabled' ? this._appLocalization.get('applications.settings.mr.disable') : this._appLocalization.get('applications.settings.mr.enable'),
                 command: () => this._actionSelected('enable-disable', profile)
             },
-            // {
-            //     id: 'test-run',
-            //     label: this._appLocalization.get('applications.settings.mr.testRun'),
-            //     command: () => this._actionSelected('test-run', profile)
-            // },
+            {
+                id: 'test-run',
+                label: this._appLocalization.get('applications.settings.mr.testRun'),
+                command: () => this._actionSelected('test-run', profile)
+            },
             {
                 id: 'edit',
                 label: this._appLocalization.get('applications.settings.authentication.table.edit'),
@@ -137,6 +137,9 @@ export class RulesComponent implements OnInit, OnDestroy {
                 break;
             case "edit":
                 this._editProfile(profile);
+                break;
+            case "test-run":
+                this._testRun(profile);
                 break;
             case "delete":
                 this.deletePopup.open();
@@ -186,6 +189,25 @@ export class RulesComponent implements OnInit, OnDestroy {
         this._logger.info(`handle edit ManagedTasksProfile action by user`);
         this._mrStore.selectedRule = profile;
         this._router.navigateByUrl(`/settings/mr/rule/${profile.id}`);
+    }
+
+    public _testRun(profile: ManagedTasksProfile): void {
+        this._blockerMessage = null;
+        this._isBusy = true;
+        this._mrStore.testRunProfile(profile).subscribe(
+            (response) => {
+                if (response && response.objectType && response.objectType === "KalturaAPIException") {
+                    // error returned from the server in the response
+                    this.displayError(response.message ? response.message : this._appLocalization.get('applications.settings.mr.dryRunError'));
+                } else {
+                    // success
+                    this._refresh();
+                }
+            },
+            error => {
+                this.displayError(this._appLocalization.get('applications.settings.mr.dryRunError'));
+            }
+        )
     }
 
     private displayError(error: string): void {

@@ -3589,6 +3589,7 @@
                 "deleteError": "Error deleting rule",
                 "loadError": "Error loading rule",
                 "saveError": "Error saving rule",
+                "dryRunError": "Error trying to test run the rule",
                 "statusError": "Error updating status",
                 "notifyError": "Error notifying owners",
                 "statusSuccess": "Status updated",

@@ -195,6 +195,15 @@ export class MrStoreService implements OnDestroy {
             return throwError(new Error('An error occurred while trying to update managed tasks profile ' + profile.id));
         }
     }
+
+    public testRunProfile(profile: ManagedTasksProfile): Observable<any> {
+        try {
+            return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/managedTasksProfile/dryRun`, {id: profile.id}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to dry run managed tasks profile ' + profile.id));
+        }
+    }
+
     public loadProfile(id: string): Observable<any> {
         try {
             return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/managedTasksProfile/get`, {id}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
