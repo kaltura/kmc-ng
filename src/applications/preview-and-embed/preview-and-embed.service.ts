@@ -45,7 +45,7 @@ export class PreviewEmbedService {
 		const filter = new KalturaUiConfFilter({
 			'tagsMultiLikeOr': tags,
 			'orderBy': '-updatedAt',
-			'objTypeIn': '1,8,22',
+			'objTypeIn': '1,8,22,23',
 			'creationModeEqual': 2
 		});
 

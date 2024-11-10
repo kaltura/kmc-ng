@@ -59,6 +59,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   private _previewLink = null;
   public renderPlayer = null;
   public _isAudioPlayer = false;
+  public _isReelsPlayer = false;
 
   public get _showEmberCode(): boolean {
     const showForPlaylist = this.media instanceof KalturaPlaylist && this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_EMBED_CODE);
@@ -102,6 +103,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           this._selectedPlayerVersion = form.selectedPlayer.version;
       }
       this._isAudioPlayer = this._previewForm.controls['selectedPlayer'].value.uiConf.objType === KalturaUiConfObjType.sap;
+      this._isReelsPlayer = this._previewForm.controls['selectedPlayer'].value.uiConf.objType === KalturaUiConfObjType.reels;
       this.setEmbedTypes();
       if (this._selectedPlayerVersion === 2) {
           this._generatedCode = this.generateCode(false);

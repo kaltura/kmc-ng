@@ -13,14 +13,16 @@
                         <ng-template let-item pTemplate="selectedItem">
                             <div class="playerItem selectedPlayer">
                                 <div *ngIf="item.value.uiConf.objType===22" class="playerIcon audio"></div>
-                                <div *ngIf="item.value.uiConf.objType!==22" [class]="'playerIcon v'+item.value.version"></div>
+                                <div *ngIf="item.value.uiConf.objType===23" class="playerIcon reels"></div>
+                                <div *ngIf="item.value.uiConf.objType!==22 && item.value.uiConf.objType!==23" [class]="'playerIcon v'+item.value.version"></div>
                                 <span>{{item.label}}</span>
                             </div>
                         </ng-template>
                         <ng-template let-item pTemplate="item">
                             <div class="playerItem">
                                 <div *ngIf="item.value.uiConf.objType===22" class="playerIcon audio"></div>
-                                <div *ngIf="item.value.uiConf.objType!==22" [class]="'playerIcon v'+item.value.version"></div>
+                                <div *ngIf="item.value.uiConf.objType===23" class="playerIcon reels"></div>
+                                <div *ngIf="item.value.uiConf.objType!==22 && item.value.uiConf.objType!==23" [class]="'playerIcon v'+item.value.version"></div>
                                 <span>{{item.label}}</span>
                                 <i class="check kIconcheck_small"></i>
                             </div>

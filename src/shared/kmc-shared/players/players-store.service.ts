@@ -124,7 +124,7 @@ export class PlayersStore implements OnDestroy {
       objTypeEqual: KalturaUiConfObjType.player,
       tagsMultiLikeAnd: tags,
       'orderBy': '-updatedAt',
-      'objTypeIn': '1,8',
+      'objTypeIn': '1,8,22,23',
       'creationModeEqual': 2
     });
 
