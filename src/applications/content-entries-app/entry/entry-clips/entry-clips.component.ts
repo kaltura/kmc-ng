@@ -130,6 +130,12 @@ export class EntryClips implements OnInit, OnDestroy {
                         eventSessionContextId: '',
                     }
 
+                    if (this._widgetService.isLiveEntry() && this._widgetService.data?.redirectEntryId?.length) {
+                        // handle live with recording
+                        contextSettings.entryId = this._widgetService.data.redirectEntryId;
+                        contextSettings.eventSessionContextId = entryId;
+                    }
+
                     if (!this.unisphereModuleContext) {
                         unisphereWorkspace.loadElement('unisphere.module.content-lab', 'application', contextSettings).then((data: any) => {
                             this.unisphereModuleContext = data.element;
