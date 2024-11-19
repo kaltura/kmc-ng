@@ -45,6 +45,11 @@
         },
         "unisphereLoaderEndpoint": {
             "uri": "https://unisphere.nvp1.ovp.kaltura.com/v1"
+        },
+        "checklistEndpoint": {
+            "checklistItem": "kmc-ng-v1",
+            "scriptUri": "https://checklist-ui.nvp1.ovp.kaltura.com",
+            "uri": "https://checklist.nvp1.ovp.kaltura.com"
         }
     },
     "externalApps": {

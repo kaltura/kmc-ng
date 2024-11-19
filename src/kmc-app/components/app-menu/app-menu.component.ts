@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, AfterViewInit, Renderer2, ViewChild} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
 import {
     AppAnalytics,
@@ -30,7 +30,7 @@ import {AppLocalization} from "@kaltura-ng/mc-shared";
     ]
 
 })
-export class AppMenuComponent implements OnInit, OnDestroy {
+export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @ViewChild('helpmenu', {static: true}) private _helpmenu: PopupWidgetComponent;
     @ViewChild('supportPopup', {static: true}) private _supportPopup: PopupWidgetComponent;
@@ -153,6 +153,29 @@ export class AppMenuComponent implements OnInit, OnDestroy {
                 this.hideMainMenu = false;
             });
 
+    }
+
+    ngAfterViewInit(){
+        // remove script node if exists
+        const script: any = document.getElementById("kalturaChecklistScript");
+        if (script !== null) {
+            script.parentNode.removeChild(script);
+        }
+        const s: any = document.createElement('script');
+        s.src = `${serverConfig.externalServices.checklistEndpoint.scriptUri}/checklist.js`;
+        s.id = "kalturaChecklistScript";
+        s.async = false;
+        s.onload = () => {
+            const c = new window["Checklist"]();
+            c.init({
+                apiUrl: serverConfig.externalServices.checklistEndpoint.uri,
+                button_location_id: "announcements",
+                kaltura_application: serverConfig.externalServices.checklistEndpoint.checklistItem,
+                ks : this._userAuthentication.appUser.ks
+            });
+            c.run();
+        }
+        document.head.appendChild(s);
     }
 
     private replaceMenu(menuID: string, menu: KMCAppMenuItem[]): void {

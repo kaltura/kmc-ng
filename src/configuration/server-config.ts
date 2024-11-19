@@ -123,6 +123,11 @@ export interface ServerConfig {
         },
         unisphereLoaderEndpoint?: {
             uri?: string;
+        },
+        checklistEndpoint?: {
+            checklistItem?: string;
+            scriptUri?: string;
+            uri?: string;
         };
     },
     analyticsServer?: {
