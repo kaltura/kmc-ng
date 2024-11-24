@@ -1575,7 +1575,8 @@
                     "clips": "Clips",
                     "users": "Users",
                     "distribution": "Distribution",
-                    "advertisements": "Advertisements"
+                    "advertisements": "Advertisements",
+                    "quizzes": "Quizzes"
                 },
                 "preview": {
                     "clipAndTrim": "Editor",
@@ -2020,6 +2021,10 @@
                     "n_a": "N/A",
                     "clipTrim": "Clip & Trim"
                 },
+                "quiz": {
+                    "quizzes": "Quizzes",
+                    "edit": "Add Quiz"
+                },
                 "advertisements": {
                     "title":"Advertisements",
                     "description": "Create and manage time-based advertisements using the Kaltura Video Editor Tool.",
@@ -2188,6 +2193,7 @@
                     "categoriesLoadError": "Error loading categories",
                     "flavorsLoadError": "Could not load data of flavors assets and params for this entry.",
                     "clipsLoadError": "Error loading clips.",
+                    "quizzesLoadError": "Error loading quizzes.",
                     "datesRangeError": "Day before cannot be earlier than the day after"
                 }
             },

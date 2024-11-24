@@ -33,6 +33,7 @@ import { ContentEntriesAppService } from '../content-entries-app.service';
 import { AppAnalytics, BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import {EntryQuizzeWidget} from './entry-quizzes/entry-quizzes-widget.service';
 
 @Component({
 	selector: 'kEntry',
@@ -49,6 +50,7 @@ import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
 		EntryFlavoursWidget,
 		EntryLiveWidget,
 		EntryClipsWidget,
+        EntryQuizzeWidget,
 		EntryCaptionsWidget,
 		EntryAccessControlWidget,
 		EntryMetadataWidget,
@@ -133,6 +135,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	            widget13: EntryPreviewWidget,
 	            widget14: EntryDistributionWidget,
 	            widget15: EntryAdvertisementsWidget,
+                widget16: EntryQuizzeWidget,
 	            private _permissionsService: KMCPermissionsService,
 	            private _entriesStore: EntriesStore,
 	            private _appLocalization: AppLocalization,
@@ -151,7 +154,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 		entryWidgetsManager.registerWidgets([
 			widget1, widget2, widget3, widget4, widget5, widget6, widget7,
 			widget8, widget9, widget10, widget11, widget12, widget13, widget14,
-			widget15
+			widget15, widget16
 		]);
 	}
 

@@ -30,6 +30,7 @@ export enum ContentEntryViewSections {
     Related = 'Related',
     Clips = 'Clips',
     Advertisements = 'Advertisements',
+    Quizzes = 'Quizzes',
     Users = 'Users',
     Distribution = 'Distribution',
     ResolveFromActivatedRoute = 'ResolveFromActivatedRoute'
@@ -119,6 +120,9 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
                     case 'advertisements':
                         result = ContentEntryViewSections.Advertisements;
                         break;
+                    case 'quizzes':
+                        result = ContentEntryViewSections.Quizzes;
+                        break;
                     case 'users':
                         result = ContentEntryViewSections.Users;
                         break;
@@ -167,6 +171,9 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
             case ContentEntryViewSections.Advertisements:
                 result = 'advertisements';
                 break;
+            case ContentEntryViewSections.Quizzes:
+                result = 'quizzes';
+                break;
             case ContentEntryViewSections.Users:
                 result = 'users';
                 break;
@@ -205,6 +212,9 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
                 result = mediaType !== KalturaMediaType.image;
                 break;
             case ContentEntryViewSections.Advertisements:
+                result = mediaType !== KalturaMediaType.image && !this._isLiveMediaEntry(entry.mediaType);
+                break;
+            case ContentEntryViewSections.Quizzes:
                 result = mediaType !== KalturaMediaType.image && !this._isLiveMediaEntry(entry.mediaType);
                 break;
             case ContentEntryViewSections.Live:
@@ -247,6 +257,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
                 result = this._appPermissions.hasPermission(KMCPermissions.FEATURE_LIVE_STREAM);
                 break;
             case ContentEntryViewSections.Advertisements:
+            case ContentEntryViewSections.Quizzes:
                 result = this._appPermissions.hasPermission(KMCPermissions.ADCUEPOINT_PLUGIN_PERMISSION);
                 break;
             case ContentEntryViewSections.Captions:
