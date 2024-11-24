@@ -150,8 +150,9 @@ export class EntryClips implements OnInit, OnDestroy {
                         switch (action) {
                             case 'entry':
                                 // navigate to entry
+                                this.unisphereModuleContext?.closeWidget(); // close widget
                                 document.body.style.overflowY = "auto";
-                                this._widgetService.navigateToEntry(entry.id)
+                                this._widgetService.navigateToEntry(entry.id);
                                 break;
                             case 'download':
                                 // download entry
