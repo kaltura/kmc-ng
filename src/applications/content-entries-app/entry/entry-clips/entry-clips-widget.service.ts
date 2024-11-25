@@ -2,7 +2,13 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import { Observable } from 'rxjs';
 
-import {KalturaClient, KalturaMediaType} from 'kaltura-ngx-client';
+import {
+    KalturaClient,
+    KalturaMediaType, KalturaNullableBoolean,
+    KalturaQuizAdvancedFilter,
+    KalturaSearchOperator,
+    KalturaSearchOperatorType
+} from 'kaltura-ngx-client';
 import {KalturaMediaEntryFilter} from 'kaltura-ngx-client';
 import {KalturaFilterPager} from 'kaltura-ngx-client';
 import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client';
@@ -150,6 +156,13 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
         filter: new KalturaMediaEntryFilter(
           {
             rootEntryIdIn,
+            advancedSearch: new KalturaSearchOperator({
+                type: KalturaSearchOperatorType.searchAnd,
+                items: [new KalturaSearchOperator({
+                    type: KalturaSearchOperatorType.searchOr,
+                    items: [new KalturaQuizAdvancedFilter({ isQuiz: KalturaNullableBoolean.falseValue })]
+                })]
+            }),
             orderBy: `${this.sortOrder === 1 ? '+' : '-'}${this.sortBy}`
           }
         ),
