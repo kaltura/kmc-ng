@@ -159,11 +159,6 @@ export class EntryQuizzeWidget extends EntryWidget implements OnDestroy {
             pageIndex: this.pageIndex + 1
           }
         )
-      }).setRequestOptions({
-        responseProfile: new KalturaDetachedResponseProfile({
-          type: KalturaResponseProfileType.includeFields,
-          fields: 'id,name,plays,createdAt,duration,status,operationAttributes,moderationStatus'
-        })
       }))
         .pipe(cancelOnDestroy(this, this.widgetReset$))
         .subscribe(

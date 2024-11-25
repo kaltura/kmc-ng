@@ -86,7 +86,7 @@ export class EntryClips implements OnInit, OnDestroy {
                             entry: this._widgetService.data,
                             hasSource: this._store.hasSource.value()
                         });
-                        if (this._widgetService.data?.id && this._contentLabAvailable) {
+                        if (this._widgetService.data?.id && this._contentLabAvailable && !this.unisphereCallbackUnsubscribe) {
                             this.loadContentLab(this._widgetService.data.id);
                         }
                     }else {

@@ -276,7 +276,6 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
                   break;
           }
 
-keditUrl = "https://kmc.kaltura.com/apps/kea/v2.29.34/index.html";
           if (keditUrl) {
               this._logger.debug('show kedit application', {keditUrl: keditUrl, tab: this.tab});
               const isLiveEntry = [

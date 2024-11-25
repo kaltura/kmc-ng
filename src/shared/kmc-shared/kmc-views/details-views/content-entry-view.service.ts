@@ -215,7 +215,7 @@ export class ContentEntryViewService extends KmcDetailsViewBaseService<ContentEn
                 result = mediaType !== KalturaMediaType.image && !this._isLiveMediaEntry(entry.mediaType);
                 break;
             case ContentEntryViewSections.Quizzes:
-                result = mediaType !== KalturaMediaType.image && !this._isLiveMediaEntry(entry.mediaType);
+                result = mediaType !== KalturaMediaType.image && !this._isLiveMediaEntry(entry.mediaType) && entry.capabilities?.indexOf('quiz.quiz') === -1;
                 break;
             case ContentEntryViewSections.Live:
                 result = this._isLiveMediaEntry(entry.mediaType);

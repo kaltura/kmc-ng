@@ -38,6 +38,7 @@ export class EntryPreview implements OnInit, OnDestroy {
     public _previewDisabled = false;
     public _entryId = '';
     public _isImage = false;
+    public _isQuiz = false;
     public _loadThumbnailWithKs = false;
     public _thumbnailUrl = '';
     public _ks = '';
@@ -113,6 +114,7 @@ export class EntryPreview implements OnInit, OnDestroy {
                         }
                     })
                     this._isImage = data.mediaType === KalturaMediaType.image;
+                    this._isQuiz = data.capabilities?.indexOf('quiz.quiz') > -1;
                     this._thumbnailUrl = data.thumbnailUrl + '/width/280';
                     const entryHasContent = this._currentEntry.status.toString() !== KalturaEntryStatus.noContent.toString();
 

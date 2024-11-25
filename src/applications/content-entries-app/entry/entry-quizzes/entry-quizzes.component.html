@@ -2,11 +2,10 @@
                 [bodyScroll]="true">
     <div class="kClips">
         <p class="kTitle">{{'applications.content.entryDetails.quiz.quizzes' | translate}}</p>
-        <span>{{_widgetService.data?.capabilities?.indexOf('quiz.quiz') > -1}}</span>
         <div class="kButtons">
             <div>
                 <button [disabled]="!_clipAndTrimEnabled" pButton class="kButtonDefault"
-                        (click)="_clipAndTrimEnabled && clipAndTrim.open()" icon="kIconquiz"
+                        (click)="addQuiz()" icon="kIconquiz"
                         label="{{'applications.content.entryDetails.quiz.edit' | translate}}"></button>
             </div>
             <div *ngIf="_contentLabAvailable" id="contentLabButton"></div>
@@ -45,6 +44,7 @@
                         <th [ngStyle]="{'width':'70px'}">
                             {{'applications.content.entryDetails.clips.status' | translate}}
                         </th>
+                        <th [ngStyle]="{'width':'80px'}"></th>
                     </tr>
                 </ng-template>
 
@@ -60,6 +60,12 @@
                         <td [ngStyle]="{'width':'110px'}">{{entry.createdAt | kmcDate}}</td>
                         <td [ngStyle]="{'width':'80px'}">{{entry.duration}}</td>
                         <td [ngStyle]="{'width':'70px'}">{{entry | entryStatus}}</td>
+                        <td [ngStyle]="{'width':'80px'}">
+                            <div class="kQuizzesTableActions">
+                                <button type="button" pButton class="kMoreActionsButton" icon="kIconmore"
+                                        (click)="openActionsMenu($event, entry)"></button>
+                            </div>
+                        </td>
                     </tr>
                 </ng-template>
 
@@ -77,9 +83,11 @@
 
 <kPopupWidget #clipAndTrim data-aid="clipAndTrim" [fullScreen]="true">
     <ng-template>
-        <kEntryEditor [entry]="_widgetService.data"
+        <kEntryEditor [entry]="_selectedEntry"
                       [entryHasSource]="true"
                       [tab]="'quiz'"
                       [parentPopupWidget]="clipAndTrim"></kEntryEditor>
     </ng-template>
 </kPopupWidget>
+
+<p-menu #actionsmenu [popup]="true" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>

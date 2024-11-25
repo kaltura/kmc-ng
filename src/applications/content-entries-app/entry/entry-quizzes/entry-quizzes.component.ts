@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {globalConfig} from 'config/global';
 import {EntryQuizzeWidget} from './entry-quizzes-widget.service';
@@ -12,6 +12,12 @@ import { AppAuthentication, AppBootstrap, BrowserService } from 'app-shared/kmc-
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {WindowClosedEvent} from 'app-shared/kmc-shared/events/window-closed.event';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {ContentEntriesAppService} from '../../content-entries-app.service';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {KalturaMediaEntry} from 'kaltura-ngx-client';
+import {MenuItem} from 'primeng/api';
+import {Menu} from 'primeng/menu';
 
 @Component({
     selector: 'kEntryQuizzes',
@@ -22,6 +28,9 @@ import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-p
     ]
 })
 export class EntryQuizzes implements OnInit, OnDestroy {
+    @ViewChild('clipAndTrim', { static: true }) _clipAndTrim: PopupWidgetComponent;
+    @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
+
     public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
     public _loading = false;
     public _loadingError = null;
@@ -31,10 +40,14 @@ export class EntryQuizzes implements OnInit, OnDestroy {
     private unisphereModuleContext: any;
     private unisphereCallbackUnsubscribe: Function;
     private sharedEntryId = '';
+    public _selectedEntry: KalturaMediaEntry = null;
+    public _actions: MenuItem[] = [];
 
     constructor(public _widgetService: EntryQuizzeWidget,
                 private _bootstrapService: AppBootstrap,
                 private _appPermissions: KMCPermissionsService,
+                private _contentEntriesAppService: ContentEntriesAppService,
+                private _appLocalization: AppLocalization,
                 private _appAuthentication: AppAuthentication,
                 private _browserService: BrowserService,
                 private _appEvents: AppEventsService,
@@ -84,7 +97,7 @@ export class EntryQuizzes implements OnInit, OnDestroy {
                             entry: this._widgetService.data,
                             hasSource: this._store.hasSource.value()
                         });
-                        if (this._widgetService.data?.id && this._contentLabAvailable) {
+                        if (this._widgetService.data?.id && this._contentLabAvailable && !this.unisphereCallbackUnsubscribe) {
                             this.loadContentLab(this._widgetService.data.id);
                         }
                     }else {
@@ -105,6 +118,37 @@ export class EntryQuizzes implements OnInit, OnDestroy {
 
                 }
             });
+
+        this._actions = [
+            {label: this._appLocalization.get('applications.content.table.editor'), command: (event) => {this.actionSelected("edit");}},
+            {label: this._appLocalization.get('applications.content.table.pretest'), command: (event) => {this.actionSelected("download");}}
+        ];
+    }
+
+    openActionsMenu(event: any, entry: KalturaMediaEntry): void{
+        if (this.actionsMenu){
+            // save the selected file for usage in the actions menu
+            this._selectedEntry = entry;
+            this.actionsMenu.toggle(event);
+        }
+    }
+
+    private actionSelected(action: string): void{
+        switch (action){
+            case "edit":
+                this._clipAndTrim.open();
+                break;
+            case "download":
+                this.downloadQuestions(this._selectedEntry.id);
+                break;
+        }
+    }
+
+    public addQuiz(): void {
+        if (this._clipAndTrimEnabled) {
+            this._selectedEntry = this._widgetService.data;
+            this._clipAndTrim.open();
+        }
     }
 
     private loadContentLab(entryId: string): void {
@@ -147,20 +191,19 @@ export class EntryQuizzes implements OnInit, OnDestroy {
                         switch (action) {
                             case 'entry':
                                 // navigate to entry
+                                this.unisphereModuleContext?.closeWidget();
                                 document.body.style.overflowY = "auto";
                                 this._widgetService.navigateToEntry(entry.id)
-                                this.unisphereModuleContext?.closeWidget();
                                 break;
                             case 'download':
                                 // download questions list
-                                alert("download questions list")
+                                this.downloadQuestions(entry.id);
                                 break;
                             case 'edit':
                                 // edit entry
-                                alert("edit quiz")
-                                // this.sharedEntryId = entry.id;
-                                // this.unisphereModuleContext?.closeWidget(); // close widget
-                                // this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaMediaEntry(entry)));
+                                this._selectedEntry = entry;
+                                this.unisphereModuleContext?.closeWidget();
+                                this._clipAndTrim.open();
                                 break;
                             default:
                                 break;
@@ -173,11 +216,33 @@ export class EntryQuizzes implements OnInit, OnDestroy {
             })
     }
 
+    private downloadQuestions(entryId: string): void {
+        this._contentEntriesAppService.downloadPretest(entryId)
+            .pipe(
+                tag('block-shell'),
+                cancelOnDestroy(this)
+            )
+            .subscribe(
+                (url) => {
+                    this._browserService.openLink(url);
+                },
+                error => {
+                    this._browserService.alert({
+                        header: this._appLocalization.get('app.common.error'),
+                        message: error.message
+                    });
+                }
+            );
+    }
+
     ngOnDestroy() {
         if (this.unisphereCallbackUnsubscribe) {
             this.unisphereCallbackUnsubscribe();
         }
+        this.actionsMenu.hide();
         this._widgetService.detachForm();
     }
+
+    protected readonly _kmcPermissions = KMCPermissions;
 }
 
