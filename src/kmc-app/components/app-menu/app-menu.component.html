@@ -38,6 +38,7 @@
 
                 <button *ngIf="_showStartPlan" (click)="startPlan()" class="kButtonBranded kStartPlan" pButton [label]="'selfServe.startPlan' | translate"></button>
 
+                <div id="announcements"></div>
                 <kUploadMonitor [appmenu]="appmenu"></kUploadMonitor>
 
                 <i *ngFor="let item of rightMenuConfig" (click)="item.open()" [ngClass]="item.icon" [class.open]="item === selectedMenuItem" [kTooltip]="item.menuTitle" [placement]="'bottom'"></i>
