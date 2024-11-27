@@ -9,6 +9,9 @@
     cursor: default;
     pointer-events: none;
 }
+#announcements {
+    margin-right: 12px;
+}
 .appMenu {
     background: $menuBkgColor; /* Old browsers */
     background: -moz-linear-gradient(left, #004194 0%, #006EFA 100%); /* FF3.6-15 */
