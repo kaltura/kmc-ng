@@ -124,6 +124,7 @@ export class EntryClips implements OnInit, OnDestroy {
                         kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
                         kalturaServerProxyURI: '',
                         clipsOverride: '',
+                        postSaveActions: 'share,download,entry',
                         widget: 'clips',
                         entryId,
                         buttonLabel: '',

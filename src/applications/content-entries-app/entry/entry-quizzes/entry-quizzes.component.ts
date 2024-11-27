@@ -166,6 +166,7 @@ export class EntryQuizzes implements OnInit, OnDestroy {
                         kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
                         kalturaServerProxyURI: '',
                         widget: 'quiz',
+                        postSaveActions: 'edit,download,entry',
                         entryId,
                         buttonLabel: '',
                         eventSessionContextId: '',
