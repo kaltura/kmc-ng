@@ -171,7 +171,12 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
                 apiUrl: serverConfig.externalServices.checklistEndpoint.uri,
                 button_location_id: "announcements",
                 kaltura_application: serverConfig.externalServices.checklistEndpoint.checklistItem,
-                ks : this._userAuthentication.appUser.ks
+                ks : this._userAuthentication.appUser.ks,
+                vars : {
+                    hostControlButtonMargin: true,
+                    whatsNewIcon: `${serverConfig.externalServices.checklistEndpoint.scriptUri}/assets/gift-lightBlue.svg`,
+                    whatsNewLabel: ""
+                }
             });
             c.run();
         }
