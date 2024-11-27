@@ -1272,6 +1272,7 @@
                 }
             },
             "table": {
+                "pretest": "Download pre-test",
                 "thumbnail": "Thumbnail",
                 "thumb": "Thumb",
                 "id": "ID",
@@ -1575,7 +1576,8 @@
                     "clips": "Clips",
                     "users": "Users",
                     "distribution": "Distribution",
-                    "advertisements": "Advertisements"
+                    "advertisements": "Advertisements",
+                    "quizzes": "Quizzes"
                 },
                 "preview": {
                     "clipAndTrim": "Editor",
@@ -2020,6 +2022,10 @@
                     "n_a": "N/A",
                     "clipTrim": "Clip & Trim"
                 },
+                "quiz": {
+                    "quizzes": "Quizzes",
+                    "edit": "Add Quiz"
+                },
                 "advertisements": {
                     "title":"Advertisements",
                     "description": "Create and manage time-based advertisements using the Kaltura Video Editor Tool.",
@@ -2188,6 +2194,7 @@
                     "categoriesLoadError": "Error loading categories",
                     "flavorsLoadError": "Could not load data of flavors assets and params for this entry.",
                     "clipsLoadError": "Error loading clips.",
+                    "quizzesLoadError": "Error loading quizzes.",
                     "datesRangeError": "Day before cannot be earlier than the day after"
                 }
             },
@@ -4052,6 +4059,7 @@
         "BO": "Tibetan",
         "BR": "Breton",
         "CA": "Catalan",
+        "CMN": "Mandarin Chinese",
         "CO": "Corsican",
         "CS": "Czech",
         "CY": "Welsh",
@@ -4067,7 +4075,7 @@
         "ES": "Spanish",
         "ET": "Estonian",
         "EU": "Basque",
-        "FA": "Persian",
+        "FA": "Farsi",
         "FI": "Finnish",
         "FJ": "Fiji",
         "FO": "Faeroese",
@@ -4134,6 +4142,7 @@
         "OR": "Oriya",
         "PA": "Punjabi",
         "PL": "Polish",
+        "PRP": "Persian",
         "PS": "Pashto (Pushto)",
         "PT": "Portuguese",
         "PTBR": "Portuguese (Brazil)",
@@ -4188,6 +4197,7 @@
         "XH": "Xhosa",
         "YI": "Yiddish",
         "YO": "Yoruba",
+        "YUE": "Cantonese",
         "ZH": "Chinese",
         "ZHTW": "Taiwanese Mandarin",
         "ZU": "Zulu"

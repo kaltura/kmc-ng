@@ -48,5 +48,9 @@ export const SectionsList = [
     {
       label : 'applications.content.entryDetails.sections.advertisements',
       key : ContentEntryViewSections.Advertisements
+    },
+    {
+      label : 'applications.content.entryDetails.sections.quizzes',
+      key : ContentEntryViewSections.Quizzes
     }
 ];

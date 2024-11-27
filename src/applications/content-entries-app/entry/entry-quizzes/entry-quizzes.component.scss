@@ -19,13 +19,17 @@
   }
 	.kTable{
 		margin-top: 24px;
+        .kQuizzesTableActions {
+            width: 100%;
+            text-align: center;
+        }
 	}
 }
 :host ::ng-deep .ui-paginator {
 	padding-right: 12px;
 }
 :host ::ng-deep .kTableFooter {
-   position: relative;
+  position: relative;
   .p-dropdown-panel {
     min-width: 70px;
   }

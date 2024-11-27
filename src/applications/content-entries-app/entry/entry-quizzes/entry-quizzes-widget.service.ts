@@ -31,17 +31,18 @@ import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { UpdateClipsEvent } from 'app-shared/kmc-shared/events/update-clips-event';
+import {UpdateQuizzesEvent} from 'app-shared/kmc-shared/events/update-quizzes-event';
 
-export interface ClipsData
+export interface QuizzesData
 {
     items : any[];
     totalItems : number;
 }
 
 @Injectable()
-export class EntryClipsWidget extends EntryWidget implements OnDestroy {
-  private _clips = new BehaviorSubject<ClipsData>({items: null, totalItems: 0});
-  public entries$ = this._clips.asObservable();
+export class EntryQuizzeWidget extends EntryWidget implements OnDestroy {
+  private _quizzes = new BehaviorSubject<QuizzesData>({items: null, totalItems: 0});
+  public entries$ = this._quizzes.asObservable();
   public sortBy: string = 'createdAt';
   public sortOrder = 1;
 
@@ -64,12 +65,12 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
               private _appLocalization: AppLocalization,
               private _appEvents: AppEventsService,
               logger: KalturaLogger) {
-    super(ContentEntryViewSections.Clips, logger);
+    super(ContentEntryViewSections.Quizzes, logger);
 
-      this._appEvents.event(UpdateClipsEvent)
+      this._appEvents.event(UpdateQuizzesEvent)
           .pipe(cancelOnDestroy(this))
           .subscribe(() => {
-              this.updateClips();
+              this.updateQuizzes();
               this._store.setRefreshEntriesListUponLeave();
           });
 
@@ -88,16 +89,16 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
       this.pageSize = defaultPageSize;
     }
 
-    this._clips.next({items: [], totalItems: 0});
+    this._quizzes.next({items: [], totalItems: 0});
   }
 
   /**
    * Updates list of clips
    */
-  public updateClips(): void {
+  public updateQuizzes(): void {
 
     if (this.data) {
-      this._getEntryClips('reload').subscribe(() => {
+      this._getEntryQuizzes('reload').subscribe(() => {
         // do nothing
       });
     }
@@ -114,33 +115,19 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
         this.data.mediaType === KalturaMediaType.liveStreamQuicktime;
   }
 
-  private _updateClipProperties(clips: any[]): any[] {
-    clips.forEach((clip: any) => {
-      clip['offset'] = this._getClipOffset(clip);
-      clip['duration'] = this._getClipDuration(clip);
+  private _updateQuizProperties(quizzes: any[]): any[] {
+      quizzes.forEach((quiz: any) => {
+          quiz['duration'] = this._getQuizDuration(quiz);
     });
-    return clips.filter(clip => clip.id !== this.data.id);
+    return quizzes.filter(clip => clip.id !== this.data.id);
   }
 
-  private _getClipOffset(entry: KalturaMediaEntry): string {
-    let offset: number = -1;
-    if (entry.operationAttributes && entry.operationAttributes.length) {
-      entry.operationAttributes.forEach((attr: KalturaOperationAttributes) => {
-        if (attr instanceof KalturaClipAttributes) {
-          if (attr.offset && offset === -1) { // take the first offset we find as in legacy KMC
-            offset = attr.offset / 1000;
-          }
-        }
-      });
-    }
-    return offset !== -1 ? KalturaUtils.formatTime(offset) : this._appLocalization.get('applications.content.entryDetails.clips.n_a');
-  }
 
-  private _getClipDuration(entry: KalturaMediaEntry): string {
+  private _getQuizDuration(entry: KalturaMediaEntry): string {
     return entry.duration ? KalturaUtils.formatTime(entry.duration) : this._appLocalization.get('applications.content.entryDetails.clips.n_a');
   }
 
-  private _getEntryClips(origin: 'activation' | 'reload'): Observable<{ failed: boolean, error?: Error }> {
+  private _getEntryQuizzes(origin: 'activation' | 'reload'): Observable<{ failed: boolean, error?: Error }> {
     return Observable.create(observer => {
       const entry: KalturaMediaEntry = this.data;
 
@@ -156,14 +143,14 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
         filter: new KalturaMediaEntryFilter(
           {
             rootEntryIdIn,
+            orderBy: `${this.sortOrder === 1 ? '+' : '-'}${this.sortBy}`,
             advancedSearch: new KalturaSearchOperator({
-                type: KalturaSearchOperatorType.searchAnd,
-                items: [new KalturaSearchOperator({
-                    type: KalturaSearchOperatorType.searchOr,
-                    items: [new KalturaQuizAdvancedFilter({ isQuiz: KalturaNullableBoolean.falseValue })]
-                })]
-            }),
-            orderBy: `${this.sortOrder === 1 ? '+' : '-'}${this.sortBy}`
+              type: KalturaSearchOperatorType.searchAnd,
+              items: [new KalturaSearchOperator({
+                type: KalturaSearchOperatorType.searchOr,
+                items: [new KalturaQuizAdvancedFilter({ isQuiz: KalturaNullableBoolean.trueValue })]
+              })]
+            })
           }
         ),
         pager: new KalturaFilterPager(
@@ -172,34 +159,29 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
             pageIndex: this.pageIndex + 1
           }
         )
-      }).setRequestOptions({
-        responseProfile: new KalturaDetachedResponseProfile({
-          type: KalturaResponseProfileType.includeFields,
-          fields: 'id,name,plays,createdAt,duration,status,offset,operationAttributes,moderationStatus'
-        })
       }))
         .pipe(cancelOnDestroy(this, this.widgetReset$))
         .subscribe(
           response => {
             super._hideLoader();
-            this._clips.next({items: this._updateClipProperties(response.objects), totalItems: response.totalCount});
+            this._quizzes.next({items: this._updateQuizProperties(response.objects), totalItems: response.totalCount});
             observer.next({failed: false});
             observer.complete();
           },
           error => {
-            this._clips.next({items: [], totalItems: 0});
+            this._quizzes.next({items: [], totalItems: 0});
             super._hideLoader();
             if (origin === 'activation') {
               super._showActivationError();
             } else {
               this._showBlockerMessage(new AreaBlockerMessage(
                 {
-                  message: this._appLocalization.get('applications.content.entryDetails.errors.clipsLoadError'),
+                  message: this._appLocalization.get('applications.content.entryDetails.errors.quizzesLoadError'),
                   buttons: [
                     {
                       label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
                       action: () => {
-                        this._getEntryClips('reload').subscribe(() => {
+                        this._getEntryQuizzes('reload').subscribe(() => {
                           // do nothing
                         });
                       }
@@ -225,7 +207,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy {
 
   protected onActivate(firstTimeActivating: boolean) {
     const entry: KalturaMediaEntry = this.data ? this.data as KalturaMediaEntry : null;
-    return this._getEntryClips('activation');
+    return this._getEntryQuizzes('activation');
   }
 
   ngOnDestroy() {

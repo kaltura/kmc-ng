@@ -1,0 +1,93 @@
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage"
+                [bodyScroll]="true">
+    <div class="kClips">
+        <p class="kTitle">{{'applications.content.entryDetails.quiz.quizzes' | translate}}</p>
+        <div class="kButtons">
+            <div>
+                <button [disabled]="!_clipAndTrimEnabled" pButton class="kButtonDefault"
+                        (click)="addQuiz()" icon="kIconquiz"
+                        label="{{'applications.content.entryDetails.quiz.edit' | translate}}"></button>
+            </div>
+            <div *ngIf="_contentLabAvailable" id="contentLabButton"></div>
+        </div>
+        <div class="kTable">
+            <p-table dataKey="id"
+                     [value]="(_widgetService.entries$ | async)?.items"
+                     [scrollable]="true"
+                     [rowTrackBy]="_rowTrackBy"
+                     [customSort]="true"
+                     [sortField]="_widgetService.sortBy"
+                     [sortOrder]="_widgetService.sortOrder"
+                     [defaultSortOrder]="_defaultSortOrder"
+                     (sortFunction)="_onSortChanged($event)">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th [ngStyle]="{'width':'120px','padding-left': '24px'}">
+                            {{'applications.content.entryDetails.clips.id' | translate}}
+                        </th>
+                        <th [kpSortableColumn]="'name'">
+                            {{'applications.content.entryDetails.clips.name' | translate}}
+                            <p-sortIcon [field]="'name'"></p-sortIcon>
+                        </th>
+                        <th [ngStyle]="{'width':'80px'}" [kpSortableColumn]="'plays'">
+                            {{'applications.content.entryDetails.clips.plays' | translate}}
+                            <p-sortIcon [field]="'plays'"></p-sortIcon>
+                        </th>
+                        <th [ngStyle]="{'width':'110px'}" [kpSortableColumn]="'createdAt'">
+                            {{'applications.content.entryDetails.clips.created' | translate}}
+                            <p-sortIcon [field]="'createdAt'"></p-sortIcon>
+                        </th>
+                        <th [ngStyle]="{'width':'80px'}" [kpSortableColumn]="'duration'">
+                            {{'applications.content.entryDetails.clips.duration' | translate}}
+                            <p-sortIcon [field]="'duration'"></p-sortIcon>
+                        </th>
+                        <th [ngStyle]="{'width':'70px'}">
+                            {{'applications.content.entryDetails.clips.status' | translate}}
+                        </th>
+                        <th [ngStyle]="{'width':'80px'}"></th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-entry>
+                    <tr>
+                        <td [ngStyle]="{'width':'120px','padding-left': '24px'}">
+                            <a (click)="_widgetService.navigateToEntry(entry)">{{entry.id}}</a>
+                        </td>
+                        <td>
+                            <span class="kTableColumn" [kTooltip]="entry.name">{{entry.name}}</span>
+                        </td>
+                        <td [ngStyle]="{'width':'80px'}">{{entry.plays}}</td>
+                        <td [ngStyle]="{'width':'110px'}">{{entry.createdAt | kmcDate}}</td>
+                        <td [ngStyle]="{'width':'80px'}">{{entry.duration}}</td>
+                        <td [ngStyle]="{'width':'70px'}">{{entry | entryStatus}}</td>
+                        <td [ngStyle]="{'width':'80px'}">
+                            <div class="kQuizzesTableActions">
+                                <button type="button" pButton class="kMoreActionsButton" icon="kIconmore"
+                                        (click)="openActionsMenu($event, entry)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <div class="emptymessage">{{'applications.content.table.noResults' | translate}}</div>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-paginator class="kTableFooter" [rows]="_widgetService.pageSize" (onPageChange)="_onPaginationChanged($event)"
+                     [totalRecords]="(_widgetService.entries$ | async)?.totalItems"
+                     [rowsPerPageOptions]="_widgetService.pageSizesAvailable"></p-paginator>
+    </div>
+</k-area-blocker>
+
+<kPopupWidget #clipAndTrim data-aid="clipAndTrim" [fullScreen]="true">
+    <ng-template>
+        <kEntryEditor [entry]="_selectedEntry"
+                      [entryHasSource]="true"
+                      [tab]="'quiz'"
+                      [parentPopupWidget]="clipAndTrim"></kEntryEditor>
+    </ng-template>
+</kPopupWidget>
+
+<p-menu #actionsmenu [popup]="true" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
