@@ -25,7 +25,7 @@ import { EntryAdvertisementsWidget } from './entry-advertisements/entry-advertis
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { ClipAndTrimAppViewService, LiveDashboardAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
+import { ClipAndTrimAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { CustomMenuItem } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
@@ -33,6 +33,7 @@ import { ContentEntriesAppService } from '../content-entries-app.service';
 import { AppAnalytics, BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
+import {EntryQuizzeWidget} from './entry-quizzes/entry-quizzes-widget.service';
 
 @Component({
 	selector: 'kEntry',
@@ -49,6 +50,7 @@ import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
 		EntryFlavoursWidget,
 		EntryLiveWidget,
 		EntryClipsWidget,
+        EntryQuizzeWidget,
 		EntryCaptionsWidget,
 		EntryAccessControlWidget,
 		EntryMetadataWidget,
@@ -73,6 +75,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _enablePrevButton: boolean;
 	public _enableNextButton: boolean;
 	public _entryHasChanges : boolean;
+    public _isQuizEntry: boolean;
 	public _kmcPermissions = KMCPermissions;
     public _items: CustomMenuItem[] = [
         {
@@ -88,6 +91,11 @@ export class EntryComponent implements OnInit, OnDestroy {
         {
             label: this._appLocalization.get('applications.content.table.editor'),
             commandName: 'editor',
+            styleClass: ''
+        },
+        {
+            label: this._appLocalization.get('applications.content.table.pretest'),
+            commandName: 'pretest',
             styleClass: ''
         },
         {
@@ -133,13 +141,13 @@ export class EntryComponent implements OnInit, OnDestroy {
 	            widget13: EntryPreviewWidget,
 	            widget14: EntryDistributionWidget,
 	            widget15: EntryAdvertisementsWidget,
+                widget16: EntryQuizzeWidget,
 	            private _permissionsService: KMCPermissionsService,
 	            private _entriesStore: EntriesStore,
 	            private _appLocalization: AppLocalization,
                 private _analytics: AppAnalytics,
 	            public _entryStore: EntryStore,
                 private _contentEntryViewService: ContentEntryViewService,
-                private _liveDashboardAppViewService: LiveDashboardAppViewService,
                 private _contentEntriesAppService: ContentEntriesAppService,
                 private _clipAndTrimAppViewService: ClipAndTrimAppViewService,
                 private _browserService: BrowserService,
@@ -151,7 +159,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 		entryWidgetsManager.registerWidgets([
 			widget1, widget2, widget3, widget4, widget5, widget6, widget7,
 			widget8, widget9, widget10, widget11, widget12, widget13, widget14,
-			widget15
+			widget15, widget16
 		]);
 	}
 
@@ -168,10 +176,12 @@ export class EntryComponent implements OnInit, OnDestroy {
         const isDownloadCommand = commandName === 'download';
         const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
         const isNotVideoAudioImage = [KalturaMediaType.video, KalturaMediaType.audio, KalturaMediaType.image].indexOf(mediaType) === -1;
+        const isPretestCommand = commandName === 'pretest';
+        const isQuizEntry = entry.capabilities?.indexOf('quiz.quiz') > -1;
         return !(
             (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
             (isDownloadCommand && (isNotVideoAudioImage || isExternalMedia)) ||
-            cannotDeleteEntry
+            cannotDeleteEntry || (isPretestCommand && !isQuizEntry)
         );
     }
 
@@ -205,8 +215,13 @@ export class EntryComponent implements OnInit, OnDestroy {
                         };
                         break;
                     case 'download':
+                        this._analytics.trackClickEvent('Download');
                         item.command = () => this._downloadEntry(entry);
                         item.disabled = entry.status !== KalturaEntryStatus.ready || !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DOWNLOAD);
+                        break;
+                    case 'pretest':
+                        this._analytics.trackClickEvent('Pretest');
+                        item.command = () => this._downloadPretest(entry.id);
                         break;
                     default:
                         break;
@@ -238,6 +253,34 @@ export class EntryComponent implements OnInit, OnDestroy {
             .subscribe(
                 () => {
                     this._backToList();
+                },
+                error => {
+                    this._browserService.alert({
+                        header: this._appLocalization.get('app.common.error'),
+                        message: error.message,
+                        accept: () => {
+                            this._entryStore.reloadEntry();
+                        }
+                    });
+                }
+            );
+    }
+
+    private _downloadPretest(entryId: string): void {
+        this._logger.info(`handle download pre-test action by user`, { entryId });
+        if (!entryId) {
+            this._logger.info('EntryId is not defined. Abort action');
+            return;
+        }
+
+        this._contentEntriesAppService.downloadPretest(entryId)
+            .pipe(
+                tag('block-shell'),
+                cancelOnDestroy(this)
+            )
+            .subscribe(
+                (url) => {
+                    this._browserService.openLink(url);
                 },
                 error => {
                     this._browserService.alert({
@@ -313,6 +356,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 								this._entryName = entry.name;
 								this._entryType = entry.mediaType;
 								this._sourceType = entry.sourceType;
+                                this._isQuizEntry = entry.capabilities?.indexOf('quiz.quiz') > -1;
                                 this._entry = entry;
                                 this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable(); // new analytics app is available
                                 this._buildMenu(entry);

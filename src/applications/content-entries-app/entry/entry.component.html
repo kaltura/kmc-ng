@@ -58,7 +58,7 @@
     <ng-template>
         <kEntryEditor [entry]="_entryStore.entry"
                       [entryHasSource]="true"
-                      [tab]="'editor'"
+                      [tab]="_isQuizEntry? 'quiz' : 'editor'"
                       [parentPopupWidget]="clipAndTrim"></kEntryEditor>
     </ng-template>
 </kPopupWidget>

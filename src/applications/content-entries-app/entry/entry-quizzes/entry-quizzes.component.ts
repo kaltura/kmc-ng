@@ -1,7 +1,7 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {globalConfig} from 'config/global';
-import {EntryClipsWidget} from './entry-clips-widget.service';
+import {EntryQuizzeWidget} from './entry-quizzes-widget.service';
 import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
 import { ClipAndTrimAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { EntryStore } from '../entry-store.service';
@@ -9,21 +9,28 @@ import { combineLatest } from 'rxjs';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { serverConfig } from 'config/server';
 import { AppAuthentication, AppBootstrap, BrowserService } from 'app-shared/kmc-shell';
-import {PreviewAndEmbedEvent} from 'app-shared/kmc-shared/events';
 import {AppEventsService} from 'app-shared/kmc-shared';
-import {KalturaMediaEntry} from 'kaltura-ngx-client';
 import {WindowClosedEvent} from 'app-shared/kmc-shared/events/window-closed.event';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {ContentEntriesAppService} from '../../content-entries-app.service';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {KalturaMediaEntry} from 'kaltura-ngx-client';
+import {MenuItem} from 'primeng/api';
+import {Menu} from 'primeng/menu';
 
 @Component({
-    selector: 'kEntryClips',
-    templateUrl: './entry-clips.component.html',
-    styleUrls: ['./entry-clips.component.scss'],
+    selector: 'kEntryQuizzes',
+    templateUrl: './entry-quizzes.component.html',
+    styleUrls: ['./entry-quizzes.component.scss'],
     providers: [
-      KalturaLogger.createLogger('EntryClipsComponent')
+      KalturaLogger.createLogger('EntryQuizzesComponent')
     ]
 })
-export class EntryClips implements OnInit, OnDestroy {
+export class EntryQuizzes implements OnInit, OnDestroy {
+    @ViewChild('clipAndTrim', { static: true }) _clipAndTrim: PopupWidgetComponent;
+    @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
+
     public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
     public _loading = false;
     public _loadingError = null;
@@ -33,10 +40,14 @@ export class EntryClips implements OnInit, OnDestroy {
     private unisphereModuleContext: any;
     private unisphereCallbackUnsubscribe: Function;
     private sharedEntryId = '';
+    public _selectedEntry: KalturaMediaEntry = null;
+    public _actions: MenuItem[] = [];
 
-    constructor(public _widgetService: EntryClipsWidget,
+    constructor(public _widgetService: EntryQuizzeWidget,
                 private _bootstrapService: AppBootstrap,
                 private _appPermissions: KMCPermissionsService,
+                private _contentEntriesAppService: ContentEntriesAppService,
+                private _appLocalization: AppLocalization,
                 private _appAuthentication: AppAuthentication,
                 private _browserService: BrowserService,
                 private _appEvents: AppEventsService,
@@ -59,7 +70,7 @@ export class EntryClips implements OnInit, OnDestroy {
             this._widgetService.sortOrder = event.order;
             this._widgetService.sortBy = event.field;
 
-            this._widgetService.updateClips();
+            this._widgetService.updateQuizzes();
         }
     }
 
@@ -67,7 +78,7 @@ export class EntryClips implements OnInit, OnDestroy {
         if (state.page !== this._widgetService.pageIndex || state.rows !== this._widgetService.pageSize) {
             this._widgetService.pageIndex = state.page;
             this._widgetService.pageSize = state.rows;
-            this._widgetService.updateClips();
+            this._widgetService.updateQuizzes();
         }
     }
 
@@ -100,13 +111,44 @@ export class EntryClips implements OnInit, OnDestroy {
             .pipe(cancelOnDestroy(this))
             .subscribe(({window}) => {
                 if (window === 'preview') {
-                    this.unisphereModuleContext?.selectClip(this.sharedEntryId); // set selected clip
+                    this.unisphereModuleContext?.selectClip(this.sharedEntryId); // set selected quiz
                     setTimeout(() => {
                         this.unisphereModuleContext?.openWidget(); // open widget
                     }, 100);
 
                 }
             });
+
+        this._actions = [
+            {label: this._appLocalization.get('applications.content.table.editor'), command: (event) => {this.actionSelected("edit");}},
+            {label: this._appLocalization.get('applications.content.table.pretest'), command: (event) => {this.actionSelected("download");}}
+        ];
+    }
+
+    openActionsMenu(event: any, entry: KalturaMediaEntry): void{
+        if (this.actionsMenu){
+            // save the selected file for usage in the actions menu
+            this._selectedEntry = entry;
+            this.actionsMenu.toggle(event);
+        }
+    }
+
+    private actionSelected(action: string): void{
+        switch (action){
+            case "edit":
+                this._clipAndTrim.open();
+                break;
+            case "download":
+                this.downloadQuestions(this._selectedEntry.id);
+                break;
+        }
+    }
+
+    public addQuiz(): void {
+        if (this._clipAndTrimEnabled) {
+            this._selectedEntry = this._widgetService.data;
+            this._clipAndTrim.open();
+        }
     }
 
     private loadContentLab(entryId: string): void {
@@ -123,9 +165,8 @@ export class EntryClips implements OnInit, OnDestroy {
                         hostAppVersion: globalConfig.client.appVersion,
                         kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
                         kalturaServerProxyURI: '',
-                        clipsOverride: '',
-                        postSaveActions: 'share,download,entry',
-                        widget: 'clips',
+                        widget: 'quiz',
+                        postSaveActions: 'edit,download,entry',
                         entryId,
                         buttonLabel: '',
                         eventSessionContextId: '',
@@ -151,19 +192,19 @@ export class EntryClips implements OnInit, OnDestroy {
                         switch (action) {
                             case 'entry':
                                 // navigate to entry
-                                this.unisphereModuleContext?.closeWidget(); // close widget
+                                this.unisphereModuleContext?.closeWidget();
                                 document.body.style.overflowY = "auto";
-                                this._widgetService.navigateToEntry(entry.id);
+                                this._widgetService.navigateToEntry(entry.id)
                                 break;
                             case 'download':
-                                // download entry
-                                this._browserService.openLink(entry.downloadUrl);
+                                // download questions list
+                                this.downloadQuestions(entry.id);
                                 break;
-                            case 'share':
+                            case 'edit':
                                 // edit entry
-                                this.sharedEntryId = entry.id;
-                                this.unisphereModuleContext?.closeWidget(); // close widget
-                                this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaMediaEntry(entry)));
+                                this._selectedEntry = entry;
+                                this.unisphereModuleContext?.closeWidget();
+                                this._clipAndTrim.open();
                                 break;
                             default:
                                 break;
@@ -176,11 +217,33 @@ export class EntryClips implements OnInit, OnDestroy {
             })
     }
 
+    private downloadQuestions(entryId: string): void {
+        this._contentEntriesAppService.downloadPretest(entryId)
+            .pipe(
+                tag('block-shell'),
+                cancelOnDestroy(this)
+            )
+            .subscribe(
+                (url) => {
+                    this._browserService.openLink(url);
+                },
+                error => {
+                    this._browserService.alert({
+                        header: this._appLocalization.get('app.common.error'),
+                        message: error.message
+                    });
+                }
+            );
+    }
+
     ngOnDestroy() {
         if (this.unisphereCallbackUnsubscribe) {
             this.unisphereCallbackUnsubscribe();
         }
+        this.actionsMenu.hide();
         this._widgetService.detachForm();
     }
+
+    protected readonly _kmcPermissions = KMCPermissions;
 }
 

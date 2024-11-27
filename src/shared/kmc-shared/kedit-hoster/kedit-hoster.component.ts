@@ -32,11 +32,11 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() entry: KalturaMediaEntry | KalturaLiveEntry = null;
   @Input() tab: 'quiz' | 'editor' | 'advertisements' | 'hotspots' = null;
-    @Input() entryHasSource = false;
+  @Input() entryHasSource = false;
 
   @Output() enteredDraftMode = new EventEmitter<void>();
   @Output() exitDraftMode = new EventEmitter<void>();
-    @Output() closeEditor = new EventEmitter<void>();
+  @Output() closeEditor = new EventEmitter<void>();
 
 
   public keditUrl: string;
@@ -275,7 +275,6 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
                   keditUrl = null;
                   break;
           }
-
 
           if (keditUrl) {
               this._logger.debug('show kedit application', {keditUrl: keditUrl, tab: this.tab});

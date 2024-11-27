@@ -48,7 +48,7 @@ export class QuizAppViewService extends KmcComponentViewBaseService<QuizAppViewA
     }
 
     private _isAvailableByPermission(): boolean {
-        return false;
+        return this._appPermissions.hasPermission(KMCPermissions.ADCUEPOINT_PLUGIN_PERMISSION);
     }
 
     private _isAvailableByData(args: QuizAppViewArgs): boolean {
