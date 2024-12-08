@@ -228,7 +228,7 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
               this._logger.debug('quiz view is available, add configuration for tabs: quiz');
               tabs['quiz'] = {
                   name: 'quiz',
-                  permissions: ['quiz'],
+                  permissions: ['quiz','questions-v2','questions-v3','enable-retake','preventSeek'],
                   userPermissions: ['quiz']
               };
           }
