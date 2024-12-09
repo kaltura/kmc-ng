@@ -3,11 +3,8 @@
 .kHoster{
     width: 100%;
     height: calc(100vh - 59px);
-    display: flex;
-    justify-content: center;
   iframe{
     width: 100%;
-    max-width: 1200px;
     height: 672px;
   }
 }
