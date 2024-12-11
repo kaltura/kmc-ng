@@ -30,8 +30,7 @@ import {EntryWidget} from '../entry-widget';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { ContentEntryViewSections } from 'app-shared/kmc-shared/kmc-views/details-views/content-entry-view.service';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { UpdateClipsEvent } from 'app-shared/kmc-shared/events/update-clips-event';
-import {UpdateQuizzesEvent} from 'app-shared/kmc-shared/events/update-quizzes-event';
+import { UpdateQuizzesEvent } from 'app-shared/kmc-shared/events/update-quizzes-event';
 
 export interface QuizzesData
 {
