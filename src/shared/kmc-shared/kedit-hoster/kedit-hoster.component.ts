@@ -18,6 +18,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaLiveEntry } from 'kaltura-ngx-client';
 import { KalturaMediaType } from 'kaltura-ngx-client';
+import { UpdateQuizzesEvent } from 'app-shared/kmc-shared/events/update-quizzes-event';
 
 
 @Component({
@@ -110,6 +111,11 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
               }, e.origin);
           }
 
+
+          /* received when a quiz was created.*/
+          if (postMessageData.messageType === 'kea-quiz-created') {
+              this._appEvents.publish(new UpdateQuizzesEvent());
+          }
 
           /*
 		  * Fired when modifying advertisements (save not performed yet).
