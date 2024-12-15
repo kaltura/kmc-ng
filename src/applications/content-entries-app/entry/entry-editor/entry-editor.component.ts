@@ -4,6 +4,8 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import {WindowClosedEvent} from 'app-shared/kmc-shared/events/window-closed.event';
+import {AppEventsService} from 'app-shared/kmc-shared';
 
 @Component({
   selector: 'kEntryEditor',
@@ -25,6 +27,7 @@ export class EntryEditorComponent implements OnInit, OnDestroy {
   public _confirmClose = false;
 
   constructor(private _browserService: BrowserService,
+              private appEvents: AppEventsService,
               private _appLocalization: AppLocalization) {
   }
 
@@ -43,6 +46,7 @@ export class EntryEditorComponent implements OnInit, OnDestroy {
           accept: () => {
             this._confirmClose = false;
             if (this.parentPopupWidget) {
+              this.appEvents.publish(new WindowClosedEvent('editor'));
               this.parentPopupWidget.close();
             }
           },
@@ -52,6 +56,7 @@ export class EntryEditorComponent implements OnInit, OnDestroy {
       );
     } else {
       if (this.parentPopupWidget) {
+        this.appEvents.publish(new WindowClosedEvent('editor'));
         this.parentPopupWidget.close();
       }
     }

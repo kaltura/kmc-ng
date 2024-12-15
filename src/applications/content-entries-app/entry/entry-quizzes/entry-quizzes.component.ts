@@ -110,8 +110,7 @@ export class EntryQuizzes implements OnInit, OnDestroy {
             .event(WindowClosedEvent)
             .pipe(cancelOnDestroy(this))
             .subscribe(({window}) => {
-                if (window === 'preview') {
-                    this.unisphereModuleContext?.selectClip(this.sharedEntryId); // set selected quiz
+                if (window === 'editor') {
                     setTimeout(() => {
                         this.unisphereModuleContext?.openWidget(); // open widget
                     }, 100);
