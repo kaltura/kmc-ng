@@ -7,9 +7,10 @@
 						<button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
 						<div class="kTitle">{{ _entryName }}</div>
                         <div class="kEntryActionsWrapper">
+                            <div id="contentLabButton"></div>
 <!--                            <k-toggle-live-btn *ngIf="$any(_entry)?.explicitLive"-->
 <!--                                               [entry]="_entry"></k-toggle-live-btn>-->
-                            <button pButton icon="kIconstatistic" class="kButtonDefault kAnalytics"
+                            <button pButton class="kButtonDefault kAnalytics"
                                     *ngIf="_analyticsAllowed"
                                     [label]="'applications.content.entries.viewAnalytics' | translate"
                                     (click)="_openEntryAnalytics()"></button>
