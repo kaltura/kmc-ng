@@ -27,7 +27,11 @@ export class UpgradePlayerComponent implements OnInit, OnDestroy {
                     if (unisphereWorkspace) {
                         const contextSettings = {
                             ks: this._appAuthentication.appUser.ks,
-                            kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri
+                            kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
+                            analyticsServerURI: serverConfig.analyticsServer.uri,
+                            hostAppName: 'kmc',
+                            hostAppVersion: globalConfig.client.appVersion,
+                            pid: this._appAuthentication.appUser.partnerId.toString()
                         }
                         if (!this.unisphereModuleContext) {
                             unisphereWorkspace.loadElement('unisphere.module.upgrade-player', 'application', contextSettings).then((data: any) => {
