@@ -52,19 +52,9 @@ export class DocumentComponent implements OnInit, OnDestroy {
   public _analyticsAllowed = false;
   public _enablePrevButton: boolean;
   public _enableNextButton: boolean;
-    public _items: CustomMenuItem[] = [
-        {
-            label: this._appLocalization.get('applications.content.table.download'),
-            commandName: 'download',
-            styleClass: ''
-        },
-        {
-            label: this._appLocalization.get('applications.content.table.delete'),
-            commandName: 'delete',
-            styleClass: 'kDanger'
-        }
-    ];
+  public _items: CustomMenuItem[] = [];
   public _menuItems: CustomMenuItem[] = [];
+  public _showActions = true;
 
     public get _enableSaveBtn(): boolean {
         return this._documentStore.documentIsDirty; // TODO [kmc] check for room update permissions once added to the backend
@@ -94,6 +84,21 @@ export class DocumentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+        this._showActions = this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DOWNLOAD) || this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DOWNLOAD)) {
+            this._items.push({
+                label: this._appLocalization.get('applications.content.table.download'),
+                commandName: 'download',
+                styleClass: ''
+            });
+        }
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE)) {
+            this._items.push({
+                label: this._appLocalization.get('applications.content.table.delete'),
+                commandName: 'delete',
+                styleClass: 'kDanger'
+            });
+        }
     let errorMessage;
       this._documentStore.notifications$
           .pipe(cancelOnDestroy(this))

@@ -11,7 +11,7 @@
 <!--                                    *ngIf="_analyticsAllowed"-->
 <!--                                    [label]="'applications.content.entries.viewAnalytics' | translate"-->
 <!--                                    (click)="_openRoomAnalytics()"></button>-->
-                            <button type="button" pButton class="kButtonDefault kEntryActions" icon="kIconmore"
+                            <button *ngIf="_showActions" type="button" pButton class="kButtonDefault kEntryActions" icon="kIconmore"
                                     (click)="actionsmenu.toggle($event)"></button>
                             <button pButton class="kButtonBranded kSaveBtn"
                                     [label]="'app.common.save' | translate"

@@ -13,7 +13,7 @@ import {Menu} from 'primeng/menu';
 import {KalturaBaseEntry, KalturaRoomEntry} from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {globalConfig} from 'config/global';
-import {KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 import {ColumnsResizeManagerService, ResizableColumnsTableName} from 'app-shared/kmc-shared/columns-resize-manager';
 import {MenuItem} from 'primeng/api';
 import {AnalyticsNewMainViewService} from "app-shared/kmc-shared/kmc-views";
@@ -54,7 +54,7 @@ export class RoomsTableComponent implements AfterViewInit, OnInit, OnDestroy {
     public _rooms: KalturaRoomEntry[] = [];
     public _items: MenuItem[];
     public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
-
+    public _showActionsColumn = true;
     public rowTrackBy: Function = (index: number, item: any) => item.id;
 
     constructor(public _columnsResizeManager: ColumnsResizeManagerService,
@@ -63,6 +63,8 @@ export class RoomsTableComponent implements AfterViewInit, OnInit, OnDestroy {
                 private _analyticsNewMainViewService: AnalyticsNewMainViewService,
                 private _cdRef: ChangeDetectorRef,
                 private _el: ElementRef<HTMLElement>) {
+        this._showActionsColumn = this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_METADATA) ||
+            this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DOWNLOAD);
     }
 
     ngOnInit() {
@@ -95,22 +97,26 @@ export class RoomsTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     buildMenu(room: KalturaRoomEntry): void {
-        this._items = [
-            {
+        this._items = [];
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_METADATA)) {
+            this._items.push({
                 id: 'view',
                 label: this._appLocalization.get('applications.content.table.view'),
                 command: () => this.onActionSelected('view', room)
-            },
-            {
+            });
+        }
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE)) {
+            this._items.push({
                 id: 'delete',
                 label: this._appLocalization.get('applications.content.table.delete'),
                 styleClass: 'kDanger',
                 command: () => this.onActionSelected('delete', room)
-            }
-        ];
+            });
+        }
     }
 
     onActionSelected(action: string, room: KalturaRoomEntry) {
+        if (action === 'view' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_METADATA)) return;
         this.actionSelected.emit({'action': action, 'room': room});
     }
 
