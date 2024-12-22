@@ -7,7 +7,7 @@ import {
   KeyValueDiffers,
   OnDestroy
 } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import { throwError } from 'rxjs';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
@@ -295,7 +295,6 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
   public _removeFile(file: RelatedFile): void {
     // update the list by filtering the assets array.
     this._relatedFiles.next({ items: this._relatedFiles.getValue().items.filter((item: RelatedFile) => item !== file) });
-
     // stop tracking changes on this asset
     // if file id is empty it was added by the user so no need to track its changes.
     if (file.id && this.relatedFileDiffer[file.id]) {
@@ -397,6 +396,16 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 	public _setDirty(){
 		super.updateState({isDirty: true});
 	}
+
+    protected onValidate(wasActivated: boolean) : Observable<{ isValid : boolean}>
+    {
+        const isValid = this._relatedFiles.getValue().items.filter((item: RelatedFile) => item.uploadFailure === true).length === 0;
+        return Observable.create(observer =>
+        {
+            observer.next({ isValid });
+            observer.complete()
+        });
+    }
 
     ngOnDestroy()
     {
