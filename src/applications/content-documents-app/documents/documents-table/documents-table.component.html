@@ -39,7 +39,7 @@
           <th data-cid="status" [ngStyle]="{'width': '160px'}" pResizableColumn>
             {{'applications.content.table.status' | translate}}
           </th>
-          <th [ngStyle]="{'width': '80px'}"></th>
+          <th *ngIf="_showActionsColumn" [ngStyle]="{'width': '80px'}"></th>
         </tr>
       </ng-template>
 
@@ -80,7 +80,7 @@
               </span>
           </td>
 
-          <td [ngStyle]="{'width': '80px'}">
+          <td *ngIf="_showActionsColumn" [ngStyle]="{'width': '80px'}">
             <div class="kDocumentsTableActions">
               <button class="kMoreActionsButton" type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, document)"></button>
             </div>

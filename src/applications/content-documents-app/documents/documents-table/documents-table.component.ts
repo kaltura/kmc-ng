@@ -13,7 +13,7 @@ import {Menu} from 'primeng/menu';
 import {KalturaDocumentEntry} from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {globalConfig} from 'config/global';
-import {KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 import {ColumnsResizeManagerService, ResizableColumnsTableName} from 'app-shared/kmc-shared/columns-resize-manager';
 import {MenuItem} from 'primeng/api';
 import {AnalyticsNewMainViewService} from "app-shared/kmc-shared/kmc-views";
@@ -55,6 +55,7 @@ export class DocumentsTableComponent implements AfterViewInit, OnInit, OnDestroy
     public _documents: KalturaDocumentEntry[] = [];
     public _items: MenuItem[];
     public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
+    public _showActionsColumn = true;
 
     public rowTrackBy: Function = (index: number, item: any) => item.id;
     public _loadThumbnailWithKs = false;
@@ -67,6 +68,9 @@ export class DocumentsTableComponent implements AfterViewInit, OnInit, OnDestroy
                 private _analyticsNewMainViewService: AnalyticsNewMainViewService,
                 private _cdRef: ChangeDetectorRef,
                 private _el: ElementRef<HTMLElement>) {
+        this._showActionsColumn = this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_METADATA) ||
+            this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE) ||
+            this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DOWNLOAD);
     }
 
     ngOnInit() {
@@ -101,27 +105,32 @@ export class DocumentsTableComponent implements AfterViewInit, OnInit, OnDestroy
     }
 
     buildMenu(document: KalturaDocumentEntry): void {
-        this._items = [
-            {
+        this._items = [];
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_METADATA)) {
+            this._items.push({
                 id: 'view',
                 label: this._appLocalization.get('applications.content.table.view'),
                 command: () => this.onActionSelected('view', document)
-            },
-            {
+            });
+        }
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DOWNLOAD)) {
+            this._items.push({
                 id: 'download',
                 label: this._appLocalization.get('applications.content.table.download'),
                 command: () => this.onActionSelected('download', document)
-            },
-            {
-                id: 'delete',
+            });
+        }
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE)) {
+            this._items.push({
                 label: this._appLocalization.get('applications.content.table.delete'),
                 styleClass: 'kDanger',
                 command: () => this.onActionSelected('delete', document)
-            }
-        ];
+            });
+        }
     }
 
     onActionSelected(action: string, document: KalturaDocumentEntry) {
+        if (action === 'view' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_METADATA)) return;
         this.actionSelected.emit({'action': action, 'document': document});
     }
 

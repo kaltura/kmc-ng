@@ -19,7 +19,7 @@
                 <col data-cid="name">
                 <col data-cid="roomId" [ngStyle]="{'width': '160px'}">
                 <col data-cid="createdAt" [ngStyle]="{'width': '180px'}">
-                <col [ngStyle]="{'width': '80px'}">
+                <col *ngIf="_showActionsColumn" [ngStyle]="{'width': '80px'}">
             </colgroup>
         </ng-template>
       <ng-template pTemplate="header">
@@ -36,7 +36,7 @@
             {{'applications.content.table.createdOn' | translate}}
             <p-sortIcon [field]="'createdAt'"></p-sortIcon>
           </th>
-          <th [ngStyle]="{'width': '80px'}"></th>
+          <th *ngIf="_showActionsColumn" [ngStyle]="{'width': '80px'}"></th>
         </tr>
       </ng-template>
 
@@ -69,7 +69,7 @@
               </span>
           </td>
 
-          <td [ngStyle]="{'width': '80px'}">
+          <td *ngIf="_showActionsColumn" [ngStyle]="{'width': '80px'}">
             <div class="kRoomsTableActions">
               <button class="kMoreActionsButton" type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, room)"></button>
             </div>

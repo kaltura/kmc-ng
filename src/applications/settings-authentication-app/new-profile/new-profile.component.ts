@@ -130,7 +130,7 @@ import { serverConfig } from "config/server";
             cert: "__placeholder__",
             identifierFormat: "urn:oasis:names:tc:SAML:2.0:nameid-format:emailAddress"
         },
-        ksPrivileges: "",
+        ksPrivileges: adminProfile ? "all:*,disableentitlement" : "",
         userIdAttribute: "Core_User_Email",
         userAttributeMappings: {}
 
