@@ -481,7 +481,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                             kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
                             kalturaServerProxyURI: '',
                             clipsOverride: '',
-                            postSaveActions: 'share,edit,download,entry',
+                            postSaveActions: 'share,editQuiz,download,entry',
                             widget: '',
                             entryId: entry.id,
                             buttonLabel: '',
@@ -510,7 +510,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     // navigate to entry
                                     this.unisphereModuleContext?.closeWidget(); // close widget
                                     document.body.style.overflowY = "auto";
-                                    this._entryStore.openEntry(entry);
+                                    this._entryStore.openEntry(new KalturaMediaEntry(entry));
                                     break;
                                 case 'download':
                                     // download entry
