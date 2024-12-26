@@ -528,6 +528,10 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     document.body.style.overflowY = "auto";
                                     this._clipAndTrim.open();
                                     break;
+                                case 'downloadQuiz':
+                                    // download questions list
+                                    this._downloadPretest(entry.id)
+                                    break;
                                 default:
                                     break;
                             }
