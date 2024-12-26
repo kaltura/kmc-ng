@@ -334,9 +334,6 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     activatedRoute: this._entryRoute,
                                     section: ContentEntryViewSections.ResolveFromActivatedRoute
                                 });
-                                if (this._contentLabAvailable && !this.unisphereCallbackUnsubscribe) {
-                                    this.loadContentLab(entry);
-                                }
                             }
                             break;
                         default:
@@ -373,6 +370,16 @@ export class EntryComponent implements OnInit, OnDestroy {
                                 this._entry = entry;
                                 this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable(); // new analytics app is available
                                 this._buildMenu(entry);
+                                if (this._contentLabAvailable) {
+                                    if (this.unisphereCallbackUnsubscribe) {
+                                        this.unisphereCallbackUnsubscribe();
+                                        this.unisphereCallbackUnsubscribe = null;
+                                    }
+                                    if (this.unisphereModuleContext) {
+                                        this.unisphereModuleContext = null;
+                                    }
+                                    this.loadContentLab(entry);
+                                }
 								break;
 							case ActionTypes.EntryLoadingFailed:
 								let message = status.error ? status.error.message : '';
