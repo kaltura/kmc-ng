@@ -7,13 +7,13 @@
     align-items: center;
     justify-content: center;
       iframe {
-        width: 1200px;
-        height: 707px;
+        width: 1180px;
+        height: 682px;
         box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.25);
         border-radius: 3px;
       }
 }
-@media screen and (max-width: 1090px) {
+@media screen and (max-width: 1179px) {
     .kHoster iframe {
         box-shadow: none;
     }
