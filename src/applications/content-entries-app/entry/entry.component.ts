@@ -530,6 +530,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaMediaEntry(entry)));
                                     break;
                                 case 'edit':
+                                case 'editQuiz':
                                     // edit entry
                                     this.unisphereModuleContext?.closeWidget();
                                     document.body.style.overflowY = "auto";
