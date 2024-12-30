@@ -91,6 +91,11 @@ kautocomplete ::ng-deep ul{
         background-color: transparentize($kPrimary, 0.5) !important;
     }
 }
+kautocomplete ::ng-deep {
+    .p-autocomplete-panel {
+        overflow: auto;
+    }
+}
 :host ::ng-deep .kHighlightedText {
     text-decoration: underline;
 }
