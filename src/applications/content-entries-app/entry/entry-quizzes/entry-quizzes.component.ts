@@ -98,7 +98,7 @@ export class EntryQuizzes implements OnInit, OnDestroy {
                             hasSource: this._store.hasSource.value()
                         });
                         if (this._widgetService.data?.id && this._contentLabAvailable && !this.unisphereCallbackUnsubscribe) {
-                            this.loadContentLab(this._widgetService.data.id);
+                            // this.loadContentLab(this._widgetService.data.id);
                         }
                     }else {
                         this._clipAndTrimEnabled = false;

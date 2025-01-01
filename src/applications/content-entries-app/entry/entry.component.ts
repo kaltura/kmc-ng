@@ -34,6 +34,9 @@ import { AppAnalytics, BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import {EntryQuizzeWidget} from './entry-quizzes/entry-quizzes-widget.service';
+import {serverConfig} from 'config/server';
+import {globalConfig} from 'config/global';
+import {AppAuthentication, AppBootstrap} from 'app-shared/kmc-shell';
 
 @Component({
 	selector: 'kEntry',
@@ -77,6 +80,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _entryHasChanges : boolean;
     public _isQuizEntry: boolean;
 	public _kmcPermissions = KMCPermissions;
+    public _contentLabAvailable = false;
     public _items: CustomMenuItem[] = [
         {
             label: this._appLocalization.get('applications.content.table.download'),
@@ -125,6 +129,9 @@ export class EntryComponent implements OnInit, OnDestroy {
 
     public _analyticsAllowed: boolean;
 
+    private unisphereModuleContext: any;
+    private unisphereCallbackUnsubscribe: Function;
+
 	constructor(entryWidgetsManager: EntryWidgetsManager,
 	            widget1: EntrySectionsListWidget,
 	            widget2: EntryUsersWidget,
@@ -155,6 +162,8 @@ export class EntryComponent implements OnInit, OnDestroy {
                 private _entryRoute: ActivatedRoute,
                 private _logger: KalturaLogger,
                 private _analyticsNewMainViewService: AnalyticsNewMainViewService,
+                private _bootstrapService: AppBootstrap,
+                private _appAuthentication: AppAuthentication,
                 private _router: Router) {
 		entryWidgetsManager.registerWidgets([
 			widget1, widget2, widget3, widget4, widget5, widget6, widget7,
@@ -309,6 +318,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+        this._contentLabAvailable = this._permissionsService.hasPermission(KMCPermissions.FEATURE_CONTENT_LAB);
 
 	    this._entryStore.notifications$
             .pipe(cancelOnDestroy(this))
@@ -360,6 +370,16 @@ export class EntryComponent implements OnInit, OnDestroy {
                                 this._entry = entry;
                                 this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable(); // new analytics app is available
                                 this._buildMenu(entry);
+                                if (this._contentLabAvailable) {
+                                    if (this.unisphereCallbackUnsubscribe) {
+                                        this.unisphereCallbackUnsubscribe();
+                                        this.unisphereCallbackUnsubscribe = null;
+                                    }
+                                    if (this.unisphereModuleContext) {
+                                        this.unisphereModuleContext = null;
+                                    }
+                                    this.loadContentLab(entry);
+                                }
 								break;
 							case ActionTypes.EntryLoadingFailed:
 								let message = status.error ? status.error.message : '';
@@ -445,6 +465,91 @@ export class EntryComponent implements OnInit, OnDestroy {
 					throw error;
 				});
 	}
+
+    private isLiveEntry(entry: KalturaMediaEntry): boolean {
+        return entry.mediaType === KalturaMediaType.liveStreamFlash ||
+            entry.mediaType === KalturaMediaType.liveStreamWindowsMedia ||
+            entry.mediaType === KalturaMediaType.liveStreamRealMedia ||
+            entry.mediaType === KalturaMediaType.liveStreamQuicktime;
+    }
+
+    private loadContentLab(entry: KalturaMediaEntry): void {
+        this._bootstrapService.unisphereWorkspace$
+            .pipe(cancelOnDestroy(this))
+            .subscribe(unisphereWorkspace => {
+                    if (unisphereWorkspace) {
+                        const contextSettings = {
+                            ks: this._appAuthentication.appUser.ks,
+                            pid: this._appAuthentication.appUser.partnerId.toString(),
+                            uiconfId: serverConfig.kalturaServer.previewUIConfV7.toString(),
+                            analyticsServerURI: serverConfig.analyticsServer.uri,
+                            hostAppName: 'kmc',
+                            hostAppVersion: globalConfig.client.appVersion,
+                            kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
+                            kalturaServerProxyURI: '',
+                            clipsOverride: '',
+                            postSaveActions: 'share,editQuiz,download,entry',
+                            widget: '',
+                            entryId: entry.id,
+                            buttonLabel: '',
+                            eventSessionContextId: '',
+                        }
+
+                        if (this.isLiveEntry(entry) && entry.redirectEntryId?.length) {
+                            // handle live with recording
+                            contextSettings.entryId = entry.redirectEntryId;
+                            contextSettings.eventSessionContextId = entry.id;
+                        }
+
+                        if (!this.unisphereModuleContext) {
+                            unisphereWorkspace.loadElement('unisphere.module.content-lab', 'application', contextSettings).then((data: any) => {
+                                this.unisphereModuleContext = data.element;
+                                this.unisphereModuleContext.assignArea('contentLabButton');
+                            }).catch(error => {
+                                console.error('failed to load module: ' + error.message)
+                            });
+                        }
+
+                        this.unisphereCallbackUnsubscribe = unisphereWorkspace.getService('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-lab.message-host-app', (data) => {
+                            const { action, entry } = data.payload;
+                            switch (action) {
+                                case 'entry':
+                                    // navigate to entry
+                                    this.unisphereModuleContext?.closeWidget(); // close widget
+                                    document.body.style.overflowY = "auto";
+                                    this._entryStore.openEntry(new KalturaMediaEntry(entry));
+                                    break;
+                                case 'download':
+                                    // download entry
+                                    this._browserService.openLink(entry.downloadUrl);
+                                    break;
+                                case 'share':
+                                    // open share & embed
+                                    this.unisphereModuleContext?.closeWidget(); // close widget
+                                    document.body.style.overflowY = "auto";
+                                    this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaMediaEntry(entry)));
+                                    break;
+                                case 'edit':
+                                case 'editQuiz':
+                                    // edit entry
+                                    this.unisphereModuleContext?.closeWidget();
+                                    document.body.style.overflowY = "auto";
+                                    this._clipAndTrim.open();
+                                    break;
+                                case 'downloadQuiz':
+                                    // download questions list
+                                    this._downloadPretest(entry.id)
+                                    break;
+                                default:
+                                    break;
+                            }
+                        })
+                    }
+                },
+                error => {
+                    // TODO - handle unisphere workspace load error
+                })
+    }
 
 	private _createBackToEntriesButton(): AreaBlockerMessageButton {
 		return {
