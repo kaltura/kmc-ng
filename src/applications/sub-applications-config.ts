@@ -34,7 +34,7 @@ export const subApplicationsConfig: SubApplicationsConfig = {
         'bulkActionsLimit': 50
     },
     'contentPlaylistsApp': {
-        'ruleBasedTotalResults': 200
+        'ruleBasedTotalResults': 150
     },
     'previewAndEmbedApp': {
         'includeKalturaLinks': false,
