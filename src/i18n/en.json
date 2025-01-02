@@ -779,7 +779,7 @@
                 "resultsLimit": "Results Limit ({{0}})",
                 "orderBy": "Order by: {{0}}",
                 "totalDuration": "Total duration {{0}}",
-                "resultsLimitRange": "1 - 200 Entries",
+                "resultsLimitRange": "1 - 150 Entries",
                 "noEntries": "No entries",
                 "viewAnalytics": "View Analytics",
                 "filterError": "Could not filter entries using the provided filters combination.\nPlease remove some of the filters and try again."
