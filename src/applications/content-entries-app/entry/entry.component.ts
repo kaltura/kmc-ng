@@ -488,7 +488,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                             kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
                             kalturaServerProxyURI: '',
                             clipsOverride: '',
-                            postSaveActions: 'share,editQuiz,download,entry',
+                            postSaveActions: 'share,editQuiz,download,entry,downloadQuiz',
                             widget: '',
                             entryId: entry.id,
                             buttonLabel: '',
