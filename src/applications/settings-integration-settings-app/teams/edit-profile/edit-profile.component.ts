@@ -287,8 +287,10 @@ export class EditTeamsProfileComponent implements OnDestroy {
         const userNotFoundMethod = formValue.createUser ? 'create' : 'assign-default';
         Object.assign(this._profile.settings, {userNotFoundMethod});
 
-        if (formValue.defaultUserId?.length) {
+        if (formValue.defaultUserId?.length && formValue.createUser === false) {
             Object.assign(this._profile.settings, {defaultUserId: formValue.defaultUserId[0].id});
+        } else {
+            Object.assign(this._profile.settings, {defaultUserId: ''});
         }
 
         this.onSave.emit(this._profile);
