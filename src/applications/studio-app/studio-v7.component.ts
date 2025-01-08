@@ -37,6 +37,7 @@ export class StudioV7Component implements OnInit, OnDestroy {
                       });
                   }
               },
+              'useCanary': this._browserService.getInitialQueryParam('useCanary') || false,
               'dateFormat': this._browserService.getFromLocalStorage('kmc_date_format') || 'month-day-year',
               'pid': this._appAuthentication.appUser.partnerId,
               'publisherEnvType': this._appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
