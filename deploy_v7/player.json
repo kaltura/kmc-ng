@@ -1,10 +1,37 @@
 {
     "disableUserCache": false,
-    "player": {
-        "plugins": {},
-        "playback": {
-            "textLanguage": "auto"
+    "plugins": {
+        "unisphere": {
+            "widgets": [
+                {
+                    "widgetId": "unisphere.widget.video-summary",
+                    "context": "kaltura-player-list",
+                    "settings": {},
+                    "containers": [
+                        {
+                            "unisphereArea": "summary-list",
+                            "containerType": "sidepanel",
+                            "presets": [
+                                "Playback"
+                            ],
+                            "position": "right",
+                            "expandMode": "over"
+                        },
+                        {
+                            "unisphereArea": "chapter-title",
+                            "containerType": "simple",
+                            "presets": [
+                                "Playback"
+                            ],
+                            "playerArea": "BottomBarCenterControls"
+                        }
+                    ]
+                }
+            ]
         }
+    },
+    "playback": {
+        "textLanguage": "auto"
     },
     "provider": {
         "env": {}
