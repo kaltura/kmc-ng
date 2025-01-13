@@ -483,7 +483,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                             pid: this._appAuthentication.appUser.partnerId.toString(),
                             uiconfId: serverConfig.kalturaServer.previewUIConfV7.toString(),
                             analyticsServerURI: serverConfig.analyticsServer.uri,
-                            hostAppName: 'kmc',
+                            hostAppName: 0, // kmc
                             hostAppVersion: globalConfig.client.appVersion,
                             kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
                             kalturaServerProxyURI: '',

@@ -112,7 +112,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             ks: this.appAuthentication.appUser.ks,
             pid: this.appAuthentication.appUser.partnerId,
             locale: this._appLocalization.selectedLanguage,
-            hostAppName: 'kmc',
+            hostAppName: 0, // kmc
             hostAppVersion: globalConfig.client.appVersion,
             liveEntryUsersReports: this._browserService.getFromLocalStorage('kmc_analytics_live_entry_users_reports') || 'All',
             dateFormat: this._browserService.getFromLocalStorage('kmc_date_format') || 'month-day-year',
