@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, Renderer2, Input } from '@angular/core';
 import { Router, NavigationEnd, Params, ActivatedRoute } from '@angular/router';
-import { AppAuthentication } from 'shared/kmc-shell/index';
+import { AppAuthentication, ApplicationType } from 'shared/kmc-shell/index';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -8,7 +8,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import {globalConfig} from 'config/global';
+import { globalConfig } from 'config/global';
 
 @Component({
     selector: 'kAnalyticsFrame',
@@ -112,7 +112,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             ks: this.appAuthentication.appUser.ks,
             pid: this.appAuthentication.appUser.partnerId,
             locale: this._appLocalization.selectedLanguage,
-            hostAppName: 0, // kmc
+            hostAppName: ApplicationType.KMC,
             hostAppVersion: globalConfig.client.appVersion,
             liveEntryUsersReports: this._browserService.getFromLocalStorage('kmc_analytics_live_entry_users_reports') || 'All',
             dateFormat: this._browserService.getFromLocalStorage('kmc_date_format') || 'month-day-year',

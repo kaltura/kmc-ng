@@ -57,7 +57,7 @@
 
 <kPopupWidget #clipAndTrim [fullScreen]="true">
     <ng-template>
-        <kEntryEditor [entry]="_entryStore.entry"
+        <kEntryEditor [entry]="_contentLabSelectedQuiz"
                       [entryHasSource]="true"
                       [tab]="_isQuizEntry? 'quiz' : 'editor'"
                       [parentPopupWidget]="clipAndTrim"></kEntryEditor>

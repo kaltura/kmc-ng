@@ -30,13 +30,13 @@ import { CustomMenuItem } from 'app-shared/content-shared/entries/entries-list/e
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ContentEntriesAppService } from '../content-entries-app.service';
-import { AppAnalytics, BrowserService } from 'app-shared/kmc-shell/providers';
+import { AppAnalytics, ApplicationType, BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
-import {EntryQuizzeWidget} from './entry-quizzes/entry-quizzes-widget.service';
-import {serverConfig} from 'config/server';
-import {globalConfig} from 'config/global';
-import {AppAuthentication, AppBootstrap} from 'app-shared/kmc-shell';
+import { EntryQuizzeWidget } from './entry-quizzes/entry-quizzes-widget.service';
+import { serverConfig } from 'config/server';
+import { globalConfig } from 'config/global';
+import { AppAuthentication, AppBootstrap } from 'app-shared/kmc-shell';
 
 @Component({
 	selector: 'kEntry',
@@ -128,6 +128,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	}
 
     public _analyticsAllowed: boolean;
+    public _contentLabSelectedQuiz: KalturaMediaEntry;
 
     private unisphereModuleContext: any;
     private unisphereCallbackUnsubscribe: Function;
@@ -170,9 +171,14 @@ export class EntryComponent implements OnInit, OnDestroy {
 			widget8, widget9, widget10, widget11, widget12, widget13, widget14,
 			widget15, widget16
 		]);
+        this._contentLabSelectedQuiz = this._entryStore.entry;
 	}
 
 	ngOnDestroy() {
+        if (this.unisphereCallbackUnsubscribe) {
+            this.unisphereCallbackUnsubscribe();
+            this.unisphereCallbackUnsubscribe = null;
+        }
 	}
 
     private _hideMenuItems(entry: KalturaMediaEntry,
@@ -276,7 +282,6 @@ export class EntryComponent implements OnInit, OnDestroy {
     }
 
     private _downloadPretest(entryId: string): void {
-        this._logger.info(`handle download pre-test action by user`, { entryId });
         if (!entryId) {
             this._logger.info('EntryId is not defined. Abort action');
             return;
@@ -483,7 +488,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                             pid: this._appAuthentication.appUser.partnerId.toString(),
                             uiconfId: serverConfig.kalturaServer.previewUIConfV7.toString(),
                             analyticsServerURI: serverConfig.analyticsServer.uri,
-                            hostAppName: 0, // kmc
+                            hostAppName: ApplicationType.KMC,
                             hostAppVersion: globalConfig.client.appVersion,
                             kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
                             kalturaServerProxyURI: '',
@@ -529,9 +534,9 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     document.body.style.overflowY = "auto";
                                     this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaMediaEntry(entry)));
                                     break;
-                                case 'edit':
                                 case 'editQuiz':
                                     // edit entry
+                                    this._contentLabSelectedQuiz = new KalturaMediaEntry(entry);
                                     this.unisphereModuleContext?.closeWidget();
                                     document.body.style.overflowY = "auto";
                                     this._clipAndTrim.open();
