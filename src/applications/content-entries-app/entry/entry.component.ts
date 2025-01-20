@@ -539,6 +539,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     this._contentLabSelectedQuiz = new KalturaMediaEntry(entry);
                                     this.unisphereModuleContext?.closeWidget();
                                     document.body.style.overflowY = "auto";
+                                    this._isQuizEntry = true;
                                     this._clipAndTrim.open();
                                     break;
                                 case 'downloadQuiz':
