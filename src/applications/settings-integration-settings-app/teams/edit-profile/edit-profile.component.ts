@@ -27,7 +27,7 @@ import { ISubscription } from "rxjs/Subscription";
 import { Observable } from "rxjs";
 import { CategoriesSearchService } from "app-shared/content-shared/categories/categories-search.service";
 import {AppAnalytics, BrowserService, ButtonType, PageType} from 'app-shared/kmc-shell';
-import { TeamsIntegration } from '../teams.service';
+import {TeamsIntegration, TeamsIntegrationUserIdSearchMethod} from '../teams.service';
 
 @Component({
     selector: 'kTeamsEditProfile',
@@ -151,6 +151,7 @@ export class EditTeamsProfileComponent implements OnDestroy {
             attendeesRoles: this.getRole(this._profile.settings?.attendeesRoles || []),
             userId: this._profile.settings?.userIdSource === 'upn' ? true : false,
             postfix: this._profile.settings?.userIdSuffixMethod === 'append' ? 2 : this._profile.settings?.userIdSuffixMethod === 'remove' ? 1 : 0,
+            userSearchMethod: this._profile.settings?.userSearchMethod || TeamsIntegrationUserIdSearchMethod.Id,
             userPostfix: this._profile.settings?.userIdSuffix || '',
             createUser: this._profile.settings?.defaultUserId ? false : true,
             defaultUserId: this._profile.settings?.defaultUserId ? [{id: this._profile.settings?.defaultUserId}] : [],
@@ -179,6 +180,7 @@ export class EditTeamsProfileComponent implements OnDestroy {
             attendeesRoles: null,
             userId: true,
             postfix: 0,
+            userSearchMethod: TeamsIntegrationUserIdSearchMethod.Id,
             userPostfix: [''],
             createUser: true,
             defaultUserId: [''],
@@ -281,6 +283,9 @@ export class EditTeamsProfileComponent implements OnDestroy {
 
         const userIdSuffixMethod = formValue.postfix === 0 ? 'none' : formValue.postfix === 1 ? 'remove' : 'append';
         Object.assign(this._profile.settings, {userIdSuffixMethod});
+
+        const userSearchMethod = formValue.userSearchMethod || TeamsIntegrationUserIdSearchMethod.Id;
+        Object.assign(this._profile.settings, {userSearchMethod});
 
         Object.assign(this._profile.settings, {userIdSuffix: formValue.userPostfix?.length ? formValue.userPostfix : ''});
 

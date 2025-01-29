@@ -4,11 +4,16 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { serverConfig } from "config/server";
 import { AppAuthentication } from "app-shared/kmc-shell";
-import {KalturaWebexAPIIntegrationSetting, WebexVendorListAction, WebexVendorSubmitRegistrationAction} from 'kaltura-ngx-client';
 
 export enum SortDirection {
     Desc = -1,
     Asc = 1
+}
+
+export enum TeamsIntegrationUserIdSearchMethod {
+    Id = 'id',
+    Email = 'email',
+    All = 'all',
 }
 
 export type KalturaPager = {
@@ -22,6 +27,7 @@ export type TeamsIntegrationSettings = {
     categories?: string[];
     userGroupsInclude?: any[];
     userGroupsExclude?: any[];
+    userSearchMethod?: TeamsIntegrationUserIdSearchMethod;
     userIdSource?: 'upn' | 'azure-id';
     userIdSuffixMethod?: 'remove' | 'append';
     userIdSuffix?: string;
