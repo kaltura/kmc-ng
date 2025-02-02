@@ -189,8 +189,7 @@ export class RolesStoreService extends FiltersStoreBase<RolesFilters> implements
     try {
       const filter: KalturaUserRoleFilter = new KalturaUserRoleFilter({
         statusEqual: KalturaUserRoleStatus.active,
-        orderBy: KalturaUserRoleOrderBy.idAsc.toString(),
-        tagsMultiLikeOr: 'kmc'
+        orderBy: KalturaUserRoleOrderBy.idAsc.toString()
       });
       let pager: KalturaFilterPager = null;
 
