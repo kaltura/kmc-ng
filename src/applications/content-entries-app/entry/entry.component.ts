@@ -218,7 +218,6 @@ export class EntryComponent implements OnInit, OnDestroy {
                         });
                         item.command = () => {
                             this._contentLabSelectedQuiz = this._entryStore.entry;
-                            console.log("open: " + this._contentLabSelectedQuiz.id);
                             this._clipAndTrim.open();
                         }
                         break;
