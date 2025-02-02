@@ -217,7 +217,10 @@ export class EntryComponent implements OnInit, OnDestroy {
                             entry: entry,
                             hasSource: this._entryStore.hasSource.value()
                         });
-                        item.command = () => this._clipAndTrim.open();
+                        item.command = () => {
+                            this._contentLabSelectedQuiz = this._entryStore.entry;
+                            this._clipAndTrim.open();
+                        }
                         break;
                     case 'delete':
                         item.command = () => {
