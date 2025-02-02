@@ -171,7 +171,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 			widget8, widget9, widget10, widget11, widget12, widget13, widget14,
 			widget15, widget16
 		]);
-        this._contentLabSelectedQuiz = this._entryStore.entry;
 	}
 
 	ngOnDestroy() {
@@ -219,6 +218,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                         });
                         item.command = () => {
                             this._contentLabSelectedQuiz = this._entryStore.entry;
+                            console.log("open: " + this._contentLabSelectedQuiz.id);
                             this._clipAndTrim.open();
                         }
                         break;
@@ -366,6 +366,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 								// reflect the entry that is currently being loaded
 								// while 'entry$' stream is null
 								this._currentEntryId = this._entryStore.entryId;
+                                this._contentLabSelectedQuiz = this._entryStore.entry;
 								this._updateNavigationState();
 								this._entryHasChanges = false;
 								break;
