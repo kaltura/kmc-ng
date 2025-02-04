@@ -9,6 +9,9 @@
   .kFullName {
     font-weight: bold;
     color: $kGrayscale1;
+      &.disabled {
+          color: $kGrayscale4;
+      }
   }
 
   .kIconOwner {

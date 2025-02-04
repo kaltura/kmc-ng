@@ -2612,6 +2612,7 @@
                 "addRole": "Add role",
                 "addUser": "Add User",
                 "ssoUser": "SSO user",
+                "editDisabled": "This user was created in a different application and can not be edited here.",
                 "currentStatus": "Current status:",
                 "usersInfo": "{{0}} KMC {{1}} in use, {{2}} additional available.",
                 "failedLoading": "Failed to load users data",
