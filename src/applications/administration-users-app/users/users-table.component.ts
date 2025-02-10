@@ -43,6 +43,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() editUser = new EventEmitter<KalturaUser>();
   @Output() toggleUserStatus = new EventEmitter<KalturaUser>();
   @Output() deleteUser = new EventEmitter<KalturaUser>();
+  @Output() removeUser = new EventEmitter<KalturaUser>();
 
   private _partnerInfo: PartnerInfo = { adminLoginUsersQuota: 0, adminUserId: null };
 
@@ -159,6 +160,16 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
               {
                   id: 'blockUnblock', label: this._appLocalization.get('applications.content.table.blockUnblock'),
                   command: () => this.toggleUserStatus.emit(user)
+              },
+              {
+                  id: 'remove', label: this._appLocalization.get('applications.upload.uploadSettings.table.remove'),
+                  command: () => {
+                      this._browserService.confirm({
+                          header: this._appLocalization.get('applications.administration.users.removeUser'),
+                          message: this._appLocalization.get('applications.administration.users.confirmRemove', {0: user.fullName}),
+                          accept: () => this.removeUser.emit(user)
+                      });
+                  }
               },
               {
                   id: 'delete', label: this._appLocalization.get('applications.content.table.delete'),

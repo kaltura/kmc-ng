@@ -2602,6 +2602,8 @@
                 "accountOwner": "Account Owner",
                 "deleteUser": "Delete User",
                 "confirmDelete": "Are you sure you want to delete the selected user? \n ({{0}})",
+                "removeUser": "Remove User",
+                "confirmRemove": "This action will only remove the user/s from the KMC, keeping all their metadata and ownership.\nAre you sure you want to remove the selected user/s:\n ({{0}})",
                 "save": "Save",
                 "editUser": "Edit User",
                 "loginEmailAddress": "Login Email address",

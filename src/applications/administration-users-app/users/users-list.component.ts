@@ -163,6 +163,14 @@ export class UsersListComponent implements OnInit, OnDestroy {
       .subscribe(this._getObserver(retryFn))
   }
 
+  public _onRemoveUser(user: KalturaUser): void {
+    const retryFn = () => this._onRemoveUser(user);
+    this._usersStore.removeUser(user)
+      .pipe(cancelOnDestroy(this))
+      .pipe(tag('block-shell'))
+      .subscribe(this._getObserver(retryFn))
+  }
+
   public _addUser(): void {
     this._analytics.trackClickEvent('Add_user');
     this._user = null;

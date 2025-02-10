@@ -230,6 +230,25 @@ export class UsersStore implements OnDestroy {
       }));
   }
 
+  public removeUser(user: KalturaUser): Observable<void> {
+    const isCurrentUser = this.isCurrentUser(user);
+    const isAdminUser = this._usersDataValue && this._usersDataValue.partnerInfo.adminUserId === user.id;
+
+    if (isCurrentUser || isAdminUser) {
+      return throwError(new Error(this._appLocalization.get('applications.administration.users.cantPerform')));
+    }
+
+      const updatedUser = new KalturaUser({
+          loginEnabled: false
+      });
+
+    return this._kalturaServerClient
+      .request(new UserUpdateAction({ userId: user.id, user: updatedUser }))
+      .pipe(map(() => {
+        return;
+      }));
+  }
+
   public isUserAlreadyExists(email: string): Observable<IsUserExistsStatuses | null> {
     return this._kalturaServerClient
       .request(new UserGetByLoginIdAction({ loginId: email }))
