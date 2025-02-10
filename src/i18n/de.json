@@ -5,6 +5,8 @@
             "administrationRolesMenuTitle": "Rollen",
             "administrationUsersPageTitle": "Administration > Benutzer",
             "administrationUsersMenuTitle": "Benutzer",
+            "administrationMultiAccountPageTitle": "Verwaltung > Mehrfaches Konto",
+            "administrationMultiAccountMenuTitle": "Mehrfaches Konto",
             "contentBulkUploadPageTitle": "Inhalt > Massen-Upload",
             "contentBulkUploadMenuTitle": "Massen-Upload",
             "contentCategoriesPageTitle": "Inhalt > Kategorien",
@@ -16,7 +18,9 @@
             "contentModerationPageTitle": "Inhalt > Moderation",
             "contentModerationMenuTitle": "Moderation",
             "contentPlaylistsPageTitle": "Inhalt > Wiedergabelisten",
+            "contentRoomsPageTitle": "Inhalt > Räume",
             "contentPlaylistsMenuTitle": "Wiedergabelisten",
+            "contentRoomsMenuTitle": "Räume",
             "contentSyndicationPageTitle": "Inhalt > Syndizierung",
             "contentSyndicationMenuTitle": "Syndizierung",
             "contentUploadsPageTitle": "Inhalt > Upload-Kontrolle",
@@ -24,40 +28,53 @@
             "analyticsLivePageTitle": "Analytics > Live Echtzeit-Dashboard",
             "analyticsLiveMenuTitle": "Live Echtzeit-Dashboard",
             "analyticsKavaPageTitle": "Analytics > KAVA",
+            "analyticsMenuTitle": "Analytik",
+            "analyticsPageTitle": "Analytik",
             "analyticsKavaMenuTitle": "KAVA",
             "settingsAccessControlPageTitle": "Einstellungen > Zugriffskontrolle",
             "settingsAccessControlMenuTitle": "Zugriffskontrolle",
+            "settingsReachPageTitle": "Einstellungen > Reichweite",
+            "settingsReachMenuTitle": "Reichweite",
             "settingsAccountInfoPageTitle": "Einstellungen > Kontoinformationen",
             "settingsAccountInfoMenuTitle": "Kontoinformationen",
-            "settingsAccountSettingsPageTitle": "Einstellungen > Kontoeinstellungen",
-            "settingsAccountSettingsMenuTitle": "Kontoeinstellungen",
-            "settingsIntegrationPageTitle": "Einstellungen > Integrationseinstellungen",
-            "settingsIntegrationMenuTitle": "Integrationseinstellungen",
+            "settingsAuthenticationPageTitle": "Einstellungen > Authentifizierung",
+            "settingsAuthenticationMenuTitle": "Authentifizierung",
+            "settingsAccountSettingsPageTitle": "Einstellungen > Konto",
+            "settingsAccountSettingsMenuTitle": "Konto",
+            "settingsIntegrationPageTitle": "Einstellungen > Integration",
+            "settingsIntegrationMenuTitle": "Integration",
             "settingsMetadataPageTitle": "Einstellungen > Benutzerdefinierte Daten",
             "settingsMetadataMenuTitle": "Benutzerdefinierte Daten",
-            "settingsMyUserSettingsPageTitle": "Einstellungen > Meine Benutzereinstellungen",
-            "settingsMyUserSettingsMenuTitle": "Meine Benutzereinstellungen",
-            "settingsTranscodingPageTitle": "Einstellungen > Transkodierungseinstellungen",
-            "settingsTranscodingRolesMenuTitle": "Transkodierungseinstellungen",
+            "settingsMyUserSettingsPageTitle": "Einstellungen > Mein Benutzer",
+            "settingsMyUserSettingsMenuTitle": "Mein Benutzer",
+            "settingsTranscodingPageTitle": "Einstellungen > Transcodierung",
+            "settingsTranscodingRolesMenuTitle": "Transcodierung",
             "studioV2PageTitle": "Studio > Universal Studio",
             "studioV2MenuTitle": "Universal Studio",
             "studioV3PageTitle": "Studio > TV-Plattform-Studio",
             "studio3MenuTitle": "TV-Plattform-Studio",
+            "studioV7PageTitle": "Studio > Spieler-Studio",
+            "studio7MenuTitle": "Spieler-Studio",
             "usageDashboardPageTitle": "Nutzung-Dashboard",
             "usageDashboardMenuTitle": "Nutzung-Dashboard",
             "restorePasswordPageTitle": "Passwort zurücksetzen",
+            "authenticatorPageTitle": "Authentifizierung",
             "uploadMonitor": "Upload-Monitor",
             "create": "Erstellen",
             "content": "Inhalt",
             "studio": "Studio",
-            "analytics": "Analytics",
+            "analytics": "Analytik",
+            "analyticsDashboard": "Armaturenbrett",
             "settings": "Einstellungen",
             "administration": "Administration",
             "reachDashboardMenuTitle": "Dienstleistungs-Dashboard",
             "reachDashboardPageTitle": "Dienstleistungs-Dashboard",
+            "allAccounts": "Alle Konten",
+            "parentOnly": "Nur Eltern",
             "analyticsBW": "Nutzung",
+            "analyticsOverview": "Überblick",
             "analyticsPublisher": "Bandbreite und Speicherplatz des Herausgebers",
-            "analyticsEndUser": "Endbenutzer-Speicherplatz",
+            "analyticsEndUser": "Endbenutzerspeicher",
             "analyticsTopContributors": "Top-Mitwirkende",
             "analyticsTechnology": "Technologie",
             "analyticsGeo": "Geolokalisierung",
@@ -77,13 +94,14 @@
             "choose": "Einen anderen Partner wählen:",
             "continue": "Weiter",
             "errors": {
-                "loadPartners": "Beim Laden der Konten ist ein Fehler aufgetreten."
+                "loadPartners": "Beim Laden der Konten ist ein Fehler aufgetreten.",
+                "authenticationRequired": "Gewünschtes Konto verlangt neue Anmeldung."
             }
         },
         "helpMenu": {
             "gettingStarted": "Erste Schritte",
             "kmcOverview": "KMC-Übersicht",
-            "mediaManagement": "Medienverwaltung & Abläufe",
+            "mediaManagement": "Medienverwaltung &amp; Abläufe",
             "productTour": "Die Produkttour ansehen",
             "support": "Hilfe und Kundendienst",
             "userManual": "Benutzerhandbuch herunterladen",
@@ -97,9 +115,12 @@
         },
         "common": {
             "n_a": "k. A.",
+            "none": "Keine",
+            "undefined": "Unbestimmt",
             "copyToClipboard": "In Zwischenablage kopieren",
             "copySuccess": "In Zwischenablage kopiert",
             "copyFailure": "Kopieren fehlgeschlagen",
+            "updateSuccess": "Erfolgreich aktualisiert",
             "on": "An",
             "off": "Aus",
             "ok": "OK",
@@ -119,7 +140,9 @@
             "save": "Speichern",
             "error": "Fehler",
             "connectionError": "Fehler bei der Verbindung mit dem Server",
-            "invalidKs": "Benutzersitzung abgelaufen. Bitte erneut einloggen."
+            "invalidKs": "Benutzersitzung abgelaufen. Bitte erneut einloggen.",
+            "noAccess": "Sie haben keine Zugriffsberechtigung für die Kaltura Management Console. Bitte kontaktieren Sie Ihren Administrator, um Zugang zu erhalten.",
+            "export": "Wir bereiten Ihren Bericht vor. Wir senden ihn in Kürze an Ihre E-Mail Adresse."
         },
         "redirect":{
             "redirect1": "Weiterleitung an Standardansicht ...",
@@ -139,10 +162,17 @@
                 "forgotPassword": "Passwort vergessen?",
                 "placeholder": {
                     "username": "E-Mail-Adresse eingeben",
-                    "password": "Passwort eingeben"
+                    "password": "Passwort eingeben",
+                    "auth": "Authentifizierungscode eingeben"
                 },
+                "authHelp": "Was ist ein Authentifizierungscode?",
+                "authHelpTooltip": "Der Authentifizierungscode ist ein Schlüssel, der von einer Authentifizierungs-App zum Schutz Ihres Kontos bereitgestellt wird. Sie können eine Authentifizierungs-App auf Ihr Mobilgerät herunterladen.",
                 "browserVer1": "Browserversion wird nicht unterstützt",
-                "browserVer2": "Bitte benutzen Sie Internet Explorer Version 11 oder höher"
+                "browserVer2": "Bitte benutzen Sie Internet Explorer Version 11 oder höher",
+                "qrCode": "Scannen Sie diesen QR-Code mit Ihrer Authentifizierungs-App. Sie können eine Authentifizierungs-App für beide Plattformen herunterladen:",
+                "sso": "Anmeldung mit SSO",
+                "loginWithPassword": "Anmeldung mit E-Mail und Passwort",
+                "orgIdErr": "Bitte Organisations-ID eingeben"
             },
             "invalidLoginHash": {
                 "title": "Ungültiger Anmeldelink",
@@ -167,13 +197,14 @@
                     "emailSent": "Es wurde eine E-Mail an Ihren Posteingang geschickt!",
                     "instructions": "Falls Sie die Nachricht nicht in Ihrem Posteingang finden, sehen Sie in Ihrem Spam- oder Junk-Ordner nach.",
                     "redirectTo": "Weiterleiten zu",
-                    "login": "anmelden"
+                    "login": "Anmelden"
                 }
             },
             "passwordExpired": {
-                "title": "Ihr Passwort ist älter als 90 Tage. Um das System weiterhin zu benutzen, müssen Sie jetzt Ihr Passwort ändern.",
+                "title": "Ihr Passwort ist abgelaufen. Um das System weiterhin zu benutzen, müssen Sie jetzt Ihr Passwort ändern.",
                 "error": {
                     "equal": "Passwörter stimmen nicht überein",
+                    "notEqual": "Das neue Passwort darf nicht mit dem alten identisch sein",
                     "required": "Dieses Feld ist ein Pflichtfeld"
                 },
                 "placeholder": {
@@ -204,7 +235,7 @@
                     "toUnblockYourAccount": " um Ihr Konto zu entsperren."
                 },
                 "userNotFound": "Der von Ihnen eingegebene Benutzername oder das Passwort ist falsch.",
-                "invalidStructure": "Das von Ihnen eingegebene Passwort hat eine ungültige Struktur. Passwörter müssen den folgenden Regeln entsprechen: - Sie müssen zwischen 8 und 14 Zeichen lang sein. - Sie dürfen nicht Ihren Namen enthalten. - Sie müssen mindestens einen Kleinbuchstaben enthalten (a-z). - Sie müssen mindestens eine Zahl enthalten (0-9). - Sie müssen mindestens eines der folgenden Symbole enthalten: %~!@#\\$^*=+?[]{}. - Sie dürfen keines der folgenden Symbole enthalten: &lt; oder >.",
+                "invalidStructure": "Das von Ihnen eingegebene Passwort hat eine ungültige Struktur. Passwörter müssen den folgenden Regeln entsprechen: - Sie müssen zwischen 8 und 14 Zeichen lang sein. - Sie dürfen nicht Ihren Namen enthalten. - Sie müssen mindestens einen Kleinbuchstaben enthalten (a-z). - Sie müssen mindestens eine Zahl enthalten (0-9). - Sie müssen mindestens eines der folgenden Symbole enthalten: !?~@#$%^*=+-()[]{}. - Sie dürfen keines der folgenden Symbole enthalten: &lt; oder >",
                 "alreadyUsed": "Ungültiges Passwort. <br> Dieses Passwort wurde bereits in der Vergangenheit benutzt. Bitte wählen Sie ein neues Passwort aus.",
                 "loginBlocked": {
                     "loginDenied":"Anmeldung verweigert. Sie haben die Anzahl ungültiger Anmeldeversuche überschritten. Den Kaltura-kontaktieren können Sie kontaktieren unter ",
@@ -214,7 +245,12 @@
                 "newPasswordHashKeyExpired": "Dieser Link ist älter als 24 Stunden und nicht mehr gültig.",
                 "wrongOldPassword": "Das alte Passwort ist falsch.",
                 "invalidField": "Der Wert im Feld {{value}} ist ungültig.",
-                "userForbiddenForBeta": "Dies ist eine geschlossene Beta der neuen Managementkonsole von Kaltura. In Kürze steht sie allgemein zur Verfügung. Bleiben Sie dran."
+                "userForbiddenForBeta": "Dies ist eine geschlossene Beta der neuen Managementkonsole von Kaltura. In Kürze steht sie allgemein zur Verfügung. Bleiben Sie dran.",
+                "missingOtp": "Authentifizierungscode ist erforderlich",
+                "invalidOtp": "Ungültiger Authentifikator-Code",
+                "updatePasswordMissingOtp": "Ihr Passwort wurde erfolgreich aktualisiert. Bitte melden Sie sich mit Ihrem neuen Passwort erneut an.",
+                "ssoForbidden": "SSO-Funktion nicht verfügbar",
+                "ssoNotFound": "SSO-Anmeldung fehlgeschlagen"
             },
             "send": "Senden",
             "wait": "Warten...",
@@ -234,9 +270,26 @@
             "messageNav": "Diese Ansicht kann nicht geladen werden. Wenn das Problem weiterhin besteht, wenden Sie sich an den Kaltura-Kundendienst. Klicken Sie auf OK, um zur Hauptansicht zu gelangen."
         }
     },
+    "selfServe": {
+        "unMute": "Stummschaltung aufheben",
+        "getStarted": "Erste Schritte",
+        "startPlan": "Plan starten",
+        "trial": "Kostenloser Probeplan",
+        "credits": "${{0}} Guthaben verbleibend",
+        "balance": "Guthaben",
+        "creditsBalance": "${{0}} Impressum",
+        "buy": "Guthaben kaufen",
+        "manage": "Abonnement verwalten",
+        "trialExpired": "Ihre kostenlose Testversion ist abgelaufen.",
+        "dunning": "Ihr Konto wird bald deaktiviert.",
+        "deactivated": "Ihr Konto ist aktuell deaktiviert.",
+        "update": "Zahlungsmethode aktualisieren",
+        "connecting": "Verbinden...",
+        "error": "Fehler bei der Verbindung mit dem Server"
+    },
     "applications": {
         "embed":{
-            "previewShare": "Teilen & Einbetten",
+            "previewShare": "Teilen &amp; Einbetten",
             "previewInPlayer": "Vorschau im Player",
             "embedType": "Einbettungsart",
             "selectPlayer": "Player auswählen",
@@ -280,7 +333,8 @@
                     "noMembers": "Keine Mitglieder",
                     "private": "Privat"
                 }
-            }
+            },
+            "export": "Einträge exportieren"
         },
         "upload": {
             "fileStatus": {
@@ -408,7 +462,7 @@
                 "completed": "{{0}} Abgeschlossen",
                 "error": "{{0}} Fehler",
                 "upToDate": "Aktuell",
-                "loading": "Wird geladen...",
+                "loading": "Daten werden geladen...",
                 "errors": {
                     "poll": "Kann Upload-Status nicht abrufen. Wiederholen...",
                     "prepare": "Konnte keine Verbindung mit dem Upload-Monitor herstellen!"
@@ -445,6 +499,10 @@
                         "appended": "Aufgezeichneten Inhalt einem einzelnen Eintrag hinzufügen"
                     },
                     "previewMode": "Vorschaumodus",
+                    "lowLatency": "Geringe Latenzzeit (Beta)",
+                    "lowLatencyHelp1": "Folgen Sie den Anweisungen in diesem",
+                    "lowLatencyHelp2": "Knowledge-Center-Artikel",
+                    "lowLatencyHelp3": "um sicherzustellen, dass geringe Latenzzeit korrekt funktioniert",
                     "errors": {
                         "required": "Dieses Feld ist ein Pflichtfeld."
                     }
@@ -454,10 +512,11 @@
                     "description": "Beschreibung",
                     "flashHDSURL": "Live Flash HDS-Stream URL",
                     "hlsStreamUrl": "Live Mobile HLS-Stream URL",
+                    "dashStreamUrl": "DASH-Stream-URL",
                     "useAkamaiHdProtocol": "Bei dieser HDS-URL wird das Akamai HD-Protokoll benutzt.",
                     "errors": {
                         "required": "Dieses Feld ist ein Pflichtfeld",
-                        "enterUrl": "Sie müssen mindestens eine HDS/HLS/DASH-Stream-URL eingeben",
+                        "enterUrl": "Sie müssen mindestens eine aus den HDS/HLS/DASH-Stream-URLs eingeben",
                         "invalidUrl": "Sie müssen eine gültige URL eingeben"
                     }
                 },
@@ -528,7 +587,7 @@
                     "fileSize": "Dateigröße",
                     "entryId": "Eintrags-ID",
                     "status": "Status",
-                    "datesTooltip": "Upload-Beginn erkannt am: {{0}} Upload-Fertigstellung erkannt am: {{1}} Datei-Übertragung von Ablageordner zu Kaltura begonnen am: {{2}} Datei-Übertragung von Ablageordner zu Kaltura beendet am: {{3}}",
+                    "datesTooltip": "Hochladen gestartet am: {{0}} Hochladen abgeschlossen am: {{1}} Dateitransfer vom Ablageorder zu Kaltura gestartet am: {{2}} Dateitransfer vom Ablageorder zu Kaltura abgeschlossen am: {{3}}",
                     "notAvailable": "k. A.",
                     "unknown": "Unbekannt",
                     "delete": "Löschen"
@@ -538,7 +597,8 @@
                     "createdBetween": "Erstellt zwischen",
                     "clearDates": "Daten löschen",
                     "clearAll": "Alle löschen",
-                    "close": "Schließen"
+                    "close": "Schließen",
+                    "dropFolders": "Ablageordner"
                 },
                 "dropFolderStatusLabels": {
                     "allStatuses": "Alle Statusangaben",
@@ -592,6 +652,7 @@
                 "moveCategory": "Kategorie verschieben",
                 "cancel": "Abbrechen",
                 "addServiceRule": "Service-Regel hinzufügen",
+                "export": "Kategorien exportieren",
                 "bActions": {
                     "addRemoveTags": "Tags hinzufügen / entfernen",
                     "addTags": "Tags hinzufügen",
@@ -687,7 +748,7 @@
                     "categoryAlreadyBelongsToParent": "Die Kategorie ist bereits der ausgewählten übergeordneten Kategorie untergeordnet.",
                     "onlySiblingsMoveAllowed" : "Nur Subkategorien derselben übergeordneten Kategorie können gemeinsam verschoben werden.",
                     "creationError": "Bei dem Versuch, eine neue Kategorie hinzuzufügen, ist ein Fehler aufgetreten.",
-                    "duplicatedName": "Die Kategorie \"{{0}}\" existiert bereits"
+                    "duplicatedName": "Die Kategorie „{{0}}“ existiert bereits"
                 }
             },
             "entries": {
@@ -702,16 +763,32 @@
                 "deleteEntry": "Eintrag löschen",
                 "confirmDelete": "Wollen Sie den ausgewählten Eintrag wirklich löschen?",
                 "confirmDeleteSingle": "Wollen Sie den ausgewählten Eintrag wirklich löschen? {{0}} Bitte beachten Sie, dass der Eintrag dauerhaft von Ihrem Konto gelöscht wird.",
-                "confirmDeleteMultiple": "Wollen Sie die ausgewählten Einträge wirklich löschen? {{0}} Bitte beachten Sie, dass diese Einträge dauerhaft von Ihrem Konto gelöscht werden.",
+                "confirmDeleteMultiple": "Wollen Sie die ausgewählten Einträge wirklich löschen? {{0}} Bitte beachten Sie, dass die Einträge dauerhaft von Ihrem Konto gelöscht werden.",
                 "entryId": "Eintrags-ID: {{0}}",
                 "deleteNote": "Bitte beachten Sie, dass der Eintrag dauerhaft von Ihrem Konto gelöscht wird.",
                 "ruleName": "Regelname",
                 "ruleNamePlaceholder": "Regelname",
-                "resultsLimit": "Ergebnisbegrenzung ({{0}})",
+                "resultsLimit": "Ergebnisgrenzwert ({{0}})",
                 "orderBy": "Sortieren nach: {{0}}",
                 "totalDuration": "Gesamtdauer {{0}}",
                 "resultsLimitRange": "1 - 200 Einträge",
-                "noEntries": "Keine Einträge"
+                "noEntries": "Keine Einträge",
+                "viewAnalytics": "Analytiken anzeigen",
+                "filterError": "Die Einträge konnten mit der angegebenen Filterkombination nicht gefiltert werden. Bitte entfernen Sie einige der Filter und versuchen Sie es erneut."
+            },
+            "rooms": {
+                "legacy": "Raum",
+                "rooms": "{{0}} Räume",
+                "searchRooms": "Räume suchen",
+                "deleteRoom": "Raum löschen",
+                "confirmDeleteSingle": "Wollen Sie den ausgewählten Eintrag wirklich löschen? {{0}} Bitte beachten Sie, dass der Raum dauerhaft von Ihrem Konto gelöscht wird.",
+                "sections": {
+                    "metadata": "Metadata"
+                },
+                "backToRooms": "Zurück zu Räumen",
+                "nameIsMandatory": "Sie müssen einen Raumnamen eingeben",
+                "breakout": "Breakout-Räume",
+                "recordings": "Aufnahmen"
             },
             "playlists": {
                 "playlists": "{{0}} Wiedergabelisten",
@@ -721,15 +798,15 @@
                 "remove": "Entfernen",
                 "cancel": "Abbrechen",
                 "deletePlaylist": "Wiedergabeliste löschen",
-                "confirmDeleteMultiple": "Wollen Sie die ausgewählten Wiedergabelisten löschen? {{0}} Bitte beachten Sie, dass diese Wiedergabelisten permanent von Ihrem Konto gelöscht werden.",
-                "confirmDeleteSingle": "Wollen Sie die ausgewählte Wiedergabeliste wirklich löschen? {{0}} Bitte beachten Sie, dass diese Wiedergabeliste permanent von Ihrem Konto gelöscht wird.",
-                "playlistId": "Wiedergabeliste-ID: {{0}}",
+                "confirmDeleteMultiple": "Wollen Sie die ausgewählten Wiedergabelisten wirklich löschen? {{0}} Bitte beachten Sie, dass diese Wiedergabelisten dauerhaft von Ihrem Konto gelöscht werden.",
+                "confirmDeleteSingle": "Wollen Sie die ausgewählte Wiedergabelisten wirklich löschen? {{0}} Bitte beachten Sie, dass diese Wiedergabeliste dauerhaft von Ihrem Konto gelöscht wird.",
+                "playlistId": "Wiedergabelisten-ID: {{0}}",
                 "searchEntries": "Wiedergabelisten durchsuchen",
                 "addPlaylist": "Wiedergabeliste hinzufügen",
                 "addEntry": "Eintrag hinzufügen",
                 "addToPlaylist": "Hinzufügen",
                 "refresh": "Aktualisieren",
-                "deleteNote": "Bitte beachten Sie, dass die {{0}} Wiedergabeliste{{1}} dauerhaft von Ihrem Konto gelöscht wird.",
+                "deleteNote": "Bitte beachten Sie, dass {{0}} Wiedergabeliste{{1}} dauerhaft von Ihrem Konto gelöscht wird.",
                 "notSupportedMsg": "Regelbasierte Wiedergabelisten werden derzeit nicht unterstützt.",
                 "deleteEntry": "Eintrag löschen",
                 "deleteEntries": "Einträge löschen",
@@ -790,7 +867,7 @@
                         "numOfEntries": "{{0}} Einträge",
                         "warning": "{{0}} Einträge sind nicht in diesem Feed enthalten.",
                         "moreInfo": "Weitere Informationen.",
-                        "warningMoreInfo": "<b>Hinweis: </b> {{0}} Einträge sind nicht in diesem Feed enthalten, da sie nicht mit der benötigten {{1}} Variante transkodiert sind.<br>Sie können jeden Eintrag auf {{1}} transkodieren, indem Sie im KMC in den Bereich „Verwalten“ gehen. Öffnen Sie den Eintrag, den Sie transkodieren möchten, gehen Sie zur Registerkarte „Variante“ und wählen Sie die Option „Konvertieren“.",
+                        "warningMoreInfo": "<b>Hinweis:</b> {{0}} Einträge sind nicht in diesem Feed enthalten, da sie nicht mit der benötigten {{1}} Variante transkodiert sind.<br>Sie können jeden Eintrag auf {{1}} transkodieren, indem Sie im KMC in den Bereich „Verwalten“ gehen. Öffnen Sie den Eintrag, den Sie transkodieren möchten, gehen Sie zur Registerkarte „Variante“ und wählen Sie die Option „Konvertieren“.",
                         "flavorId": "(Varianten-ID) {{0}}"
                     },
                     "destination": "Zielort",
@@ -825,7 +902,7 @@
                                 "availableCategories": {
                                     "Arts": "Kunst",
                                     "Arts/Design": "Kunst/Design",
-                                    "Arts/Fashion &amp; Beauty": "Kunst/Mode & Beauty",
+                                    "Arts/Fashion &amp; Beauty": "Kunst/Mode &amp; Beauty",
                                     "Arts/Food": "Kunst/Essen",
                                     "Arts/Literature": "Kunst/Literatur",
                                     "Arts/Performing Arts": "Kunst/Darstellende Kunst",
@@ -834,7 +911,7 @@
                                     "Business/Business News": "Business/Business-News",
                                     "Business/Careers": "Business/Karriere",
                                     "Business/Investing": "Business/Investitionen",
-                                    "Business/Management &amp; Marketing": "Business/Management & Marketing",
+                                    "Business/Management &amp; Marketing": "Business/Management &amp; Marketing",
                                     "Business/Shopping": "Business/Shopping",
                                     "Comedy": "Comedy",
                                     "Education": "Lernen",
@@ -843,53 +920,53 @@
                                     "Education/K-12": "Lernen/K-12",
                                     "Education/Language Courses": "Lernen/Sprachkurse",
                                     "Education/Training": "Lernen/Schulungen",
-                                    "Games &amp; Hobbies": "Spiele & Hobbys",
-                                    "Games &amp; Hobbies/Automotive": "Spiele & Hobbys/Fahrzeuge",
-                                    "Games &amp; Hobbies/Aviation": "Spiele & Hobbys/Flugzeuge",
-                                    "Games &amp; Hobbies/Hobbies": "Spiele & Hobbys/Hobbys",
-                                    "Games &amp; Hobbies/Other Games": "Spiele & Hobbys/Sonstige Spiele",
-                                    "Games &amp; Hobbies/Video Games": "Spiele & Hobbys/Videospiele",
-                                    "Government &amp; Organizations": "Regierung & Organisationen",
-                                    "Government &amp; Organizations/Local": "Regierung & Organisationen/Kommunal",
-                                    "Government &amp; Organizations/National": "Regierung & Organisationen/National",
-                                    "Government &amp; Organizations/Non-Profit": "Regierung & Organisationen/Wohltätigkeit",
-                                    "Government &amp; Organizations/Regional": "Regierung & Organisationen/Regional",
+                                    "Games &amp; Hobbies": "Spiele &amp; Hobbys",
+                                    "Games &amp; Hobbies/Automotive": "Spiele &amp; Hobbys/Fahrzeuge",
+                                    "Games &amp; Hobbies/Aviation": "Spiele &amp; Hobbys/Flugzeuge",
+                                    "Games &amp; Hobbies/Hobbies": "Spiele &amp; Hobbys/Hobbys",
+                                    "Games &amp; Hobbies/Other Games": "Spiele &amp; Hobbys/Sonstige Spiele",
+                                    "Games &amp; Hobbies/Video Games": "Spiele &amp; Hobbys/Videospiele",
+                                    "Government &amp; Organizations": "Regierung &amp; Organisationen",
+                                    "Government &amp; Organizations/Local": "Regierung &amp; Organisationen/Kommunal",
+                                    "Government &amp; Organizations/National": "Regierung &amp; Organisationen/National",
+                                    "Government &amp; Organizations/Non-Profit": "Regierung &amp; Organisationen/Wohltätigkeit",
+                                    "Government &amp; Organizations/Regional": "Regierung &amp; Organisationen/Regional",
                                     "Health": "Gesundheit",
                                     "Health/Alternative Health": "Gesundheit/Alternative Gesundheit",
-                                    "Health/Fitness &amp; Nutrition": "Gesundheit/Fitness & Ernährung",
+                                    "Health/Fitness &amp; Nutrition": "Gesundheit/Fitness &amp; Ernährung",
                                     "Health/Self-Help": "Gesundheit/Eigenbehandlung",
                                     "Health/Sexuality": "Gesundheit/Sexualität",
-                                    "Kids &amp;Family": "Kinder & Familie",
+                                    "Kids &amp; Family": "Kinder &amp; Familie",
                                     "Music": "Musik",
-                                    "News &amp; Politics": "Nachrichten & Politik",
-                                    "Religion &amp; Spirituality": "Religion & Spiritualität",
-                                    "Religion &amp; Spirituality/Buddhism": "Religion & Spiritualität/Buddhismus",
-                                    "Religion &amp; Spirituality/Christianity": "Religion & Spiritualität/Christentum",
-                                    "Religion &amp; Spirituality/Hinduism": "Religion & Spiritualität/Hinduismus",
-                                    "Religion &amp; Spirituality/Islam": "Religion & Spiritualität/Islam",
-                                    "Religion &amp; Spirituality/Judaism": "Religion & Spiritualität/Judentum",
-                                    "Religion &amp; Spirituality/Other": "Religion & Spiritualität/Sonstiges",
-                                    "Religion &amp; Spirituality/Spirituality": "Religion & Spiritualität/Spiritualität",
-                                    "Science &amp; Medicine": "Wissenschaft & Medizin",
-                                    "Science &amp; Medicine/Medicine": "Wissenschaft & Medizin/Medizin",
-                                    "Science &amp; Medicine/Natural Sciences": "Wissenschaft & Medizin/Naturwissenschaften",
-                                    "Science &amp; Medicine/Social Sciences": "Wissenschaft & Medizin/Sozialwissenschaften",
-                                    "Society &amp; Culture": "Gesellschaft & Kultur",
-                                    "Society &amp; Culture/History": "Gesellschaft & Kultur/Geschichte",
-                                    "Society &amp; Culture/Personal Journals": "Gesellschaft & Kultur/Tagebücher",
-                                    "Society &amp; Culture/Philosophy": "Gesellschaft & Kultur/Philosophie",
-                                    "Society &amp; Culture/Places &amp; Travel": "Gesellschaft & Kultur/Orte & Reisen",
-                                    "Sports &amp; Recreation": "Sport & Freizeit",
-                                    "Sports &amp; Recreation/Amateur": "Sport & Freizeit/Amateure",
-                                    "Sports &amp; Recreation/College &amp; High School": "Sport & Freizeit/Realschule & Gymnasium",
-                                    "Sports &amp; Recreation/Outdoor": "Sport & Freizeit/Im Freien",
-                                    "Sports &amp; Recreation/Professional": "Sport & Freizeit/Profis",
+                                    "News &amp; Politics": "Nachrichten &amp; Politik",
+                                    "Religion &amp; Spirituality": "Religion &amp; Spiritualität",
+                                    "Religion &amp; Spirituality/Buddhism": "Religion &amp; Spiritualität/Buddhismus",
+                                    "Religion &amp; Spirituality/Christianity": "Religion &amp; Spiritualität/Christentum",
+                                    "Religion &amp; Spirituality/Hinduism": "Religion &amp; Spiritualität/Hinduismus",
+                                    "Religion &amp; Spirituality/Islam": "Religion &amp; Spiritualität/Islam",
+                                    "Religion &amp; Spirituality/Judaism": "Religion &amp; Spiritualität/Judentum",
+                                    "Religion &amp; Spirituality/Other": "Religion &amp; Spiritualität/Sonstiges",
+                                    "Religion &amp; Spirituality/Spirituality": "Religion &amp; Spiritualität/Spiritualität",
+                                    "Science &amp; Medicine": "Wissenschaft &amp; Medizin",
+                                    "Science &amp; Medicine/Medicine": "Wissenschaft &amp; Medizin/Medizin",
+                                    "Science &amp; Medicine/Natural Sciences": "Wissenschaft &amp; Medizin/Naturwissenschaften",
+                                    "Science &amp; Medicine/Social Sciences": "Wissenschaft &amp; Medizin/Sozialwissenschaften",
+                                    "Society &amp; Culture": "Gesellschaft &amp; Kultur",
+                                    "Society &amp; Culture/History": "Gesellschaft &amp; Kultur/Geschichte",
+                                    "Society &amp; Culture/Personal Journals": "Gesellschaft &amp; Kultur/Tagebücher",
+                                    "Society &amp; Culture/Philosophy": "Gesellschaft &amp; Kultur/Philosophie",
+                                    "Society &amp; Culture/Places &amp; Travel": "Gesellschaft &amp; Kultur/Orte &amp; Reisen",
+                                    "Sports &amp; Recreation": "Sport &amp; Freizeit",
+                                    "Sports &amp; Recreation/Amateur": "Sport &amp; Freizeit/Amateure",
+                                    "Sports &amp; Recreation/College &amp; High School": "Sport &amp; Freizeit/Realschule &amp; Gymnasium",
+                                    "Sports &amp; Recreation/Outdoor": "Sport &amp; Freizeit/Im Freien",
+                                    "Sports &amp; Recreation/Professional": "Sport &amp; Freizeit/Profis",
                                     "Technology": "Technologie",
                                     "Technology/Gadgets": "Technologie/Gadgets",
                                     "Technology/Tech News": "Technologie/Technologie-News",
                                     "Technology/Podcasting": "Technologie/Podcasting",
                                     "Technology/Software How-To": "Technologie/Angewandte Software",
-                                    "TV &amp; Film": "TV & Film"
+                                    "TV &amp; Film": "TV &amp; Film"
                                 }
                             },
                             "adultContent": {
@@ -982,23 +1059,23 @@
                                 "itemsSelected":"{0} ausgewählte Kategorien",
                                 "availableCategories": {
                                     "Action": "Aktion",
-                                    "Art &amp; Animation": "Kunst & Animation",
-                                    "Entertainment &amp; TV": "Unterhaltung & Fernsehen",
+                                    "Art &amp; Animation": "Kunst &amp; Animation",
+                                    "Entertainment &amp; TV": "Unterhaltung &amp; Fernsehen",
                                     "Food": "Ernährung",
                                     "Games": "Spiele",
                                     "How-To": "Anleitungen",
                                     "Music": "Musik",
-                                    "People &amp; Vlogs": "Leute & Vlogs",
-                                    "Science &amp; Environment": "Wissenschaft & Umwelt",
+                                    "People &amp; Vlogs": "Leute &amp; Vlogs",
+                                    "Science &amp; Environment": "Wissenschaft &amp; Umwelt",
                                     "Transportation": "Transport",
                                     "Animals": "Tiere",
                                     "Commercials": "Werbung",
                                     "Family": "Familie",
                                     "Funny Videos": "Lustige Videos",
-                                    "Health &amp; Beauty": "Gesundheit & Schönheit",
-                                    "Movies &amp; Shorts": "Filme & Kurzfilme",
-                                    "News &amp; Politics": "Nachrichten & Politik",
-                                    "Products &amp; Tech.": "Produkte & Technik",
+                                    "Health &amp; Beauty": "Gesundheit &amp; Schönheit",
+                                    "Movies &amp; Shorts": "Filme &amp; Kurzfilme",
+                                    "News &amp; Politics": "Nachrichten &amp; Politik",
+                                    "Products &amp; Tech.": "Produkte &amp; Technik",
                                     "Sports": "Sport",
                                     "Travel": "Reisen"
                                 }
@@ -1018,7 +1095,7 @@
                             "xslCode": {
                                 "label": "XSL-Code",
                                 "browse": "Durchsuchen",
-                                "loading": "Wird geladen...",
+                                "loading": "Daten werden geladen...",
                                 "errors": {
                                     "requiredXslCode": "XSL-Code ist erforderlich",
                                     "loadingFile": "Fehler beim Laden der Datei {{0}}"
@@ -1028,15 +1105,16 @@
                     },
                     "errors": {
                         "loadFailed":  "Beim Laden der Feed-Daten ist ein Fehler aufgetreten.",
+                        "deletedPlaylist":  "Die Wiedergabeliste, die zur Erstellung dieses Feeds verwendet wurde, konnte nicht gefunden werden (gelöscht?) Fehlende Wiedergabelisten-ID: {{0}} Bitte erstellen Sie einen neuen Feed.",
                         "enterName": "Sie müssen einen Namen eingeben, um den Feed zu speichern.",
                         "chooseDestination": "Sie müssen einen Zielort eingeben, um den Feed zu speichern.",
                         "fieldRequired": "Dieses Feld ist ein Pflichtfeld."
                     }
                 },
                 "deleteConfirmation": {
-                    "title": "Löschen bestätigen",
-                    "singleFeed": "Wollen Sie den folgenden Feed wirklich löschen? {{0}}",
-                    "upTo5Feed": "Wollen Sie die folgenden Feeds wirklich löschen? {{0}}",
+                    "title": "Löschung bestätigen",
+                    "singleFeed": "Wollen Sie den folgenden Feed wirklich löschen? {{0}}",
+                    "upTo5Feed": "Wollen Sie die folgenden Feeds wirklich löschen? {{0}}",
                     "moreThan5": "Wollen Sie die ausgewählten Feeds wirklich löschen?"
                 },
                 "errors": {
@@ -1089,7 +1167,7 @@
                 "name": "Name",
                 "entryId": "Eintrags-ID",
                 "duration": "Dauer",
-                "plays": "Wiedergaben",
+                "plays": "Wiedergabe",
                 "moderationStatus": "Moderationsstatus",
                 "clippedFrom": "Ausgeschnitten aus",
                 "creator": "Ersteller",
@@ -1108,6 +1186,7 @@
                 "additionalFilters": "Zusätzliche Filter",
                 "refineSearch": "Suche eingrenzen",
                 "clearDates": "Daten löschen",
+                "clearDate": "Datum löschen",
                 "dates": "Daten",
                 "after": "Nach",
                 "before": "Vor",
@@ -1119,16 +1198,22 @@
                 "durations": "Dauer: {{0}}",
                 "replacementStatuses": "Austausch-Status: {{0}}",
                 "moderationStatuses": "Moderation: {{0}}",
-                "originalClippedEntries": "Original & Zugeschnitten: {{0}}",
+                "originalClippedEntries": "Original &amp; Zugeschnitten: {{0}}",
                 "timeScheduling": "Planung: {{0}}",
                 "accessControlProfiles": "Zugriffskontrolle: {{0}}",
                 "flavors": "Variante: {{0}}",
                 "distributions": "Verteilung: {{0}}",
                 "freeText": "Freitextsuche",
+                "lastPlayedAt": "Gespielt bis",
                 "metaData": "{{0}}: {{1}}",
                 "uploadedItem": "Hochgeladenes Element: {{0}}",
                 "status": "Status: {{0}}",
                 "permissionLevels": "Berechtigungsstufe: {{0}}",
+                "youtubeVideo": "YouTube-Video",
+                "videoQuiz": "Video mit Quiz",
+                "videoCaptions": "Video mit Untertiteln",
+                "videoNoCaptions": "Video ohne Untertitel",
+                "recycled": "Recycelte Einträge",
                 "preferences": {
                     "preferences": "Einstellungen",
                     "filterPreferences": "Einstellungen filtern",
@@ -1139,10 +1224,35 @@
                     "until": "Bis {{0}}",
                     "from": "Von {{0}}"
                 },
-                "privacyTypes": "Inhalts-Datenschutz: {{0}}",
+                "privacyTypes": "Inhalt-Datenschutz: {{0}}",
                 "categoryListing": "Kategorienliste: {{0}}",
                 "contributionPolicy": "Beitragsrichtlinien: {{0}}",
-                "endUserPermissions": "Endnutzer-Berechtigung: {{0}}"
+                "endUserPermissions": "Endnutzer-Berechtigung: {{0}}",
+                "searchFields": {
+                    "all": "Alle Felder und Metadaten",
+                    "includeCaptions": "Untertitel anzeigen",
+                    "name": "Eintragsname",
+                    "description": "Beschreibung",
+                    "tags": "Tags",
+                    "owner": "Eigentümer",
+                    "coeditor": "Mitherausgeber",
+                    "copublisher": "Mitverleger",
+                    "captions": "Untertitel",
+                    "entryId": "Eintrags-ID",
+                    "entryCreatorId": "Eintrag Ersteller-ID",
+                    "help": "Hilfe",
+                    "tooltips": {
+                        "nameLike": "Suchfeld: Eintragsname",
+                        "searchTextMatchOr": "Suchfeld: Beschreibung",
+                        "tagsMultiLikeOr": "Suchfeld: Tags",
+                        "userIdEqual": "Suchfeld: Eigentümer",
+                        "entitledUsersEditMatchOr": "Suchen in: Mitherausgeber",
+                        "entitledUsersPublishMatchOr": "Suchfeld: Mitverleger",
+                        "captions": "Suchfeld: Untertitel",
+                        "idIn": "Suchfeld: Eintrags-ID",
+                        "creatorIdEqual": "Suchfeld: Eintrag Ersteller-ID"
+                    }
+                }
             },
             "table": {
                 "thumbnail": "Vorschaubild",
@@ -1151,22 +1261,24 @@
                 "playlistType": "Wiedergabelisten-Typ",
                 "name": "Name",
                 "type": "Typ",
-                "plays": "Wiedergaben",
+                "plays": "Wiedergabe",
                 "createdOn": "Erstellt am",
                 "duration": "Dauer",
                 "status": "Status",
-                "previewAndEmbed": "Teilen & Einbetten",
+                "previewAndEmbed": "Teilen &amp; Einbetten",
                 "previewInPlayer": "Vorschau im Player",
-                "liveDashboard": "Live-Dashboard",
+                "liveDashboard": "Echtzeit-Dashboard öffnen",
+                "realTimeAnalytics": "Echtzeit-Analytik",
+                "webcastAnalytics": "Webcast-Analytik",
                 "delete": "Löschen",
                 "view": "Details anzeigen",
                 "entries": "Einträge",
                 "subcategories": "Unterkategorien",
-                "loading": "Wird geladen...",
+                "loading": "Daten werden geladen...",
                 "noResults": "Keine Ergebnisse",
                 "flags": "Markierungen",
                 "moderationStatus": "Moderationsstatus",
-                "reportsAndDetails": "Berichte & Details",
+                "reportsAndDetails": "Berichte &amp; Details",
                 "approve": "Freigeben",
                 "reject": "Ablehnen",
                 "userName": "Benutzername",
@@ -1181,9 +1293,10 @@
                 "limit": "Begrenzung",
                 "orderBy": "Sortieren nach",
                 "nameTooltip": "{{0}} Tags: {{1}}",
-                "download": "Herunterladen",
+                "download": "Download",
                 "editor": "Editor starten",
-                "captionRequest": "Untertitelanforderung"
+                "captionRequest": "Untertitel &amp; Anreichern",
+                "analytics": "Analytiken anzeigen"
             },
             "paginator": {
                 "showRows": "Zeilen anzeigen:"
@@ -1312,12 +1425,14 @@
                 "dynamic": "Regelbasiert",
                 "external": "Externer RSS",
                 "staticList": "Manuell",
-                "unknown": "Unbekannt"
+                "unknown": "Unbekannt",
+                "interactive": "Interaktives Video"
             },
             "userStatus": {
                 "active": "Aktiv",
                 "blocked": "Gesperrt",
-                "deleted": "Gelöscht"
+                "deleted": "Gelöscht",
+                "removed": "Entfernt"
             },
             "addNewPlaylist": {
                 "addNewPlaylist": "Neue Wiedergabeliste hinzufügen",
@@ -1334,7 +1449,7 @@
                 "dismiss": "Verwerfen"
             },
             "bulkActions": {
-                "captionRequest": "Untertitelanforderung",
+                "captionRequest": "Untertitel &amp; Anreichern",
                 "setScheduling": "Planung festlegen",
                 "setAccessControl": "Zugriffskontrolle festlegen",
                 "addRemovePublishers": "Mitverleger hinzufügen/entfernen",
@@ -1343,7 +1458,13 @@
                 "removePublishers": "Mitverleger entfernen",
                 "removePublishersLabel": "Aus dieser Liste entfernte Mitverleger werden aus allen ausgewählten Einträgen entfernt",
                 "noPublishersToRemove": "Keine zu entfernenden Mitverleger",
-                "userTooltip": "Der Benutzer ist noch nicht in Kaltura aufgeführt. {{0}} wird als die Kennung des Benutzers festgelegt.",
+                "addRemoveViewers": "Mitzuschauer hinzufügen/entfernen",
+                "addViewers": "Mitzuschauer hinzufügen",
+                "addViewersLabel": "Mitzuschauer eingeben, die allen ausgewählten Einträgen angefügt werden",
+                "removeViewers": "Mitzuschauer entfernen",
+                "removeViewersLabel": "Aus dieser Liste entfernte Mitzuschauer werden aus allen ausgewählten Einträgen entfernt",
+                "noViewersToRemove": "Keine Mitzuschauer zu entfernen",
+                "userTooltip": "Der Benutzer ist noch nicht in Kaltura aufgeführt. {{0}} wird als die Kennung des Benutzers festgelegt",
                 "addRemoveEditors": "Mitherausgeber hinzufügen/entfernen",
                 "addEditors": "Mitherausgeber hinzufügen",
                 "addEditorsLabel": "Mitherausgeber eingeben, die allen ausgewählten Einträgen angefügt werden.",
@@ -1365,7 +1486,7 @@
                 "addToNewPlaylist": "Zu neuer Wiedergabeliste hinzufügen",
                 "changeOwner": "Inhaber ändern",
                 "changeOwnerLabel": "Einen neuen Inhaber für die ausgewählten Einträge festlegen.",
-                "download": "Herunterladen",
+                "download": "Download",
                 "downloadEntries": "Ausgewählte Einträge herunterladen",
                 "download1Label": "Sie haben 1 Eintrag zum Herunterladen ausgewählt.",
                 "downloadManyLabel": "Sie haben {{0}} Einträge zum Herunterladen ausgewählt.",
@@ -1400,7 +1521,7 @@
                 "reject": "Ablehnen",
                 "newPlaylist": "Neue Wiedergabeliste",
                 "createPlaylistWarning": "Neue Wiedergabeliste",
-                "createPlaylistWarningMsg": "Einige der ausgewählten Einträge haben ungültige Statusangaben. Sie können fortfahren, ungültige Einträge werden jedoch ignoriert: {{0}}.",
+                "createPlaylistWarningMsg": "Einige der ausgewählten Einträge haben ungültige Statusangaben. Sie können fortfahren, ungültige Einträge werden jedoch ignoriert {{0}}",
                 "createPlaylistWarningMsgShort": "{{0}} der ausgewählten Einträge haben ungültige Statusangaben. Sie können fortfahren, ungültige Einträge werden jedoch ignoriert.",
                 "createPlaylistErrorMsg": "Alle ausgewählten Einträge haben ungültige Statusangaben. Sie können keine neue Wiedergabeliste erstellen, welche diese Einträge enthält",
                 "viewRule": "Regel ansehen/bearbeiten",
@@ -1419,14 +1540,14 @@
                     "discard": "Alle Änderungen verwerfen?"
                 },
                 "downloadEntry": {
-                    "title": "Herunterladen",
+                    "title": "Download",
                     "downloadFlavor": "Falls Sie das Herunterladen eines Videos ausgewählt haben, wählen Sie bitte das benötigte Format:",
                     "downloadEntry": "Download-Eintrag"
                 },
                 "save": "Speichern",
                 "newDraftEntryWarning": "Eintrag wurde automatisch gespeichert. Möchten Sie diese Eintrag beibehalten?",
                 "sections": {
-                    "metadata": "Metadaten",
+                    "metadata": "Metadata",
                     "thumbnails": "Vorschaubilder",
                     "accesscontrol": "Zugriffskontrolle",
                     "scheduling": "Planung",
@@ -1441,12 +1562,12 @@
                 },
                 "preview": {
                     "clipAndTrim": "Editor",
-                    "pande": "Teilen & Einbetten",
+                    "pande": "Teilen &amp; Einbetten",
                     "previewInPlayer": "Vorschau im Player",
                     "details": "Details",
                     "entryID": "ID:",
                     "creator": "Erstellt von:",
-                    "owner": "Inhaber",
+                    "owner": "Eigentümer:",
                     "creationDate": "Erstellungsdatum:",
                     "updateDate": "Letzte Aktualisierung:",
                     "landingPage": "Zielseite:",
@@ -1482,7 +1603,7 @@
                     "removeEntry": "Eintrag entfernen",
                     "remove": "Entfernen",
                     "selected": "{{0}} ausgewählt",
-                    "clear": "Löschen",
+                    "clear": "Inhalt löschen",
                     "addGroup": "Gruppe hinzufügen",
                     "deleteGroup": "Gruppe löschen",
                     "nameRequired": "Sie müssen einen Eintragsnamen eingeben",
@@ -1505,7 +1626,7 @@
                     "dimensions": "Maße",
                     "size": "Größe",
                     "distributors": "Verteiler",
-                    "download": "Herunterladen",
+                    "download": "Download",
                     "delete": "Löschen",
                     "preview": "Vorschau",
                     "defaultTitle": "Standard",
@@ -1522,16 +1643,16 @@
                     "domains": "Domains",
                     "anyDomain": "Jede Domain",
                     "allowDomains": "Erlaubte Domains: {{0}}",
-                    "blockDomains": "{{0}} Gesperrt",
+                    "blockDomains": "Gesperrt: {{0}}",
                     "anyCountry": "Jedes Land",
                     "allowCountries": "Erlaubte Länder: {{0}}",
-                    "blockCountries": "{{0}} Gesperrt",
+                    "blockCountries": "Gesperrt: {{0}}",
                     "anyIP": "Jede IP",
                     "allowIPs": "Erlaubte IPs: {{0}}",
-                    "blockIPs": "{{0}} Gesperrt",
+                    "blockIPs": "Gesperrt: {{0}}",
                     "anyFlavour": "Jede Variante",
                     "allowFlavours": "Erlaubte Varianten: {{0}}",
-                    "blockFlavours": "{{0}} Gesperrt",
+                    "blockFlavours": "Gesperrt: {{0}}",
                     "ks": "KS",
                     "freePreview": "KS, Vorschau ({{0}})",
                     "countries": "Länder",
@@ -1588,7 +1709,7 @@
                     "actions": {
                         "convert": "Konvertieren",
                         "delete": "Löschen",
-                        "download": "Herunterladen",
+                        "download": "Download",
                         "upload": "Hochladen",
                         "import": "Importieren",
                         "preview": "Vorschau",
@@ -1617,7 +1738,7 @@
                         "format": "Format:",
                         "size": "Größe (KB):",
                         "status": "Status:",
-                        "loading": "Wird geladen...",
+                        "loading": "Daten werden geladen...",
                         "loadingError": "Fehler beim Laden der Variante:"
                     },
                     "link": {
@@ -1724,17 +1845,25 @@
                 "captions": {
                     "captions": "Untertitel",
                     "add": "Untertitel hinzufügen",
-                    "request": "Untertitel anfordern",
+                    "request": "Untertitel &amp; Anreichern",
                     "label": "Beschriftung",
                     "type": "Dateityp",
                     "language": "Sprache",
                     "status": "Status",
+                    "accuracy": "Genauigkeit",
+                    "emptyMsgTitle": "Noch keine Untertitel",
+                    "emptyMsg": "Klicken Sie auf „Untertitel hinzufügen“, um Untertiteldateien hochzuladen",
+                    "accuracy_title": "Genauigkeit der Untertitel einstellen",
+                    "accuracy_tt": "Sie können die Genauigkeit der Untertitel über die Option „Bearbeiten“ aktualisieren",
+                    "accurate": "Genau",
                     "defaultTitle": "Standard",
                     "default": "Standard-Untertitel",
                     "setDefault": "Als Standard festlegen",
                     "edit": "Bearbeiten",
+                    "editor": "Untertitel-Editor",
+                    "editorDisabled": "Format wird nicht unterstützt",
                     "editCaption": "Untertitel bearbeiten",
-                    "download": "Herunterladen",
+                    "download": "Download",
                     "delete": "Löschen",
                     "processing": "Wird verarbeitet",
                     "error": "Fehler",
@@ -1751,13 +1880,19 @@
                     "uploadError": "Fehler beim Hochladen",
                     "remove": "Entfernen",
                     "noLabel": "Da keine Beschriftung angegeben wurde, wird im Untertitelmenü des Players die Untertitelsprache verwendet",
-                    "pending": "Ausstehend"
+                    "pending": "Ausstehend",
+                    "displayOnPlayer": "Anzeige am Player"
                 },
                 "live": {
+                    "goLive": "Live gehen",
+                    "endLive": "Live beenden",
+                    "endLiveHeader": "Immer langsam mit den jungen Pferden!",
+                    "endLiveMessage": "Möchten Sie die Live-Übertragung wirklich beenden?<br>Diese Aktion kann nicht rückgängig gemacht werden",
                     "live": "Live-Stream",
-                    "liveDashboard": "Live-Dashboard",
+                    "liveDashboard": "Echtzeit-Dashboard öffnen",
                     "urls": "Übertragungs-URLs",
                     "primary": "Primär-URL:",
+                    "secondary": "Sekundäre URL:",
                     "backup": "Backup-URL:",
                     "regenerate": "Stream-Token neu generieren",
                     "regenerateTooltip": "Ein neues RTMP-Token für diesen Eintrag generieren",
@@ -1772,8 +1907,19 @@
                     "dvrWindow": "DVR-Fenster:",
                     "activeRec": "Aufnahme:",
                     "previewMode": "Vorschaumodus:",
+                    "lowLatency": "Geringe Latenzzeit (Beta):",
                     "rtsp": "RTSP Übertragungs-URLs",
-                    "hlsStream": "HLS-Stream-URL:",
+                    "srt": "SRT-Übertragungs-URLs",
+                    "primarySRTid": "Primäre Stream-ID:",
+                    "secondarySRTid": "Sekundäre Stream-ID:",
+                    "srtKey": "Verschlüsselung:",
+                    "noSrtKey": "Festlegen einer Passphrase zur Aktivierung der Verschlüsselung",
+                    "clearSrt": "Passphrase löschen",
+                    "srtPassAuto": "Automatisch einstellen",
+                    "srtPassManual": "Manuell einstellen",
+                    "srtPassPlaceholder": "Eingabe einer Passphrase",
+                    "srtPassTooltip": "Eine Passphrase festlegen, um die Verschlüsselung zu aktivieren 10-79 alphanumerische Zeichen als Passphrase für die Verschlüsselung",
+                    "hlsStream": "HLS (Apple HTTP) Stream-URL:",
                     "akamaiStream": "Akamai-Stream-ID:",
                     "transcoding": "Konfiguration des Transkodierungsprofils",
                     "transcodingProfile": "Transkodierungsprofil:",
@@ -1794,7 +1940,19 @@
                     "hours": "Stunden",
                     "selectBitrate": "Bitrate auswählen",
                     "bitrateError": "Die Auswahl einer Bitrate ist erforderlich.",
-                    "dimensionsError": "Höhe und Breite sind für alle Bitraten erforderlich"
+                    "dimensionsError": "Höhe und Breite sind für alle Bitraten erforderlich",
+                    "videoConferenceIntegration": "Integration von Videokonferenzen",
+                    "sipUser": "SIP-Benutzer",
+                    "noSipUser": "Der SIP-Benutzer wurde für diesen Eintrag nicht erstellt",
+                    "generateSip": "SIP-Benutzer erstellen",
+                    "regenerateSip": "SIP-Benutzer erneut erstellen",
+                    "generateSrtKey": "Passphrase generieren mit Verschlüsselung",
+                    "regenerateSrtKey": "Passphrase neu generieren mit Verschlüsselung",
+                    "sipSource": "Streamquelle auswählen",
+                    "sipSource1": "Talking Heads",
+                    "sipSource2": "Talking Heads + Inhaltsfreigabe (PiP)",
+                    "sipSource3": "Inhaltsanteil",
+                    "sipError": "Generieren fehlgeschlagen. Versuchen Sie es erneut."
                 },
                 "related": {
                     "related": "Zugehörige Dateien",
@@ -1804,11 +1962,12 @@
                     "size": "Dateigröße",
                     "assetId": "Objekt-ID",
                     "document": "Dokument",
+                    "json": "JSON",
                     "media": "Medien",
                     "text": "Text",
                     "select": "Typ auswählen",
                     "edit": "Bearbeiten",
-                    "download": "Herunterladen",
+                    "download": "Download",
                     "delete": "Löschen",
                     "preview": "Vorschau",
                     "editTitle": "Dateidetails bearbeiten",
@@ -1824,13 +1983,13 @@
                     "clips": "Clips",
                     "id": "ID",
                     "name": "Name",
-                    "plays": "Wiedergaben",
+                    "plays": "Wiedergabe",
                     "created": "Erstellt am",
                     "offset": "Offset",
                     "duration": "Dauer",
                     "status": "Status",
                     "n_a": "k. A.",
-                    "clipTrim": "üemdomZuschneiden & Anpassen"
+                    "clipTrim": "üemdomZuschneiden &amp; Anpassen"
                 },
                 "advertisements": {
                     "title":"Werbeanzeigen",
@@ -1849,6 +2008,7 @@
                     "save": "Speichern",
                     "co-editors": "Mitherausgeber",
                     "co-publishers": "Mitverleger",
+                    "co-viewers": "Mitzuschauer",
                     "tooltip": "Der Benutzer ist nicht in Kaltura aufgeführt. {{0}} wird als die Kennung des Benutzers festgelegt.",
                     "noScreenName": "Benutzer kann nicht übernommen werden, Bildschirmname ist leer"
 
@@ -1872,6 +2032,7 @@
                     "delete": "Löschen",
                     "deleteConfirm": "Sie sind im Begriff, das exportierte Video zu löschen, das von {{0}} verteilt wurde. Das Video ist dann nicht mehr auf der Videoseite der externen Plattform verfügbar. Wie wollen Sie fortfahren?",
                     "form": {
+                        "provider": "Anbieter: {{0}}",
                         "status": "Status",
                         "updates": "Aktualisierungen",
                         "updateAutomatically": "Automatisch aktualisieren",
@@ -1879,7 +2040,7 @@
                         "remoteId": "Remote-ID",
                         "startDate": "Anfangsdatum",
                         "endDate": "Enddatum",
-                        "metadata": "Metadaten",
+                        "metadata": "Metadata",
                         "name": "Name",
                         "description": "Beschreibung",
                         "tags": "Tags",
@@ -1969,9 +2130,9 @@
                     "errorsInfo": {
                         "goToMetadataTab": "Gehe zur Metadaten-Registerkarte",
                         "goToThumbnailsTab": "Gehe zu Vorschaubilder-Registerkarte",
-                        "goToFlavorsTab": "Gehe zu Varianten-Registerkarte",
-                        "metadataError": "Die Metadaten des ausgewählten Eintrags stimmen nicht mit den erforderlichen Spezifikationen überein: {{0}} Um die Verteilung abzuschließen, müssen Sie diesen Fehler in den relevanten Tabs beheben:\n",
-                        "missingMetadata": "Im ausgewählten Eintrag fehlen Inhalte für die folgenden Metadaten-Felder: {{0}} Um diese Verteilung abzuschließen, müssen Sie in den entsprechenden Registerkarten die Metadaten für jedes der oben aufgelisteten Felder hinzufügen:\n",
+                        "goToFlavorsTab": "Gehe zur Varianten-Registerkarte",
+                        "metadataError": "Die Metadaten des ausgewählten Eintrags entsprechen nicht den erforderlichen Spezifikationen: {{0}}. Um diese Verteilung abzuschließen, müssen Sie diesen Fehler in den entsprechenden Registerkarten beheben:\n",
+                        "missingMetadata": "Für den ausgewählten Eintrag fehlen Inhalte für die folgenden Metadaten-Felder: {{0}}. Um diese Verteilung abzuschließen, müssen Sie in den entsprechenden Registerkarten die Metadaten für jedes der oben aufgelisteten Felder hinzufügen:\n",
                         "missingFlavor": "Für den ausgewählten Eintrag fehlen die folgenden Transkodierungsvarianten: {{0}}. Um diese Verteilung abzuschließen, gehen Sie zur Registerkarte „Varianten“ und wählen Sie „Konvertieren“ für jede der oben aufgelisteten Varianten:\n",
                         "missingThumbnail": "Für den ausgewählten Eintrag fehlen die folgenden Vorschaubilder-Maße: {{0}}. Um diese Verteilung abzuschließen, gehen Sie zur Registerkarte „Vorschaubilder“ und erstellen Sie Vorschaubilder für alle der oben aufgelisteten Maße:\n",
                         "autoDistributionMetadataMissing": "Dieser Eintrag wurde mit automatischer Verteilung eingerichtet, wenn bestimmte Metadaten eingegeben werden. Die folgenden Metadaten fehlen derzeit: {{0}}. Um diese Verteilung abzuschließen, müssen Sie diesen Inhalt in der entsprechenden Registerkarte hinzufügen:\n"
@@ -2003,7 +2164,7 @@
             },
             "categoryDetails": {
                 "save": "Speichern",
-                "referenceIdInUse": "Die folgenden Kategorien wurden bereits mit {{0}} als Referenz-ID festgelegt: {{1}}. Möchten Sie fortfahren?",
+                "referenceIdInUse": "Die folgenden Kategorien wurden bereits mit {{0}} als Referenz-ID festgelegt: {{1}} Möchten Sie fortfahren?",
                 "header": "{{0}}",
                 "backToCategories": "Zurück zu den Kategorien",
                 "headerProps": {
@@ -2019,7 +2180,7 @@
                 "cancelEdit": "Bearbeitung abbrechen",
                 "discard": "Alle Änderungen verwerfen?",
                 "sections": {
-                    "metadata": "Metadaten",
+                    "metadata": "Metadata",
                     "entitlements": "Rechte",
                     "subcategories": "Unterkategorien"
                 },
@@ -2065,7 +2226,7 @@
                         "requiresAuthentication": "Authentifizierung erforderlich",
                         "requiresAuthentication_explanation": "Nur sichtbar für authentifizierte Endbenutzer,",
                         "private": "Privat",
-                        "private_explanation": "Nur sichtbar für Benutzer mit besonderen Zugriffsrechten auf die Inhalte dieser Kategorie."
+                        "private_explanation": "Kategorie ist nur sichtbar für Benutzer mit besonderen Zugriffsrechten auf die Inhalte dieser Kategorie."
                     },
                     "categoryListing": {
                         "label": "Kategorienliste",
@@ -2073,7 +2234,7 @@
                         "noRestrictions": "Keine Einschränkungen",
                         "noRestrictions_explanation": "Sichtbar für jeden mit Zugriff auf die Anwendungsseite.",
                         "private": "Privat",
-                        "private_explanation": "Nur sichtbar für Benutzer mit besonderen Zugriffsrechten auf die Inhalte dieser Kategorie."
+                        "private_explanation": "Kategorie ist nur sichtbar für Benutzer mit besonderen Zugriffsrechten auf die Inhalte dieser Kategorie."
                     },
                     "contentPublishPermissions": {
                         "label": "Veröffentlichungs-rechte für Inhalte",
@@ -2103,16 +2264,16 @@
                         "manager": "Manager"
                     },
                     "owner": {
-                        "label": "Inhaber",
+                        "label": "Eigentümer",
                         "notSpecified": "Nicht festgelegt",
                         "changeOwner": "Inhaber ändern",
                         "changeOwnerLabel": "Legen Sie einen neuen Inhaber für diese Kategorie fest",
                         "changeOwnerPlaceholder": "Benutzername/ID eingeben",
                         "cancelEdit": "Bearbeitung abbrechen",
                         "discard": "Alle Änderungen verwerfen?",
-                        "tooltip": "Der Benutzer ist nicht in Kaltura aufgeführt. {{0}} wird als die Kennung des Benutzers angesehen",
+                        "tooltip": "Der Benutzer ist nicht in Kaltura aufgeführt. {{0}} wird als die Kennung des Benutzers angesehen.",
                         "errors": {
-                            "changeOwnerFailed" : "Beim Ändern des Inhabers ist ein Fehler aufgetreten.",
+                            "changeOwnerFailed" : "Beim Ändern des Inhabers trat ein Fehler auf.",
                             "unableToChange": "Der Inhaber der aktuellen Kategorie konnte nicht geändert werden.",
                             "selectUser" : "Der Inhaber konnte nicht geändert werden, da kein Benutzer ausgewählt wurde.",
                             "invalidOwner": "Kann Inhaber-Feld nicht mit Benutzer-ID \"{{0}}\" einrichten. Benutzer-ID ist ungültig.",
@@ -2121,7 +2282,7 @@
                     },
                     "permittedUsers": {
                         "label": "Berechtigte Nutzer",
-                        "loading": "Wird geladen...",
+                        "loading": "Daten werden geladen...",
                         "none": "Keine",
                         "manageUsers": "Benutzer verwalten",
                         "viewUsers": "Benutzer ansehen",
@@ -2131,7 +2292,7 @@
                         "refine": "Eingrenzen",
                         "searchUsers": "Benutzer durchsuchen",
                         "title":"Endnutzerberechtigungen verwalten",
-                        "titleView":"Endnutzerberechtigungen ansehen",
+                        "titleView":"Endbenutzerberechtigungen ansehen",
                         "inheritanceMessage":"Berechtigungen wurden von {{0}} übernommen und können auf dieser Seite nicht bearbeitet werden.",
                         "close": "Schließen",
                         "table": {
@@ -2256,11 +2417,11 @@
                 }
             },
             "liveDashboard": {
-                "title": "Live-Dashboard"
+                "title": "Echtzeit-Dashboard öffnen"
             },
             "playlistDetails": {
                 "sections": {
-                    "metadata": "Metadaten",
+                    "metadata": "Metadata",
                     "content": "Inhalt"
                 },
                 "details": {
@@ -2312,11 +2473,67 @@
             }
         },
         "administration": {
+            "accounts":{
+                "addAccount": "Konto hinzufügen",
+                "refresh": "Aktualisieren",
+                "accountsNum": "{{0}} Verleger",
+                "currentUser": "(Elternkonto)",
+                "confirmDeleteHeader": "Bestätigen Entfernen",
+                "search": "Suchen",
+                "confirmDeleteBody": "Sind Sie sicher, dass Sie das ausgewählte Konto entfernen möchten? ({{0}})",
+                "currentStatus": "Derzeitiger Status:",
+                "accountsInfo": "{{0}} genutzte Konten*, {{1}} zusätzliche verbleibende.",
+                "accountsExplain": "* aktive oder gesperrte Konten, die nicht als Vorlagen verwendet werden",
+                "moreAccounts": "Brauchen Sie mehr Konten?",
+                "contact": "Kaltura kontaktieren,",
+                "usersUpgrade": "um ein Upgrade zu beantragen.",
+                "create": "Erstellen",
+                "note": "Die Erstellung eines Kontos kann bis zu einer Minute dauern",
+                "accountInfo": "Kontoinformationen",
+                "administrator": "Verwalter",
+                "name": "Name des Kontos",
+                "email": "Administrator E-Mail",
+                "phone": "Administrator Telefon",
+                "website": "Website-URL",
+                "template": "Inhalt aus Vorlagenkonto kopieren",
+                "defaultTemplate": "Standard-Vorlagenkonto",
+                "refid": "Referenz-ID",
+                "tableColumns": {
+                    "status": "Status",
+                    "id": "Partner-ID",
+                    "name": "Name des Kontos",
+                    "refid": "Referenz-ID",
+                    "website": "Website-URL",
+                    "administrator": "Verwalter",
+                    "email": "E-Mail-Verwaltung",
+                    "phone": "Telefon-Verwaltung",
+                    "created": "Erstellungsdatum"
+                },
+                "actions": {
+                    "kmc": "KMC-Login",
+                    "block": "Blockieren",
+                    "unblock": "Entsperren",
+                    "remove": "Entfernen"
+                },
+                "errors": {
+                    "loadError": "Konten können nicht geladen werden",
+                    "required": "Wert ist erforderlich und kann nicht leer sein",
+                    "emailFormat": "Ungültiges E-Mail-Format",
+                    "emailExists": "E-Mail-Adresse ist bereits im System vorhanden"
+                },
+                "statusLabels": {
+                    "allStatuses": "Alle Statusangaben",
+                    "active": "Aktiv",
+                    "deleted": "Gelöscht",
+                    "blocked": "Gesperrt",
+                    "removed": "Entfernt"
+                }
+            },
             "roles": {
                 "addRole": "Rolle hinzufügen",
                 "rolesNum": "{{0}} Rollen",
                 "refresh": "Aktualisieren",
-                "confirmDeleteHeader": "Löschen bestätigen",
+                "confirmDeleteHeader": "Löschung bestätigen",
                 "confirmDeleteBody": "Wollen Sie die ausgewählte Rolle wirklich löschen? ({{0}})",
                 "deleted": "Rolle wurde erfolgreich gelöscht",
                 "copyOf": "Kopie von",
@@ -2331,7 +2548,7 @@
                     "delete": "Löschen"
                 },
                 "errors": {
-                    "loadError": "Einträge können nicht geladen werden",
+                    "loadError": "Rollen können nicht geladen werden",
                     "roleInUse": "Die von Ihnen ausgewählte Rolle kann nicht gelöscht werden, da sie derzeit vorhandenen Benutzern zugewiesen ist.",
                     "cantDeleteRole": "Rolle kann nicht gelöscht werden",
                     "cantDeleteAdminRole": "Administratorrolle kann nicht gelöscht werden",
@@ -2358,9 +2575,11 @@
                 "userRole": "Benutzerrolle",
                 "addRole": "Rolle hinzufügen",
                 "addUser": "Benutzer hinzufügen",
+                "ssoUser": "SSO-Benutzer",
                 "currentStatus": "Derzeitiger Status:",
                 "usersInfo": "{{0}} KMC {{1}} in Benutzung, {{2}} zusätzliche verfügbar.",
                 "failedLoading": "Laden von Benutzerdaten fehlgeschlagen",
+                "export": "Benutzer exportieren",
                 "cantPerform": "Sie verfügen nicht über die Zugriffsrechte, um diese Aktion auszuführen",
                 "successSavingUser": "Änderungen treten sofort in Kraft. Bitte weisen Sie den Benutzer an, seinen Browser zu aktualisieren.",
                 "personalDetails": "Persönliche Details",
@@ -2461,6 +2680,135 @@
                     "contactUs": "Kontaktieren Sie uns, um mehr über unterschiedliche Pakete und Mehrwertdienste zu erfahren."
                 }
             },
+            "authentication": {
+                "newProfile": "Neues SAML-Profil",
+                "profilesNum": "{{0}} Profile",
+                "loadError": "Fehler beim Laden von Authentifizierungsprofilen",
+                "table": {
+                    "name": "Name",
+                    "admin": "(Verwaltung)",
+                    "description": "Beschreibung",
+                    "id": "ID",
+                    "status": "Status",
+                    "type": "Typ",
+                    "provider": "Anbieter (IdP)",
+                    "created": "Erstellungsdatum",
+                    "edit": "Bearbeiten",
+                    "delete": "Löschen",
+                    "draft": "Entwurf",
+                    "complete": "Bereit"
+                },
+                "selectProfile": "Authentifizierungsprofil auswählen",
+                "delete": "Profil löschen",
+                "deleteMsg": "Sind Sie sicher, dass Sie das ausgewählte Profil löschen wollen? „{{0}}“",
+                "deleteConfirm": "Geben Sie zur Bestätigung „{{0}}“ in das Feld darunter ein",
+                "deleteBtn": "Dieses Profil löschen",
+                "name": "Name",
+                "profileName": "Profilname",
+                "deleteError": "Fehler beim Löschen des Profils",
+                "addOrganizationId": "Organisations-ID (optional)",
+                "organizationId": "Organisations-ID",
+                "loginError": "Ein Fehler beim Einloggen ist aufgetreten",
+                "edit": {
+                    "titleAdd": "Profil hinzufügen",
+                    "titleEdit": "Profil bearbeiten",
+                    "newProfile": "Neues Profil",
+                    "sps": "Einstellungen des Dienstanbieters",
+                    "metadata": "Klicken Sie hier, um die Metadaten als",
+                    "metadata1": "URL",
+                    "metadata2": "oder",
+                    "metadata3": "Datei",
+                    "metadataUpdate": "Wird aktualisiert...",
+                    "ssoUrl": "URL zur einmaligen Anmeldung",
+                    "ssoUrl_tt": "Assertion-Consumer-Dienst, der dem IdP mitteilt, wohin ein authentifizierter Benutzer nach der Anmeldung umgeleitet werden soll. Die SAML-Antwort wird unter dieser URL veröffentlicht.",
+                    "entity": "Entitäts-ID",
+                    "entity_tt": "Die eindeutige Kennung des Dienstanbieters. Dieses Feld wurde automatisch mit einem empfohlenen Wert versehen.",
+                    "sign": "SAML-Anfrage unterschreiben",
+                    "sign_tt": "SAML Request Signature erzeugt, wenn aktiviert, eine signierte Authentifizierungsanfrage. Die Anfrage wird signiert und der IdP kann die Anfrage anhand des öffentlichen Schlüssels, der in den Metadaten (nächstes Feld) angegeben wurde, validieren.",
+                    "signCert": "Signatur-Zertifikat",
+                    "encryption": "Verschlüsselung",
+                    "encryption_tt": "Verschlüsseln Sie die SAML-Assertions mit dem unten angegebenen öffentlichen Schlüssel. Die Behauptungen können mit den privaten Schlüsseln von Kaltura entschlüsselt werden.",
+                    "encryptionKey": "Verschlüsselungsschlüssel",
+                    "idp": "Einstellungen des Identitätsanbieters",
+                    "idp_tt": "Kopieren Sie den folgenden Text vom IdP und fügen Sie ihn in die unten stehenden Textfelder ein:",
+                    "login": "Anmelde-URL",
+                    "login_tt": "Wird aus den IdP-Metadaten bezogen. In der Regel erscheinen sie als <SingleSignOnService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect\"……/>",
+                    "logout": "Abmelde-URL",
+                    "logout_tt": "Wird aus den IdP-Metadaten bezogen. Üblicherweise erscheint es als &lt;SingleLogoutService Binding=&amp;quot;urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect&amp;quot;.../>",
+                    "ipc": "IdP-Zertifikat",
+                    "ipc_tt": "Das vom Identity Provider (IdP) zum Signieren der SAML-Antwort verwendete Zertifikat. Wird aus den IdP-Metadaten entnommen.",
+                    "metadataUrl": "Metadaten-URL",
+                    "metadataUrl_tt": "Fügen Sie die Metadaten-URL hinzu, um das Zertifikat automatisch zu aktualisieren, bevor das Zertifikat abläuft.",
+                    "attributesStatement": "Attributanweisungen",
+                    "attributes_tt": "Geben Sie den Namen des Attributs, wie er in der SAML-Assertion erscheinen würde, in das erste Textfeld ein und ordnen Sie sie den Kaltura-Attribut-Anweisungen zu, indem Sie eine Kaltura-Attribut-Anweisung aus der Dropdown-Liste auswählen:",
+                    "attributes": {
+                        "Core_User_FirstName": "Vorname",
+                        "Core_User_LastName": "Nachname",
+                        "Core_User_Email": "E-Mail-Adresse",
+                        "Core_User_ScreenName": "Bildschirmname",
+                        "Core_User_DateOfBirth": "Geburtsdatum",
+                        "Core_User_Gender": "Geschlecht",
+                        "Core_User_ThumbnailUrl": "Vorschaubild",
+                        "Core_User_Description": "Beschreibung",
+                        "Core_User_Title": "Titel",
+                        "Core_User_Country": "Land",
+                        "Core_User_Company": "Firma",
+                        "Core_User_State": "Bundesland",
+                        "Core_User_City": "Stadt",
+                        "Core_User_Zip": "PLZ"
+                    },
+                    "confirm": "Mit dieser Änderung wird das Profil gespeichert. Möchten Sie fortfahren?",
+                    "provider": "Name des Anbieters",
+                    "kaltura": "Kaltura / benutzerdefinierter Name",
+                    "kalturaName": "Name Kaltura",
+                    "add": "Kaltura-Attribut hinzufügen",
+                    "addCustom": "Benutzerdefiniertes Attribut hinzufügen",
+                    "remove": "Attribut entfernen",
+                    "attributePh": "Kaltura-Attribut auswählen",
+                    "email_tt": "Dies dient als Ihre eindeutige Kennung. Wenn Ihr eindeutiger Bezeichner keine E-Mail sein sollte, wenden Sie sich an Ihren Kaltura-Administrator.",
+                    "show": "Erweiterte Einstellungen anzeigen",
+                    "hide": "Erweiterte Einstellungen ausblenden",
+                    "group": "Gruppenattributanweisungen",
+                    "group_tt": "Ordnen Sie die Attribute der Anbieter Ihrem Kaltura-Schema zu:",
+                    "groupName": "Name des Gruppenattributs",
+                    "groupName_tt": "Name des Attributs, das die Benutzergruppen enthält, wie sie in der SAML-Assertion erscheinen würden.",
+                    "addGroup": "Gruppenattribut hinzufügen",
+                    "createGroups": "Neue Gruppen erstellen",
+                    "createGroups_tt": "Erstellen Sie Gruppen in Kaltura, die im IdP existieren und während der Synchronisierung nicht in Kaltura vorhanden sind.",
+                    "removeGroups": "Aus bestehenden Gruppen entfernen",
+                    "removeGroups_tt": "Entfernen Sie Benutzer, die während der Synchronisierung aus der IdP-Gruppe entfernt wurden, aus der Kaltura-Gruppe.",
+                    "groupMapping": "Benutzergruppen-Mapping",
+                    "syncGroups": "Alle Benutzergruppen synchronisieren",
+                    "syncGroups_tt": "Automatische Synchronisierung aller IdP-Benutzergruppen mit Kaltura-Benutzergruppen. Die Gruppennamen in Kaltura sind identisch mit denen in der SAML-Assertion.",
+                    "additional": "Zusätzliche Einstellungen",
+                    "format": "Antwort im Kennzeichnungsformat",
+                    "format_tt": "NameID-Format, wie es in der SAML-Anfrage erscheinen wird.",
+                    "formatPh": "Antwort im Format der Kennung auswählen",
+                    "removeFormat": "Entfernen"
+                },
+                "new": {
+                    "doc": "Eine Anleitung zur Konfiguration eines neuen SSO-Profils finden Sie auf unserer",
+                    "docLink": "SSO-Profil-Konfigurationsanleitung",
+                    "provider": "Anbieter",
+                    "admin": "Verwaltungsprofil",
+                    "admin-help": "Aktivieren Sie dieses Textfeld, wenn dieses Profil für die Anmeldung bei Verwaltungsanwendungen (z. B. Veranstaltungsplattform, KMC) erstellt wird",
+                    "createTitle": "Profil erstellen",
+                    "create": "Weiter",
+                    "create_tt": "Profil erstellen und fortfahren, um die Profileinstellungen zu vervollständigen",
+                    "adminLabel": "Als Admin-Anwendungsprofil festlegen"
+                },
+                "subscribe": {
+                    "general": "Allgemeines",
+                    "config": "SSO-Konfiguration",
+                    "profiles": "Profile",
+                    "profilesPlaceholder": "Profile auswählen",
+                    "profiles-help": "Wählen Sie ein oder mehrere Verwaltungsprofile",
+                    "domain": "Bereich",
+                    "domain-help": "Geben Sie die Domain Ihrer Organisation ein, z. B.: <organization>.com",
+                    "orgId": "Organisations-ID",
+                    "orgId-help": "Optional können Sie eine Organisations-ID hinzufügen, um mehrere Konten pro Domain zu unterstützen"
+                }
+            },
             "metadata": {
                 "errorLoading": "Fehler beim Laden von Schemata",
                 "addCustomSchema": "Benutzerdefiniertes Schema hinzufügen",
@@ -2477,7 +2825,8 @@
                 "fields": "{{0}} Benutzerdefinierte Felder",
                 "applyTo": {
                     "entries": "Einträge",
-                    "categories": "Kategorien"
+                    "categories": "Kategorien",
+                    "userEntry": "Benutzereingabe"
                 },
                 "form": {
                     "customSchemaTitle": "Titel des benutzerdefinierten Schemas",
@@ -2486,6 +2835,7 @@
                     "applyTo": "Übernehmen für",
                     "entries": "Einträge",
                     "categories": "Kategorien",
+                    "userEntry": "Benutzereingabe",
                     "schemaNameRequired": "Name erforderlich",
                     "schemaNameMaxLength": "Name muss weniger als {{0}} Zeichen enthalten"
                 },
@@ -2512,7 +2862,7 @@
                     "remove": "Entfernen",
                     "actions": {
                         "edit": "Bearbeiten",
-                        "download": "Herunterladen",
+                        "download": "Download",
                         "delete": "Löschen"
                     }
                 },
@@ -2525,8 +2875,8 @@
                 "unlimited": "Unbegrenzt",
                 "deleteSchema": "Benutzerdefiniertes Datenschema löschen",
                 "deleteSchemas": "Benutzerdefinierte Datenschemata löschen",
-                "confirmDeleteSingle": "Wollen Sie das folgende benutzerdefinierte Datenschema wirklich löschen: {{0}}?",
-                "confirmDeleteMultipleNames": "Wollen Sie die folgenden benutzerdefinierten Datenschemata wirklich löschen: {{0}}?",
+                "confirmDeleteSingle": "Wollen Sie das folgende benutzerdefinierte Datenschema wirklich löschen: {0}}?",
+                "confirmDeleteMultipleNames": "Wollen Sie die folgenden benutzerdefinierten Datenschemata wirklich löschen: {0}}?",
                 "confirmDeleteMultiple": "Wollen Sie die ausgewählten benutzerdefinierten Datenschemata wirklich löschen?",
                 "updateError": "Bei der Aktualisierung der benutzerdefinierten Datenschemata ist ein Fehler aufgetreten.",
                 "discardChanges": "Änderungen verwerfen",
@@ -2538,6 +2888,8 @@
                     "shortDescription": "Kurzbeschreibung",
                     "description": "Beschreibung",
                     "searchable": "Durchsuchbar",
+                    "hidden": "Versteckt",
+                    "required": "Erforderlich",
                     "includeTime": "Zeit einfügen",
                     "listValues": "Werte auflisten",
                     "listValuesPlaceholder": "Geben Sie einen Wert pro Zeile ein",
@@ -2550,9 +2902,9 @@
                         "invalidSystemName": "Das Feld „Systemname“ muss einen einmaligen Namen haben. Bitte geben Sie einen anderen Namen ein.",
                         "emptyLabel": "Bitte geben Sie eine Feldbeschriftung ein",
                         "invalidLabelPrefix": "Der Feldname muss mit einem Buchstaben beginnen.",
-                        "invalidChars": "Ungültige Eingabe. Die Sonderzeichen &lt; > & \" und ' sind nicht erlaubt.",
+                        "invalidChars": "Ungültige Eingabe. Die Sonderzeichen &lt; > &amp; \" und ' sind nicht erlaubt.",
                         "emptyListValues": "Ungültige Eingabe bei „Werte auflisten“: Es muss mindestens eine Option aufgelistet werden.",
-                        "invalidListOptions": "Ungültige Eingabe bei „Werte auflisten“: Erlaubt sind nur Buchstaben, Zahlen und die folgenden Sonderzeichen: ()|-@~&/^$=_%.':",
+                        "invalidListOptions": "Ungültige Eingabe bei „Werte auflisten“: Erlaubt sind nur Buchstaben, Zahlen und die folgenden Sonderzeichen: ()|-@~&amp;/^$=_%.':.",
                         "invalidListOptionsPrefix": "Ungültige Eingabe bei „Werte auflisten“: - ist ein ungültiges Präfix."
                     }
                 },
@@ -2576,9 +2928,108 @@
                         "loadFailed": "Beim Laden der Kontoinformationen ist ein Fehler aufgetreten."
                     },
                     "notifications": {
-                        "title": "Benachrichtigungen",
-                        "message": " Kontaktieren Sie Ihren Ansprechpartner bei Kaltura, um Benachrichtigungseinstellungen einzurichten."
+                        "title": "Nachrichten",
+                        "message": "Die Benachrichtigungen sind aktuell nicht verfügbar."
+                    },
+                    "distribution": {
+                        "title": "Vertriebsprofile",
+                        "text": "YouTube-Distributionsprofile"
                     }
+                },
+                "distribution": {
+                    "name": "Name",
+                    "creation": "Erstellungsdatum",
+                    "update": "Aktualisiert um",
+                    "account": "YouTube-Konto",
+                    "empty": "Keine Profile für dieses Kaltura-Konto ",
+                    "loadError": "Beim Laden von Verteilungsprofilen ist ein Fehler aufgetreten.",
+                    "deleteTitle": "YouTube-Profil löschen",
+                    "deleteText": "Das YouTube-Profil ‚{{0}}‘ wird gelöscht und Sie können es nicht mehr für die Verbreitung Ihrer Videos auf YouTube verwenden. Möchten Sie wirklich fortfahren?",
+                    "token": "YouTube-API-Zugang autorisieren",
+                    "tokenText": "Klicken oder kopieren Sie den obigen Link und melden Sie sich mit Ihren KMC-Zugangsdaten an. Anschließend authentifizieren Sie sich bei Google mit Ihrem Google-Konto, das mit Ihrem YouTube-Kanal verknüpft ist."
+                },
+                "zoom": {
+                    "title": "Zoom-Integration",
+                    "enableIntegration": "Aktivierung der Integration",
+                    "explanation": "Zoom integrierte Konten",
+                    "generate": " Integrationscode generieren",
+                    "loadError": "Beim Laden der Zoom-Integrationsprofile ist ein Fehler aufgetreten.",
+                    "empty": "Es gibt keine aktiven Zoom-Konten.",
+                    "edit": "Bearbeiten",
+                    "name": "Benutzer-ID",
+                    "user": "Benutzer einstellen basierend auf",
+                    "userHelp": "Wählen Sie diese Option, wenn Sie „user_id“ mit einem bestimmten Feld wie SSO verknüpfen möchten. Weitere Einzelheiten zur CMS-ID finden Sie unter „cms_user_id“ unter dem folgenden",
+                    "here": "Link.",
+                    "accountId": "Zoom-Konto-ID",
+                    "accountDescription": "Beschreibung des Kontos",
+                    "created": "Erstellungsdatum",
+                    "updated": "Aktualisiert um",
+                    "status": "Status",
+                    "codeTitle": "Integrationscode",
+                    "code": "Zoom-Integrationscode",
+                    "codeFailed": "Bei der Generierung des Integrationscodes ist ein Fehler aufgetreten.",
+                    "updateError": "Bei der Aktualisierung der Zoom-Integration ist ein Fehler aufgetreten.",
+                    "copy": "Kopieren und schließen",
+                    "enabled": "Aktiviert",
+                    "disabled": "Deaktiviert",
+                    "enable": "Aktivieren",
+                    "disable": "Deaktivieren",
+                    "editAccount": "Zoom-Konto bearbeiten",
+                    "recordingUpload": "Aufnahme-Upload",
+                    "description": "Zoom-Konto Beschreibung",
+                    "uploadMeetings": "Hochladen von Meeting-Aufnahmen",
+                    "uploadWebinars": "Webinar-Aufnahmen hochladen",
+                    "category": "Kategorie ",
+                    "webinarCategory": "Webinar-Kategorie",
+                    "delete": "Löschen von Inhalten aus Zoom nach dem Hochladen",
+                    "create": "Falls der Benutzer nicht existiert",
+                    "transcription": "Zoom-Transkription",
+                    "owner": "Besitzer für Aufnahmen festlegen",
+                    "zoom": "Zoom-Benutzer",
+                    "cms": "CMS-Benutzer",
+                    "post": "Postfix",
+                    "postfix": "E-Mail-Postfix",
+                    "postfix1": "Nicht verändern",
+                    "postfix2": "Postfix entfernen",
+                    "postfix3": "Postfix hinzufügen",
+                    "permissions": "Benutzerberechtigungen für hochgeladene Aufnahmen konfigurieren",
+                    "participation": "Teilnehmer",
+                    "participation1": "Teilnehmer ignorieren",
+                    "participation2": "Als Mitzuschauer hinzufügen",
+                    "participation3": "Als Mitherausgeber hinzufügen",
+                    "hosts1": "Keine",
+                    "hosts2": "Mitzuschauer",
+                    "hosts3": "Mitverleger",
+                    "hosts4": "Mitherausgeber",
+                    "hosts5": "Mitherausgeber und Mitverleger",
+                    "altHosts": "Alternative Hosts",
+                    "coHosts": "Mit-Hosts",
+                    "user1": "Neuen Benutzer basierend auf Zoom-Benutzer erstellen",
+                    "user2": "Standardbenutzer verwenden",
+                    "note": "* Die Anzahl der Zoom-Konten für die Kaltura-Integration ist auf {{0}} Konten begrenzt. Es werden die zuletzt aktualisierten Konten angezeigt.",
+                    "invalid": "Die Standard-Benutzer-ID ist erforderlich.",
+                    "upload": "Verwaltung der hochgeladenen Aufnahmen",
+                    "uploadAll": "Alle Aufnahmen hochladen",
+                    "uploadIn": "Opt-in-Gruppen",
+                    "uploadOut": "Opt-out-Gruppen",
+                    "uploadError": "Muss mindestens eine Gruppe ausfüllen"
+                },
+                "webex": {
+                    "title": "Webex-Integration",
+                    "explanation": "Integrierte Webex-Konten",
+                    "updateError": "Bei der Aktualisierung der Webex-Integration ist ein Fehler aufgetreten.",
+                    "empty": "Es gibt keine aktiven Webex-Konten.",
+                    "accountId": "Webex-Konto-ID",
+                    "code": "Code für die Webex-Integration",
+                    "editAccount": "Webex-Konto bearbeiten",
+                    "participation": "Besprechungsteilnehmer hinzufügen als",
+                    "description": "Beschreibung des Webex-Kontos",
+                    "delete": "Löschen von Inhalten aus Webex nach dem Hochladen",
+                    "owner": "Eigentümer der Aufnahmen",
+                    "transcription": "Webex-Transkription",
+                    "webex": "Webex-Benutzer",
+                    "user1": "Erstellen eines neuen Benutzers basierend auf einem Webex-Benutzer",
+                    "note": "* Die Anzahl der Webex-Konten für die Kaltura-Integration ist auf {{0}} Konten begrenzt. Es werden die zuletzt aktualisierten Konten angezeigt."
                 },
                 "entitlement": {
                     "title": "Berechtigung",
@@ -2620,11 +3071,154 @@
                         "privacyContextLabel": "Datenschutz-kontext-Beschriftung",
                         "actions": {
                             "edit": "Bearbeiten",
-                            "delete": "Löschen"
+                            "delete": "Löschen",
+                            "token": "Zulassen"
                         }
                     },
                     "errors": {
                         "loadError": "Beim Laden der Berechtigungen ist ein Fehler aufgetreten."
+                    }
+                }
+            },
+            "reach": {
+                "reachProfiles": "Profile",
+                "edit": "Bearbeiten",
+                "duplicate": "Duplizieren",
+                "unlimited": "Unbegrenzt",
+                "search": "Suchen",
+                "cancelEdit": "Bearbeitung abbrechen",
+                "discard": "Alle Änderungen verwerfen?",
+                "errorLoadingProfiles": "Reach-Profile konnten nicht geladen werden",
+                "errorLoadingServices": "Reach-Dienste konnten nicht geladen werden",
+                "profiles": "{{0}} Profile",
+                "autoRules": "Für die Festlegung der Regeln wenden Sie sich bitte an Ihre CSM.",
+                "profile": {
+                    "save": "Speichern",
+                    "backToProfiles": "Zurück zu den Profilen",
+                    "errors": {
+                        "error": "Fehler",
+                        "dismiss": "Verwerfen",
+                        "reload": "Neu laden",
+                        "loadError": "Beim laden der Daten trat ein Fehler auf.",
+                        "saveError": "Beim Speichern trat ein Fehler auf.",
+                        "validationError": "Das Formular enthält ungültige Informationen. Bitte überprüfen Sie die Bereiche, die als ungültig markiert wurden",
+                        "busyError": "Ein Vorgang wird derzeit noch ausgeführt. Bitte versuchen Sie es später erneut.",
+                        "savePrepareError": "Bei der Vorbereitung des Speicherns trat ein Fehler auf. Versuchen Sie es erneut."
+                    }
+                },
+                "table": {
+                    "name": "Name",
+                    "id": "ID",
+                    "created": "Erstellt am",
+                    "allocated": "Zugewiesenes Guthaben",
+                    "remaining": "Restguthaben",
+                    "expiration": "Ablaufdatum des Guthabens"
+                },
+                "sections": {
+                    "settings": "Einstellungen",
+                    "service": " Dienstparameter",
+                    "credit": "Guthaben",
+                    "dictionary": "Wörterbuch",
+                    "rules": "Automatische Regeln"
+                },
+                "details": {
+                    "id": "ID",
+                    "remaining": "Restguthaben",
+                    "expiration": "Ablaufdatum des Guthabens",
+                    "creationDate": "Erstellungsdatum"
+                },
+                "settings": {
+                    "name": "Name",
+                    "machine": "Moderation von Maschinenanfragen",
+                    "professional": "Moderation bei beruflichen Anfragen",
+                    "deletion": "Politik zur Löschung von Inhalten",
+                    "region": "Region der Aufgabenbearbeitung",
+                    "machineCaptions": "Suffix für Maschinenuntertitel",
+                    "defaultMachineCaptionsLabel": "(Automatisch generiert)",
+                    "humanCaptions": "Suffix für von Menschen generierte Untertitel",
+                    "nameIsMandatory": "Name erforderlich.",
+                    "deleteOptions": {
+                        "deleteAfterMonth": "Nach einem Monat löschen",
+                        "deleteAfterThreeMonths": "Nach drei Monaten löschen",
+                        "deleteAfterWeek": "Nach einer Woche löschen",
+                        "deleteOnceProcessed": "Nach Bearbeitung löschen",
+                        "doNothing": "Nicht löschen"
+                    },
+                    "regionOptions": {
+                        "us": "US",
+                        "eu": "EU"
+                    }
+                },
+                "service": {
+                    "captions": "Untertitel-Service",
+                    "format": "Standard-Untertitelformat",
+                    "max": "Maximale Zeichen pro Untertitelzeile",
+                    "machine": "Automatische Anzeige von Maschinenuntertiteln auf dem Player",
+                    "human": "Automatische Anzeige von menschlichen Untertiteln auf dem Player",
+                    "metadata": "Extraktion von Metadaten",
+                    "speaker": "Anzeige von Sprecherwechseln",
+                    "audio": "Untertitel-Audio-Tags",
+                    "removal": "Profanität in Untertiteln entfernen",
+                    "naxIsMandatory": "Max Zeichen Wert ist erforderlich.",
+                    "formatOptions": {
+                        "dfxp": "DFXP",
+                        "srt": "SRT"
+                    }
+                },
+                "credit": {
+                    "type": "Guthabenart",
+                    "generic": "Allgemeines Guthaben",
+                    "unlimited": "Unbegrenztes Guthaben",
+                    "reoccurring": "Wiederkehrendes Guthaben",
+                    "range": "Guthaben für Zeitspanne",
+                    "amount": "Guthabenbetrag",
+                    "consumption": "%-Verbrauch",
+                    "overage": "Zulässige Überschreitung",
+                    "from": "Von Datum",
+                    "to": "Verfallsdatum"
+                },
+                "dictionary": {
+                    "language": "Sprache",
+                    "words": "Wörter",
+                    "add": "Wörterbuch hinzufügen",
+                    "delete": "Wörterbuch löschen",
+                    "error": "Sie überschreiten die maximale Zeichenanzahl"
+                },
+                "services": {
+                    "services": "{{0}} Services",
+                    "title": "Services",
+                    "captions": "Untertitel",
+                    "translations": "Übersetzungen",
+                    "alignment": "Ausrichtung",
+                    "audioDescription": "Audiobeschreibung",
+                    "chaptering": "Kapiteleinteilung",
+                    "service": "Dienstleistung",
+                    "id": "ID",
+                    "tat": "Turnaround-Zeit",
+                    "language": "Ausgangssprache",
+                    "languages": "Sprachen",
+                    "languageTar": "Zielsprache",
+                    "chooseLang": "Sprachen wählen",
+                    "searchLang": "Suchen",
+                    "langSelected": "{0} Ausgewählte Sprachen",
+                    "speaker": "Sprecher-ID",
+                    "cpm": "Kosten pro Minute",
+                    "human": "Mensch",
+                    "machine": "Maschine",
+                    "turnAroundTime": {
+                        "bestEffort": "Beste Bemühungen",
+                        "eightHours": "8 Stunden",
+                        "fiveDays": "5 Tage",
+                        "fortyEightHours": "48 Stunden",
+                        "fourDays": "4 Tage",
+                        "immediate": "Unmittelbar",
+                        "sixHours": "6 Stunden",
+                        "tenDays": "10 Tage",
+                        "thirtyMinutes": "30 Minuten",
+                        "threeHours": "3 Stunden",
+                        "twelveHours": "12 Stunden",
+                        "twentyFourHours": "24 Stunden",
+                        "twoHours": "2 Stunden"
                     }
                 }
             },
@@ -2671,7 +3265,7 @@
                 "editAccessControlProfile": "Zugriffskontrolle-Profil bearbeiten",
                 "deleteProfile": {
                     "header": "Zugriffskontrolle-Profil(e) löschen",
-                    "messageWithNames": "Nach dem Löschen eines Zugriffskontrolle-Profils werden alle Einträge, die mit dem Profil verbunden waren, auf das Standard-Profil zurückgestellt. Wollen Sie die folgenden Zugriffskontrolle-Profile wirklich löschen {{0}}?",
+                    "messageWithNames": "Nach dem Löschen eines Zugriffskontrolle-Profils werden alle Einträge, die mit dem Profil verbunden waren, auf das Standard-Profil zurückgestellt. Wollen Sie die folgenden Zugriffskontrolle-Profile wirklich löschen: {{0}}?",
                     "message": "Nach dem Löschen eines Zugriffskontrolle-Profils werden alle Einträge, die mit dem Profil verbunden waren, auf das Standard-Profil zurückgestellt. Wollen Sie die ausgewählten Zugriffskontrolle-Profile wirklich löschen?"
                 },
                 "restrictions": {
@@ -2749,7 +3343,7 @@
                 },
                 "errors": {
                     "loading": "Konnte Zugriffskontrolle-Profile nicht laden",
-                    "delete": "Während der Löschanfrage ist ein Fehler aufgetreten.",
+                    "delete": "Während der Löschanfrage trat ein Fehler auf.",
                     "profileWasNotUpdated": "Das Zugriffskontrolle-Profil wurde nicht aktualisiert. {{0}}"
                 }
             },
@@ -2772,6 +3366,7 @@
                 "setAsDefault": "Als Standard festlegen",
                 "edit": "Bearbeiten",
                 "delete": "Löschen",
+                "view": "Ansicht",
                 "addTranscodingProfile": "Transkodierungsprofil hinzufügen",
                 "profileName": "Profilname",
                 "description": "Beschreibung",
@@ -2793,7 +3388,7 @@
                 },
                 "profile": {
                     "save": "Speichern",
-                    "metadata": "Metadaten",
+                    "metadata": "Metadata",
                     "backToProfiles": "Zurück zu den Profilen",
                     "flavor": "Variante",
                     "id": "ID {{0}}",
@@ -2808,6 +3403,7 @@
                     "systemName": "Systemname: (Optional)",
                     "flavorGenerationPolicy": "Richtlinie für die Erzeugung von Varianten",
                     "intermediateFlavorHandling": "Handhabung von Zwischenvarianten",
+                    "systemProfileTooltip": "Das Transcoding-Profil wurde von Kaltura eingerichtet. Bitte wenden Sie sich an den Kundenbetreuer, um ein Update zu erhalten",
                     "table": {
                         "flavor": "Variante",
                         "flavors": "{{0}} Varianten",
@@ -2829,7 +3425,7 @@
                     }
                 },
                 "sections": {
-                    "metadata": "Metadaten",
+                    "metadata": "Metadata",
                     "flavors": "Varianten"
                 },
                 "cancelEdit": "Bearbeitung abbrechen",
@@ -2894,17 +3490,18 @@
             }
         },
         "analytics": {
+            "analytics": "Analytik",
             "comingSoon": "In Kürze! Analytics für alle Medientypen.",
             "releaseSupports": "Diese Version unterstützt nur Analytics für „Live“-Einträge. Für alle anderen Medien <a href=\"{{0}}\" target=\"_blank\">loggen Sie sich bitte in der Legacy-KMC</a> ein, um Analytics und Berichte anzuzeigen und zu erstellen. Analytics für alle Medien sollte in Kürze verfügbar sein"
         },
         "reach": {
-            "captionRequests": "Untertitelanforderungen",
+            "captionRequests": "Untertitel &amp; Anreichern",
             "addServiceRule": "Service-Regel hinzufügen"
         }
     },
     "entriesShared": {
         "categoriesFilters": {
-            "loading": "Wird geladen...",
+            "loading": "Daten werden geladen...",
             "loadingError": "Untergeordnete Kategorien konnten nicht geladen werden.",
             "maxChildrenExceeded": "Die Anzahl der Kategorien übersteigt {{childrenCount}} und kann nicht angezeigt werden. Bitte benutzen Sie die Steuerelemente für die Kategoriensuche."
         }
@@ -3188,12 +3785,13 @@
         "FJ": "Fidschi",
         "FO": "Färöisch",
         "FR": "Französisch",
+        "FRCA": "Französisch (Kanada)",
         "FY": "Friesisch",
         "GA": "Irisch",
         "GD": "Gälisch (Schottisch)",
         "GL": "Galicisch",
         "GN": "Guarani",
-        "GU": "Gujaratisch",
+        "GU": "Gujarati",
         "HA": "Hausa",
         "HE": "Hebräisch",
         "HI": "Hindi",
@@ -3224,6 +3822,7 @@
         "KY": "Kirgisisch",
         "LA": "Latein",
         "LI": "Limburgisch",
+        "LB": "Luxemburgisch (Letzeburgisch)",
         "LN": "Lingala",
         "LO": "Laotisch",
         "LT": "Litauisch",
@@ -3250,6 +3849,7 @@
         "PL": "Polnisch",
         "PS": "Paschtunisch",
         "PT": "Portugiesisch",
+        "PTBR": "Portugiesisch (Brasilien)",
         "QU": "Quechua",
         "RM": "Rätoromanisch",
         "RN": "Kirundi",
@@ -3264,7 +3864,7 @@
         "SK": "Slowakisch",
         "SL": "Slowenisch",
         "SM": "Samoanisch",
-        "SMA": "Southern Sami",
+        "SMA": "Südsamisch",
         "SMJ": "Lule Sami",
         "SMN": "Inari Sami",
         "SMS": "Skolt Sami",
@@ -3302,6 +3902,7 @@
         "YI": "Jiddisch",
         "YO": "Yoruba",
         "ZH": "Chinesisch",
+        "ZHTW": "Taiwanesisches Mandarin",
         "ZU": "Zulu"
     },
     "shared": {

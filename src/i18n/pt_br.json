@@ -18,7 +18,9 @@
             "contentModerationPageTitle": "Conteúdo > Moderação",
             "contentModerationMenuTitle": "Moderação",
             "contentPlaylistsPageTitle": "Conteúdo > Playlists",
+            "contentRoomsPageTitle": "Conteúdo > Salas",
             "contentPlaylistsMenuTitle": "Playlists",
+            "contentRoomsMenuTitle": "Salas",
             "contentSyndicationPageTitle": "Conteúdo > Redifusão",
             "contentSyndicationMenuTitle": "Redifusão",
             "contentUploadsPageTitle": "Conteúdo > Carregar controle",
@@ -35,6 +37,8 @@
             "settingsReachMenuTitle": "Alcance",
             "settingsAccountInfoPageTitle": "Configurações > Informações da conta",
             "settingsAccountInfoMenuTitle": "Informações da conta",
+            "settingsAuthenticationPageTitle": "Configurações > Autenticação",
+            "settingsAuthenticationMenuTitle": "Autenticação",
             "settingsAccountSettingsPageTitle": "Configurações > Conta",
             "settingsAccountSettingsMenuTitle": "Conta",
             "settingsIntegrationPageTitle": "Configurações > Integração",
@@ -49,6 +53,8 @@
             "studioV2MenuTitle": "Universal Studio",
             "studioV3PageTitle": "Studio > TV Platform Studio",
             "studio3MenuTitle": "TV Platform Studio",
+            "studioV7PageTitle": "Studio > Player Studio",
+            "studio7MenuTitle": "Player Studio",
             "usageDashboardPageTitle": "Painel de uso",
             "usageDashboardMenuTitle": "Painel de uso",
             "restorePasswordPageTitle": "Redefinir senha",
@@ -66,12 +72,13 @@
             "allAccounts": "Todas as contas",
             "parentOnly": "Somente principal",
             "analyticsBW": "Uso",
+            "analyticsOverview": "Visão geral",
             "analyticsPublisher": "Armazenamento e Largura de Banda do Publicador",
             "analyticsEndUser": "Armazenamento de usuários finais",
             "analyticsTopContributors": "Principais colaboradores",
             "analyticsTechnology": "Tecnologia",
             "analyticsGeo": "Geolocalização",
-            "analyticsInteractions": "Interações de Conteúdo",
+            "analyticsInteractions": "Interações de conteúdo",
             "analyticsEngagement": "Envolvimento",
             "audience": "Audiência",
             "contributors": "Colaboradores",
@@ -113,6 +120,7 @@
             "copyToClipboard": "Copiar para a área de transferência",
             "copySuccess": "Copiado para a área de transferência",
             "copyFailure": "Operação de cópia falhou",
+            "updateSuccess": "Atualizado(s) com sucesso",
             "on": "LIGADO",
             "off": "DESLIGADO",
             "ok": "OK",
@@ -132,7 +140,9 @@
             "save": "Salvar",
             "error": "Erro",
             "connectionError": "Erro ao conectar com o servidor",
-            "invalidKs": "A sessão do usuário expirou. Faça o login novamente."
+            "invalidKs": "A sessão do usuário expirou. Faça o login novamente.",
+            "noAccess": "Você não tem permissão para acessar o console de gestão da Kaltura. Contate o administrador para obter acesso.",
+            "export": "Estamos preparando seu relatório. Enviaremos para seu endereço de e-mail em breve."
         },
         "redirect":{
             "redirect1": "Redirecionando para a visualização padrão...",
@@ -161,7 +171,8 @@
                 "browserVer2": "Use a versão 11 ou superior do Internet Explorer",
                 "qrCode": "Escaneie este código QR com o seu aplicativo autenticador. Você pode baixar um aplicativo autenticador para ambas as plataformas:",
                 "sso": "Login com SSO",
-                "loginWithPassword": "Login com e-mail e senha"
+                "loginWithPassword": "Login com e-mail e senha",
+                "orgIdErr": "Inserir ID da organização"
             },
             "invalidLoginHash": {
                 "title": "Link de login inválido",
@@ -193,6 +204,7 @@
                 "title": "A sua senha expirou. Para continuar a usar o sistema, você precisa alterar a sua senha agora.",
                 "error": {
                     "equal": "As senhas não correspondem",
+                    "notEqual": "A nova senha não pode ser igual à senha antiga",
                     "required": "Campo obrigatório"
                 },
                 "placeholder": {
@@ -202,20 +214,20 @@
                 }
             },
             "restorePassword": {
-            "welcome": "Bem-vindo à Kaltura",
-            "selectPassword": "Selecione a sua senha.",
-        "restored": "A nova senha foi definida, faça o login no console de gestão da Kaltura.",
-        "error": {
-          "equal": "As senhas não correspondem",
-          "required": "Campo obrigatório",
-          "failedValidateHash": "{{0}} Você deseja tentar novamente?"
-        },
-        "placeholder": {
-          "new": "Insira a nova senha",
-          "confirm": "Confirme a nova senha"
-        }
-      },
-      "error": {
+                "welcome": "Bem-vindo à Kaltura",
+                "selectPassword": "Selecione a sua senha.",
+                "restored": "A nova senha foi definida, faça o login no console de gestão da Kaltura.",
+                "error": {
+                    "equal": "As senhas não correspondem",
+                    "required": "Campo obrigatório",
+                    "failedValidateHash": "{{0}} Você deseja tentar novamente?"
+                },
+                "placeholder": {
+                    "new": "Insira a nova senha",
+                    "confirm": "Confirme a nova senha"
+                }
+            },
+            "error": {
                 "email": "Formato de e-mail incorreto",
                 "badCredentials": "O nome de usuário ou senha inserida estão incorretos.",
                 "retriesExceeded": {
@@ -223,7 +235,7 @@
                     "toUnblockYourAccount": " para desbloquear a sua conta."
                 },
                 "userNotFound": "O nome de usuário ou senha inserida estão incorretos.",
-                "invalidStructure": "A senha inserida possui uma estrutura inválida. A senha precisa obedecer às seguintes regras: - Deve ter entre 8 e 14 caracteres de comprimento. - Não pode conter o seu nome. - Deve conter pelo menos uma letra minúscula (a-z). - Deve conter pelo menos um número (0-9). - Deve conter pelo menos um dos seguintes símbolos: %~!@#\\$^*=+?[]{}. - Não deve conter os seguintes caracteres: &lt; ou >",
+                "invalidStructure": "A senha inserida possui uma estrutura inválida. A senha precisa obedecer às seguintes regras: - Deve ter entre 8 e 14 caracteres de comprimento. - Não pode conter o seu nome ou e-mail. - Deve conter pelo menos uma letra minúscula (a-z). - Deve conter pelo menos um número (0-9). - Deve conter pelo menos um dos seguintes símbolos: !?~@#$%^*=+-()[]{}. - Não deve conter os seguintes caracteres: &lt; ou >",
                 "alreadyUsed": "Senha inválida. <br> Esta senha já foi usada no passado. Selecione uma nova senha.",
                 "loginBlocked": {
                     "loginDenied":"Login negado. Você ultrapassou o número de tentativas de logins inválidas. Você pode contatar o suporte da Kaltura em ",
@@ -257,6 +269,23 @@
             "message": "Esta visualização não pode ser carregada. Se o problema persistir, contate o suporte da Kaltura.",
             "messageNav": "Esta visualização não pode ser carregada. Se o problema persistir, contate o suporte da Kaltura. Clique em OK para navegar para a visualização principal."
         }
+    },
+    "selfServe": {
+        "unMute": "Cancelar silenciamento",
+        "getStarted": "Começar",
+        "startPlan": "Iniciar plano",
+        "trial": "Plano de demonstração grátis",
+        "credits": "${{0}} créditos restantes",
+        "balance": "Saldo credor",
+        "creditsBalance": "${{0}} créditos",
+        "buy": "Comprar créditos",
+        "manage": "Gerenciar assinatura",
+        "trialExpired": "O período de demonstração grátis expirou.",
+        "dunning": "Sua conta será desativada.",
+        "deactivated": "Sua conta está desativada no momento.",
+        "update": "Atualizar o método de pagamento",
+        "connecting": "Conectando…",
+        "error": "Erro ao conectar com o servidor"
     },
     "applications": {
         "embed":{
@@ -304,7 +333,8 @@
                     "noMembers": "Sem membros",
                     "private": "Privado"
                 }
-            }
+            },
+            "export": "Exportar entradas"
         },
         "upload": {
             "fileStatus": {
@@ -469,6 +499,10 @@
                         "appended": "Anexar conteúdo gravado a uma única entrada"
                     },
                     "previewMode": "Modo de pré-visualização",
+                    "lowLatency": "Baixa latência (Beta)",
+                    "lowLatencyHelp1": "Siga s instruções do",
+                    "lowLatencyHelp2": "Artigo da Central de conhecimento",
+                    "lowLatencyHelp3": "para se confirmar se a Baixa latência funciona corretamente",
                     "errors": {
                         "required": "Este campo é obrigatório."
                     }
@@ -478,6 +512,7 @@
                     "description": "Descrição",
                     "flashHDSURL": "URL de stream ao vivo Flash HDS",
                     "hlsStreamUrl": "URL de stream ao vivo Mobile HLS",
+                    "dashStreamUrl": "URL do stream DASH",
                     "useAkamaiHdProtocol": "O protocolo de Akamai HD é usado nesta URL de HDS.",
                     "errors": {
                         "required": "Este campo é obrigatório",
@@ -581,7 +616,7 @@
                 },
                 "dropFolderStatusTooltips": {
                     "uploading": "O arquivo está sendo carregado para a pasta de depósito.",
-                    "downloading": "O arquivo está sendo importando da pasta de depósito para a Kaltura.",
+                    "downloading": "O arquivo está sendo importado da pasta de depósito para a Kaltura.",
                     "pending": "O carregamento do arquivo foi concluído. Aguardando o início do processamento da pasta de depósito.",
                     "processing": "A ferramenta da pasta de depósito está processando este arquivo no momento.",
                     "parsedFromXml": "A referência do arquivo foi analisada a partir do XML. O arquivo está previsto, mas ainda não está disponível na pasta de depósito.",
@@ -606,7 +641,7 @@
                 "addCategory": "Adicionar categoria",
                 "selected": "Selecionado",
                 "bulkActions": "Ações em massa",
-                "deletedSuccessfully": "As categorias foram selecionadas.",
+                "deletedSuccessfully": "As categorias foram excluídas.",
                 "refine": "Refinar",
                 "filterCategories": "Filtrar categorias",
                 "edit": "Editar",
@@ -617,6 +652,7 @@
                 "moveCategory": "Mover categoria",
                 "cancel": "Cancelar",
                 "addServiceRule": "Adicionar regra de serviço",
+                "export": "Exportar categorias",
                 "bActions": {
                     "addRemoveTags": "Adicionar/Remover tags",
                     "addTags": "Adicionar tags",
@@ -624,7 +660,7 @@
                     "removeTags": "Remover tags",
                     "removeTagsLabel": "Selecione as tags que você deseja remover das categorias selecionadas.",
                     "noTagsToRemove": "Nenhuma tag a ser removida",
-          "moveCategories": "Mover categorias",
+                    "moveCategories": "Mover categorias",
                     "changeContentPrivacy": "Alterar privacidade de conteúdo",
                     "changeContentPrivacyLabel": "Alterar as configurações de privacidade de conteúdo para todas as categorias selecionadas.",
                     "changeCategoryListing": "Alterar lista de categorias",
@@ -639,7 +675,7 @@
                     "cancelEdit": "Cancelar edição.",
                     "discard": "Cancelar todas as alterações?",
                     "noPrivacyContext": "Algumas das categorias selecionadas não possuem configurações de titularidade e, portanto, não serão atualizadas com esta ação. Para adicionar titularidades às categorias, acesse a guia Configurações na página de configurações de integração.",
-                    "failedToLoadCategoryData": "Não foi possível carregar os dados de categoria. ID de Categoria: {{0}}"
+                    "failedToLoadCategoryData": "Não foi possível carregar os dados de categoria. ID de categoria: {{0}}"
                 },
                 "deleteCategories": "Excluir categorias",
                 "editWarning": "Algumas das categorias selecionadas foram criadas por outro aplicativo e excluí-las afetará o aplicativo ou site.\n",
@@ -649,7 +685,7 @@
                 "confirmDeleteSingle": "Tem certeza de que deseja excluir esta categoria?",
                 "confirmDeleteMultipleWithSubCategories": "As categorias são excluídas com suas subcategorias. Você deseja continuar?",
                 "confirmDeleteMultiple": "Tem certeza de que deseja excluir estas categorias?",
-                "categoryId": "ID de Categoria: {{0}}",
+                "categoryId": "ID de categoria: {{0}}",
                 "noRestriction": "Sem restrição",
                 "requiresAuthentication": "Exige autenticação",
                 "private": "Privado",
@@ -740,6 +776,20 @@
                 "viewAnalytics": "Visualizar análise",
                 "filterError": "Não foi possível filtrar as entradas usando a combinação de filtros fornecida. Remova alguns filtros e tente novamente."
             },
+            "rooms": {
+                "legacy": "Sala",
+                "rooms": "{{0}} salas",
+                "searchRooms": "Buscar salas",
+                "deleteRoom": "Excluir sala",
+                "confirmDeleteSingle": "Tem certeza de que deseja excluir a sala selecionada? {{0}} Observe: a sala será excluída permanentemente da sua conta.",
+                "sections": {
+                    "metadata": "Metadados"
+                },
+                "backToRooms": "Voltar para Salas",
+                "nameIsMandatory": "Você precisa digitar um Nome da sala",
+                "breakout": "Salas de grupo",
+                "recordings": "Gravações"
+            },
             "playlists": {
                 "playlists": "{{0}} Playlists",
                 "entries": "{{0}} Entradas",
@@ -811,7 +861,7 @@
                         "fromPlaylist": "Da playlist"
                     },
                     "search": "Buscar",
-          "playerName": "Player({{0}})",
+                    "playerName": "Player({{0}})",
                     "entriesCountData": {
                         "count": "Contagem de entradas",
                         "numOfEntries": "{{0}} Entradas",
@@ -1136,6 +1186,7 @@
                 "additionalFilters": "Filtros adicionais",
                 "refineSearch": "Refinar busca",
                 "clearDates": "Limpar datas",
+                "clearDate": "Limpar data",
                 "dates": "Datas",
                 "after": "Após",
                 "before": "Antes",
@@ -1153,6 +1204,7 @@
                 "flavors": "Variante: {{0}}",
                 "distributions": "Distribuição: {{0}}",
                 "freeText": "Busca de texto livre",
+                "lastPlayedAt": "Reproduzido até",
                 "metaData": "{{0}}: {{1}}",
                 "uploadedItem": "Item carregado: {{0}}",
                 "status": "Status: {{0}}",
@@ -1161,6 +1213,7 @@
                 "videoQuiz": "Vídeo com questionário",
                 "videoCaptions": "Vídeo com legenda",
                 "videoNoCaptions": "Vídeo sem legenda",
+                "recycled": "Entradas recicladas",
                 "preferences": {
                     "preferences": "Preferências",
                     "filterPreferences": "Filtrar preferências",
@@ -1628,7 +1681,7 @@
                     "codec": "Codec",
                     "bitrate": "Taxa de bits (kbps)",
                     "dimensions": "Dimensões",
-                    "size": "Tamanho (kb)",
+                    "size": "Tamanho (KB)",
                     "stat": "Status",
                     "tags": "Tags",
                     "update": "Atualizar variante",
@@ -1709,7 +1762,7 @@
                     "deleteFailure": "Falha da exclusão do ativo da variante.",
                     "convertFailure": "Falha da conversão da variante.",
                     "missingOriginalFlavor": "O ativo original da variante está ausente",
-          "uploadFailure": "Falha ao carregar a variante.",
+                    "uploadFailure": "Falha ao carregar a variante.",
                     "downloadFailure": "Falha ao baixar a variante.",
                     "importFailure": "Falha ao importar a variante.",
                     "replaceVideo": {
@@ -1839,6 +1892,7 @@
                     "liveDashboard": "Painel em tempo real",
                     "urls": "Transmitindo URLs",
                     "primary": "URL primária:",
+                    "secondary": "URL secundário:",
                     "backup": "URL de backup:",
                     "regenerate": "Gerar novo token de stream",
                     "regenerateTooltip": "Gerar novo token RTMP para esta entrada",
@@ -1853,8 +1907,19 @@
                     "dvrWindow": "Janela do DVR:",
                     "activeRec": "Gravação:",
                     "previewMode": "Modo de pré-visualização:",
-                    "rtsp": "Transmitindo URLs RTSP:",
-                    "hlsStream": "URL do stream HLS:",
+                    "lowLatency": "Baixa latência (Beta):",
+                    "rtsp": "Transmitindo URLs RTSP",
+                    "srt": "Transmitindo URLs SRT",
+                    "primarySRTid": "ID da transmissão primária:",
+                    "secondarySRTid": "ID da transmissão secundária:",
+                    "srtKey": "Criptografia:",
+                    "noSrtKey": "Definir uma senha para habilitar a criptografia",
+                    "clearSrt": "Limpar senha",
+                    "srtPassAuto": "Definir automaticamente",
+                    "srtPassManual": "Definir manualmente",
+                    "srtPassPlaceholder": "Inserir uma senha",
+                    "srtPassTooltip": "Definir uma senha para ativar a criptografia. Senha de 10 a 79 caracteres alfanuméricos para criptografia",
+                    "hlsStream": "URL do stream HLS (Apple HTTP):",
                     "akamaiStream": "ID do stream Akamai:",
                     "transcoding": "Configuração do perfil de transcodificação",
                     "transcodingProfile": "Perfil de transcodificação:",
@@ -1878,7 +1943,16 @@
                     "dimensionsError": "Largura e altura são obrigatórias para todas as taxas de bits",
                     "videoConferenceIntegration": "Integração de videoconferência",
                     "sipUser": "Usuário SIP",
-                    "noSipUser": "Não foi gerado um usuário SIP para esta entrada"
+                    "noSipUser": "Não foi gerado um usuário SIP para esta entrada",
+                    "generateSip": "Gerar Usuário SIP",
+                    "regenerateSip": "Gerar novamente o usuário SIP",
+                    "generateSrtKey": "Gerar criptografia de senha",
+                    "regenerateSrtKey": "Gerar criptografia de senha novamente",
+                    "sipSource": "Selecionar a fonte da transmissão",
+                    "sipSource1": "Locutores",
+                    "sipSource2": "Locutores + compartilhamento de conteúdo (PIP)",
+                    "sipSource3": "Compartilhar conteúdo",
+                    "sipError": "Falha ao gerar. Tente novamente."
                 },
                 "related": {
                     "related": "Arquivos relacionados",
@@ -2501,9 +2575,11 @@
                 "userRole": "Função do usuário",
                 "addRole": "Adicionar função",
                 "addUser": "Adicionar usuário",
+                "ssoUser": "Usuário SSO",
                 "currentStatus": "Status atual:",
                 "usersInfo": "{{0}} KMC {{1}} em uso, {{2}} adicional disponível.",
                 "failedLoading": "Falha ao carregar dados dos usuários",
+                "export": "Exportar usuários",
                 "cantPerform": "Você não possui acesso para realizar esta ação",
                 "successSavingUser": "As alterações entrarão em vigor imediatamente. Instrua o usuário para atualizar o navegador.",
                 "personalDetails": "Detalhes pessoais",
@@ -2533,8 +2609,8 @@
                 "contactUs": "Contate-nos",
                 "contactUsText": " para saber mais sobre como adicionar itens desativados para a sua conta.",
                 "roleUpdated": "Função atualizada",
-        "roleUpdatedMessage": "As alterações entrarão em vigor imediatamente. A atualização da página do navegador deve ser recomendada para os usuários existentes associados a esta função",
-        "errors": {
+                "roleUpdatedMessage": "As alterações entrarão em vigor imediatamente. A atualização da página do navegador deve ser recomendada para os usuários existentes associados a esta função",
+                "errors": {
                     "required": "Este campo é obrigatório.",
                     "unsafeValue": "Tags de HTML potencialmente inseguras",
                     "validationError": "O formato contém algumas informações inválidas. Verifique as seções marcadas como inválidas."
@@ -2599,9 +2675,138 @@
                     "header": "Estamos animados que você esteja procurando mais informações sobre como fazer upgrade de sua conta!",
                     "trial": "O período de demonstração grátis expira em {{0}}",
                     "gb": " GB",
-          "bandwidth": "Consumo mensal de largura de banda até agora: {{0}}",
+                    "bandwidth": "Consumo mensal de largura de banda até agora: {{0}}",
                     "storage": "Armazenamento mensal atual até agora: {{0}}",
                     "contactUs": "Contate-nos para saber mais sobre os diferentes pacotes e serviços de valor agregado."
+                }
+            },
+            "authentication": {
+                "newProfile": "Novo perfil SAML",
+                "profilesNum": "{{0}} Perfis",
+                "loadError": "Erro ao carregar perfis de autenticação",
+                "table": {
+                    "name": "Nome",
+                    "admin": "(Admin)",
+                    "description": "Descrição",
+                    "id": "ID",
+                    "status": "Status",
+                    "type": "Tipo",
+                    "provider": "Fornecedor (IdP)",
+                    "created": "Data de criação",
+                    "edit": "Editar",
+                    "delete": "Excluir",
+                    "draft": "Esboço",
+                    "complete": "Pronto"
+                },
+                "selectProfile": "Selecionar perfil de autenticação",
+                "delete": "Excluir perfil",
+                "deleteMsg": "Tem certeza de que deseja excluir o perfil selecionado? \"{{0}}\"",
+                "deleteConfirm": "Para confirmar, digite \"{{0}}\" na caixa abaixo",
+                "deleteBtn": "Excluir esse perfil",
+                "name": "Nome",
+                "profileName": "Nome do perfil",
+                "deleteError": "Erro ao excluir o perfil",
+                "addOrganizationId": "ID da organização (opcional)",
+                "organizationId": "ID da organização",
+                "loginError": "Ocorreu um erro no login",
+                "edit": {
+                    "titleAdd": "Adicionar perfil",
+                    "titleEdit": "Editar perfil",
+                    "newProfile": "Novo perfil",
+                    "sps": "Configurações de fornecedor de serviço",
+                    "metadata": "Clique aqui para baixar os metadados como um",
+                    "metadata1": "URL",
+                    "metadata2": "ou",
+                    "metadata3": "Arquivo",
+                    "metadataUpdate": "atualizando…",
+                    "ssoUrl": "URL de login único",
+                    "ssoUrl_tt": "O Serviço de consumidor de asserção informa ao IdP para onde redirecionar um usuário autenticado após o login. A resposta do SAML é postada nessa URL.",
+                    "entity": "ID de entidade",
+                    "entity_tt": "O identificador exclusivo do fornecedor de serviço. O campo foi gerado automaticamente com um valor recomendado.",
+                    "sign": "Assinar solicitação SAML",
+                    "sign_tt": "A assinatura de solicitação SAML, quando habilitada, gera uma solicitação de autenticação assinada. A solicitação será assinada e o IdP poderá validá-la contra a chave pública fornecida nos metadados fornecidos (próximo campo).",
+                    "signCert": "Certificado de assinatura",
+                    "encryption": "Criptografia",
+                    "encryption_tt": "Criptografar as asserções SAML com a chave pública fornecida abaixo As asserções podem ser descriptografadas com chaves privadas mantidas pela Kaltura.",
+                    "encryptionKey": "Chave de criptografia",
+                    "idp": "Configurações de fornecedor de identidade",
+                    "idp_tt": "Copie os itens do IdP a seguir e cole nas caixas de texto abaixo:",
+                    "login": "URL de login",
+                    "login_tt": "Obtida dos metadados do IdP. Geralmente, aparecerá como <SingleSignOnService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect\"……/>",
+                    "logout": "URL de logout",
+                    "logout_tt": "Obtida dos metadados do IdP. Geralmente, aparecerá como &lt;SingleLogoutService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect”…/>",
+                    "ipc": "Certificado de IdP",
+                    "ipc_tt": "O certificado usado pelo Fornecedor de Identidade (IdP) para assinar a resposta SAML. Obtida dos metadados do IdP.",
+                    "metadataUrl": "URL de metadados",
+                    "metadataUrl_tt": "Adicionar a URL de metadados para atualizar o certificado automaticamente antes dele expirar.",
+                    "attributesStatement": "Instruções do atributo",
+                    "attributes_tt": "Digite o nome do atributo como apareceria na asserção SAML na primeira caixa de texto e mapeie-o para as instruções do atributo Kaltura selecionando uma instrução do atributo Kaltura na lista suspensa:",
+                    "attributes": {
+                        "Core_User_FirstName": "Nome",
+                        "Core_User_LastName": "Sobrenome",
+                        "Core_User_Email": "E-mail",
+                        "Core_User_ScreenName": "Nome de tela",
+                        "Core_User_DateOfBirth": "Data de nascimento",
+                        "Core_User_Gender": "Gênero",
+                        "Core_User_ThumbnailUrl": "Miniatura",
+                        "Core_User_Description": "Descrição",
+                        "Core_User_Title": "Título",
+                        "Core_User_Country": "País",
+                        "Core_User_Company": "Empresa",
+                        "Core_User_State": "Estado",
+                        "Core_User_City": "Cidade",
+                        "Core_User_Zip": "CEP"
+                    },
+                    "confirm": "Essa alteração salvará o perfil. Você gostaria de continuar?",
+                    "provider": "Nome do fornecedor",
+                    "kaltura": "Kaltura / nome do cliente",
+                    "kalturaName": "Nome Kaltura",
+                    "add": "Adicionar atributo Kaltura",
+                    "addCustom": "Adicionar atributo personalizado",
+                    "remove": "Remover atributo",
+                    "attributePh": "Selecionar atributo Kaltura",
+                    "email_tt": "Ele funcionará como seu identificador exclusivo. Se o seu identificador exclusivo não for um e-mail, entre em contato com o administrador da Kaltura.",
+                    "show": "Exibir configurações avançadas",
+                    "hide": "Ocultar configurações avançadas",
+                    "group": "Agrupar instruções do atributo",
+                    "group_tt": "Mapear os atributos de fornecedores para o esquema Kaltura:",
+                    "groupName": "Agrupar nome de atributo",
+                    "groupName_tt": "Nome do atributo que contém os grupos de usuário conforme apareceria na asserção SAML.",
+                    "addGroup": "Adicionar atributo de grupo",
+                    "createGroups": "Criar novos grupos",
+                    "createGroups_tt": "Criar grupos no Kaltura que existam no IdP e não existam no Kaltura durante a sincronização.",
+                    "removeGroups": "Remover dos grupos existentes",
+                    "removeGroups_tt": "Remover usuários do grupo do Kaltura que foram removidos do grupo do IdP durante a sincronização.",
+                    "groupMapping": "Mapeamento de grupo de usuário",
+                    "syncGroups": "Sincronizar todos os grupos de usuário",
+                    "syncGroups_tt": "Sincronizar automaticamente todos os grupos de usuário IdP com os grupos de usuários do Kaltura. Os nomes de grupo no Kaltura serão idênticos aos da asserção SAML.",
+                    "additional": "Configurações adicionais",
+                    "format": "Resposta do formato de identificador",
+                    "format_tt": "O formato do NameID aparecerá na solicitação SAML.",
+                    "formatPh": "Selecionar resposta do formato de identificador",
+                    "removeFormat": "Remover"
+                },
+                "new": {
+                    "doc": "Para obter instruções sobre como configurar um novo perfil SSO, visite nosso",
+                    "docLink": "Guia de configuração do perfil SSO",
+                    "provider": "Fornecedor",
+                    "admin": "Perfil de administrador",
+                    "admin-help": "Confira essa caixa de texto se esse perfil for criado para entrar em aplicativos administrativos (ou seja, Event Platform, KMC)",
+                    "createTitle": "Criar perfil",
+                    "create": "Próximo",
+                    "create_tt": "Criar perfil e continuar para concluir as configurações de perfil",
+                    "adminLabel": "Definir como perfil de aplicativo administrativo"
+                },
+                "subscribe": {
+                    "general": "Geral",
+                    "config": "Configuração de SSO",
+                    "profiles": "Perfis",
+                    "profilesPlaceholder": "Selecionar perfis",
+                    "profiles-help": "Selecione um ou mais perfis de administrador",
+                    "domain": "Domínio",
+                    "domain-help": "Insira o domínio da sua organização, ou seja: <organization>.com",
+                    "orgId": "ID da organização",
+                    "orgId-help": "Opcionalmente, você pode adicionar um ID da organização para dar suporte a várias contas por domínio"
                 }
             },
             "metadata": {
@@ -2694,7 +2899,7 @@
                     "saveChangesMessage": "Você deseja salvar as alterações feitas?",
                     "validationErrors": {
                         "invalidInput": "Entrada inválida",
-                        "invalidSystemName": "O nome do sistema de campo deve ser exclusivo, insira um nome diferente.",
+                        "invalidSystemName": "O campo nome do sistema deve ser exclusivo, insira um nome diferente.",
                         "emptyLabel": "Insira um rótulo do campo",
                         "invalidLabelPrefix": "O nome do campo deve começar com uma letra.",
                         "invalidChars": "Entrada inválida. Os caracteres especiais &lt; > &amp; \" e ' não são permitidos.",
@@ -2742,6 +2947,89 @@
                     "deleteText": "O perfil '{{0}}' do YouTube será excluído e você não poderá usá-lo para distribuir seus vídeos no YouTube. Tem certeza de que deseja continuar?",
                     "token": "Autorizar acesso à API do YouTube",
                     "tokenText": "Clique ou copie o link acima e faça login usando suas credenciais da KMC e, em seguida, autentique-se no Google usando a conta do Google vinculada ao seu canal do YouTube."
+                },
+                "zoom": {
+                    "title": "Integração do Zoom",
+                    "enableIntegration": "Habilitar integração",
+                    "explanation": "Contas do Zoom integradas",
+                    "generate": " Gerar código de integração",
+                    "loadError": "Ocorreu um erro ao carregar os perfis de integração do Zoom.",
+                    "empty": "Não existem contas do Zoom ativas.",
+                    "edit": "Editar",
+                    "name": "ID do usuário",
+                    "user": "Definir usuário com base em",
+                    "userHelp": "Escolha esta opção quando quiser mapear um 'user_id' com um campo específico, como SSO. Para obter mais detalhes sobre ID do CMS procure por 'cms_user_id' no seguinte",
+                    "here": "link.",
+                    "accountId": "ID da conta do Zoom",
+                    "accountDescription": "Descrição da conta",
+                    "created": "Data de criação",
+                    "updated": "Atualizado em",
+                    "status": "Status",
+                    "codeTitle": "Código de integração",
+                    "code": "Código de integração do Zoom",
+                    "codeFailed": "Ocorreu um erro durante a geração do código de integração.",
+                    "updateError": "Ocorreu um erro durante a atualização da integração com o Zoom.",
+                    "copy": "Copiar e fechar",
+                    "enabled": "Habilitada",
+                    "disabled": "Desativada",
+                    "enable": "Habilitar",
+                    "disable": "Desabilitar",
+                    "editAccount": "Editar conta do Zoom",
+                    "recordingUpload": "Carga de gravação",
+                    "description": "Descrição da conta do Zoom",
+                    "uploadMeetings": "Carregar gravações de reunião",
+                    "uploadWebinars": "Carregar gravações de webinar",
+                    "category": "Categoria",
+                    "webinarCategory": "Categoria de webinar",
+                    "delete": "Excluir conteúdo do Zoom após a carga",
+                    "create": "No caso, o usuário não existe",
+                    "transcription": "Transcrição do Zoom",
+                    "owner": "Definir proprietário para gravações",
+                    "zoom": "Usuário do Zoom",
+                    "cms": "Usuário do CMS",
+                    "post": "Postfix",
+                    "postfix": "Postfix de e-mail",
+                    "postfix1": "Não modificar",
+                    "postfix2": "Remover postfix",
+                    "postfix3": "Adicionar postfix",
+                    "permissions": "Configurar permissões de usuários para gravações carregados",
+                    "participation": "Participantes",
+                    "participation1": "Ignorar participantes",
+                    "participation2": "Adicionar como covisualizador",
+                    "participation3": "Adicionar como copublicadores",
+                    "hosts1": "Nenhum",
+                    "hosts2": "Covisualizador",
+                    "hosts3": "Copublicador",
+                    "hosts4": "Coeditor",
+                    "hosts5": "Coeditor e Copublicador",
+                    "altHosts": "Hosts alternativos",
+                    "coHosts": "Co-Hosts",
+                    "user1": "Criar novo usuário com base no usuário do Zoom",
+                    "user2": "Usar usuário padrão",
+                    "note": "* O número de contas do Zoom para integração com o Kaltura está limitado a {{0}} contas. São exibidas as contas atualizadas mais recentemente.",
+                    "invalid": "A ID do usuário padrão é obrigatória.",
+                    "upload": "Gerenciamento de carga de gravações",
+                    "uploadAll": "Carregar todas as gravações",
+                    "uploadIn": "Grupos de aceitação",
+                    "uploadOut": "Grupos de exclusão",
+                    "uploadError": "Pelo menos um grupo deve ser preenchido"
+                },
+                "webex": {
+                    "title": "Integração do Webex",
+                    "explanation": "Contas do Webex integradas",
+                    "updateError": "Ocorreu um erro durante a atualização da integração com o Webex.",
+                    "empty": "Não existem contas do Webex ativas.",
+                    "accountId": "ID da conta do Webex",
+                    "code": "Código de integração do Webex",
+                    "editAccount": "Editar conta do Webex",
+                    "participation": "Adicionar participantes de reunião como",
+                    "description": "Descrição da conta do Webex",
+                    "delete": "Excluir conteúdo do Webex após a carga",
+                    "owner": "Proprietário de gravações",
+                    "transcription": "Transcrição do Webex",
+                    "webex": "Usuário do Webex",
+                    "user1": "Criar novo usuário com base no usuário do Webex",
+                    "note": "* O número de contas do Webex para integração com o Kaltura está limitado a {{0}} contas. São exibidas as contas atualizadas mais recentemente."
                 },
                 "entitlement": {
                     "title": "Direito",
@@ -2845,6 +3133,9 @@
                     "professional": "Solicitações de moderação de profissionais",
                     "deletion": "Política de exclusão de conteúdo",
                     "region": "Região de processamento da tarefa",
+                    "machineCaptions": "Sufixo do rótulo das legendas de máquina",
+                    "defaultMachineCaptionsLabel": "(Geradas automaticamente)",
+                    "humanCaptions": "Sufixo do rótulo das legendas humanas",
                     "nameIsMandatory": "O nome é obrigatório.",
                     "deleteOptions": {
                         "deleteAfterMonth": "Excluir depois de um mês",
@@ -3032,8 +3323,8 @@
                     "ipsPlaceholder": "Inserir IP",
                     "domainsPlaceholder": "Inserir domínio",
                     "selectFlavors": "Selecionar variantes",
-                    "selectCountry": "Selecione o País",
-                    "findCountry": "Encontrar País",
+                    "selectCountry": "Selecionar país",
+                    "findCountry": "Encontrar país",
                     "findFlavor": "Encontrar variante",
                     "countriesSelected": "{0} Países Selecionados",
                     "flavorsSelected": "{0} variantes selecionadas",
@@ -3075,6 +3366,7 @@
                 "setAsDefault": "Definir como padrão",
                 "edit": "Editar",
                 "delete": "Excluir",
+                "view": "Visualizar",
                 "addTranscodingProfile": "Adicionar perfil de transcodificação",
                 "profileName": "Nome do perfil",
                 "description": "Descrição",
@@ -3111,6 +3403,7 @@
                     "systemName": "Nome do sistema: (Opcional)",
                     "flavorGenerationPolicy": "Política de geração de variante",
                     "intermediateFlavorHandling": "Manipulação de variante intermediária",
+                    "systemProfileTooltip": "O perfil de transcodificação foi definido pela Kaltura, entre em contato com o gerente da conta / atendimento ao cliente para atualizá-lo.",
                     "table": {
                         "flavor": "Variante",
                         "flavors": "{{0}} variantes",
@@ -3199,7 +3492,7 @@
         "analytics": {
             "analytics": "Análise",
             "comingSoon": "Em breve! Análise para todos os tipos de mídia.",
-           "releaseSupports": "Esta versão somente oferece suporte a análises para entradas “Ao vivo”. Para todas as outras mídias, faça o <a href=\"{{0}}\" target=\"_blank\">login no KMC</a> para visualizar e criar análises e relatórios. Análises para todas as mídias deve ficar disponível em breve"
+            "releaseSupports": "Esta versão somente oferece suporte a análises para entradas “Ao vivo”. Para todas as outras mídias, faça o <a href=\"{{0}}\" target=\"_blank\">login no KMC</a> para visualizar e criar análises e relatórios. Análises para todas as mídias deve ficar disponível em breve"
         },
         "reach": {
             "captionRequests": "Legendas e melhorias",
@@ -3492,6 +3785,7 @@
         "FJ": "Fiji",
         "FO": "Feroês",
         "FR": "Francês",
+        "FRCA": "Francês (Canadá)",
         "FY": "Frísio",
         "GA": "Irlandês",
         "GD": "Gaélico (Gaels)",
@@ -3555,6 +3849,7 @@
         "PL": "Polonês",
         "PS": "Pashto (Pushto)",
         "PT": "Português",
+        "PTBR": "Português (Brasil)",
         "QU": "Quechua",
         "RM": "Reto-românico",
         "RN": "Kirundi",
@@ -3607,6 +3902,7 @@
         "YI": "Ídiche",
         "YO": "Yoruba",
         "ZH": "Chinês",
+        "ZHTW": "Mandarim de Taiwan",
         "ZU": "Zulu"
     },
     "shared": {

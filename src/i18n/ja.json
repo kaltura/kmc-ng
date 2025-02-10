@@ -5,6 +5,8 @@
             "administrationRolesMenuTitle": "ロール",
             "administrationUsersPageTitle": "管理 > ユーザー",
             "administrationUsersMenuTitle": "ユーザー",
+            "administrationMultiAccountPageTitle": "管理 > マルチアカウント",
+            "administrationMultiAccountMenuTitle": "マルチアカウント",
             "contentBulkUploadPageTitle": "コンテンツ > 一括アップロード",
             "contentBulkUploadMenuTitle": "一括アップロード",
             "contentCategoriesPageTitle": "コンテンツ > カテゴリ",
@@ -16,7 +18,9 @@
             "contentModerationPageTitle": "コンテンツ > モデレーション",
             "contentModerationMenuTitle": "モデレーション",
             "contentPlaylistsPageTitle": "コンテンツ > プレーリスト",
+            "contentRoomsPageTitle": "コンテンツ > ルーム",
             "contentPlaylistsMenuTitle": "プレーリスト",
+            "contentRoomsMenuTitle": "ルーム",
             "contentSyndicationPageTitle": "コンテンツ > シンジケーション",
             "contentSyndicationMenuTitle": "シンジケーション",
             "contentUploadsPageTitle": "コンテンツ > アップロード制御",
@@ -24,48 +28,61 @@
             "analyticsLivePageTitle": "分析 > ライブリアルタイムダッシュボード",
             "analyticsLiveMenuTitle": "ライブリアルタイムダッシュボード",
             "analyticsKavaPageTitle": "分析 > KAVA",
+            "analyticsMenuTitle": "分析",
+            "analyticsPageTitle": "分析",
             "analyticsKavaMenuTitle": "KAVA",
             "settingsAccessControlPageTitle": "設定 > アクセス制御",
             "settingsAccessControlMenuTitle": "アクセス制御",
+            "settingsReachPageTitle": "設定 > Reach",
+            "settingsReachMenuTitle": "Reach",
             "settingsAccountInfoPageTitle": "設定 > アカウント情報",
             "settingsAccountInfoMenuTitle": "アカウント情報",
-            "settingsAccountSettingsPageTitle": "設定 > アカウント設定",
-            "settingsAccountSettingsMenuTitle": "アカウント設定",
-            "settingsIntegrationPageTitle": "設定 > 統合設定",
-            "settingsIntegrationMenuTitle": "統合設定",
+            "settingsAuthenticationPageTitle": "設定 > 認証",
+            "settingsAuthenticationMenuTitle": "認証",
+            "settingsAccountSettingsPageTitle": "設定 > アカウント",
+            "settingsAccountSettingsMenuTitle": "アカウント",
+            "settingsIntegrationPageTitle": "設定 > 統合",
+            "settingsIntegrationMenuTitle": "統合",
             "settingsMetadataPageTitle": "設定 > カスタムデータ",
             "settingsMetadataMenuTitle": "カスタムデータ",
-            "settingsMyUserSettingsPageTitle": "設定 > マイユーザー設定",
-            "settingsMyUserSettingsMenuTitle": "マイユーザー設定",
-            "settingsTranscodingPageTitle": "設定 > トランスコーディング設定",
-            "settingsTranscodingRolesMenuTitle": "トランスコーディング設定",
+            "settingsMyUserSettingsPageTitle": "設定 > マイユーザー",
+            "settingsMyUserSettingsMenuTitle": "マイユーザー",
+            "settingsTranscodingPageTitle": "設定 > トランスコーディング",
+            "settingsTranscodingRolesMenuTitle": "トランスコーディング",
             "studioV2PageTitle": "スタジオ > ユニバーサルスタジオ",
             "studioV2MenuTitle": "ユニバーサルスタジオ",
             "studioV3PageTitle": "スタジオ > TVプラットフォームスタジオ",
             "studio3MenuTitle": "TVプラットフォームスタジオ",
+            "studioV7PageTitle": "スタジオ > プレーヤースタジオ",
+            "studio7MenuTitle": "プレーヤースタジオ",
             "usageDashboardPageTitle": "使用率ダッシュボード",
             "usageDashboardMenuTitle": "使用率ダッシュボード",
             "restorePasswordPageTitle": "パスワードをリセット",
+            "authenticatorPageTitle": "認証",
             "uploadMonitor": "アップロードモニター",
             "create": "作成",
             "content": "コンテンツ",
             "studio": "スタジオ",
             "analytics": "分析",
+            "analyticsDashboard": "ダッシュボード",
             "settings": "設定",
             "administration": "管理",
             "reachDashboardMenuTitle": "サービスダッシュボード",
             "reachDashboardPageTitle": "サービスダッシュボード",
+            "allAccounts": "すべてのアカウント",
+            "parentOnly": "親のみ",
             "analyticsBW": "使用法",
+            "analyticsOverview": "概要",
             "analyticsPublisher": "パブリッシャの帯域幅&amp;ストレージ",
-            "analyticsEndUser": "エンドユーザーストレージ",
+            "analyticsEndUser": "エンドユーザーのストレージ",
             "analyticsTopContributors": "トップ投稿者",
             "analyticsTechnology": "テクノロジー",
             "analyticsGeo": "ジオロケーション",
             "analyticsInteractions": "コンテンツの相互作用",
             "analyticsEngagement": "視聴時間",
-            "audience": "対象者",
+            "audience": "オーディエンス",
             "contributors": "投稿者",
-            "live": "Live",
+            "live": "ライブ",
             "realtime": "リアルタイム"
         },
         "userSettings": {
@@ -77,7 +94,8 @@
             "choose": "他のパートナーを選択してください:",
             "continue": "続行",
             "errors": {
-                "loadPartners": "アカウントのロード中にエラーが発生しました。"
+                "loadPartners": "アカウントのロード中にエラーが発生しました。",
+                "authenticationRequired": "リクエストされたアカウントには新たなログインが必要です。"
             }
         },
         "helpMenu": {
@@ -97,10 +115,13 @@
         },
         "common": {
             "n_a": "該当なし",
+            "none": "なし",
+            "undefined": "未定義",
             "copyToClipboard": "クリップボードにコピー",
             "copySuccess": "クリップボードにコピーしました",
             "copyFailure": "コピー操作に失敗しました",
-            "on": "オン",
+            "updateSuccess": "正常に更新されました",
+            "on": ":",
             "off": "オフ",
             "ok": "OK",
             "cancel": "キャンセル",
@@ -119,7 +140,9 @@
             "save": "保存",
             "error": "エラー",
             "connectionError": "サーバーへの接続中にエラーが発生しました",
-            "invalidKs": "ユーザーセッションの有効期限が切れました。再度ログインしてください。"
+            "invalidKs": "ユーザーセッションの有効期限が切れました。再度ログインしてください。",
+            "noAccess": "Kaltura管理コンソールにアクセスする権限がありません。アクセスするには管理者に連絡してください。",
+            "export": "レポートを準備しています。間もなく電子メールアドレスにレポートを送信します。"
         },
         "redirect":{
             "redirect1": "デフォルトビューにリダイレクトしています...",
@@ -139,24 +162,31 @@
                 "forgotPassword": "パスワードを忘れてしまった場合",
                 "placeholder": {
                     "username": "電子メールアドレスを入力",
-                    "password": "パスワードを入力"
+                    "password": "パスワードを入力",
+                    "auth": "認証コードを入力"
                 },
+                "authHelp": "認証コードとは？",
+                "authHelpTooltip": "認証コードは、アカウントを保護するために認証アプリによって提供されるキーです。お手持ちのモバイル機器で認証コードをダウンロードしてください。",
                 "browserVer1": "ご利用のブラウザバージョンはサポートされていません",
-                "browserVer2": "Internet Explorerバージョン11以上をご利用ください"
+                "browserVer2": "Internet Explorerバージョン11以上をご利用ください",
+                "qrCode": "認証アプリを使ってこのQRコードをスキャンしてください。どちらのプラットフォームの認証アプリもダウンロードできます: ",
+                "sso": "SSOを使用してログイン",
+                "loginWithPassword": "電子メールとパスワードを使用してログイン",
+                "orgIdErr": "組織IDを入力してください"
             },
             "invalidLoginHash": {
                 "title": "ログインリンクが無効です",
                 "placeholder": "電子メールアドレスを入力",
                 "instructions": "このリンクは無効か、有効期限が切れています。新しいリンクを受信するには、電子メールアドレスを入力してください",
                 "sent": {
-                    "instructions": "パスワードをリセットするためのリンクが記載された電子メールが{{value}}に送信されました。受信トレイにメッセージが表示されない場合は、迷惑メールやゴミ箱フォルダーにメッセージがないか確認してください。"
+                    "instructions": "パスワードをリセットするためのリンクが記載された電子メールが {{value}} に送信されました。受信トレイにメッセージが表示されない場合は、迷惑メールやゴミ箱フォルダーにメッセージがないか確認してください。"
                 }
             },
             "invalidResetPasswordHash": {
                 "title": "リンクが無効です",
                 "placeholder": "電子メールアドレスを入力",
                 "instructions": "このリンクは無効か、有効期限が切れています。新しいリンクを受信するには、電子メールアドレスを入力してください。",
-                "sentInstructions": "パスワードをリセットするためのリンクが記載された電子メールが{{0}}に送信されました。受信トレイにメッセージが表示されない場合は、迷惑メールやゴミ箱フォルダーにメッセージがないか確認してください。"
+                "sentInstructions": "パスワードをリセットするためのリンクが記載された電子メールが {{0}} に送信されました。受信トレイにメッセージが表示されない場合は、迷惑メールやゴミ箱フォルダーにメッセージがないか確認してください。"
             },
             "forgotPassword": {
                 "title": "パスワードを忘れてしまった場合",
@@ -171,9 +201,10 @@
                 }
             },
             "passwordExpired": {
-                "title": "ご利用のパスワードは90日以上前に作成されました。システムを使用し続けるには、今すぐパスワードを変更する必要があります。",
+                "title": "パスワードの有効期限が切れています。システムを使用し続けるには、今すぐパスワードを変更する必要があります。",
                 "error": {
                     "equal": "パスワードが一致しません",
+                    "notEqual": "新しいパスワードを古いパスワードと同じにすることはできません",
                     "required": "フィールドは必須です"
                 },
                 "placeholder": {
@@ -204,7 +235,7 @@
                     "toUnblockYourAccount": " からKalturaサポートにお問い合わせください。"
                 },
                 "userNotFound": "入力されたユーザー名またはパスワードが正しくありません。",
-                "invalidStructure": "入力されたパスワードの構造は無効です。パスワードは次のルールに従う必要があります: - 8～14文字の長さであること。- 名前を含まないこと。- 小文字（a-z）を少なくとも1文字含んでいること。- 数字（0-9）を少なくとも1文字含んでいること。- 次の記号を少なくとも1文字含んでいること: %~!@#\\$^*=+?[]{}。- 次の文字を含んでいないこと: &lt;または>",
+                "invalidStructure": "入力されたパスワードの構造は無効です。パスワードは次のルールに従う必要があります: - 8～14文字の長さであること。- 名前または電子メールアドレスを含まないこと。- 小文字（a-z）を少なくとも1文字含んでいること。- 数字（0-9）を少なくとも1文字含んでいること。- 次の記号を少なくとも1文字含んでいること: !?~@#$%^*=+-()[]{}。- 次の文字を含んでいないこと: &lt;または>",
                 "alreadyUsed": "パスワードが無効です。<br> このパスワードは過去に使用されています。新しいパスワードを選択してください。",
                 "loginBlocked": {
                     "loginDenied":"ログインが拒否されました。無効なログイン試行数が一定回数を超えました。アカウントのロックを解除するには、 ",
@@ -213,8 +244,13 @@
                 "newPasswordHashKeyInvalid": "このリンクは有効ではありません。",
                 "newPasswordHashKeyExpired": "このリンクは24時間より前のものであるか、もう有効ではなくなりました。",
                 "wrongOldPassword": "古いパスワードが正しくありません。",
-                "invalidField": "フィールド{{value}}の値は有効ではありません。",
-                "userForbiddenForBeta": "これは新しいKaltura管理コンソールのクローズドベータ版です。間もなく正規版がリリースされますのでお待ち下さい。"
+                "invalidField": "フィールド {{value}} の値は有効ではありません。",
+                "userForbiddenForBeta": "これは新しいKaltura管理コンソールのクローズドベータ版です。間もなく正規版がリリースされますのでお待ち下さい。",
+                "missingOtp": "認証コードが必要です",
+                "invalidOtp": "無効な認証コード",
+                "updatePasswordMissingOtp": "パスワードが正常に更新されました。新しいパスワードを使ってもう一度ログインしてください。",
+                "ssoForbidden": "SSO機能が利用できません",
+                "ssoNotFound": "SSOログインに失敗しました"
             },
             "send": "送信",
             "wait": "待機中...",
@@ -234,9 +270,26 @@
             "messageNav": "このビューはロードできません。問題が解決されない場合は、Kalturaサポートにお問い合わせください。OKをクリックするとメインビューに移動します。"
         }
     },
+    "selfServe": {
+        "unMute": "ミュート解除",
+        "getStarted": "開始しました",
+        "startPlan": "開始プラン",
+        "trial": "無料トライアルプラン",
+        "credits": "${{0}} クレジットが残っています",
+        "balance": "クレジット残高",
+        "creditsBalance": "${{0}} クレジット",
+        "buy": "クレジットを購入する",
+        "manage": "サブスクリプションを管理",
+        "trialExpired": "無料トライアルの期限が切れました。",
+        "dunning": "あなたのアカウントはまもなく無効化されます。",
+        "deactivated": "あなたのアカウントは現在無効化されています。",
+        "update": "支払い方法を更新",
+        "connecting": "接続中...",
+        "error": "サーバーへの接続中にエラーが発生しました"
+    },
     "applications": {
         "embed":{
-            "previewShare": "共有&amp;埋め込み",
+            "previewShare": "共有と埋め込み",
             "previewInPlayer": "プレーヤーでプレビュー",
             "embedType": "埋め込みタイプ",
             "selectPlayer": "プレーヤーを選択",
@@ -280,7 +333,8 @@
                     "noMembers": "メンバーなし",
                     "private": "プライベート"
                 }
-            }
+            },
+            "export": "エントリをエクスポート"
         },
         "upload": {
             "fileStatus": {
@@ -402,11 +456,11 @@
                 "bulkUpload": "一括アップロード",
                 "dropFolders": "ドロップフォルダー",
                 "viewDetails": "詳細を表示",
-                "uploading": "{{0}}件アップロード中",
-                "syncing": "{{0}}件同期中",
-                "queued": "{{0}}件キューに格納済み",
-                "completed": "{{0}}件完了済み",
-                "error": "エラー{{0}}件",
+                "uploading": "{{0}} アップロード中",
+                "syncing": "{{0}} 同期中",
+                "queued": "{{0}} キューに格納済み",
+                "completed": "{{0}} 完了",
+                "error": "{{0}} エラー",
                 "upToDate": "最新",
                 "loading": "ロードしています...",
                 "errors": {
@@ -445,6 +499,10 @@
                         "appended": "レコーディング済みコンテンツをシングルエントリに追加"
                     },
                     "previewMode": "プレビューモード",
+                    "lowLatency": "低遅延（ベータ版）",
+                    "lowLatencyHelp1": "このナレッジセンターの",
+                    "lowLatencyHelp2": "記事の手順に従って、",
+                    "lowLatencyHelp3": "低遅延が正しく動作することを確認してください",
                     "errors": {
                         "required": "このフィールドは必須です。"
                     }
@@ -454,6 +512,7 @@
                     "description": "説明",
                     "flashHDSURL": "ライブFlash HDSストリームURL",
                     "hlsStreamUrl": "ライブモバイルHLSストリームURL",
+                    "dashStreamUrl": "DASHストリームURL",
                     "useAkamaiHdProtocol": "このHDS URLではAkamai HDプロトコルが使用されています。",
                     "errors": {
                         "required": "このフィールドは必須です",
@@ -488,15 +547,15 @@
             "uploadControl": {
                 "retryError": {
                     "header": "アップロードを再試行",
-                    "message": "リクエストされたファイルのアップロードを再開できません。再度ファイルをアップロードしてください。"
+                    "message": "リクエストされたファイルのアップロードを再開できません。もう一度ファイルをアップロードしてください。"
                 },
                 "bulkCancel": {
                     "header": "アップロードをキャンセル",
                     "message": "これらのアップロードをキャンセルしますか?"
                 },
-                "files": "ファイル{{0}}件",
-                "selected": "{{0}}件選択済み",
-                "cancel": "キャンセル",
+                "files": "{{0}} ファイル",
+                "selected": "{{0}} 件が選択されました",
+                "cancel": "キャンセルする",
                 "table": {
                     "fileName": "ファイル名",
                     "entryId": "ID",
@@ -519,8 +578,8 @@
                 "allStatuses": "すべてのステータス",
                 "refresh" : "更新",
                 "deleteFiles": "ファイルを削除",
-                "confirmDelete": "選択されたすべてのファイルを永久に削除してもよろしいですか?{{0}}",
-                "confirmDeleteSingle": "選択されたファイルを永久に削除してもよろしいですか?{{0}}",
+                "confirmDelete": "選択されたすべてのファイルを永久に削除してもよろしいですか? {{0}}",
+                "confirmDeleteSingle": "選択されたファイルを永久に削除してもよろしいですか? {{0}}",
                 "table": {
                     "fileName": "ファイル名",
                     "dropFolderName": "ドロップフォルダー名",
@@ -528,7 +587,7 @@
                     "fileSize": "ファイルサイズ",
                     "entryId": "エントリID",
                     "status": "ステータス",
-                    "datesTooltip": "アップロードの開始が検出されました:{{0}}件のアップロードの完了が検出されました:ドロップフォルダーからKalturaへの{{1}}件のファイル転送が開始されました:ドロップフォルダーのKalturaへの{{2}}件のファイル転送が終了しました: {{3}}",
+                    "datesTooltip": "アップロードの開始が検出されました: {{0}} アップロード完了が検出されました: {{1}} ドロップフォルダーからKalturaへのファイル転送が開始されました: {{2}} ドロップフォルダーからKalturaへのファイル転送が終了しました: {{3}}",
                     "notAvailable": "該当なし",
                     "unknown": "不明",
                     "delete": "削除"
@@ -538,7 +597,8 @@
                     "createdBetween": "作成期間",
                     "clearDates": "日付をクリア",
                     "clearAll": "すべてクリア",
-                    "close": "閉じる"
+                    "close": "閉じる",
+                    "dropFolders": "ドロップフォルダー"
                 },
                 "dropFolderStatusLabels": {
                     "allStatuses": "すべてのステータス",
@@ -575,7 +635,7 @@
                 }
             },
             "categories": {
-                "categories": "{{0}}件のカテゴリ",
+                "categories": "{{0}} カテゴリ",
                 "search": "検索",
                 "refresh": "更新",
                 "addCategory": "カテゴリを追加",
@@ -592,6 +652,7 @@
                 "moveCategory": "カテゴリを移動",
                 "cancel": "キャンセル",
                 "addServiceRule": "サービスルールの追加",
+                "export": "カテゴリをエクスポート",
                 "bActions": {
                     "addRemoveTags": "タグを追加/削除",
                     "addTags": "タグを追加",
@@ -665,7 +726,7 @@
                 "searchCategories": "カテゴリ検索",
                 "selectedParentCategory":"親カテゴリID: {{value}}",
                 "name": "名前",
-                "categoryMovedSuccessfully": "カテゴリーの移動に成功しました。",
+                "categoryMovedSuccessfully": "カテゴリの移動に成功しました。",
                 "errors": {
                     "failedToLoadParentCategoryData": "親カテゴリデータをロードできませんでした。",
                     "cannotLinkEntries": "カテゴリが作成されましたが、一部のエントリのリンクに失敗しました。作成されたカテゴリを確認してください。",
@@ -701,35 +762,51 @@
                 "refresh": "更新",
                 "deleteEntry": "エントリを削除",
                 "confirmDelete": "選択したエントリを削除しますか?",
-                "confirmDeleteSingle": "選択したエントリを削除しますか?{{0}} 注意: エントリはアカウントから完全に削除されます。",
-                "confirmDeleteMultiple": "選択したエントリを削除しますか?{{0}} 注意: これらのエントリはアカウントから完全に削除されます。",
+                "confirmDeleteSingle": "選択したエントリを削除してもよろしいですか? {{0}} 注意: エントリはアカウントから完全に削除されます。",
+                "confirmDeleteMultiple": "選択したエントリを削除してもよろしいですか? {{0}} 注意: これらのエントリはアカウントから完全に削除されます。",
                 "entryId": "エントリID: {{0}}",
                 "deleteNote": "注意: エントリはアカウントから完全に削除されます。",
                 "ruleName": "ルール名",
                 "ruleNamePlaceholder": "ルール名",
                 "resultsLimit": "結果制限（{{0}}）",
                 "orderBy": "並び替え: {{0}}",
-                "totalDuration": "合計長さ{{0}}",
+                "totalDuration": "合計長さ {{0}}",
                 "resultsLimitRange": "1 - 200件のエントリ",
-                "noEntries": "エントリはありません"
+                "noEntries": "エントリはありません",
+                "viewAnalytics": "分析を表示",
+                "filterError": "提供されたフィルターの組み合わせを使用してエントリをフィルタリングできませんでした。いくつかのフィルターを削除して、もう一度やり直してください。"
+            },
+            "rooms": {
+                "legacy": "ルーム",
+                "rooms": "{{0}} ルーム",
+                "searchRooms": "ルームを検索",
+                "deleteRoom": "ルームを削除",
+                "confirmDeleteSingle": "選択したルームを削除してもよろしいですか? {{0}} 注意: このルームはアカウントから完全に削除されます。",
+                "sections": {
+                    "metadata": "メタデータ"
+                },
+                "backToRooms": "ルームに戻る",
+                "nameIsMandatory": "ルーム名を入力する必要があります。",
+                "breakout": "ブレイクアウトルーム",
+                "recordings": "レコーディング"
             },
             "playlists": {
-                "playlists": "{{0}}件のプレーリスト",
-                "entries": "{{0}}件のエントリ",
-                "selected": "{{0}}件選択済み",
+                "playlists": "{{0}} 件のプレーリスト",
+                "entries": "{{0}} 件のエントリ",
+                "selected": "{{0}} 件が選択されました",
                 "bulkActions": "一括アクション",
                 "remove": "削除",
                 "cancel": "キャンセル",
-                "deletePlaylist": "プレーリストを削除",
-                "confirmDeleteMultiple": "選択したプレーリストを削除しますか?{{0}} 注意: これらのプレーリストはアカウントから完全に削除されます。",
-                "confirmDeleteSingle": "選択したプレーリストを削除しますか?{{0}} 注意: このプレーリストはアカウントから完全に削除されます。",
+                "deletePlaylist": "プレーリストを削除する",
+                "confirmDeleteMultiple": "選択したプレーリストを削除してもよろしいですか? {{0}} 注意: これらのプレーリストはアカウントから完全に削除されます。",
+                "confirmDeleteSingle": "選択したプレーリストを削除してもよろしいですか? {{0}} 注意: このプレーリストはアカウントから完全に削除されます。",
                 "playlistId": "プレーリストID: {{0}}",
                 "searchEntries": "プレーリストの検索",
                 "addPlaylist": "プレーリストを追加",
                 "addEntry": "エントリを追加",
                 "addToPlaylist": "追加",
-                "refresh": "更新",
-                "deleteNote": "注意: {{0}}のプレーリスト{{1}}はアカウントから完全に削除されます。",
+                "refresh": "リフレッシュ",
+                "deleteNote": "注意: {{0}} のプレーリスト{{1}} はアカウントから完全に削除されます。",
                 "notSupportedMsg": "ルールベースのプレーリストは現在サポートされていません。",
                 "deleteEntry": "エントリを削除",
                 "deleteEntries": "エントリを削除",
@@ -743,8 +820,8 @@
             },
             "syndication": {
                 "addFeed": "フィードを追加",
-                "feeds": "{{0}}件のフィード",
-                "selected": "{{0}}件選択済み",
+                "feeds": "{{0}} 件のフィード",
+                "selected": "{{0}} 件が選択されました",
                 "table": {
                     "noResults": "結果なし",
                     "allContent": "すべてのコンテンツ",
@@ -787,10 +864,10 @@
                     "playerName": "プレーヤー（{{0}}）",
                     "entriesCountData": {
                         "count": "エントリ数",
-                        "numOfEntries": "{{0}}件のエントリ",
-                        "warning": "{{0}}件のエントリはこのフィードに含まれていません。",
+                        "numOfEntries": "{{0}} 件のエントリ",
+                        "warning": "{{0}} 件のエントリはこのフィードに含まれていません。",
                         "moreInfo": "詳細情報。",
-                        "warningMoreInfo": "<b>注意:</b> 必要な{{1}}フレーバーでトランスコードされていないため、{{0}}件のエントリはこのフィードに含まれせん。<br>KMCの管理セクションに移動すると、エントリを{{1}}にトランスコードできます。トランスコードしたい特定のエントリを開き、フレーバータブに移動して、「変換」オプションを選択します。",
+                        "warningMoreInfo": "<b>注意:</b> 必要な {{1}} フレーバーでトランスコードされていないため、{{0}} 件のエントリはこのフィードに含まれせん。<br>KMCの管理セクションに移動すると、エントリを {{1}} にトランスコードできます。トランスコードしたい特定のエントリを開き、フレーバータブに移動して、「変換」オプションを選択します。",
                         "flavorId": "（フレーバーID）{{0}}"
                     },
                     "destination": "デスティネーション",
@@ -1021,13 +1098,14 @@
                                 "loading": "ロードしています...",
                                 "errors": {
                                     "requiredXslCode": "CSLコードは必須です。",
-                                    "loadingFile": "ファイル{{0}}のロード中にエラーが発生しました"
+                                    "loadingFile": "ファイル {{0}} のロード中にエラーが発生しました"
                                 }
                             }
                         }
                     },
                     "errors": {
                         "loadFailed":  "フィードデータのロード中にエラーが発生しました。",
+                        "deletedPlaylist":  "このフィードの作成に使用されたプレーリストが見つかりませんでした（削除しましたか?） プレーリストIDがありません: {{0}} 新しいフィードを作成してください。",
                         "enterName": "フィードを保存するには名前を入力する必要があります。",
                         "chooseDestination": "フィードを保存するには保存先を選択する必要があります。",
                         "fieldRequired": "このフィールドは必須です。"
@@ -1035,8 +1113,8 @@
                 },
                 "deleteConfirmation": {
                     "title": "削除を確認",
-                    "singleFeed": "次のフィードを削除しますか?{{0}}",
-                    "upTo5Feed": "次のフィードを削除しますか?{{0}}",
+                    "singleFeed": "次のフィードを削除してもよろしいですか? {{0}}",
+                    "upTo5Feed": "次のフィードを削除してもよろしいですか? {{0}}",
                     "moreThan5": "選択したフィードを削除しますか?"
                 },
                 "errors": {
@@ -1061,8 +1139,8 @@
                 "report": "レポート",
                 "details": "詳細詳細",
                 "banCreator": "作成者をBAN",
-                "flagSingular": "{{0}}フラグ",
-                "flagPlural": "{{0}}フラグ",
+                "flagSingular": "{{0}} フラグ",
+                "flagPlural": "{{0}} フラグ",
                 "sexualContent": "性的コンテンツ",
                 "harmfulOrDangerousAct": "有害または危険",
                 "spamOrCommercials": "スパム/コマーシャル",
@@ -1071,13 +1149,13 @@
                 "errorOccured": "エラーが発生しました。",
                 "notificationHasBeenSent": "このユーザーにフラグを立てるため、CMSシステムに通知が送信されました。",
                 "approveMedia": "モデレーション:メディアを承認",
-                "sureToApprove": "次のエントリを承認しますか?{{0}}",
-                "sureToApproveMultiple": "次のエントリを承認しますか?{{0}}",
-                "sureToApproveSelected": "選択したエントリを承認しますか?",
+                "sureToApprove": "次のエントリを承認してもよろしいですか? {{0}}",
+                "sureToApproveMultiple": "次のエントリを承認してもよろしいですか? {{0}}",
+                "sureToApproveSelected": "選択したエントリを承認してもよろしいですか? {{0}}",
                 "rejectMedia": "モデレーション:メディアを拒否",
-                "sureToReject": "次のエントリを拒否しますか?{{0}}",
-                "sureToRejectMultiple": "次のエントリを拒否しますか?{{0}}",
-                "sureToRejectSelected": "選択したエントリを拒否しますか?",
+                "sureToReject": "次のエントリを拒否してもよろしいですか? {{0}}",
+                "sureToRejectMultiple": "次のエントリを拒否してもよろしいですか? {{0}}",
+                "sureToRejectSelected": "選択したエントリを拒否してもよろしいですか? {{0}}",
                 "selectAction": "アクションを選択",
                 "errors": {
                     "missingIds": "引数entryIdsが見つかりません",
@@ -1108,27 +1186,34 @@
                 "additionalFilters": "追加フィルター",
                 "refineSearch": "検索を絞り込む",
                 "clearDates": "日付をクリア",
+                "clearDate": "日付をクリア",
                 "dates": "日付",
                 "after": "後",
                 "before": "前",
                 "loading_lbl": "ロード中",
                 "categoryId_tt": "カテゴリID: {{0}}",
                 "createdBetween": "作成期間",
-                "mediaTypes": "メディアのタイプ: {{0}}",
+                "mediaTypes": "メディアの種別: {{0}}",
                 "ingestionStatuses": "ステータス: {{0}}",
                 "durations": "長さ: {{0}}",
                 "replacementStatuses": "交換ステータス: {{0}}",
-                "moderationStatuses": "モデレーション:{{0}}",
+                "moderationStatuses": "モデレーション: {{0}}",
                 "originalClippedEntries": "オリジナル＆クリップ済み: {{0}}",
                 "timeScheduling": "スケジュール中: {{0}}",
                 "accessControlProfiles": "アクセス制御: {{0}}",
                 "flavors": "フレーバー: {{0}}",
                 "distributions": "配信: {{0}}",
                 "freeText": "フリーテキスト検索",
+                "lastPlayedAt": "再生終了",
                 "metaData": "{{0}}: {{1}}",
                 "uploadedItem": "アップロードされた項目: {{0}}",
                 "status": "ステータス: {{0}}",
                 "permissionLevels": "権限レベル: {{0}}",
+                "youtubeVideo": "YouTube動画",
+                "videoQuiz": "クイズ付き動画",
+                "videoCaptions": "キャプション付き動画",
+                "videoNoCaptions": "キャプションなし動画",
+                "recycled": "リサイクルされたエントリ",
                 "preferences": {
                     "preferences": "環境設定",
                     "filterPreferences": "環境設定のフィルタ",
@@ -1136,13 +1221,38 @@
                     "subSelected": "選択されたカテゴリとそのサブカテゴリに関連するエントリを表示します。"
                 },
                 "dateFilter": {
-                    "until": "終了日時{{0}}",
-                    "from": "開始日時{{0}}"
+                    "until": "終了 {{0}}",
+                    "from": "開始日 {{0}}"
                 },
                 "privacyTypes": "コンテンツプライバシー: {{0}}",
                 "categoryListing": "カテゴリの一覧表示: {{0}}",
                 "contributionPolicy": "投稿ポリシー: {{0}}",
-                "endUserPermissions": "エンドユーザー権限: {{0}}"
+                "endUserPermissions": "エンドユーザー権限: {{0}}",
+                "searchFields": {
+                    "all": "すべてのフィールドとメタデータ",
+                    "includeCaptions": "キャプションを含める",
+                    "name": "エントリ名",
+                    "description": "説明",
+                    "tags": "タグ",
+                    "owner": "所有者",
+                    "coeditor": "共同編集者",
+                    "copublisher": "共同公開者",
+                    "captions": "キャプション（複数）",
+                    "entryId": "エントリID",
+                    "entryCreatorId": "エントリ作成者ID",
+                    "help": "ヘルプ",
+                    "tooltips": {
+                        "nameLike": "検索フィールド: エントリ名",
+                        "searchTextMatchOr": "検索フィールド: 説明",
+                        "tagsMultiLikeOr": "検索フィールド: タグ",
+                        "userIdEqual": "検索フィールド: 所有者",
+                        "entitledUsersEditMatchOr": "検索:共同編集者",
+                        "entitledUsersPublishMatchOr": "検索フィールド: 共同公開者",
+                        "captions": "検索フィールド: キャプション（複数）",
+                        "idIn": "検索フィールド: エントリID",
+                        "creatorIdEqual": "検索フィールド: エントリ作成者ID"
+                    }
+                }
             },
             "table": {
                 "thumbnail": "サムネイル",
@@ -1157,7 +1267,9 @@
                 "status": "ステータス",
                 "previewAndEmbed": "共有&amp;埋め込み",
                 "previewInPlayer": "プレーヤーでプレビュー",
-                "liveDashboard": "ライブダッシュボード",
+                "liveDashboard": "リアルタイムダッシュボード",
+                "realTimeAnalytics": "リアルタイム分析",
+                "webcastAnalytics": "Webキャスト分析",
                 "delete": "削除",
                 "view": "詳細を表示",
                 "entries": "エントリ",
@@ -1180,10 +1292,11 @@
                 "entriesCount": "エントリ番号",
                 "limit": "制限",
                 "orderBy": "並び替え",
-                "nameTooltip": "{{0}} タグ: {{1}}",
+                "nameTooltip": "{{0}} 件のタグ: {{1}}",
                 "download": "ダウンロード",
                 "editor": "エディタを起動",
-                "captionRequest": "キャプションリクエスト"
+                "captionRequest": "キャプションとエンリッチ",
+                "analytics": "分析を表示"
             },
             "paginator": {
                 "showRows": "行を表示:"
@@ -1201,7 +1314,7 @@
                     "messages": {
                         "uploadError": {
                             "header": "エラー",
-                            "message": "予期せぬ権限エラーが発生しました。ブラウザを更新してください。エラーが解決されない場合は、追加情報について、Kalturaサポートにお問い合わせください。{{value}}"
+                            "message": "予期せぬ権限エラーが発生しました。ブラウザを更新してください。エラーが解決されない場合は、追加情報について、Kalturaサポートにお問い合わせください。 {{value}}"
                         },
                         "uploadSuccess": {
                             "body": "リクエストが送信されました。一括ジョブの進捗状況は ",
@@ -1312,12 +1425,14 @@
                 "dynamic": "ルールベース",
                 "external": "外部RSS",
                 "staticList": "マニュアル",
-                "unknown": "不明"
+                "unknown": "不明",
+                "interactive": "インタラクティブビデオ"
             },
             "userStatus": {
                 "active": "アクティブ",
                 "blocked": "ブロック済み",
-                "deleted": "削除済み"
+                "deleted": "削除済み",
+                "removed": "削除済み"
             },
             "addNewPlaylist": {
                 "addNewPlaylist": "新規プレーリストを追加",
@@ -1331,10 +1446,10 @@
                 "cancelEdit": "編集をキャンセル",
                 "discard": "すべての変更を破棄しますか?",
                 "notSupportedMsg": "新規ルールベースのプレーリストの追加は現在サポートされていません。",
-                "dismiss": "却下"
+                "dismiss": "拒否"
             },
             "bulkActions": {
-                "captionRequest": "キャプションリクエスト",
+                "captionRequest": "キャプションとエンリッチ",
                 "setScheduling": "スケジュールを設定",
                 "setAccessControl": "アクセス制御を設定",
                 "addRemovePublishers": "共同公開者を追加/削除",
@@ -1343,7 +1458,13 @@
                 "removePublishers": "共同公開者を削除",
                 "removePublishersLabel": "このリストから削除された共同公開者は、選択されたすべてのエントリから削除されます",
                 "noPublishersToRemove": "削除する共同公開者がいません",
-                "userTooltip": "ユーザーはまだKalturaでリスト化されていません。{{0}}はユーザーの識別子とみなされます。",
+                "addRemoveViewers": "共同視聴者の追加/削除",
+                "addViewers": "共同視聴者の追加",
+                "addViewersLabel": "選択されたすべてのエントリに追加される共同視聴者を入力",
+                "removeViewers": "共同視聴者の削除",
+                "removeViewersLabel": "このリストから削除された共同視聴者は、選択されたすべてのエントリから削除されます",
+                "noViewersToRemove": "削除する共同視聴者がいません",
+                "userTooltip": "ユーザーはまだKalturaでリスト化されていません。{{0}} はユーザーの識別子とみなされます",
                 "addRemoveEditors": "共同編集者の追加/削除",
                 "addEditors": "共同編集者の追加",
                 "addEditorsLabel": "選択されたすべてのエントリに追加される共同編集者を入力",
@@ -1368,12 +1489,12 @@
                 "download": "ダウンロード",
                 "downloadEntries": "選択されたエントリをダウンロード",
                 "download1Label": "1件のエントリがダウンロード用に選択されています。",
-                "downloadManyLabel": "{{0}}件のエントリがダウンロード用に選択されています。",
+                "downloadManyLabel": "{{0}} 件のエントリがダウンロード用に選択されています。",
                 "downloadFlavor": "ビデオをダウンロードする場合は、目的の形式を選択してください。",
                 "downloadAudio": "オーディオエントリはFLV形式で配信されます。",
                 "downloadImage": "画像は元の形式で配信されます。",
                 "downloadNote": "他のタイプのエントリのダウンロードはサポートされておらず、無視されます。",
-                "downloadMsg": "ダウンロードリクエストが処理されました。処理の完了後、ダウンロードリンクが{{0}}に送信されます。",
+                "downloadMsg": "ダウンロードリクエストが処理されました。処理の完了後、ダウンロードリンクが {{0}} に送信されます。",
                 "delete": "削除",
                 "apply": "選択したすべてのエントリに適用",
                 "error": "エントリの更新中にエラーが発生しました。",
@@ -1382,10 +1503,10 @@
                 "errorCategories": "カテゴリの更新中にエラーが発生しました。",
                 "updated": "エントリが正常に更新されました。",
                 "note": "更新ノート",
-                "confirm": "{{0}}件のエントリを更新してもよろしいですか?しばらくお待ち下さい...",
-                "confirmCategories": "{{0}}件のカテゴリを更新してもよろしいですか?しばらくお待ち下さい...",
-                "confirmPlaylsts": "{{0}}件のプレーリストを更新してもよろしいですか?しばらくお待ち下さい...",
-                "confirmDropFolders": "{{0}}件のドロップフォルダーを更新してもよろしいですか?しばらくお待ち下さい...",
+                "confirm": "{{0}} 件のエントリを更新してもよろしいですか?しばらくお待ち下さい...",
+                "confirmCategories": "{{0}} 件のカテゴリを更新してもよろしいですか?しばらくお待ち下さい...",
+                "confirmPlaylsts": "{{0}} 件のプレーリストを更新してもよろしいですか?しばらくお待ち下さい...",
+                "confirmDropFolders": "{{0}} 件のドロップフォルダーのファイルを更新してもよろしいですか?しばらくお待ち下さい...",
                 "deleteEntries": "エントリを削除",
                 "deleteConfirm": "選択したエントリを削除しますか?",
                 "deleteNote": "注意: 選択されたエントリはアカウントから完全に削除されます。",
@@ -1401,12 +1522,12 @@
                 "newPlaylist": "新規プレーリスト",
                 "createPlaylistWarning": "新規プレーリスト",
                 "createPlaylistWarningMsg": "選択されたエントリの一部のステータスが無効です。続行できますが、無効なエントリは無視されます: {{0}}",
-                "createPlaylistWarningMsgShort": "選択されたエントリのうち{{0}}件のステータスが無効です。続行できますが、無効なエントリは無視されます。",
+                "createPlaylistWarningMsgShort": "選択されたエントリのうち {{0}} 件のステータスが無効です。続行できますが、無効なエントリは無視されます。",
                 "createPlaylistErrorMsg": "選択されたすべてのエントリのステータスが無効です。これらのエントリを含む新規プレーリストを作成できません",
                 "viewRule": "ルールを表示/編集",
                 "deleteRule": "ルールを削除",
                 "noCategoriesOrEntries": "カテゴリまたはエントリが選択されませんでした。",
-                "entryAlreadyAssignedToCategory": "エントリ{{0}}はすでにカテゴリ{{1}}に割り当てられています。",
+                "entryAlreadyAssignedToCategory": "エントリ {{0}} はすでにカテゴリ {{1}} に割り当てられています。",
                 "downloadFailed": "ダウンロードリクエストが失敗しました。",
                 "captionRequestAllInvalid": "選択した項目はキャプションの並び替えをサポートしていません。再生の準備ができているビデオ/オーディオエントリのみを選択してください",
                 "captionRequestSomeInvalid": "いくつかのエントリはキャプションの並び替えをサポートしていないため、無視されます。続行しますか?"
@@ -1481,7 +1602,7 @@
                     "addEntries": "エントリを追加",
                     "removeEntry": "エントリを削除",
                     "remove": "削除",
-                    "selected": "{{0}}件選択済み",
+                    "selected": "{{0}} 件が選択されました",
                     "clear": "クリア",
                     "addGroup": "グループを追加",
                     "deleteGroup": "グループを削除",
@@ -1489,7 +1610,7 @@
                     "customDataError": "「{{0}}」カスタムデータエラー",
                     "missingEntriesWarning": "次のエントリが見つかりませんでした: {{0}}",
                     "replaceLinkedEntry": "新規エントリの選択によって、現在のエントリが置き換えられます。続行しますか?",
-                    "maxCategoriesLinked": "エントリは最大{{0}}件のカテゴリにリンクできます"
+                    "maxCategoriesLinked": "エントリは最大 {{0}} 件のカテゴリにリンクできます"
                 },
                 "thumbnails": {
                     "tags": "タグ",
@@ -1543,7 +1664,7 @@
                     "scheduling": "スケジュール中",
                     "anytime": "いつでも",
                     "range": "特定の範囲",
-                    "note": "注意:使用されているタイムゾーン（GMT{{0}}）",
+                    "note": "注:使用されているタイムゾーン（GMT{{0}}）",
                     "start": "開始日",
                     "end": "終了日",
                     "clear": "日付をクリア",
@@ -1560,7 +1681,7 @@
                     "codec": "コーデック",
                     "bitrate": "ビットレート（kbps）",
                     "dimensions": "寸法",
-                    "size": "サイズ（kb）",
+                    "size": "サイズ（KB）",
                     "stat": "ステータス",
                     "tags": "タグ",
                     "update": "フレーバーを更新",
@@ -1635,7 +1756,7 @@
                         "enterFlavorUrl": "フレーバーURLを入力してください",
                         "linkRemoteStorage": "リモートストレージへのリンク"
                     },
-                    "deleteConfirm": "このアセット: {{0}}を削除しますか?",
+                    "deleteConfirm": "このアセット: {{0}} を削除してもよろしいですか?",
                     "deleteConfirmTitle": "フレーバーアセットを削除",
                     "uploadSuccess": "フレーバーアセットは正常にアップロードされました。",
                     "deleteFailure": "フレーバーアセットの削除に失敗しました。",
@@ -1724,15 +1845,23 @@
                 "captions": {
                     "captions": "キャプション",
                     "add": "キャプションを追加",
-                    "request": "キャプションをリクエスト",
+                    "request": "キャプションとエンリッチ",
                     "label": "ラベル",
                     "type": "ファイルタイプ",
                     "language": "言語",
                     "status": "ステータス",
+                    "accuracy": "正確性",
+                    "emptyMsgTitle": "まだキャプションはありません",
+                    "emptyMsg": "「キャプションを追加」をクリックして、キャプションファイルをアップロードします",
+                    "accuracy_title": "キャプションの正確性を設定",
+                    "accuracy_tt": "「編集」オプションを使用してキャプションの正確性を更新できます",
+                    "accurate": "正確",
                     "defaultTitle": "デフォルト",
                     "default": "デフォルトキャプション",
                     "setDefault": "デフォルトとして設定",
                     "edit": "編集",
+                    "editor": "終了したキャプションエディター",
+                    "editorDisabled": "フォーマットがサポートされません",
                     "editCaption": "キャプションを編集",
                     "download": "ダウンロード",
                     "delete": "削除",
@@ -1751,13 +1880,19 @@
                     "uploadError": "アップロードエラー",
                     "remove": "削除",
                     "noLabel": "ラベルが指定されなかったため、キャプション言語はプレーヤーキャプションメニューで使用されます",
-                    "pending": "保留中"
+                    "pending": "保留中",
+                    "displayOnPlayer": "プレーヤー上に表示"
                 },
                 "live": {
+                    "goLive": "ライブ開始",
+                    "endLive": "ライブ終了",
+                    "endLiveHeader": "しばらくお待ち下さい。",
+                    "endLiveMessage": "ライブブロードキャストを本当に終了してもよいですか?<br>この操作を取り消すことはできません。",
                     "live": "ライブストリーム",
-                    "liveDashboard": "ライブダッシュボード",
+                    "liveDashboard": "リアルタイムダッシュボード",
                     "urls": "ブロードキャストURL",
                     "primary": "プライマリURL:",
+                    "secondary": "セカンダリURL:",
                     "backup": "バックアップ URL:",
                     "regenerate": "ストリームトークンを再生成",
                     "regenerateTooltip": "このエントリの新しいRTMPトークンを再生成",
@@ -1772,8 +1907,19 @@
                     "dvrWindow": "DVR期間:",
                     "activeRec": "レコーディング:",
                     "previewMode": "プレビューモード:",
+                    "lowLatency": "低遅延（ベータ版）:",
                     "rtsp": "RTSPブロードキャストURL",
-                    "hlsStream": "HLSストリームURL:",
+                    "srt": "SRTブロードキャストURL",
+                    "primarySRTid": "プライマリストリームのID:",
+                    "secondarySRTid": "セカンダリストリームのID:",
+                    "srtKey": "暗号化:",
+                    "noSrtKey": "パスフレーズを設定して暗号化を有効にする",
+                    "clearSrt": "パスフレーズをクリア",
+                    "srtPassAuto": "自動設定",
+                    "srtPassManual": "手動設定",
+                    "srtPassPlaceholder": "パスフレーズを入力",
+                    "srtPassTooltip": "暗号化用の10～79文字の英数字のパスフレーズを設定して、暗号化を有効にする",
+                    "hlsStream": "HLS (Apple HTTP) ストリームURL:",
                     "akamaiStream": "AkamaiストリームID:",
                     "transcoding": "トランスコーディングプロファイル設定",
                     "transcodingProfile": "トランスコーディングプロファイル:",
@@ -1794,7 +1940,19 @@
                     "hours": "時間",
                     "selectBitrate": "ビットレートを選択",
                     "bitrateError": "ビットレートの選択は必須です。",
-                    "dimensionsError": "すべてのビットレートで幅と高さは必須です"
+                    "dimensionsError": "すべてのビットレートで幅と高さは必須です",
+                    "videoConferenceIntegration": "ビデオ会議の統合",
+                    "sipUser": "SIPユーザー",
+                    "noSipUser": "このエントリに対してSIPユーザーが生成されていません",
+                    "generateSip": "SIPユーザーを生成",
+                    "regenerateSip": "SIPユーザーを再生成",
+                    "generateSrtKey": "暗号化パスフレーズの生成",
+                    "regenerateSrtKey": "暗号化パスフレーズの再生成",
+                    "sipSource": "ストリームソースを選択",
+                    "sipSource1": "話し手の顔",
+                    "sipSource2": "話し手の顔とコンテンツ共有（PIP）",
+                    "sipSource3": "コンテンツ共有",
+                    "sipError": "生成に失敗しました。もう一度試してください。"
                 },
                 "related": {
                     "related": "関連ファイル",
@@ -1804,6 +1962,7 @@
                     "size": "ファイルサイズ",
                     "assetId": "アセットID",
                     "document": "ドキュメント",
+                    "json": "JSON",
                     "media": "メディア",
                     "text": "テキスト",
                     "select": "タイプを選択",
@@ -1849,7 +2008,8 @@
                     "save": "保存",
                     "co-editors": "共同編集者",
                     "co-publishers": "共同公開者",
-                    "tooltip": "ユーザーはKalturaでリスト化されていません。{{0}}はユーザーの識別子とみなされます。",
+                    "co-viewers": "共同視聴者",
+                    "tooltip": "ユーザーはKalturaにリストされていません。{{0}} はユーザーの識別子とみなされます。",
                     "noScreenName": "ユーザーを適用できません。スクリーン名が空です。"
 
                 },
@@ -1859,7 +2019,7 @@
                     "export": "エクスポート",
                     "upToDate": "最新",
                     "update": "更新",
-                    "lastUpdate": "最終更新{{0}}",
+                    "lastUpdate": "最終更新 {{0}}",
                     "moreDetails": "詳細を表示",
                     "moreInfo": "詳細情報",
                     "processing": "処理中",
@@ -1870,8 +2030,9 @@
                     "previewDistributorVideo": "ディストリビューターページでビデオをプレビューします。",
                     "deleteConfirmTitle": "配信を削除",
                     "delete": "削除",
-                    "deleteConfirm": "{{0}}が配信したエクスポート済みビデオを削除しようとしています。ビデオは外部プラットフォームのビデオページで利用できなくなります。続行しますか?",
+                    "deleteConfirm": "{{0}} が配信したエクスポート済みビデオを削除しようとしています。ビデオは外部プラットフォームのビデオページで利用できなくなります。続行しますか?",
                     "form": {
+                        "provider": "プロバイダー: {{0}}",
                         "status": "ステータス",
                         "updates": "更新",
                         "updateAutomatically": "自動更新",
@@ -1958,7 +2119,7 @@
                         "missingFlavor": "フレーバーが見つかりません。",
                         "missingThumbnail": "サムネイルが見つかりません。",
                         "autoDistributionMetadataMissing": "自動配信メタデータが見つかりません。",
-                        "failedLoadMissingFlavors": "見つからないフレーバーアセット: {{0}}のロードに失敗しました",
+                        "failedLoadMissingFlavors": "見つからないフレーバーアセット: {{0}} のロードに失敗しました",
                         "serverError": "サーバーエラー",
                         "datesRangeError": "「開始日」は「終了日」より前である必要があります",
                         "missingThumbnails": "エントリサムネイルから必要なサムネイルサイズが見つかりません。",
@@ -1970,17 +2131,17 @@
                         "goToMetadataTab": "メタデータタブに移動",
                         "goToThumbnailsTab": "サムネイルタブに移動",
                         "goToFlavorsTab": "フレーバータブに移動",
-                        "metadataError": "選択したエントリのメタデータは、必要な仕様を満たしていません。{{0}} この配信を最終化するには、関連するタブでこのエラーを修正する必要があります:\n",
-                        "missingMetadata": "選択したエントリでは、以下のメタデータフィールドのコンテンツが見つかりません:{{0}} この配信を最終化するには、関連するタブに移動し、上記の各フィールドにメタデータを追加します:\n",
-                        "missingFlavor": "選択したエントリでは、以下のトランスコーディングフレーバーが見つかりません:{{0}} この配信を最終化するには、フレーバータブに移動し、上記の各フレーバーで変換を選択します:\n",
-                        "missingThumbnail": "選択したエントリでは、以下のサムネイル寸法が見つかりません:{{0}} この配信を最終化するには、サムネイルタブに移動し、上記の各寸法でサムネイルを作成します。\n",
-                        "autoDistributionMetadataMissing": "このエントリは、特定のメタデータが入力されるときに自動配信で設定されました。以下のメタデータは、現在見つかりません。{{0}} この配信を最終化するには、関連するタブでこのコンテンツを追加する必要があります:\n"
+                        "metadataError": "選択したエントリのメタデータは必要な仕様を満たしていません: {{0}} この配信を完了するには、関連するタブでこのエラーを修正する必要があります:\n",
+                        "missingMetadata": "選択したエントリでは、以下のメタデータ フィールドのコンテンツが見つかりません: {{0}} この配信を最終化するには、関連するタブに移動し、上記の各フィールドにメタデータを追加します:\n",
+                        "missingFlavor": "選択したエントリでは、以下のトランスコーディングフレーバーが見つかりません: {{0}} この配信を最終化するには、フレーバータブに移動し、上記の各フレーバーで変換を選択します:\n",
+                        "missingThumbnail": "選択したエントリでは、以下のサムネイル寸法が見つかりません: {{0}} この配信を最終化するには、サムネイルタブに移動し、上記の各寸法でサムネイルを作成します。\n",
+                        "autoDistributionMetadataMissing": "このエントリは、特定のメタデータが入力されるときに自動配信で設定されました。以下のメタデータは、現在見つかりません: {{0}} この配信を最終化するには、関連するタブでこのコンテンツを追加する必要があります:\n"
                     },
                     "errorTypes": {
-                        "stringEmpty": "- {{0}}は必須フィールドです\n",
-                        "stringTooLong": "- {{0}}フィールドは最大長である{{1}}文字を超えています\n",
-                        "stringTooShort": "- {{0}}フィールドの長さは少なくとも{{1}}文字である必要があります\n",
-                        "invalidFormat": "- {{0}}フィールドは{{1}}形式である必要があります\n"
+                        "stringEmpty": "- {{0}} は必須フィールドです\n",
+                        "stringTooLong": "- {{0}} フィールドは最大長である {{1}} 文字を超えています\n",
+                        "stringTooShort": "- {{0}} フィールドの長さは少なくとも {{1}} 文字である必要があります\n",
+                        "invalidFormat": "- {{0}} フィールドは {{1}} 形式である必要があります\n"
                     }
                 },
                 "errors": {
@@ -2003,7 +2164,7 @@
             },
             "categoryDetails": {
                 "save": "保存",
-                "referenceIdInUse": "以下のカテゴリはすでに参照IDとして{{0}}で設定されています:{{1}}続行しますか?",
+                "referenceIdInUse": "以下のカテゴリはすでに参照IDとして {{0}} で設定されています: {{1}} 続行しますか?",
                 "header": "{{0}}",
                 "backToCategories": "カテゴリに戻る",
                 "headerProps": {
@@ -2065,7 +2226,7 @@
                         "requiresAuthentication": "認証が必要",
                         "requiresAuthentication_explanation": "認証済みのエンドユーザーにのみ表示されます。",
                         "private": "プライベート",
-                        "private_explanation": "このカテゴリコンテンツへにアクセスするための特定の権限を持つユーザーにのみ表示されます。"
+                        "private_explanation": "カテゴリは、このカテゴリコンテンツへにアクセスするための特定の権限を持つユーザーにのみ表示されます。"
                     },
                     "categoryListing": {
                         "label": "カテゴリの一覧表示",
@@ -2073,7 +2234,7 @@
                         "noRestrictions": "制限なし",
                         "noRestrictions_explanation": "アプリケーションページへのアクセス権を持つすべてのユーザーに表示されます。",
                         "private": "プライベート",
-                        "private_explanation": "このカテゴリコンテンツへにアクセスするための特定の権限を持つユーザーにのみ表示されます。"
+                        "private_explanation": "カテゴリは、このカテゴリコンテンツへにアクセスするための特定の権限を持つユーザーにのみ表示されます。"
                     },
                     "contentPublishPermissions": {
                         "label": "コンテンツ公開権限",
@@ -2110,7 +2271,7 @@
                         "changeOwnerPlaceholder": "ユーザー名/IDを入力してください",
                         "cancelEdit": "編集をキャンセル",
                         "discard": "すべての変更を破棄しますか?",
-                        "tooltip": "ユーザーはまだKalturaでリスト化されていません。{{0}}はユーザーの識別子とみなされます",
+                        "tooltip": "ユーザーはまだKalturaでリスト化されていません。{{0}} はユーザーの識別子とみなされます",
                         "errors": {
                             "changeOwnerFailed" : "所有者の変更中にエラーが発生しました。",
                             "unableToChange": "現在のカテゴリの所有者を変更できません。",
@@ -2125,14 +2286,14 @@
                         "none": "なし",
                         "manageUsers": "ユーザーを管理",
                         "viewUsers": "ユーザーを表示",
-                        "count": "{{0}}人のエンドユーザー"
+                        "count": "{{0}} 人のエンドユーザー"
                     },
                     "usersPermissions": {
                         "refine": "絞り込み",
                         "searchUsers": "ユーザーを検索",
                         "title":"エンドユーザー権限を管理",
                         "titleView":"エンドユーザー権限を表示",
-                        "inheritanceMessage":"権限が{{0}}から継承されました。このページからは編集できません。",
+                        "inheritanceMessage":"権限が {{0}} から継承されました。このページからは編集できません。",
                         "close": "閉じる",
                         "table": {
                             "userNameId": "ユーザー名/ID",
@@ -2148,9 +2309,9 @@
                         },
                         "bulkOperations": {
                             "addUsers": "ユーザーを追加",
-                            "usersCount": "{{0}}人のユーザー",
-                            "selectedUsersCount": "{{0}}件選択済み",
-                            "cancel": "キャンセル",
+                            "usersCount": "{{0}} 人のユーザー",
+                            "selectedUsersCount": "{{0}} 件が選択されました",
+                            "cancel": "キャンセルする",
                             "remove": "削除",
                             "search": "検索",
                             "refine": "絞り込み",
@@ -2181,7 +2342,7 @@
                             "selectEndUsers": "エンドユーザーを選択",
                             "permissionLevel": "権限レベル",
                             "updateMethod": "メソッドを更新",
-                            "addUsers": "{{0}}人のユーザーを追加",
+                            "addUsers": "{{0}} 人のユーザーを追加",
                             "save": "保存",
                             "cancel": "キャンセル",
                             "retry": "再試行",
@@ -2221,11 +2382,11 @@
                 },
                 "subcategories": {
                     "tableHeaderDetails": {
-                        "total": "{{0}}サブカテゴリ",
+                        "total": "{{0}} サブカテゴリ",
                         "addSubcategory": "サブカテゴリを追加",
                         "remove": "削除",
-                        "selected": "{{0}}件選択済み",
-                        "cancel": "キャンセル"
+                        "selected": "{{0}} 件が選択されました",
+                        "cancel": "キャンセルする"
                     },
                     "actions": {
                         "moveUp": "上に移動",
@@ -2256,7 +2417,7 @@
                 }
             },
             "liveDashboard": {
-                "title": "ライブダッシュボード"
+                "title": "リアルタイムダッシュボード"
             },
             "playlistDetails": {
                 "sections": {
@@ -2288,7 +2449,7 @@
                         "entryName": "エントリ名"
                     },
                     "addRule": "ルールを追加",
-                    "entriesInRules": "{{1}}件のルールの{{0}}件のエントリ"
+                    "entriesInRules": "{{1}} 件のルールの{{0}} 件のエントリ"
                 },
                 "errors": {
                     "reload": "リロード",
@@ -2312,12 +2473,68 @@
             }
         },
         "administration": {
+            "accounts":{
+                "addAccount": "アカウントを追加",
+                "refresh": "リフレッシュ",
+                "accountsNum": "{{0}} 公開者",
+                "currentUser": "(親アカウント)",
+                "confirmDeleteHeader": "削除を確認",
+                "search": "検索",
+                "confirmDeleteBody": "選択したアカウントを削除してもよろしいですか? ({{0}})",
+                "currentStatus": "現在のステータス:",
+                "accountsInfo": "{{0}} 使用中のアカウント*, {{1}} 残りを追加",
+                "accountsExplain": "* テンプレートとして使用されていないアクティブなアカウントまたはブロックされたアカウント",
+                "moreAccounts": "もっとアカウントが必要ですか？",
+                "contact": "Kalturaに問い合わせて、",
+                "usersUpgrade": "アップグレードをリクエストします。",
+                "create": "作成する",
+                "note": "アカウントの作成には最大１分かかります",
+                "accountInfo": "アカウント情報",
+                "administrator": "管理者",
+                "name": "アカウント名",
+                "email": "管理者の電子メール",
+                "phone": "管理者の電話番号",
+                "website": "WebサイトURL",
+                "template": "テンプレートアカウントからコンテンツをコピーする",
+                "defaultTemplate": "デフォルトのテンプレートアカウント",
+                "refid": "参照ID",
+                "tableColumns": {
+                    "status": "ステータス",
+                    "id": "パートナー ID",
+                    "name": "アカウント名",
+                    "refid": "参照ID",
+                    "website": "WebサイトURL",
+                    "administrator": "管理者",
+                    "email": "管理者の電子メール",
+                    "phone": "管理者の電話番号",
+                    "created": "作成日"
+                },
+                "actions": {
+                    "kmc": "KMCログイン",
+                    "block": "ブロック",
+                    "unblock": "ブロック解除",
+                    "remove": "削除"
+                },
+                "errors": {
+                    "loadError": "アカウントを読み込めません",
+                    "required": "値が必須です。空欄にすることはできません",
+                    "emailFormat": "電子メールのフォーマットが無効です",
+                    "emailExists": "電子メールアドレスはシステムにすでに存在しています"
+                },
+                "statusLabels": {
+                    "allStatuses": "すべてのステータス",
+                    "active": "アクティブ",
+                    "deleted": "削除済み",
+                    "blocked": "ブロック済み",
+                    "removed": "削除済み"
+                }
+            },
             "roles": {
                 "addRole": "ロールを追加",
-                "rolesNum": "{{0}}件のロール",
-                "refresh": "更新",
+                "rolesNum": "{{0}} 件のロール",
+                "refresh": "リフレッシュ",
                 "confirmDeleteHeader": "削除を確認",
-                "confirmDeleteBody": "選択したロールを削除しますか?（{{0}}）",
+                "confirmDeleteBody": "選択したロールを削除してもよろしいですか? ({{0}})",
                 "deleted": "ロールは正常に削除されました",
                 "copyOf": "コピー",
                 "tableColumns": {
@@ -2331,7 +2548,7 @@
                     "delete": "削除"
                 },
                 "errors": {
-                    "loadError": "エントリをロードできません",
+                    "loadError": "ロールを読み込めません",
                     "roleInUse": "選択したロールは現在既存のユーザーに割り当てられているため、削除できません。",
                     "cantDeleteRole": "ロールを削除できません",
                     "cantDeleteAdminRole": "管理者ロールを削除できません",
@@ -2348,7 +2565,7 @@
                 "you": "あなた",
                 "accountOwner": "アカウント所有者",
                 "deleteUser": "ユーザーを削除",
-                "confirmDelete": "選択したユーザーを削除しますか?（{{0}}）",
+                "confirmDelete": "選択したユーザーを削除してもよろしいですか? ({{0}})",
                 "save": "保存",
                 "editUser": "ユーザーを編集",
                 "loginEmailAddress": "ログイン電子メールアドレス",
@@ -2358,9 +2575,11 @@
                 "userRole": "ユーザーロール",
                 "addRole": "ロールを追加",
                 "addUser": "ユーザーを追加",
+                "ssoUser": "SSOユーザー",
                 "currentStatus": "現在のステータス:",
-                "usersInfo": "{{0}} KMC {{1}}が使用中、{{2}}が追加で利用可能です。",
+                "usersInfo": "{{0}} KMC {{1}} が使用中、{{2}} が追加で利用可能です。",
                 "failedLoading": "ユーザーデータのロードに失敗しました",
+                "export": "ユーザーをエクスポート",
                 "cantPerform": "このアクションを実行するためのアクセス権がありません",
                 "successSavingUser": "変更はすぐに反映されます。ブラウザを更新するようユーザーに指示してください。",
                 "personalDetails": "個人の詳細",
@@ -2368,11 +2587,11 @@
                 "required": "このフィールドは必須です。",
                 "emailFormat": "電子メールのフォーマットが無効です",
                 "publisherIdFormat": "パブリッシャーIDのフォーマットが無効です",
-                "userAlreadyExist": "{{0}}はすでにシステムに存在しており、別のKMCアカウントに関連付けられています。このユーザーもこのアカウントに関連付けますか?",
+                "userAlreadyExist": "{{0}} はすでにシステムに存在しており、別のKMCアカウントに関連付けられています。このユーザーもこのアカウントに関連付けますか?",
                 "alreadyExist": "ユーザーはすでに存在しています",
-                "alreadyExistError": "ログイン電子メール{{0}}は、アカウントの認証済みユーザーとしてすでにシステム内に存在しています。",
+                "alreadyExistError": "ログイン電子メール {{0}} は、アカウントの認証済みユーザーとしてすでにシステム内に存在しています。",
                 "userAssociatedCaption": "関連ユーザー",
-                "userAssociated": "IDが{{0}}のユーザーはアカウント上にすでに存在しています。このユーザーへのKMCアクセスを有効化しますか?",
+                "userAssociated": "IDが {{0}} のユーザーはアカウント上にすでに存在しています。このユーザーへのKMCアクセスを有効化しますか?",
                 "refresh": "更新",
                 "commonError": "サーバーリクエスト中にエラーが発生しました。",
                 "addUserError": "必須フィールドのいずれかが見つかりません",
@@ -2454,11 +2673,140 @@
                 },
                 "accountInfo": {
                     "header": "アカウントのアップグレードに興味を持っていただきありがとうございます。",
-                    "trial": "無料トライアルの期限は{{0}}に切れます。",
+                    "trial": "無料トライアルの期限は {{0}} に切れます",
                     "gb": " GB",
-                    "bandwidth": "今月の帯域幅消費は{{0}}です",
-                    "storage": "今月のストレージ使用量は{{0}}です",
+                    "bandwidth": "今月の帯域幅消費は {{0}} です",
+                    "storage": "今月のストレージ使用量は {{0}} です",
                     "contactUs": "他のパッケージと付加価値サービスの詳細については、弊社にお問い合わせください。"
+                }
+            },
+            "authentication": {
+                "newProfile": "新規SAMLプロファイル",
+                "profilesNum": "{{0}} 件のプロファイル",
+                "loadError": "認証プロファイルを読み込み中にエラー発生",
+                "table": {
+                    "name": "名前",
+                    "admin": "(管理者)",
+                    "description": "説明",
+                    "id": "ID",
+                    "status": "ステータス",
+                    "type": "タイプ",
+                    "provider": "プロバイダー (IdP)",
+                    "created": "作成日",
+                    "edit": "編集",
+                    "delete": "削除",
+                    "draft": "下書き",
+                    "complete": "準備"
+                },
+                "selectProfile": "認証プロファイルを選択",
+                "delete": "プロファイルを削除",
+                "deleteMsg": "選択したプロファイルを削除してもよろしいですか？「{{0}}」",
+                "deleteConfirm": "確認するには、下のボックスに「{{0}}」を入力します",
+                "deleteBtn": "このプロファイルを削除",
+                "name": "名前",
+                "profileName": "プロファイル名",
+                "deleteError": "プロファイルを削除中にエラー発生",
+                "addOrganizationId": "組織ID（任意）",
+                "organizationId": "組織ID",
+                "loginError": "ログインエラーが発生しました",
+                "edit": {
+                    "titleAdd": "プロファイルを追加",
+                    "titleEdit": "プロファイルを編集",
+                    "newProfile": "新規プロファイル",
+                    "sps": "サービスプロバイダーの設定",
+                    "metadata": "ここをクリックしてメタデータをダウンロード",
+                    "metadata1": "URL",
+                    "metadata2": "または",
+                    "metadata3": "ファイルとして",
+                    "metadataUpdate": "更新中...",
+                    "ssoUrl": "URLに単一署名",
+                    "ssoUrl_tt": "アサーションコンシューマサービスは、サインイン後に認証されたユーザーをどこにリダイレクトするかをIdPに指示します。SAML応答はこのURLに投稿されます。",
+                    "entity": "エンティティID",
+                    "entity_tt": "サービスプロバイダーの一意の識別子。このフィールドは、推奨値を使用して自動的に生成されています。",
+                    "sign": "SAMLリクエストに署名",
+                    "sign_tt": "SAMLリクエスト署名を有効にすると、署名付き認証リクエストが生成されます。リクエストに署名すると、IdPはメタデータ (次のフィールド) で提供された公開キーに照らしてリクエストを検証できます。",
+                    "signCert": "署名証明書",
+                    "encryption": "暗号化",
+                    "encryption_tt": "以下に提供される公開キーを使用して SAMLアサーションを暗号化します。アサーションは、Kalturaが保持するプライベートキーを使用して復号化できます。",
+                    "encryptionKey": "暗号化キー",
+                    "idp": "アイデンティティプロバイダーの設定",
+                    "idp_tt": "IdP から以下をコピーし、下のテキストボックスに貼り付けます: ",
+                    "login": "ログインURL",
+                    "login_tt": "IdPメタデータから取得。通常<SingleSignOnService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect\"……/>のように表示",
+                    "logout": "ログアウトURL",
+                    "logout_tt": "IdPメタデータから取得。通常、&lt;SingleLogoutService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect\"…/> と表示されます。",
+                    "ipc": "IdP証明書",
+                    "ipc_tt": "アイデンティティプロバイダー (IdP) がSAML応答に署名するために使用する証明書。IdPメタデータから取得されます。",
+                    "metadataUrl": "メタデータURL",
+                    "metadataUrl_tt": "メタデータURLを追加して、証明書の有効期限が切れる前に証明書を自動的に更新します。",
+                    "attributesStatement": "属性ステートメント",
+                    "attributes_tt": "SAMLアサーションに表示される属性の名前を最初のテキストボックスに入力し、ドロップダウンリストから Kaltura属性ステートメントを選択して、それらをKaltura属性ステートメントにマッピングします。",
+                    "attributes": {
+                        "Core_User_FirstName": "名",
+                        "Core_User_LastName": "姓",
+                        "Core_User_Email": "電子メール",
+                        "Core_User_ScreenName": "スクリーンネーム",
+                        "Core_User_DateOfBirth": "生年月日",
+                        "Core_User_Gender": "性別",
+                        "Core_User_ThumbnailUrl": "サムネイル",
+                        "Core_User_Description": "説明",
+                        "Core_User_Title": "タイトル",
+                        "Core_User_Country": "国",
+                        "Core_User_Company": "会社",
+                        "Core_User_State": "州",
+                        "Core_User_City": "市",
+                        "Core_User_Zip": "ジップコード"
+                    },
+                    "confirm": "この変更によりプロファイルが保存されます。続行しますか?",
+                    "provider": "プロバイダー名",
+                    "kaltura": "Kaltura / カスタム名",
+                    "kalturaName": "Kaltura名",
+                    "add": "Kaltura属性を追加",
+                    "addCustom": "カスタム属性を追加",
+                    "remove": "属性を削除",
+                    "attributePh": "Kaltura属性を選択",
+                    "email_tt": "これは一意の識別子として機能します。一意の識別子を電子メールアドレスにしてはいけない場合は、Kaltura管理者にお問い合わせください。",
+                    "show": "高度な設定を表示",
+                    "hide": "高度な設定を非表示",
+                    "group": "グループ属性ステートメント",
+                    "group_tt": "プロバイダー属性をKalturaスキーマにマッピングする:",
+                    "groupName": "グループ属性の名前",
+                    "groupName_tt": "SAMLアサーションに表示されるユーザーグループを含む属性の名前。",
+                    "addGroup": "グループ属性を追加",
+                    "createGroups": "新しいグループを作成",
+                    "createGroups_tt": "IdPに存在し、同期中にはKalturaに存在しないグループをKalturaに作成します。",
+                    "removeGroups": "既存のグループから削除",
+                    "removeGroups_tt": "同期中にIdPグループから削除されたユーザーをKalturaグループから削除します。",
+                    "groupMapping": "ユーザーグループマッピング",
+                    "syncGroups": "すべてのユーザーグループを同期",
+                    "syncGroups_tt": "自動的にすべてのIdPユーザーグループをKalturaユーザーグループに同期します。Kaltura内のグループ名は、SAMLアサーション内のグループ名と同一になります。",
+                    "additional": "追加設定",
+                    "format": "識別子フォーマット応答",
+                    "format_tt": "SAMLリクエストに表示されるNameIDフォーマット。",
+                    "formatPh": "識別子フォーマット応答を選択",
+                    "removeFormat": "削除"
+                },
+                "new": {
+                    "doc": "新しいSSOプロファイルを構成する方法については、",
+                    "docLink": "SSOプロファイル構成ガイドを参照してください",
+                    "provider": "プロバイダー",
+                    "admin": "管理プロファイル",
+                    "admin-help": "このプロファイルが管理アプリケーション (イベントプラットフォーム、KMC) にサインインするために作成されている場合は、このテキストボックスにチェックを入れます。",
+                    "createTitle": "プロファイルを作成",
+                    "create": "次",
+                    "create_tt": "プロファイルを作成し、続けてプロファイル設定を完了します",
+                    "adminLabel": "管理アプリケーションプロファイルとして設定"
+                },
+                "subscribe": {
+                    "general": "一般",
+                    "config": "SSO構成",
+                    "profiles": "プロファイル",
+                    "profilesPlaceholder": "プロファイルを選択",
+                    "profiles-help": "1つ以上の管理プロファイルを選択",
+                    "domain": "ドメイン",
+                    "domain-help": "組織ドメインを入力してください: <organization>.com",
+                    "orgId": "組織ID",
+                    "orgId-help": "オプションで、組織IDを追加して、ドメインごとに複数のアカウントをサポートできます。"
                 }
             },
             "metadata": {
@@ -2469,15 +2817,16 @@
                 "addCustomField": "カスタムフィールドを追加",
                 "editCustomField": "カスタムフィールドを編集",
                 "downloadSchema": "スキーマをダウンロード",
-                "schemas": "{{0}}件のカスタムスキーマ",
-                "selected": "{{0}}件選択済み",
-                "cancel": "キャンセル",
+                "schemas": "{{0}} 件のカスタムスキーマ",
+                "selected": "{{0}} 件が選択されました",
+                "cancel": "キャンセルする",
                 "add": "追加",
                 "save": "保存",
-                "fields": "{{0}}件のカスタムフィールド",
+                "fields": "{{0}} 件のカスタムフィールド",
                 "applyTo": {
                     "entries": "エントリ",
-                    "categories": "カテゴリ"
+                    "categories": "カテゴリ",
+                    "userEntry": "ユーザーエントリ"
                 },
                 "form": {
                     "customSchemaTitle": "カスタムスキーマタイトル",
@@ -2486,8 +2835,9 @@
                     "applyTo": "適用先",
                     "entries": "エントリ",
                     "categories": "カテゴリ",
+                    "userEntry": "ユーザーエントリ",
                     "schemaNameRequired": "名前は必須です",
-                    "schemaNameMaxLength": "名前は{{0}}文字未満である必要があります"
+                    "schemaNameMaxLength": "名前は {{0}} 文字未満である必要があります"
                 },
                 "table": {
                     "disabledLabel": "データスキーマは、Kalturaプロフェッショナルサービスによって手動でセットアップされました。更新/変更については、アカウントマネージャーにお問い合わせください。",
@@ -2506,7 +2856,7 @@
                     "deleteCustomDataField": "カスタムデータフィールドを削除",
                     "bulkDeleteCustomDataField": "カスタムデータフィールドを削除",
                     "fieldBulkRemoveConfirmation": "選択したフィールドを削除しますか?警告:既存のエントリの削除されたフィールドのすべてのメタデータが失われます。注意:一括アップロードにXMLを使用する場合は、スキーマフィールドを削除すると、XMLカスタムデータエレメントの検証に影響します。スキーマフィールドを削除する場合は、削除を反映するように、既存の一括アップロードXML構造を更新する必要もあります。",
-                    "fieldRemoveConfirmation": "{{0}}を削除してもよろしいですか?警告:既存のエントリの削除されたフィールドのすべてのメタデータが失われます。注意:一括アップロードにXMLを使用する場合は、スキーマフィールドを削除すると、XMLカスタムデータエレメントの検証に影響します。スキーマフィールドを削除する場合は、削除を反映するように、既存の一括アップロードXML構造を更新する必要もあります。",
+                    "fieldRemoveConfirmation": "{{0}} を削除してもよろしいですか？警告:既存のエントリの削除されたフィールドのすべてのメタデータが失われます。注意:一括アップロードにXMLを使用する場合は、スキーマフィールドを削除すると、XMLカスタムデータエレメントの検証に影響します。スキーマフィールドを削除する場合は、削除を反映するように、既存の一括アップロードXML構造を更新する必要もあります。",
                     "moveUp": "上に移動",
                     "moveDown": "下に移動",
                     "remove": "削除",
@@ -2538,6 +2888,8 @@
                     "shortDescription": "簡単な説明",
                     "description": "説明",
                     "searchable": "検索可能",
+                    "hidden": "非表示",
+                    "required": "必須",
                     "includeTime": "時間を含める",
                     "listValues": "値を一覧表示",
                     "listValuesPlaceholder": "1行に1つ値を入力してください",
@@ -2577,8 +2929,107 @@
                     },
                     "notifications": {
                         "title": "通知",
-                        "message": " 通知設定をセットアップするには、Kalturaの担当者にお問い合わせください。"
+                        "message": "現在、通知は利用できません。"
+                    },
+                    "distribution": {
+                        "title": "配信プロファイル",
+                        "text": "YouTube配信プロファイル"
                     }
+                },
+                "distribution": {
+                    "name": "名前",
+                    "creation": "作成日",
+                    "update": "更新日",
+                    "account": "Youtubeアカウント",
+                    "empty": "このKalturaアカウントのプロファイルがありません ",
+                    "loadError": "配信プロファイルの読み込み中にエラーが発生しました。",
+                    "deleteTitle": "YouTubeプロファイルを削除",
+                    "deleteText": "「{{0}}」のYouTubeプロファイルが削除され、YouTubeへの動画配信に使用できなくなります。続行してもよろしいですか?",
+                    "token": "YouTube APIアクセスを許可",
+                    "tokenText": "上のリンクをクリックまたはコピーし、KMC認証情報を使用してログインし、YouTubeチャンネルにリンクされているGoogleアカウントを使用してGoogleで認証します。"
+                },
+                "zoom": {
+                    "title": "Zoomの統合",
+                    "enableIntegration": "統合を有効にする",
+                    "explanation": "Zoom統合アカウント",
+                    "generate": " 統合コードを生成",
+                    "loadError": "Zoom統合プロファイルの読み込み中にエラーが発生しました。",
+                    "empty": "Zoomのアクティブアカウントはありません。",
+                    "edit": "編集",
+                    "name": "ユーザーID",
+                    "user": "ユーザーを設定:",
+                    "userHelp": "「user_id」を SSO などの特定のフィールドでマッピングする場合は、このオプションを選択してください。CMS IDの詳細については、次の「cms_user_id」を検索してください。",
+                    "here": "リンク",
+                    "accountId": "ZoomアカウントID",
+                    "accountDescription": "アカウントの説明",
+                    "created": "作成日",
+                    "updated": "更新日",
+                    "status": "ステータス",
+                    "codeTitle": "統合コード",
+                    "code": "Zoom統合コード",
+                    "codeFailed": "統合コードの生成中にエラーが発生しました。",
+                    "updateError": "Zoom統合の更新中にエラーが発生しました。",
+                    "copy": "コピーして閉じる",
+                    "enabled": "有効化",
+                    "disabled": "無効化",
+                    "enable": "有効にする",
+                    "disable": "無効にする",
+                    "editAccount": "Zoomアカウントを編集",
+                    "recordingUpload": "レコーディングのアップロード",
+                    "description": "Zoomアカウントの説明",
+                    "uploadMeetings": "ミーティングレコーディングをアップロード",
+                    "uploadWebinars": "ウェビナーレコーディングをアップロード",
+                    "category": "カテゴリ",
+                    "webinarCategory": "ウェビナーカテゴリ",
+                    "delete": "アップロード後にZoomからコンテンツを削除",
+                    "create": "ユーザーが存在しない場合",
+                    "transcription": "Zoomの文字起こし",
+                    "owner": "レコーディングのための所有者設定",
+                    "zoom": "Zoomユーザー",
+                    "cms": "CMSユーザー",
+                    "post": "Postfix",
+                    "postfix": "電子メールpostfix",
+                    "postfix1": "修正しないでください",
+                    "postfix2": "postfixを削除",
+                    "postfix3": "postfixを追加",
+                    "permissions": "アップロードされたレコーディングに対するユーザー権限を構成する",
+                    "participation": "参加者",
+                    "participation1": "参加者を無視",
+                    "participation2": "共同視聴者として追加",
+                    "participation3": "共同公開者として追加",
+                    "hosts1": "なし",
+                    "hosts2": "共同視聴者",
+                    "hosts3": "共同公開者",
+                    "hosts4": "共同編集者",
+                    "hosts5": "共同編集者と共同公開者",
+                    "altHosts": "代替ホスト",
+                    "coHosts": "共同ホスト",
+                    "user1": "Zoomユーザーに基づいて新しいユーザーを作成",
+                    "user2": "デフォルトユーザーを使用",
+                    "note": "* Kaltura 統合用のZoomアカウントの数は {{0}} アカウントに制限されています。最近更新されたアカウントが表示されます。",
+                    "invalid": "デフォルトのユーザーIDは必須です。",
+                    "upload": "レコーディングマネジメントをアップロード",
+                    "uploadAll": "すべてのレコーディングをアップロード",
+                    "uploadIn": "オプトイングループ",
+                    "uploadOut": "オプトアウトグループ",
+                    "uploadError": "少なくとも1つのグループに入力する必要があります"
+                },
+                "webex": {
+                    "title": "Webex統合",
+                    "explanation": "Webex統合アカウント",
+                    "updateError": "Webex統合のアップデート中にエラーが発生しました。",
+                    "empty": "Webexのアクティブアカウントはありません。",
+                    "accountId": "WebexアカウントID",
+                    "code": "Webex統合コード",
+                    "editAccount": "Webexアカウントを編集",
+                    "participation": "ミーティング参加者を追加",
+                    "description": "Webexアカウントの説明",
+                    "delete": "アップロート後にWebexからコンテンツを削除",
+                    "owner": "レコーディング所有者",
+                    "transcription": "Webexの文字起こし",
+                    "webex": "Webexユーザー",
+                    "user1": "Webexユーザーに基づいて新しいユーザーを作成",
+                    "note": "* Kaltura 統合用のWebexアカウントの数は {{0}} アカウントに制限されています。最近更新されたアカウントが表示されます。"
                 },
                 "entitlement": {
                     "title": "資格情報",
@@ -2603,7 +3054,7 @@
                         "categoryName": "カテゴリ名",
                         "privacyContextLabel": "プライバシーコンテキストラベル",
                         "confirmationTitle": "編集を確認",
-                        "confirmation": "資格情報設定は、非同期プロセスですべてのサブカテゴリに追加されます。この操作には数分ほどかかる場合があります。注意:このアクションは、Kaltura資格情報サービスと連動するように更新されていない既存のアプリケーションからの、{{0}}カテゴリのコンテンツへのアクセスに影響を与える可能性があります。続行してもよろしいですか?",
+                        "confirmation": "資格情報設定は、非同期プロセスですべてのサブカテゴリに追加されます。この操作には数分ほどかかる場合があります。注:このアクションは、Kaltura資格情報サービスと連動するように更新されていない既存のアプリケーションからの、{{0}} カテゴリのコンテンツへのアクセスに影響を与える可能性があります。続行してもよろしいですか?",
                         "errors": {
                             "privacyContextLabelRequired": "プライバシーコンテキストラベルを入力してください",
                             "privacyContextLabelExists": "カテゴリはすでにプライバシーコンテキストラベルで設定されています。",
@@ -2613,18 +3064,161 @@
                     },
                     "deleteEntitlement": {
                         "title": "資格情報を削除",
-                        "confirmation": "資格情報設定は、非同期プロセスですべてのサブカテゴリから削除されます。この操作には数分ほどかかる場合があります。注意:{{0}}カテゴリ（すべてのサブカテゴリを含む）で定義された以前のコンテンツポリシー設定は失われます。続行してもよろしいですか?"
+                        "confirmation": "資格情報設定は、非同期プロセスですべてのサブカテゴリから削除されます。この操作には数分ほどかかる場合があります。注:{{0}} カテゴリ（すべてのサブカテゴリを含む）で定義された以前のコンテンツポリシー設定は失われます。続行してもよろしいですか?"
                     },
                     "table": {
                         "applicationRootCategory": "アプリケーションロボットカテゴリ",
                         "privacyContextLabel": "プライバシーコンテキストラベル",
                         "actions": {
                             "edit": "編集",
-                            "delete": "削除"
+                            "delete": "削除",
+                            "token": "承認する"
                         }
                     },
                     "errors": {
                         "loadError": "資格情報のロード中にエラーが発生しました"
+                    }
+                }
+            },
+            "reach": {
+                "reachProfiles": "プロファイル",
+                "edit": "編集",
+                "duplicate": "複製",
+                "unlimited": "無制限",
+                "search": "検索",
+                "cancelEdit": "編集をキャンセル",
+                "discard": "すべての変更を破棄しますか?",
+                "errorLoadingProfiles": "Reachプロファイルの読み込みに失敗しました",
+                "errorLoadingServices": "Reachサービスの読み込みに失敗しました",
+                "profiles": "{{0}} 件のプロファイル",
+                "autoRules": "ルールの設定については、CSMにお問い合わせください。",
+                "profile": {
+                    "save": "保存",
+                    "backToProfiles": "プロファイルに戻る",
+                    "errors": {
+                        "error": "エラー",
+                        "dismiss": "却下",
+                        "reload": "リロード",
+                        "loadError": "データのロード中にエラーが発生しました。",
+                        "saveError": "保存中にエラーが発生しました。",
+                        "validationError": "フォームに無効な情報がいくつか含まれています。無効としてマークされた選択を確認してください",
+                        "busyError": "操作はまだ進行中です。あとでもう一度やり直してください。",
+                        "savePrepareError": "保存の準備中にエラーが発生しました。もう一度試してください。"
+                    }
+                },
+                "table": {
+                    "name": "名前",
+                    "id": "ID",
+                    "created": "作成日",
+                    "allocated": "クレジットの割り当て",
+                    "remaining": "残りのクレジット",
+                    "expiration": "クレジットの有効期限"
+                },
+                "sections": {
+                    "settings": "設定",
+                    "service": " サービスパラメーター",
+                    "credit": "クレジット",
+                    "dictionary": "辞書",
+                    "rules": "自動ルール"
+                },
+                "details": {
+                    "id": "ID",
+                    "remaining": "残りのクレジット",
+                    "expiration": "クレジットの有効期限",
+                    "creationDate": "作成日"
+                },
+                "settings": {
+                    "name": "名前",
+                    "machine": "機械リクエストについてのモデレーション",
+                    "professional": "プロフェッショナルリクエストについてのモデレーション",
+                    "deletion": "コンテンツ削除に関するポリシー",
+                    "region": "タスク処理中の領域",
+                    "machineCaptions": "機械キャプションのラベルサフィックス",
+                    "defaultMachineCaptionsLabel": "（自動生成）",
+                    "humanCaptions": "ヒューマンキャプションのラベルサフィックス",
+                    "nameIsMandatory": "名前は必須です。",
+                    "deleteOptions": {
+                        "deleteAfterMonth": "1か月後に削除",
+                        "deleteAfterThreeMonths": "3か月後に削除",
+                        "deleteAfterWeek": "1週間後に削除",
+                        "deleteOnceProcessed": "処理後に削除",
+                        "doNothing": "削除しないでください"
+                    },
+                    "regionOptions": {
+                        "us": "US",
+                        "eu": "EU"
+                    }
+                },
+                "service": {
+                    "captions": "キャプションサービス",
+                    "format": "デフォルトのキャプションフォーマット",
+                    "max": "キャプション1行あたりの最大文字数",
+                    "machine": "プレーヤー上に自動表示機械キャプション",
+                    "human": "プレーヤー上に自動表示ヒューマンキャプション",
+                    "metadata": "メタデータの抽出",
+                    "speaker": "スピーカー変更表示",
+                    "audio": "キャプションオーディオタグ",
+                    "removal": "キャプションの冒涜的な表現の削除",
+                    "naxIsMandatory": "最大文字数の値は必須です。",
+                    "formatOptions": {
+                        "dfxp": "DFXP",
+                        "srt": "SRT"
+                    }
+                },
+                "credit": {
+                    "type": "クレジットの種別",
+                    "generic": "一般のクレジット",
+                    "unlimited": "無制限のクレジット",
+                    "reoccurring": "リカーリングクレジット",
+                    "range": "時間範囲クレジット",
+                    "amount": "クレジット金額",
+                    "consumption": "%の消費量",
+                    "overage": "許容される超過量",
+                    "from": "開始日",
+                    "to": "有効期限"
+                },
+                "dictionary": {
+                    "language": "言語",
+                    "words": "単語",
+                    "add": "辞書を追加",
+                    "delete": "辞書を削除",
+                    "error": "最大文字数制限を超えています"
+                },
+                "services": {
+                    "services": "{{0}} のサービス",
+                    "title": "サービス（複数）",
+                    "captions": "キャプション（複数）",
+                    "translations": "翻訳",
+                    "alignment": "アラインメント",
+                    "audioDescription": "オーディオ解説",
+                    "chaptering": "チャプターづくり",
+                    "service": "サービス",
+                    "id": "ID",
+                    "tat": "ターンアラウンドタイム",
+                    "language": "ソース言語",
+                    "languages": "言語",
+                    "languageTar": "ターゲット言語",
+                    "chooseLang": "言語を選択",
+                    "searchLang": "検索",
+                    "langSelected": "{0} 選択した言語",
+                    "speaker": "スピーカーID",
+                    "cpm": "1分あたりのコスト",
+                    "human": "人間",
+                    "machine": "機械",
+                    "turnAroundTime": {
+                        "bestEffort": "ベストエフォート",
+                        "eightHours": "8時間",
+                        "fiveDays": "5日",
+                        "fortyEightHours": "48時間",
+                        "fourDays": "4日",
+                        "immediate": "即時",
+                        "sixHours": "6時間",
+                        "tenDays": "10日",
+                        "thirtyMinutes": "30分",
+                        "threeHours": "3時間",
+                        "twelveHours": "12時間",
+                        "twentyFourHours": "24時間",
+                        "twoHours": "2時間"
                     }
                 }
             },
@@ -2663,8 +3257,8 @@
                 }
             },
             "accessControl": {
-                "selected": "{{0}}件選択済み",
-                "cancel": "キャンセル",
+                "selected": "{{0}} 件が選択されました",
+                "cancel": "キャンセルする",
                 "save": "保存",
                 "addProfile": "プロファイルを追加",
                 "addAccessControlProfile": "アクセス制御プロファイルを追加",
@@ -2675,16 +3269,16 @@
                     "message": "アクセス制御プロファイルを削除すると、そのプロファイルに関連付けられていたすべてのエントリが、デフォルトプロファイルに変更されます。選択されたアクセス制御プロファイルを削除しますか?"
                 },
                 "restrictions": {
-                    "authorized": "{{0}}件許可済み",
-                    "blocked": "{{0}}件ブロック済み",
-                    "flavors": "{{0}}件のフレーバー",
+                    "authorized": "{{0}} 件許可済み",
+                    "blocked": "{{0}} ブロック済み",
+                    "flavors": "{{0}} フレーバー",
                     "ks": "KS",
                     "freePreview": "フリープレビュー",
                     "freePreviewDetails": "フリープレビュー開始（{{0}}分:{{1}}秒）"
                 },
                 "table": {
                     "noAdditionalInfo": "追加情報はありません",
-                    "header": "{{0}}件のプロファイル",
+                    "header": "{{0}} 件のプロファイル",
                     "allowAll": "すべて許可",
                     "name": "名前",
                     "id": "ID",
@@ -2750,7 +3344,7 @@
                 "errors": {
                     "loading": "アクセス制御プロファイルをロードできませんでした",
                     "delete": "リクエストの削除中にエラーが発生しました。",
-                    "profileWasNotUpdated": "アクセス制御プロファイルは更新されませんでした。{{0}}"
+                    "profileWasNotUpdated": "アクセス制御プロファイルは更新されませんでした。 {{0}}"
                 }
             },
             "transcoding": {
@@ -2764,22 +3358,23 @@
                 "failedSetDefault": "プロファイルをデフォルトとして設定できませんでした。",
                 "failedDelete": "プロファイルの削除に失敗しました。",
                 "transcodingProfiles": "トランスコーディングプロファイル",
-                "profiles": "{{0}}件のプロファイル",
-                "selected": "{{0}}件選択済み",
+                "profiles": "{{0}} 件のプロファイル",
+                "selected": "{{0}} 件が選択されました",
                 "liveTranscodingProfiles": "ライブトランスコーディングプロファイル",
                 "default": "デフォルト",
                 "addProfile": "プロファイルを追加",
                 "setAsDefault": "デフォルトとして設定",
                 "edit": "編集",
                 "delete": "削除",
+                "view": "表示 ",
                 "addTranscodingProfile": "トランスコーディングプロファイルを追加",
                 "profileName": "プロファイル名",
                 "description": "説明",
                 "defaultMetadataSettings": "デフォルトメタデータ設定",
                 "ingestFromRemoteStorage": "リモートストレージから取り込み",
                 "deleteProfiles": "プロファイルを削除",
-                "confirmDeleteProfilesNames": "次のトランスコーディングプロファイルを削除しますか: {{0}}{{1}}",
-                "confirmDeleteProfiles": "選択されたトランスコーディングプロファイルを削除しますか?{{0}}",
+                "confirmDeleteProfilesNames": "次のトランスコーディングプロファイルを削除してもよろしいですか: {{0}}{{1}}",
+                "confirmDeleteProfiles": "選択されたトランスコーディングプロファイルを削除してもよろしいですか?{{0}}",
                 "deleteDefaultProfileNote": "\n\n注意 - デフォルトトランスコーディングプロファイルは削除されません。",
                 "cannotDeleteDefaultProfile": "デフォルトトランスコーディングプロファイルを削除できません",
                 "cancel": "キャンセル",
@@ -2798,7 +3393,7 @@
                     "flavor": "フレーバー",
                     "id": "ID {{0}}",
                     "creationDate": "作成日 {{0}}",
-                    "flavors": "{{0}}件のフレーバー",
+                    "flavors": "{{0}} フレーバー",
                     "editTranscodingSettings": "トランスコーディング設定を編集",
                     "editLiveTranscodingSettings": "ライブトランスコーディングフレーバー設定を編集",
                     "profileName": "プロファイル名",
@@ -2808,9 +3403,10 @@
                     "systemName": "システム名: （オプション）",
                     "flavorGenerationPolicy": "フレーバー生成ポリシー",
                     "intermediateFlavorHandling": "中間フレーバーハンドリング",
+                    "systemProfileTooltip": "トランスコーディングプロファイルはKalturaによって設定されました。更新についてはアカウントマネージャー/カスタマー ケアにお問い合わせください",
                     "table": {
                         "flavor": "フレーバー",
-                        "flavors": "{{0}}件のフレーバー",
+                        "flavors": "{{0}} フレーバー",
                         "id": "ID",
                         "format": "フォーマット",
                         "codec": "コーデック",
@@ -2854,9 +3450,9 @@
                     "nameIsMandatory": "名前は必須です。"
                 },
                 "flavors": {
-                    "cancel": "キャンセル",
-                    "flavors": "{{0}}件のフレーバー",
-                    "selected": "{{0}}件選択済み",
+                    "cancel": "キャンセルする",
+                    "flavors": "{{0}} フレーバー",
+                    "selected": "{{0}} 件が選択されました",
                     "na": "該当なし",
                     "auto": "自動",
                     "noFlavorsSelectedWarning": "トランスコーディングは、このプロファイルに関連付けられているエントリには適用されません。続行しますか?",
@@ -2894,11 +3490,12 @@
             }
         },
         "analytics": {
+            "analytics": "分析",
             "comingSoon": "間もなく登場すべてのメディアタイプについて分析します。",
             "releaseSupports": "このリリースでは、「ライブ」エントリの分析のみがサポートされます。他のすべてのメディアについては、<a href=\"{{0}}\" target=\"_blank\">レガシーKMCにログイン</a>して、分析およびレポートを表示および作成してください。すべてのメディアの分析については、間もなく利用できるようになるはずです"
         },
         "reach": {
-            "captionRequests": "キャプションリクエスト",
+            "captionRequests": "キャプションとエンリッチ",
             "addServiceRule": "サービスルールの追加"
         }
     },
@@ -3188,6 +3785,7 @@
         "FJ": "フィジー語",
         "FO": "フェロー語",
         "FR": "フランス語",
+        "FRCA": "フランス語（カナダ）",
         "FY": "フリジア（フリースランド）語",
         "GA": "アイルランド語",
         "GD": "ゲール（スコットランド・ゲール）誤",
@@ -3224,6 +3822,7 @@
         "KY": "キルギス語",
         "LA": "ラテン語",
         "LI": "リンバーガー（リンブルガー）語",
+        "LB": "ルクセンブルク（レッツェブルク）語",
         "LN": "リンガラ語",
         "LO": "ラオス語",
         "LT": "リトアニア語",
@@ -3250,6 +3849,7 @@
         "PL": "ポーランド語",
         "PS": "パシュトウ（プシュトウ）語",
         "PT": "ポルトガル語",
+        "PTBR": "ポルトガル語（ブラジル）",
         "QU": "ケチュア語",
         "RM": "ロマンシュ語",
         "RN": "ルンディ語",
@@ -3264,10 +3864,10 @@
         "SK": "スロバキア語",
         "SL": "スロベニア語",
         "SM": "サモア語",
-        "SMA": "Southern Sami",
-        "SMJ": "Lule Sami",
-        "SMN": "Inari Sami",
-        "SMS": "Skolt Sami",
+        "SMA": "南部サーミ語",
+        "SMJ": "ルレ・サーミ語",
+        "SMN": "イナリ・サーミ語",
+        "SMS": "スコルト・サーミ語",
         "SN": "ショナ語",
         "SO": "ソマリ語",
         "SQ": "アルバニア語",
@@ -3302,6 +3902,7 @@
         "YI": "イディッシュ語",
         "YO": "ヨルバ語",
         "ZH": "中国語",
+        "ZHTW": "台湾中国語",
         "ZU": "ズールー語"
     },
     "shared": {
