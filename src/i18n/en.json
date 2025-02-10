@@ -3093,7 +3093,7 @@
                     "edit": "Edit Teams account",
                     "categories": "Publish to categories",
                     "categories_tt": "Enter categories that the ingested media should be published to",
-                    "transcripts": "Upload Teams transcripts",
+                    "transcripts": "Teams transcription",
                     "organizers": "Co-organizers",
                     "presenters": "Presenters",
                     "findUserBy": "Find user by",
