@@ -251,7 +251,8 @@ export class EntryComponent implements OnInit, OnDestroy {
 	    if (entry.mediaType === KalturaMediaType.video || entry.mediaType === KalturaMediaType.audio) {
             this._bulkActionsPopup.open();
         } else {
-            this._browserService.openLink(entry.downloadUrl);
+            const downloadUrl = entry.downloadUrl.indexOf('/ks/') === -1 ? `${entry.downloadUrl}/ks/${this._appAuthentication.appUser.ks}` : entry.downloadUrl;
+            this._browserService.openLink(downloadUrl);
         }
     }
 
@@ -529,7 +530,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     break;
                                 case 'download':
                                     // download entry
-                                    this._browserService.openLink(entry.downloadUrl);
+                                    this._downloadEntry(entry);
                                     break;
                                 case 'share':
                                     // open share & embed
