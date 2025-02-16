@@ -3112,7 +3112,9 @@
                     "update": "Update",
                     "docLink": "Teams integration article",
                     "error1":"We've detected an error on at least one integration. For help in troubleshooting, ",
-                    "error2": "click here"
+                    "error2": "click here",
+                    "doc": "Visit our",
+                    "doc2": "for a step-by-step guide "
                 },
                 "webex": {
                     "title": "Webex integration",
