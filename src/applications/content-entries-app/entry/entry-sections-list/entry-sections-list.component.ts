@@ -44,7 +44,10 @@ export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
 				this._loading = false;
 			    this._sections = sections;
 			    this._showList = sections && sections.length > 0;
-			    this.entrySections.updateLayout();
+                setTimeout(() => {
+                    this.entrySections.updateLayout();
+                }, 100);
+
 			}
 		);
 	}
