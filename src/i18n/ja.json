@@ -1265,7 +1265,7 @@
                 "createdOn": "作成日",
                 "duration": "長さ",
                 "status": "ステータス",
-                "previewAndEmbed": "共有&amp;埋め込み",
+                "previewAndEmbed": "共有&埋め込み",
                 "previewInPlayer": "プレーヤーでプレビュー",
                 "liveDashboard": "リアルタイムダッシュボード",
                 "realTimeAnalytics": "リアルタイム分析",
@@ -1562,7 +1562,7 @@
                 },
                 "preview": {
                     "clipAndTrim": "編集者",
-                    "pande": "共有&amp;埋め込み",
+                    "pande": "共有&埋め込み",
                     "previewInPlayer": "プレーヤーでプレビュー",
                     "details": "詳細詳細",
                     "entryID": "ID:",
