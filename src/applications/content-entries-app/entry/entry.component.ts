@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { KalturaEntryStatus, KalturaExternalMediaEntry, KalturaMediaEntry, KalturaMediaType, KalturaSourceType } from 'kaltura-ngx-client';
+import { KalturaEntryStatus, KalturaExternalMediaEntry, KalturaMediaEntry, KalturaMediaType, KalturaPlaylist, KalturaSourceType } from 'kaltura-ngx-client';
 import { ActionTypes, EntryStore, NotificationTypes } from './entry-store.service';
 import { EntrySectionsListWidget } from './entry-sections-list/entry-sections-list-widget.service';
 import { EntryMetadataWidget } from './entry-metadata/entry-metadata-widget.service';
@@ -497,7 +497,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                             kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
                             kalturaServerProxyURI: '',
                             clipsOverride: '',
-                            postSaveActions: 'share,editQuiz,download,entry,downloadQuiz',
+                            postSaveActions: 'share,editQuiz,download,entry,downloadQuiz,playlist,editPlaylist,sharePlaylist',
                             widget: '',
                             entryId: entry.id,
                             buttonLabel: '',
@@ -528,15 +528,33 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     document.body.style.overflowY = "auto";
                                     this._entryStore.openEntry(new KalturaMediaEntry(entry));
                                     break;
+                                case 'playlist':
+                                    // navigate to playlist metadata tab
+                                    this.unisphereModuleContext?.closeWidget(); // close widget
+                                    document.body.style.overflowY = "auto";
+                                    this._router.navigateByUrl(`/content/playlists/playlist/${entry.id}/metadata`);
+                                    break;
+                                case 'editPlaylist':
+                                    // navigate to playlist content tb
+                                    this.unisphereModuleContext?.closeWidget(); // close widget
+                                    document.body.style.overflowY = "auto";
+                                    this._router.navigateByUrl(`/content/playlists/playlist/${entry.id}/content`);
+                                    break;
                                 case 'download':
                                     // download entry
                                     this._downloadEntry(entry);
                                     break;
                                 case 'share':
-                                    // open share & embed
+                                    // open share & embed for entry
                                     this.unisphereModuleContext?.closeWidget(); // close widget
                                     document.body.style.overflowY = "auto";
                                     this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaMediaEntry(entry)));
+                                    break;
+                                case 'sharePlaylist':
+                                    // open share & embed for playlist
+                                    this.unisphereModuleContext?.closeWidget(); // close widget
+                                    document.body.style.overflowY = "auto";
+                                    this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaPlaylist(entry)));
                                     break;
                                 case 'editQuiz':
                                     // edit entry
