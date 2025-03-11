@@ -298,6 +298,16 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
                                         itemType: KalturaESearchItemType.startsWith,
                                         fieldName: KalturaESearchUserFieldName.userId,
                                         searchTerm: text
+                                    }),
+                                    new KalturaESearchUserItem({
+                                        itemType: KalturaESearchItemType.partial,
+                                        fieldName: KalturaESearchUserFieldName.screenName,
+                                        searchTerm: text
+                                    }),
+                                    new KalturaESearchUserItem({
+                                        itemType: KalturaESearchItemType.partial,
+                                        fieldName: KalturaESearchUserFieldName.userId,
+                                        searchTerm: text
                                     })
                                 ]
                             })
