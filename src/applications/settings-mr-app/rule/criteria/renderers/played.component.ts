@@ -38,7 +38,7 @@ export class CriteriaPlayedComponent implements OnInit{
 
     public _timeIntervalOptions: { value: string, label: string }[] = [
         {value: 'lastPlayedAtGreaterThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.less')},
-        {value: 'lastPlayedAtLessThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
+        {value: 'lastPlayedAtLessThanOrEqualOrNull', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
     ];
 
     public playedTimeUnit = 'day';
@@ -46,7 +46,7 @@ export class CriteriaPlayedComponent implements OnInit{
     public playedTimeInterval = 'lastPlayedAtGreaterThanOrEqual';
 
     @Input() set filter(value: any) {
-        ['lastPlayedAtLessThanOrEqual', 'lastPlayedAtGreaterThanOrEqual'].forEach(key => {
+        ['lastPlayedAtLessThanOrEqualOrNull', 'lastPlayedAtGreaterThanOrEqual'].forEach(key => {
             if (value && value[key]) {
                 this.playedTimeInterval = key;
                 this.playedTime = Math.abs(value[key].numberOfUnits) || 0;

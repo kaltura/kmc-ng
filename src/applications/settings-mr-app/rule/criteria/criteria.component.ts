@@ -33,7 +33,7 @@ export class CriteriaComponent {
         if (this._filter['createdAtLessThanOrEqual'] || this._filter['createdAtGreaterThanOrEqual']) {
             this._criterias.push('created');
         }
-        if (this._filter['lastPlayedAtLessThanOrEqual'] || this._filter['lastPlayedAtGreaterThanOrEqual']) {
+        if (this._filter['lastPlayedAtLessThanOrEqualOrNull'] || this._filter['lastPlayedAtGreaterThanOrEqual']) {
             this._criterias.push('played');
         }
         if (this._filter['advancedSearch']) {
@@ -132,7 +132,7 @@ export class CriteriaComponent {
             delete this._filter['createdAtGreaterThanOrEqual'];
         }
         if (field === 'played') {
-            delete this._filter['lastPlayedAtLessThanOrEqual'];
+            delete this._filter['lastPlayedAtLessThanOrEqualOrNull'];
             delete this._filter['lastPlayedAtGreaterThanOrEqual'];
         }
         if (field === 'plays') {
