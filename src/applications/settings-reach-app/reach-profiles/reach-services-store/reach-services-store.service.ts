@@ -17,7 +17,8 @@ import {
     KalturaVendorLiveCaptionCatalogItemFilter,
     KalturaVendorServiceFeature,
     KalturaVendorTranslationCatalogItemFilter,
-    VendorCatalogItemListAction
+    VendorCatalogItemListAction,
+    KalturaVendorExtendedAudioDescriptionCatalogItemFilter,
 } from 'kaltura-ngx-client';
 import {KalturaFilterPager} from 'kaltura-ngx-client';
 import {BrowserService} from 'shared/kmc-shell/providers/browser.service';
@@ -139,6 +140,9 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
                     break;
                 case KalturaVendorServiceFeature.chaptering:
                     filter = new KalturaVendorChapteringCatalogItemFilter({});
+                    break;
+                case KalturaVendorServiceFeature.extendedAudioDescription:
+                    filter = new KalturaVendorExtendedAudioDescriptionCatalogItemFilter({});
                     break;
             }
             const data: ReachServicesFilters = this._getFiltersAsReadonly();

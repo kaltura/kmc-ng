@@ -59,7 +59,8 @@ export class ReachServicesListComponent implements OnInit, OnDestroy {
             { label: this._appLocalization.get('applications.settings.reach.services.translations'), value: KalturaVendorServiceFeature.translation },
             { label: this._appLocalization.get('applications.settings.reach.services.alignment'), value: KalturaVendorServiceFeature.alignment },
             { label: this._appLocalization.get('applications.settings.reach.services.audioDescription'), value: KalturaVendorServiceFeature.audioDescription },
-            { label: this._appLocalization.get('applications.settings.reach.services.chaptering'), value: KalturaVendorServiceFeature.chaptering }
+            { label: this._appLocalization.get('applications.settings.reach.services.chaptering'), value: KalturaVendorServiceFeature.chaptering },
+            { label: this._appLocalization.get('applications.settings.reach.services.extendedAudioDescription'), value: KalturaVendorServiceFeature.extendedAudioDescription }
         ];
     }
 

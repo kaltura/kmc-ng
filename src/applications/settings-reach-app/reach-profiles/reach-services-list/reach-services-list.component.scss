@@ -102,3 +102,7 @@
     min-width: 70px;
   }
 }
+
+:host ::ng-deep .p-dropdown{
+    width: 230px;
+}

@@ -3295,6 +3295,7 @@
                     "alignment": "Alignment",
                     "audioDescription": "Audio Description",
                     "chaptering": "Chaptering",
+                    "extendedAudioDescription": "Extended Audio Description",
                     "service": "Service",
                     "id": "ID",
                     "tat": "Turn Around Time",
