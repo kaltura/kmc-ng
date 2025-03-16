@@ -247,8 +247,8 @@ export class EntryComponent implements OnInit, OnDestroy {
             });
     }
 
-    private _downloadEntry(entry: KalturaMediaEntry): void {
-	    if (entry.mediaType === KalturaMediaType.video || entry.mediaType === KalturaMediaType.audio) {
+    private _downloadEntry(entry: KalturaMediaEntry, isContentLab = false): void {
+	    if (!isContentLab && (entry.mediaType === KalturaMediaType.video || entry.mediaType === KalturaMediaType.audio)) {
             this._bulkActionsPopup.open();
         } else {
             const downloadUrl = entry.downloadUrl.indexOf('/ks/') === -1 ? `${entry.downloadUrl}/ks/${this._appAuthentication.appUser.ks}` : entry.downloadUrl;
@@ -542,7 +542,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     break;
                                 case 'download':
                                     // download entry
-                                    this._downloadEntry(entry);
+                                    this._downloadEntry(entry, true);
                                     break;
                                 case 'share':
                                     // open share & embed for entry
