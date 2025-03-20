@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { IsUserExistsStatuses } from './user-exists-statuses';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import {KalturaAPIException, KalturaKeyValueExtended, KalturaUser, UserExportToCsvAction} from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaKeyValueExtended, KalturaUser, UserDemoteAdminAction, UserExportToCsvAction } from 'kaltura-ngx-client';
 import { KalturaUserRole } from 'kaltura-ngx-client';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import { UserRoleListAction } from 'kaltura-ngx-client';
@@ -225,6 +225,21 @@ export class UsersStore implements OnDestroy {
 
     return this._kalturaServerClient
       .request(new UserDeleteAction({ userId: user.id }))
+      .pipe(map(() => {
+        return;
+      }));
+  }
+
+  public demoteUser(user: KalturaUser): Observable<void> {
+    const isCurrentUser = this.isCurrentUser(user);
+    const isAdminUser = this._usersDataValue && this._usersDataValue.partnerInfo.adminUserId === user.id;
+
+    if (isCurrentUser || isAdminUser) {
+      return throwError(new Error(this._appLocalization.get('applications.administration.users.cantPerform')));
+    }
+
+    return this._kalturaServerClient
+      .request(new UserDemoteAdminAction({ userId: user.id }))
       .pipe(map(() => {
         return;
       }));
