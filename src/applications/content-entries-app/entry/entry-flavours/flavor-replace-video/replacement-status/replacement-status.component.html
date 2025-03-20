@@ -9,7 +9,7 @@
             {{replacementData?.status | kFlavorReplacementStatus:'label'}}
         </ng-template>
         <span class="kDelimiter"></span>
-        {{'applications.content.entryDetails.flavours.replaceVideo.tempEntryId' | translate:[replacementData?.tempEntryId]}}
+        {{'applications.content.entryDetails.flavours.replaceVideo.tempEntryId' | translate:{'0': replacementData?.tempEntryId} }}
         <kInputHelper class="kHelp" icon="kIconlife_donut" trigger="click"
                       [title]="'applications.content.entryDetails.flavours.replaceVideo.autoReplacement' | translate">
             <span>{{'applications.content.entryDetails.flavours.replaceVideo.approveReplacementTooltip' | translate}}</span>

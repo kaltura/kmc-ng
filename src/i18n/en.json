@@ -2633,7 +2633,10 @@
                 "refresh": "Refresh",
                 "commonError": "Error happened during server request.",
                 "addUserError": "Missing one of the mandatory fields",
-                "invalidUserId": "Invalid User id"
+                "invalidUserId": "Invalid User id",
+                "remove": "Remove",
+                "demote": "Remove user",
+                "confirmDemote": "This action will only remove the user from KMC, keeping all user metadata and ownership.\nAre you sure you want to remove {{0}} from KMC?"
             },
             "role": {
                 "titleEdit": "Edit Role",
