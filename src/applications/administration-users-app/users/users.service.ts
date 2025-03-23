@@ -59,6 +59,10 @@ export class UsersStore implements OnDestroy {
     pageIndex: 1,
     pageSize: 25
   });
+  private _queryRoleSource = new BehaviorSubject<QueryData>({
+    pageIndex: 1,
+    pageSize: 500
+  });
 
   private get _usersDataValue(): UsersData {
     return this._users.data.value;
@@ -107,7 +111,8 @@ export class UsersStore implements OnDestroy {
             statusEqual: KalturaUserRoleStatus.active,
             orderBy: KalturaUserRoleOrderBy.idAsc.toString(),
             tagsMultiLikeOr: 'kmc'
-          })
+          }),
+        pager: new KalturaFilterPager(this._queryRoleSource.value)
         }),
         new UserListAction({
           filter: new KalturaUserFilter({
