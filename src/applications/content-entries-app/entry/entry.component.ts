@@ -631,7 +631,7 @@ export class EntryComponent implements OnInit, OnDestroy {
             this._analytics.trackClickEvent('View_analytics');
             const isLive = this._sourceType === KalturaSourceType.liveStream || this._sourceType === KalturaSourceType.manualLiveStream || this._sourceType === KalturaSourceType.akamaiLive || this._sourceType === KalturaSourceType.akamaiUniversalLive;
             const isWebcast = this._entry.adminTags && this._entry.adminTags.indexOf('kms-webcast-event') !== -1;
-            const route = isLive ? ( isWebcast ? 'analytics/entry-webcast' : 'analytics/entry-live' ) : 'analytics/entry';
+            const route = isLive ? 'analytics/entry-webcast' : 'analytics/entry';
             this._router.navigate([route], { queryParams: { id: this._currentEntryId } });
         }
     }
