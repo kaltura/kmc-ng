@@ -34,7 +34,8 @@
         [users]="_users"
         (editUser)="_onEditUser($event)"
         (toggleUserStatus)="_onToggleUserStatus($event)"
-        (deleteUser)="_onDeleteUser($event)"></kUsersTable>
+        (deleteUser)="_onDeleteUser($event)"
+        (demoteUser)="_onDemoteUser($event)"></kUsersTable>
       <div class="kUsersTableFooter kContent" #footer *ngIf="(_usersStore.users.data$ | async)?.users.totalCount">
         <p-paginator
           [rows]="_filter.pageSize"
