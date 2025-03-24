@@ -107,7 +107,8 @@ export class UsersStore implements OnDestroy {
             statusEqual: KalturaUserRoleStatus.active,
             orderBy: KalturaUserRoleOrderBy.idAsc.toString(),
             tagsMultiLikeOr: 'kmc'
-          })
+          }),
+        pager: new KalturaFilterPager({ pageSize: 500, pageIndex: 0})
         }),
         new UserListAction({
           filter: new KalturaUserFilter({
