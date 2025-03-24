@@ -45,6 +45,8 @@ import { MatchDropFolderComponent } from './entry-flavours/flavor-replace-video/
 import { DownloadEntryComponent } from './components/download-entry/download-entry.component';
 import {EntryLiveCaptions} from './entry-captions/entry-live-captions.component';
 import {EntryQuizzes} from './entry-quizzes/entry-quizzes.component';
+import {EntryThumbnailAI} from './entry-thumbnails/entry-thumbnails-ai.component';
+import {Spaceship} from './entry-thumbnails/spaceship.component';
 
 
 export const EntryComponentsList = [
@@ -69,6 +71,8 @@ export const EntryComponentsList = [
     EntrySectionsList,
     EntryThumbnails,
     EntryThumbnailCapture,
+    EntryThumbnailAI,
+    Spaceship,
     EntryUsers,
     FlavorImport,
     FlavorPreview,

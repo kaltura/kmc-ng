@@ -16,6 +16,11 @@
                         *ngIf="_widgetService.allowGrabFromVideo && _kmcPermissions.CONTENT_MANAGE_THUMBNAIL | kNgIfPermitted"
                         icon="kIconimage"
                         label="{{'applications.content.entryDetails.thumbnails.capture.choose' | translate}}"></button>
+                <button pButton class="kButtonBranded"
+                        (click)="AIPopup.open()"
+                        *ngIf="_widgetService.allowGrabFromVideo && _kmcPermissions.CONTENT_MANAGE_THUMBNAIL | kNgIfPermitted"
+                        icon="kAIIcon"
+                        label="Create with AI"></button>
             </div>
         </div>
         <div class="kTable">
@@ -92,6 +97,12 @@
         <ng-template>
             <kThumbnailCapture [entryId]="_widgetService.data?.id" [thumbnailUrl]="_widgetService.data?.thumbnailUrl"
                                [parentPopupWidget]="capturePopup"></kThumbnailCapture>
+        </ng-template>
+    </kPopupWidget>
+
+    <kPopupWidget #AIPopup data-aid="AIPopup" [popupWidth]="586" [popupHeight]="475" [modal]="true">
+        <ng-template>
+            <kThumbnailAI [entryId]="_widgetService.data?.id" [parentPopupWidget]="AIPopup"></kThumbnailAI>
         </ng-template>
     </kPopupWidget>
 </k-area-blocker>

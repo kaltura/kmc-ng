@@ -275,7 +275,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
             );
     }
 
-    public _onFileSelected(selectedFiles: FileList) {
+    public _onFileSelected(selectedFiles: FileList | File[]) {
         if (selectedFiles && selectedFiles.length) {
             const fileData: File = selectedFiles[0];
             const maxFileSize = globalConfig.kalturaServer.maxUploadFileSize;
