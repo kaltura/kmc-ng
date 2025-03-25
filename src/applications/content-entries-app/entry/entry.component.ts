@@ -136,7 +136,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	constructor(entryWidgetsManager: EntryWidgetsManager,
 	            widget1: EntrySectionsListWidget,
 	            widget2: EntryUsersWidget,
-	            widget3: EntryThumbnailsWidget,
+	            private widget3: EntryThumbnailsWidget,
 	            widget4: EntrySchedulingWidget,
 	            widget5: EntryRelatedWidget,
 	            widget6: EntryFlavoursWidget,
@@ -539,6 +539,13 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     this.unisphereModuleContext?.closeWidget(); // close widget
                                     document.body.style.overflowY = "auto";
                                     this._router.navigateByUrl(`/content/playlists/playlist/${entry.id}/content`);
+                                    break;
+                                case 'thumbnail':
+                                    // navigate to playlist content tb
+                                    this.unisphereModuleContext?.closeWidget(); // close widget
+                                    document.body.style.overflowY = "auto";
+                                    this._router.navigateByUrl(`/content/entries/entry/${entry.id}/thumbnails`);
+                                    this.widget3.reloadThumbnails();
                                     break;
                                 case 'download':
                                     // download entry

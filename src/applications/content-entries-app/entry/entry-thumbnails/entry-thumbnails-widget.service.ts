@@ -174,7 +174,7 @@ export class EntryThumbnailsWidget extends EntryWidget {
         this._thumbnails.next({items: thumbs});
     }
 
-    private reloadThumbnails() {
+    public reloadThumbnails() {
         super._showLoader();
         const thumbs = Array.from(this._thumbnails.getValue().items);
         this._kalturaServerClient.request(new ThumbAssetGetByEntryIdAction(
