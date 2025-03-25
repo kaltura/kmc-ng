@@ -135,3 +135,4 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
       this._widgetService._onFileSelected([file]);
     }
 }
+
