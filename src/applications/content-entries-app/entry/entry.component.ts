@@ -568,6 +568,10 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     // download questions list
                                     this._downloadPretest(entry.id)
                                     break;
+                                case 'updateMetadata':
+                                    // update metadata
+                                    this._entryStore.reloadEntry();
+                                    break;
                                 default:
                                     break;
                             }
