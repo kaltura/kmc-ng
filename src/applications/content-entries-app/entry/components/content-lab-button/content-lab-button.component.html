@@ -1,0 +1,18 @@
+<button pButton class="kButtonBranded"
+        [label]="'Content lab'"
+        (click)="openContentLab()"></button>
+
+<kPopupWidget #clipAndTrim [fullScreen]="true">
+    <ng-template>
+        <kEntryEditor [entry]="_contentLabSelectedQuiz"
+                      [entryHasSource]="true"
+                      [tab]="_isQuizEntry? 'quiz' : 'editor'"
+                      [parentPopupWidget]="clipAndTrim"></kEntryEditor>
+    </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #bulkActionsPopup [popupWidth]="570" [popupHeight]="245" [modal]="true" [preventPageScroll]="true">
+    <ng-template>
+        <kDownloadEntry [entry]="_entryStore.entry" [parentPopupWidget]="bulkActionsPopup"></kDownloadEntry>
+    </ng-template>
+</kPopupWidget>

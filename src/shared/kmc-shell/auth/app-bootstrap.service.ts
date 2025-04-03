@@ -8,6 +8,8 @@ import { kmcAppConfig } from '../../../kmc-app/kmc-app-config';
 import { globalConfig } from 'config/global';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { serverConfig } from 'config/server';
+import {ApplicationType} from 'app-shared/kmc-shell';
+import {UnisphereWorkspaceType} from '@unisphere/runtime';
 
 export enum BoostrappingStatus
 {
@@ -21,11 +23,12 @@ export class AppBootstrap implements CanActivate {
 
     private static _executed = false;
     private _initialized = false;
+    private _unisphereInitialized = false;
 
     private _bootstrapStatusSource = new BehaviorSubject<BoostrappingStatus>(BoostrappingStatus.Bootstrapping);
     bootstrapStatus$ = this._bootstrapStatusSource.asObservable();
 
-    private _unisphereWorkspaceSource = new BehaviorSubject<any>(null);
+    private _unisphereWorkspaceSource = new BehaviorSubject<UnisphereWorkspaceType>(null);
     unisphereWorkspace$ = this._unisphereWorkspaceSource.asObservable();
 
     constructor(private appLocalization: AppLocalization,
@@ -97,44 +100,6 @@ export class AppBootstrap implements CanActivate {
                     bootstrapFailure(error);
                 }
             );
-
-            const loadUnisphereWorkspace = async (loaderUrl: string, options: any) => {
-                const loaderPath = loaderUrl;
-                const { loader } = await import(/* webpackIgnore: true */ loaderPath);
-                return loader(options)
-            }
-
-            loadUnisphereWorkspace(`${serverConfig.externalServices.unisphereLoaderEndpoint.uri}/loader/index.esm.js`,
-                {
-                    serverUrl: serverConfig.externalServices.unisphereLoaderEndpoint.uri,
-                    application: 'kmc',
-                    workspaceVersion: '1.0.0',
-                    modules: [],
-                    ui: {
-                        theme: 'light',
-                        language: 'en',
-                    },
-                    // devOverrides: {
-                    //         widgets: {
-                    //             "unisphere.widget.content-lab": {
-                    //                 application: {
-                    //                     version: "1.0.0",
-                    //                         url: "http://localhost:8300/index.dev.esm.js"
-                    //                 }
-                    //             },
-                    //             "unisphere.widget.video-summary": {
-                    //                 "content-lab-ai-generator": {
-                    //                     "url": "http://localhost:8400/index.dev.esm.js"
-                    //                 }
-                    //             }
-                    //     }
-                    // }
-                }).then((workspace: any) => {
-                    console.log("[unisphere.kmc] workspace loaded");
-                    this._unisphereWorkspaceSource.next(workspace);
-            }, (error) => {
-                console.error('[unisphere.kmc] Error loading the Unisphere workspace:', error);
-            });
         }
     }
 
@@ -150,5 +115,51 @@ export class AppBootstrap implements CanActivate {
         }
 
         return lang === null ? "en" : lang;
+    }
+
+    public loadUnisphere(): void {
+        if (this._unisphereInitialized) return;
+        this._unisphereInitialized = true;
+        const loadUnisphereWorkspace = async (loaderUrl: string, options: any) => {
+            const loaderPath = loaderUrl;
+            const { loader } = await import(/* webpackIgnore: true */ loaderPath);
+            return loader(options)
+        }
+
+        loadUnisphereWorkspace(`${serverConfig.externalServices.unisphereLoaderEndpoint.uri}/loader/index.esm.js`,
+            {
+                serverUrl: serverConfig.externalServices.unisphereLoaderEndpoint.uri,
+                application: 'kmc',
+                workspaceVersion: '1.0.0',
+                runtimes: [{
+                    widgetName: 'unisphere.widget.content-lab',
+                    runtimeName: 'application',
+                    runtimeArea: {
+                        target: 'body'
+                    },
+                    settings: {
+                        ks: this.auth.appUser.ks,
+                        pid: this.auth.appUser.partnerId.toString(),
+                        uiconfId: serverConfig.kalturaServer.previewUIConfV7.toString(),
+                        analyticsServerURI: serverConfig.analyticsServer.uri,
+                        hostAppName: ApplicationType.KMC,
+                        hostAppVersion: globalConfig.client.appVersion,
+                        kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
+                        kalturaServerProxyURI: '',
+                        clipsOverride: '',
+                        postSaveActions: 'share,editQuiz,download,entry,downloadQuiz,playlist,editPlaylist,sharePlaylist',
+                        widget: ''
+                    }
+                }],
+                ui: {
+                    theme: 'light',
+                    language: 'en',
+                }
+            }).then((workspace: any) => {
+            console.log("[unisphere.kmc] workspace loaded");
+            this._unisphereWorkspaceSource.next(workspace);
+        }, (error) => {
+            console.error('[unisphere.kmc] Error loading the Unisphere workspace:', error);
+        });
     }
 }

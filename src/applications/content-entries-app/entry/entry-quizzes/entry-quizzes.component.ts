@@ -18,6 +18,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {KalturaMediaEntry} from 'kaltura-ngx-client';
 import {MenuItem} from 'primeng/api';
 import {Menu} from 'primeng/menu';
+import {PubSubServiceType} from '@unisphere/runtime';
 
 @Component({
     selector: 'kEntryQuizzes',
@@ -186,7 +187,7 @@ export class EntryQuizzes implements OnInit, OnDestroy {
                         });
                     }
 
-                    this.unisphereCallbackUnsubscribe = unisphereWorkspace.getService('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-lab.message-host-app', (data) => {
+                    this.unisphereCallbackUnsubscribe = unisphereWorkspace.getService<PubSubServiceType>('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-lab.message-host-app', (data) => {
                         const { action, entry } = data.payload;
                         switch (action) {
                             case 'entry':

@@ -7,6 +7,7 @@
 						<button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
 						<div class="kTitle">{{ _entryName }}</div>
                         <div class="kEntryActionsWrapper">
+                            <k-content-lab-btn [entryId]="_contentLabEntryId" [eventSessionContextId]="_contentLabEventSessionContextId"></k-content-lab-btn>
                             <div id="contentLabButton"></div>
 <!--                            <k-toggle-live-btn *ngIf="$any(_entry)?.explicitLive"-->
 <!--                                               [entry]="_entry"></k-toggle-live-btn>-->

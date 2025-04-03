@@ -14,6 +14,7 @@ import {AppEventsService} from 'app-shared/kmc-shared';
 import {KalturaMediaEntry} from 'kaltura-ngx-client';
 import {WindowClosedEvent} from 'app-shared/kmc-shared/events/window-closed.event';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {PubSubServiceType} from '@unisphere/runtime';
 
 @Component({
     selector: 'kEntryClips',
@@ -146,7 +147,7 @@ export class EntryClips implements OnInit, OnDestroy {
                         });
                     }
 
-                    this.unisphereCallbackUnsubscribe = unisphereWorkspace.getService('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-lab.message-host-app', (data) => {
+                    this.unisphereCallbackUnsubscribe = unisphereWorkspace.getService<PubSubServiceType>('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-lab.message-host-app', (data) => {
                         const { action, entry } = data.payload;
                         switch (action) {
                             case 'entry':

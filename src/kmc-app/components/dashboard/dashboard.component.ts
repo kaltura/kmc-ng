@@ -1,21 +1,28 @@
-import { Component, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
-import { AppShellService } from "app-shared/kmc-shell";
+import {Component, AfterViewInit, ViewChild, OnDestroy, OnInit} from '@angular/core';
+import {AppBootstrap, ApplicationType, AppShellService} from 'app-shared/kmc-shell';
 import * as $ from 'jquery';
+import {serverConfig} from 'config/server';
+import {globalConfig} from 'config/global';
 
 @Component({
   selector: 'kKMCDashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements AfterViewInit, OnDestroy {
+export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('appMenu', { static: true }) private _appMenuRef : any;
 
   private onResize : () => void;
 
-  constructor(private appShellService : AppShellService) {
+  constructor(private appShellService : AppShellService, private _bootstarpService: AppBootstrap) {
       this.onResize = this._resizeContent.bind(this);
   }
+
+    ngOnInit(): void {
+        this._bootstarpService.loadUnisphere();
+    }
+
 
   private _resizeContent() : void
   {
