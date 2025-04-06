@@ -543,9 +543,5 @@ export class EntryComponent implements OnInit, OnDestroy {
             this._router.navigate([route], { queryParams: { id: this._currentEntryId } });
         }
     }
-
-    public loadCL(): void {
-        this.unisphereModuleContext?.openWidget(); // open widget
-    }
 }
 

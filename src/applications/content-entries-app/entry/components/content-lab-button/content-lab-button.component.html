@@ -1,5 +1,7 @@
 <button pButton class="kButtonBranded"
-        [label]="'Content lab'"
+        [kTooltip]="reason"
+        [label]="loading ? 'Loading...' : 'Content lab'"
+        [disabled]="disabled"
         (click)="openContentLab()"></button>
 
 <kPopupWidget #clipAndTrim [fullScreen]="true">

@@ -1,5 +1,5 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {KalturaLiveStreamEntry, KalturaMediaEntry, KalturaMediaType, KalturaPlaylist} from 'kaltura-ngx-client';
+import {KalturaEntryStatus, KalturaLiveStreamEntry, KalturaMediaEntry, KalturaMediaType, KalturaPlaylist} from 'kaltura-ngx-client';
 import {cancelOnDestroy, tag} from '@kaltura-ng/kaltura-common';
 import {AppAuthentication, AppBootstrap, ApplicationType, BrowserService} from 'app-shared/kmc-shell';
 import {serverConfig} from 'config/server';
@@ -23,15 +23,24 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
 })
 export class ContentLabButtonComponent implements OnInit, OnDestroy {
     @Input() entryId: string;
+    @Input() entryDuration: number;
+    @Input() entryStatus: KalturaEntryStatus;
+    @Input() entryType: number;
     @Input() eventSessionContextId: string;
     @ViewChild('clipAndTrim', { static: true }) _clipAndTrim: PopupWidgetComponent;
     @ViewChild('bulkActionsPopup', { static: true }) _bulkActionsPopup: PopupWidgetComponent;
 
     private unisphereCallbackUnsubscribe: ISubscription;
     private unisphereRuntime: any = null;
+    private _unsubscribePartnerCheck: () => void;
+    private _destroyed = false;
 
     public _contentLabSelectedQuiz: KalturaMediaEntry;
     public _isQuizEntry: boolean;
+    public loading = true;
+    public disabled = true;
+    public reason = '';
+
 
     constructor(private _bootstrapService: AppBootstrap,
                 private _router: Router,
@@ -51,17 +60,44 @@ export class ContentLabButtonComponent implements OnInit, OnDestroy {
 
                     if (unisphereWorkspace) {
 
-
-                        // if (this.isLiveEntry(this.entry) && this.entry.redirectEntryId?.length) {
-                        //     // handle live with recording
-                        //     contextSettings.entryId = this.entry.redirectEntryId;
-                        //     contextSettings.eventSessionContextId = this.entry.id;
-                        // }
-
                         this.unisphereRuntime = unisphereWorkspace.getRuntime('unisphere.widget.content-lab', 'application');
 
                         if (this.unisphereRuntime) {
-                            // TODO register to tine data source for partner and entry
+                            this._unsubscribePartnerCheck = this.unisphereRuntime.partnerChecks.onChanges((data) => {
+                                if (data.status === 'loaded') {
+                                    if (data.isAvailable) {
+                                        const entry = {
+                                            id: this.entryId,
+                                            type: this.entryType,
+                                            duration: this.entryDuration,
+                                            status: this.entryStatus
+                                        }
+                                        this.unisphereRuntime.isEntryRelevant(entry, { canManageCaptions: false}).then(
+                                            result => {
+                                                if (this._destroyed) return;
+                                                this.loading = false;
+                                                this.disabled = !result.canUse;
+                                            },
+                                            error => {
+                                                if (this._destroyed) return;
+                                                this.loading = false;
+                                                this.disabled = true;
+                                                this.reason = 'error'; // TODO - add error message token
+                                            }
+                                        )
+                                    } else {
+                                        this.loading = false;
+                                        this.disabled = true;
+                                        this.reason = data.unavailabilityReason;
+                                    }
+                                } else if (data.status === 'error') {
+                                    this.loading = false;
+                                    this.disabled = true;
+                                    this.reason = 'general error'; // TODO - add error message
+                                    console.error('Error loading partner checks', data.error);
+                                }
+                            }, {replayLastValue: true})
+
                         }
 
                         unisphereWorkspace.getService<PubSubServiceType>('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-lab.message-host-app', (data) => {
@@ -129,15 +165,12 @@ export class ContentLabButtonComponent implements OnInit, OnDestroy {
                 })
     }
 
-    private isLiveEntry(entry: KalturaMediaEntry): boolean {
-        return entry.mediaType === KalturaMediaType.liveStreamFlash ||
-            entry.mediaType === KalturaMediaType.liveStreamWindowsMedia ||
-            entry.mediaType === KalturaMediaType.liveStreamRealMedia ||
-            entry.mediaType === KalturaMediaType.liveStreamQuicktime;
-    }
-
     ngOnDestroy() {
-
+        if (this._unsubscribePartnerCheck) {
+            this._unsubscribePartnerCheck();
+            this._unsubscribePartnerCheck = null;
+        }
+        this._destroyed = true;
     }
 
     private _downloadEntry(entry: KalturaMediaEntry, isContentLab = false): void {
