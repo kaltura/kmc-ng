@@ -1,7 +1,9 @@
 <button pButton class="kButtonBranded"
-        [kTooltip]="reason"
-        [label]="loading ? 'Loading...' : 'Content lab'"
+        [kTooltip]="reason ? (('contentLab.errors.' + reason) | translate) : ''"
+        [label]="loading ? ('contentLab.initializing' | translate) : ('contentLab.buttonLabel' | translate)"
         [disabled]="disabled"
+        [ngClass]="loading ? 'loading' : disabled ? 'disabled' : 'loaded'"
+        [icon]="'clIcon'"
         (click)="openContentLab()"></button>
 
 <kPopupWidget #clipAndTrim [fullScreen]="true">
