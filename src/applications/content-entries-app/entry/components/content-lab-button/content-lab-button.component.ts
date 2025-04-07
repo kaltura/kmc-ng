@@ -72,17 +72,18 @@ export class ContentLabButtonComponent implements OnInit, OnDestroy {
                                             duration: this.entryDuration,
                                             status: this.entryStatus
                                         }
-                                        this.unisphereRuntime.isEntryRelevant(entry, { canManageCaptions: false}).then(
+                                        this.unisphereRuntime.isEntryRelevant(entry).then(
                                             result => {
                                                 if (this._destroyed) return;
                                                 this.loading = false;
                                                 this.disabled = !result.canUse;
+                                                this.reason = result.rejectionReason;
                                             },
                                             error => {
                                                 if (this._destroyed) return;
                                                 this.loading = false;
                                                 this.disabled = true;
-                                                this.reason = 'error'; // TODO - add error message token
+                                                this.reason = 'error';
                                             }
                                         )
                                     } else {
@@ -93,7 +94,7 @@ export class ContentLabButtonComponent implements OnInit, OnDestroy {
                                 } else if (data.status === 'error') {
                                     this.loading = false;
                                     this.disabled = true;
-                                    this.reason = 'general error'; // TODO - add error message
+                                    this.reason = data.error;
                                     console.error('Error loading partner checks', data.error);
                                 }
                             }, {replayLastValue: true})

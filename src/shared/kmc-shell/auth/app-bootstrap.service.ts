@@ -148,10 +148,16 @@ export class AppBootstrap implements CanActivate {
                         kalturaServerProxyURI: '',
                         clipsOverride: '',
                         postSaveActions: 'share,editQuiz,download,entry,downloadQuiz,playlist,editPlaylist,sharePlaylist',
-                        widget: ''
+                        widget: '',
+                        canManageCaptions: false
                     }
                 }],
                 ui: {
+                    // bodyContainer: {
+                    //     style: {
+                    //         zIndex: 1000
+                    //     }
+                    // },
                     theme: 'light',
                     language: 'en',
                 }
