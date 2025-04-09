@@ -21,8 +21,12 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
     styleUrls: ['./content-lab-button.component.scss'],
     providers: [KalturaLogger.createLogger('ContentLabButtonComponent')]
 })
-export class ContentLabButtonComponent implements OnInit, OnDestroy {
-    @Input() entryId: string;
+export class ContentLabButtonComponent implements OnDestroy {
+    @Input() set entryId(value: string) {
+        this._entryId = value;
+        this.initializeUnisphereRuntime();
+    };
+
     @Input() entryDuration: number;
     @Input() entryStatus: KalturaEntryStatus;
     @Input() entryType: number;
@@ -40,6 +44,7 @@ export class ContentLabButtonComponent implements OnInit, OnDestroy {
     public loading = true;
     public disabled = true;
     public reason = '';
+    public _entryId: string;
 
 
     constructor(private _bootstrapService: AppBootstrap,
@@ -53,7 +58,7 @@ export class ContentLabButtonComponent implements OnInit, OnDestroy {
                 private _appAuthentication: AppAuthentication) {
     }
 
-    ngOnInit() {
+    private initializeUnisphereRuntime() {
         this._bootstrapService.unisphereWorkspace$
             .pipe(cancelOnDestroy(this))
             .subscribe(unisphereWorkspace => {
@@ -67,7 +72,7 @@ export class ContentLabButtonComponent implements OnInit, OnDestroy {
                                 if (data.status === 'loaded') {
                                     if (data.isAvailable) {
                                         const entry = {
-                                            id: this.entryId,
+                                            id: this._entryId,
                                             type: this.entryType,
                                             duration: this.entryDuration,
                                             status: this.entryStatus
@@ -185,7 +190,7 @@ export class ContentLabButtonComponent implements OnInit, OnDestroy {
 
     public openContentLab(): void {
         if (this.unisphereRuntime) {
-            this.unisphereRuntime.openWidget(this.entryId, this.eventSessionContextId);
+            this.unisphereRuntime.openWidget(this._entryId, this.eventSessionContextId);
             document.body.style.overflowY = "hidden";
         }
     }

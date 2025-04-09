@@ -153,11 +153,9 @@ export class AppBootstrap implements CanActivate {
                     }
                 }],
                 ui: {
-                    // bodyContainer: {
-                    //     style: {
-                    //         zIndex: 1000
-                    //     }
-                    // },
+                    bodyContainer: {
+                        zIndex: 1000
+                    },
                     theme: 'light',
                     language: 'en',
                 }
