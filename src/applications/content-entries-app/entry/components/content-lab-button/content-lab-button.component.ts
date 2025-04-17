@@ -1,9 +1,7 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {KalturaEntryStatus, KalturaLiveStreamEntry, KalturaMediaEntry, KalturaMediaType, KalturaPlaylist} from 'kaltura-ngx-client';
+import {Component, Input, OnDestroy, ViewChild} from '@angular/core';
+import {KalturaEntryStatus, KalturaMediaEntry, KalturaMediaType, KalturaPlaylist} from 'kaltura-ngx-client';
 import {cancelOnDestroy, tag} from '@kaltura-ng/kaltura-common';
 import {AppAuthentication, AppBootstrap, ApplicationType, BrowserService} from 'app-shared/kmc-shell';
-import {serverConfig} from 'config/server';
-import {globalConfig} from 'config/global';
 import {PreviewAndEmbedEvent} from 'app-shared/kmc-shared/events';
 import {ISubscription} from 'rxjs/Subscription';
 import {PubSubServiceType, UnisphereElementBaseType} from '@unisphere/runtime';
@@ -70,7 +68,7 @@ export class ContentLabButtonComponent implements OnDestroy {
                         if (this.unisphereRuntime) {
                             this._unsubscribePartnerCheck = this.unisphereRuntime.partnerChecks.onChanges((data) => {
                                 if (data.status === 'loaded') {
-                                    if (data.isAvailable) {
+                                    if (data.isAvailable && data.hasConsent) {
                                         const entry = {
                                             id: this._entryId,
                                             type: this.entryType,
@@ -94,7 +92,11 @@ export class ContentLabButtonComponent implements OnDestroy {
                                     } else {
                                         this.loading = false;
                                         this.disabled = true;
-                                        this.reason = data.unavailabilityReason;
+                                        if (!data.hasConsent) {
+                                            this.reason = 'AI_CONSENT'; // TODO: enable button to open AI consent announcement?
+                                        } else {
+                                            this.reason = data.unavailabilityReason;
+                                        }
                                     }
                                 } else if (data.status === 'error') {
                                     this.loading = false;

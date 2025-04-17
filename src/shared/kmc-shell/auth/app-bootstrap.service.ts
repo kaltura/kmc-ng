@@ -151,6 +151,16 @@ export class AppBootstrap implements CanActivate {
                         widget: '',
                         canManageCaptions: false
                     }
+                },
+                {
+                    widgetName: 'unisphere.widget.content-lab',
+                    runtimeName: 'ai-consent',
+                    runtimeAreasByName: {
+                        announcement: {
+                            target: 'body',
+                        },
+                    },
+                    settings: {}
                 }],
                 ui: {
                     bodyContainer: {
