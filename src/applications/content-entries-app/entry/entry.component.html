@@ -7,7 +7,7 @@
 						<button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
 						<div class="kTitle">{{ _entryName }}</div>
                         <div class="kEntryActionsWrapper">
-                            <k-content-lab-btn *ngIf="_entry"
+                            <k-content-lab-btn *ngIf="_entry && _contentLabAvailable"
                                                [entryDuration]="_entry.duration"
                                                [entryType]="_entry.mediaType"
                                                [entryStatus]="_entry.status"

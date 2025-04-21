@@ -91,12 +91,12 @@ export class ContentLabButtonComponent implements OnDestroy {
                                         )
                                     } else {
                                         this.loading = false;
-                                        this.disabled = true;
-                                        if (!data.hasConsent) {
-                                            this.reason = 'AI_CONSENT'; // TODO: enable button to open AI consent announcement?
-                                        } else {
-                                            this.reason = data.unavailabilityReason;
-                                        }
+                                        this.disabled = false; // TODO - mark button with missing AI consent? @Dana
+                                        // if (!data.hasConsent) {
+                                        //     this.reason = 'AI_CONSENT'; // TODO: enable button to open AI consent announcement?
+                                        // } else {
+                                        //     this.reason = data.unavailabilityReason;
+                                        // }
                                     }
                                 } else if (data.status === 'error') {
                                     this.loading = false;
@@ -192,8 +192,7 @@ export class ContentLabButtonComponent implements OnDestroy {
 
     public openContentLab(): void {
         if (this.unisphereRuntime) {
-            this.unisphereRuntime.openWidget(this._entryId, this.eventSessionContextId);
-            document.body.style.overflowY = "hidden";
+            this.unisphereRuntime.openApplication({entryId: this._entryId, eventSessionContextId: this.eventSessionContextId, type: 'entry'});
         }
     }
 

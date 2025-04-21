@@ -145,11 +145,9 @@ export class AppBootstrap implements CanActivate {
                         hostAppName: ApplicationType.KMC,
                         hostAppVersion: globalConfig.client.appVersion,
                         kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
-                        kalturaServerProxyURI: '',
-                        clipsOverride: '',
                         postSaveActions: 'share,editQuiz,download,entry,downloadQuiz,playlist,editPlaylist,sharePlaylist',
-                        widget: '',
-                        canManageCaptions: false
+                        canManageCaptions: false,
+                        widget: ''
                     }
                 },
                 {
@@ -160,7 +158,9 @@ export class AppBootstrap implements CanActivate {
                             target: 'body',
                         },
                     },
-                    settings: {}
+                    settings: {
+                        ks: this.auth.appUser.ks
+                    }
                 }],
                 ui: {
                     bodyContainer: {
