@@ -1,4 +1,4 @@
-<button pButton class="kButtonBranded"
+<button pButton class="kButtonBranded contentLabButton" [class.responsive]="responsive"
         [kTooltip]="reason ? (('contentLab.errors.' + reason) | translate) : ''"
         [label]="loading ? ('contentLab.initializing' | translate) : ('contentLab.buttonLabel' | translate)"
         [disabled]="disabled"

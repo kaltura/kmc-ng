@@ -99,7 +99,7 @@
   }
   .kEntriesTableActions {
     width: 100%;
-    text-align: center;
+      text-align: center;
     .kButtonAddToBucket {
       width: 42px;
       height: 34px;
@@ -107,11 +107,8 @@
       font-weight: normal;
     }
   }
+
 }
-
-
-
-
 :host {
   display: flex;
   flex-flow: row wrap;

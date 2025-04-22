@@ -65,6 +65,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit {
   @Input() sortOrder: number = null;
   @Input() selectedEntries: any[] = [];
   @Input() isTagsBarVisible = false;
+  @Input() isAIButtonVisible = false;
 
   @Output() sortChanged = new EventEmitter<{ field: string, order: number }>();
   @Output() actionSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
@@ -142,6 +143,13 @@ export class EntriesTableComponent implements AfterViewInit, OnInit {
     return !(isLiveStream && isReady);
   }
 
+    public isLiveEntry(entry: KalturaMediaEntry): boolean {
+        return entry.mediaType === KalturaMediaType.liveStreamFlash ||
+            entry.mediaType === KalturaMediaType.liveStreamWindowsMedia ||
+            entry.mediaType === KalturaMediaType.liveStreamRealMedia ||
+            entry.mediaType === KalturaMediaType.liveStreamQuicktime;
+    }
+
   public _onActionSelected(action: string, entry: KalturaMediaEntry): void {
     const actionAllowed = this._allowDrilldown(action, entry.mediaType, entry.status);
     if (actionAllowed) {
@@ -160,8 +168,11 @@ export class EntriesTableComponent implements AfterViewInit, OnInit {
     this.selectedEntriesChange.emit(event);
   }
 
-  public _getColumnStyle({ width = 'auto', align = 'left' } = {}): EntriesTableColumnStyle {
-      return {
+  public _getColumnStyle({ width = 'auto', maxWidth = null,  align = 'left' } = {}): EntriesTableColumnStyle {
+      return maxWidth ? {
+          'width': width,
+          'text-align': align
+      } : {
           'width': width,
           'text-align': align
       };

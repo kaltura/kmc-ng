@@ -14,7 +14,7 @@ import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 
 @Component({
-    selector: 'k-content-lab-btn',
+    selector: 'k-content-lab-button',
     templateUrl: './content-lab-button.component.html',
     styleUrls: ['./content-lab-button.component.scss'],
     providers: [KalturaLogger.createLogger('ContentLabButtonComponent')]
@@ -29,6 +29,8 @@ export class ContentLabButtonComponent implements OnDestroy {
     @Input() entryStatus: KalturaEntryStatus;
     @Input() entryType: number;
     @Input() eventSessionContextId: string;
+    @Input() responsive: boolean;
+
     @ViewChild('clipAndTrim', { static: true }) _clipAndTrim: PopupWidgetComponent;
     @ViewChild('bulkActionsPopup', { static: true }) _bulkActionsPopup: PopupWidgetComponent;
 

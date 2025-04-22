@@ -33,6 +33,7 @@ export interface CustomMenuItem extends MenuItem {
 export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
     @Input() showReload = true;
     @Input() showExport = false;
+    @Input() isAIButtonVisible = false;
     @Input() selectedEntries: any[] = [];
     @Input() columns: EntriesTableColumns | null;
     @Input() rowActions: { label: string, commandName: string, styleClass: string }[];

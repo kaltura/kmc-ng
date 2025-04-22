@@ -37,12 +37,12 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
 
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
-    name: { sortable: true },
-    id: { width: '120px' },
-    mediaType: { sortable: true, width: '80px', align: 'center' },
-    plays: { sortable: true, width: '76px' },
+    name: { width: '100%', sortable: true },
+    id: { width: '100px' },
+    mediaType: { sortable: true, width: '70px', align: 'center' },
+    plays: { sortable: true, width: '70px' },
     createdAt: { sortable: true, width: '140px' },
-    duration: { sortable: true, width: '104px' },
+    duration: { sortable: true, width: '80px' },
     status: { width: '100px' }
   };
 

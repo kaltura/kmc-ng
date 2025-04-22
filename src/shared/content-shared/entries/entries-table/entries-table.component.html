@@ -47,9 +47,12 @@
                 <col data-cid="status"
                      *ngIf="_columnsMetadata.status"
                      [ngStyle]="_columnsMetadata.status.style">
+                <col data-cid="AIButtons" id="AIButtons"
+                     *ngIf="isAIButtonVisible"
+                     style="width: 160px">
                 <col data-cid="rowActions"
                      *ngIf="rowActions?.length"
-                     style="width: 80px">
+                     style="{{isAIButtonVisible ? 'width: 60px' : 'width: 80px'}}">
                 <col data-cid="addToBucket"
                      *ngIf="_columnsMetadata.addToBucket"
                      [ngStyle]="_columnsMetadata.addToBucket.style">
@@ -112,7 +115,10 @@
                     *ngIf="_columnsMetadata.status">
                     {{'applications.content.table.status' | translate}}
                 </th>
-                <th data-cid="rowActions" id="rowActions" *ngIf="rowActions?.length"></th>
+
+                <th *ngIf="isAIButtonVisible"></th>
+
+                <th data-cid="rowActions" id="rowActions" *ngIf="rowActions?.length" [ngStyle]="{'border-left': isAIButtonVisible ? 'none' : '1px solid #ebebeb'}"></th>
                 <th data-cid="addToBucket" id="addToBucket" *ngIf="_columnsMetadata.addToBucket"></th>
             </tr>
         </ng-template>
@@ -193,7 +199,17 @@
                     </span>
                 </td>
 
-                <td *ngIf="rowActions?.length">
+                <td *ngIf="isAIButtonVisible">
+                    <k-content-lab-button [responsive]="true"
+                                       [entryDuration]="entry.duration"
+                                       [entryType]="entry.mediaType"
+                                       [entryStatus]="entry.status"
+                                       [entryId]="isLiveEntry(entry) ? entry.redirectEntryId : entry.id"
+                                       [eventSessionContextId]="isLiveEntry(entry) ? entry.id : ''">
+                    </k-content-lab-button>
+                </td>
+
+                <td *ngIf="rowActions?.length" [ngStyle]="{'padding-left': isAIButtonVisible ? '0px' : '8px'}">
                     <div class="kEntriesTableActions">
                         <button type="button" pButton class="kMoreActionsButton" icon="kIconmore"
                                 (click)="_openActionsMenu($event, entry)"></button>
