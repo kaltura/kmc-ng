@@ -59,6 +59,7 @@ import { ConfirmationService } from 'primeng/api';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { PlayerV7Module } from "app-shared/kmc-shared/player-v7/player-v7.module";
 import {TranslateModule} from '@ngx-translate/core';
+import {ContentLabModule} from 'app-shared/content-shared/content-lab/content-lab.module';
 
 @NgModule({
     imports: [
@@ -114,6 +115,7 @@ import {TranslateModule} from '@ngx-translate/core';
         ClearableInputModule,
         DateFormatModule,
         TranslateModule,
+        ContentLabModule
     ],
   declarations: [
     ContentEntriesComponent,

@@ -17,3 +17,12 @@
         <kLiveDashboard [entryId]="_entryId" [parentPopupWidget]="liveDashboard"></kLiveDashboard>
     </ng-template>
 </kPopupWidget>
+
+<kPopupWidget #clipAndTrim [fullScreen]="true">
+    <ng-template>
+                <kEntryEditor [entry]="_contentLabEntry"
+                              [entryHasSource]="true"
+                              [tab]="'quiz'"
+                              [parentPopupWidget]="clipAndTrim"></kEntryEditor>
+    </ng-template>
+</kPopupWidget>

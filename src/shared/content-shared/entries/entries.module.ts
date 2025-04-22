@@ -42,9 +42,11 @@ import { PaginatorModule } from 'primeng/paginator';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { InputTextModule } from 'primeng/inputtext';
 import { EntriesSearchFiltersComponent } from "app-shared/content-shared/entries/entries-search-filters/entries-search-filters.component";
+import {ContentLabModule} from 'app-shared/content-shared/content-lab/content-lab.module';
 
 @NgModule({
   imports: [
+    ContentLabModule,
     AreaBlockerModule,
     TooltipModule,
     AutoCompleteModule,

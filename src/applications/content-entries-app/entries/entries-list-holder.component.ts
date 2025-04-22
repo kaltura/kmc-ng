@@ -19,6 +19,7 @@ import { AnalyticsNewMainViewService, ContentEntriesMainViewService } from 'app-
 import { ClearEntriesSelectionEvent } from 'app-shared/kmc-shared/events/clear-entries-selection-event';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 import { filter } from 'rxjs/operators';
+import {KalturaMediaEntry} from 'kaltura-ngx-client';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -31,9 +32,11 @@ import { filter } from 'rxjs/operators';
 export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent, { static: true }) public _entriesList: EntriesListComponent;
   @ViewChild('liveDashboard', { static: true }) _liveDashboard: PopupWidgetComponent;
+  @ViewChild('clipAndTrim', { static: true }) _clipAndTrimPopup: PopupWidgetComponent;
 
   public _entryId: string = null;
   public _blockerMessage: AreaBlockerMessage = null;
+  public _contentLabEntry: KalturaMediaEntry | null = null;
 
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
@@ -188,6 +191,14 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         case 'captionRequest':
             this._analytics.trackClickEvent('Captions_enrich');
             this._reachAppViewService.open({ entry, page: ReachPages.entry });
+            break;
+        case 'editQuiz':
+            this._contentLabEntry = entry;
+            console.log(entry);
+            setTimeout(() => {
+                this._clipAndTrimPopup.open();
+            }, 1000);
+
             break;
       default:
         break;
