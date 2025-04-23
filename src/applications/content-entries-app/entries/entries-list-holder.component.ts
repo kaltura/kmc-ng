@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { EntriesListComponent } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
-import { AppAnalytics, BrowserService, NewEntryUploadFile } from 'app-shared/kmc-shell';
+import {AppAnalytics, AppAuthentication, AppBootstrap, BrowserService, NewEntryUploadFile} from 'app-shared/kmc-shell';
 import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { AreaBlockerMessage, PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
@@ -19,13 +19,18 @@ import { AnalyticsNewMainViewService, ContentEntriesMainViewService } from 'app-
 import { ClearEntriesSelectionEvent } from 'app-shared/kmc-shared/events/clear-entries-selection-event';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 import { filter } from 'rxjs/operators';
-import {KalturaMediaEntry} from 'kaltura-ngx-client';
+import {KalturaClient, KalturaMediaEntry, KalturaPlaylist, KalturaQuizOutputType, QuizGetUrlAction} from 'kaltura-ngx-client';
+import {PubSubServiceType} from '@unisphere/runtime';
+import {Observable} from 'rxjs';
+import {throwError as ObservableThrowError} from 'rxjs/internal/observable/throwError';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kEntriesListHolder',
   templateUrl: './entries-list-holder.component.html',
     providers: [
         ColumnsResizeManagerService,
+        KalturaLogger.createLogger('EntriesListComponent'),
         { provide: ResizableColumnsTableName, useValue: 'entries-table' }
     ]
 })
@@ -36,6 +41,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
 
   public _entryId: string = null;
   public _blockerMessage: AreaBlockerMessage = null;
+  public _contentLabAvailable = false;
   public _contentLabEntry: KalturaMediaEntry | null = null;
 
   public _columns: EntriesTableColumns = {
@@ -83,8 +89,10 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
     }
   ];
 
+    private unisphereRuntime: any = null;
+    private unsubscribeToUnisphereEvents: () => void = null;
+
   constructor(private _router: Router,
-              private _activatedRoute: ActivatedRoute,
               private _entriesListService: EntriesListService,
               private _browserService: BrowserService,
               private _analytics: AppAnalytics,
@@ -93,6 +101,10 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               private _uploadManagement: UploadManagement,
               private _permissionsService: KMCPermissionsService,
               public _entriesStore: EntriesStore,
+              private _appAuthentication: AppAuthentication,
+              private _logger: KalturaLogger,
+              private _kalturaServerClient: KalturaClient,
+              private _bootstrapService: AppBootstrap,
               private _contentEntryViewService: ContentEntryViewService,
               private _contentEntriesAppService: ContentEntriesAppService,
               private _contentEntriesMainViewService: ContentEntriesMainViewService,
@@ -115,10 +127,14 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-
+    if (this.unsubscribeToUnisphereEvents) {
+        this.unsubscribeToUnisphereEvents();
+        this.unsubscribeToUnisphereEvents = null;
+    }
   }
 
   private _prepare(): void {
+      this._contentLabAvailable = this._permissionsService.hasPermission(KMCPermissions.FEATURE_CONTENT_LAB);
       if (this._entriesListService.isViewAvailable) {
           this._entriesStore.reload();
       }
@@ -138,6 +154,83 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       if (!hasEmbedPermission) {
           this._rowActions[0].label = this._appLocalization.get('applications.content.table.previewInPlayer');
       }
+
+      if (this._contentLabAvailable) {
+          this.registerToContentLabAction();
+      }
+  }
+
+  private registerToContentLabAction(): void {
+      this._bootstrapService.unisphereWorkspace$
+          .pipe(cancelOnDestroy(this))
+          .subscribe(unisphereWorkspace => {
+              if (unisphereWorkspace) {
+                  this.unisphereRuntime = unisphereWorkspace.getRuntime('unisphere.widget.content-lab', 'application');
+                  if (this.unisphereRuntime) {
+                      this.unsubscribeToUnisphereEvents = unisphereWorkspace.getService<PubSubServiceType>('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-lab.message-host-app', (data) => {
+                          const {action, entry} = data.payload;
+                          switch (action) {
+                              case 'entry':
+                                  // navigate to entry
+                                  this.unisphereRuntime?.closeWidget(); // close widget
+                                  document.body.style.overflowY = "auto";
+                                  this._router.navigateByUrl(`/content/entries/entry/${entry.id}/metadata`);
+                                  // this._entryStore.openEntry(new KalturaMediaEntry(entry)); // TODO - handle in entry page
+                                  break;
+                              case 'playlist':
+                                  // navigate to playlist metadata tab
+                                  this.unisphereRuntime?.closeWidget(); // close widget
+                                  document.body.style.overflowY = "auto";
+                                  this._router.navigateByUrl(`/content/playlists/playlist/${entry.id}/metadata`);
+                                  break;
+                              case 'editPlaylist':
+                                  // navigate to playlist content tb
+                                  this.unisphereRuntime?.closeWidget(); // close widget
+                                  document.body.style.overflowY = "auto";
+                                  this._router.navigateByUrl(`/content/playlists/playlist/${entry.id}/content`);
+                                  break;
+                              case 'download':
+                                  // download entry
+                                  const downloadUrl = entry.downloadUrl.indexOf('/ks/') === -1 ? `${entry.downloadUrl}/ks/${this._appAuthentication.appUser.ks}` : entry.downloadUrl;
+                                  this._browserService.openLink(downloadUrl);
+                                  break;
+                              case 'share':
+                                  // open share & embed for entry
+                                  this.unisphereRuntime?.closeWidget(); // close widget
+                                  document.body.style.overflowY = "auto";
+                                  this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaMediaEntry(entry)));
+                                  break;
+                              case 'sharePlaylist':
+                                  // open share & embed for playlist
+                                  this.unisphereRuntime?.closeWidget(); // close widget
+                                  document.body.style.overflowY = "auto";
+                                  this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaPlaylist(entry)));
+                                  break;
+                              case 'editQuiz':
+                                  // edit entry
+                                  this._contentLabEntry = new KalturaMediaEntry(entry);
+                                  this.unisphereRuntime?.closeWidget();
+                                  document.body.style.overflowY = "auto";
+                                  this._clipAndTrimPopup.open();
+                                  break;
+                              case 'downloadQuiz':
+                                  // download questions list
+                                  this._downloadPretest(entry.id)
+                                  break;
+                              case 'updateMetadata':
+                                  // update metadata
+                                  this._entriesStore.reload();
+                                  // this._entryStore.reloadEntry(); todo: handle in entry page only
+                                  break;
+                              default:
+                                  break;
+                          }
+
+
+                      })
+                  }
+              }
+          });
   }
 
   public _onActionSelected({ action, entry }) {
@@ -192,18 +285,40 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
             this._analytics.trackClickEvent('Captions_enrich');
             this._reachAppViewService.open({ entry, page: ReachPages.entry });
             break;
-        case 'editQuiz':
-            this._contentLabEntry = entry;
-            console.log(entry);
-            setTimeout(() => {
-                this._clipAndTrimPopup.open();
-            }, 1000);
-
-            break;
       default:
         break;
     }
   }
+    private downloadPretest(entryId: string): Observable<string> {
+        if (!entryId) {
+            return ObservableThrowError('missing entryId argument');
+        }
+        return this._kalturaServerClient
+            .request(new QuizGetUrlAction({ entryId, quizOutputType: KalturaQuizOutputType.pdf }))
+    }
+
+    private _downloadPretest(entryId: string): void {
+        if (!entryId) {
+            this._logger.info('EntryId is not defined. Abort action');
+            return;
+        }
+        this.downloadPretest(entryId)
+            .pipe(
+                tag('block-shell'),
+                cancelOnDestroy(this)
+            )
+            .subscribe(
+                (url) => {
+                    this._browserService.openLink(url);
+                },
+                error => {
+                    this._browserService.alert({
+                        header: this._appLocalization.get('app.common.error'),
+                        message: error.message
+                    });
+                }
+            );
+    }
 
   private _deleteEntry(entryId: string): void {
     if (!entryId) {

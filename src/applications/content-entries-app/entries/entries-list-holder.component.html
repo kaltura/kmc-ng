@@ -1,7 +1,7 @@
 <k-area-blocker [message]="_blockerMessage" [bodyScroll]="true">
 <kEntriesList [columns]="_columns"
               [showExport]="true"
-              [isAIButtonVisible]="true"
+              [isAIButtonVisible]="_contentLabAvailable"
               [rowActions]="_rowActions"
               (onActionsSelected)="_onActionSelected($event)">
   <div class="bulk-actions">

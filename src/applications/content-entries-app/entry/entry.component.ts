@@ -34,10 +34,8 @@ import { AppAnalytics, ApplicationType, BrowserService } from 'app-shared/kmc-sh
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { EntryQuizzeWidget } from './entry-quizzes/entry-quizzes-widget.service';
-import { serverConfig } from 'config/server';
-import { globalConfig } from 'config/global';
 import { AppAuthentication, AppBootstrap } from 'app-shared/kmc-shell';
-import {PubSubServiceType} from '@unisphere/runtime';
+import { PubSubServiceType } from '@unisphere/runtime';
 
 @Component({
 	selector: 'kEntry',
@@ -131,10 +129,10 @@ export class EntryComponent implements OnInit, OnDestroy {
 	}
 
     public _analyticsAllowed: boolean;
-    public _contentLabSelectedQuiz: KalturaMediaEntry;
 
-    private unisphereModuleContext: any;
-    private unisphereCallbackUnsubscribe: Function;
+    private unisphereRuntime: any = null;
+    public _contentLabSelectedQuiz: KalturaMediaEntry;
+    private unisphereCallbackUnsubscribe:  () => void = null;
 
 	constructor(entryWidgetsManager: EntryWidgetsManager,
 	            widget1: EntrySectionsListWidget,
@@ -386,13 +384,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                                 this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable(); // new analytics app is available
                                 this._buildMenu(entry);
                                 if (this._contentLabAvailable) {
-                                    if (this.unisphereCallbackUnsubscribe) {
-                                        this.unisphereCallbackUnsubscribe();
-                                        this.unisphereCallbackUnsubscribe = null;
-                                    }
-                                    if (this.unisphereModuleContext) {
-                                        this.unisphereModuleContext = null;
-                                    }
+                                    this.registerToContentLabAction();
                                 }
 								break;
 							case ActionTypes.EntryLoadingFailed:
@@ -479,6 +471,80 @@ export class EntryComponent implements OnInit, OnDestroy {
 					throw error;
 				});
 	}
+
+    private registerToContentLabAction(): void {
+        if (this.unisphereCallbackUnsubscribe) {
+            this.unisphereCallbackUnsubscribe();
+            this.unisphereCallbackUnsubscribe = null;
+        }
+        this._bootstrapService.unisphereWorkspace$
+            .pipe(cancelOnDestroy(this))
+            .subscribe(unisphereWorkspace => {
+                if (unisphereWorkspace) {
+                    this.unisphereRuntime = unisphereWorkspace.getRuntime('unisphere.widget.content-lab', 'application');
+                    if (this.unisphereRuntime) {
+                        this.unisphereCallbackUnsubscribe = unisphereWorkspace.getService<PubSubServiceType>('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-lab.message-host-app', (data) => {
+                            const {action, entry} = data.payload;
+                            switch (action) {
+                                case 'entry':
+                                    // navigate to entry
+                                    this.unisphereRuntime?.closeWidget(); // close widget
+                                    document.body.style.overflowY = "auto";
+                                    this._entryStore.openEntry(new KalturaMediaEntry(entry));
+                                    break;
+                                case 'playlist':
+                                    // navigate to playlist metadata tab
+                                    this.unisphereRuntime?.closeWidget(); // close widget
+                                    document.body.style.overflowY = "auto";
+                                    this._router.navigateByUrl(`/content/playlists/playlist/${entry.id}/metadata`);
+                                    break;
+                                case 'editPlaylist':
+                                    // navigate to playlist content tb
+                                    this.unisphereRuntime?.closeWidget(); // close widget
+                                    document.body.style.overflowY = "auto";
+                                    this._router.navigateByUrl(`/content/playlists/playlist/${entry.id}/content`);
+                                    break;
+                                case 'download':
+                                    // download entry
+                                    this._downloadEntry(entry, true);
+                                    break;
+                                case 'share':
+                                    // open share & embed for entry
+                                    this.unisphereRuntime?.closeWidget(); // close widget
+                                    document.body.style.overflowY = "auto";
+                                    this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaMediaEntry(entry)));
+                                    break;
+                                case 'sharePlaylist':
+                                    // open share & embed for playlist
+                                    this.unisphereRuntime?.closeWidget(); // close widget
+                                    document.body.style.overflowY = "auto";
+                                    this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaPlaylist(entry)));
+                                    break;
+                                case 'editQuiz':
+                                    // edit entry
+                                    this._contentLabSelectedQuiz = new KalturaMediaEntry(entry);
+                                    this.unisphereRuntime?.closeWidget();
+                                    document.body.style.overflowY = "auto";
+                                    this._isQuizEntry = true;
+                                    this._clipAndTrim.open();
+                                    break;
+                                case 'downloadQuiz':
+                                    // download questions list
+                                    this._downloadPretest(entry.id)
+                                    break;
+                                case 'updateMetadata':
+                                    // update metadata
+                                    this._entryStore.reloadEntry();
+                                    break;
+                                default:
+                                    break;
+                            }
+                        })
+                    }
+                }
+            });
+    }
+
 
     private isLiveEntry(entry: KalturaMediaEntry): boolean {
         return entry.mediaType === KalturaMediaType.liveStreamFlash ||

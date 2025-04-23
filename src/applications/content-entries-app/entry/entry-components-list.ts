@@ -45,8 +45,6 @@ import { MatchDropFolderComponent } from './entry-flavours/flavor-replace-video/
 import { DownloadEntryComponent } from './components/download-entry/download-entry.component';
 import {EntryLiveCaptions} from './entry-captions/entry-live-captions.component';
 import {EntryQuizzes} from './entry-quizzes/entry-quizzes.component';
-import {ContentLabButtonComponent} from './components/content-lab-button/content-lab-button.component';
-
 
 export const EntryComponentsList = [
     CategoriesSelector,
@@ -71,7 +69,6 @@ export const EntryComponentsList = [
     EntryThumbnails,
     EntryThumbnailCapture,
     EntryUsers,
-    ContentLabButtonComponent,
     FlavorImport,
     FlavorPreview,
     JumpToSection,
