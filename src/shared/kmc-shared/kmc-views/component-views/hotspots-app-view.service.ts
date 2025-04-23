@@ -55,7 +55,7 @@ export class HotspotsAppViewService extends KmcComponentViewBaseService<Hotspots
     private _isAvailableByData(args: HotspotsAppViewArgs): boolean {
         const { entry, hasSource} = args;
         const entryReady = entry.status === KalturaEntryStatus.ready;
-        const isEntryReplacing = entry.replacementStatus !== KalturaEntryReplacementStatus.none;
+        const isEntryReplacing = entry.replacementStatus && entry.replacementStatus !== KalturaEntryReplacementStatus.none;
         const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
         const isEntryRelevant = [KalturaMediaType.video].indexOf(entry.mediaType) !== -1 && !isExternalMedia;
         const isLiveEntry = [

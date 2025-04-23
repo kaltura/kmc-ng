@@ -1,6 +1,7 @@
 <k-area-blocker [message]="_blockerMessage" [bodyScroll]="true">
 <kEntriesList [columns]="_columns"
               [showExport]="true"
+              [isAIButtonVisible]="_contentLabAvailable"
               [rowActions]="_rowActions"
               (onActionsSelected)="_onActionSelected($event)">
   <div class="bulk-actions">
@@ -14,5 +15,14 @@
 <kPopupWidget #liveDashboard data-aid="liveDashboard" [fullScreen]="true">
     <ng-template>
         <kLiveDashboard [entryId]="_entryId" [parentPopupWidget]="liveDashboard"></kLiveDashboard>
+    </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #clipAndTrim [fullScreen]="true">
+    <ng-template>
+                <kEntryEditor [entry]="_contentLabEntry"
+                              [entryHasSource]="true"
+                              [tab]="'quiz'"
+                              [parentPopupWidget]="clipAndTrim"></kEntryEditor>
     </ng-template>
 </kPopupWidget>

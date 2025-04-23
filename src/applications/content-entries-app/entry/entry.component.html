@@ -8,6 +8,7 @@
 						<div class="kTitle">{{ _entryName }}</div>
                         <div class="kEntryActionsWrapper">
                             <k-content-lab-btn *ngIf="_entry && _contentLabAvailable"
+                                               [responsive]="false"
                                                [entryDuration]="_entry.duration"
                                                [entryType]="_entry.mediaType"
                                                [entryStatus]="_entry.status"

@@ -99,7 +99,7 @@
   }
   .kEntriesTableActions {
     width: 100%;
-    text-align: center;
+      text-align: center;
     .kButtonAddToBucket {
       width: 42px;
       height: 34px;
@@ -107,10 +107,8 @@
       font-weight: normal;
     }
   }
+
 }
-
-
-
 
 :host {
   display: flex;
@@ -136,4 +134,21 @@
 
 :host ::ng-deep .kButtonAddToBucket .p-button-text {
   padding: 0;
+}
+
+@media screen and (max-width: 1310px) {
+    .kButtonBranded.large {
+        display: none !important;
+    }
+    #AIButtons {
+        width: 64px !important;
+    }
+}
+@media screen and (min-width: 1311px) {
+    .kButtonBranded.small {
+        display: none;
+    }
+    #AIButtons {
+        width: 162px !important;
+    }
 }

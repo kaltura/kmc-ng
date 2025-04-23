@@ -192,6 +192,7 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
               entry: this.entry,
               hasSource: this.entryHasSource
           });
+          console.log("quizAvailable: "+quizAvailable)
           const hotspotsAvailable = this._hotspotsAppViewService.isAvailable({
               entry: this.entry,
               hasSource: this.entryHasSource

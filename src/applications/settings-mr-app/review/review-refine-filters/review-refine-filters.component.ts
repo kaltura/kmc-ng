@@ -335,9 +335,6 @@ export class ReviewRefineFiltersComponent implements OnInit, OnDestroy {
                         item: suggestedUser,
                         isSelectable: isSelectable
                     });
-                    setTimeout(() => {
-                        //debugger;
-                    })
                 });
                 this._usersProvider.next({suggestions: suggestions, isLoading: false});
             },
