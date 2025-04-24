@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy} from '@angular/core';
 import {KalturaEntryStatus, KalturaMediaEntry} from 'kaltura-ngx-client';
 import {cancelOnDestroy, tag} from '@kaltura-ng/kaltura-common';
-import {AppBootstrap} from 'app-shared/kmc-shell';
+import {AppAnalytics, AppBootstrap, ButtonType} from 'app-shared/kmc-shell';
 import { ChangeDetectorRef } from '@angular/core';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
@@ -33,7 +33,7 @@ export class ContentLabBtnComponent implements OnDestroy {
     public reason = '';
     public _entryId: string;
 
-    constructor(private _bootstrapService: AppBootstrap, private cdr: ChangeDetectorRef) {
+    constructor(private _bootstrapService: AppBootstrap, private cdr: ChangeDetectorRef, private _analytics: AppAnalytics) {
     }
 
     private initializeUnisphereRuntime() {
@@ -105,6 +105,7 @@ export class ContentLabBtnComponent implements OnDestroy {
 
     public openContentLab(): void {
         if (this.unisphereRuntime) {
+            this._analytics.trackButtonClickEvent(ButtonType.Open,'GenerateWithAI', 'none', 'CL_core');
             this.unisphereRuntime.openApplication({entryId: this._entryId, eventSessionContextId: this.eventSessionContextId, type: 'entry'});
         }
     }
