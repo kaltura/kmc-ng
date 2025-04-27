@@ -200,6 +200,12 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
                                   document.body.style.overflowY = "auto";
                                   this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaMediaEntry(entry)));
                                   break;
+                              case 'addCaptions':
+                                  // open captions tab
+                                  this.unisphereRuntime?.closeWidget(); // close widget
+                                  document.body.style.overflowY = "auto";
+                                  this._router.navigateByUrl(`/content/entries/entry/${entry.id}/captions`);
+                                  break;
                               case 'sharePlaylist':
                                   // open share & embed for playlist
                                   this.unisphereRuntime?.closeWidget(); // close widget

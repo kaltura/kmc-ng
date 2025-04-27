@@ -146,9 +146,19 @@ export class AppBootstrap implements CanActivate {
                         hostAppVersion: globalConfig.client.appVersion,
                         kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
                         postSaveActions: 'share,editQuiz,download,entry,downloadQuiz,playlist,editPlaylist,sharePlaylist',
-                        canManageCaptions: false,
                         widget: ''
                     }
+                },
+                {
+                    widgetName: 'unisphere.widget.notifications',
+                    runtimeName: 'notifications',
+                    settings: {},
+                    runtimeArea: {
+                        target: 'body',
+                        style: {
+                            'z-index': '99999',
+                        },
+                    },
                 },
                 {
                     widgetName: 'unisphere.widget.content-lab',
@@ -162,6 +172,15 @@ export class AppBootstrap implements CanActivate {
                         ks: this.auth.appUser.ks
                     }
                 }],
+                widgetsConfiguration: {
+                    'unisphere.widget.notifications': {
+                        bodyContainer: {
+                            style: {
+                                'z-index': 1,
+                            },
+                        },
+                    },
+                },
                 ui: {
                     bodyContainer: {
                         zIndex: 1000
