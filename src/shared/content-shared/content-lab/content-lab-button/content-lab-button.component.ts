@@ -45,7 +45,7 @@ export class ContentLabBtnComponent implements OnDestroy {
                         if (this.unisphereRuntime) {
                             this._unsubscribePartnerCheck = this.unisphereRuntime.partnerChecks.onChanges((data) => {
                                 if (data.status === 'loaded') {
-                                    if (data.isAvailable && data.hasConsent) {
+                                    if (data.isAvailable) {
                                         const entry = {
                                             id: this._entryId,
                                             type: this.entryType,
@@ -70,7 +70,7 @@ export class ContentLabBtnComponent implements OnDestroy {
                                         )
                                     } else {
                                         this.loading = false;
-                                        this.disabled = false; // TODO - mark button with missing AI consent? @Dana
+                                        this.disabled = true;
                                         this.cdr.detectChanges();
                                         // if (!data.hasConsent) {
                                         //     this.reason = 'AI_CONSENT'; // TODO: enable button to open AI consent announcement?
