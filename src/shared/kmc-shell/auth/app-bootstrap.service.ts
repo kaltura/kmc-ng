@@ -153,11 +153,13 @@ export class AppBootstrap implements CanActivate {
                     widgetName: 'unisphere.widget.notifications',
                     runtimeName: 'notifications',
                     settings: {},
+                    ui: {
+                        bodyContainer: {
+                            zIndex: 1,
+                        }
+                    },
                     runtimeArea: {
                         target: 'body',
-                        style: {
-                            'z-index': '99999',
-                        },
                     },
                 },
                 {
@@ -172,15 +174,6 @@ export class AppBootstrap implements CanActivate {
                         ks: this.auth.appUser.ks
                     }
                 }],
-                widgetsConfiguration: {
-                    'unisphere.widget.notifications': {
-                        bodyContainer: {
-                            style: {
-                                'z-index': 1,
-                            },
-                        },
-                    },
-                },
                 ui: {
                     bodyContainer: {
                         zIndex: 1000
