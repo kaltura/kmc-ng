@@ -206,6 +206,7 @@ export class AppBootstrap implements CanActivate {
                         },
                         settings: {
                             ks: this.auth.appUser.ks,
+                            hostAppName: 'KMC'
                         },
                     },
                 ],

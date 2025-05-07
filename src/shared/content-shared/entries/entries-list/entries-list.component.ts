@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { CategoriesStatusMonitorService, CategoriesStatus } from '../../categories-status/categories-status-monitor.service';
 import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
@@ -17,6 +17,7 @@ import { MenuItem } from 'primeng/api';
 import { EntriesSearchFiltersComponent } from "app-shared/content-shared/entries/entries-search-filters/entries-search-filters.component";
 import { filter } from 'rxjs/operators';
 import { first } from 'rxjs/operators';
+import {AppBootstrap} from 'app-shared/kmc-shell';
 
 export interface CustomMenuItem extends MenuItem {
     metadata?: any;
@@ -30,7 +31,7 @@ export interface CustomMenuItem extends MenuItem {
   styleUrls: ['./entries-list.component.scss'],
     providers: [EntriesRefineFiltersService]
 })
-export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
+export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
     @Input() showReload = true;
     @Input() showExport = false;
     @Input() isAIButtonVisible = false;
@@ -72,8 +73,10 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         categoriesMode: null
     };
     public searchFieldsTooltip = '';
+    private destroyed = false;
 
     constructor(public _entriesStore: EntriesStore,
+                private _bootstrapService: AppBootstrap,
                 private _entriesRefineFilters: EntriesRefineFiltersService,
                 private _appLocalization: AppLocalization,
                 private _analytics: AppAnalytics,
@@ -99,6 +102,20 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
         });
 
         this._prepare();
+    }
+
+    ngAfterViewInit() {
+        this._bootstrapService.unisphereWorkspace$
+            .pipe(cancelOnDestroy(this))
+            .subscribe(unisphereWorkspace => {
+                if (unisphereWorkspace) {
+                    unisphereWorkspace.getRuntimeAsync('unisphere.widget.content-lab', 'ai-consent').then(widget => {
+                        if (!this.destroyed) {
+                            widget.assignAreaByName('banner', 'ai-consent-banner');
+                        }
+                    })
+                }
+            });
     }
 
     ngOnChanges(changes)
@@ -410,7 +427,17 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy() {
+      this._bootstrapService.unisphereWorkspace$
+          .pipe(cancelOnDestroy(this))
+          .subscribe(unisphereWorkspace => {
+              if (unisphereWorkspace) {
+                  unisphereWorkspace.getRuntimeAsync('unisphere.widget.content-lab', 'ai-consent').then(widget => {
+                      widget.unassignAreaByName('banner');
+                  })
+              }
+          });
       this.actionsMenu.hide();
+      this.destroyed = true;
   }
 
   public _reload() {
