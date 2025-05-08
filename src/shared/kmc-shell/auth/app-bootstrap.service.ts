@@ -14,6 +14,7 @@ import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 import { serverConfig } from "config/server";
 import { ApplicationType } from "app-shared/kmc-shell";
 import { UnisphereWorkspaceType } from "@unisphere/runtime";
+import { registerElementInGlobalKalturaVersions } from '@unisphere/runtime'
 
 export enum BoostrappingStatus {
     Bootstrapping,
@@ -221,6 +222,14 @@ export class AppBootstrap implements CanActivate {
         ).then(
             (workspace: any) => {
                 console.log("[unisphere.kmc] workspace loaded");
+                // register KMC with Unisphere
+                registerElementInGlobalKalturaVersions({
+                    _schemaVersion: '1',
+                    productName: 'kmc',
+                    type: 'host',
+                    version: globalConfig.client.appVersion,
+                    origin: 'url',
+                });
                 this._unisphereWorkspaceSource.next(workspace);
             },
             (error) => {
