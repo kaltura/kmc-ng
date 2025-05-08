@@ -203,9 +203,10 @@
                     <k-content-lab-btn [responsive]="true"
                                        [entryDuration]="entry.duration"
                                        [entryType]="entry.mediaType"
+                                       [isLive]="isLiveEntry(entry) && entry.redirectEntryId?.length > 0"
                                        [entryStatus]="entry.status"
-                                       [entryId]="isLiveEntry(entry) ? entry.redirectEntryId : entry.id"
-                                       [eventSessionContextId]="isLiveEntry(entry) ? entry.id : ''">
+                                       [entryId]="isLiveEntry(entry) && entry.redirectEntryId?.length > 0 ? entry.redirectEntryId : entry.id"
+                                       [eventSessionContextId]="isLiveEntry(entry) && entry.redirectEntryId?.length > 0 ? entry.id : ''">
                     </k-content-lab-btn>
                 </td>
 

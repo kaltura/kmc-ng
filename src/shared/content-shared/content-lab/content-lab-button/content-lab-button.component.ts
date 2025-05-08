@@ -20,6 +20,7 @@ export class ContentLabBtnComponent implements OnDestroy {
     @Input() entryDuration: number;
     @Input() entryStatus: KalturaEntryStatus;
     @Input() entryType: number;
+    @Input() isLive: boolean;
     @Input() eventSessionContextId: string;
     @Input() responsive: boolean;
 
@@ -50,7 +51,8 @@ export class ContentLabBtnComponent implements OnDestroy {
                                             id: this._entryId,
                                             type: this.entryType,
                                             duration: this.entryDuration,
-                                            status: this.entryStatus
+                                            status: this.entryStatus,
+                                            isLive: this.isLive
                                         }
                                         this.unisphereRuntime.isEntryRelevant(entry).then(
                                             result => {

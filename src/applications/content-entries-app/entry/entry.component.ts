@@ -73,6 +73,7 @@ export class EntryComponent implements OnInit, OnDestroy {
     public _entry: KalturaMediaEntry;
     public _contentLabEntryId: string;
     public _contentLabEventSessionContextId = '';
+    public _isLive = false;
 	public _showLoader = false;
 	public _areaBlockerMessage: AreaBlockerMessage;
 	public _currentEntryId: string;
@@ -379,8 +380,9 @@ export class EntryComponent implements OnInit, OnDestroy {
                                 this._isQuizEntry = entry.capabilities?.indexOf('quiz.quiz') > -1;
                                 this._entry = entry;
                                 const isLive = this.isLiveEntry(entry);
-                                this._contentLabEntryId = isLive ? entry.redirectEntryId : entry.id;
-                                this._contentLabEventSessionContextId = isLive ? entry.id : '';
+                                this._contentLabEntryId = isLive && entry.redirectEntryId?.length > 0 ? entry.redirectEntryId : entry.id;
+                                this._contentLabEventSessionContextId = isLive && entry.redirectEntryId?.length > 0 ? entry.id : '';
+                                this._isLive = isLive && entry.redirectEntryId?.length > 0;
                                 this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable(); // new analytics app is available
                                 this._buildMenu(entry);
                                 if (this._contentLabAvailable) {
