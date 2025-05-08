@@ -1,8 +1,8 @@
 import {Component, Input, OnDestroy} from '@angular/core';
-import {KalturaEntryStatus, KalturaMediaEntry} from 'kaltura-ngx-client';
-import {cancelOnDestroy, tag} from '@kaltura-ng/kaltura-common';
+import {KalturaMediaEntry, KalturaMediaType} from 'kaltura-ngx-client';
+import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {AppAnalytics, AppBootstrap, ButtonType} from 'app-shared/kmc-shell';
-import { ChangeDetectorRef } from '@angular/core';
+import {ChangeDetectorRef} from '@angular/core';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 
 @Component({
@@ -12,29 +12,20 @@ import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
     providers: [KalturaLogger.createLogger('ContentLabBtnComponent')]
 })
 export class ContentLabBtnComponent implements OnDestroy {
-    @Input() set entryId(value: string) {
-        this._entryId = value;
-        setTimeout(() => {
-            this.initializeUnisphereRuntime();
-        }, 100);
+    @Input() set entry(value: KalturaMediaEntry) {
+        this._entry = value;
+        this.initializeUnisphereRuntime();
     };
-
-    @Input() entryDuration: number;
-    @Input() entryStatus: KalturaEntryStatus;
-    @Input() entryType: number;
-    @Input() isLive: boolean;
-    @Input() eventSessionContextId: string;
     @Input() responsive: boolean;
 
     private unisphereRuntime: any = null;
     private _unsubscribePartnerCheck: () => void;
     private _destroyed = false;
 
-    public _contentLabSelectedQuiz: KalturaMediaEntry;
     public loading = true;
     public disabled = true;
     public reason = '';
-    public _entryId: string;
+    public _entry: KalturaMediaEntry;
 
     constructor(private _bootstrapService: AppBootstrap, private cdr: ChangeDetectorRef, private _analytics: AppAnalytics) {
     }
@@ -49,15 +40,7 @@ export class ContentLabBtnComponent implements OnDestroy {
                             this._unsubscribePartnerCheck = this.unisphereRuntime.partnerChecks.onChanges((data) => {
                                 if (data.status === 'loaded') {
                                     if (data.isAvailable) {
-                                        const entry = {
-                                            id: this._entryId,
-                                            type: this.entryType,
-                                            duration: this.entryDuration,
-                                            status: this.entryStatus,
-                                            isLive: this.isLive,
-                                            hasRecording: this.eventSessionContextId.length > 0
-                                        }
-                                        this.unisphereRuntime.isEntryRelevant(entry).then(
+                                        this.unisphereRuntime.isEntryRelevant(this._entry).then(
                                             result => {
                                                 if (this._destroyed) return;
                                                 this.loading = false;
@@ -70,24 +53,19 @@ export class ContentLabBtnComponent implements OnDestroy {
                                                 this.loading = false;
                                                 this.disabled = true;
                                                 this.reason = 'error';
-                                                this.cdr.detectChanges();
+                                                this.cdr.detectChanges(); // force refresh as change was made outside Angular ngZone
                                             }
                                         )
                                     } else {
                                         this.loading = false;
                                         this.disabled = true;
-                                        this.cdr.detectChanges();
-                                        // if (!data.hasConsent) {
-                                        //     this.reason = 'AI_CONSENT'; // TODO: enable button to open AI consent announcement?
-                                        // } else {
-                                        //     this.reason = data.unavailabilityReason;
-                                        // }
+                                        this.cdr.detectChanges(); // force refresh as change was made outside Angular ngZone
                                     }
                                 } else if (data.status === 'error') {
                                     this.loading = false;
                                     this.disabled = true;
                                     this.reason = data.error;
-                                    this.cdr.detectChanges();
+                                    this.cdr.detectChanges(); // force refresh as change was made outside Angular ngZone
                                     console.error('Error loading partner checks', data.error);
                                 }
                             }, {replayLastValue: true})
@@ -96,7 +74,7 @@ export class ContentLabBtnComponent implements OnDestroy {
                     }
                 },
                 error => {
-                    // TODO - handle unisphere workspace load error
+                    console.error('Error initializing Unisphere workspace', error);
                 })
     }
 
@@ -108,10 +86,21 @@ export class ContentLabBtnComponent implements OnDestroy {
         this._destroyed = true;
     }
 
+    private isLiveEntry(entry: KalturaMediaEntry): boolean {
+        return entry.mediaType === KalturaMediaType.liveStreamFlash ||
+            entry.mediaType === KalturaMediaType.liveStreamWindowsMedia ||
+            entry.mediaType === KalturaMediaType.liveStreamRealMedia ||
+            entry.mediaType === KalturaMediaType.liveStreamQuicktime;
+    }
+
     public openContentLab(): void {
         if (this.unisphereRuntime) {
             this._analytics.trackButtonClickEvent(ButtonType.Open,'GenerateWithAI', 'none', 'CL_core');
-            this.unisphereRuntime.openApplication({entryId: this._entryId, eventSessionContextId: this.eventSessionContextId, type: 'entry'});
+            if (this.isLiveEntry(this._entry) && this._entry.redirectEntryId) {
+                this.unisphereRuntime.openApplication({entryId: this._entry.redirectEntryId, eventSessionContextId: this._entry.id, type: 'entry'});
+            } else {
+                this.unisphereRuntime.openApplication({entryId: this._entry.id, eventSessionContextId: '', type: 'entry'});
+            }
         }
     }
 
