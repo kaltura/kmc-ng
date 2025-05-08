@@ -307,6 +307,7 @@
             "ENTRY_NOT_READY": "To create with AI, this entry must be ready",
             "ENTRY_DURATION_LESS_THAN_MIN": "To create with AI, video duration must be at least 60 seconds",
             "ENTRY_TYPE_NOT_SUPPORTED": "To create with AI, this entry must be of type video or audio",
+            "NO_RECORDING": "To create with AI, live entries must have a recording",
             "GENERAL_ERROR": "Something happened on our end and we couldn't proceed with your request",
             "AI_CONSENT": "To create with AI, you must accept the terms and conditions"
         }

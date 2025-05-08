@@ -14,7 +14,9 @@ import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 export class ContentLabBtnComponent implements OnDestroy {
     @Input() set entryId(value: string) {
         this._entryId = value;
-        this.initializeUnisphereRuntime();
+        setTimeout(() => {
+            this.initializeUnisphereRuntime();
+        }, 100);
     };
 
     @Input() entryDuration: number;
@@ -52,7 +54,8 @@ export class ContentLabBtnComponent implements OnDestroy {
                                             type: this.entryType,
                                             duration: this.entryDuration,
                                             status: this.entryStatus,
-                                            isLive: this.isLive
+                                            isLive: this.isLive,
+                                            hasRecording: this.eventSessionContextId.length > 0
                                         }
                                         this.unisphereRuntime.isEntryRelevant(entry).then(
                                             result => {

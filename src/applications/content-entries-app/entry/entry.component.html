@@ -11,7 +11,7 @@
                                                [responsive]="false"
                                                [entryDuration]="_entry.duration"
                                                [entryType]="_entry.mediaType"
-                                               [isLive]="_isLive"
+                                               [isLive]="isLiveEntry(_entry)"
                                                [entryStatus]="_entry.status"
                                                [entryId]="_contentLabEntryId"
                                                [eventSessionContextId]="_contentLabEventSessionContextId">

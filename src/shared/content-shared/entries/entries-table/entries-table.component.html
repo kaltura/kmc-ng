@@ -203,7 +203,7 @@
                     <k-content-lab-btn [responsive]="true"
                                        [entryDuration]="entry.duration"
                                        [entryType]="entry.mediaType"
-                                       [isLive]="isLiveEntry(entry) && entry.redirectEntryId?.length > 0"
+                                       [isLive]="isLiveEntry(entry)"
                                        [entryStatus]="entry.status"
                                        [entryId]="isLiveEntry(entry) && entry.redirectEntryId?.length > 0 ? entry.redirectEntryId : entry.id"
                                        [eventSessionContextId]="isLiveEntry(entry) && entry.redirectEntryId?.length > 0 ? entry.id : ''">
