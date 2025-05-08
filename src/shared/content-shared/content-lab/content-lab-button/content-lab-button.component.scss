@@ -15,7 +15,8 @@
 }
 @media screen and (max-width: 1310px) {
     .contentLabButton.responsive {
-        width: 48px !important;
+        width: 34px !important;
+        padding: 4px;
         min-width: 0px;
         ::ng-deep .p-button-label {
             display: none !important;
