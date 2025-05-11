@@ -57,7 +57,7 @@
                            suggestionItemField="item"
                            suggestionLabelField="name"
                            suggestionSelectableField="isSelectable"
-                           [allowMultiple]="false"
+                           [allowMultiple]="true"
                            [minLength]="3"
                            [suggestionsProvider]="_categoriesProvider"
                            (completeMethod)="_searchCategories($event)">
@@ -85,7 +85,7 @@
                            suggestionItemField="item"
                            suggestionLabelField="name"
                            suggestionSelectableField="isSelectable"
-                           [allowMultiple]="false"
+                           [allowMultiple]="true"
                            [minLength]="3"
                            [suggestionsProvider]="_categoriesProvider"
                            (completeMethod)="_searchCategories($event)">
