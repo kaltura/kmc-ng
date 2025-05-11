@@ -170,16 +170,13 @@ export class AppBootstrap implements CanActivate {
                         settings: {
                             ks: this.auth.appUser.ks,
                             pid: this.auth.appUser.partnerId.toString(),
-                            uiconfId:
-                                serverConfig.kalturaServer.previewUIConfV7.toString(),
-                            analyticsServerURI:
-                                serverConfig.analyticsServer.uri,
+                            uiconfId: serverConfig.kalturaServer.previewUIConfV7.toString(),
+                            analyticsServerURI: serverConfig.analyticsServer.uri,
                             hostAppName: ApplicationType.KMC,
                             hostAppVersion: globalConfig.client.appVersion,
-                            kalturaServerURI:
-                                "https://" + serverConfig.kalturaServer.uri,
-                            postSaveActions:
-                                "share,editQuiz,download,entry,downloadQuiz,playlist,editPlaylist,sharePlaylist",
+                            kalturaServerURI: "https://" + serverConfig.kalturaServer.uri,
+                            postSaveActions: "share,editQuiz,download,entry,downloadQuiz,playlist,editPlaylist,sharePlaylist",
+                            hostedInKalturaProduct: true,
                             widget: "",
                         },
                     },
