@@ -170,6 +170,7 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
             c.init({
                 apiUrl: serverConfig.externalServices.checklistEndpoint.uri,
                 button_location_id: "announcements",
+                integrateWithUnisphere: true,
                 kaltura_application: serverConfig.externalServices.checklistEndpoint.checklistItem,
                 ks : this._userAuthentication.appUser.ks,
                 vars : {
