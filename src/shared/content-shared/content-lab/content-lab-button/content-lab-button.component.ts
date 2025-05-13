@@ -59,6 +59,7 @@ export class ContentLabBtnComponent implements OnDestroy {
                                     } else {
                                         this.loading = false;
                                         this.disabled = true;
+                                        // TODO add tooltip
                                         this.cdr.detectChanges(); // force refresh as change was made outside Angular ngZone
                                     }
                                 } else if (data.status === 'error') {
@@ -95,7 +96,7 @@ export class ContentLabBtnComponent implements OnDestroy {
 
     public openContentLab(): void {
         if (this.unisphereRuntime) {
-            this._analytics.trackButtonClickEvent(ButtonType.Open,'GenerateWithAI', 'none', 'CL_core');
+            this._analytics.trackButtonClickEvent(ButtonType.Open,'GenerateWithAI', this.responsive ? 'KMC_Entries_list page' : 'KMC_entry_page', 'CL_core');
             if (this.isLiveEntry(this._entry) && this._entry.redirectEntryId) {
                 this.unisphereRuntime.openApplication({entryId: this._entry.redirectEntryId, eventSessionContextId: this._entry.id, type: 'entry'});
             } else {
