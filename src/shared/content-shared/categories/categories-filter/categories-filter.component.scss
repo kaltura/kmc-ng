@@ -29,14 +29,10 @@
 }
 
 .kTreeContainer {
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   height: 340px;
   border-bottom: 1px solid $kGrayscale6;
-  margin-left: -12px;
-  padding-left: 12px;
-  margin-right: -12px;
-  width: 387px;
+  width: 400px;
 }
 
 a.disabled {

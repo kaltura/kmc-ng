@@ -127,6 +127,14 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         if (profile.optOutGroupNames) {
             profile.optOutGroupNames.split(this.groupsDelimiter).forEach(groupName => optOutGroupNames.push({id: groupName}));
         }
+        let categories = [];
+        if (this.profile.zoomCategory.length) {
+            this.profile.zoomCategory.split(',').forEach(category => categories.push({name: category}));
+        }
+        let webinarCategory = [];
+        if (this.profile.zoomWebinarCategory.length) {
+            this.profile.zoomWebinarCategory.split(',').forEach(category => webinarCategory.push({name: category}));
+        }
         this._profileForm.setValue({
             enabled: profile.enableRecordingUpload === KalturaNullableBoolean.trueValue,
             accountId: profile.accountId || '',
@@ -144,8 +152,8 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             altHosts: profile.handleAlternativeHostsMode,
             coHosts: profile.handleCohostsMode,
             upload: profile.groupParticipationType || 0,
-            categories: profile.zoomCategory ? [{name: profile.zoomCategory}] : [],
-            webinarCategory: profile.zoomWebinarCategory ? [{name: profile.zoomWebinarCategory}] : [],
+            categories,
+            webinarCategory,
             uploadMeeting: typeof profile.enableMeetingUpload === "undefined" || profile.enableMeetingUpload === KalturaNullableBoolean.trueValue,
             uploadWebinar: profile.enableWebinarUploads === KalturaNullableBoolean.trueValue
         });
@@ -340,8 +348,9 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         } else {
             this.profile.optOutGroupNames = null;
         }
-        this.profile.zoomCategory = formValue.categories.length ? (formValue.categories[0].fullName ? formValue.categories[0].fullName : formValue.categories[0].name) : '';
-        this.profile.zoomWebinarCategory = formValue.webinarCategory.length ? formValue.webinarCategory[0].name : '';
+
+        this.profile.zoomCategory = formValue.categories.length ? formValue.categories.map(category => category.fullName ? category.fullName : category.name).join(',') : '';
+        this.profile.zoomWebinarCategory = formValue.webinarCategory.length ? formValue.webinarCategory.map(category => category.name).join(',') : '';
         if (this._showDeleteContent) {
             this.profile.deletionPolicy = formValue.deleteContent ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
         }
