@@ -158,7 +158,7 @@ export class AppBootstrap implements CanActivate {
             `${serverConfig.externalServices.unisphereLoaderEndpoint.uri}/loader/index.esm.js`,
             {
                 serverUrl:
-                    serverConfig.externalServices.unisphereLoaderEndpoint.uri,
+                serverConfig.externalServices.unisphereLoaderEndpoint.uri,
                 application: "kmc",
                 workspaceVersion: "1.0.0",
                 runtimes: [
@@ -171,6 +171,7 @@ export class AppBootstrap implements CanActivate {
                         settings: {
                             ks: this.auth.appUser.ks,
                             pid: this.auth.appUser.partnerId.toString(),
+                            loadThumbnailWithKS: this.auth.appUser.partnerInfo.loadThumbnailWithKs,
                             uiconfId: serverConfig.kalturaServer.previewUIConfV7.toString(),
                             analyticsServerURI: serverConfig.analyticsServer.uri,
                             hostAppName: ApplicationType.KMC,
@@ -204,7 +205,7 @@ export class AppBootstrap implements CanActivate {
                         },
                         settings: {
                             ks: this.auth.appUser.ks,
-                            hostAppName: 'KMC'
+                            hostAppName: 'kmc'
                         },
                     },
                 ],
