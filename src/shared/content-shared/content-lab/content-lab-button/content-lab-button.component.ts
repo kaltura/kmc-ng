@@ -52,14 +52,14 @@ export class ContentLabBtnComponent implements OnDestroy {
                                                 if (this._destroyed) return;
                                                 this.loading = false;
                                                 this.disabled = true;
-                                                this.reason = 'error';
+                                                this.reason = 'GENERAL_ERROR';
                                                 this.cdr.detectChanges(); // force refresh as change was made outside Angular ngZone
                                             }
                                         )
                                     } else {
                                         this.loading = false;
                                         this.disabled = true;
-                                        // TODO add tooltip
+                                        this.reason = 'NO_CATALOG_ITEMS';
                                         this.cdr.detectChanges(); // force refresh as change was made outside Angular ngZone
                                     }
                                 } else if (data.status === 'error') {
