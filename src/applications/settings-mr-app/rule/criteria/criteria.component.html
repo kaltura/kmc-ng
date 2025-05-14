@@ -12,6 +12,7 @@
             <kCriteriaPlays *ngSwitchCase="field === 'plays'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaPlays>
             <kCriteriaCategories *ngSwitchCase="field === 'categories'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaCategories>
             <kCriteriaTags *ngSwitchCase="field === 'tags'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaTags>
+            <kCriteriaMetadata *ngSwitchCase="field === 'metadata'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaMetadata>
             <kCriteriaOwner *ngSwitchCase="field === 'owner'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaOwner>
         </ng-container>
     </div>
