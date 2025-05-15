@@ -205,7 +205,10 @@ export class AppBootstrap implements CanActivate {
                         },
                         settings: {
                             ks: this.auth.appUser.ks,
-                            hostAppName: 'kmc'
+                            pid: this.auth.appUser.partnerId.toString(),
+                            analyticsServerURI: serverConfig.analyticsServer.uri,
+                            hostAppName: ApplicationType.KMC,
+                            hostAppVersion: globalConfig.client.appVersion
                         },
                     },
                 ],
