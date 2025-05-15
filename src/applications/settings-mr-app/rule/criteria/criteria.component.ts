@@ -46,6 +46,9 @@ export class CriteriaComponent {
                         delete this._filter['tagsMultiLikeOr']; // remove old filter from old rules to prevent tags filter duplication
                         this._criterias.push('tags');
                     }
+                    if (search['objectType'] === 'KalturaMetadataSearchItem') {
+                        this._criterias.push('metadata');
+                    }
                 })
             }
         }

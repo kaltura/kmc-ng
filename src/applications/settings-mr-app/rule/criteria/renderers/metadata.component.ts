@@ -1,8 +1,4 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
-import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
-import {ISubscription} from 'rxjs/Subscription';
-import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {
     KalturaClient,
     KalturaFilterPager,
@@ -11,11 +7,7 @@ import {
     KalturaMetadataProfile,
     KalturaMetadataProfileCreateMode,
     KalturaMetadataProfileFilter,
-    KalturaTagFilter,
-    KalturaTaggedObjectType,
-    MetadataProfileListAction,
-    KalturaSearchOperatorType,
-    TagSearchAction
+    MetadataProfileListAction
 } from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
@@ -69,8 +61,6 @@ import {MetadataItem, MetadataItemTypes, MetadataProfileParser} from 'app-shared
 })
 export class CriteriaMetadataComponent implements OnDestroy, OnInit {
 
-    public tags: string[] = [];
-
     public _matchConditions: { value: string, label: string }[] = [
         {value: 'contains', label: this._appLocalization.get('applications.settings.mr.criteria.tagsIn')},
         {value: 'notContains', label: this._appLocalization.get('applications.settings.mr.criteria.tagsNotIn')}
@@ -79,9 +69,11 @@ export class CriteriaMetadataComponent implements OnDestroy, OnInit {
 
     public _schemas: { value: KalturaMetadataProfile, label: string }[] = [];
     public _selectedSchema: KalturaMetadataProfile | null = null;
+    private savedSchemaId = 0;
 
     public _fields: { value: MetadataItem, label: string }[] = [];
     public _selectedField: MetadataItem | null = null;
+    private savedFieldName = '';
 
     public _value = '';
     public _loadingSchemas = false;
@@ -91,9 +83,12 @@ export class CriteriaMetadataComponent implements OnDestroy, OnInit {
     @Input() set filter(value: any) {
         if (value['advancedSearch'] && value['advancedSearch']['items'] && value['advancedSearch']['items'].length) {
             value['advancedSearch']['items'].forEach((advancedSearch: any) => {
-                if (advancedSearch['attribute'] && advancedSearch['attribute'] === KalturaMediaEntryMatchAttribute.tags) {
-                    this._matchCondition = advancedSearch['not'] === true ? 'notContains' : 'contains';
-                    this.tags = advancedSearch['value'].split(',');
+                if (advancedSearch['objectType'] && advancedSearch['objectType'] === 'KalturaMetadataSearchItem' && advancedSearch.items?.length) {
+                    this.savedSchemaId = advancedSearch.metadataProfileId;
+                    const item = advancedSearch.items[0];
+                    this._matchCondition = item['not'] === true ? 'notContains' : 'contains';
+                    this.savedFieldName = item['field'].split("'")[3];
+                    this._value = item['value'];
                 }
             });
         }
@@ -124,6 +119,13 @@ export class CriteriaMetadataComponent implements OnDestroy, OnInit {
                 response.objects.forEach(profile => {
                     this._schemas.push({value: profile, label: profile.name});
                 });
+                // select schema if savedSchemaId !== 0
+                if (this.savedSchemaId !== 0) {
+                    this._selectedSchema = this._schemas.find(schema => schema.value.id === this.savedSchemaId)?.value || null;
+                    if (this._selectedSchema) {
+                        this.loadFields();
+                    }
+                }
             }
         },
         error => {
@@ -135,7 +137,6 @@ export class CriteriaMetadataComponent implements OnDestroy, OnInit {
     public loadFields(): void {
         this._parsingError = false;
         this._fields = [];
-        this._value = '';
         this._selectedField = null;
         const parser = new MetadataProfileParser();
         const parsedProfile = parser.parse(this._selectedSchema);
@@ -150,6 +151,10 @@ export class CriteriaMetadataComponent implements OnDestroy, OnInit {
                     this._fields.push({value: item, label: item.label});
                 }
             });
+            if (this.savedFieldName !== '') {
+                this._selectedField = this._fields.find(field => field.value.name === this.savedFieldName)?.value || null;
+                this.savedFieldName = '';
+            }
         }
     }
 
