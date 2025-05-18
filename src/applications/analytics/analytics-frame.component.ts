@@ -129,7 +129,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             },
             customStyle: {
                 baseClassName: 'kmc',
-                css: `.kmc .kRealtimeDisclaimer {background-color: white;}`
+                css: `.kmc .kRealtimeDisclaimer {background-color: white !important;}`
             }
         };
 
