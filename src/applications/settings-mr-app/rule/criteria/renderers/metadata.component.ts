@@ -29,8 +29,8 @@ import {MetadataItem, MetadataItemTypes, MetadataProfileParser} from 'app-shared
             <div class="kRow kCenter">
                 <span class="kLabel">{{'applications.settings.mr.criteria.metadataSchema' | translate}}</span>
                 <div class="kRow">
-                    <p-dropdown [disabled]="_loadingSchemas || _error" [options]="_schemas" [style]="{'width':'200px', 'margin-right': '16px'}" [(ngModel)]="_selectedSchema" (ngModelChange)="onCriteriaChange()" [placeholder]="'applications.settings.mr.criteria.schemaPlaceholder' | translate" (onChange)="loadFields()"></p-dropdown>
-                    <p-dropdown [disabled]="_loadingSchemas || _error || _selectedSchema === null" [options]="_fields" [style]="{'width':'200px', 'margin-right': '16px'}" [(ngModel)]="_selectedField" (ngModelChange)="onCriteriaChange()" [placeholder]="'applications.settings.mr.criteria.fieldPlaceholder' | translate" (onChange)="onFieldChange()"></p-dropdown>
+                    <p-dropdown [disabled]="_loadingSchemas || _error" [options]="_schemas" [style]="{'width':'200px', 'margin-right': '16px'}" [(ngModel)]="_selectedSchema" [placeholder]="'applications.settings.mr.criteria.schemaPlaceholder' | translate" (onChange)="loadFields()"></p-dropdown>
+                    <p-dropdown [disabled]="_loadingSchemas || _error || _selectedSchema === null" [options]="_fields" [style]="{'width':'200px', 'margin-right': '16px'}" [(ngModel)]="_selectedField" [placeholder]="'applications.settings.mr.criteria.fieldPlaceholder' | translate" (onChange)="onFieldChange()"></p-dropdown>
                     <div *ngIf="_loadingSchemas" class="k-spinner-animation kSpinnerAnim" [style]="{'margin-top': '4px'}"></div>
                 </div>
             </div>
@@ -44,14 +44,15 @@ import {MetadataItem, MetadataItemTypes, MetadataProfileParser} from 'app-shared
                 <span class="kLabel">{{'applications.settings.mr.criteria.metadataLabel' | translate}}</span>
                 <div class="kRow">
                     <p-dropdown [options]="_matchConditions" [style]="{'width':'200px', 'margin-right': '16px'}" [(ngModel)]="_matchCondition" (ngModelChange)="onCriteriaChange()"></p-dropdown>
-                    <input *ngIf="_selectedField?.type !== 1" type="text" pInputText class="kSearchInput" [style]="{'width':'200px'}"
+                    <input type="text" pInputText class="kSearchInput" [style]="{'width':'200px'}"
                            [(ngModel)]="_value"
                            [disabled]="_selectedSchema === null || _selectedField === null"
                            (keyup.enter)="onCriteriaChange()"
                            (blur)="onCriteriaChange()"
                            placeholder="{{'applications.settings.mr.criteria.metadataPlaceholder' | translate}}">
-                    <p-calendar *ngIf="_selectedField?.type === 1" icon="kIconcalendar" [showIcon]="true" [(ngModel)]="_value" [style]="{'width':'200px'}"
-                                [monthNavigator]="true" [yearNavigator]="true" showTime="true" readonlyInput="true" (ngModelChange)="onCriteriaChange()"></p-calendar>
+                    <kInputHelper *ngIf="_selectedField" [style]="{'margin-top': '4px', 'margin-left': '4px'}">
+                        <span>{{'applications.settings.mr.criteria.field-' + _selectedField.type | translate}}</span>
+                    </kInputHelper>
                 </div>
             </div>
 
@@ -137,6 +138,7 @@ export class CriteriaMetadataComponent implements OnDestroy, OnInit {
     public loadFields(): void {
         this._parsingError = false;
         this._fields = [];
+        this._value = '';
         this._selectedField = null;
         const parser = new MetadataProfileParser();
         const parsedProfile = parser.parse(this._selectedSchema);
@@ -159,9 +161,7 @@ export class CriteriaMetadataComponent implements OnDestroy, OnInit {
     }
 
     public onFieldChange(): void {
-        if (this._selectedField.type === 1) {
-            this._value = '';
-        }
+        this._value = '';
     }
 
     public onCriteriaChange(): void {

@@ -3722,7 +3722,11 @@
                     "years": "Years",
                     "sec": "Seconds",
                     "min": "Minutes",
-                    "hour": "Hours"
+                    "hour": "Hours",
+                    "field-0": "Enter value",
+                    "field-1": "Enter date in Epoch format",
+                    "field-2": "Enter entries list: comma delimited string of entry IDs",
+                    "field-3": "Enter list of values: comma delimited string of values"
                 },
                 "schedule": {
                     "daily": "Daily",
