@@ -126,6 +126,10 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             },
             previewPlayer: {
                 loadJquery: false
+            },
+            customStyle: {
+                baseClassName: 'kmc',
+                css: `.kmc .kRealtimeDisclaimer {background-color: white;}`
             }
         };
 
