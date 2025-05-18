@@ -169,6 +169,7 @@ export class AppBootstrap implements CanActivate {
                             target: "body",
                         },
                         settings: {
+                            _schemaVersion: '1',
                             ks: this.auth.appUser.ks,
                             pid: this.auth.appUser.partnerId.toString(),
                             loadThumbnailWithKS: this.auth.appUser.partnerInfo.loadThumbnailWithKs,
@@ -204,11 +205,15 @@ export class AppBootstrap implements CanActivate {
                             },
                         },
                         settings: {
+                            _schemaVersion: '1',
                             ks: this.auth.appUser.ks,
                             pid: this.auth.appUser.partnerId.toString(),
-                            analyticsServerURI: serverConfig.analyticsServer.uri,
-                            hostAppName: ApplicationType.KMC,
-                            hostAppVersion: globalConfig.client.appVersion
+                            hostApp: 'kmc',
+                            kaltura: {
+                                analyticsServerURI: serverConfig.analyticsServer.uri,
+                                hostAppName: ApplicationType.KMC,
+                                hostAppVersion: globalConfig.client.appVersion
+                            }
                         },
                     },
                 ],
