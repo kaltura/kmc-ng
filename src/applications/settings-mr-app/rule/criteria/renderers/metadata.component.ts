@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {
     KalturaClient,
     KalturaFilterPager,
-    KalturaMediaEntryMatchAttribute,
     KalturaMetadataObjectType,
     KalturaMetadataProfile,
     KalturaMetadataProfileCreateMode,
@@ -30,8 +29,14 @@ import {MetadataItem, MetadataItemTypes, MetadataProfileParser} from 'app-shared
                 <span class="kLabel">{{'applications.settings.mr.criteria.metadataSchema' | translate}}</span>
                 <div class="kRow">
                     <p-dropdown [disabled]="_loadingSchemas || _error" [options]="_schemas" [style]="{'width':'200px', 'margin-right': '16px'}" [(ngModel)]="_selectedSchema" [placeholder]="'applications.settings.mr.criteria.schemaPlaceholder' | translate" (onChange)="loadFields()"></p-dropdown>
+                     <div *ngIf="_loadingSchemas" class="k-spinner-animation kSpinnerAnim" [style]="{'margin-top': '4px'}"></div>
+                </div>
+            </div>
+
+            <div class="kRow kCenter">
+                <span class="kLabel">{{'applications.settings.mr.criteria.metadataSchemaField' | translate}}</span>
+                <div class="kRow">
                     <p-dropdown [disabled]="_loadingSchemas || _error || _selectedSchema === null" [options]="_fields" [style]="{'width':'200px', 'margin-right': '16px'}" [(ngModel)]="_selectedField" [placeholder]="'applications.settings.mr.criteria.fieldPlaceholder' | translate" (onChange)="onFieldChange()"></p-dropdown>
-                    <div *ngIf="_loadingSchemas" class="k-spinner-animation kSpinnerAnim" [style]="{'margin-top': '4px'}"></div>
                 </div>
             </div>
 
@@ -43,7 +48,7 @@ import {MetadataItem, MetadataItemTypes, MetadataProfileParser} from 'app-shared
             <div class="kRow kCenter">
                 <span class="kLabel">{{'applications.settings.mr.criteria.metadataLabel' | translate}}</span>
                 <div class="kRow">
-                    <p-dropdown [options]="_matchConditions" [style]="{'width':'200px', 'margin-right': '16px'}" [(ngModel)]="_matchCondition" (ngModelChange)="onCriteriaChange()"></p-dropdown>
+                    <p-dropdown [options]="_matchConditions" [style]="{'width':'200px', 'margin-right': '16px'}" [(ngModel)]="_matchCondition" (ngModelChange)="onMatchConditionChange()"></p-dropdown>
                     <input type="text" pInputText class="kSearchInput" [style]="{'width':'200px'}"
                            [(ngModel)]="_value"
                            [disabled]="_selectedSchema === null || _selectedField === null"
@@ -63,10 +68,10 @@ import {MetadataItem, MetadataItemTypes, MetadataProfileParser} from 'app-shared
 export class CriteriaMetadataComponent implements OnDestroy, OnInit {
 
     public _matchConditions: { value: string, label: string }[] = [
-        {value: 'contains', label: this._appLocalization.get('applications.settings.mr.criteria.tagsIn')},
-        {value: 'notContains', label: this._appLocalization.get('applications.settings.mr.criteria.tagsNotIn')}
+        {value: 'equals', label: this._appLocalization.get('applications.settings.mr.criteria.equals')},
+        {value: 'notEquals', label: this._appLocalization.get('applications.settings.mr.criteria.notEqual')}
     ];
-    public _matchCondition = 'contains';
+    public _matchCondition = 'equals';
 
     public _schemas: { value: KalturaMetadataProfile, label: string }[] = [];
     public _selectedSchema: KalturaMetadataProfile | null = null;
@@ -87,7 +92,7 @@ export class CriteriaMetadataComponent implements OnDestroy, OnInit {
                 if (advancedSearch['objectType'] && advancedSearch['objectType'] === 'KalturaMetadataSearchItem' && advancedSearch.items?.length) {
                     this.savedSchemaId = advancedSearch.metadataProfileId;
                     const item = advancedSearch.items[0];
-                    this._matchCondition = item['not'] === true ? 'notContains' : 'contains';
+                    this._matchCondition = item['not'] === true ? 'notEquals' : 'equals';
                     this.savedFieldName = item['field'].split("'")[3];
                     this._value = item['value'];
                 }
@@ -138,7 +143,6 @@ export class CriteriaMetadataComponent implements OnDestroy, OnInit {
     public loadFields(): void {
         this._parsingError = false;
         this._fields = [];
-        this._value = '';
         this._selectedField = null;
         const parser = new MetadataProfileParser();
         const parsedProfile = parser.parse(this._selectedSchema);
@@ -161,7 +165,30 @@ export class CriteriaMetadataComponent implements OnDestroy, OnInit {
     }
 
     public onFieldChange(): void {
+        let fieldName = '';
+        switch (this._selectedField?.type) {
+            case MetadataItemTypes.Text:
+                fieldName = 'AM_criteria_entry_custom_metadata_field_type_text';
+                break;
+            case MetadataItemTypes.Date:
+                fieldName = 'AM_criteria_entry_custom_metadata_field_type_date';
+                break;
+            case MetadataItemTypes.Object:
+                fieldName = 'AM_criteria_entry_custom_metadata_field_type_entry_list';
+                break;
+            case MetadataItemTypes.List:
+                fieldName = 'AM_criteria_entry_custom_metadata_field_type_text_select_list';
+                break;
+            default:
+                fieldName = 'AM_criteria_entry_custom_metadata_field_type_text';
+        }
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, fieldName, null , 'Automation_manager');
         this._value = '';
+    }
+
+    public onMatchConditionChange(): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, this._matchCondition === 'equals' ? 'AM_criteria_entry_custom_metadata_equals' : 'AM_criteria_entry_custom_metadata_doesnt_equal', null , 'Automation_manager');
+        this.onCriteriaChange();
     }
 
     public onCriteriaChange(): void {
@@ -174,14 +201,13 @@ export class CriteriaMetadataComponent implements OnDestroy, OnInit {
             items: [
                 {
                     objectType: "KalturaSearchMatchCondition",
-                    not: this._matchCondition === 'contains' ? false : true,
+                    not: this._matchCondition === 'equals' ? false : true,
                     field: "/*[local-name()='metadata']/*[local-name()='" + this._selectedField.name + "']",
                     value: this._value
                 }
             ]
 
         };
-        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_tags_type', this._matchCondition === 'tagsIn' ? 'contains' : 'doesn’t_contain' , 'Automation_manager');
         this.onFilterChange.emit({field: 'metadata', value});
     }
 

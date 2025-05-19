@@ -111,14 +111,6 @@ export class CriteriaComponent {
                 }
             },
             {
-                label: this._appLocalization.get('applications.settings.mr.criteria.metadata'),
-                disabled: this._criterias.indexOf('metadata') > -1,
-                command: () => {
-                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_metadata', null , 'Automation_manager');
-                    this.addFilter('metadata');
-                }
-            },
-            {
                 label: this._appLocalization.get('applications.settings.mr.criteria.owner'),
                 disabled: this._criterias.indexOf('owner') > -1,
                 command: () => {
@@ -132,6 +124,14 @@ export class CriteriaComponent {
                 command: () => {
                     this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_duration', null , 'Automation_manager');
                     this.addFilter('duration');
+                }
+            },
+            {
+                label: this._appLocalization.get('applications.settings.mr.criteria.metadata'),
+                disabled: this._criterias.indexOf('metadata') > -1,
+                command: () => {
+                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_entry_custom_metadata', null , 'Automation_manager');
+                    this.addFilter('metadata');
                 }
             }
         ];
@@ -221,6 +221,7 @@ export class CriteriaComponent {
     }
 
     public deleteCriteria(field: string): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Delete, 'AM_criteria', field , 'Automation_manager');
         this.clearFilterFields(field);
         this._criterias = this._criterias.filter(criteria => criteria !== field);
         this.removeEmptyFields();
