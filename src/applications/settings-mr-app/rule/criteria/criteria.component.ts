@@ -46,6 +46,9 @@ export class CriteriaComponent {
                         delete this._filter['tagsMultiLikeOr']; // remove old filter from old rules to prevent tags filter duplication
                         this._criterias.push('tags');
                     }
+                    if (search['objectType'] === 'KalturaMetadataSearchItem') {
+                        this._criterias.push('metadata');
+                    }
                 })
             }
         }
@@ -122,6 +125,14 @@ export class CriteriaComponent {
                     this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_duration', null , 'Automation_manager');
                     this.addFilter('duration');
                 }
+            },
+            {
+                label: this._appLocalization.get('applications.settings.mr.criteria.metadata'),
+                disabled: this._criterias.indexOf('metadata') > -1,
+                command: () => {
+                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_entry_custom_metadata', null , 'Automation_manager');
+                    this.addFilter('metadata');
+                }
             }
         ];
     }
@@ -156,6 +167,14 @@ export class CriteriaComponent {
                 delete this._filter['advancedSearch'];
             }
         }
+        if (field === 'metadata') {
+            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
+                this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search['objectType'] !== 'KalturaMetadataSearchItem');
+            }
+            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length === 0) {
+                delete this._filter['advancedSearch'];
+            }
+        }
         if (field === 'owner') {
             delete this._filter['userIdIn'];
             delete this._filter['userIdNotIn'];
@@ -176,13 +195,15 @@ export class CriteriaComponent {
 
     public onCriteriaChange(event: {field: string, value: any}): void {
         this.clearFilterFields(event.field);
-        if (event.field === 'plays' || event.field === 'tags') {
+        if (event.field === 'plays' || event.field === 'tags' || event.field === 'metadata') {
             if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
                 // remove old plays filter before adding the new one
                 if (event.field === 'plays') {
                     this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter((search: any) => search['attribute'] !== KalturaMediaEntryCompareAttribute.plays);
-                } else {
+                } else if (event.field === 'tags') {
                     this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter((search: any) => search['attribute'] !== KalturaMediaEntryMatchAttribute.tags);
+                } else {
+                    this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter((search: any) => search['objectType'] !== 'KalturaMetadataSearchItem');
                 }
             } else {
                 this._filter['advancedSearch'] = {
@@ -200,6 +221,7 @@ export class CriteriaComponent {
     }
 
     public deleteCriteria(field: string): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Delete, 'AM_criteria', field , 'Automation_manager');
         this.clearFilterFields(field);
         this._criterias = this._criterias.filter(criteria => criteria !== field);
         this.removeEmptyFields();

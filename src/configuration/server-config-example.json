@@ -41,7 +41,7 @@
             "uri": "https://user.nvp1.ovp.kaltura.com/api/v1/reports"
         },
         "mrEndpoint": {
-            "uri": "https://mr.nvp1.ovp.kaltura.com/api/v1/"
+            "uri": "https://mr.nvp1.ovp.kaltura.com/api/v1"
         },
         "unisphereLoaderEndpoint": {
             "uri": "https://unisphere.nvp1.ovp.kaltura.com/v1"

@@ -31,8 +31,10 @@ import { DeleteRuleComponent } from './rules/delete-rule/delete-rule.component';
 import { NewRuleComponent } from './rules/new-rule/new-rule.component';
 import { RuleComponent } from './rule/rule.component';
 import { CriteriaComponent } from './rule/criteria/criteria.component';
-import { CriteriaCreatedComponent, CriteriaPlayedComponent, CriteriaDurationComponent, CriteriaPlaysComponent,
-         CriteriaCategoriesComponent, CriteriaTagsComponent, CriteriaOwnerComponent } from './rule/criteria/renderers';
+import {
+    CriteriaCreatedComponent, CriteriaPlayedComponent, CriteriaDurationComponent, CriteriaPlaysComponent,
+    CriteriaCategoriesComponent, CriteriaTagsComponent, CriteriaOwnerComponent, CriteriaMetadataComponent
+} from './rule/criteria/renderers';
 import { CategoriesSelector } from './rule/category-selector/categories-selector.component';
 import {KMCPermissionsModule} from 'app-shared/kmc-shared/kmc-permissions';
 import {ReviewTagsComponent} from './review/review-tags/review-tags.component';
@@ -109,6 +111,7 @@ import {StatusPipe} from './review/review-tags/status.pipe';
       CriteriaCategoriesComponent,
       CategoriesSelector,
       CriteriaTagsComponent,
+      CriteriaMetadataComponent,
       CriteriaOwnerComponent,
       ActionFlavourComponent,
       ActionCategoryComponent,
