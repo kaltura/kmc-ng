@@ -1,0 +1,32 @@
+.contentLabButton {
+    min-width: 150px;
+    margin-right: 8px;
+    ::ng-deep .clIcon {
+        width: 24px;
+        height: 24px;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFPSURBVHgB7VTtcYMwDLVNB2AEOgJ3DEAmaTpBmwmSTtB2giSTlAHgGKHtBiwARLpInE/xB/n6l3fnOyNb0tOTsFIPENq2TWFl0v6kboRhGD7Hccxgu7DtWt0AyLzv+1/cJ0nynOf5H5+ZGc7O0kXwLX/j3r4flchXOgeGVQqXEqtpmmZnjFmZCPsMgi/RyVFFB+vf50ukUhNhv+Y9sHq3z0DnriiKJWoOn5V1VKENzhbYCx1iz41jxtTALnR3VpOxscD+TZjRtnY1nAJWWuudHRyhJRMMTLqnygMMBA38sINR4k5WqK0ScdRKdQYo0colG4MlCk6EDzwpoTsnEkElG9i+BHyQzB6a+SX1jiYQiXAsZaO/IfAmJMmsBJQkpdGbJJAjOAfeH41Y7icmjhG8KgECdZ4uwliqe6Cu6x94uLbqQkRfU6jiVR0n54H74AAyXsCQasd9MwAAAABJRU5ErkJggg==);
+    }
+    &.loaded ::ng-deep .clIcon {
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADPSURBVHgB7ZTbDcMgDEWdqgMwgkfrRmEDugmrtBOkG7hYclRKAUMDfzkSIlLwvX4gAE4EIjJhIcwiiLuwPMyAM6cP2BOrli7iPjLwXSal0jPCKRxnroo4hu22fy/L8oh+v8J6VsI51kBD9ju2lMRfLaLvwTEbl9xwFlvEebBrpq9rSUAyd5owishGdVxqJLGmJuypH1cUFS6yazeiBIJ2UzKV3JWsuX2Wjrw7YmQz4lZrSY+Jod9hI4wkqcLBaOjIK9lh4qdkHxngsMGe5HgDkCTZZZRLez8AAAAASUVORK5CYII=);
+    }
+    &.disabled ::ng-deep .clIcon {
+        display: block;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFPSURBVHgB7VTtcYMwDLVNB2AEOgJ3DEAmaTpBmwmSTtB2giSTlAHgGKHtBiwARLpInE/xB/n6l3fnOyNb0tOTsFIPENq2TWFl0v6kboRhGD7Hccxgu7DtWt0AyLzv+1/cJ0nynOf5H5+ZGc7O0kXwLX/j3r4flchXOgeGVQqXEqtpmmZnjFmZCPsMgi/RyVFFB+vf50ukUhNhv+Y9sHq3z0DnriiKJWoOn5V1VKENzhbYCx1iz41jxtTALnR3VpOxscD+TZjRtnY1nAJWWuudHRyhJRMMTLqnygMMBA38sINR4k5WqK0ScdRKdQYo0colG4MlCk6EDzwpoTsnEkElG9i+BHyQzB6a+SX1jiYQiXAsZaO/IfAmJMmsBJQkpdGbJJAjOAfeH41Y7icmjhG8KgECdZ4uwliqe6Cu6x94uLbqQkRfU6jiVR0n54H74AAyXsCQasd9MwAAAABJRU5ErkJggg==);
+    }
+    &.responsive {
+        margin-right: 0px;
+    }
+}
+@media screen and (max-width: 1310px) {
+    .contentLabButton.responsive {
+        width: 34px !important;
+        padding: 4px;
+        min-width: 0px;
+        ::ng-deep .p-button-label {
+            display: none !important;
+        }
+        ::ng-deep .p-button-icon {
+            margin-right: 0px !important;
+        }
+    }
+}

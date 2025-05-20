@@ -54,7 +54,7 @@ export class QuizAppViewService extends KmcComponentViewBaseService<QuizAppViewA
     private _isAvailableByData(args: QuizAppViewArgs): boolean {
         const { entry, hasSource} = args;
         const entryReady = entry.status === KalturaEntryStatus.ready;
-        const isEntryReplacing = entry.replacementStatus !== KalturaEntryReplacementStatus.none;
+        const isEntryReplacing = entry.replacementStatus && entry.replacementStatus !== KalturaEntryReplacementStatus.none;
         const isLiveEntry = entry.mediaType === KalturaMediaType.liveStreamFlash ||
             entry.mediaType === KalturaMediaType.liveStreamWindowsMedia ||
             entry.mediaType === KalturaMediaType.liveStreamRealMedia ||

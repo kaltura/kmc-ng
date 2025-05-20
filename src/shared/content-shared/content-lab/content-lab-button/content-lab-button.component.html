@@ -1,0 +1,7 @@
+<button pButton class="kButtonBranded contentLabButton" [class.responsive]="responsive"
+        [kTooltip]="reason ? (('contentLab.errors.' + reason) | translate) : ''"
+        [label]="loading ? ('contentLab.initializing' | translate) : ('contentLab.buttonLabel' | translate)"
+        [disabled]="disabled"
+        [ngClass]="loading ? 'loading' : disabled ? 'disabled' : 'loaded'"
+        [icon]="'clIcon'"
+        (click)="openContentLab()"></button>

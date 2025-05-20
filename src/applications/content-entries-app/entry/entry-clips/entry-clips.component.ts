@@ -14,6 +14,7 @@ import {AppEventsService} from 'app-shared/kmc-shared';
 import {KalturaMediaEntry} from 'kaltura-ngx-client';
 import {WindowClosedEvent} from 'app-shared/kmc-shared/events/window-closed.event';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {PubSubServiceType} from '@unisphere/runtime';
 
 @Component({
     selector: 'kEntryClips',
@@ -86,9 +87,6 @@ export class EntryClips implements OnInit, OnDestroy {
                             entry: this._widgetService.data,
                             hasSource: this._store.hasSource.value()
                         });
-                        if (this._widgetService.data?.id && this._contentLabAvailable && !this.unisphereCallbackUnsubscribe) {
-                            // this.loadContentLab(this._widgetService.data.id);
-                        }
                     }else {
                         this._clipAndTrimEnabled = false;
                     }
@@ -107,73 +105,6 @@ export class EntryClips implements OnInit, OnDestroy {
 
                 }
             });
-    }
-
-    private loadContentLab(entryId: string): void {
-        this._bootstrapService.unisphereWorkspace$
-            .pipe(cancelOnDestroy(this))
-            .subscribe(unisphereWorkspace => {
-                if (unisphereWorkspace) {
-                    const contextSettings = {
-                        ks: this._appAuthentication.appUser.ks,
-                        pid: this._appAuthentication.appUser.partnerId.toString(),
-                        uiconfId: serverConfig.kalturaServer.previewUIConfV7.toString(),
-                        analyticsServerURI: serverConfig.analyticsServer.uri,
-                        hostAppName: 'kmc',
-                        hostAppVersion: globalConfig.client.appVersion,
-                        kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
-                        kalturaServerProxyURI: '',
-                        clipsOverride: '',
-                        postSaveActions: 'share,download,entry',
-                        widget: 'clips',
-                        entryId,
-                        buttonLabel: '',
-                        eventSessionContextId: '',
-                    }
-
-                    if (this._widgetService.isLiveEntry() && this._widgetService.data?.redirectEntryId?.length) {
-                        // handle live with recording
-                        contextSettings.entryId = this._widgetService.data.redirectEntryId;
-                        contextSettings.eventSessionContextId = entryId;
-                    }
-
-                    if (!this.unisphereModuleContext) {
-                        unisphereWorkspace.loadElement('unisphere.module.content-lab', 'application', contextSettings).then((data: any) => {
-                            this.unisphereModuleContext = data.element;
-                            this.unisphereModuleContext.assignArea('contentLabButton');
-                        }).catch(error => {
-                            console.error('failed to load module: ' + error.message)
-                        });
-                    }
-
-                    this.unisphereCallbackUnsubscribe = unisphereWorkspace.getService('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-lab.message-host-app', (data) => {
-                        const { action, entry } = data.payload;
-                        switch (action) {
-                            case 'entry':
-                                // navigate to entry
-                                this.unisphereModuleContext?.closeWidget(); // close widget
-                                document.body.style.overflowY = "auto";
-                                this._widgetService.navigateToEntry(entry.id);
-                                break;
-                            case 'download':
-                                // download entry
-                                this._browserService.openLink(entry.downloadUrl);
-                                break;
-                            case 'share':
-                                // edit entry
-                                this.sharedEntryId = entry.id;
-                                this.unisphereModuleContext?.closeWidget(); // close widget
-                                this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaMediaEntry(entry)));
-                                break;
-                            default:
-                                break;
-                        }
-                    })
-                }
-            },
-            error => {
-                // TODO - handle unisphere workspace load error
-            })
     }
 
     ngOnDestroy() {

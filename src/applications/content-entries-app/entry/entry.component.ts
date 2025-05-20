@@ -34,9 +34,8 @@ import { AppAnalytics, ApplicationType, BrowserService } from 'app-shared/kmc-sh
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { EntryQuizzeWidget } from './entry-quizzes/entry-quizzes-widget.service';
-import { serverConfig } from 'config/server';
-import { globalConfig } from 'config/global';
 import { AppAuthentication, AppBootstrap } from 'app-shared/kmc-shell';
+import { PubSubServiceType } from '@unisphere/runtime';
 
 @Component({
 	selector: 'kEntry',
@@ -72,6 +71,8 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _entryType: KalturaMediaType;
 	public _sourceType: KalturaSourceType;
     public _entry: KalturaMediaEntry;
+    public _contentLabEntryId: string;
+    public _contentLabEventSessionContextId = '';
 	public _showLoader = false;
 	public _areaBlockerMessage: AreaBlockerMessage;
 	public _currentEntryId: string;
@@ -128,10 +129,10 @@ export class EntryComponent implements OnInit, OnDestroy {
 	}
 
     public _analyticsAllowed: boolean;
-    public _contentLabSelectedQuiz: KalturaMediaEntry;
 
-    private unisphereModuleContext: any;
-    private unisphereCallbackUnsubscribe: Function;
+    private unisphereRuntime: any = null;
+    public _contentLabSelectedQuiz: KalturaMediaEntry;
+    private unisphereCallbackUnsubscribe:  () => void = null;
 
 	constructor(entryWidgetsManager: EntryWidgetsManager,
 	            widget1: EntrySectionsListWidget,
@@ -377,17 +378,13 @@ export class EntryComponent implements OnInit, OnDestroy {
 								this._sourceType = entry.sourceType;
                                 this._isQuizEntry = entry.capabilities?.indexOf('quiz.quiz') > -1;
                                 this._entry = entry;
+                                const isLive = this.isLiveEntry(entry);
+                                this._contentLabEntryId = isLive && entry.redirectEntryId?.length > 0 ? entry.redirectEntryId : entry.id;
+                                this._contentLabEventSessionContextId = isLive && entry.redirectEntryId?.length > 0 ? entry.id : '';
                                 this._analyticsAllowed = this._analyticsNewMainViewService.isAvailable(); // new analytics app is available
                                 this._buildMenu(entry);
                                 if (this._contentLabAvailable) {
-                                    if (this.unisphereCallbackUnsubscribe) {
-                                        this.unisphereCallbackUnsubscribe();
-                                        this.unisphereCallbackUnsubscribe = null;
-                                    }
-                                    if (this.unisphereModuleContext) {
-                                        this.unisphereModuleContext = null;
-                                    }
-                                    this.loadContentLab(entry);
+                                    this.registerToContentLabAction();
                                 }
 								break;
 							case ActionTypes.EntryLoadingFailed:
@@ -475,68 +472,35 @@ export class EntryComponent implements OnInit, OnDestroy {
 				});
 	}
 
-    private isLiveEntry(entry: KalturaMediaEntry): boolean {
-        return entry.mediaType === KalturaMediaType.liveStreamFlash ||
-            entry.mediaType === KalturaMediaType.liveStreamWindowsMedia ||
-            entry.mediaType === KalturaMediaType.liveStreamRealMedia ||
-            entry.mediaType === KalturaMediaType.liveStreamQuicktime;
-    }
-
-    private loadContentLab(entry: KalturaMediaEntry): void {
+    private registerToContentLabAction(): void {
+        if (this.unisphereCallbackUnsubscribe) {
+            this.unisphereCallbackUnsubscribe();
+            this.unisphereCallbackUnsubscribe = null;
+        }
         this._bootstrapService.unisphereWorkspace$
             .pipe(cancelOnDestroy(this))
             .subscribe(unisphereWorkspace => {
-                    if (unisphereWorkspace) {
-                        const contextSettings = {
-                            ks: this._appAuthentication.appUser.ks,
-                            pid: this._appAuthentication.appUser.partnerId.toString(),
-                            uiconfId: serverConfig.kalturaServer.previewUIConfV7.toString(),
-                            analyticsServerURI: serverConfig.analyticsServer.uri,
-                            hostAppName: ApplicationType.KMC,
-                            hostAppVersion: globalConfig.client.appVersion,
-                            kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
-                            kalturaServerProxyURI: '',
-                            clipsOverride: '',
-                            postSaveActions: 'share,editQuiz,download,entry,downloadQuiz,playlist,editPlaylist,sharePlaylist',
-                            widget: '',
-                            entryId: entry.id,
-                            buttonLabel: '',
-                            eventSessionContextId: '',
-                        }
-
-                        if (this.isLiveEntry(entry) && entry.redirectEntryId?.length) {
-                            // handle live with recording
-                            contextSettings.entryId = entry.redirectEntryId;
-                            contextSettings.eventSessionContextId = entry.id;
-                        }
-
-                        if (!this.unisphereModuleContext) {
-                            unisphereWorkspace.loadElement('unisphere.module.content-lab', 'application', contextSettings).then((data: any) => {
-                                this.unisphereModuleContext = data.element;
-                                this.unisphereModuleContext.assignArea('contentLabButton');
-                            }).catch(error => {
-                                console.error('failed to load module: ' + error.message)
-                            });
-                        }
-
-                        this.unisphereCallbackUnsubscribe = unisphereWorkspace.getService('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-lab.message-host-app', (data) => {
-                            const { action, entry } = data.payload;
+                if (unisphereWorkspace) {
+                    this.unisphereRuntime = unisphereWorkspace.getRuntime('unisphere.widget.content-lab', 'application');
+                    if (this.unisphereRuntime) {
+                        this.unisphereCallbackUnsubscribe = unisphereWorkspace.getService<PubSubServiceType>('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-lab.message-host-app', (data) => {
+                            const {action, entry} = data.payload;
                             switch (action) {
                                 case 'entry':
                                     // navigate to entry
-                                    this.unisphereModuleContext?.closeWidget(); // close widget
+                                    this.unisphereRuntime?.closeWidget(); // close widget
                                     document.body.style.overflowY = "auto";
                                     this._entryStore.openEntry(new KalturaMediaEntry(entry));
                                     break;
                                 case 'playlist':
                                     // navigate to playlist metadata tab
-                                    this.unisphereModuleContext?.closeWidget(); // close widget
+                                    this.unisphereRuntime?.closeWidget(); // close widget
                                     document.body.style.overflowY = "auto";
                                     this._router.navigateByUrl(`/content/playlists/playlist/${entry.id}/metadata`);
                                     break;
                                 case 'editPlaylist':
                                     // navigate to playlist content tb
-                                    this.unisphereModuleContext?.closeWidget(); // close widget
+                                    this.unisphereRuntime?.closeWidget(); // close widget
                                     document.body.style.overflowY = "auto";
                                     this._router.navigateByUrl(`/content/playlists/playlist/${entry.id}/content`);
                                     break;
@@ -546,20 +510,26 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     break;
                                 case 'share':
                                     // open share & embed for entry
-                                    this.unisphereModuleContext?.closeWidget(); // close widget
+                                    this.unisphereRuntime?.closeWidget(); // close widget
                                     document.body.style.overflowY = "auto";
                                     this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaMediaEntry(entry)));
                                     break;
+                                case 'addCaptions':
+                                    // open captions tab
+                                    this.unisphereRuntime?.closeWidget(); // close widget
+                                    document.body.style.overflowY = "auto";
+                                    this._router.navigateByUrl(`/content/entries/entry/${entry.id}/captions`);
+                                    break;
                                 case 'sharePlaylist':
                                     // open share & embed for playlist
-                                    this.unisphereModuleContext?.closeWidget(); // close widget
+                                    this.unisphereRuntime?.closeWidget(); // close widget
                                     document.body.style.overflowY = "auto";
                                     this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaPlaylist(entry)));
                                     break;
                                 case 'editQuiz':
                                     // edit entry
                                     this._contentLabSelectedQuiz = new KalturaMediaEntry(entry);
-                                    this.unisphereModuleContext?.closeWidget();
+                                    this.unisphereRuntime?.closeWidget();
                                     document.body.style.overflowY = "auto";
                                     this._isQuizEntry = true;
                                     this._clipAndTrim.open();
@@ -577,10 +547,16 @@ export class EntryComponent implements OnInit, OnDestroy {
                             }
                         })
                     }
-                },
-                error => {
-                    // TODO - handle unisphere workspace load error
-                })
+                }
+            });
+    }
+
+
+    public isLiveEntry(entry: KalturaMediaEntry): boolean {
+        return entry.mediaType === KalturaMediaType.liveStreamFlash ||
+            entry.mediaType === KalturaMediaType.liveStreamWindowsMedia ||
+            entry.mediaType === KalturaMediaType.liveStreamRealMedia ||
+            entry.mediaType === KalturaMediaType.liveStreamQuicktime;
     }
 
 	private _createBackToEntriesButton(): AreaBlockerMessageButton {

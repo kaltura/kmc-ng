@@ -23,6 +23,12 @@
     display: flex;
     flex-direction: column;
 
+    .aiConsentBanner {
+        display: flex;
+        justify-content: center;
+        margin-top: -8px;
+        margin-bottom: 16px;
+    }
     .kEntriesInfo {
       position: absolute;
       top: 144px;

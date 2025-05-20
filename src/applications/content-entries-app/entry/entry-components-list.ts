@@ -46,7 +46,6 @@ import { DownloadEntryComponent } from './components/download-entry/download-ent
 import {EntryLiveCaptions} from './entry-captions/entry-live-captions.component';
 import {EntryQuizzes} from './entry-quizzes/entry-quizzes.component';
 
-
 export const EntryComponentsList = [
     CategoriesSelector,
     DRMDetails,

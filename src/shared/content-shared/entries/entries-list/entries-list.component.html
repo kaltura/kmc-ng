@@ -1,6 +1,7 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
   <div class="kEntries kOverrideFAIcons">
     <div #entriesTableHolder class="kEntriesHolder kContent">
+      <div id="ai-consent-banner" class="aiConsentBanner"></div>
       <kSticky stickyId="entriesFilters" [scrollOffset]="80" [sticksTo]="'header'">
         <div class="kEntriesTableFilters kContent" [class.kAdditionalFilters]="additionalFilters.children.length !== 0">
           <span class="kSelectedEntriesNum"
@@ -97,6 +98,7 @@
                      [sortOrder]="_query.sortDirection"
                      [columns]="columns"
                      [rowActions]="rowActions"
+                     [isAIButtonVisible]="isAIButtonVisible"
                      (actionSelected)="onActionsSelected.emit($event)"
                      (openActionsMenu)="_openActionsMenu($event)"
                      (sortChanged)="onSortChanged($event)"

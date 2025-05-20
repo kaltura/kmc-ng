@@ -18,6 +18,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
 import {KalturaMediaEntry} from 'kaltura-ngx-client';
 import {MenuItem} from 'primeng/api';
 import {Menu} from 'primeng/menu';
+import {PubSubServiceType} from '@unisphere/runtime';
 
 @Component({
     selector: 'kEntryQuizzes',
@@ -97,9 +98,6 @@ export class EntryQuizzes implements OnInit, OnDestroy {
                             entry: this._widgetService.data,
                             hasSource: this._store.hasSource.value()
                         });
-                        if (this._widgetService.data?.id && this._contentLabAvailable && !this.unisphereCallbackUnsubscribe) {
-                            // this.loadContentLab(this._widgetService.data.id);
-                        }
                     }else {
                         this._clipAndTrimEnabled = false;
                     }
@@ -148,72 +146,6 @@ export class EntryQuizzes implements OnInit, OnDestroy {
             this._selectedEntry = this._widgetService.data;
             this._clipAndTrim.open();
         }
-    }
-
-    private loadContentLab(entryId: string): void {
-        this._bootstrapService.unisphereWorkspace$
-            .pipe(cancelOnDestroy(this))
-            .subscribe(unisphereWorkspace => {
-                if (unisphereWorkspace) {
-                    const contextSettings = {
-                        ks: this._appAuthentication.appUser.ks,
-                        pid: this._appAuthentication.appUser.partnerId.toString(),
-                        uiconfId: serverConfig.kalturaServer.previewUIConfV7.toString(),
-                        analyticsServerURI: serverConfig.analyticsServer.uri,
-                        hostAppName: 'kmc',
-                        hostAppVersion: globalConfig.client.appVersion,
-                        kalturaServerURI: 'https://' + serverConfig.kalturaServer.uri,
-                        kalturaServerProxyURI: '',
-                        widget: 'quiz',
-                        postSaveActions: 'edit,download,entry',
-                        entryId,
-                        buttonLabel: '',
-                        eventSessionContextId: '',
-                    }
-
-                    if (this._widgetService.isLiveEntry() && this._widgetService.data?.redirectEntryId?.length) {
-                        // handle live with recording
-                        contextSettings.entryId = this._widgetService.data.redirectEntryId;
-                        contextSettings.eventSessionContextId = entryId;
-                    }
-
-                    if (!this.unisphereModuleContext) {
-                        unisphereWorkspace.loadElement('unisphere.module.content-lab', 'application', contextSettings).then((data: any) => {
-                            this.unisphereModuleContext = data.element;
-                            this.unisphereModuleContext.assignArea('contentLabButton');
-                        }).catch(error => {
-                            console.error('failed to load module: ' + error.message)
-                        });
-                    }
-
-                    this.unisphereCallbackUnsubscribe = unisphereWorkspace.getService('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-lab.message-host-app', (data) => {
-                        const { action, entry } = data.payload;
-                        switch (action) {
-                            case 'entry':
-                                // navigate to entry
-                                this.unisphereModuleContext?.closeWidget();
-                                document.body.style.overflowY = "auto";
-                                this._widgetService.navigateToEntry(entry.id)
-                                break;
-                            case 'download':
-                                // download questions list
-                                this.downloadQuestions(entry.id);
-                                break;
-                            case 'edit':
-                                // edit entry
-                                this._selectedEntry = entry;
-                                this.unisphereModuleContext?.closeWidget();
-                                this._clipAndTrim.open();
-                                break;
-                            default:
-                                break;
-                        }
-                    })
-                }
-            },
-            error => {
-                // TODO - handle unisphere workspace load error
-            })
     }
 
     private downloadQuestions(entryId: string): void {
