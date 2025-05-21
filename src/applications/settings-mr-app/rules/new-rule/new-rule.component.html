@@ -22,6 +22,13 @@
                 </div>
 
                 <div class="kRow">
+                    <span class="kLabel">{{'applications.settings.mr.newRuleType' | translate}}</span>
+                    <div>
+                        <p-dropdown class="kControl" formControlName="type" appendTo="body" [options]="_ruleTypes"></p-dropdown>
+                    </div>
+                </div>
+
+                <div class="kRow">
                     <span class="kLabel">{{'applications.administration.role.description' | translate}}</span>
                     <div class="inputWithDoc">
                         <textarea class="kControl" pInputTextarea [maxlength]="512" formControlName="description"></textArea>

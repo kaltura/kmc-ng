@@ -21,6 +21,11 @@ export class NewRuleComponent implements OnInit {
     @Input() parentPopupWidget: PopupWidgetComponent;
     @Output() onProfileCreated = new EventEmitter<ManagedTasksProfile>();
 
+    public _ruleTypes: Array<{ value: string, label: string }> = [
+        {label: this._appLocalization.get('applications.settings.mr.vodRule'), value: 'entryProfile'},
+        {label: this._appLocalization.get('applications.settings.mr.liveRule'), value: 'liveEntryProfile'}
+    ];
+
     public _newProfileForm: FormGroup;
 
     public _blockerMessage: AreaBlockerMessage = null;
@@ -49,6 +54,7 @@ export class NewRuleComponent implements OnInit {
     private _buildForm(): void {
         this._newProfileForm = this._fb.group({
             name: ['', Validators.required],
+            type: ['entryProfile'],
             description: ['']
         });
     }
@@ -83,12 +89,15 @@ export class NewRuleComponent implements OnInit {
         }
 
         this._markFormFieldsAsPristine();
-        this._analytics.trackButtonClickEvent(ButtonType.Add, 'AM_add_new_rule', null, 'Automation_manager');
 
-        const {name, description} = this._newProfileForm.value;
+        const {name, description, type} = this._newProfileForm.value;
+
+        this._analytics.trackButtonClickEvent(ButtonType.Add, 'AM_add_new_rule', type === 'entryProfile' ? 'automationManagerAddRuleVod' : 'automationManagerAddRuleLive', 'Automation_manager');
+
         const newProfile = {
             name,
             description,
+            type,
             runningCadence: {
                 cadence: 'advanced',
                 advancedCadence: {

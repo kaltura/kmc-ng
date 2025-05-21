@@ -38,6 +38,7 @@ export class RuleActionsComponent implements OnInit {
             || action.type === 'addTags' || action.type === 'removeCategory' || action.type === 'addCategory' || action.type === 'flavours').length > 0;
     };
     @Input() selectedTab: string;
+    @Input() isLiveRule: boolean;
     @Output() onActionsChange = new EventEmitter<Action[]>();
 
     public items: MenuItem[];

@@ -42,8 +42,9 @@
                                 {{'applications.settings.authentication.table.name' | translate}}
                                 <p-sortIcon [field]="'name'"></p-sortIcon>
                             </th>
-                            <th data-cid="description" pResizableColumn>
-                                {{'applications.settings.authentication.table.description' | translate}}
+                            <th data-cid="type" pResizableColumn  [pSortableColumn]="'type'" [ngStyle]="{'width': '64px'}">
+                                {{'applications.settings.mr.type' | translate}}
+                                <p-sortIcon [field]="'type'"></p-sortIcon>
                             </th>
                             <th data-cid="created" pResizableColumn [pSortableColumn]="'createdAt'" [ngStyle]="{'width': '100px'}">
                                 {{'applications.settings.mr.created' | translate}}
@@ -69,8 +70,9 @@
                             <td class="nameHolder">
                                 <span class="kProfileName kTableColumn name" [kTooltip]="profile.name" [showOnEllipsis]="true" (click)="_editProfile(profile)">{{profile.name}}</span>
                             </td>
-                            <td>
-                                <span class="kTableColumn" [kTooltip]="profile.description" [showOnEllipsis]="true">{{profile.description}}</span>
+                            <td [ngStyle]="{'width': '64px'}">
+                                <i class="{{profile.type === 'entryProfile' ? 'kIconvideo-small' : 'kIconlive_transcoding'}}"
+                                   [kTooltip]="profile.type === 'entryProfile' ? ('applications.content.entryType.video' | translate) : ('applications.content.entryType.live' | translate)"></i>
                             </td>
 
                             <td [ngStyle]="{'width': '100px'}">
@@ -127,7 +129,7 @@
     </ng-template>
 </kPopupWidget>
 
-<kPopupWidget #newPopup data-aid="newProfilePopup" [popupWidth]="750" [popupHeight]="360" [modal]="true" [preventPageScroll]="true">
+<kPopupWidget #newPopup data-aid="newProfilePopup" [popupWidth]="750" [popupHeight]="420" [modal]="true" [preventPageScroll]="true">
     <ng-template>
         <kNewRule [parentPopupWidget]="newPopup" (onProfileCreated)="onProfileCreated($event)"></kNewRule>
     </ng-template>

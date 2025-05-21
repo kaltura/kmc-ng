@@ -19,9 +19,9 @@ import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
             <div class="kRow">
                 <span class="kLabelWithHelpTip">{{'applications.settings.mr.actions.linked' | translate}}</span>
                 <kInputHelper>
-                    <span>{{'applications.settings.mr.actions.linked_tt' | translate}}</span>
+                    <span>{{this.isLiveRule? ('applications.settings.mr.actions.linked_live_tt' | translate) : ('applications.settings.mr.actions.linked_tt' | translate)}}</span>
                 </kInputHelper>
-                <p-dropdown [options]="_deleteOptions" [style]="{'width':'210px', 'margin-left': '91px'}" [(ngModel)]="_deleteOption" (ngModelChange)="validate()"></p-dropdown>
+                <p-dropdown [options]="_deleteOptions" [style]="isLiveRule ? {'width':'330px', 'margin-left': '91px'} : {'width':'210px', 'margin-left': '91px'}" [(ngModel)]="_deleteOption" (ngModelChange)="validate()"></p-dropdown>
             </div>
             <div class="kRow">
                 <span class="kLabel"></span>
@@ -41,6 +41,7 @@ export class ActionDeleteComponent implements OnInit{
         this._deleteOption = this.action?.task?.taskParams?.deleteEntryTaskParams?.dualScreenOptions?.behavior || 'applyAction';
     };
     @Input() profileId: string;
+    @Input() isLiveRule: boolean;
     @Output() onActionChange = new EventEmitter<Action>();
 
     public _deleteOptions: { value: string, label: string }[] = [
@@ -64,6 +65,12 @@ export class ActionDeleteComponent implements OnInit{
                 this.validate(false);
             }
         }, 100);
+        if (this.isLiveRule) {
+            this._deleteOptions = [
+                {value: 'applyAction', label: this._appLocalization.get('applications.settings.mr.actions.applyActionLive')},
+                {value: 'expose', label: this._appLocalization.get('applications.settings.mr.actions.exposeLive')}
+            ];
+        }
     }
 
     public validate(sendAnalytics = true): void {
@@ -88,7 +95,7 @@ export class ActionDeleteComponent implements OnInit{
             this.action.task.taskParams.deleteEntryTaskParams.dualScreenOptions.behavior = this._deleteOption as 'applyAction' | 'expose';
         }
         if (sendAnalytics) {
-            this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_actions_delete_linked_entries', this._deleteOption === 'expose' ? 'stand_alone' : 'secondary', 'Automation_manager');
+            this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_actions_delete_linked_entries', this._deleteOption === 'expose' ? this.isLiveRule ? 'AM_delete_live_only' : 'stand_alone' : this.isLiveRule ? 'AM_delete_live_and_recording' : 'secondary', 'Automation_manager');
         }
         this.onActionChange.emit(this.action);
     }

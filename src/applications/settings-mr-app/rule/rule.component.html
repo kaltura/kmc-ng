@@ -48,6 +48,10 @@
                                 <div *ngIf="rule.name.length === 0" class="kError">{{'applications.administration.role.errors.required' | translate}}</div>
                             </div>
                         </div>
+                        <div class="kRow kCenter">
+                            <span class="kLabel">{{'applications.settings.mr.newRuleType' | translate}}</span>
+                            <span class="kLabel autoWidth">{{rule.type === 'entryProfile' ? ('applications.settings.mr.vodRule' | translate) : ('applications.settings.mr.liveRule' | translate)}}</span>
+                        </div>
                         <div class="kRow">
                             <span class="kLabel">{{'applications.administration.role.description' | translate}}</span>
                             <input class="kControl" pInputText [(ngModel)]="rule.description" (ngModelChange)="_isDirty = true">
@@ -126,7 +130,7 @@
 
                     <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'action' && _selectedSection !== 'notifications'" *ngIf="rule">
                         <span class="kTitle">{{_selectedSection === 'action' ? ('applications.settings.mr.action' | translate) : ('applications.settings.mr.notifications' | translate)}}</span>
-                        <kRuleActions #actionsComponent [ruleActions]="ruleActions" [profileId]="rule.id" [selectedTab]="_selectedSection" (onActionsChange)="onActionChange($event)"></kRuleActions>
+                        <kRuleActions #actionsComponent [ruleActions]="ruleActions" [isLiveRule]="rule.type === 'liveEntryProfile'" [profileId]="rule.id" [selectedTab]="_selectedSection" (onActionsChange)="onActionChange($event)"></kRuleActions>
                     </div>
 
                 </div>
