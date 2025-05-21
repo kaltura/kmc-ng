@@ -95,7 +95,7 @@ export class ActionDeleteComponent implements OnInit{
             this.action.task.taskParams.deleteEntryTaskParams.dualScreenOptions.behavior = this._deleteOption as 'applyAction' | 'expose';
         }
         if (sendAnalytics) {
-            this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_actions_delete_linked_entries', this._deleteOption === 'expose' ? 'stand_alone' : 'secondary', 'Automation_manager');
+            this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_actions_delete_linked_entries', this._deleteOption === 'expose' ? this.isLiveRule ? 'AM_delete_live_only' : 'stand_alone' : this.isLiveRule ? 'AM_delete_live_and_recording' : 'secondary', 'Automation_manager');
         }
         this.onActionChange.emit(this.action);
     }
