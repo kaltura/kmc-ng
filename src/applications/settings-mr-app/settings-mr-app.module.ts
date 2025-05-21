@@ -33,7 +33,7 @@ import { RuleComponent } from './rule/rule.component';
 import { CriteriaComponent } from './rule/criteria/criteria.component';
 import {
     CriteriaCreatedComponent, CriteriaPlayedComponent, CriteriaDurationComponent, CriteriaPlaysComponent,
-    CriteriaCategoriesComponent, CriteriaTagsComponent, CriteriaOwnerComponent, CriteriaMetadataComponent
+    CriteriaCategoriesComponent, CriteriaTagsComponent, CriteriaOwnerComponent, CriteriaMetadataComponent, CriteriaAdminTagsComponent
 } from './rule/criteria/renderers';
 import { CategoriesSelector } from './rule/category-selector/categories-selector.component';
 import {KMCPermissionsModule} from 'app-shared/kmc-shared/kmc-permissions';
@@ -111,6 +111,7 @@ import {StatusPipe} from './review/review-tags/status.pipe';
       CriteriaCategoriesComponent,
       CategoriesSelector,
       CriteriaTagsComponent,
+      CriteriaAdminTagsComponent,
       CriteriaMetadataComponent,
       CriteriaOwnerComponent,
       ActionFlavourComponent,
