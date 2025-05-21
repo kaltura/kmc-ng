@@ -35,6 +35,7 @@ export type ManagedTasksProfile = {
     ownerId: string;
     partnerId: number;
     description: string;
+    type: 'entryProfile' | 'liveEntryProfile';
     objectFilter?: any;
     objectFilterType?: string;
     status: 'deleted' | 'disabled' | 'enabled';
