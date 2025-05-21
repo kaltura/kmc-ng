@@ -287,18 +287,16 @@ export class UsersStore implements OnDestroy {
         .pipe(map(() => {}));
   }
 
-  public updateUser(userData: { roleIds: string, id: string, email: string, ssoUser?: boolean}, userId: string): Observable<void> {
+  public updateUser(userData: { roleIds: string, id: string, email: string, ssoUser?: boolean}, userId: string, isHashedUserId = false): Observable<void> {
     const { roleIds, id, email } = userData;
 
     if ((!id && !email) || !userId || !roleIds) {
       return throwError(new Error(this._appLocalization.get('applications.administration.users.invalidUserId')));
     }
 
-    const user = new KalturaUser({
-      roleIds,
-      id: id || email,
-        email: email
-    });
+    const user = isHashedUserId ?
+        new KalturaUser({roleIds, email}) :
+        new KalturaUser({roleIds, id: id || email, email});
     if (userData.ssoUser !== undefined) {
         user.isSsoExcluded = !userData.ssoUser
     }
