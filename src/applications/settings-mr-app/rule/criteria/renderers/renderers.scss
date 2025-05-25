@@ -15,7 +15,7 @@
         }
         .kLabel {
             line-height: 24px;
-            width: 208px;
+            width: 180px;
             flex: 0 0 auto;
         }
         .kLabelWithHelpTip {
@@ -38,12 +38,15 @@
         kinputhelper {
             padding-top: 4px;
         }
+        kautocomplete ::ng-deep input {
+            width: 200px;
+        }
     }
     .kDelete {
         color: $kDandger;
         cursor: pointer;
         font-weight: 700;
-        margin-left: 208px;
+        margin-left: 180px;
         margin-top: 24px;
         display: block;
         display: inline-block;

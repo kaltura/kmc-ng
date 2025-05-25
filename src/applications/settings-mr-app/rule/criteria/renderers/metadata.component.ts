@@ -48,13 +48,12 @@ import {MetadataItem, MetadataItemTypes, MetadataProfileParser} from 'app-shared
             <div class="kRow kCenter">
                 <span class="kLabel">{{'applications.settings.mr.criteria.metadataLabel' | translate}}</span>
                 <div class="kRow">
-                    <p-dropdown [options]="_matchConditions" [style]="{'width':'200px', 'margin-right': '16px'}" [(ngModel)]="_matchCondition" (ngModelChange)="onMatchConditionChange()"></p-dropdown>
-                    <input type="text" pInputText class="kSearchInput" [style]="{'width':'200px'}"
+                    <p-dropdown [options]="_matchConditions" [style]="{'width':'180px', 'margin-right': '12px'}" [(ngModel)]="_matchCondition" (ngModelChange)="onMatchConditionChange()"></p-dropdown>
+                    <input type="text" pInputText class="kSearchInput" [style]="{'width':'180px'}"
                            [(ngModel)]="_value"
                            [disabled]="_selectedSchema === null || _selectedField === null"
                            (keyup.enter)="onCriteriaChange()"
-                           (blur)="onCriteriaChange()"
-                           placeholder="{{'applications.settings.mr.criteria.metadataPlaceholder' | translate}}">
+                           (blur)="onCriteriaChange()">
                     <kInputHelper *ngIf="_selectedField" [style]="{'margin-top': '4px', 'margin-left': '4px'}">
                         <span>{{'applications.settings.mr.criteria.field-' + _selectedField.type | translate}}</span>
                     </kInputHelper>

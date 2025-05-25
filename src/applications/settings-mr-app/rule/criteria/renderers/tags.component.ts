@@ -25,7 +25,7 @@ import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
                 <div class="kRow">
                     <p-dropdown [options]="_tagsOptions" [style]="{'width':'150px', 'margin-right': '16px'}" [(ngModel)]="_tags" (ngModelChange)="onCriteriaChange()"></p-dropdown>
                     <div class="kCol">
-                        <kAutoComplete
+                        <kAutoComplete [style]="{'width':'150px'}"
                             [(ngModel)]="tags"
                             (ngModelChange)="onCriteriaChange()"
                             suggestionItemField="item"
