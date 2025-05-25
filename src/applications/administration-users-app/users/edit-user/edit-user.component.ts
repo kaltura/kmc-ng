@@ -47,6 +47,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   public _saveBtnShown = false;
   public _idServerError = false;
   public _emailServerError = false;
+  public _isHashedUserId = false;
 
   public _showSsoUser = false;
   private disableSsoUserCB = false;
@@ -78,6 +79,10 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+    this._isHashedUserId = this.user.externalId !== null && this.user.externalId !== undefined && this.user.externalId.length > 0;
+    if (this._isHashedUserId) {
+        this._idField.disable();
+    }
     this._usersStore.users.data$
       .pipe(cancelOnDestroy(this))
       .pipe(first())
@@ -214,7 +219,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
     const { roleIds, id, email, ssoUser } = this._userForm.getRawValue();
     const userData = this._showSsoUser ? { roleIds, email, id: (id || '').trim(), ssoUser } : { roleIds, email, id: (id || '').trim() };
-    this._usersStore.updateUser(userData, this.user.id)
+    this._usersStore.updateUser(userData, this.user.id, this._isHashedUserId)
       .pipe(tag('block-shell'))
       .pipe(cancelOnDestroy(this))
       .subscribe(
