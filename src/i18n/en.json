@@ -3714,9 +3714,15 @@
                     "tagsLabel": "Tags",
                     "tagsIn": "Contains",
                     "tagsNotIn": "Doesn't contain",
+                    "adminTags": "Admin tags",
+                    "adminTags_tt": "The exact names of the desired admin tags should be specified to find the tagged entries.To search for multiple admin tags, enter them in comma delimited format.",
+                    "adminTagsIn": "Contains",
+                    "adminTagsNotIn": "Doesn't contain",
+                    "adminTagsLabel": "Entry admin tags",
+                    "admin_tags_tt": "Select admin tags the rule will apply to. The rule will be performed if the entry contains the added admin tag.",
                     "metadata": "Entry custom metadata",
                     "metadata_tt": "Select Custom data schema the rule will apply to",
-                    "metadataSchema": "Custom metadata schema",
+                    "metadataSchema": "Metadata schema",
                     "metadataSchemaField": "Field name",
                     "schemaPlaceholder": "Select metadata schema",
                     "equals": "Equals",
@@ -3750,7 +3756,7 @@
                     "field-0": "Type the exact value. Copy paste is recommended.",
                     "field-1": "Type the exact value in unix epoch time.",
                     "field-2": "Type the exact entry id value.",
-                    "field-3": "Choose the desired value"
+                    "field-3": "Choose the desired value."
                 },
                 "schedule": {
                     "daily": "Daily",
