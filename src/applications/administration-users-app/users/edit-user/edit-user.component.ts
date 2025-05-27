@@ -79,10 +79,6 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this._isHashedUserId = this.user.externalId !== null && this.user.externalId !== undefined && this.user.externalId.length > 0;
-    if (this._isHashedUserId) {
-        this._idField.disable();
-    }
     this._usersStore.users.data$
       .pipe(cancelOnDestroy(this))
       .pipe(first())
@@ -127,6 +123,11 @@ export class EditUserComponent implements OnInit, OnDestroy {
           this._userForm.get('email').disable();
           this._userForm.get('firstName').disable();
           this._userForm.get('lastName').disable();
+
+          this._isHashedUserId = this.user.externalId !== null && this.user.externalId !== undefined && this.user.externalId.length > 0;
+            if (this._isHashedUserId) {
+                this._idField.disable();
+            }
 
             const isUserAdmin = this.user.id === this._partnerInfo.adminUserId;
             const isCurrentUser = this._usersStore.isCurrentUser(this.user);
