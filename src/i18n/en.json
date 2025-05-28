@@ -300,8 +300,8 @@
         "loading": "Loading...",
         "initializing": "Initializing...",
         "errors": {
-            "NO_REACH_PROFILE": "Please contact your Kaltura representative to enable AI creation",
-            "NO_CATALOG_ITEMS": "Please contact your Kaltura representative to enable AI creation",
+            "NO_REACH_PROFILE": "Reach profile ID is missing. Please contact your Kaltura representative to enable AI creation",
+            "NO_CATALOG_ITEMS": "No catalog items found. Please contact your Kaltura representative to enable AI creation",
             "NO_REACH_PERMISSION": "Please contact your Kaltura representative to enable AI creation",
             "NO_CAPTIONS": "To create with AI, this entry must have captions",
             "ENTRY_NOT_READY": "To create with AI, this entry must be ready",
