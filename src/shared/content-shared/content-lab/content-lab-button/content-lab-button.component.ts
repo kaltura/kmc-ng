@@ -1,5 +1,5 @@
 import {Component, Input, OnDestroy} from '@angular/core';
-import {KalturaMediaEntry, KalturaMediaType} from 'kaltura-ngx-client';
+import {KalturaLiveStreamAdminEntry, KalturaMediaEntry, KalturaMediaType} from 'kaltura-ngx-client';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {AppAnalytics, AppBootstrap, ButtonType} from 'app-shared/kmc-shell';
 import {ChangeDetectorRef} from '@angular/core';
@@ -40,6 +40,7 @@ export class ContentLabBtnComponent implements OnDestroy {
                             this._unsubscribePartnerCheck = this.unisphereRuntime.partnerChecks.onChanges((data) => {
                                 if (data.status === 'loaded') {
                                     if (data.isAvailable) {
+                                        console.log(this._entry);
                                         this.unisphereRuntime.isEntryRelevant(this._entry).then(
                                             result => {
                                                 if (this._destroyed) return;
@@ -97,8 +98,9 @@ export class ContentLabBtnComponent implements OnDestroy {
     public openContentLab(): void {
         if (this.unisphereRuntime) {
             this._analytics.trackButtonClickEvent(ButtonType.Open,'CreateWithAI', this.responsive ? 'KMC_Entries_list page' : 'KMC_entry_page', 'CL_core');
-            if (this.isLiveEntry(this._entry) && this._entry.redirectEntryId) {
-                this.unisphereRuntime.openApplication({entryId: this._entry.redirectEntryId, eventSessionContextId: this._entry.id, type: 'entry'});
+            if (this.isLiveEntry(this._entry) && (this._entry.redirectEntryId || (this._entry as KalturaLiveStreamAdminEntry).recordedEntryId)) {
+                const recordingEntryId = (this._entry as KalturaLiveStreamAdminEntry).recordedEntryId || this._entry.redirectEntryId;
+                this.unisphereRuntime.openApplication({entryId: recordingEntryId, eventSessionContextId: this._entry.id, type: 'entry'});
             } else {
                 this.unisphereRuntime.openApplication({entryId: this._entry.id, eventSessionContextId: '', type: 'entry'});
             }
