@@ -40,7 +40,6 @@ export class ContentLabBtnComponent implements OnDestroy {
                             this._unsubscribePartnerCheck = this.unisphereRuntime.partnerChecks.onChanges((data) => {
                                 if (data.status === 'loaded') {
                                     if (data.isAvailable) {
-                                        console.log(this._entry);
                                         this.unisphereRuntime.isEntryRelevant(this._entry).then(
                                             result => {
                                                 if (this._destroyed) return;
