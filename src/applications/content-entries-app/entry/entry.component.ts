@@ -36,6 +36,7 @@ import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { EntryQuizzeWidget } from './entry-quizzes/entry-quizzes-widget.service';
 import { AppAuthentication, AppBootstrap } from 'app-shared/kmc-shell';
 import { PubSubServiceType } from '@unisphere/runtime';
+import { EntryPreview } from './entry-preview/entry-preview.component';
 
 @Component({
 	selector: 'kEntry',
@@ -67,6 +68,7 @@ export class EntryComponent implements OnInit, OnDestroy {
     @ViewChild('liveDashboard', { static: true }) _liveDashboard: PopupWidgetComponent;
     @ViewChild('clipAndTrim', { static: true }) _clipAndTrim: PopupWidgetComponent;
     @ViewChild('bulkActionsPopup', { static: true }) _bulkActionsPopup: PopupWidgetComponent;
+    @ViewChild('entryPreview', { static: true }) _entryPreview: EntryPreview;
 	public _entryName: string;
 	public _entryType: KalturaMediaType;
 	public _sourceType: KalturaSourceType;
@@ -614,6 +616,10 @@ export class EntryComponent implements OnInit, OnDestroy {
             const route = isLive ? 'analytics/entry-webcast' : 'analytics/entry';
             this._router.navigate([route], { queryParams: { id: this._currentEntryId } });
         }
+    }
+
+    public onContentLabOpen(): void {
+        this._entryPreview.pausePlayer();
     }
 }
 

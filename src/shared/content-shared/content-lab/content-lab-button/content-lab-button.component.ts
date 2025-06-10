@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import {KalturaLiveStreamAdminEntry, KalturaMediaEntry, KalturaMediaType} from 'kaltura-ngx-client';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {AppAnalytics, AppBootstrap, ButtonType} from 'app-shared/kmc-shell';
@@ -17,6 +17,7 @@ export class ContentLabBtnComponent implements OnDestroy {
         this.initializeUnisphereRuntime();
     };
     @Input() responsive: boolean;
+    @Output() onOpenContentLab = new EventEmitter<void>();
 
     private unisphereRuntime: any = null;
     private _unsubscribePartnerCheck: () => void;
@@ -103,6 +104,7 @@ export class ContentLabBtnComponent implements OnDestroy {
             } else {
                 this.unisphereRuntime.openApplication({entryId: this._entry.id, eventSessionContextId: '', type: 'entry'});
             }
+            this.onOpenContentLab.emit();
         }
     }
 

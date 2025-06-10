@@ -20,6 +20,9 @@
           if (e.origin === window.location.origin && e.data.messageType === 'getCurrentTime') {
               window.parent.postMessage({ 'messageType': 'currentTime', currentTime:  kPlayer.currentTime}, window.location.origin);
           }
+          if (e.origin === window.location.origin && e.data.messageType === 'pause' && kPlayer) {
+              kPlayer.pause();
+          }
           if (e.origin === window.location.origin && e.data.messageType === 'embed') {
               const embedParams = e.data.embedParams;
               let template = document.createElement('template');
