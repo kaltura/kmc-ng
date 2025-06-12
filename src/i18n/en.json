@@ -3317,6 +3317,7 @@
                     "chaptering": "Chaptering",
                     "extendedAudioDescription": "Extended Audio Description",
                     "signLanguage": "Sign Language",
+                    "liveTranslation": "Live Translation",
                     "service": "Service",
                     "id": "ID",
                     "tat": "Turn Around Time",

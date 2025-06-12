@@ -18,7 +18,9 @@ import {
     KalturaVendorServiceFeature,
     KalturaVendorTranslationCatalogItemFilter,
     VendorCatalogItemListAction,
-    KalturaVendorExtendedAudioDescriptionCatalogItemFilter, KalturaVendorSignLanguageCatalogItemFilter,
+    KalturaVendorExtendedAudioDescriptionCatalogItemFilter,
+    KalturaVendorSignLanguageCatalogItemFilter,
+    KalturaVendorLiveTranslationCatalogItemFilter,
 } from 'kaltura-ngx-client';
 import {KalturaFilterPager} from 'kaltura-ngx-client';
 import {BrowserService} from 'shared/kmc-shell/providers/browser.service';
@@ -146,6 +148,9 @@ export class ReachServicesStore extends FiltersStoreBase<ReachServicesFilters> i
                     break;
                 case KalturaVendorServiceFeature.signLanguage:
                     filter = new KalturaVendorSignLanguageCatalogItemFilter({});
+                    break;
+                case KalturaVendorServiceFeature.liveTranslation:
+                    filter = new KalturaVendorLiveTranslationCatalogItemFilter({});
                     break;
             }
             const data: ReachServicesFilters = this._getFiltersAsReadonly();
