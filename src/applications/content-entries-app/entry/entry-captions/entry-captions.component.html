@@ -6,7 +6,12 @@
                 icon="kIconplus"
                 label="{{'applications.content.entryDetails.captions.add' | translate}}"
                 *ngIf="(_kmcPermissions.CAPTION_MODIFY | kNgIfPermitted) && !_isLive"
-                (click)="_addCaption()"></button>
+                (click)="_addCaption(false)"></button>
+        <button type="button" class="kButtonDefault" pButton
+                icon="kIconplus"
+                label="{{'applications.content.entryDetails.captions.addEad' | translate}}"
+                *ngIf="(_kmcPermissions.CAPTION_MODIFY | kNgIfPermitted) && !_isLive"
+                (click)="_addCaption(true)"></button>
         <button type="button" class="kButtonDefault" pButton
                 label="{{'applications.content.entryDetails.captions.request' | translate}}"
                 *ngIf="_requestCaptionsAvailable && !_isLive"
@@ -62,14 +67,20 @@
                                 <span>{{'applications.content.entryDetails.captions.uploadError' | translate}}</span>
                             </div>
                         </td>
-                        <td>
-                            <p-inputSwitch class="kInputSwitch"
-                                            [disabled]="caption.isDefault && caption.displayOnPlayer"
-                                            (ngModelChange)="_widgetService.setDirty()"
-                                            [(ngModel)]="caption.displayOnPlayer"></p-inputSwitch>
-                            <span class="kInputSwitchLabel">
-                                {{caption.displayOnPlayer ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}
-                            </span>
+                        <td [ngStyle]="{'overflow':'visible'}">
+                            <div *ngIf="caption.usage === '0'">
+                                <p-inputSwitch class="kInputSwitch"
+                                                [disabled]="caption.isDefault && caption.displayOnPlayer"
+                                                (ngModelChange)="_widgetService.setDirty()"
+                                                [(ngModel)]="caption.displayOnPlayer"></p-inputSwitch>
+                                <span class="kInputSwitchLabel">
+                                    {{caption.displayOnPlayer ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}
+                                </span>
+                            </div>
+                            <div *ngIf="caption.usage === '1'">
+                                <span>{{'applications.content.entryDetails.captions.ead' | translate}}</span>
+                                <i class="kIconhelp_full eadHelp" [kTooltip]="'applications.content.entryDetails.captions.eadHelp' | translate"></i>
+                            </div>
                         </td>
                         <td>
                             <span *ngIf="caption.isDefault">
@@ -119,7 +130,7 @@
 
     <kPopupWidget #editPopup data-aid="editCaptionPopup" [popupWidth]="586" [modal]="true">
         <ng-template>
-            <kEntryCaptionsEdit [currentCaption]="_widgetService.currentCaption"
+            <kEntryCaptionsEdit [currentCaption]="_widgetService.currentCaption" [ead]="_ead"
                                 [parentPopupWidget]="editPopup"></kEntryCaptionsEdit>
         </ng-template>
     </kPopupWidget>

@@ -25,6 +25,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 
 	@Input() currentCaption: KalturaCaptionAsset;
 	@Input() parentPopupWidget: PopupWidgetComponent;
+	@Input() ead: boolean;
 
 	@ViewChild('fileDialog', { static: true }) private fileDialog: FileDialogComponent;
 

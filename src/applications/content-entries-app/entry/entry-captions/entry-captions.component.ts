@@ -6,7 +6,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
-import {KalturaCaptionAssetStatus, KalturaCaptionType, KalturaMediaType} from 'kaltura-ngx-client';
+import {KalturaCaptionAssetStatus, KalturaCaptionAssetUsage, KalturaCaptionType, KalturaMediaType} from 'kaltura-ngx-client';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { EntryCaptionsWidget } from './entry-captions-widget.service';
 import { getKalturaServerUri, serverConfig } from 'config/server';
@@ -32,6 +32,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
     public _captionStatusError = KalturaCaptionAssetStatus.error;
     public _requestCaptionsAvailable = false;
     public _isLive = false;
+    public _ead = false;
 
     @ViewChild('actionsmenu', { static: true }) private actionsMenu: Menu;
     @ViewChild('editPopup', { static: true }) public editPopup: PopupWidgetComponent;
@@ -90,6 +91,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
         if (this.actionsMenu){
             // save the selected caption for usage in the actions menu
             this._widgetService.currentCaption = caption;
+            this._ead = caption.usage === KalturaCaptionAssetUsage.extendedAudioDescription;
             this.actions = this.filterActions();
             this.actionsMenu.toggle(event);
         }
@@ -130,8 +132,9 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
         }
     }
 
-    public _addCaption(){
-        this._widgetService._addCaption();
+    public _addCaption(ead: boolean){
+        this._ead = ead;
+        this._widgetService._addCaption(ead);
         setTimeout( () => {this.editPopup.open(); }, 0); // use a timeout to allow data binding of the new caption to update before opening the popup widget
     }
 
