@@ -1,34 +1,34 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
 import {
+    ESearchSearchUserAction,
     KalturaClient,
+    KalturaESearchItemType,
+    KalturaESearchOperatorType,
+    KalturaESearchUserFieldName,
+    KalturaESearchUserItem,
+    KalturaESearchUserOperator,
+    KalturaESearchUserParams,
+    KalturaESearchUserResult,
     KalturaFilterPager,
     KalturaNullableBoolean,
     KalturaUser,
     KalturaUserFilter,
+    KalturaUserType,
     KalturaZoomIntegrationSetting,
     KalturaZoomUsersMatching,
-    KalturaUserType,
-    UserListAction,
-    KalturaESearchUserResult,
-    ESearchSearchUserAction,
-    KalturaESearchUserParams,
-    KalturaESearchUserOperator,
-    KalturaESearchOperatorType,
-    KalturaESearchUserItem,
-    KalturaESearchItemType,
-    KalturaESearchUserFieldName
+    KalturaZoomUsersSearchMethod,
+    UserListAction
 } from 'kaltura-ngx-client';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
-import { Subject } from "rxjs";
-import { SuggestionsProviderData } from "@kaltura-ng/kaltura-primeng-ui";
-import { ISubscription } from "rxjs/Subscription";
-import { Observable } from "rxjs";
-import { CategoriesSearchService } from "app-shared/content-shared/categories/categories-search.service";
-import { BrowserService } from "app-shared/kmc-shell";
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
+import {Observable, Subject} from 'rxjs';
+import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
+import {ISubscription} from 'rxjs/Subscription';
+import {CategoriesSearchService} from 'app-shared/content-shared/categories/categories-search.service';
+import {AppAnalytics, BrowserService, ButtonType} from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kZoomEditProfile',
@@ -60,6 +60,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
     public _altHosts: AbstractControl;
     public _coHosts: AbstractControl;
     public _upload: AbstractControl;
+    public _userSearchMethod: AbstractControl;
     public _categories: AbstractControl;
     public _createUser: AbstractControl;
     public _uploadMeeting: AbstractControl;
@@ -84,6 +85,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
 
     constructor(private _appLocalization: AppLocalization,
                 private _fb: FormBuilder,
+                private _analytics: AppAnalytics,
                 private _browserService: BrowserService,
                 private _kalturaServerClient: KalturaClient,
                 private _categoriesSearchService: CategoriesSearchService,
@@ -152,6 +154,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             altHosts: profile.handleAlternativeHostsMode,
             coHosts: profile.handleCohostsMode,
             upload: profile.groupParticipationType || 0,
+            userSearchMethod: profile.userSearchMethod || KalturaZoomUsersSearchMethod.id,
             categories,
             webinarCategory,
             uploadMeeting: typeof profile.enableMeetingUpload === "undefined" || profile.enableMeetingUpload === KalturaNullableBoolean.trueValue,
@@ -178,6 +181,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             altHosts: null,
             coHosts: null,
             upload: null,
+            userSearchMethod: KalturaZoomUsersSearchMethod.id,
             categories: [[]],
             webinarCategory: [[]],
             uploadMeeting: false,
@@ -201,6 +205,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         this._altHosts = this._profileForm.controls['altHosts'];
         this._coHosts = this._profileForm.controls['coHosts'];
         this._upload = this._profileForm.controls['upload'];
+        this._userSearchMethod = this._profileForm.controls['userSearchMethod'];
         this._categories = this._profileForm.controls['categories'];
         this._webinarCategory = this._profileForm.controls['webinarCategory'];
         this._uploadMeeting = this._profileForm.controls['uploadMeeting'];
@@ -227,6 +232,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                     this._altHosts.enable();
                     this._coHosts.enable();
                     this._upload.enable();
+                    this._userSearchMethod.enable();
                     this._categories.enable();
                     this._webinarCategory.enable();
                     if (this._enableMeetingUpload) {
@@ -245,6 +251,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
                     this._altHosts.disable();
                     this._coHosts.disable();
                     this._upload.disable();
+                    this._userSearchMethod.disable();
                     this._categories.disable();
                     this._defaultUserId.disable();
                     this._uploadIn.disable();
@@ -301,6 +308,11 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             .subscribe(value => {
                 this.validate();
             });
+        this._userSearchMethod.valueChanges
+            .pipe(cancelOnDestroy(this))
+            .subscribe(value => {
+                this.validate();
+            });
         this._uploadIn.valueChanges
             .pipe(cancelOnDestroy(this))
             .subscribe(value => {
@@ -326,6 +338,13 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
 
     public openHelpLink(): void {
         this._browserService.openLink('https://marketplace.zoom.us/docs/api-reference/zoom-api/users/user');
+    }
+
+    public sendUserSearchAnalytics(value: KalturaZoomUsersSearchMethod): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Choose,
+            value === KalturaZoomUsersSearchMethod.id ? 'zoomIntegration_findUserBy_userdId' :
+            value === KalturaZoomUsersSearchMethod.email ? 'zoomIntegration_findUserBy_userdEmail' :
+            'zoomIntegration_findUserBy_both');
     }
 
     public _save(): void {
@@ -372,6 +391,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
         this.profile.handleAlternativeHostsMode = formValue.altHosts;
         this.profile.handleCohostsMode = formValue.coHosts;
         this.profile.groupParticipationType = formValue.upload;
+        this.profile.userSearchMethod = formValue.userSearchMethod;
         this.onSave.emit(this.profile);
         this.parentPopup.close();
     }
