@@ -180,7 +180,6 @@ export class AppBootstrap implements CanActivate {
                             kalturaServerURI: "https://" + serverConfig.kalturaServer.uri,
                             postSaveActions: "share,editQuiz,download,entry,downloadQuiz,playlist,editPlaylist,sharePlaylist",
                             hostedInKalturaProduct: true,
-                            hideTags: true,
                             widget: "",
                         },
                     },
