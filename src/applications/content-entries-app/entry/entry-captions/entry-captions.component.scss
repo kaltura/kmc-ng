@@ -49,6 +49,10 @@
             line-height: 20px;
         }
     }
+    .eadHelp {
+        margin-left: 8px;
+        cursor: pointer;
+    }
 }
 :host ::ng-deep .p-datatable {
     .p-datatable-data tr.uoloading {

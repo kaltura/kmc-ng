@@ -38,7 +38,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { filter, map, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { of } from 'rxjs';
-import { KalturaStreamContainer } from 'kaltura-ngx-client';
+import { KalturaStreamContainer, KalturaCaptionAssetUsage } from 'kaltura-ngx-client';
 
 export interface CaptionRow {
     uploading: boolean;
@@ -54,6 +54,7 @@ export interface CaptionRow {
     language: KalturaLanguage;
     label: string;
     fileExt: string;
+    usage: KalturaCaptionAssetUsage;
     status?: KalturaCaptionAssetStatus;
     displayOnPlayer?: boolean;
 }
@@ -290,7 +291,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       return status;
     }
 
-  public _addCaption(): any {
+  public _addCaption(ead: boolean): any {
 
     const newCaption: CaptionRow = {
       uploading: false,
@@ -305,7 +306,8 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       isDefault: 0,
       fileExt: '',
       status: null,
-      displayOnPlayer: true,
+      usage: ead ? KalturaCaptionAssetUsage.extendedAudioDescription : KalturaCaptionAssetUsage.caption,
+      displayOnPlayer: !ead,
     };
 
     // create a copy of the captions array without a reference to the original array
@@ -378,6 +380,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
               label: record.item.label,
               displayOnPlayer: record.item.displayOnPlayer,
               accuracy: record.item.accuracy,
+              usage: record.item.usage,
               isDefault: 0
             });
             const addCaptionRequest = new CaptionAssetAddAction({ entryId: this.data.id, captionAsset: captionAsset });

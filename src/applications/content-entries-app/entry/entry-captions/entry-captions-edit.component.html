@@ -1,8 +1,9 @@
 <div class="kEditWin kOverrideFAIcons" #captionsEdit>
-	<kFileDialog #fileDialog [filter]="'.xml,.srt,.dfxp,.vtt,.scc'" (onFileSelected)="_onFileSelected($event)"></kFileDialog>
+	<kFileDialog #fileDialog [filter]="ead ? '.vtt' : '.xml,.srt,.dfxp,.vtt,.scc'" (onFileSelected)="_onFileSelected($event)"></kFileDialog>
 	<form [formGroup]="captionsEditForm" novalidate>
     <div class="kHeader">
-      <span class="kTitle">{{ (_newCaption ? 'applications.content.entryDetails.captions.add' : 'applications.content.entryDetails.captions.editCaption') | translate}}</span>
+      <span *ngIf="!ead" class="kTitle">{{ (_newCaption ? 'applications.content.entryDetails.captions.add' : 'applications.content.entryDetails.captions.editCaption') | translate}}</span>
+      <span *ngIf="ead" class="kTitle">{{ (_newCaption ? 'applications.content.entryDetails.captions.addEad' : 'applications.content.entryDetails.captions.editEad') | translate}}</span>
     </div>
 
     <div class="kContainer">
@@ -16,7 +17,8 @@
       </div>
       <div class="kRow" *ngIf="_newCaption">
         <span class="kLabel">{{'applications.content.entryDetails.captions.type' | translate}}</span>
-        <p-dropdown [options]="_captionFormats" formControlName="format"></p-dropdown>
+        <p-dropdown *ngIf="!ead" [options]="_captionFormats" formControlName="format"></p-dropdown>
+        <span *ngIf="ead" class="kLabel">VTT</span>
       </div>
       <div class="kRow kSlider">
         <span class="kLabel">{{'applications.content.entryDetails.captions.accuracy' | translate}}</span>
@@ -44,7 +46,7 @@
 
 		<div class="kFooter">
 				<button *ngIf="!_newCaption" type="button" class="kButtonBranded" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.related.done' | translate}}"></button>
-				<button *ngIf="_newCaption" type="button" [disabled]="!_allowSave()" class="kButtonBranded" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.captions.add' | translate}}"></button>
+				<button *ngIf="_newCaption" type="button" [disabled]="!_allowSave()" class="kButtonBranded" (click)="_saveAndClose()" pButton label="{{ead ? ('applications.content.entryDetails.captions.addEad2' | translate) : ('applications.content.entryDetails.captions.add' | translate)}}"></button>
 		</div>
 
 	</form>
