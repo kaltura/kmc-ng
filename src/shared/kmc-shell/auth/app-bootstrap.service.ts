@@ -194,7 +194,7 @@ export class AppBootstrap implements CanActivate {
                         runtimeName: "notifications",
                         ui: {
                             bodyContainer: {
-                                zIndex: 1000,
+                                zIndex: 1500,
                             },
                         },
                         settings: {},
