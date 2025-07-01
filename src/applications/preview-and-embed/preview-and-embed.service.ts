@@ -87,8 +87,7 @@ export class PreviewEmbedService {
                     break;
                 case 'iframe':
                     const iframeEntryId = config.entryId.length ? `&entry_id=${config.entryId}` : '';
-                    const titleAttr = config.entryTitle ? `title="${config.entryTitle}"` : '';
-                    htmlContent = `<iframe id="${config.playerId}" src="${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}?iframeembed=true&playerId=${config.playerId}${iframeEntryId}${config.flashVarsUrl}" width="${config.width}" height="${config.height}" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"${config.videoMeta} ${titleAttr}>${config.entryMeta}</iframe>`
+                    htmlContent = `<iframe id="${config.playerId}" src="${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}?iframeembed=true&playerId=${config.playerId}${iframeEntryId}${config.flashVarsUrl}" width="${config.width}" height="${config.height}" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"${config.videoMeta}>${config.entryMeta}</iframe>`
                     break;
                 case 'auto':
                     const autoEntryId = config.entryId.length ? `&entry_id=${config.entryId}` : '';
@@ -174,9 +173,8 @@ kWidget.thumbEmbed({
                     embedParameters = {targetId: `kaltura_player_${rnd}`, partnerId: config.pid, uiconf_id: config.uiConfId, entry_id: config.entryId, poster, playerConfig: config.playerConfig};
                     break;
                 case 'iframe':
-                    const titleAttr = config.entryTitle ? `title="${config.entryTitle}"` : '';
-                    htmlContent = config.isPlaylist ? `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&playlist_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0" ${titleAttr}></iframe>` :
-                        `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0" ${titleAttr}></iframe>`;
+                    htmlContent = config.isPlaylist ? `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&playlist_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"></iframe>` :
+                        `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"></iframe>`;
                     break;
                 case 'auto':
                     scriptUrl = config.isPlaylist ? `${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?autoembed=true&targetId=kaltura_player_${rnd}&playlist_id=${config.entryId}${config.playerConfig}` :
