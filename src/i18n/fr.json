@@ -3883,7 +3883,7 @@
         "TH": "Thaïlandais",
         "TI": "Tigrinya",
         "TK": "Turkmène",
-        "TL": "Tagalog",
+        "TL": "Tagalog (Filipino)",
         "TN": "Setswana",
         "TO": "Tonga",
         "TR": "Turc",
@@ -3903,7 +3903,14 @@
         "YO": "Yoruba",
         "ZH": "Chinois",
         "ZHTW": "Mandarin de Taïwan",
-        "ZU": "Zoulou"
+        "ZU": "Zoulou",
+        "ZHCN": "Simplified Chinese",
+        "ZHHK": "Traditional Chinese",
+        "ENAU": "English (Australian)",
+        "BS": "Bosnian",
+        "KXM": "Khmer Northern",
+        "NE": "Nepali",
+        "SKSK": "Slovakian"
     },
     "shared": {
         "contentShared": {
