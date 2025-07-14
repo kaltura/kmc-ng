@@ -3903,7 +3903,14 @@
         "YO": "ヨルバ語",
         "ZH": "中国語",
         "ZHTW": "台湾中国語",
-        "ZU": "ズールー語"
+        "ZU": "ズールー語",
+        "ZHCN": "Simplified Chinese",
+        "ZHHK": "Traditional Chinese",
+        "ENAU": "English (Australian)",
+        "BS": "Bosnian",
+        "KXM": "Khmer Northern",
+        "NE": "Nepali",
+        "SKSK": "Slovakian"
     },
     "shared": {
         "contentShared": {

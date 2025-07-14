@@ -4220,7 +4220,7 @@
         "SD": "Sindhi",
         "SG": "Sango",
         "SH": "Serbo-Croatian",
-        "SI": "Singhalese",
+        "SI": "Sinhalese",
         "SK": "Slovak",
         "SL": "Slovene",
         "SM": "Samoan",
@@ -4243,7 +4243,7 @@
         "TH": "Thai",
         "TI": "Tigrinya",
         "TK": "Turkmen",
-        "TL": "Tagalog",
+        "TL": "Tagalog (Filipino)",
         "TN": "Setswana",
         "TO": "Tonga",
         "TR": "Turkish",
@@ -4264,7 +4264,14 @@
         "YUE": "Cantonese",
         "ZH": "Chinese",
         "ZHTW": "Taiwanese Mandarin",
-        "ZU": "Zulu"
+        "ZU": "Zulu",
+        "ZHCN": "Simplified Chinese",
+        "ZHHK": "Traditional Chinese",
+        "ENAU": "English (Australian)",
+        "BS": "Bosnian",
+        "KXM": "Khmer Northern",
+        "NE": "Nepali",
+        "SKSK": "Slovakian"
     },
     "shared": {
         "contentShared": {

@@ -140,7 +140,9 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 		}
 		if (this.captionsEditForm.get("format").dirty) {
 			this.currentCaption.format = this.captionsEditForm.get("format").value;
-		}
+		} else if (this.ead) {
+            this.currentCaption.format = KalturaCaptionType.webvtt; // EAD captions are always webvtt
+        }
 		this.currentCaption.accuracy = this.captionsEditForm.get("accuracy").value;
 		this._confirmClose = false;
 
