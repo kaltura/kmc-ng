@@ -74,6 +74,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
     };
     public searchFieldsTooltip = '';
     private destroyed = false;
+    private unMountBanner: () => void;
 
     constructor(public _entriesStore: EntriesStore,
                 private _bootstrapService: AppBootstrap,
@@ -111,7 +112,8 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
                 if (unisphereWorkspace) {
                     unisphereWorkspace.getRuntimeAsync('unisphere.widget.content-lab', 'ai-consent').then(widget => {
                         if (!this.destroyed) {
-                            widget.assignAreaByName('banner', 'ai-consent-banner');
+                            const {id, unsubscribe} = widget.mountVisual({type: 'banner', target: 'ai-consent-banner', settings: {}});
+                            this.unMountBanner = unsubscribe;
                         }
                     })
                 }
@@ -432,7 +434,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
           .subscribe(unisphereWorkspace => {
               if (unisphereWorkspace) {
                   unisphereWorkspace.getRuntimeAsync('unisphere.widget.content-lab', 'ai-consent').then(widget => {
-                      widget.unassignAreaByName('banner');
+                      this.unMountBanner();
                   })
               }
           });

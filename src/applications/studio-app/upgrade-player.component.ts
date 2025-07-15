@@ -36,7 +36,7 @@ export class UpgradePlayerComponent implements OnInit, OnDestroy {
                         if (!this.unisphereModuleContext) {
                             unisphereWorkspace.loadElement('unisphere.module.upgrade-player', 'application', contextSettings).then((data: any) => {
                                 this.unisphereModuleContext = data.element;
-                                this.unisphereModuleContext.assignArea('upgradePlayerApp');
+                                this.unisphereModuleContext.mountVisual({type: 'default', target: 'upgradePlayerApp', settings: {} });
                             }).catch(error => {
                                 console.error('failed to load module: ' + error.message)
                             });

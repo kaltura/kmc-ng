@@ -14,7 +14,7 @@ import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 import { serverConfig } from "config/server";
 import { ApplicationType } from "app-shared/kmc-shell";
 import { UnisphereWorkspaceType } from "@unisphere/runtime";
-import { registerElementInGlobalKalturaVersions } from '@unisphere/runtime'
+import { registerElementInGlobalKalturaVersions } from '@unisphere/core';
 
 export enum BoostrappingStatus {
     Bootstrapping,
@@ -165,9 +165,15 @@ export class AppBootstrap implements CanActivate {
                     {
                         widgetName: "unisphere.widget.content-lab",
                         runtimeName: "application",
-                        runtimeArea: {
-                            target: "body",
-                        },
+                        visuals: [
+                            {
+                                type: "drawer",
+                                settings: {},
+                                target: {
+                                    target: "body"
+                                }
+                            }
+                        ],
                         settings: {
                             _schemaVersion: '1',
                             ks: this.auth.appUser.ks,
@@ -192,18 +198,28 @@ export class AppBootstrap implements CanActivate {
                             },
                         },
                         settings: {},
-                        runtimeArea: {
-                            target: "body",
-                        },
+                        visuals: [
+                            {
+                                type: "container",
+                                settings: {},
+                                target: {
+                                    target: "body"
+                                }
+                            }
+                        ]
                     },
                     {
                         widgetName: "unisphere.widget.content-lab",
                         runtimeName: "ai-consent",
-                        runtimeAreasByName: {
-                            announcement: {
-                                target: "body",
-                            },
-                        },
+                        visuals: [
+                            {
+                                type: "announcement",
+                                settings: {},
+                                target: {
+                                    target: "body"
+                                }
+                            }
+                        ],
                         settings: {
                             _schemaVersion: '1',
                             ks: this.auth.appUser.ks,
