@@ -154,7 +154,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             altHosts: profile.handleAlternativeHostsMode,
             coHosts: profile.handleCohostsMode,
             upload: profile.groupParticipationType || 0,
-            userSearchMethod: profile.userSearchMethod || KalturaZoomUsersSearchMethod.id,
+            userSearchMethod: profile.userSearchMethod || KalturaZoomUsersSearchMethod.email,
             categories,
             webinarCategory,
             uploadMeeting: typeof profile.enableMeetingUpload === "undefined" || profile.enableMeetingUpload === KalturaNullableBoolean.trueValue,
@@ -181,7 +181,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
             altHosts: null,
             coHosts: null,
             upload: null,
-            userSearchMethod: KalturaZoomUsersSearchMethod.id,
+            userSearchMethod: KalturaZoomUsersSearchMethod.email,
             categories: [[]],
             webinarCategory: [[]],
             uploadMeeting: false,
@@ -342,9 +342,7 @@ export class EditZoomProfileComponent implements OnInit, OnDestroy {
 
     public sendUserSearchAnalytics(value: KalturaZoomUsersSearchMethod): void {
         this._analytics.trackButtonClickEvent(ButtonType.Choose,
-            value === KalturaZoomUsersSearchMethod.id ? 'zoomIntegration_findUserBy_userdId' :
-            value === KalturaZoomUsersSearchMethod.email ? 'zoomIntegration_findUserBy_userdEmail' :
-            'zoomIntegration_findUserBy_both');
+            value === KalturaZoomUsersSearchMethod.external ? 'zoomIntegration_findUserBy_external' : 'zoomIntegration_findUserBy_userdEmail');
     }
 
     public _save(): void {

@@ -233,21 +233,16 @@
                 <span>{{'applications.settings.integrationSettings.teams.findUserBy' | translate}}</span>
             </div>
             <div class="kRow" style="margin-bottom: 16px">
-                <p-radioButton name="userSearchMethod"
+                <p-radioButton name="userSearchMethod" [ngStyle]="{'marginLeft': '24px'}"
                                [value]="0"
                                (onClick)="sendUserSearchAnalytics(0)"
                                formControlName="userSearchMethod"
-                               [label]="'applications.settings.integrationSettings.teams.userId' | translate"></p-radioButton>
+                               [label]="'applications.settings.myUserSettings.email' | translate"></p-radioButton>
                 <p-radioButton name="userSearchMethod" [ngStyle]="{'marginLeft': '24px'}"
                                [value]="1"
                                (onClick)="sendUserSearchAnalytics(1)"
                                formControlName="userSearchMethod"
-                               [label]="'applications.settings.integrationSettings.teams.userEmail' | translate"></p-radioButton>
-                <p-radioButton name="userSearchMethod" [ngStyle]="{'marginLeft': '24px'}"
-                               [value]="2"
-                               (onClick)="sendUserSearchAnalytics(2)"
-                               formControlName="userSearchMethod"
-                               [label]="'applications.settings.integrationSettings.teams.both' | translate"></p-radioButton>
+                               [label]="'applications.settings.integrationSettings.teams.external' | translate"></p-radioButton>
             </div>
         </div>
 

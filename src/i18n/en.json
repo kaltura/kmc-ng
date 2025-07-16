@@ -3125,6 +3125,7 @@
                     "userId": "User ID",
                     "userEmail": "User e-mail",
                     "both": "Both",
+                    "external": "External ID (Use with SSO)",
                     "users": "Users",
                     "users1": "None",
                     "users2": "Co-Viewers",
