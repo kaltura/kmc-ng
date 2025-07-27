@@ -424,5 +424,10 @@ export const PermissionTreeNodes: PermissionTreeNode[] = [
         value: KMCPermissions.KMC_ACCESS,
         label: 'KMC Access',
         noChildren: true
+    },
+    {
+        value: KMCPermissions.FEATURE_MEDIA_REPURPOSING_NG_PERMISSION,
+        label: 'Automation Manager',
+        noChildren: true
     }
 ];
