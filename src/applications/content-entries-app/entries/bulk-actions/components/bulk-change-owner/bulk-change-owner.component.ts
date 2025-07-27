@@ -116,7 +116,17 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
                                 itemType: KalturaESearchItemType.startsWith,
                                 fieldName: KalturaESearchUserFieldName.userId,
                                 searchTerm: event.query
-                            })
+                            }),
+							new KalturaESearchUserItem({
+								itemType: KalturaESearchItemType.partial,
+								fieldName: KalturaESearchUserFieldName.screenName,
+								searchTerm: event.query
+							}),
+							new KalturaESearchUserItem({
+								itemType: KalturaESearchItemType.partial,
+								fieldName: KalturaESearchUserFieldName.userId,
+								searchTerm: event.query
+							})
                         ]
                     })
                 }),
