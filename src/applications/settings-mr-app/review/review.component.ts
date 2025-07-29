@@ -8,7 +8,10 @@ import {ColumnsResizeManagerService, ResizableColumnsTableName} from 'app-shared
 import {Menu} from 'primeng/menu';
 import {MenuItem} from 'primeng/api';
 import {ReviewTagsComponent} from './review-tags/review-tags.component';
-import {AppAnalytics, BrowserService, ButtonType, PageType} from 'app-shared/kmc-shell';
+import {AppAnalytics, AppAuthentication, BrowserService, ButtonType, PageType} from 'app-shared/kmc-shell';
+import {DatePipe} from 'app-shared/kmc-shared/date-format/date.pipe';
+import {EntryTypePipe} from '../../../shared/content-shared/entries/pipes/entry-type.pipe';
+import {ReviewService} from './review.service';
 
 @Component({
     selector: 'kMrReview',
@@ -16,6 +19,7 @@ import {AppAnalytics, BrowserService, ButtonType, PageType} from 'app-shared/kmc
     styleUrls: ['./review.component.scss'],
     providers: [KalturaLogger.createLogger('MrReviewComponent'),
         ColumnsResizeManagerService,
+        ReviewService,
         { provide: ResizableColumnsTableName, useValue: 'review-table' }
     ]
 })
@@ -40,7 +44,7 @@ export class ReviewComponent implements OnInit {
     public _bulkActionsMenu: MenuItem[] = [];
     public _query: any = {};
     public ERROR_STATUS = 'error';
-
+    public _userIdNameMap = new Map<string, string>();
     public _freeTextSearch = '';
 
     private savedCustomTooltip = '';
@@ -48,9 +52,11 @@ export class ReviewComponent implements OnInit {
     constructor(private _mrMainViewService: SettingsMrMainViewService,
                 public _columnsResizeManager: ColumnsResizeManagerService,
                 private _appLocalization: AppLocalization,
+                private _appAuthentication: AppAuthentication,
                 private _browserService: BrowserService,
                 private _logger: KalturaLogger,
                 private _mrStore: MrStoreService,
+                private _reviewService: ReviewService,
                 private _analytics: AppAnalytics) {
     }
 
@@ -331,7 +337,61 @@ export class ReviewComponent implements OnInit {
     }
 
     public _export(): void {
-        console.log("export"); // TODO: implementation
+        this._isBusy = true;
+        const uniqueIds = this.getUniqueUserIDs(this._reviews);
+        this._reviewService.getUserNameByIds(uniqueIds).pipe()
+            .subscribe(
+                data => {
+                    let idToNameMap = new Map<string, string>();
+                    if (data?.objects) {
+                        idToNameMap = new Map(data.objects.map(obj => [obj.id, obj.fullName]));
+                        this._userIdNameMap = idToNameMap;
+                    }
+                    const reviewsInCSV = this.mapObjectsToCsvRows(this._reviews);
+                    const dateNow = (new DatePipe(this._browserService)).transform(new Date().getTime(), 'dateAndTime');
+                    this._browserService.exportToCsv(`AM-review-${this._appAuthentication.appUser.partnerId}-${dateNow}.csv`,[
+                        ["Name", "ID", "Duration", "Type", "Sub Type", "Triggering rule", "Planned Execution date",  "Owner ID", "Owner Name", "Status"],
+                        ...reviewsInCSV,
+                    ]);
+                    this._isBusy = false;
+
+                },
+                err => {
+                    this._logger.info(`failed to search users`, { errorMessage: err.message });
+                    this._isBusy = false;
+                }
+            );
+    }
+
+    public getUniqueUserIDs(reviews): string {
+        const userIds: string = this.getOwnerIds(reviews);
+        const idArray = userIds.split(',');
+        const uniqueIdsArray = Array.from(new Set(idArray));
+        return uniqueIdsArray.join(',');
+    }
+
+    public mapObjectsToCsvRows(reviews) {
+        const entryTypePipe = new EntryTypePipe(this._appLocalization);
+        return reviews.map(obj => [
+            obj.objectName || '',
+            obj.objectId || '',
+            this._browserService.getFormattedTime(obj.objectDuration) || 0,
+            obj.objectType || '',
+            entryTypePipe.transform(this.getMediaType(obj.objectSubType), true) || '',
+            obj.managedTasksProfileName || '',
+            obj.plannedExecutionTime || '',
+            obj.ownerId || '',
+            this._userIdNameMap.get(obj.ownerId) || '',
+            obj.status || ''
+        ]);
+    }
+
+    public getOwnerIds(reviews): string {
+        return reviews
+            .map(obj => obj.ownerId)
+            .filter((ownerId): ownerId is string => typeof ownerId === 'string')
+            .join(',');
+
     }
 
     public updateTags(customTooltip = ''): void {
