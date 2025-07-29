@@ -12,7 +12,8 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {ColumnsResizeManagerService, ResizableColumnsTableName} from 'app-shared/kmc-shared/columns-resize-manager';
 import {ReviewTagsComponent} from '../review/review-tags/review-tags.component';
-import {AppAnalytics, BrowserService, ButtonType, PageType} from 'app-shared/kmc-shell';
+import {AppAnalytics, AppAuthentication, BrowserService, ButtonType, PageType} from 'app-shared/kmc-shell';
+import {DatePipe} from 'app-shared/kmc-shared/date-format/date.pipe';
 
 @Component({
     selector: 'kMrLogs',
@@ -46,6 +47,7 @@ export class LogsComponent implements OnInit {
                 public _columnsResizeManager: ColumnsResizeManagerService,
                 private _browserService: BrowserService,
                 private _appLocalization: AppLocalization,
+                private _appAuthentication: AppAuthentication,
                 private _logger: KalturaLogger,
                 private _mrStore: MrStoreService,
                 private _analytics: AppAnalytics) {
@@ -162,15 +164,17 @@ export class LogsComponent implements OnInit {
     public download(id: string, type: string): void {
         this._isBusy = true;
         this._analytics.trackButtonClickEvent(ButtonType.Download, 'AM_download_report', type, 'Automation_manager');
+        const dateNow = (new DatePipe(this._browserService)).transform(new Date().getTime(), 'dateAndTime');
+        const reportName = `AM-report-${this._appAuthentication.appUser.partnerId}-${dateNow}`;
         this._mrStore.downloadReport(id).subscribe(
             data => {
                 this._isBusy = false;
-                this._browserService.download(data, id + '.csv', 'text/csv');
+                this._browserService.download(data, reportName + '.csv', 'text/csv');
             },
             error => {
                 // temp solution until BE supports text/csv content-type for the request
                 this._isBusy = false;
-                this._browserService.download(error?.error?.text || '', id + '.csv', 'text/csv');
+                this._browserService.download(error?.error?.text || '', reportName + '.csv', 'text/csv');
                 // this.displayError(this._appLocalization.get('applications.settings.mr.reportDownloadError'), () => this.download(id));
             }
         );
