@@ -40,7 +40,7 @@ export class ReachProfileDictionaryWidget extends ReachProfileWidget {
         // set dictionaries (clone objects)
         this._dictionaries = [];
         this.data.dictionaries.forEach((dictionary: KalturaDictionary) => {
-            this._dictionaries.push(Object.assign({
+            dictionary.data && this._dictionaries.push(Object.assign({
                 words: dictionary.data.split(String.fromCharCode(10)),
                 usedCharacters: dictionary.data.split(String.fromCharCode(10)).join('').length,
                 isValid: true
@@ -74,6 +74,9 @@ export class ReachProfileDictionaryWidget extends ReachProfileWidget {
                 }));
             }
         });
+        if (!newData.dictionaries.length) {
+            newData.dictionaries.push(new KalturaDictionary());
+        }
     }
 
     public _onDataChange(index, data: string[] = null): void {
