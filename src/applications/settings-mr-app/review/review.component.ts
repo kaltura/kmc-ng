@@ -349,7 +349,7 @@ export class ReviewComponent implements OnInit {
                     }
                     const reviewsInCSV = this.mapObjectsToCsvRows(this._reviews);
                     const dateNow = (new DatePipe(this._browserService)).transform(new Date().getTime(), 'dateAndTime');
-                    this._browserService.exportToCsv(`AM-review-${this._appAuthentication.appUser.partnerId}-${dateNow}.csv`,[
+                    this._browserService.exportToCsv(`AM-review-${this._appAuthentication.appUser.id}-${dateNow}.csv`,[
                         ["Name", "ID", "Duration", "Type", "Sub Type", "Triggering rule", "Planned Execution date",  "Owner ID", "Owner Name", "Status"],
                         ...reviewsInCSV,
                     ]);

@@ -165,7 +165,7 @@ export class LogsComponent implements OnInit {
         this._isBusy = true;
         this._analytics.trackButtonClickEvent(ButtonType.Download, 'AM_download_report', type, 'Automation_manager');
         const dateNow = (new DatePipe(this._browserService)).transform(new Date().getTime(), 'dateAndTime');
-        const reportName = `AM-report-${this._appAuthentication.appUser.partnerId}-${dateNow}`;
+        const reportName = `AM-report-${this._appAuthentication.appUser.id}-${dateNow}`;
         this._mrStore.downloadReport(id).subscribe(
             data => {
                 this._isBusy = false;
