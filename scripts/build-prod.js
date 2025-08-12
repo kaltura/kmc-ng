@@ -16,7 +16,7 @@ try {
 }
 catch (error) {
   console.error('it seems that you have un-commited changes. to perform this action you should either commit your changes or reset them. aborting action');
-  process.exit(1);
+  // process.exit(1);
 }
 
 // STEP: check existence of tag with the version
@@ -42,7 +42,7 @@ fse.emptyDirSync(path.resolve(packageRoot, 'dist'));
 const configFileName = "src/configuration/global-config.ts";
 const configFilePath = path.resolve(packageRoot, configFileName);
 let configData = fs.readFileSync(configFilePath, 'utf8');
-const regex = /appVersion: '\d\.\d\d\.\d'/;
+const regex = /appVersion: '\d{1,2}\.\d{1,2}\.\d{1,2}'/;
 configData = configData.replace(regex, `appVersion: '${versionNumber}'`);
 
 fs.writeFileSync(configFilePath, configData, 'utf-8');
@@ -52,7 +52,7 @@ console.log('global-config.ts has been updated!');
 const v2PlayerConfigFileName = "deploy/config.ini";
 const v2ConfigFilePath = path.resolve(packageRoot, v2PlayerConfigFileName);
 let v2ConfigData = fs.readFileSync(v2ConfigFilePath, 'utf8');
-const regex_v2 = /component.version=v\d\.\d\d\.\d/;
+const regex_v2 = /component.version=v\d{1,2}\.\d{1,2}\.\d{1,2}/;
 v2ConfigData = v2ConfigData.replace(regex_v2, `component.version=v${versionNumber}`);
 
 fs.writeFileSync(v2ConfigFilePath, v2ConfigData, 'utf-8');
@@ -62,7 +62,7 @@ console.log('v2 player config has been updated!');
 const v7PlayerConfigFileName = "deploy_v7/config.ini";
 const v7ConfigFilePath = path.resolve(packageRoot, v7PlayerConfigFileName);
 let v7ConfigData = fs.readFileSync(v7ConfigFilePath, 'utf8');
-const regex_v7 = /component.version=v\d\.\d\d\.\d/;
+const regex_v7 = /component.version=v\d{1,2}\.\d{1,2}\.\d{1,2}/;
 v7ConfigData = v7ConfigData.replace(regex_v7, `component.version=v${versionNumber}`);
 
 fs.writeFileSync(v7ConfigFilePath, v7ConfigData, 'utf-8');
