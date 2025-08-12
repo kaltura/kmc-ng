@@ -32,8 +32,8 @@
   "scripts": {
     "setup": "node ./scripts/setup.js",
     "build": "ng build",
-    "build:prod": "node --max_old_space_size=8092 ./node_modules/@angular/cli/bin/ng build --prod",
-    "build:prod-new": "node scripts/build-prod.js $1",
+    "build:prod-old": "node --max_old_space_size=8092 ./node_modules/@angular/cli/bin/ng build --prod",
+    "build:prod": "node scripts/build-prod.js $1",
     "build:analyze": "node --max_old_space_size=8092 ./node_modules/@angular/cli/bin/ng build --prod--preserve-symlinks --aot --extract-licenses --named-chunks --stats-json && webpack-bundle-analyzer dist/stats.json",
     "kws": "kws",
     "lint": "ng lint",
