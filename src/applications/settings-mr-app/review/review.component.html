@@ -25,7 +25,8 @@
                         <i class="kIcondropdown_arrow_bottom dropdown"></i>
                     </div>
                     <button pButton class="kButtonDefault kExportBtn" (click)="_export()" type="text" [class.kHidden]="_selectedReviews.length"
-                            [label]="'applications.content.entryDetails.distribution.export' | translate"></button>
+                            [label]="'applications.content.entryDetails.distribution.export' | translate"
+                            [disabled]="this._reviews.length === 0"></button>
                     <button pButton class="kButtonDefault kRefreshBtn small" (click)="_refresh()" type="text" icon="kIconrefresh" [class.kHidden]="_selectedReviews.length"
                             [kTooltip]="'applications.administration.roles.refresh' | translate"></button>
                 </div>
