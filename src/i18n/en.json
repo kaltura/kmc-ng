@@ -89,7 +89,8 @@
             "audience": "Audience",
             "contributors": "Contributors",
             "live": "Live",
-            "realtime": "Real-Time"
+            "realtime": "Real-Time",
+            "agents": "Agents"
         },
         "userSettings": {
             "changeAccount": "Change Account",

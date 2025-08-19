@@ -118,6 +118,9 @@ export interface ServerConfig {
         mrEndpoint: {
             uri: string;
         },
+        agentsManagerEndpoint: {
+            uri: string;
+        },
         vendorIntegrationsEndpoint: {
             uri: string;
         },

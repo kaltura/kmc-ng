@@ -190,6 +190,25 @@ export class AppBootstrap implements CanActivate {
                         },
                     },
                     {
+                        widgetName: "unisphere.widget.agents",
+                        runtimeName: "manager",
+                        visuals: [
+                            {
+                                type: "drawer",
+                                settings: {},
+                                target: {
+                                    target: "body"
+                                }
+                            }
+                        ],
+                        settings: {
+                            ks: this.auth.appUser.ks,
+                            pid: this.auth.appUser.partnerId.toString(),
+                            kalturaServerURI: "https://" + serverConfig.kalturaServer.uri,
+                            agentsServiceURI: serverConfig.externalServices.agentsManagerEndpoint.uri,
+                        },
+                    },
+                    {
                         widgetName: "unisphere.widget.notifications",
                         runtimeName: "notifications",
                         ui: {

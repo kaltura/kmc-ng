@@ -2,7 +2,7 @@ import {Component, ElementRef, OnDestroy, OnInit, AfterViewInit, Renderer2, View
 import {NavigationEnd, Router} from '@angular/router';
 import {
     AppAnalytics,
-    AppAuthentication,
+    AppAuthentication, AppBootstrap,
     AppUserStatus,
     BrowserService,
     PartnerPackageTypes
@@ -20,6 +20,7 @@ import {HideMenuEvent, ShowMenuEvent, ResetMenuEvent, UpdateMenuEvent} from 'app
 import {KalturaPartnerStatus} from "kaltura-ngx-client";
 import { KPFLoginRedirects, KPFService } from "app-shared/kmc-shell/providers/kpf.service";
 import {AppLocalization} from "@kaltura-ng/mc-shared";
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -36,6 +37,7 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('supportPopup', {static: true}) private _supportPopup: PopupWidgetComponent;
     @ViewChild('leftMenu', {static: true}) private leftMenu: ElementRef;
     private _appCachedVersionToken = 'kmc-cached-app-version';
+    private unisphereRuntime: any = null;
 
     public _showChangelog = false;
     public _helpMenuOpened = false;
@@ -54,6 +56,7 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     public _appUserStatus: AppUserStatus = null;
     public _connectingToKPF = false;
     public hideMainMenu = false;
+    public _agentsEnabled = false;
 
     menuConfig: KMCAppMenuItem[];
     leftMenuConfig: KMCAppMenuItem[];
@@ -67,6 +70,8 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
 
     constructor(public _kmcLogs: KmcLoggerConfigurator,
                 private _contextualHelpService: ContextualHelpService,
+                private _appPermissions: KMCPermissionsService,
+                private _bootstrapService: AppBootstrap,
                 public _userAuthentication: AppAuthentication,
                 private _kmcMainViews: KmcMainViewsService,
                 private _appLocalization: AppLocalization,
@@ -117,6 +122,7 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this._showStartPlan = partnerInfo.isSelfServe && this._appUserStatus ===  AppUserStatus.FreeTrialActive && !partnerInfo.isChildAccount;
         this._showNotificationsBar = partnerInfo.isSelfServe && !partnerInfo.isChildAccount && (this._appUserStatus ===  AppUserStatus.FreeTrialBlocked || this._appUserStatus ===  AppUserStatus.PaidBlocked);
+        this._agentsEnabled = true; // this._appPermissions.hasPermission(KMCPermissions.FEATURE_AGENTS_FRAMEWORK_PERMISSION); TODO: uncomment when implemented by backend
     }
 
     ngOnInit() {
@@ -153,6 +159,18 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.hideMainMenu = false;
             });
 
+        if (this._agentsEnabled) {
+            this._bootstrapService.unisphereWorkspace$
+                .pipe(cancelOnDestroy(this))
+                .subscribe(unisphereWorkspace => {
+                        if (unisphereWorkspace) {
+                            this.unisphereRuntime = unisphereWorkspace.getRuntime('unisphere.widget.agents', 'manager');
+                        }
+                    },
+                    error => {
+                        console.error('Error initializing Unisphere workspace', error);
+                    })
+        }
     }
 
     ngAfterViewInit(){
@@ -243,6 +261,12 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
     ngOnDestroy() {
+    }
+
+    public openAgents(): void {
+        if (this._agentsEnabled && this.unisphereRuntime) {
+            this.unisphereRuntime.openDrawer();
+        }
     }
 
     public _changelogPopupOpened(): void {

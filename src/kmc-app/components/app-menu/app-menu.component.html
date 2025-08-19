@@ -24,9 +24,10 @@
                     <a class="kMenuLink" *ngIf="item.menuTitle.length && !item.icon"
                        [class.activeLink]="item === selectedMenuItem"
                        (click)="item.open()">
-                            {{item.menuTitle | uppercase}}
-                    </a>
+                            {{item.menuTitle | uppercase}}</a>
                 </div>
+
+                <a *ngIf="_agentsEnabled" class="kMenuLink" (click)="openAgents()">{{'app.titles.agents' | translate | uppercase}}</a>
 
                 <kUploadButton></kUploadButton>
             </div>
