@@ -122,7 +122,7 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this._showStartPlan = partnerInfo.isSelfServe && this._appUserStatus ===  AppUserStatus.FreeTrialActive && !partnerInfo.isChildAccount;
         this._showNotificationsBar = partnerInfo.isSelfServe && !partnerInfo.isChildAccount && (this._appUserStatus ===  AppUserStatus.FreeTrialBlocked || this._appUserStatus ===  AppUserStatus.PaidBlocked);
-        this._agentsEnabled = true; // this._appPermissions.hasPermission(KMCPermissions.FEATURE_AGENTS_FRAMEWORK_PERMISSION); TODO: uncomment when implemented by backend
+        this._agentsEnabled = this._appPermissions.hasPermission(KMCPermissions.FEATURE_AGENTS_FRAMEWORK_PERMISSION);
     }
 
     ngOnInit() {
