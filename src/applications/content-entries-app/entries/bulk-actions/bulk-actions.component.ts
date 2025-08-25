@@ -303,12 +303,14 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   // bulk delete
   public deleteEntries(): void {
     this._analytics.trackClickEvent('Bulk_delete');
-    const entriesToDelete = this.selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}` ),
+    
+    if(this.selectedEntries.length < 25) {
+      const entriesToDelete = this.selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}` ),
       entries: string = this.selectedEntries.length <= 10 ? entriesToDelete.join(',').replace(/,/gi, '\n') : '',
       message: string = this.selectedEntries.length > 1 ?
         this._appLocalization.get('applications.content.entries.confirmDeleteMultiple', { 0: entries }) :
         this._appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: entries });
-    this._browserService.confirm(
+        this._browserService.confirm(
       {
         header: this._appLocalization.get('applications.content.bulkActions.deleteEntries'),
         message: message,
@@ -319,6 +321,15 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
         }
       }
     );
+    } else {
+      this._browserService.alert({
+        header: this._appLocalization.get('applications.content.bulkActions.deleteEntries'),
+        message: this._appLocalization.get('applications.content.entries.deleteMultipleOver25Limit', { 0 : this.selectedEntries.length }),
+        accept: () => {
+          return;
+        }
+      })
+    }
   }
 
   // bulk download initial check
