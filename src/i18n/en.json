@@ -790,7 +790,7 @@
                 "confirmDelete": "Are you sure you want to delete the selected entry?",
                 "confirmDeleteSingle": "Are you sure you want to delete the selected entry? \n {{0}} \n Please note: the entry will be permanently deleted from your account.",
                 "confirmDeleteMultiple": "Are you sure you want to delete the selected entries? \n {{0}} \n Please note: these entries will be permanently deleted from your account.",
-                "confirmDeleteMultipleOver25": "Are you sure you want to delete the selected entries? \n {{0}} \n Please note: these entries will be permanently deleted from your account. \n Note: You can delete up to 25 entries at a time.",
+                "deleteMultipleOver25Limit": "You selected {{0}} entries, but only 25 can be deleted at once. Please reduce your selection and try again.",
                 "entryId": "Entry ID: {{0}}",
                 "deleteNote": "Please note: the entry will be permanently deleted from your account.",
                 "ruleName": "Rule Name",
