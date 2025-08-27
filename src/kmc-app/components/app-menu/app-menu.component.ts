@@ -17,10 +17,11 @@ import {globalConfig} from 'config/global';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {HideMenuEvent, ShowMenuEvent, ResetMenuEvent, UpdateMenuEvent} from 'app-shared/kmc-shared/events';
-import {KalturaPartnerStatus} from "kaltura-ngx-client";
+import {KalturaPartnerStatus} from 'kaltura-ngx-client';
 import { KPFLoginRedirects, KPFService } from "app-shared/kmc-shell/providers/kpf.service";
 import {AppLocalization} from "@kaltura-ng/mc-shared";
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
+import {PubSubServiceType} from '@unisphere/runtime';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -38,6 +39,7 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('leftMenu', {static: true}) private leftMenu: ElementRef;
     private _appCachedVersionToken = 'kmc-cached-app-version';
     private unisphereRuntime: any = null;
+    private unisphereCallbackUnsubscribe:  () => void = null;
 
     public _showChangelog = false;
     public _helpMenuOpened = false;
@@ -165,6 +167,16 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
                 .subscribe(unisphereWorkspace => {
                         if (unisphereWorkspace) {
                             this.unisphereRuntime = unisphereWorkspace.getRuntime('unisphere.widget.agents', 'manager');
+                            this.unisphereCallbackUnsubscribe = unisphereWorkspace.getService<PubSubServiceType>('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.agents.message-host-app', (data) => {
+                                const {action, entryId} = data.payload;
+                                switch (action) {
+                                    case 'entry':
+                                        // navigate to entry
+                                        this.unisphereRuntime?.closeDrawer(); // close widget
+                                        this.router.navigateByUrl('/content/entries/entry/' + entryId);
+                                        break;
+                                }
+                            })
                         }
                     },
                     error => {
@@ -261,6 +273,10 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
     ngOnDestroy() {
+        if (this.unisphereCallbackUnsubscribe) {
+            this.unisphereCallbackUnsubscribe();
+            this.unisphereCallbackUnsubscribe = null;
+        }
     }
 
     public openAgents(): void {
