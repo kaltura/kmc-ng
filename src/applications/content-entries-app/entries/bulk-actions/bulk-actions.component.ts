@@ -304,7 +304,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   public deleteEntries(): void {
     this._analytics.trackClickEvent('Bulk_delete');
     
-    if(this.selectedEntries.length < 25) {
+    if(this.selectedEntries.length <= 25) {
       const entriesToDelete = this.selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}` ),
       entries: string = this.selectedEntries.length <= 10 ? entriesToDelete.join(',').replace(/,/gi, '\n') : '',
       message: string = this.selectedEntries.length > 1 ?
