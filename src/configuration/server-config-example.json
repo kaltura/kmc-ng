@@ -74,7 +74,7 @@
             "customerPortal": "https://support.kaltura.com/login"
         },
         "entitlements":{
-            "manage": "https://knowledge.kaltura.com/node/629#managing"
+            "manage": "https://knowledge.kaltura.com/help/how-to-add-entitlements-to-categories---kmc"
         },
         "uploads": {
             "needHighSpeedUpload": "http://site.kaltura.com/Upgrade_Request_High_Speed_Upload.html",
