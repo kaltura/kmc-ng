@@ -1,19 +1,16 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
-import { SelectItem } from 'primeng/api';
-import { UploadManagement } from '@kaltura-ng/kaltura-common';
-import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { KalturaMediaType } from 'kaltura-ngx-client';
-import { NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
-import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import { TranscodingProfileManagement } from 'app-shared/kmc-shared/transcoding-profile-management';
-import { globalConfig } from 'config/global';
-import { urlRegex } from '@kaltura-ng/kaltura-ui';
-import { UpdateEntriesListEvent } from 'app-shared/kmc-shared/events/update-entries-list-event';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { NewEntryCreateFromUrlService } from 'app-shared/kmc-shell/new-entry-create-from-url';
-import { AppEventsService } from 'app-shared/kmc-shared';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
+import {SelectItem} from 'primeng/api';
+import {cancelOnDestroy, tag, UploadManagement} from '@kaltura-ng/kaltura-common';
+import {AppLocalization} from '@kaltura-ng/mc-shared';
+import {KalturaDocumentType, KalturaMediaType} from 'kaltura-ngx-client';
+import {NewEntryUploadFile, NewEntryUploadService} from 'app-shared/kmc-shell';
+import {AreaBlockerMessage, FileDialogComponent, PopupWidgetComponent, urlRegex} from '@kaltura-ng/kaltura-ui';
+import {TranscodingProfileManagement} from 'app-shared/kmc-shared/transcoding-profile-management';
+import {globalConfig} from 'config/global';
+import {UpdateEntriesListEvent} from 'app-shared/kmc-shared/events/update-entries-list-event';
+import {NewEntryCreateFromUrlService} from 'app-shared/kmc-shell/new-entry-create-from-url';
+import {AppEventsService} from 'app-shared/kmc-shared';
 
 export enum KMCFileCreationType {
     upload = 'upload',
@@ -23,7 +20,7 @@ export enum KMCFileCreationType {
 export interface UploadSettingsFile {
     url?: string;
   file?: File;
-  mediaType?: KalturaMediaType;
+  mediaType?: KalturaMediaType | KalturaDocumentType;
   name?: string;
   isEditing?: boolean;
   hasError?: boolean;
@@ -65,12 +62,21 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit, OnDestroy
       'label': this._appLocalization.get('applications.upload.uploadSettings.mediaTypes.image'),
       'value': KalturaMediaType.image
     },
+    {
+      'label': this._appLocalization.get('applications.upload.uploadSettings.mediaTypes.pdf'),
+      'value': KalturaDocumentType.pdf
+    },
+    {
+      'label': this._appLocalization.get('applications.upload.uploadSettings.mediaTypes.document'),
+      'value': KalturaDocumentType.document
+    },
   ];
 
   public _allowedExtensions = `
     .flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v,.mpeg,.mxf,.rm,.rv,.rmvb,.ts,.ogg,.ogv,.vob,.webm,.mts,.arf,.mkv,.m2v,
     .mp3,.wav,.ra,.rm,.wma,.aif,.m4a,.flac,
-    .jpg,.jpeg,.gif,.png
+    .jpg,.jpeg,.gif,.png,
+    .pdf, .doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv,.txt
   `;
 
   constructor(private _newEntryUploadService: NewEntryUploadService,
@@ -115,7 +121,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit, OnDestroy
     const newItems = Array.from(files).map(file => {
       const ext = this._getFileExtension(file.name);
       const mediaType = this._getMediaTypeFromExtension(ext);
-      const name = file.name.replace(/\.[^.]*$/, '');
+      const name = (mediaType === KalturaDocumentType.pdf || mediaType === KalturaDocumentType.document) ? file.name : file.name.replace(/\.[^.]*$/, '');
       const { size } = file;
       return ({ file, mediaType, name, size, isEditing });
     });
@@ -128,7 +134,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit, OnDestroy
     return typeof extension === "undefined" ? '' : extension.toLowerCase();
   }
 
-  private _getMediaTypeFromExtension(extension: string): KalturaMediaType | null {
+  private _getMediaTypeFromExtension(extension: string): KalturaMediaType | KalturaDocumentType | null {
     const imageFiles = ['jpg', 'jpeg', 'gif', 'png'];
     const audioFiles = [
       'flv', 'asf', 'qt', 'mov', 'mpg',
@@ -142,6 +148,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit, OnDestroy
       'rmvb', 'ts', 'ogg', 'ogv', 'vob',
       'webm', 'mts', 'arf', 'mkv','m2v'
     ];
+    const documentFiles = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'csv', 'txt'];
 
     switch (true) {
       case videoFiles.indexOf(extension) !== -1:
@@ -150,6 +157,8 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit, OnDestroy
         return KalturaMediaType.audio;
       case imageFiles.indexOf(extension) !== -1:
         return KalturaMediaType.image;
+      case documentFiles.indexOf(extension) !== -1:
+        return extension === 'pdf' ? KalturaDocumentType.pdf : KalturaDocumentType.document;
       default:
         return null;
     }
@@ -307,7 +316,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit, OnDestroy
   private _validateUploadFiles(files: UploadSettingsFile[]): boolean {
 
     let result = true;
-    const allowedTypes = [KalturaMediaType.audio, KalturaMediaType.video, KalturaMediaType.image];
+    const allowedTypes = [KalturaMediaType.audio, KalturaMediaType.video, KalturaMediaType.image, KalturaDocumentType.pdf, KalturaDocumentType.document];
     const maxFileSize = globalConfig.kalturaServer.maxUploadFileSize;
 
     files.forEach(file => {

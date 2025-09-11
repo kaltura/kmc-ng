@@ -1,25 +1,31 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaClient } from 'kaltura-ngx-client';
-import { Observable } from 'rxjs';
-import { KalturaMediaType, KalturaEntryApplication } from 'kaltura-ngx-client';
-import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
-import { NewEntryUploadFile } from './new-entry-upload-file';
-import { MediaAddAction } from 'kaltura-ngx-client';
-import { KalturaMediaEntry } from 'kaltura-ngx-client';
-import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client';
-import { KalturaAssetParamsResourceContainer } from 'kaltura-ngx-client';
-import { KalturaAssetsParamsResourceContainers } from 'kaltura-ngx-client';
-import { MediaUpdateContentAction } from 'kaltura-ngx-client';
-import { UploadTokenDeleteAction } from 'kaltura-ngx-client';
-import { TrackedFileData } from '@kaltura-ng/kaltura-common';
-import { Subject } from 'rxjs';
-import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { filter, switchMap, tap } from 'rxjs/operators';
-import { globalConfig } from 'config/global';
+import {Injectable, OnDestroy} from '@angular/core';
+import {
+    BaseEntryAddAction, DocumentsAddContentAction,
+    DocumentsUpdateContentAction,
+    KalturaAssetParamsResourceContainer,
+    KalturaAssetsParamsResourceContainers,
+    KalturaBaseEntry,
+    KalturaClient,
+    KalturaDocumentEntry,
+    KalturaDocumentType,
+    KalturaEntryApplication,
+    KalturaMediaEntry,
+    KalturaMediaType,
+    KalturaUploadedFileTokenResource,
+    MediaAddAction,
+    MediaUpdateContentAction,
+    UploadTokenDeleteAction,
+    KalturaEntryType
+} from 'kaltura-ngx-client';
+import {Observable, Subject} from 'rxjs';
+import {cancelOnDestroy, TrackedFileData, TrackedFileStatuses, UploadManagement} from '@kaltura-ng/kaltura-common';
+import {NewEntryUploadFile} from './new-entry-upload-file';
+import {filter, switchMap, tap} from 'rxjs/operators';
+import {globalConfig} from 'config/global';
 
 export interface KmcNewEntryUpload {
   file: File;
-  mediaType: KalturaMediaType;
+  mediaType: KalturaMediaType | KalturaDocumentType;
   entryName: string;
 }
 
@@ -48,7 +54,7 @@ export class NewEntryUploadService implements OnDestroy {
             case TrackedFileStatuses.purged:
               this._cleanupUpload(trackedFile);
               break;
-            case TrackedFileStatuses.prepared:
+            case TrackedFileStatuses.uploadCompleted:
               this._linkEntryWithFile(trackedFile);
               break;
             default:
@@ -94,33 +100,47 @@ export class NewEntryUploadService implements OnDestroy {
       );
   }
 
-  private _updateMediaContent(entry: KalturaMediaEntry, file: NewEntryUploadFile): Observable<KalturaMediaEntry> {
+  private _updateMediaContent(entry: KalturaMediaEntry, file: NewEntryUploadFile): Observable<KalturaMediaEntry | KalturaDocumentEntry> {
     const entryId = entry.id;
     const conversionProfileId = file.transcodingProfileId;
     const subSubResource = new KalturaUploadedFileTokenResource({ token: file.serverUploadToken });
     let resource = null;
 
-    if (file.mediaType === KalturaMediaType.image) {
+    if (file.mediaType === KalturaMediaType.image || file.mediaType === KalturaDocumentType.pdf || file.mediaType === KalturaDocumentType.document) {
       resource = subSubResource;
     } else {
       const subResource = new KalturaAssetParamsResourceContainer({ resource: subSubResource, assetParamsId: 0 });
       resource = new KalturaAssetsParamsResourceContainers({ resources: [subResource] });
     }
 
-    return this._kalturaServerClient.request(new MediaUpdateContentAction({ entryId, resource, conversionProfileId }));
+    return (file.mediaType === KalturaDocumentType.pdf || file.mediaType === KalturaDocumentType.document)
+        ? this._kalturaServerClient.request(new DocumentsAddContentAction({ entryId, resource }))
+        : this._kalturaServerClient.request(new MediaUpdateContentAction({ entryId, resource, conversionProfileId }));
   }
 
-  private _createMediaEntry(file: NewEntryUploadFile): Observable<KalturaMediaEntry> {
-    return this._kalturaServerClient.request(new MediaAddAction({
-      entry: new KalturaMediaEntry({
-        application: KalturaEntryApplication.kmc,
-        applicationVersion: globalConfig.client.appVersion,
-        sourceVersion: 'desktop',
-        mediaType: file.mediaType,
-        name: file.entryName,
-        conversionProfileId: file.transcodingProfileId
-      })
-    }));
+  private _createMediaEntry(file: NewEntryUploadFile): Observable<KalturaMediaEntry | KalturaBaseEntry> {
+      if (file.mediaType === KalturaDocumentType.pdf || file.mediaType === KalturaDocumentType.document) {
+          return this._kalturaServerClient.request(new BaseEntryAddAction({
+              entry: new KalturaDocumentEntry({
+                  application: KalturaEntryApplication.kmc,
+                  applicationVersion: globalConfig.client.appVersion,
+                  name: file.entryName,
+                  type: KalturaEntryType.document,
+                  documentType: file.mediaType as KalturaDocumentType
+              })
+          }));
+      } else {
+          return this._kalturaServerClient.request(new MediaAddAction({
+              entry: new KalturaMediaEntry({
+                  application: KalturaEntryApplication.kmc,
+                  applicationVersion: globalConfig.client.appVersion,
+                  sourceVersion: 'desktop',
+                  mediaType: file.mediaType as KalturaMediaType,
+                  name: file.entryName,
+                  conversionProfileId: file.transcodingProfileId
+              })
+          }));
+      }
   }
 
   private _removeUploadToken(uploadTokenId: string): Observable<void> {
