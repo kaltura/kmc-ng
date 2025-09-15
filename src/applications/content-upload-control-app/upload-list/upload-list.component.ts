@@ -3,7 +3,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService, NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { KalturaMediaType } from 'kaltura-ngx-client';
+import {KalturaDocumentType, KalturaMediaType} from 'kaltura-ngx-client';
 import { TrackedFileData } from '@kaltura-ng/kaltura-common';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 import { KalturaUploadFile } from 'app-shared/kmc-shared';
@@ -24,7 +24,7 @@ export interface UploadFileData {
   fileSize: number;
   uploadedOn: Date;
   status: string;
-  mediaType: KalturaMediaType;
+  mediaType: KalturaMediaType | KalturaDocumentType;
   entryId?: string;
   progress?: number;
 }

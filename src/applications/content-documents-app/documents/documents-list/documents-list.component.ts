@@ -9,15 +9,15 @@ import {AppEventsService} from 'app-shared/kmc-shared';
 import {KMCPermissions} from 'app-shared/kmc-shared/kmc-permissions';
 import {ContentDocumentViewService, ContentDocumentViewSections} from 'app-shared/kmc-shared/kmc-views/details-views';
 import {ContentDocumentsMainViewService} from 'app-shared/kmc-shared/kmc-views';
-import {cancelOnDestroy, tag} from '@kaltura-ng/kaltura-common';
+import {cancelOnDestroy, tag, TrackedFileStatuses, UploadManagement} from '@kaltura-ng/kaltura-common';
 import { asyncScheduler } from 'rxjs';
-import { observeOn } from 'rxjs/operators';
+import {filter, observeOn} from 'rxjs/operators';
 import {
     CategoriesStatus,
     CategoriesStatusMonitorService
 } from "app-shared/content-shared/categories-status/categories-status-monitor.service";
 import {CategoriesModes} from "app-shared/content-shared/categories/categories-mode-type";
-import {AppAuthentication} from 'app-shared/kmc-shell';
+import {AppAuthentication, NewEntryUploadFile} from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kDocumentsList',
@@ -50,6 +50,7 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
   constructor(public _documentsStore: DocumentsStore,
               private _appLocalization: AppLocalization,
               private _appAuthentication: AppAuthentication,
+              private _uploadManagement: UploadManagement,
               private _router: Router,
               private _appEvents: AppEventsService,
               private _browserService: BrowserService,
@@ -83,6 +84,15 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
       this._restoreFiltersState();
       this._registerToFilterStoreDataChanges();
       this._registerToDataChanges();
+
+      this._uploadManagement.onTrackedFileChanged$
+          .pipe(cancelOnDestroy(this))
+          .pipe(filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile && trackedFile.status === TrackedFileStatuses.uploadCompleted))
+          .subscribe(() => {
+              setTimeout(() => {
+                 this._documentsStore.reload();
+              },1000);
+          });
   }
 
   private _deleteDocument(documentId: string): void {
