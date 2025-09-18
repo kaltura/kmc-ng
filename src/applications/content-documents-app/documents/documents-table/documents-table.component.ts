@@ -10,7 +10,7 @@ import {
     ViewChild
 } from '@angular/core';
 import {Menu} from 'primeng/menu';
-import {KalturaDocumentEntry} from 'kaltura-ngx-client';
+import {KalturaDocumentEntry, KalturaEntryModerationStatus} from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {globalConfig} from 'config/global';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
@@ -118,6 +118,16 @@ export class DocumentsTableComponent implements AfterViewInit, OnInit, OnDestroy
                 id: 'download',
                 label: this._appLocalization.get('applications.content.table.download'),
                 command: () => this.onActionSelected('download', document)
+            });
+        }
+        if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MODERATE_APPROVE_REJECT)  && (document.moderationStatus === KalturaEntryModerationStatus.pendingModeration || document.moderationStatus === KalturaEntryModerationStatus.flaggedForReview)) {
+            this._items.push({
+                label: this._appLocalization.get('applications.content.table.approve'),
+                command: () => this.onActionSelected('approve', document)
+            });
+            this._items.push({
+                label: this._appLocalization.get('applications.content.table.reject'),
+                command: () => this.onActionSelected('reject', document)
             });
         }
         if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE)) {

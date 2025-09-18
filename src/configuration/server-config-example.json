@@ -1,12 +1,12 @@
 {
     "kalturaServer": {
-        "uri" : "www.kaltura.com",
+        "uri" : "api.nvq2.ovp.kaltura.com",
         "previewUIConf": 47253602,
         "previewUIConfV7":47253612
     },
     "cdnServers": {
-        "serverUri": "http://cdnapi.kaltura.com",
-        "securedServerUri": "https://cdnapisec.kaltura.com"
+        "serverUri": "http://api.nvq2.ovp.kaltura.com",
+        "securedServerUri": "https://api.nvq2.ovp.kaltura.com"
     },
     "kpfServer": {
         "kpfPackageManagerBaseUrl": "https://kpf-dev.kaltura.com/package-manager",
@@ -16,40 +16,40 @@
         "uri":"analytics.www.kaltura.com"
     },
     "epServer": {
-        "uri": "https://epm.nvp1.ovp.kaltura.com"
+        "uri": "https://epm.nvq2.ovp.kaltura.com"
     },
     "externalServices": {
         "appRegistryEndpoint": {
-            "uri": "https://app-registry.nvp1.ovp.kaltura.com/api/v1/app-registry"
+            "uri": "https://app-registry.nvq2.ovp.kaltura.com/api/v1/app-registry"
         },
         "appSubscriptionEndpoint": {
-            "uri": "https://auth.nvp1.ovp.kaltura.com/api/v1/app-subscription"
+            "uri": "https://auth.nvq2.ovp.kaltura.com/api/v1/app-subscription"
         },
         "authManagerEndpoint": {
-            "uri": "https://auth.nvp1.ovp.kaltura.com/api/v1/auth-manager"
+            "uri": "https://auth.nvq2.ovp.kaltura.com/api/v1/auth-manager"
         },
         "authProfileEndpoint": {
-            "uri": "https://auth.nvp1.ovp.kaltura.com/api/v1/auth-profile"
+            "uri": "https://auth.nvq2.ovp.kaltura.com/api/v1/auth-profile"
         },
         "spaProxyEndpoint": {
-            "uri": "https://auth.nvp1.ovp.kaltura.com/api/v1/spa-proxy"
+            "uri": "https://auth.nvq2.ovp.kaltura.com/api/v1/spa-proxy"
         },
         "userProfileEndpoint": {
-            "uri": "https://user.nvp1.ovp.kaltura.com/api/v1/user-profile"
+            "uri": "https://user.nvq2.ovp.kaltura.com/api/v1/user-profile"
         },
         "userReportsEndpoint": {
-            "uri": "https://user.nvp1.ovp.kaltura.com/api/v1/reports"
+            "uri": "https://user.nvq2.ovp.kaltura.com/api/v1/reports"
         },
         "mrEndpoint": {
-            "uri": "https://mr.nvp1.ovp.kaltura.com/api/v1"
+            "uri": "https://mr.nvq2.ovp.kaltura.com/api/v1"
         },
         "unisphereLoaderEndpoint": {
-            "uri": "https://unisphere.nvp1.ovp.kaltura.com/v1"
+            "uri": "https://unisphere.nvq2.ovp.kaltura.com/v1"
         },
         "checklistEndpoint": {
             "checklistItem": "kmc-ng-v1",
-            "scriptUri": "https://checklist-ui.nvp1.ovp.kaltura.com",
-            "uri": "https://checklist.nvp1.ovp.kaltura.com"
+            "scriptUri": "https://checklist-ui.nvq2.ovp.kaltura.com",
+            "uri": "https://checklist.nvq2.ovp.kaltura.com"
         }
     },
     "externalApps": {

@@ -6,7 +6,7 @@ import {AreaBlockerMessage, StickyComponent} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {AppAnalytics, BrowserService} from 'app-shared/kmc-shell/providers';
 import {AppEventsService} from 'app-shared/kmc-shared';
-import {KMCPermissions} from 'app-shared/kmc-shared/kmc-permissions';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 import {ContentDocumentViewService, ContentDocumentViewSections} from 'app-shared/kmc-shared/kmc-views/details-views';
 import {ContentDocumentsMainViewService} from 'app-shared/kmc-shared/kmc-views';
 import {cancelOnDestroy, tag, TrackedFileStatuses, UploadManagement} from '@kaltura-ng/kaltura-common';
@@ -18,11 +18,13 @@ import {
 } from "app-shared/content-shared/categories-status/categories-status-monitor.service";
 import {CategoriesModes} from "app-shared/content-shared/categories/categories-mode-type";
 import {AppAuthentication, NewEntryUploadFile} from 'app-shared/kmc-shell';
+import {BulkService} from '../../../content-moderation-app/bulk-service/bulk.service';
 
 @Component({
   selector: 'kDocumentsList',
   templateUrl: './documents-list.component.html',
-  styleUrls: ['./documents-list.component.scss']
+  styleUrls: ['./documents-list.component.scss'],
+  providers: [BulkService]
 })
 export class DocumentsListComponent implements OnInit, OnDestroy {
 
@@ -55,6 +57,8 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
               private _appEvents: AppEventsService,
               private _browserService: BrowserService,
               private _analytics: AppAnalytics,
+              private _bulkService: BulkService,
+              private _permissionsService: KMCPermissionsService,
               private _categoriesStatusMonitorService: CategoriesStatusMonitorService,
               private _contentDocumentsMainViewService: ContentDocumentsMainViewService,
               private _contentDocumentViewService: ContentDocumentViewService) {
@@ -95,7 +99,78 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
           });
   }
 
-  private _deleteDocument(documentId: string): void {
+    private _approveEntry(entryId: string, entryName: string): void {
+        if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_KMC_VERIFY_MODERATION)) {
+            this._browserService.confirm({
+                header: this._appLocalization.get('applications.content.moderation.approveMedia'),
+                message: this._appLocalization.get('applications.content.moderation.sureToApprove', { 0: entryName }),
+                accept: () => this._doApproveEntry(entryId)
+            });
+        } else {
+            this._doApproveEntry(entryId);
+        }
+    }
+
+    private _doApproveEntry(entryIds: string | string[]): void {
+        this._bulkService.approveEntry(typeof entryIds === 'string' ? [entryIds] : entryIds)
+            .pipe(cancelOnDestroy(this))
+            .pipe(tag('block-shell'))
+            .subscribe(
+                () => {
+                    this._documentsStore.reload();
+                },
+                error => {
+                    this._blockerMessage = new AreaBlockerMessage({
+                        message: this._appLocalization.get('applications.content.moderation.errors.bulkApproveEntry'),
+                        buttons: [{
+                            label: this._appLocalization.get('app.common.reload'),
+                            action: () => {
+                                this._blockerMessage = null;
+                                this._documentsStore.reload();
+                            }
+                        }]
+                    });
+                }
+            );
+    }
+
+    private _rejectEntry(entryId: string, entryName: string): void {
+        if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_KMC_VERIFY_MODERATION)) {
+            this._browserService.confirm({
+                header: this._appLocalization.get('applications.content.moderation.rejectMedia'),
+                message: this._appLocalization.get('applications.content.moderation.sureToReject', { 0: entryName }),
+                accept: () => this._doRejectEntry(entryId)
+            });
+        } else {
+            this._doRejectEntry(entryId);
+        }
+    }
+
+    private _doRejectEntry(entryIds: string | string[]): void {
+        this._bulkService.rejectEntry(typeof entryIds === 'string' ? [entryIds] : entryIds)
+            .pipe(cancelOnDestroy(this))
+            .pipe(tag('block-shell'))
+            .subscribe(
+                () => {
+                    this._documentsStore.reload();
+                },
+                error => {
+                    this._blockerMessage = new AreaBlockerMessage({
+                        message: this._appLocalization.get('applications.content.moderation.errors.bulkRejectEntry'),
+                        buttons: [{
+                            label: this._appLocalization.get('app.common.reload'),
+                            action: () => {
+                                this._blockerMessage = null;
+                                this._documentsStore.reload();
+                            }
+                        }]
+                    });
+                }
+            );
+    }
+
+
+    private _deleteDocument(documentId: string): void {
     this._documentsStore.deleteDocument(documentId)
       .pipe(cancelOnDestroy(this))
       .pipe(tag('block-shell'))
@@ -262,6 +337,12 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
               break;
           case 'download':
               this._browserService.openLink(event.document.downloadUrl + '/ks/' + this._appAuthentication.appUser.ks);
+              break;
+          case 'approve':
+              this._approveEntry(event.document.id, event.document.name);
+              break;
+          case 'reject':
+              this._rejectEntry(event.document.id, event.document.name);
               break;
           case 'delete':
               this._browserService.confirm(
