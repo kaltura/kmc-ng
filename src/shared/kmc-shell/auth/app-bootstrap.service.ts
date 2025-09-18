@@ -206,6 +206,9 @@ export class AppBootstrap implements CanActivate {
                             pid: this.auth.appUser.partnerId.toString(),
                             kalturaServerURI: "https://" + serverConfig.kalturaServer.uri,
                             agentsServiceURI: serverConfig.externalServices.agentsManagerEndpoint.uri,
+                            analyticsServerURI: serverConfig.analyticsServer.uri,
+                            hostAppName: ApplicationType.KMC,
+                            hostAppVersion: globalConfig.client.appVersion
                         },
                     },
                     {
