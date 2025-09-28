@@ -162,7 +162,7 @@ export class DropFoldersMonitorService implements OnDestroy {
   private _getActiveUpload(dropFoldersIn: string): Observable<KalturaDropFolderFileListResponse> {
     const activeUploads = new DropFolderFileListAction({
       filter: new KalturaDropFolderFileFilter({
-        dropFolderIdIn: dropFoldersIn,
+        // dropFolderIdIn: dropFoldersIn,
         statusIn: this._activeStatuses.join(',')
       })
     });

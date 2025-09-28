@@ -20,7 +20,7 @@ export class DropFoldersRequestFactory implements RequestFactory<DropFolderFileL
     return new DropFolderFileListAction({
       filter: new KalturaDropFolderFileFilter({
         createdAtGreaterThanOrEqual: this.uploadedOn,
-        dropFolderIdIn: this.dropFolderIdIn
+        // dropFolderIdIn: this.dropFolderIdIn
       })
     }).setRequestOptions({
         responseProfile: new KalturaDetachedResponseProfile({

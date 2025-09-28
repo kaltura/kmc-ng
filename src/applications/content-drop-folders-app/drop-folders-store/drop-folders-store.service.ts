@@ -202,7 +202,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters
         const data: DropFoldersFilters = this._getFiltersAsReadonly();
 
         // use selected folders - list of folders ids separated by comma
-        filter.dropFolderIdIn = dropFoldersList.reduce((ids, kdf) => `${ids}${kdf.id},`, '');
+        // filter.dropFolderIdIn = dropFoldersList.reduce((ids, kdf) => `${ids}${kdf.id},`, '');
 
         // filter 'freeText'
         if (data.freeText) {
