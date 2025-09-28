@@ -16,8 +16,8 @@ export type EmbedConfig = {
     entryTitle?: string;
     ks: string;
     uiConfId: string;
-    width: number;
-    height: number;
+    width: string;
+    height: string;
     pid: number;
     serverUri: string;
     playerConfig: string;
@@ -82,7 +82,7 @@ export class PreviewEmbedService {
             switch (config.embedType) {
                 case 'dynamic':
                     scriptUrl = `${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}`;
-                    htmlContent = `<div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>`;
+                    htmlContent = `<div id="${config.playerId}" style="width: ${config.width}; height: ${config.height};"${config.videoMeta}>${config.entryMeta}</div>`;
                     embedParameters = {targetId: config.playerId, wid: "_"+config.pid, uiconf_id: config.uiConfId, flashvars: JSON.parse(config.flashVars), cache_st: config.cacheSt, entry_id: config.entryId};
                     break;
                 case 'iframe':
@@ -93,12 +93,12 @@ export class PreviewEmbedService {
                     const autoEntryId = config.entryId.length ? `&entry_id=${config.entryId}` : '';
                     scriptUrl = `${config.serverUri}/p/${config.pid}/sp/${config.pid}100/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}?autoembed=true${autoEntryId}&playerId=${config.playerId}&cache_st=${config.cacheSt}&width=${config.width}&height=${config.height}${config.flashVarsUrl}`;
                     if (config.includeSeoMetadata) {
-                        htmlContent = `<div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>`;
+                        htmlContent = `<div id="${config.playerId}" style="width: ${config.width}; height: ${config.height};"${config.videoMeta}>${config.entryMeta}</div>`;
                     }
                     break;
                 case 'thumb':
                     scriptUrl = `${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}`;
-                    htmlContent = `<div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>`;
+                    htmlContent = `<div id="${config.playerId}" style="width: ${config.width}; height: ${config.height};"${config.videoMeta}>${config.entryMeta}</div>`;
                     embedParameters = {targetId: config.playerId, wid: "_"+config.pid, uiconf_id: config.uiConfId, flashvars: JSON.parse(config.flashVars), cache_st: config.cacheSt, entry_id: config.entryId};
                     break;
             }
@@ -116,7 +116,7 @@ export class PreviewEmbedService {
                     const dynamicEntryId = !config.entryId.length ? '' : `,
   "entry_id": "${config.entryId}"`;
                     code = `<script src="${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}"></script>
-<div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>
+<div id="${config.playerId}" style="width: ${config.width}; height: ${config.height};"${config.videoMeta}>${config.entryMeta}</div>
 <script>
 kWidget.embed({
   "targetId": "${config.playerId}",
@@ -136,13 +136,13 @@ kWidget.embed({
                     const autoEntryId = config.entryId.length ? `&entry_id=${config.entryId}` : '';
                     code = `<script src="${config.serverUri}/p/${config.pid}/sp/${config.pid}100/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}?autoembed=true${autoEntryId}&playerId=${config.playerId}&cache_st=${config.cacheSt}&width=${config.width}&height=${config.height}${config.flashVarsUrl}"></script>`
                     if (config.includeSeoMetadata) {
-                        code = `<div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>
+                        code = `<div id="${config.playerId}" style="width: ${config.width}; height: ${config.height};"${config.videoMeta}>${config.entryMeta}</div>
 ` + code;
                     }
                     break;
                 case 'thumb':
                     code = `<script src="${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}"></script>
-<div id="${config.playerId}" style="width: ${config.width}px; height: ${config.height}px;"${config.videoMeta}>${config.entryMeta}</div>
+<div id="${config.playerId}" style="width: ${config.width}; height: ${config.height};"${config.videoMeta}>${config.entryMeta}</div>
 <script>
 kWidget.thumbEmbed({
   "targetId": "${config.playerId}",
@@ -169,17 +169,17 @@ kWidget.thumbEmbed({
                 case 'dynamic':
                 case 'thumb':
                     scriptUrl = `${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}`;
-                    htmlContent = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>`;
+                    htmlContent = `<div id="kaltura_player_${rnd}" style="width: ${config.width};height: ${config.height}"></div>`;
                     embedParameters = {targetId: `kaltura_player_${rnd}`, partnerId: config.pid, uiconf_id: config.uiConfId, entry_id: config.entryId, poster, playerConfig: config.playerConfig};
                     break;
                 case 'iframe':
-                    htmlContent = config.isPlaylist ? `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&playlist_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"></iframe>` :
-                        `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"></iframe>`;
+                    htmlContent = config.isPlaylist ? `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&playlist_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}; height: ${config.height}" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"></iframe>` :
+                        `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}; height: ${config.height}" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"></iframe>`;
                     break;
                 case 'auto':
                     scriptUrl = config.isPlaylist ? `${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?autoembed=true&targetId=kaltura_player_${rnd}&playlist_id=${config.entryId}${config.playerConfig}` :
                         `${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?autoembed=true&targetId=kaltura_player_${rnd}&entry_id=${config.entryId}${config.playerConfig}`;
-                    htmlContent = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>`;
+                    htmlContent = `<div id="kaltura_player_${rnd}" style="width: ${config.width};height: ${config.height}"></div>`;
                     break;
             }
             return {
@@ -194,7 +194,7 @@ kWidget.thumbEmbed({
             let code = '';
             switch (config.embedType) {
                 case 'dynamic':
-                    code = config.isPlaylist ? `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
+                    code = config.isPlaylist ? `<div id="kaltura_player_${rnd}" style="width: ${config.width};height: ${config.height}"></div>
                     <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
                     <script type="text/javascript">
                     try {
@@ -210,7 +210,7 @@ kWidget.thumbEmbed({
                       console.error(e.message)
                     }
                   </script>`:
-                    `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
+                    `<div id="kaltura_player_${rnd}" style="width: ${config.width};height: ${config.height}"></div>
                     <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
                     <script type="text/javascript">
                     try {
@@ -228,7 +228,7 @@ kWidget.thumbEmbed({
                   </script>`;
                     break;
                 case 'thumb':
-                    code = `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
+                    code = `<div id="kaltura_player_${rnd}" style="width: ${config.width};height: ${config.height}"></div>
                     <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
                     <script src="https://static.kaltura.com/content/static/player-scripts/thumbnail-embed.js"></script>
                     <script type="text/javascript">
@@ -250,13 +250,13 @@ kWidget.thumbEmbed({
                     break;
                 case 'iframe':
                     const titleAttr = config.entryTitle ? `title="${config.entryTitle}"` : '';
-                    code = config.isPlaylist ? `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&playlist_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0" ${titleAttr}></iframe>` :
-                        `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}px; height: ${config.height}px" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0" ${titleAttr}></iframe>`;
+                    code = config.isPlaylist ? `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&playlist_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}; height: ${config.height}" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0" ${titleAttr}></iframe>` :
+                        `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}; height: ${config.height}" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0" ${titleAttr}></iframe>`;
                     break;
                 case 'auto':
-                    code = config.isPlaylist ? `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
+                    code = config.isPlaylist ? `<div id="kaltura_player_${rnd}" style="width: ${config.width};height: ${config.height}"></div>
 <script type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?autoembed=true&targetId=kaltura_player_${rnd}&playlist_id=${config.entryId}${config.playerConfig}'></script>` :
-                        `<div id="kaltura_player_${rnd}" style="width: ${config.width}px;height: ${config.height}px"></div>
+                        `<div id="kaltura_player_${rnd}" style="width: ${config.width};height: ${config.height}"></div>
 <script type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?autoembed=true&targetId=kaltura_player_${rnd}&entry_id=${config.entryId}${config.playerConfig}'></script>`
                     break;
                 default:
