@@ -16,17 +16,21 @@
      </div>
    </div>
 
-   <div class="kRow">
+   <div class="kRow smallGap">
      <div class="kLabel">{{'applications.settings.integrationSettings.accountInfo.adminSecret'| translate}}</div>
      <div class="kControl">
-       <span class="kTableColumn" [kTooltip]="_accountInfo?.adminSecret">{{_accountInfo?.adminSecret}}</span>
+       <span class="kTableColumn">{{_showAdminSecret ? _accountInfo?.adminSecret : '********************************************'}}</span>
+       <i class="kIconview" [kTooltip]="'applications.settings.integrationSettings.accountInfo.show'| translate" (click)="_showAdminSecret = true"></i>
+       <kCopyToClipboard class="kIcon" [text]="_accountInfo?.adminSecret || ''" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
      </div>
    </div>
 
    <div class="kRow">
      <div class="kLabel">{{'applications.settings.integrationSettings.accountInfo.userSecret'| translate}}</div>
      <div class="kControl">
-       <span class="kTableColumn" [kTooltip]="_accountInfo?.userSecret">{{_accountInfo?.userSecret}}</span>
+       <span class="kTableColumn">{{_showUserSecret ? _accountInfo?.userSecret : '********************************************'}}</span>
+       <i class="kIconview" [kTooltip]="'applications.settings.integrationSettings.accountInfo.show'| translate" (click)="_showUserSecret = true"></i>
+       <kCopyToClipboard class="kIcon" [text]="_accountInfo?.userSecret || ''" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
      </div>
    </div>
  </div>

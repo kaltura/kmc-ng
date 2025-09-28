@@ -14,9 +14,15 @@
   }
 
   .kRow {
-    padding-bottom: 20px;
+    padding-bottom: 24px;
     display: flex;
     font-size: 15px;
+      &:last-child {
+        padding-bottom: 0;
+      }
+      &.smallGap {
+        padding-bottom: 18px;
+      }
     .kLabel {
       flex: 0 0 auto;
       color: $kGrayscale1;
@@ -26,7 +32,6 @@
       min-width: 145px;
       max-width: 200px;
     }
-
     .kControl {
       padding-left: 30px;
       flex: 1 1 auto;
@@ -34,6 +39,13 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+        i {
+            cursor: pointer;
+            margin-right: 8px;
+            margin-left: 8px;
+        }
     }
   }
 

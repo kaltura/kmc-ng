@@ -24,6 +24,9 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
   public _accountInfo: AccountInfo;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
+  public _copyToClipboardTooltips: { success: string, failure: string, idle: string, notSupported: string } = null;
+  public _showAdminSecret = false;
+  public _showUserSecret = false;
 
   constructor(private _accountInfoService: AccountInfoService,
               private _logger: KalturaLogger,
@@ -35,6 +38,12 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
       if (this._settingsIntegrationSettingsMainView.isAvailable()) {
           this._loadPartnerAccountInfo();
       }
+      this._copyToClipboardTooltips = {
+          success: this._appLocalization.get('applications.content.syndication.table.copyToClipboardTooltip.success'),
+          failure: this._appLocalization.get('applications.content.syndication.table.copyToClipboardTooltip.failure'),
+          idle: this._appLocalization.get('applications.content.syndication.table.copyToClipboardTooltip.idle'),
+          notSupported: this._appLocalization.get('applications.content.syndication.table.copyToClipboardTooltip.notSupported')
+      };
   }
 
   ngOnDestroy(): void {
