@@ -15,6 +15,7 @@ import { serverConfig } from "config/server";
 import { ApplicationType } from "app-shared/kmc-shell";
 import { UnisphereWorkspaceType } from "@unisphere/runtime";
 import { registerElementInGlobalKalturaVersions } from '@unisphere/core';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 
 export enum BoostrappingStatus {
     Bootstrapping,
@@ -39,6 +40,7 @@ export class AppBootstrap implements CanActivate {
 
     constructor(
         private appLocalization: AppLocalization,
+        private permissionsService: KMCPermissionsService,
         private auth: AppAuthentication,
         private _browserService: BrowserService
     ) {}
@@ -142,6 +144,8 @@ export class AppBootstrap implements CanActivate {
 
     public loadUnisphere(): void {
         if (this._unisphereInitialized) return;
+        const loadContentLab = this.permissionsService.hasPermission(KMCPermissions.FEATURE_CONTENT_LAB);
+        const loadAgents = this.permissionsService.hasPermission(KMCPermissions.FEATURE_AGENTS_FRAMEWORK_PERMISSION);
         this._unisphereInitialized = true;
         const loadUnisphereWorkspace = async (
             loaderUrl: string,
@@ -153,6 +157,114 @@ export class AppBootstrap implements CanActivate {
             );
             return loader(options);
         };
+        // define runtimes to load. allways load notifications runtime
+        const runtimes: any[] = [
+            {
+                widgetName: "unisphere.widget.notifications",
+                runtimeName: "notifications",
+                ui: {
+                    bodyContainer: {
+                        zIndex: 1500,
+                    },
+                },
+                settings: {},
+                visuals: [
+                    {
+                        type: "container",
+                        settings: {},
+                        target: {
+                            target: "body"
+                        }
+                    }
+                ]
+            }
+        ];
+        // load content lab and ai-consent runtimes only if user has content lab permissions
+        if (loadContentLab) {
+            runtimes.push(
+                {
+                    widgetName: "unisphere.widget.content-lab",
+                    runtimeName: "application",
+                    visuals: [
+                        {
+                            type: "drawer",
+                            settings: {},
+                            target: {
+                                target: "body"
+                            }
+                        }
+                    ],
+                    settings: {
+                        _schemaVersion: '1',
+                        ks: this.auth.appUser.ks,
+                        pid: this.auth.appUser.partnerId.toString(),
+                        loadThumbnailWithKS: this.auth.appUser.partnerInfo.loadThumbnailWithKs,
+                        uiconfId: serverConfig.kalturaServer.previewUIConfV7.toString(),
+                        analyticsServerURI: serverConfig.analyticsServer.uri,
+                        hostAppName: ApplicationType.KMC,
+                        hostAppVersion: globalConfig.client.appVersion,
+                        kalturaServerURI: "https://" + serverConfig.kalturaServer.uri,
+                        postSaveActions: "share,editQuiz,download,entry,downloadQuiz,playlist,editPlaylist,sharePlaylist",
+                        hostedInKalturaProduct: true,
+                        widget: "",
+                    },
+                }
+            );
+            runtimes.push(
+                {
+                    widgetName: "unisphere.widget.content-lab",
+                    runtimeName: "ai-consent",
+                    visuals: [
+                        {
+                            type: "announcement",
+                            settings: {},
+                            target: {
+                                target: "body"
+                            }
+                        }
+                    ],
+                    settings: {
+                        _schemaVersion: '1',
+                        ks: this.auth.appUser.ks,
+                        pid: this.auth.appUser.partnerId.toString(),
+                        hostApp: 'kmc',
+                        kaltura: {
+                            analyticsServerURI: serverConfig.analyticsServer.uri,
+                            hostAppName: ApplicationType.KMC,
+                            hostAppVersion: globalConfig.client.appVersion
+                        }
+                    },
+                },
+            );
+        }
+        // load agents runtime only if user has agents permissions
+        if (loadAgents) {
+            runtimes.push(
+                {
+                    widgetName: "unisphere.widget.agents",
+                    runtimeName: "manager",
+                    visuals: [
+                        {
+                            type: "drawer",
+                            settings: {},
+                            target: {
+                                target: "body"
+                            }
+                        }
+                    ],
+                    settings: {
+                        ks: this.auth.appUser.ks,
+                        pid: this.auth.appUser.partnerId.toString(),
+                        kalturaServerURI: "https://" + serverConfig.kalturaServer.uri,
+                        agentsServiceURI: serverConfig.externalServices.agentsManagerEndpoint.uri,
+                        analyticsServerURI: serverConfig.analyticsServer.uri,
+                        hostAppName: ApplicationType.KMC,
+                        hostAppVersion: globalConfig.client.appVersion
+                    },
+                }
+            );
+        }
+
 
         loadUnisphereWorkspace(
             `${serverConfig.externalServices.unisphereLoaderEndpoint.uri}/loader/index.esm.js`,
@@ -161,100 +273,7 @@ export class AppBootstrap implements CanActivate {
                 serverConfig.externalServices.unisphereLoaderEndpoint.uri,
                 application: "kmc",
                 workspaceVersion: "1.0.0",
-                runtimes: [
-                    {
-                        widgetName: "unisphere.widget.content-lab",
-                        runtimeName: "application",
-                        visuals: [
-                            {
-                                type: "drawer",
-                                settings: {},
-                                target: {
-                                    target: "body"
-                                }
-                            }
-                        ],
-                        settings: {
-                            _schemaVersion: '1',
-                            ks: this.auth.appUser.ks,
-                            pid: this.auth.appUser.partnerId.toString(),
-                            loadThumbnailWithKS: this.auth.appUser.partnerInfo.loadThumbnailWithKs,
-                            uiconfId: serverConfig.kalturaServer.previewUIConfV7.toString(),
-                            analyticsServerURI: serverConfig.analyticsServer.uri,
-                            hostAppName: ApplicationType.KMC,
-                            hostAppVersion: globalConfig.client.appVersion,
-                            kalturaServerURI: "https://" + serverConfig.kalturaServer.uri,
-                            postSaveActions: "share,editQuiz,download,entry,downloadQuiz,playlist,editPlaylist,sharePlaylist",
-                            hostedInKalturaProduct: true,
-                            widget: "",
-                        },
-                    },
-                    {
-                        widgetName: "unisphere.widget.agents",
-                        runtimeName: "manager",
-                        visuals: [
-                            {
-                                type: "drawer",
-                                settings: {},
-                                target: {
-                                    target: "body"
-                                }
-                            }
-                        ],
-                        settings: {
-                            ks: this.auth.appUser.ks,
-                            pid: this.auth.appUser.partnerId.toString(),
-                            kalturaServerURI: "https://" + serverConfig.kalturaServer.uri,
-                            agentsServiceURI: serverConfig.externalServices.agentsManagerEndpoint.uri,
-                            analyticsServerURI: serverConfig.analyticsServer.uri,
-                            hostAppName: ApplicationType.KMC,
-                            hostAppVersion: globalConfig.client.appVersion
-                        },
-                    },
-                    {
-                        widgetName: "unisphere.widget.notifications",
-                        runtimeName: "notifications",
-                        ui: {
-                            bodyContainer: {
-                                zIndex: 1500,
-                            },
-                        },
-                        settings: {},
-                        visuals: [
-                            {
-                                type: "container",
-                                settings: {},
-                                target: {
-                                    target: "body"
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        widgetName: "unisphere.widget.content-lab",
-                        runtimeName: "ai-consent",
-                        visuals: [
-                            {
-                                type: "announcement",
-                                settings: {},
-                                target: {
-                                    target: "body"
-                                }
-                            }
-                        ],
-                        settings: {
-                            _schemaVersion: '1',
-                            ks: this.auth.appUser.ks,
-                            pid: this.auth.appUser.partnerId.toString(),
-                            hostApp: 'kmc',
-                            kaltura: {
-                                analyticsServerURI: serverConfig.analyticsServer.uri,
-                                hostAppName: ApplicationType.KMC,
-                                hostAppVersion: globalConfig.client.appVersion
-                            }
-                        },
-                    },
-                ],
+                runtimes,
                 ui: {
                     bodyContainer: {
                         zIndex: 1000,

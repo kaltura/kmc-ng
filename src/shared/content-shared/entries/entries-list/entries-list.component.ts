@@ -106,18 +106,20 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
     }
 
     ngAfterViewInit() {
-        this._bootstrapService.unisphereWorkspace$
-            .pipe(cancelOnDestroy(this))
-            .subscribe(unisphereWorkspace => {
-                if (unisphereWorkspace) {
-                    unisphereWorkspace.getRuntimeAsync('unisphere.widget.content-lab', 'ai-consent').then(widget => {
-                        if (!this.destroyed) {
-                            const {id, unsubscribe} = widget.mountVisual({type: 'banner', target: 'ai-consent-banner', settings: {}});
-                            this.unMountBanner = unsubscribe;
-                        }
-                    })
-                }
-            });
+        if (this._permissionsService.hasPermission(KMCPermissions.FEATURE_CONTENT_LAB)) {
+            this._bootstrapService.unisphereWorkspace$
+                .pipe(cancelOnDestroy(this))
+                .subscribe(unisphereWorkspace => {
+                    if (unisphereWorkspace) {
+                        unisphereWorkspace.getRuntimeAsync('unisphere.widget.content-lab', 'ai-consent').then(widget => {
+                            if (widget && !this.destroyed) {
+                                const {id, unsubscribe} = widget.mountVisual({type: 'banner', target: 'ai-consent-banner', settings: {}});
+                                this.unMountBanner = unsubscribe;
+                            }
+                        })
+                    }
+                });
+        }
     }
 
     ngOnChanges(changes)
