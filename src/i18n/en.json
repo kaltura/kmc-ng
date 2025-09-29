@@ -3006,6 +3006,7 @@
                     "adminSecret": "Administrator Secret",
                     "userSecret": "User Secret",
                     "show": "Show secret",
+                    "hide": "Hide secret",
                     "errors": {
                         "loadFailed": "An error occurred during account info loading."
                     },
