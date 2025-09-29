@@ -80,10 +80,16 @@
         height: 100%;
         right: 0px;
         bottom: 0px;
+        top: 16px;
       }
         &.audioPlayer {
             iframe {
                 top: 100px;
+            }
+        }
+        &.responsive {
+            iframe {
+                top: 0px;
             }
         }
     }

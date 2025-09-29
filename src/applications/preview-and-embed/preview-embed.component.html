@@ -34,7 +34,7 @@
             </div>
 
             <div class="kPreview">
-                <div class="kPreviewContainer" [class.audioPlayer]="this._isAudioPlayer">
+                <div class="kPreviewContainer" [class.audioPlayer]="_isAudioPlayer" [class.responsive]="_previewForm.controls['responsive'].value === true">
                     <iframe #previewIframe *ngIf="_showPlayer" frameborder="0" marginheight="0" marginwidth="0" allowFullScreen webkitallowfullscreen mozallowfullscreen></iframe>
                 </div>
                 <div class="kPreviewParams" [style.maxWidth]="_showEmbedParams ? '450px' : '0px'">
