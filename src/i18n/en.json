@@ -327,6 +327,7 @@
             "copy": "Copy",
             "seo": "Include Search Engine Optimization Data",
             "https": "Support for HTTPS Embed Code",
+            "responsive": "Responsive",
             "qr": "Scan Code for Mobile Preview",
             "view": "Standalone Preview",
             "advanced": "Advanced Settings",

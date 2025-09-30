@@ -62,8 +62,8 @@ export class EntryThumbnailCapture implements AfterContentInit, OnInit, OnDestro
             ks,
             entryId: this.entryId,
             uiConfId,
-            width: 340,
-            height: 210,
+            width: '340px',
+            height: '210px',
             pid: this._appAuthentication.appUser.partnerId,
             serverUri: buildCDNUrl(''),
             playerConfig: ''

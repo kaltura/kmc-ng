@@ -152,8 +152,8 @@ export class EntryPreview implements OnInit, OnDestroy {
             ks,
             entryId: this._entryId,
             uiConfId,
-            width: 280,
-            height: 158,
+            width: '280px',
+            height: '158px',
             pid: this._appAuthentication.appUser.partnerId,
             serverUri: buildCDNUrl(''),
             playerConfig: ''

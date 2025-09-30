@@ -60,6 +60,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   public renderPlayer = null;
   public _isAudioPlayer = false;
   public _isReelsPlayer = false;
+  public _showResponsive = true;
 
   public get _showEmberCode(): boolean {
     const showForPlaylist = this.media instanceof KalturaPlaylist && this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_EMBED_CODE);
@@ -99,6 +100,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       this._browserService.setInLocalStorage('previewEmbed.embedType', this._previewForm.controls['selectedEmbedType'].value);
       this._browserService.setInLocalStorage('previewEmbed.seo', this._previewForm.controls['seo'].value);
       this._browserService.setInLocalStorage('previewEmbed.secured', this._previewForm.controls['secured'].value);
+      this._browserService.setInLocalStorage('previewEmbed.responsive', this._previewForm.controls['responsive'].value);
       if (form && form.selectedPlayer){
           this._selectedPlayerVersion = form.selectedPlayer.version;
       }
@@ -108,8 +110,16 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       if (this._selectedPlayerVersion === 2) {
           this._generatedCode = this.generateCode(false);
           this._generatedPreviewCode = this.generateCode(true);
+          this._showResponsive = this._previewForm.controls['selectedEmbedType'].value !== 'auto';
+          // set responsive value to false if not supported
+            if (!this._showResponsive && this._previewForm.controls['responsive'].value === true) {
+                this._previewForm.patchValue({
+                    responsive: false
+                });
+            }
           this.createPreviewLink();
       } else {
+          this._showResponsive = true; // responsive is always on for V3 players
           this._generatedCode = this.generateV3code(false);
           this._generatedPreviewCode = this.generateV3code(true);
           this.createPreviewLink();
@@ -224,11 +234,13 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   private createForm():void{
     const seo: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.seo');
     const secured: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.secured');
+    const responsive: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.responsive');
     this._previewForm = this._fb.group({
       selectedPlayer: null,
       selectedEmbedType: this._browserService.getFromLocalStorage('previewEmbed.embedType') || subApplicationsConfig.previewAndEmbedApp.embedType,
       seo: seo !== null ? seo : subApplicationsConfig.previewAndEmbedApp.includeSeoMetadata,
-      secured: secured !== null ? secured : subApplicationsConfig.previewAndEmbedApp.secureEmbed
+      secured: secured !== null ? secured : subApplicationsConfig.previewAndEmbedApp.secureEmbed,
+      responsive: responsive !== null ? responsive : subApplicationsConfig.previewAndEmbedApp.responsive
     });
   }
 
@@ -260,8 +272,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           entryId: this.media.id,
           entryTitle: this.media.name,
           uiConfId: uiConf.id,
-          width: uiConf.width,
-          height: uiConf.height,
+          width: this._previewForm.controls['responsive'].value === true ? '100%' : uiConf.width + 'px',
+          height: this._previewForm.controls['responsive'].value === true ? '100%' : uiConf.height + 'px',
           pid: this._appAuthentication.appUser.partnerId,
           serverUri: '',
           playerConfig: '',
@@ -317,8 +329,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       serverUri: isSecured && !isPreview ? this.getProtocol(isPreview) + '://' + securedCdnUrl : this.getProtocol(isPreview) + '://' + baseCdnUrl,
       embedType: this._previewForm.controls['selectedEmbedType'].value,
       uiConfId: this._previewForm.controls['selectedPlayer'].value.uiConf.id,
-      width: this._previewForm.controls['selectedPlayer'].value.uiConf.width,
-      height: this._previewForm.controls['selectedPlayer'].value.uiConf.height,
+      width: this._previewForm.controls['responsive'].value === true ? '100%' : this._previewForm.controls['selectedPlayer'].value.uiConf.width + 'px',
+      height: this._previewForm.controls['responsive'].value === true ? '100%' : this._previewForm.controls['selectedPlayer'].value.uiConf.height + 'px',
       entryMeta: includeSeoMetadata ? this.getMediaMetadata() : '',
       videoMeta: videoMeta,
       playerId: 'kaltura_player_' + cacheStr,
