@@ -16,17 +16,41 @@
      </div>
    </div>
 
-   <div class="kRow">
+   <div class="kRow smallGap">
      <div class="kLabel">{{'applications.settings.integrationSettings.accountInfo.adminSecret'| translate}}</div>
      <div class="kControl">
-       <span class="kTableColumn" [kTooltip]="_accountInfo?.adminSecret">{{_accountInfo?.adminSecret}}</span>
+       <span class="kTableColumn">{{_showAdminSecret ? _accountInfo?.adminSecret : '********************************************'}}</span>
+       <div  [kTooltip]="_showAdminSecret ? ('applications.settings.integrationSettings.accountInfo.hide'| translate) : ('applications.settings.integrationSettings.accountInfo.show'| translate)" (click)="_showAdminSecret = !_showAdminSecret">
+           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="!_showAdminSecret">
+               <path fill-rule="evenodd" clip-rule="evenodd" d="M8.00004 3.33301C11.0303 3.33301 13.6182 5.07301 14.6667 7.99967C13.6182 10.9263 11.0303 12.6663 8.00004 12.6663C4.96974 12.6663 2.38186 10.9263 1.33337 7.99967C2.38186 5.07301 4.96974 3.33301 8.00004 3.33301ZM8.00004 4.66634C6.163 4.66634 4.66671 6.16264 4.66671 7.99967C4.66671 9.83671 6.163 11.333 8.00004 11.333C9.83708 11.333 11.3334 9.83671 11.3334 7.99967C11.3334 6.16264 9.83708 4.66634 8.00004 4.66634ZM10 7.99967C10 6.89745 9.10226 5.99967 8.00004 5.99967C6.89782 5.99967 6.00004 6.89745 6.00004 7.99967C6.00004 9.1019 6.89782 9.99967 8.00004 9.99967C9.10226 9.99967 10 9.1019 10 7.99967Z" fill="black"/>
+           </svg>
+           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="_showAdminSecret">
+               <path d="M14.6667 7.99967C13.6182 5.07301 11.0303 3.33301 8.00004 3.33301C6.90287 3.33301 5.8637 3.56111 4.93459 3.99104L6.16279 5.22009C6.68999 4.87031 7.32179 4.66634 8.00004 4.66634C9.83708 4.66634 11.3334 6.16264 11.3334 7.99967C11.3334 8.67764 11.1296 9.30919 10.7801 9.83625L12.2503 11.3061C13.3244 10.5108 14.169 9.38895 14.6667 7.99967Z" fill="black"/>
+               <path d="M5.22001 6.1631L3.7498 4.69324C2.67567 5.48853 1.83108 6.6104 1.33337 7.99967C2.38186 10.9263 4.96974 12.6663 8.00004 12.6663C9.09721 12.6663 10.1364 12.4382 11.0655 12.0083L9.83662 10.7797C9.30955 11.1292 8.678 11.333 8.00004 11.333C6.163 11.333 4.66671 9.83671 4.66671 7.99967C4.66671 7.32171 4.8705 6.69016 5.22001 6.1631Z" fill="black"/>
+               <path d="M6.19508 7.13899L8.86138 9.80432C8.60035 9.92951 8.30818 9.99967 8.00004 9.99967C6.89782 9.99967 6.00004 9.1019 6.00004 7.99967C6.00004 7.69179 6.07009 7.39986 6.19508 7.13899Z" fill="black"/>
+               <path d="M10 7.99967C10 6.89745 9.10226 5.99967 8.00004 5.99967C7.6919 5.99967 7.39973 6.06984 7.1387 6.19503L9.80469 8.86102C9.92987 8.59998 10 8.30782 10 7.99967Z" fill="black"/>
+           </svg>
+       </div>
+       <kCopyToClipboard class="kIcon" [text]="_accountInfo?.adminSecret || ''" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
      </div>
    </div>
 
    <div class="kRow">
      <div class="kLabel">{{'applications.settings.integrationSettings.accountInfo.userSecret'| translate}}</div>
      <div class="kControl">
-       <span class="kTableColumn" [kTooltip]="_accountInfo?.userSecret">{{_accountInfo?.userSecret}}</span>
+       <span class="kTableColumn">{{_showUserSecret ? _accountInfo?.userSecret : '********************************************'}}</span>
+         <div  [kTooltip]="_showUserSecret ? ('applications.settings.integrationSettings.accountInfo.hide'| translate) : ('applications.settings.integrationSettings.accountInfo.show'| translate)" (click)="_showUserSecret = !_showUserSecret">
+             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="!_showUserSecret">
+                 <path fill-rule="evenodd" clip-rule="evenodd" d="M8.00004 3.33301C11.0303 3.33301 13.6182 5.07301 14.6667 7.99967C13.6182 10.9263 11.0303 12.6663 8.00004 12.6663C4.96974 12.6663 2.38186 10.9263 1.33337 7.99967C2.38186 5.07301 4.96974 3.33301 8.00004 3.33301ZM8.00004 4.66634C6.163 4.66634 4.66671 6.16264 4.66671 7.99967C4.66671 9.83671 6.163 11.333 8.00004 11.333C9.83708 11.333 11.3334 9.83671 11.3334 7.99967C11.3334 6.16264 9.83708 4.66634 8.00004 4.66634ZM10 7.99967C10 6.89745 9.10226 5.99967 8.00004 5.99967C6.89782 5.99967 6.00004 6.89745 6.00004 7.99967C6.00004 9.1019 6.89782 9.99967 8.00004 9.99967C9.10226 9.99967 10 9.1019 10 7.99967Z" fill="black"/>
+             </svg>
+             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="_showUserSecret">
+                 <path d="M14.6667 7.99967C13.6182 5.07301 11.0303 3.33301 8.00004 3.33301C6.90287 3.33301 5.8637 3.56111 4.93459 3.99104L6.16279 5.22009C6.68999 4.87031 7.32179 4.66634 8.00004 4.66634C9.83708 4.66634 11.3334 6.16264 11.3334 7.99967C11.3334 8.67764 11.1296 9.30919 10.7801 9.83625L12.2503 11.3061C13.3244 10.5108 14.169 9.38895 14.6667 7.99967Z" fill="black"/>
+                 <path d="M5.22001 6.1631L3.7498 4.69324C2.67567 5.48853 1.83108 6.6104 1.33337 7.99967C2.38186 10.9263 4.96974 12.6663 8.00004 12.6663C9.09721 12.6663 10.1364 12.4382 11.0655 12.0083L9.83662 10.7797C9.30955 11.1292 8.678 11.333 8.00004 11.333C6.163 11.333 4.66671 9.83671 4.66671 7.99967C4.66671 7.32171 4.8705 6.69016 5.22001 6.1631Z" fill="black"/>
+                 <path d="M6.19508 7.13899L8.86138 9.80432C8.60035 9.92951 8.30818 9.99967 8.00004 9.99967C6.89782 9.99967 6.00004 9.1019 6.00004 7.99967C6.00004 7.69179 6.07009 7.39986 6.19508 7.13899Z" fill="black"/>
+                 <path d="M10 7.99967C10 6.89745 9.10226 5.99967 8.00004 5.99967C7.6919 5.99967 7.39973 6.06984 7.1387 6.19503L9.80469 8.86102C9.92987 8.59998 10 8.30782 10 7.99967Z" fill="black"/>
+             </svg>
+         </div>
+       <kCopyToClipboard class="kIcon" [text]="_accountInfo?.userSecret || ''" [iconSwitchTimeout]="5000" [tooltips]="_copyToClipboardTooltips"></kCopyToClipboard>
      </div>
    </div>
  </div>

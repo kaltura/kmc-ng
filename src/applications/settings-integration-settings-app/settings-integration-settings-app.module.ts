@@ -38,7 +38,7 @@ import { TeamsProfilesTableComponent } from './teams/profiles-table/profiles-tab
 import { TeamsNewProfileComponent } from './teams/new-profile/new-profile.component';
 import { EditTeamsProfileComponent } from './teams/edit-profile/edit-profile.component';
 import { TeamsUpdateProfileSecretComponent } from './teams/update-secret/update-secret.component';
-import { LocalizationModule } from '@kaltura-ng/mc-shared';
+import {CopyToClipboardModule, LocalizationModule} from '@kaltura-ng/mc-shared';
 
 @NgModule({
     imports: [
@@ -63,7 +63,8 @@ import { LocalizationModule } from '@kaltura-ng/mc-shared';
         InputHelperModule,
         KMCPermissionsModule,
         TableModule,
-        LocalizationModule
+        LocalizationModule,
+        CopyToClipboardModule
     ],
   declarations: [
     SettingsIntegrationSettingsComponent,
