@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+<k-area-blocker [showLoader]="_isBusy || _widgetId === null" [message]="_blockerMessage">
     <div #preview class="kPreviewAndEmbed">
         <form [formGroup]="_previewForm" novalidate>
 
@@ -79,9 +79,13 @@
                                 <span class="kCol">{{'applications.embed.https' | translate}}</span>
                                 <p-inputSwitch formControlName="secured"></p-inputSwitch>
                             </div>
-                            <div class="kSection kRow kAlignTop" *ngIf="_showResponsive">
+                            <div class="kSection kRow kAlignTop" *ngIf="false"> <!-- change false to _showResponsive to support responsive embed -->
                                 <span class="kCol">{{'applications.embed.responsive' | translate}}</span>
                                 <p-inputSwitch formControlName="responsive"></p-inputSwitch>
+                            </div>
+                            <div class="kSection kRow kAlignTop" *ngIf="_showDee">
+                                <span class="kCol">{{'applications.embed.dee' | translate}}</span>
+                                <p-inputSwitch formControlName="dee"></p-inputSwitch>
                             </div>
                         </div>
                     </div>

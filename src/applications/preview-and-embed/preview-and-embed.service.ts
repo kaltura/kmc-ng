@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { KalturaFilterPager } from 'kaltura-ngx-client';
+import {KalturaFilterPager, KalturaWidget, WidgetAddAction} from 'kaltura-ngx-client';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
 import { UiConfListAction } from 'kaltura-ngx-client';
@@ -22,6 +22,7 @@ export type EmbedConfig = {
     serverUri: string;
     playerConfig: string;
     isPlaylist?: boolean;
+    widgetId?: string;
 }
 
 export type EmbedParams = {
@@ -64,6 +65,16 @@ export class PreviewEmbedService {
             responseProfile
         }));
 	}
+
+    generateWidget(entryId: string, pid: string): Observable<KalturaWidget> {
+        return this._kalturaClient.request(new WidgetAddAction({widget: new KalturaWidget({
+                entryId,
+                sourceWidgetId: `_${pid}`,
+                enforceEntitlement: false,
+                privileges: `sview:${entryId}`
+            })}
+        ));
+    }
 
 	generateShortLink(url: string): Observable<KalturaShortLink>{
 
@@ -194,6 +205,8 @@ kWidget.thumbEmbed({
             let code = '';
             switch (config.embedType) {
                 case 'dynamic':
+                    const widgetCode = config.widgetId ? `,
+                          widgetId: "${config.widgetId}"` : '';
                     code = config.isPlaylist ? `<div id="kaltura_player_${rnd}" style="width: ${config.width};height: ${config.height}"></div>
                     <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
                     <script type="text/javascript">
@@ -202,7 +215,7 @@ kWidget.thumbEmbed({
                         targetId: "kaltura_player_${rnd}",
                         provider: {
                           partnerId: ${config.pid},
-                          uiConfId: ${config.uiConfId}
+                          uiConfId: ${config.uiConfId}${widgetCode}
                         }
                       });
                       kalturaPlayer.loadPlaylist({playlistId: '${config.entryId}'});
@@ -218,7 +231,7 @@ kWidget.thumbEmbed({
                         targetId: "kaltura_player_${rnd}",
                         provider: {
                           partnerId: ${config.pid},
-                          uiConfId: ${config.uiConfId}
+                          uiConfId: ${config.uiConfId}${widgetCode}
                         }
                       });
                       kalturaPlayer.loadMedia({entryId: '${config.entryId}'});
@@ -228,6 +241,8 @@ kWidget.thumbEmbed({
                   </script>`;
                     break;
                 case 'thumb':
+                    const thumbWidgetCode = config.widgetId ? `,
+                              widgetId: "${config.widgetId}"` : '';
                     code = `<div id="kaltura_player_${rnd}" style="width: ${config.width};height: ${config.height}"></div>
                     <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
                     <script src="https://static.kaltura.com/content/static/player-scripts/thumbnail-embed.js"></script>
@@ -237,7 +252,7 @@ kWidget.thumbEmbed({
                         config:  {
                             provider: {
                               partnerId: ${config.pid},
-                              uiConfId: ${config.uiConfId}
+                              uiConfId: ${config.uiConfId}${thumbWidgetCode}
                             },
                             targetId: "kaltura_player_${rnd}"
                         },
@@ -250,14 +265,16 @@ kWidget.thumbEmbed({
                     break;
                 case 'iframe':
                     const titleAttr = config.entryTitle ? `title="${config.entryTitle}"` : '';
-                    code = config.isPlaylist ? `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&playlist_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}; height: ${config.height}" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0" ${titleAttr}></iframe>` :
-                        `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${config.playerConfig}' style="width: ${config.width}; height: ${config.height}" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0" ${titleAttr}></iframe>`;
+                    const iframeWidget = config.widgetId ? `&config[provider]={"widgetId":"${config.widgetId}"}` : '';
+                    code = config.isPlaylist ? `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&playlist_id=${config.entryId}${iframeWidget}${config.playerConfig}' style="width: ${config.width}; height: ${config.height}" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0" ${titleAttr}></iframe>` :
+                        `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${iframeWidget}${config.playerConfig}' style="width: ${config.width}; height: ${config.height}" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0" ${titleAttr}></iframe>`;
                     break;
                 case 'auto':
+                    const autoWidget = config.widgetId ? `&config[provider]={"widgetId":"${config.widgetId}"}` : '';
                     code = config.isPlaylist ? `<div id="kaltura_player_${rnd}" style="width: ${config.width};height: ${config.height}"></div>
-<script type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?autoembed=true&targetId=kaltura_player_${rnd}&playlist_id=${config.entryId}${config.playerConfig}'></script>` :
+<script type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?autoembed=true&targetId=kaltura_player_${rnd}&playlist_id=${config.entryId}${autoWidget}${config.playerConfig}'></script>` :
                         `<div id="kaltura_player_${rnd}" style="width: ${config.width};height: ${config.height}"></div>
-<script type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?autoembed=true&targetId=kaltura_player_${rnd}&entry_id=${config.entryId}${config.playerConfig}'></script>`
+<script type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?autoembed=true&targetId=kaltura_player_${rnd}&entry_id=${config.entryId}${autoWidget}${config.playerConfig}'></script>`
                     break;
                 default:
                     break;
