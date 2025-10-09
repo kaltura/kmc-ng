@@ -79,7 +79,7 @@
                                 <span class="kCol">{{'applications.embed.https' | translate}}</span>
                                 <p-inputSwitch formControlName="secured"></p-inputSwitch>
                             </div>
-                            <div class="kSection kRow kAlignTop" *ngIf="false"> <!-- change false to _showResponsive to support responsive embed -->
+                            <div class="kSection kRow kAlignTop" *ngIf="_showResponsive">
                                 <span class="kCol">{{'applications.embed.responsive' | translate}}</span>
                                 <p-inputSwitch formControlName="responsive"></p-inputSwitch>
                             </div>
