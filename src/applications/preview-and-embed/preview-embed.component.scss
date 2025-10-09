@@ -87,6 +87,11 @@
                 top: 100px;
             }
         }
+        &.responsive {
+            iframe {
+                top: 0px;
+            }
+        }
     }
     .kPreviewParams{
       width: 450px;
@@ -173,7 +178,7 @@
       .kAdvanced{
         transition: max-height 0.3s;
         overflow-y: hidden;
-        height: 250px;
+        height: 300px;
       }
     }
   }

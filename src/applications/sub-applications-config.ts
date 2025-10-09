@@ -10,6 +10,8 @@ export interface SubApplicationsConfig {
     previewAndEmbedApp: {
         includeKalturaLinks: boolean,
         secureEmbed: boolean,
+        responsive: boolean,
+        dee: boolean,
         includeSeoMetadata: boolean,
         embedType: 'dynamic' | 'iframe' | 'auto' | 'thumb'
     };
@@ -39,6 +41,8 @@ export const subApplicationsConfig: SubApplicationsConfig = {
     'previewAndEmbedApp': {
         'includeKalturaLinks': false,
         'secureEmbed': true,
+        'responsive': false,
+        'dee': false,
         'includeSeoMetadata': false,
         'embedType': 'dynamic'
     },

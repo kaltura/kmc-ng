@@ -7,7 +7,7 @@ import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { PreviewEmbedService, EmbedConfig, EmbedParams } from './preview-and-embed.service';
 
-import { KalturaPlaylist, KalturaUiConfObjType } from 'kaltura-ngx-client';
+import {KalturaPlaylist, KalturaUiConfObjType, KalturaWidget} from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaUiConfListResponse } from 'kaltura-ngx-client';
 import { KalturaUiConf } from 'kaltura-ngx-client';
@@ -60,6 +60,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   public renderPlayer = null;
   public _isAudioPlayer = false;
   public _isReelsPlayer = false;
+  public _showResponsive = true;
+  public _showDee = true;
+  public _widgetId = null;
 
   public get _showEmberCode(): boolean {
     const showForPlaylist = this.media instanceof KalturaPlaylist && this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_EMBED_CODE);
@@ -79,6 +82,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     this._playersSortBy = this._browserService.getFromLocalStorage('previewEmbed.sortBy') || 'updatedAt';
     this._showShortLink = !this._permissionsService.hasPermission(KMCPermissions.FEATURE_DISABLE_PREVIEW_PAGE);
     this.listPlayers();
+    this.createWidgetId();
     this.createForm();
     this._title = this._showEmberCode
       ? this._appLocalization.get('applications.embed.previewShare')
@@ -94,32 +98,61 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
     }
   }
 
+  private registerToFormValueChanges(): void {
+      this._previewForm.valueChanges.pipe(cancelOnDestroy(this)).subscribe((form) => {
+          this._browserService.setInLocalStorage('previewEmbed.embedType', this._previewForm.controls['selectedEmbedType'].value);
+          this._browserService.setInLocalStorage('previewEmbed.seo', this._previewForm.controls['seo'].value);
+          this._browserService.setInLocalStorage('previewEmbed.secured', this._previewForm.controls['secured'].value);
+          this._browserService.setInLocalStorage('previewEmbed.responsive', this._previewForm.controls['responsive'].value);
+          this._browserService.setInLocalStorage('previewEmbed.dee', this._previewForm.controls['dee'].value);
+          if (form && form.selectedPlayer){
+              this._selectedPlayerVersion = form.selectedPlayer.version;
+          }
+          this._isAudioPlayer = this._previewForm.controls['selectedPlayer'].value.uiConf.objType === KalturaUiConfObjType.sap;
+          this._isReelsPlayer = this._previewForm.controls['selectedPlayer'].value.uiConf.objType === KalturaUiConfObjType.reels;
+          this.setEmbedTypes();
+          if (this._selectedPlayerVersion === 2) {
+              this._showDee = false;
+              this._generatedCode = this.generateCode(false);
+              this._generatedPreviewCode = this.generateCode(true);
+              this._showResponsive = this._previewForm.controls['selectedEmbedType'].value !== 'auto';
+              // set responsive value to false if not supported
+              if (!this._showResponsive && this._previewForm.controls['responsive'].value === true) {
+                  this._previewForm.patchValue({
+                      responsive: false
+                  });
+              }
+              this.createPreviewLink();
+          } else {
+              this._showDee = true;
+              this._showResponsive = true; // responsive is always on for V3 players
+              this._generatedCode = this.generateV3code(false);
+              this._generatedPreviewCode = this.generateV3code(true);
+              this.createPreviewLink();
+          }
+          this._showPlayer = false; // remove iframe from DOM to invoke refresh
+          setTimeout(() => {        // use a timeout to ivoke iframe content refresh
+              this._showPlayer = true;
+              this.showPreview();
+          }, 0);
+      });
+  }
+
   ngAfterViewInit(){
-    this._previewForm.valueChanges.pipe(cancelOnDestroy(this)).subscribe((form) => {
-      this._browserService.setInLocalStorage('previewEmbed.embedType', this._previewForm.controls['selectedEmbedType'].value);
-      this._browserService.setInLocalStorage('previewEmbed.seo', this._previewForm.controls['seo'].value);
-      this._browserService.setInLocalStorage('previewEmbed.secured', this._previewForm.controls['secured'].value);
-      if (form && form.selectedPlayer){
-          this._selectedPlayerVersion = form.selectedPlayer.version;
-      }
-      this._isAudioPlayer = this._previewForm.controls['selectedPlayer'].value.uiConf.objType === KalturaUiConfObjType.sap;
-      this._isReelsPlayer = this._previewForm.controls['selectedPlayer'].value.uiConf.objType === KalturaUiConfObjType.reels;
-      this.setEmbedTypes();
-      if (this._selectedPlayerVersion === 2) {
-          this._generatedCode = this.generateCode(false);
-          this._generatedPreviewCode = this.generateCode(true);
-          this.createPreviewLink();
-      } else {
-          this._generatedCode = this.generateV3code(false);
-          this._generatedPreviewCode = this.generateV3code(true);
-          this.createPreviewLink();
-      }
-      this._showPlayer = false; // remove iframe from DOM to invoke refresh
-      setTimeout(() => {        // use a timeout to ivoke iframe content refresh
-          this._showPlayer = true;
-          this.showPreview();
-      }, 0);
-    });
+      this.registerToFormValueChanges();
+  }
+
+  private createWidgetId(): void {
+      const entryId = this.media.id;
+      const pid = this._appAuthentication.appUser.partnerId;
+      this._previewEmbedService.generateWidget(entryId, pid).pipe(cancelOnDestroy(this)).subscribe(
+            (widget: KalturaWidget) => {
+                this._widgetId = widget.id;
+            },
+            error => {
+                this._widgetId = '';
+            }
+        );
   }
 
   private listPlayers(){
@@ -224,11 +257,15 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   private createForm():void{
     const seo: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.seo');
     const secured: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.secured');
+    const responsive: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.responsive');
+    const dee: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.dee');
     this._previewForm = this._fb.group({
       selectedPlayer: null,
       selectedEmbedType: this._browserService.getFromLocalStorage('previewEmbed.embedType') || subApplicationsConfig.previewAndEmbedApp.embedType,
       seo: seo !== null ? seo : subApplicationsConfig.previewAndEmbedApp.includeSeoMetadata,
-      secured: secured !== null ? secured : subApplicationsConfig.previewAndEmbedApp.secureEmbed
+      secured: secured !== null ? secured : subApplicationsConfig.previewAndEmbedApp.secureEmbed,
+      responsive: responsive !== null ? responsive : subApplicationsConfig.previewAndEmbedApp.responsive,
+      dee: dee !== null ? dee : subApplicationsConfig.previewAndEmbedApp.dee
     });
   }
 
@@ -260,12 +297,15 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           entryId: this.media.id,
           entryTitle: this.media.name,
           uiConfId: uiConf.id,
-          width: uiConf.width,
-          height: uiConf.height,
+          width: this._previewForm.controls['responsive'].value === true ? '100%' : uiConf.width + 'px',
+          height: this._previewForm.controls['responsive'].value === true ? '100%' : uiConf.height + 'px',
           pid: this._appAuthentication.appUser.partnerId,
           serverUri: '',
           playerConfig: '',
           isPlaylist: this.media instanceof KalturaPlaylist
+      }
+      if (this._previewForm.controls['dee'].value === true && this._widgetId) {
+          embedConfig.widgetId = this._widgetId;
       }
       let config = '';
       let poster = '';
@@ -317,8 +357,8 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       serverUri: isSecured && !isPreview ? this.getProtocol(isPreview) + '://' + securedCdnUrl : this.getProtocol(isPreview) + '://' + baseCdnUrl,
       embedType: this._previewForm.controls['selectedEmbedType'].value,
       uiConfId: this._previewForm.controls['selectedPlayer'].value.uiConf.id,
-      width: this._previewForm.controls['selectedPlayer'].value.uiConf.width,
-      height: this._previewForm.controls['selectedPlayer'].value.uiConf.height,
+      width: this._previewForm.controls['responsive'].value === true ? '100%' : this._previewForm.controls['selectedPlayer'].value.uiConf.width + 'px',
+      height: this._previewForm.controls['responsive'].value === true ? '100%' : this._previewForm.controls['selectedPlayer'].value.uiConf.height + 'px',
       entryMeta: includeSeoMetadata ? this.getMediaMetadata() : '',
       videoMeta: videoMeta,
       playerId: 'kaltura_player_' + cacheStr,

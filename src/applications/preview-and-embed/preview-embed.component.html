@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+<k-area-blocker [showLoader]="_isBusy || _widgetId === null" [message]="_blockerMessage">
     <div #preview class="kPreviewAndEmbed">
         <form [formGroup]="_previewForm" novalidate>
 
@@ -34,7 +34,7 @@
             </div>
 
             <div class="kPreview">
-                <div class="kPreviewContainer" [class.audioPlayer]="this._isAudioPlayer">
+                <div class="kPreviewContainer" [class.audioPlayer]="_isAudioPlayer" [class.responsive]="_previewForm.controls['responsive'].value === true">
                     <iframe #previewIframe *ngIf="_showPlayer" frameborder="0" marginheight="0" marginwidth="0" allowFullScreen webkitallowfullscreen mozallowfullscreen></iframe>
                 </div>
                 <div class="kPreviewParams" [style.maxWidth]="_showEmbedParams ? '450px' : '0px'">
@@ -63,7 +63,7 @@
                             <i class="kAdvancedArrow kIcondropdown_arrow_right" [class.kArrowDown]="_showAdvanced"></i>
                         </div>
 
-                        <div class="kAdvanced" [style.maxHeight]="_showAdvanced ? '250px' : '0px'">
+                        <div class="kAdvanced" [style.maxHeight]="_showAdvanced ? '300px' : '0px'">
                             <div class="kSection kRow">
                                 <div class="kCol">
                                     <span>{{'applications.embed.embedType' | translate}}</span>
@@ -78,6 +78,14 @@
                             <div class="kSection kRow kAlignTop">
                                 <span class="kCol">{{'applications.embed.https' | translate}}</span>
                                 <p-inputSwitch formControlName="secured"></p-inputSwitch>
+                            </div>
+                            <div class="kSection kRow kAlignTop" *ngIf="_showResponsive">
+                                <span class="kCol">{{'applications.embed.responsive' | translate}}</span>
+                                <p-inputSwitch formControlName="responsive"></p-inputSwitch>
+                            </div>
+                            <div class="kSection kRow kAlignTop" *ngIf="_showDee">
+                                <span class="kCol">{{'applications.embed.dee' | translate}}</span>
+                                <p-inputSwitch formControlName="dee"></p-inputSwitch>
                             </div>
                         </div>
                     </div>
