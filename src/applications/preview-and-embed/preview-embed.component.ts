@@ -63,6 +63,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   public _showResponsive = true;
   public _showDee = true;
   public _widgetId = null;
+  private formInitialized = false;
 
   public get _showEmberCode(): boolean {
     const showForPlaylist = this.media instanceof KalturaPlaylist && this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_EMBED_CODE);
@@ -140,6 +141,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   ngAfterViewInit(){
       this.registerToFormValueChanges();
+      this.formInitialized = true;
   }
 
   private createWidgetId(): void {
@@ -148,6 +150,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
       this._previewEmbedService.generateWidget(entryId, pid).pipe(cancelOnDestroy(this)).subscribe(
             (widget: KalturaWidget) => {
                 this._widgetId = widget.id;
+                if (this.formInitialized) {
+                    this._previewForm.updateValueAndValidity({onlySelf: false, emitEvent: true}); // force form value update to include dee option
+                }
             },
             error => {
                 this._widgetId = '';
