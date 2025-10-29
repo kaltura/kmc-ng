@@ -56,12 +56,32 @@ export class CriteriaTagsComponent implements OnDestroy{
 
     @Input() set filter(value: any) {
         if (value['advancedSearch'] && value['advancedSearch']['items'] && value['advancedSearch']['items'].length) {
+            // Collect all tags from potentially multiple tag objects
+            const allTags = new Set<string>();
+            let notValue = null; // Track the 'not' value from the first tag object
+
             value['advancedSearch']['items'].forEach((advancedSearch: any) => {
                 if (advancedSearch['attribute'] && advancedSearch['attribute'] === KalturaMediaEntryMatchAttribute.tags) {
-                    this._tags = advancedSearch['not'] === true ? 'tagsNotIn' : 'tagsIn';
-                    this.tags = advancedSearch['value'].split(',');
+                    if (notValue === null) {
+                        notValue = advancedSearch['not'];
+                        this._tags = advancedSearch['not'] === true ? 'tagsNotIn' : 'tagsIn';
+                    }
+
+                    // Handle both comma-separated values in a single object (backward compatibility)
+                    // and individual tag objects (new format)
+                    const tagValues = advancedSearch['value'].split(',');
+                    tagValues.forEach(tag => {
+                        if (tag.trim() !== '') {
+                            allTags.add(tag.trim());
+                        }
+                    });
                 }
             });
+
+            // Convert Set to array for the tags property
+            if (allTags.size > 0) {
+                this.tags = Array.from(allTags);
+            }
         }
     }
     @Output() onDelete = new EventEmitter<string>();
