@@ -75,6 +75,7 @@ export interface EntriesFilters {
   flavors: string[];
   distributions: string[];
   categories: number[];
+  uncategorizedCategories: boolean;
   categoriesMode: CategoriesModeType;
   customMetadata: GroupedListType<string>;
   limits: number;
@@ -141,7 +142,6 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     if (typeof updates.categoriesMode !== 'undefined') {
       this._browserService.setInLocalStorage('contentShared.categoriesTree.selectionMode', updates.categoriesMode);
     }
-
     this._preFilterSubject.next(updates);
 
     return updates;
@@ -295,6 +295,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
       flavors: new ListTypeAdapter<string>(),
       distributions: new ListTypeAdapter<string>(),
       categories: new ListTypeAdapter<number>(),
+      uncategorizedCategories: new BooleanTypeAdapter(),
       categoriesMode: new CategoriesModeAdapter(),
       customMetadata: new GroupedListAdapter<string>(),
       limits: new NumberTypeAdapter(),

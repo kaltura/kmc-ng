@@ -21,6 +21,16 @@
   margin-top: 18px;
 }
 
+.uncategorized {
+  margin-top: 16px;
+  padding-left: 20px;
+    ::ng-deep p-checkbox .p-checkbox-label {
+        font-size: 14px;
+        font-weight: 700;
+        color: $kGrayscale1;
+    }
+}
+
 .kFilterPrefs {
   color: $kGrayscale3;
   line-height: 40px;

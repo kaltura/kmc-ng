@@ -76,7 +76,7 @@
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="entriesTags" [sticksTo]="'entriesFilters'">
         <div class="kContent">
             <k-entries-list-tags
-                [showEnforcedFilters]="showEnforcedFilters"
+              [showEnforcedFilters]="showEnforcedFilters"
               [refineFilters]="_refineFilters"
               [enforcedFilters] = "enforcedFilters"
               (onTagsBarVisible)="_isTagsBarVisible = $event"
@@ -136,11 +136,15 @@
               kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'categoriesFilterPopup'"
               [scrollOffset]="80">
   <ng-template>
+
   <kCategoriesFilter  [parentPopupWidget]="categoriesFilterPopup" [selection]="_query.categories"
                       [selectionMode]="_query.categoriesMode"
+                      [showUncategorizedFilter]="true"
+                      [uncategorizedFilterSelected]="_query.uncategorizedCategories === true"
+                      (onUncategorizedSelected)="onUncategorizedSelected($event)"
                       (onCategorySelected)="onCategorySelected($event)"
                       (onCategoriesUnselected)="onCategoriesUnselected($event)"
-                     (selectionModeChange)="onCategoriesModeChanged($event)"></kCategoriesFilter>
+                      (selectionModeChange)="onCategoriesModeChanged($event)"></kCategoriesFilter>
   </ng-template>
 </kPopupWidget>
 

@@ -301,6 +301,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
             });
           }
 
+          // filter categories
           if (data.categories && data.categories.length) {
             const categoriesValue = data.categories.map(item => item).join(',');
             if (data.categoriesMode === CategoriesModes.SelfAndChildren) {
@@ -308,6 +309,8 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
             } else {
               filter.categoriesIdsMatchOr = categoriesValue;
             }
+          } else if (data.uncategorizedCategories === true) {
+              filter.categoriesIdsEmpty = KalturaNullableBoolean.trueValue;
           }
 
           // remove advanced search arg if it is empty
@@ -421,6 +424,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
       flavors: [],
       distributions: [], categories: [],
       categoriesMode,
+      uncategorizedCategories: false,
       customMetadata: {},
       limits: 200,
       youtubeVideo: false,

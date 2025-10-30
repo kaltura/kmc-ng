@@ -323,6 +323,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider, OnDestr
       flavors: [],
       distributions: [], categories: [],
       categoriesMode,
+      uncategorizedCategories: false,
       customMetadata: {},
       limits: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults,
       youtubeVideo: false,

@@ -14,6 +14,9 @@
     ></kAutoComplete>
     <i #config class="kIcongear kTreeConfig" [class.kHidden]="!showPreferences"
        [kTooltip]="'applications.content.filters.preferences.preferences' | translate"></i>
+    <div class="uncategorized" *ngIf="showUncategorizedFilter">
+       <p-checkbox label="{{'applications.content.filters.uncategorized' | translate}}" [binary]="true" [(ngModel)]="_uncategorized" (onChange)="toggleUncategorized($event)"></p-checkbox>
+    </div>
     <div class="kAllCategories">
       <span>{{'applications.content.filters.allCategories' | translate | uppercase}} </span>
     </div>
