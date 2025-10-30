@@ -122,6 +122,9 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 case 'recycled':
                     this._entriesStore.filter({ recycled: false });
                     break;
+                case 'uncategorizedCategories':
+                    this._entriesStore.filter({ uncategorizedCategories: false });
+                    break;
                 default:
                     break;
             }
@@ -173,7 +176,8 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 'lastPlayedAt',
                 'customMetadata',
                 ...refineListsType,
-                'categories'
+                'categories',
+                'uncategorizedCategories'
             ]
         ));
     }
@@ -230,6 +234,10 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
         if (typeof updates.categories !== 'undefined') {
             this._syncTagsOfCategories();
+        }
+
+        if (typeof updates.uncategorizedCategories !== 'undefined') {
+            this._syncTagsOfUncategorizedCategories();
         }
     }
 
@@ -384,6 +392,26 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             });
         }
     }
+    private _syncTagsOfUncategorizedCategories(): void {
+        const previousItem = this._tags.findIndex(item => item.type === 'uncategorizedCategories');
+        if (previousItem !== -1) {
+            this._tags.splice(
+                previousItem,
+                1);
+        }
+
+        const currentUncategorizedCategoriesValue = this._entriesStore.cloneFilter('uncategorizedCategories', null);
+
+        if (currentUncategorizedCategoriesValue) {
+            this._tags.push({
+                type: 'uncategorizedCategories',
+                value: currentUncategorizedCategoriesValue,
+                label: this._appLocalization.get(`applications.content.filters.uncategorizedCategories`),
+                tooltip: this._appLocalization.get(`applications.content.filters.uncategorizedCategories`)
+            });
+        }
+    }
+
     private _syncTagOfRecycled(): void {
         const previousItem = this._tags.findIndex(item => item.type === 'recycled');
         if (previousItem !== -1) {

@@ -1223,6 +1223,7 @@
                 "close": "Close",
                 "findCategory": "Find Category",
                 "allCategories": "All Categories",
+                "uncategorized": "Uncategorized",
                 "additionalFilters": "Additional Filters",
                 "refineSearch": "Refine Search",
                 "clearDates": "Clear Dates",
@@ -1253,6 +1254,7 @@
                 "videoQuiz": "Video with Quiz",
                 "videoCaptions": "Video with Captions",
                 "videoNoCaptions": "Video without Captions",
+                "uncategorizedCategories": "Uncategorized Categories",
                 "recycled": "Recycled entries",
                 "preferences": {
                     "preferences": "Preferences",

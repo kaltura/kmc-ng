@@ -25,9 +25,12 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     @Input() public selectionMode: CategoriesModes;
     @Output() public selectionModeChange = new EventEmitter<CategoriesModes>();
     @Input() public selection: number[];
+    @Input() public showUncategorizedFilter = false;
+    @Input() public uncategorizedFilterSelected: boolean;
     @Input() public showPreferences = true;
     @Output() onCategorySelected: EventEmitter<number> = new EventEmitter();
     @Output() onCategoriesUnselected: EventEmitter<number[]> = new EventEmitter();
+    @Output() onUncategorizedSelected: EventEmitter<boolean> = new EventEmitter();
 
     @ViewChild(ScrollToTopContainerComponent, { static: true }) _treeContainer: ScrollToTopContainerComponent;
     @ViewChild('categoriesTree', { static: true }) _categoriesTree: CategoriesTreeComponent;
@@ -38,6 +41,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     public _suggestionsProvider = new Subject<SuggestionsProviderData>();
     public _categoriesLoaded = false;
+    public _uncategorized = false;
 
     public _CategoriesModes = CategoriesModes;
 
@@ -46,6 +50,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     ngOnInit() {
+        this._uncategorized = this.uncategorizedFilterSelected;
     }
 
     ngAfterViewInit() {
@@ -64,6 +69,14 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
+    public toggleUncategorized(event): void {
+        this._uncategorized = event.checked;
+        this.onUncategorizedSelected.emit(!!this._uncategorized);
+        if (this._uncategorized) {
+            // clear current selection
+            this._clearAll();
+        }
+    }
 
     public _onSelectionModeChanged(value) {
         // clear current selection
@@ -118,6 +131,8 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     _onCategorySelected(categoryId: number):void {
+        this._uncategorized = false;
+        this.onUncategorizedSelected.emit(false);
         if (this.selectionMode === CategoriesModes.SelfAndChildren) {
             // when this component is running with SelfAndChildren mode, we need to manually unselect
             // the first nested child (if any) that is currently selected

@@ -70,6 +70,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
         sortBy: null,
         sortDirection: null,
         categories: [],
+        uncategorizedCategories: false,
         categoriesMode: null
     };
     public searchFieldsTooltip = '';
@@ -314,6 +315,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
       'sortBy',
       'sortDirection',
       'categories',
+      'uncategorizedCategories',
       'categoriesMode'
     ]));
   }
@@ -351,6 +353,10 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
 
     if (typeof updates.categories !== 'undefined') {
       this._query.categories = [...updates.categories];
+    }
+
+    if (typeof updates.uncategorizedCategories !== 'undefined') {
+      this._query.uncategorizedCategories = updates.uncategorizedCategories || false;
     }
   }
 
@@ -468,6 +474,10 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
       this._reload();
     }
   }
+
+    onUncategorizedSelected(selected :boolean): void {
+        this._entriesStore.filter({ uncategorizedCategories: selected });
+    }
 
     public applySearchFields(fields: {selectedSearchField: string, includeCaptions: boolean}): void {
         if (fields.selectedSearchField === 'all') {
