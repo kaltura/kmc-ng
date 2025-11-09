@@ -18,6 +18,7 @@ import { KalturaEntryStatus } from 'kaltura-ngx-client';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 import { MenuItem } from 'primeng/api';
 import { filter } from 'rxjs/operators';
+import * as $ from 'jquery';
 
 @Component({
     selector: 'kEntryFlavours',
@@ -47,6 +48,8 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	public _showActionsView = false;
     public _replaceButtonsLabel = '';
 
+    private onResize : () => void;
+
 	constructor(public _columnsResizeManager: ColumnsResizeManagerService,
                 public _widgetService: EntryFlavoursWidget,
                 private _el: ElementRef<HTMLElement>,
@@ -54,6 +57,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
               private _appLocalization: AppLocalization,
               private _permissionsService: KMCPermissionsService,
               private _browserService: BrowserService) {
+        this.onResize = this._resizeTable.bind(this);
     }
 
     ngOnInit() {
@@ -267,7 +271,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
     ngOnDestroy() {
 	    this.actionsMenu.hide();
 		this._widgetService.detachForm();
-
+        $(window).unbind('resize',this.onResize);
 	}
 
 
@@ -285,6 +289,13 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	    }
 
         this._columnsResizeManager.updateColumns(this._el.nativeElement);
+        $(window).bind('resize', this.onResize); // We bind the event to a function reference that proxy 'actual' this inside
+        this._resizeTable();
+    }
+
+    private _resizeTable() : void
+    {
+        this._documentWidth = document.body.clientWidth;
     }
 }
 
