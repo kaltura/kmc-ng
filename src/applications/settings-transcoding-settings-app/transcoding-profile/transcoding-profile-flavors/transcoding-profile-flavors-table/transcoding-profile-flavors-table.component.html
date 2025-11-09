@@ -12,22 +12,22 @@
                 <th [ngStyle]="{'width':'44px', 'padding-left': '16px'}">
                     <p-tableHeaderCheckbox [disabled]="!_isEditAllowed"></p-tableHeaderCheckbox>
                 </th>
-                <th [ngStyle]="{'padding-left': _isEditAllowed ? '6.5px' : '16px'}">
+                <th [ngStyle]="{'padding-left': _isEditAllowed ? '6.5px' : '16px', 'width': '40%'}">
                     {{'applications.settings.transcoding.flavors.table.name' | translate}}
                 </th>
-                <th>
+                <th [ngStyle]="{'width': '12%'}">
                     {{'applications.settings.transcoding.flavors.table.id' | translate}}
                 </th>
-                <th>
+                <th [ngStyle]="{'width': '12%'}">
                     {{'applications.settings.transcoding.flavors.table.format' | translate}}
                 </th>
-                <th>
+                <th [ngStyle]="{'width': '12%'}">
                     {{'applications.settings.transcoding.flavors.table.codec' | translate}}
                 </th>
-                <th>
+                <th [ngStyle]="{'width': '12%'}">
                     {{'applications.settings.transcoding.flavors.table.bitrate' | translate}}
                 </th>
-                <th>
+                <th [ngStyle]="{'width': '12%'}">
                     {{'applications.settings.transcoding.flavors.table.dimensions' | translate}}
                 </th>
                 <th [ngStyle]="{'width': '60px'}" *ngIf="_isEditAllowed"></th>
@@ -39,16 +39,16 @@
                 <td [ngStyle]="{'width':'44px', 'padding-left': '16px'}">
                     <p-tableCheckbox [value]="flavor" [disabled]="!_isEditAllowed"></p-tableCheckbox>
                 </td>
-                <td [ngStyle]="{'padding-left': _isEditAllowed ? '6.5px' : '16px'}">
+                <td [ngStyle]="{'padding-left': _isEditAllowed ? '6.5px' : '16px', 'width': '40%'}">
                     <div class="kTitle kTableColumn" [kTooltip]="flavor.name"
                          (click)="_editFlavor(flavor)">{{flavor.name}}
                     </div>
                 </td>
-                <td>{{flavor.id}}</td>
-                <td>{{flavor.format}}</td>
-                <td>{{flavor.codec}}</td>
-                <td>{{flavor.bitrate}}</td>
-                <td>{{flavor.dimensions}}</td>
+                <td [ngStyle]="{'width': '12%'}">{{flavor.id}}</td>
+                <td [ngStyle]="{'width': '12%'}">{{flavor.format}}</td>
+                <td [ngStyle]="{'width': '12%'}">{{flavor.codec}}</td>
+                <td [ngStyle]="{'width': '12%'}">{{flavor.bitrate}}</td>
+                <td [ngStyle]="{'width': '12%'}">{{flavor.dimensions}}</td>
                 <td [ngStyle]="{'width': '60px'}" *ngIf="_isEditAllowed">
                     <div class="kEditFlavorIconWrapper">
                         <i class="kIconEdit kEditFlavorIcon" (click)="_editFlavor(flavor)"></i>
