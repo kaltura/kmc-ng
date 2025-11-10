@@ -1316,6 +1316,7 @@
                 "delete": "Delete",
                 "view": "View Details",
                 "entries": "Entries",
+                "categoryEntries": "Includes hidden and unpublished entries; visible count may differ.",
                 "subcategories": "Sub - Categories",
                 "loading": "Loading...",
                 "noResults": "No Results",
