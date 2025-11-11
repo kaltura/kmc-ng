@@ -101,41 +101,43 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   private registerToFormValueChanges(): void {
       this._previewForm.valueChanges.pipe(cancelOnDestroy(this)).subscribe((form) => {
-          this._browserService.setInLocalStorage('previewEmbed.embedType', this._previewForm.controls['selectedEmbedType'].value);
-          this._browserService.setInLocalStorage('previewEmbed.seo', this._previewForm.controls['seo'].value);
-          this._browserService.setInLocalStorage('previewEmbed.secured', this._previewForm.controls['secured'].value);
-          this._browserService.setInLocalStorage('previewEmbed.responsive', this._previewForm.controls['responsive'].value);
-          this._browserService.setInLocalStorage('previewEmbed.dee', this._previewForm.controls['dee'].value);
-          if (form && form.selectedPlayer){
-              this._selectedPlayerVersion = form.selectedPlayer.version;
-          }
-          this._isAudioPlayer = this._previewForm.controls['selectedPlayer'].value.uiConf.objType === KalturaUiConfObjType.sap;
-          this._isReelsPlayer = this._previewForm.controls['selectedPlayer'].value.uiConf.objType === KalturaUiConfObjType.reels;
-          this.setEmbedTypes();
-          if (this._selectedPlayerVersion === 2) {
-              this._showDee = false;
-              this._generatedCode = this.generateCode(false);
-              this._generatedPreviewCode = this.generateCode(true);
-              this._showResponsive = this._previewForm.controls['selectedEmbedType'].value !== 'auto';
-              // set responsive value to false if not supported
-              if (!this._showResponsive && this._previewForm.controls['responsive'].value === true) {
-                  this._previewForm.patchValue({
-                      responsive: false
-                  });
+          if (this._previewForm.controls['selectedPlayer'].value) {
+              this._browserService.setInLocalStorage('previewEmbed.embedType', this._previewForm.controls['selectedEmbedType'].value);
+              this._browserService.setInLocalStorage('previewEmbed.seo', this._previewForm.controls['seo'].value);
+              this._browserService.setInLocalStorage('previewEmbed.secured', this._previewForm.controls['secured'].value);
+              this._browserService.setInLocalStorage('previewEmbed.responsive', this._previewForm.controls['responsive'].value);
+              this._browserService.setInLocalStorage('previewEmbed.dee', this._previewForm.controls['dee'].value);
+              if (form && form.selectedPlayer) {
+                  this._selectedPlayerVersion = form.selectedPlayer.version;
               }
-              this.createPreviewLink();
-          } else {
-              this._showDee = true;
-              this._showResponsive = true; // responsive is always on for V3 players
-              this._generatedCode = this.generateV3code(false);
-              this._generatedPreviewCode = this.generateV3code(true);
-              this.createPreviewLink();
+              this._isAudioPlayer = this._previewForm.controls['selectedPlayer'].value.uiConf.objType === KalturaUiConfObjType.sap;
+              this._isReelsPlayer = this._previewForm.controls['selectedPlayer'].value.uiConf.objType === KalturaUiConfObjType.reels;
+              this.setEmbedTypes();
+              if (this._selectedPlayerVersion === 2) {
+                  this._showDee = false;
+                  this._generatedCode = this.generateCode(false);
+                  this._generatedPreviewCode = this.generateCode(true);
+                  this._showResponsive = this._previewForm.controls['selectedEmbedType'].value !== 'auto';
+                  // set responsive value to false if not supported
+                  if (!this._showResponsive && this._previewForm.controls['responsive'].value === true) {
+                      this._previewForm.patchValue({
+                          responsive: false
+                      });
+                  }
+                  this.createPreviewLink();
+              } else {
+                  this._showDee = true;
+                  this._showResponsive = true; // responsive is always on for V3 players
+                  this._generatedCode = this.generateV3code(false);
+                  this._generatedPreviewCode = this.generateV3code(true);
+                  this.createPreviewLink();
+              }
+              this._showPlayer = false; // remove iframe from DOM to invoke refresh
+              setTimeout(() => {        // use a timeout to ivoke iframe content refresh
+                  this._showPlayer = true;
+                  this.showPreview();
+              }, 0);
           }
-          this._showPlayer = false; // remove iframe from DOM to invoke refresh
-          setTimeout(() => {        // use a timeout to ivoke iframe content refresh
-              this._showPlayer = true;
-              this.showPreview();
-          }, 0);
       });
   }
 
