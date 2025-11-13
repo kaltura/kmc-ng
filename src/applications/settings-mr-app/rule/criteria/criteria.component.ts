@@ -38,13 +38,16 @@ export class CriteriaComponent {
         }
         if (this._filter['advancedSearch']) {
             if (this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
+                let hasTagsCriteria = false;
+
                 this._filter['advancedSearch']['items'].forEach(search => {
                     if (search['attribute'] === KalturaMediaEntryCompareAttribute.plays) {
                         this._criterias.push('plays');
                     }
-                    if (search['attribute'] === KalturaMediaEntryMatchAttribute.tags) {
+                    if (search['attribute'] === KalturaMediaEntryMatchAttribute.tags && !hasTagsCriteria) {
                         delete this._filter['tagsMultiLikeOr']; // remove old filter from old rules to prevent tags filter duplication
                         this._criterias.push('tags');
+                        hasTagsCriteria = true;
                     }
                     if (search['attribute'] === KalturaMediaEntryMatchAttribute.adminTags) {
                         this._criterias.push('adminTags');
@@ -219,13 +222,37 @@ export class CriteriaComponent {
                     this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter((search: any) => search['objectType'] !== 'KalturaMetadataSearchItem');
                 }
             } else {
+                const operatorType = (event.field === 'tags' && event.value && event.value.not === false)
+                    ? KalturaSearchOperatorType.searchOr
+                    : KalturaSearchOperatorType.searchAnd;
+
                 this._filter['advancedSearch'] = {
                     objectType: "KalturaSearchOperator",
-                    type: KalturaSearchOperatorType.searchAnd,
+                    type: operatorType,
                     items: []
                 };
             }
-            this._filter['advancedSearch'].items.push(event.value);
+
+            // Special handling for tags - split into separate objects
+            if ((event.field === 'tags' || event.field === 'adminTags') && event.value && event.value.value) {
+                const tags = event.value.value.split(',').filter(tag => tag.trim() !== '');
+                // If there are multiple tags, create a separate object for each tag
+                if (tags.length > 1) {
+                    tags.forEach(tag => {
+                        const tagObject = {
+                            objectType: event.value.objectType,
+                            not: event.value.not,
+                            attribute: event.value.attribute,
+                            value: tag.trim()
+                        };
+                        this._filter['advancedSearch'].items.push(tagObject);
+                    });
+                } else if (tags.length === 1) {
+                    this._filter['advancedSearch'].items.push(event.value);
+                }
+            } else {
+                this._filter['advancedSearch'].items.push(event.value);
+            }
         } else {
             Object.assign(this._filter, event.value);
         }
