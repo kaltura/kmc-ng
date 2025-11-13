@@ -54,9 +54,16 @@ export class NewEntryUploadService implements OnDestroy {
             case TrackedFileStatuses.purged:
               this._cleanupUpload(trackedFile);
               break;
-            case TrackedFileStatuses.prepared:
-              this._linkEntryWithFile(trackedFile);
-              break;
+              case TrackedFileStatuses.prepared:
+                  if ((trackedFile as any).data.mediaType !== KalturaMediaType.image) {
+                      this._linkEntryWithFile(trackedFile);
+                  }
+                  break;
+              case TrackedFileStatuses.uploadCompleted:
+                  if ((trackedFile as any).data.mediaType === KalturaMediaType.image) {
+                      this._linkEntryWithFile(trackedFile);
+                  }
+                  break;
             default:
               break;
           }
