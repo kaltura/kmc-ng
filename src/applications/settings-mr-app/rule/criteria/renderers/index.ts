@@ -7,3 +7,4 @@ export * from './tags.component';
 export * from './owner.component';
 export * from './metadata.component';
 export * from './admin-tags.component';
+export * from './captions.component';
