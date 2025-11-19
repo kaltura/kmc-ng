@@ -222,13 +222,9 @@ export class CriteriaComponent {
                     this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter((search: any) => search['objectType'] !== 'KalturaMetadataSearchItem');
                 }
             } else {
-                const operatorType = (event.field === 'tags' && event.value && event.value.not === false)
-                    ? KalturaSearchOperatorType.searchOr
-                    : KalturaSearchOperatorType.searchAnd;
-
                 this._filter['advancedSearch'] = {
                     objectType: "KalturaSearchOperator",
-                    type: operatorType,
+                    type: KalturaSearchOperatorType.searchAnd,
                     items: []
                 };
             }
