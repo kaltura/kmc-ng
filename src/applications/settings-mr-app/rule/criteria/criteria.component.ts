@@ -244,13 +244,9 @@ export class CriteriaComponent {
         const advancedSearchFields = ['plays', 'tags', 'adminTags', 'metadata', 'captions', 'ead'];
         if (advancedSearchFields.indexOf(event.field) > -1) {
             if (!this._filter['advancedSearch'] || (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length === 0)) {
-                const operatorType = (event.field === 'tags' && event.value && event.value.not === false)
-                    ? KalturaSearchOperatorType.searchOr
-                    : KalturaSearchOperatorType.searchAnd;
-
                 this._filter['advancedSearch'] = {
                     objectType: "KalturaSearchOperator",
-                    type: operatorType,
+                    type: KalturaSearchOperatorType.searchAnd,
                     items: []
                 };
             }
