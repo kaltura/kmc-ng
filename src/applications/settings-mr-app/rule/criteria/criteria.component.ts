@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {MenuItem} from 'primeng/api';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
-import {KalturaMediaEntryCompareAttribute, KalturaMediaEntryMatchAttribute, KalturaSearchOperatorType} from 'kaltura-ngx-client';
+import {KalturaMediaEntryCompareAttribute, KalturaMediaEntryMatchAttribute, KalturaSearchOperatorType, KalturaCaptionAssetUsage} from 'kaltura-ngx-client';
 import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
 
 @Component({
@@ -54,6 +54,12 @@ export class CriteriaComponent {
                     }
                     if (search['objectType'] === 'KalturaMetadataSearchItem') {
                         this._criterias.push('metadata');
+                    }
+                    if (search['objectType'] === 'KalturaEntryCaptionAdvancedFilter' && search["usage"] === KalturaCaptionAssetUsage.caption) {
+                        this._criterias.push('captions');
+                    }
+                    if (search['objectType'] === 'KalturaEntryCaptionAdvancedFilter' && search["usage"] === KalturaCaptionAssetUsage.extendedAudioDescription) {
+                        this._criterias.push('ead');
                     }
                 })
             }
@@ -125,6 +131,22 @@ export class CriteriaComponent {
                 }
             },
             {
+                label: this._appLocalization.get('applications.settings.mr.criteria.captions'),
+                disabled: this._criterias.indexOf('captions') > -1,
+                command: () => {
+                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_captions', null , 'Automation_manager');
+                    this.addFilter('captions');
+                }
+            },
+            {
+                label: this._appLocalization.get('applications.settings.mr.criteria.ead'),
+                disabled: this._criterias.indexOf('ead') > -1,
+                command: () => {
+                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_extended_audio_description', null , 'Automation_manager');
+                    this.addFilter('ead');
+                }
+            },
+            {
                 label: this._appLocalization.get('applications.settings.mr.criteria.owner'),
                 disabled: this._criterias.indexOf('owner') > -1,
                 command: () => {
@@ -185,6 +207,16 @@ export class CriteriaComponent {
                 this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search['objectType'] !== 'KalturaMetadataSearchItem');
             }
         }
+        if (field === 'captions') {
+            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
+                this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search['objectType'] !== 'KalturaEntryCaptionAdvancedFilter' || (search['objectType'] === 'KalturaEntryCaptionAdvancedFilter' && search["usage"] !== KalturaCaptionAssetUsage.caption));
+            }
+        }
+        if (field === 'ead') {
+            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
+                this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search['objectType'] !== 'KalturaEntryCaptionAdvancedFilter' || (search['objectType'] === 'KalturaEntryCaptionAdvancedFilter' && search["usage"] !== KalturaCaptionAssetUsage.extendedAudioDescription));
+            }
+        }
         if (field === 'owner') {
             delete this._filter['userIdIn'];
             delete this._filter['userIdNotIn'];
@@ -209,19 +241,9 @@ export class CriteriaComponent {
 
     public onCriteriaChange(event: {field: string, value: any}): void {
         this.clearFilterFields(event.field);
-        if (event.field === 'plays' || event.field === 'tags' || event.field === 'adminTags' || event.field === 'metadata') {
-            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
-                // remove old plays filter before adding the new one
-                if (event.field === 'plays') {
-                    this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter((search: any) => search['attribute'] !== KalturaMediaEntryCompareAttribute.plays);
-                } else if (event.field === 'tags') {
-                    this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter((search: any) => search['attribute'] !== KalturaMediaEntryMatchAttribute.tags);
-                } else if (event.field === 'adminTags') {
-                    this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter((search: any) => search['attribute'] !== KalturaMediaEntryMatchAttribute.adminTags);
-                } else {
-                    this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter((search: any) => search['objectType'] !== 'KalturaMetadataSearchItem');
-                }
-            } else {
+        const advancedSearchFields = ['plays', 'tags', 'adminTags', 'metadata', 'captions', 'ead'];
+        if (advancedSearchFields.indexOf(event.field) > -1) {
+            if (!this._filter['advancedSearch'] || (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length === 0)) {
                 this._filter['advancedSearch'] = {
                     objectType: "KalturaSearchOperator",
                     type: KalturaSearchOperatorType.searchAnd,
