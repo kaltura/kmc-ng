@@ -41,7 +41,7 @@ import {
     CriteriaOwnerComponent,
     CriteriaMetadataComponent,
     CriteriaAdminTagsComponent,
-    CriteriaCaptionsComponent
+    CriteriaCaptionsComponent, CriteriaEADComponent
 } from './rule/criteria/renderers';
 import { CategoriesSelector } from './rule/category-selector/categories-selector.component';
 import {KMCPermissionsModule} from 'app-shared/kmc-shared/kmc-permissions';
@@ -124,6 +124,7 @@ import {RadioButtonModule} from 'primeng/radiobutton';
       CriteriaTagsComponent,
       CriteriaAdminTagsComponent,
       CriteriaCaptionsComponent,
+      CriteriaEADComponent,
       CriteriaMetadataComponent,
       CriteriaOwnerComponent,
       ActionFlavourComponent,
