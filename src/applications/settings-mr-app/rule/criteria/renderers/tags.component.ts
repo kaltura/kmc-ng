@@ -60,6 +60,7 @@ export class CriteriaTagsComponent implements OnDestroy{
             const allTags = new Set<string>();
             let notValue = null; // Track the 'not' value from the first tag object
 
+            // leaving "if" below for backward compatibility when getting old advanced search structure
             value['advancedSearch']['items'].forEach((advancedSearch: any) => {
                 if (advancedSearch['attribute'] && advancedSearch['attribute'] === KalturaMediaEntryMatchAttribute.tags) {
                     if (notValue === null) {
@@ -67,12 +68,19 @@ export class CriteriaTagsComponent implements OnDestroy{
                         this._tags = advancedSearch['not'] === true ? 'tagsNotIn' : 'tagsIn';
                     }
 
-                    // Handle both comma-separated values in a single object (backward compatibility)
-                    // and individual tag objects (new format)
                     const tagValues = advancedSearch['value'].split(',');
                     tagValues.forEach(tag => {
                         if (tag.trim() !== '') {
                             allTags.add(tag.trim());
+                        }
+                    });
+                } else if (advancedSearch['objectType'] === 'KalturaSearchOperator' &&
+                    advancedSearch['items'] &&
+                    advancedSearch['items'].length) {
+                    advancedSearch['items'].forEach((item: any) => {
+                        if (item['attribute'] && item['attribute'] === KalturaMediaEntryMatchAttribute.tags) {
+                            this._tags = item['not'] === true ? 'tagsNotIn' : 'tagsIn';
+                            allTags.add(item['value']);
                         }
                     });
                 }
