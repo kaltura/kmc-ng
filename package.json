@@ -74,7 +74,7 @@
     "@unisphere/runtime": "~1.75.8",
     "@unisphere/runtime-js": "~1.74.0",
     "angularx-qrcode": "~10.0.11",
-    "core-js": "^3.2.1",
+    "core-js": "^3.20.2",
     "intl": "^1.2.5",
     "jquery": "~3.7.1",
     "jsnlog": "~2.26.2",
