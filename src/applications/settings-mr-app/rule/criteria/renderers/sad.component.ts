@@ -32,7 +32,7 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
                     <div class="kWrapRaw">
                         <p-dropdown [options]="_flavorsOptions" [style]="{'width':'150px'}" [(ngModel)]="hasFlavor" (ngModelChange)="onCriteriaChange()"></p-dropdown>
                         <span class="kFormLabel">{{'applications.settings.mr.criteria.sadIn' | translate}}</span>
-                        <p-dropdown class="wrapDropdown" [options]="_flavors" [style]="{'width':'150px'}" [(ngModel)]="_flavor" (ngModelChange)="onCriteriaChange()"></p-dropdown>
+                        <p-dropdown *ngIf="updateDropdown" class="wrapDropdown" [options]="_flavors" [style]="{'width':'150px'}" [(ngModel)]="_flavor" (ngModelChange)="onCriteriaChange()"></p-dropdown>
                     </div>
                 </div>
 
@@ -42,25 +42,25 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
     `
 })
 export class CriteriaSADComponent implements OnInit{
-
+public updateDropdown = true;
     public _isBusy = false;
     public _blockerMessage: AreaBlockerMessage = null;
 
-    public hasFlavor: boolean = true;
-    public _flavorsOptions: { value: boolean, label: string }[] = [
-        {value: false, label: this._appLocalization.get('applications.settings.mr.criteria.adminTagsIn')},
-        {value: true, label: this._appLocalization.get('applications.settings.mr.criteria.adminTagsNotIn')}
+    public hasFlavor: number = 1;
+    public _flavorsOptions: { value: number, label: string }[] = [
+        {value: 0, label: this._appLocalization.get('applications.settings.mr.criteria.adminTagsIn')},
+        {value: 1, label: this._appLocalization.get('applications.settings.mr.criteria.adminTagsNotIn')}
     ];
 
-    public _flavor: string = null;
-    public _flavors: { value: string, label: string }[] = [];
+    public _flavor: number = 0;
+    public _flavors: { value: number, label: string }[] = [];
 
     @Input() set filter(value: any) {
         if (value['advancedSearch'] && value['advancedSearch']['items'] && value['advancedSearch']['items'].length) {
             value['advancedSearch']['items'].forEach((advancedSearch: any) => {
                 if (advancedSearch['objectType'] && advancedSearch['objectType'] === 'KalturaMediaEntryMatchAttributeCondition' && advancedSearch["attribute"] === KalturaMediaEntryMatchAttribute.flavorParamsIds) {
-                    this.hasFlavor = advancedSearch.not === KalturaNullableBoolean.trueValue ? false : true;
-                    this._flavor = advancedSearch['value'] || null;
+                    this.hasFlavor = advancedSearch.not;
+                    this._flavor = advancedSearch['value'];
                 }
             });
         }
@@ -74,7 +74,6 @@ export class CriteriaSADComponent implements OnInit{
     }
 
     ngOnInit(): void {
-        this.onCriteriaChange();
         // load flavorsParams
         this._blockerMessage = null;
         this._isBusy = true;
@@ -83,9 +82,22 @@ export class CriteriaSADComponent implements OnInit{
             response => {
                 response.items.forEach(flavor => {
                    if (flavor.audioLanguages?.length) {
-                       this._flavors.push({ value: flavor.id.toString(), label: flavor.audioLanguages[0].value });
+                       this._flavors.push({ value: flavor.id, label: flavor.audioLanguages[0].value });
                    }
                 });
+
+                // select the first language by default
+                if (this._flavors.length > 0 && this._flavor === 0) {
+                    this._flavor = this._flavors[0].value;
+                }
+
+                // workaround to force render the languages dropdown after the ngModel change
+                this.updateDropdown = false;
+                setTimeout(() => {
+                    this.updateDropdown = true;
+                }, 0);
+
+                this.onCriteriaChange();
                 this._isBusy = false;
             },
             error => {
@@ -103,8 +115,6 @@ export class CriteriaSADComponent implements OnInit{
                 });
             }
         );
-        // put any language on top
-        this._flavors.unshift({ value: null, label: this._appLocalization.get('applications.settings.mr.criteria.anyLanguage') });
     }
 
 
@@ -115,7 +125,6 @@ export class CriteriaSADComponent implements OnInit{
             attribute: KalturaMediaEntryMatchAttribute.flavorParamsIds,
             value: this._flavor
         };
-        console.log(value);
         this.onFilterChange.emit({field: 'sad', value});
     }
 

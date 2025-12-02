@@ -230,7 +230,7 @@ export class CriteriaComponent {
         }
         if (field === 'sad') {
             if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
-                this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search => search['attribute'] !== KalturaMediaEntryMatchAttribute.flavorParamsIds);
+                this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search['attribute'] !== KalturaMediaEntryMatchAttribute.flavorParamsIds);
             }
         }
         if (field === 'owner') {
