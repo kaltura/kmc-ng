@@ -52,6 +52,10 @@ export class CriteriaComponent {
                     if (search['attribute'] === KalturaMediaEntryMatchAttribute.adminTags) {
                         this._criterias.push('adminTags');
                     }
+                    if (search['objectType'] === 'KalturaSearchOperator' && search['items'] && search['items'].length && !hasTagsCriteria) {
+                        this._criterias.push('tags');
+                        hasTagsCriteria = true;
+                    }
                     if (search['objectType'] === 'KalturaMetadataSearchItem') {
                         this._criterias.push('metadata');
                     }
@@ -173,6 +177,7 @@ export class CriteriaComponent {
             delete this._filter['tagsMultiLikeOr']; // remove old filter from old rules to prevent tags filter duplication
             if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
                 this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search['attribute'] !== KalturaMediaEntryMatchAttribute.tags);
+                this._filter['advancedSearch']['items'] = this.removeTagsFromNestedItems(this._filter['advancedSearch']['items']);
             }
         }
         if (field === 'adminTags') {
@@ -197,6 +202,33 @@ export class CriteriaComponent {
         if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length === 0) {
             delete this._filter['advancedSearch'];
         }
+    }
+
+    // remove all tags so the updated values are readded later on instead.
+    private removeTagsFromNestedItems(items: any[]): any[] {
+        if (!items || !items.length) {
+            return items;
+        }
+
+        return items.filter(item => {
+            if (!item) {
+                return false;
+            }
+
+            if (item['objectType'] === 'KalturaSearchOperator' && item['items'] && item['items'].length) {
+                const filteredItems = this.removeTagsFromNestedItems(item['items']);
+                item['items'] = filteredItems.filter(nestedItem =>
+                    nestedItem && nestedItem['attribute'] !== KalturaMediaEntryMatchAttribute.tags
+                );
+                return item['items'] && item['items'].length > 0;
+            }
+
+            if (item['attribute'] === KalturaMediaEntryMatchAttribute.tags) {
+                return false;
+            }
+
+            return true;
+        });
     }
 
     private removeEmptyFields(): void {
@@ -229,25 +261,67 @@ export class CriteriaComponent {
                 };
             }
 
-            // Special handling for tags - split into separate objects
-            if ((event.field === 'tags' || event.field === 'adminTags') && event.value && event.value.value) {
-                const tags = event.value.value.split(',').filter(tag => tag.trim() !== '');
-                // If there are multiple tags, create a separate object for each tag
-                if (tags.length > 1) {
+            if (event.field === 'tags' && event.value && event.value.value) {
+                const tags = event.value.value ? event.value.value.split(',').filter(tag => tag.trim() !== '') : [];
+
+                const operatorType = (event.field === 'tags' && event.value && event.value.not === false)
+                    ? KalturaSearchOperatorType.searchOr
+                    : KalturaSearchOperatorType.searchAnd;
+
+                let existingOperatorIndex = -1;
+                this._filter['advancedSearch']['items'].forEach((item, index) => {
+                    if ((item['objectType'] === 'KalturaSearchOperator' &&
+                        item['items'] &&
+                        item['items'].length &&
+                        item['items'][0] &&
+                        item['items'][0]['attribute'] === KalturaMediaEntryMatchAttribute.tags) ||
+                        item['objectType'] === 'KalturaMediaEntryMatchAttributeCondition' && item.length) {
+                        existingOperatorIndex = index;
+                    }
+                });
+
+                if (existingOperatorIndex >= 0) {
+                    const existingOperator = this._filter['advancedSearch']['items'][existingOperatorIndex];
+                    existingOperator.type = operatorType;
+
+                    const tagObj = [];
                     tags.forEach(tag => {
-                        const tagObject = {
-                            objectType: event.value.objectType,
-                            not: event.value.not,
-                            attribute: event.value.attribute,
-                            value: tag.trim()
-                        };
-                        this._filter['advancedSearch'].items.push(tagObject);
+                        if (tag && tag.trim() !== '') {
+                            const tagObject = {
+                                objectType: event.value.objectType,
+                                not: event.value.not,
+                                attribute: event.value.attribute,
+                                value: tag.trim()
+                            };
+                            tagObj.push(tagObject);
+                        }
                     });
-                } else if (tags.length === 1) {
-                    this._filter['advancedSearch'].items.push(event.value);
+
+                    existingOperator.items = tagObj;
+                } else {
+                    this._filter['advancedSearch']['items'].push({
+                        objectType: "KalturaSearchOperator",
+                        type: operatorType,
+                        items: []
+                    });
+
+                    const tagsArray = this._filter['advancedSearch']['items'].at(-1).items;
+                    tags.forEach(tag => {
+                        if (tag && tag.trim() !== '') {
+                            const tagObject = {
+                                objectType: event.value.objectType,
+                                not: event.value.not,
+                                attribute: event.value.attribute,
+                                value: tag.trim()
+                            };
+                            tagsArray.push(tagObject);
+                        }
+                    });
                 }
             } else {
-                this._filter['advancedSearch'].items.push(event.value);
+                if (event.value && event.value.value) {
+                    this._filter['advancedSearch'].items.push(event.value);
+                }
             }
         } else {
             Object.assign(this._filter, event.value);
