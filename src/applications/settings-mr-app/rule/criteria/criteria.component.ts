@@ -55,6 +55,9 @@ export class CriteriaComponent {
                     if (search['objectType'] === 'KalturaMetadataSearchItem') {
                         this._criterias.push('metadata');
                     }
+                    if (search['objectType'] === 'KalturaMediaEntryMatchAttributeCondition' && search['attribute'] === KalturaMediaEntryMatchAttribute.flavorParamsIds) {
+                        this._criterias.push('sad');
+                    }
                     if (search['objectType'] === 'KalturaEntryCaptionAdvancedFilter' && search["usage"] === KalturaCaptionAssetUsage.caption) {
                         this._criterias.push('captions');
                     }
@@ -139,6 +142,14 @@ export class CriteriaComponent {
                 }
             },
             {
+                label: this._appLocalization.get('applications.settings.mr.criteria.sad'),
+                disabled: this._criterias.indexOf('sad') > -1,
+                command: () => {
+                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_standard_audio_description', null , 'Automation_manager');
+                    this.addFilter('sad');
+                }
+            },
+            {
                 label: this._appLocalization.get('applications.settings.mr.criteria.ead'),
                 disabled: this._criterias.indexOf('ead') > -1,
                 command: () => {
@@ -217,6 +228,11 @@ export class CriteriaComponent {
                 this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search['objectType'] !== 'KalturaEntryCaptionAdvancedFilter' || (search['objectType'] === 'KalturaEntryCaptionAdvancedFilter' && search["usage"] !== KalturaCaptionAssetUsage.extendedAudioDescription));
             }
         }
+        if (field === 'sad') {
+            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
+                this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search => search['attribute'] !== KalturaMediaEntryMatchAttribute.flavorParamsIds);
+            }
+        }
         if (field === 'owner') {
             delete this._filter['userIdIn'];
             delete this._filter['userIdNotIn'];
@@ -241,7 +257,7 @@ export class CriteriaComponent {
 
     public onCriteriaChange(event: {field: string, value: any}): void {
         this.clearFilterFields(event.field);
-        const advancedSearchFields = ['plays', 'tags', 'adminTags', 'metadata', 'captions', 'ead'];
+        const advancedSearchFields = ['plays', 'tags', 'adminTags', 'metadata', 'captions', 'ead', 'sad'];
         if (advancedSearchFields.indexOf(event.field) > -1) {
             if (!this._filter['advancedSearch'] || (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length === 0)) {
                 this._filter['advancedSearch'] = {

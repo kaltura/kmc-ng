@@ -9,3 +9,4 @@ export * from './metadata.component';
 export * from './admin-tags.component';
 export * from './captions.component';
 export * from './ead.component';
+export * from './sad.component';
