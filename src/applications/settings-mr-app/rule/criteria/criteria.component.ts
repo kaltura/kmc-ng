@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {MenuItem} from 'primeng/api';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
-import {KalturaMediaEntryCompareAttribute, KalturaMediaEntryMatchAttribute, KalturaSearchOperatorType, KalturaCaptionAssetUsage} from 'kaltura-ngx-client';
+import {KalturaMediaEntryCompareAttribute, KalturaMediaEntryMatchAttribute, KalturaSearchOperatorType, KalturaCaptionAssetUsage, KalturaMediaEntryFilter, KalturaSearchOperator} from 'kaltura-ngx-client';
 import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
 
 @Component({
@@ -17,30 +17,39 @@ export class CriteriaComponent {
 
     public items: MenuItem[];
 
-    public _timeUnitOptions: { value: string, label: string }[] = [
-        {value: 'day', label: this._appLocalization.get('applications.settings.mr.criteria.days')},
-        {value: 'week', label: this._appLocalization.get('applications.settings.mr.criteria.weeks')},
-        {value: 'month', label: this._appLocalization.get('applications.settings.mr.criteria.months')},
-        {value: 'year', label: this._appLocalization.get('applications.settings.mr.criteria.years')}
-    ];
-
     public _criterias = [];
-    public _filter = {};
+    public _filter: KalturaMediaEntryFilter;
 
-    @Input() set filter(value: any) {
+    @Input() set filter(value: KalturaMediaEntryFilter) {
+        // set existing criteria according the filter
+
         this._filter = value;
         this._criterias = [];
-        if (this._filter['createdAtLessThanOrEqual'] || this._filter['createdAtGreaterThanOrEqual']) {
+
+        // simple filters
+        if (this._filter.createdAtLessThanOrEqual || this._filter.createdAtGreaterThanOrEqual) {
             this._criterias.push('created');
         }
-        if (this._filter['lastPlayedAtLessThanOrEqualOrNull'] || this._filter['lastPlayedAtGreaterThanOrEqual']) {
+        if (this._filter.lastPlayedAtLessThanOrEqualOrNull || this._filter.lastPlayedAtGreaterThanOrEqual) {
             this._criterias.push('played');
         }
-        if (this._filter['advancedSearch']) {
-            if (this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
+        if (this._filter.categoriesIdsMatchOr || this._filter.categoriesIdsNotContains) {
+            this._criterias.push('categories');
+        }
+        if (this._filter.userIdIn || this._filter.userIdNotIn) {
+            this._criterias.push('owner');
+        }
+        if (this._filter.durationLessThanOrEqual || this._filter.durationGreaterThan) {
+            this._criterias.push('duration');
+        }
+
+        // advanced search filters
+        if (this._filter.advancedSearch) {
+            const items: any[] = this._filter.advancedSearch['items'];
+            if (items && items.length) {
                 let hasTagsCriteria = false;
 
-                this._filter['advancedSearch']['items'].forEach(search => {
+                items.forEach(search => {
                     if (search['attribute'] === KalturaMediaEntryCompareAttribute.plays) {
                         this._criterias.push('plays');
                     }
@@ -66,15 +75,6 @@ export class CriteriaComponent {
                     }
                 })
             }
-        }
-        if (this._filter['categoriesIdsMatchOr'] || this._filter['categoriesIdsNotContains']) {
-            this._criterias.push('categories');
-        }
-        if (this._filter['userIdIn'] || this._filter['userIdNotIn']) {
-            this._criterias.push('owner');
-        }
-        if (this._filter['durationLessThanOrEqual'] || this._filter['durationGreaterThan']) {
-            this._criterias.push('duration');
         }
     };
     @Output() onFilterChange = new EventEmitter<any>();
@@ -186,64 +186,55 @@ export class CriteriaComponent {
 
     private clearFilterFields(field: string): void {
         if (field === 'created') {
-            delete this._filter['createdAtLessThanOrEqual'];
-            delete this._filter['createdAtGreaterThanOrEqual'];
+            delete this._filter.createdAtLessThanOrEqual;
+            delete this._filter.createdAtGreaterThanOrEqual;
         }
         if (field === 'played') {
-            delete this._filter['lastPlayedAtLessThanOrEqualOrNull'];
-            delete this._filter['lastPlayedAtGreaterThanOrEqual'];
-        }
-        if (field === 'plays') {
-            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
-                this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search['attribute'] !== KalturaMediaEntryCompareAttribute.plays);
-            }
+            delete this._filter.lastPlayedAtLessThanOrEqualOrNull;
+            delete this._filter.lastPlayedAtGreaterThanOrEqual;
         }
         if (field === 'categories') {
-            delete this._filter['categoriesIdsMatchOr'];
-            delete this._filter['categoriesIdsNotContains'];
-        }
-        if (field === 'tags') {
-            delete this._filter['tagsMultiLikeOr']; // remove old filter from old rules to prevent tags filter duplication
-            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
-                this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search['attribute'] !== KalturaMediaEntryMatchAttribute.tags);
-            }
-        }
-        if (field === 'adminTags') {
-            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
-                this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search['attribute'] !== KalturaMediaEntryMatchAttribute.adminTags);
-            }
-        }
-        if (field === 'metadata') {
-            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
-                this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search['objectType'] !== 'KalturaMetadataSearchItem');
-            }
-        }
-        if (field === 'captions') {
-            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
-                this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search['objectType'] !== 'KalturaEntryCaptionAdvancedFilter' || (search['objectType'] === 'KalturaEntryCaptionAdvancedFilter' && search["usage"] !== KalturaCaptionAssetUsage.caption));
-            }
-        }
-        if (field === 'ead') {
-            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
-                this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search['objectType'] !== 'KalturaEntryCaptionAdvancedFilter' || (search['objectType'] === 'KalturaEntryCaptionAdvancedFilter' && search["usage"] !== KalturaCaptionAssetUsage.extendedAudioDescription));
-            }
-        }
-        if (field === 'sad') {
-            if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length) {
-                this._filter['advancedSearch']['items'] = this._filter['advancedSearch']['items'].filter(search => search['attribute'] !== KalturaMediaEntryMatchAttribute.flavorParamsIds);
-            }
+            delete this._filter.categoriesIdsMatchOr;
+            delete this._filter.categoriesIdsNotContains;
         }
         if (field === 'owner') {
-            delete this._filter['userIdIn'];
-            delete this._filter['userIdNotIn'];
+            delete this._filter.userIdIn;
+            delete this._filter.userIdNotIn;
         }
         if (field === 'duration') {
-            delete this._filter['durationLessThanOrEqual'];
-            delete this._filter['durationGreaterThan'];
+            delete this._filter.durationLessThanOrEqual;
+            delete this._filter.durationGreaterThan;
         }
-        // remove advanced search if there are no items left
-        if (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length === 0) {
-            delete this._filter['advancedSearch'];
+        // handle advanced search
+        if ((this._filter.advancedSearch as any)?.items?.length) {
+            switch (field) {
+                case 'tags':
+                    delete this._filter.tagsMultiLikeOr; // remove old filter from old rules to prevent tags filter duplication
+                    this._filter.advancedSearch['items'] = this._filter.advancedSearch['items'].filter(search => search['attribute'] !== KalturaMediaEntryMatchAttribute.tags);
+                    break;
+                case 'adminTags':
+                    this._filter.advancedSearch['items'] = this._filter.advancedSearch['items'].filter(search => search['attribute'] !== KalturaMediaEntryMatchAttribute.adminTags);
+                    break
+                case 'metadata':
+                    this._filter.advancedSearch['items'] = this._filter.advancedSearch['items'].filter(search => search['objectType'] !== 'KalturaMetadataSearchItem');
+                    break;
+                case 'plays':
+                    this._filter.advancedSearch['items'] = this._filter.advancedSearch['items'].filter(search => search['attribute'] !== KalturaMediaEntryCompareAttribute.plays);
+                    break;
+                case 'captions':
+                    this._filter.advancedSearch['items'] = this._filter.advancedSearch['items'].filter(search => search['objectType'] !== 'KalturaEntryCaptionAdvancedFilter' || (search['objectType'] === 'KalturaEntryCaptionAdvancedFilter' && search["usage"] !== KalturaCaptionAssetUsage.caption));
+                    break;
+                case 'ead':
+                    this._filter.advancedSearch['items'] = this._filter.advancedSearch['items'].filter(search => search['objectType'] !== 'KalturaEntryCaptionAdvancedFilter' || (search['objectType'] === 'KalturaEntryCaptionAdvancedFilter' && search["usage"] !== KalturaCaptionAssetUsage.extendedAudioDescription));
+                    break;
+                case 'sad':
+                    this._filter.advancedSearch['items'] = this._filter.advancedSearch['items'].filter(search => search['attribute'] !== KalturaMediaEntryMatchAttribute.flavorParamsIds);
+                    break;
+            }
+            // remove advanced search if there are no items left
+            if ((this._filter.advancedSearch as any)?.items?.length === 0) {
+                delete this._filter.advancedSearch;
+            }
         }
     }
 
@@ -259,12 +250,13 @@ export class CriteriaComponent {
         this.clearFilterFields(event.field);
         const advancedSearchFields = ['plays', 'tags', 'adminTags', 'metadata', 'captions', 'ead', 'sad'];
         if (advancedSearchFields.indexOf(event.field) > -1) {
-            if (!this._filter['advancedSearch'] || (this._filter['advancedSearch'] && this._filter['advancedSearch']['items'] && this._filter['advancedSearch']['items'].length === 0)) {
-                this._filter['advancedSearch'] = {
-                    objectType: "KalturaSearchOperator",
+            if (!this._filter.advancedSearch || (this._filter.advancedSearch && this._filter.advancedSearch['items'].length === 0)) {
+                const advancedSearch: any = {
+                    objectType: 'KalturaSearchOperator',
                     type: KalturaSearchOperatorType.searchAnd,
                     items: []
                 };
+                this._filter.advancedSearch = advancedSearch;
             }
 
             // Special handling for tags - split into separate objects
@@ -279,13 +271,13 @@ export class CriteriaComponent {
                             attribute: event.value.attribute,
                             value: tag.trim()
                         };
-                        this._filter['advancedSearch'].items.push(tagObject);
+                        (this._filter.advancedSearch as any).items.push(tagObject);
                     });
                 } else if (tags.length === 1) {
-                    this._filter['advancedSearch'].items.push(event.value);
+                    (this._filter.advancedSearch as any).items.push(event.value);
                 }
             } else {
-                this._filter['advancedSearch'].items.push(event.value);
+                (this._filter.advancedSearch as any).items.push(event.value);
             }
         } else {
             Object.assign(this._filter, event.value);
@@ -305,5 +297,4 @@ export class CriteriaComponent {
     private addFilter(field: string): void {
         this._criterias.push(field);
     }
-
 }
