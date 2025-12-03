@@ -18,7 +18,7 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import {AutoCompleteModule, KalturaPrimeNgUIModule, MultiSelectModule} from '@kaltura-ng/kaltura-primeng-ui';
+import {AutoCompleteModule, KalturaPrimeNgUIModule, MultiSelectModule, SliderModule} from '@kaltura-ng/kaltura-primeng-ui';
 import { CategoriesModule } from "app-shared/content-shared/categories/categories.module";
 import { DateFormatModule } from "app-shared/kmc-shared/date-format/date-format.module";
 import { CopyToClipboardModule, LocalizationModule } from '@kaltura-ng/mc-shared';
@@ -32,8 +32,16 @@ import { NewRuleComponent } from './rules/new-rule/new-rule.component';
 import { RuleComponent } from './rule/rule.component';
 import { CriteriaComponent } from './rule/criteria/criteria.component';
 import {
-    CriteriaCreatedComponent, CriteriaPlayedComponent, CriteriaDurationComponent, CriteriaPlaysComponent,
-    CriteriaCategoriesComponent, CriteriaTagsComponent, CriteriaOwnerComponent, CriteriaMetadataComponent, CriteriaAdminTagsComponent
+    CriteriaCreatedComponent,
+    CriteriaPlayedComponent,
+    CriteriaDurationComponent,
+    CriteriaPlaysComponent,
+    CriteriaCategoriesComponent,
+    CriteriaTagsComponent,
+    CriteriaOwnerComponent,
+    CriteriaMetadataComponent,
+    CriteriaAdminTagsComponent,
+    CriteriaCaptionsComponent, CriteriaEADComponent, CriteriaSADComponent
 } from './rule/criteria/renderers';
 import { CategoriesSelector } from './rule/category-selector/categories-selector.component';
 import {KMCPermissionsModule} from 'app-shared/kmc-shared/kmc-permissions';
@@ -54,6 +62,7 @@ import {LogsRefineFiltersComponent} from './logs/logs-refine-filters/logs-refine
 import {LogsTagsComponent} from './logs/logs-tags/logs-tags.component';
 import {NotifyOwnerComponent} from './review/notify-owner/notify-owner.component';
 import {StatusPipe} from './review/review-tags/status.pipe';
+import {RadioButtonModule} from 'primeng/radiobutton';
 
 @NgModule({
     imports: [
@@ -88,7 +97,9 @@ import {StatusPipe} from './review/review-tags/status.pipe';
         AutoCompleteModule,
         KMCPermissionsModule,
         MultiSelectModule,
-        EntriesModule
+        EntriesModule,
+        RadioButtonModule,
+        SliderModule
     ],
   declarations: [
       SettingsMrComponent,
@@ -112,6 +123,9 @@ import {StatusPipe} from './review/review-tags/status.pipe';
       CategoriesSelector,
       CriteriaTagsComponent,
       CriteriaAdminTagsComponent,
+      CriteriaCaptionsComponent,
+      CriteriaEADComponent,
+      CriteriaSADComponent,
       CriteriaMetadataComponent,
       CriteriaOwnerComponent,
       ActionFlavourComponent,

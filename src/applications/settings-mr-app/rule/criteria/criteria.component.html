@@ -14,6 +14,9 @@
             <kCriteriaTags *ngSwitchCase="field === 'tags'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaTags>
             <kCriteriaAdminTags *ngSwitchCase="field === 'adminTags'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaAdminTags>
             <kCriteriaMetadata *ngSwitchCase="field === 'metadata'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaMetadata>
+            <kCriteriaCaptions *ngSwitchCase="field === 'captions'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaCaptions>
+            <kCriteriaSAD *ngSwitchCase="field === 'sad'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaSAD>
+            <kCriteriaEAD *ngSwitchCase="field === 'ead'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaEAD>
             <kCriteriaOwner *ngSwitchCase="field === 'owner'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaOwner>
         </ng-container>
     </div>
