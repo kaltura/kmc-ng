@@ -79,7 +79,7 @@
     "jquery": "~3.7.1",
     "jsnlog": "~2.26.2",
     "jsonschema": "~1.4.0",
-    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-12.0.0-v20250716-083012.tgz",
+    "kaltura-ngx-client": "file:libs/kaltura-ngx-client-12.0.0-v20251127-082933.tgz",
     "moment": "~2.30.1",
     "ngx-page-scroll": "~5.0.1",
     "ngx-webstorage": "~5.0.0",
