@@ -87,6 +87,12 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
                 this._actions[1].disabled = false;
                 this._actions[1].title = null;
             }
+            // update action label according to caption usage
+            if (caption.usage === KalturaCaptionAssetUsage.extendedAudioDescription) {
+                this._actions[1].label = this._appLocalization.get('applications.content.entryDetails.captions.editorEAD');
+            } else {
+                this._actions[1].label = this._appLocalization.get('applications.content.entryDetails.captions.editor');
+            }
         }
         if (this.actionsMenu){
             // save the selected caption for usage in the actions menu

@@ -1912,6 +1912,7 @@
                     "setDefault": "Set as default",
                     "edit": "Edit",
                     "editor": "Closed Captions Editor",
+                    "editorEAD": "Extended Audio Description Editor",
                     "editorDisabled": "Format is not supported",
                     "editCaption": "Edit Caption",
                     "editEad": "Edit Extended Audio Description",
