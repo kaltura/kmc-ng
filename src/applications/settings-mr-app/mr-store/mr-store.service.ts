@@ -83,7 +83,7 @@ export type RequestObject = {
 
 export type Task = {
     id?: string;
-    type: 'deleteEntry' | 'deleteFlavors' | 'sendNotification' | 'modifyEntry' | 'generateReport';
+    type: 'deleteEntry' | 'deleteFlavors' | 'sendNotification' | 'modifyEntry' | 'generateReport' | 'triggerAgent';
     managedTasksProfileId?: string;
     status?: 'deleted' | 'disabled' | 'enabled';
     taskParams?: {
@@ -97,6 +97,9 @@ export type Task = {
                 behavior: 'applyAction' | 'expose',
                 tag?: string
             }
+        },
+        agentTaskParams?: {
+            agentId?: string;
         },
         modifyEntryTaskParams?: {
             kalturaEntry?: any,
@@ -286,6 +289,19 @@ export class MrStoreService implements OnDestroy {
             return this._http.post(`${serverConfig.externalServices.mrEndpoint.uri}/task/list`, {managedTasksProfileId}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadTasksResponse>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to load tasks list'));
+        }
+    }
+
+    public loadAgents(): Observable<any> {
+        try {
+            const pager = {pageIndex: 0, pageSize: 500};
+            const statusIn = ['Enabled'];
+            const orderBy = '-createdAt';
+            const partnerId = this._appAuthentication.appUser.partnerId;
+            const body = {pager, orderBy};
+            return this._http.post(`${serverConfig.externalServices.agentsManagerEndpoint.uri}/agent/list`, {orderBy, pager, partnerId, statusIn}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+        } catch (ex) {
+            return throwError(new Error('An error occurred while trying to save actions'));
         }
     }
 
