@@ -8,22 +8,22 @@ jobs:
   trigger-workflow:
     runs-on: codebuild-ovp-lightweight-runner-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
-      - name: Register Access Token
-        id: register-access-token
-        run: |
-          echo "::add-mask::${ACCESS_TOKEN}"
-          echo "ACCESS_TOKEN=${ACCESS_TOKEN}" >> $GITHUB_ENV
-      - name: Trigger workflow in private repository
-        env:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          APP_NAME: "kmc-ng"
-          TAG: ${{ github.ref_name }}
-          REPO_NAME: ${{ github.event.repository.name }}
-          REPO_TYPE: "public"
-        run: |
-          curl -L \
-          -X POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer $ACCESS_TOKEN" \
-          https://api.github.com/repos/kaltura/ovp-statboy/actions/workflows/deploy-uiconf.yaml/dispatches \
-          -d "{\"ref\":\"master\",\"inputs\":{\"app_name\":\"$APP_NAME\",\"tag\":\"$TAG\",\"repo_name\":\"$REPO_NAME\",\"repo_type\":\"$REPO_TYPE\"}}"
+    - name: Register Access Token
+      id: register-access-token
+      run: |
+        echo "::add-mask::${ACCESS_TOKEN}"
+        echo "ACCESS_TOKEN=${ACCESS_TOKEN}" >> $GITHUB_ENV
+    - name: Trigger workflow in private repository
+      env:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        APP_NAME: "kmc-ng"
+        TAG: ${{ github.ref_name }}
+        REPO_NAME: ${{ github.event.repository.name }}
+        REPO_TYPE: "public"
+      run: |
+        curl -L \
+        -X POST \
+        -H "Accept: application/vnd.github+json" \
+        -H "Authorization: Bearer $ACCESS_TOKEN" \
+        https://api.github.com/repos/kaltura/ovp-statboy/actions/workflows/deploy-uiconf.yaml/dispatches \
+        -d "{\"ref\":\"master\",\"inputs\":{\"app_name\":\"$APP_NAME\",\"tag\":\"$TAG\",\"repo_name\":\"$REPO_NAME\",\"repo_type\":\"$REPO_TYPE\"}}"
