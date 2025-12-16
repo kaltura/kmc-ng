@@ -55,7 +55,7 @@ import {
     ActionOwnerComponent,
     ActionDeleteComponent,
     ActionTagsComponent,
-    ActionNotificationComponent
+    ActionNotificationComponent, ActionAgentComponent
 } from './rule/actions/renderers';
 import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
 import {LogsRefineFiltersComponent} from './logs/logs-refine-filters/logs-refine-filters.component';
@@ -132,6 +132,7 @@ import {RadioButtonModule} from 'primeng/radiobutton';
       ActionCategoryComponent,
       ActionOwnerComponent,
       ActionDeleteComponent,
+      ActionAgentComponent,
       ActionTagsComponent,
       ActionNotificationComponent,
       LogsRefineFiltersComponent,

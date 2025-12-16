@@ -4,3 +4,4 @@ export * from './flavours.component';
 export * from './owner.component';
 export * from './tags.component';
 export * from './notification.component';
+export * from './agent.component';

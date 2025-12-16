@@ -16,7 +16,7 @@ import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
     selector: 'kActionFlavours',
     styleUrls: ['./renderers.scss'],
     template: `
-        <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true">
+        <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
             <div class="action">
                 <div class="kRow">
                     <span class="kLabel">{{'applications.settings.mr.actions.value' | translate}}</span>

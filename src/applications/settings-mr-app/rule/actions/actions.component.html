@@ -13,6 +13,7 @@
             <kActionFlavours *ngSwitchCase="action.type === 'flavours'" [action]="action" [profileId]="profileId" (onActionChange)="onActionChange($event)"></kActionFlavours>
             <kActionCategory *ngSwitchCase="action.type === 'addCategory' || action.type === 'removeCategory'" [type]="action.type" [ruleAction]="action" [profileId]="profileId" (onActionChange)="onActionChange($event)"></kActionCategory>
             <kActionOwner *ngSwitchCase="action.type === 'owner'" [ruleAction]="action" [profileId]="profileId" (onActionChange)="onActionChange($event)"></kActionOwner>
+            <kActionAgent *ngSwitchCase="action.type === 'agent'" [action]="action" [profileId]="profileId" (onActionChange)="onActionChange($event)"></kActionAgent>
             <kActionDelete *ngSwitchCase="action.type === 'delete'" [ruleAction]="action" [profileId]="profileId" (onActionChange)="onActionChange($event)" [isLiveRule]="isLiveRule"></kActionDelete>
             <kActionTags *ngSwitchCase="action.type === 'addTags' || action.type === 'removeTags'" [type]="action.type" [ruleAction]="action" [profileId]="profileId" (onActionChange)="onActionChange($event)"></kActionTags>
         </ng-container>
