@@ -15,7 +15,7 @@ jobs:
         echo "ACCESS_TOKEN=${ACCESS_TOKEN}" >> $GITHUB_ENV
     - name: Trigger workflow in private repository
       env:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        ACCESS_TOKEN: ${{ env.ACCESS_TOKEN }}
         APP_NAME: "kmc-ng"
         TAG: ${{ github.ref_name }}
         REPO_NAME: ${{ github.event.repository.name }}
