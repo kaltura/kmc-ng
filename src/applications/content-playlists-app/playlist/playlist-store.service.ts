@@ -3,7 +3,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {BehaviorSubject, EMPTY} from 'rxjs';
 import { Subject } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
-import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaEntryApplication, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
 import { PlaylistGetAction } from 'kaltura-ngx-client';
 import { KalturaPlaylist } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
@@ -225,6 +225,7 @@ export class PlaylistStore implements OnDestroy {
           if (currentPlaylistId !== this._playlistId) {
             if (currentPlaylistId === 'new') {
               const newData = this._playlistCreationService.popNewPlaylistData();
+              newData.application = KalturaEntryApplication.kmc
 
               if (newData) {
                 this._playlistId = currentPlaylistId;
@@ -236,11 +237,12 @@ export class PlaylistStore implements OnDestroy {
                       playlistContent: newData.playlistContent,
                       playlistType: newData.type,
                       creatorId: this._appAuth.appUser.id,
-                      totalResults: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults
+                      totalResults: subApplicationsConfig.contentPlaylistsApp.ruleBasedTotalResults,
+                      application: newData.application
                   });
 
                   (<any>playlist).id = 'new';
-
+                  playlist.application = KalturaEntryApplication.kmc
                 this._playlist.next({ playlist });
 
                 setTimeout(() => {
@@ -273,6 +275,7 @@ export class PlaylistStore implements OnDestroy {
     if (this.playlist && this.playlist instanceof KalturaPlaylist) {
       const newPlaylist = <KalturaPlaylist>KalturaObjectBaseFactory.createObject(this.playlist);
       newPlaylist.playlistType = this.playlist.playlistType;
+      newPlaylist.application = this.playlist.application
 
       if (newPlaylist.playlistType === KalturaPlaylistType.dynamic) {
         newPlaylist.totalResults = this.playlist.totalResults;

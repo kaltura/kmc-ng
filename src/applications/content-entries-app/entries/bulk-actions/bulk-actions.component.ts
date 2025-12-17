@@ -21,6 +21,7 @@ import {
 } from './services';
 import {
     KalturaAccessControl,
+    KalturaEntryApplication,
     KalturaEntryStatus,
     KalturaMediaEntry,
     KalturaMediaType,
@@ -141,6 +142,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     const creationEvent = new CreateNewPlaylistEvent({
       type: KalturaPlaylistType.staticList,
       name: this._appLocalization.get('applications.content.bulkActions.newPlaylist'),
+      application: KalturaEntryApplication.kmc
     }, ContentPlaylistViewSections.Metadata);
     const invalidEntries = this.selectedEntries.filter(entry => {
         return this._allowedStatusesForPlaylist.indexOf(entry.status.toString()) === -1;

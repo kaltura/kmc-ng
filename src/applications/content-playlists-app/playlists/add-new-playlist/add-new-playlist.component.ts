@@ -6,7 +6,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/events/playlist-creation';
-import { KalturaPlaylistType } from 'kaltura-ngx-client';
+import { KalturaEntryApplication, KalturaPlaylistType } from 'kaltura-ngx-client';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 
 @Component({
@@ -31,7 +31,8 @@ export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy
     this.addNewPlaylistForm = _formBuilder.group({
       name: ['', Validators.required],
       description: '',
-      playlistType: KalturaPlaylistType.staticList
+      playlistType: KalturaPlaylistType.staticList,
+      application: KalturaEntryApplication.kmc
     });
   }
 
@@ -39,8 +40,8 @@ export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy
     if (this.addNewPlaylistForm.valid) {
       this._showConfirmationOnClose = false;
       this.parentPopupWidget.close();
-      const { name, description, playlistType: type } = this.addNewPlaylistForm.value;
-      this._appEvents.publish(new CreateNewPlaylistEvent({ name, description, type }))
+      const { name, description, playlistType: type , application} = this.addNewPlaylistForm.value;
+      this._appEvents.publish(new CreateNewPlaylistEvent({ name, description, type , application}))
     }
   }
 
