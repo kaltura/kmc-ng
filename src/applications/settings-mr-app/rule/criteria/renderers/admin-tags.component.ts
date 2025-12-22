@@ -17,7 +17,7 @@ import { AppAnalytics, ButtonType } from 'app-shared/kmc-shell';
             </div>
 
             <div class="kRow kCenter">
-                <span class="kLabel">{{'applications.settings.mr.criteria.adminTags' | translate}}</span>
+                <span class="kLabel">{{'applications.settings.mr.criteria.adminTags2' | translate}}</span>
                 <div class="kRow">
                     <p-dropdown [options]="_tagsOptions" [style]="{'width':'150px', 'margin-right': '16px'}" [(ngModel)]="_tags" (ngModelChange)="onCriteriaChange()"></p-dropdown>
                     <input type="text" pInputText class="kSearchInput" [style]="{'width':'200px'}"

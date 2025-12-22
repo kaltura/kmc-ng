@@ -220,6 +220,7 @@ export class RuleComponent implements OnInit {
     }
 
     public onCriteriaChange(filter: any): void {
+        console.log("filter changed:", filter);
         this.rule.objectFilter = filter;
         this._isDirty = true;
     }

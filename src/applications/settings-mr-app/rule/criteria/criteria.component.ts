@@ -84,104 +84,17 @@ export class CriteriaComponent {
     }
 
     public buildMenu(): void {
-        this.items = [
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.creation'),
-                disabled: this._criterias.indexOf('created') > -1,
+        this.items = [];
+        ['created', 'played', 'plays', 'categories', 'tags', 'adminTags', 'captions', 'sad', 'ead', 'owner', 'duration', 'metadata'].forEach(criteria => {
+            this.items.push({
+                label: this._appLocalization.get(`applications.settings.mr.criteria.${criteria}`),
+                disabled: this._criterias.indexOf(criteria) > -1,
                 command: () => {
-                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_creation_date', null , 'Automation_manager');
-                    this.addFilter('created');
+                    this._analytics.trackButtonClickEvent(ButtonType.Choose, `AM_criteria_${criteria}`, null , 'Automation_manager');
+                    this.addFilter(criteria);
                 }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.lastPlayed'),
-                disabled: this._criterias.indexOf('played') > -1,
-                command: () => {
-                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_last_played', null , 'Automation_manager');
-                    this.addFilter('played');
-                }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.plays'),
-                disabled: this._criterias.indexOf('plays') > -1,
-                command: () => {
-                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_num_plays', null , 'Automation_manager');
-                    this.addFilter('plays');
-                }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.categories'),
-                disabled: this._criterias.indexOf('categories') > -1,
-                command: () => {
-                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_categories', null , 'Automation_manager');
-                    this.addFilter('categories');
-                }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.tags'),
-                disabled: this._criterias.indexOf('tags') > -1,
-                command: () => {
-                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_tags', null , 'Automation_manager');
-                    this.addFilter('tags');
-                }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.adminTagsLabel'),
-                disabled: this._criterias.indexOf('adminTags') > -1,
-                command: () => {
-                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_admin_tags', null , 'Automation_manager');
-                    this.addFilter('adminTags');
-                }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.captions'),
-                disabled: this._criterias.indexOf('captions') > -1,
-                command: () => {
-                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_captions', null , 'Automation_manager');
-                    this.addFilter('captions');
-                }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.sad'),
-                disabled: this._criterias.indexOf('sad') > -1,
-                command: () => {
-                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_standard_audio_description', null , 'Automation_manager');
-                    this.addFilter('sad');
-                }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.ead'),
-                disabled: this._criterias.indexOf('ead') > -1,
-                command: () => {
-                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_extended_audio_description', null , 'Automation_manager');
-                    this.addFilter('ead');
-                }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.owner'),
-                disabled: this._criterias.indexOf('owner') > -1,
-                command: () => {
-                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_owner', null , 'Automation_manager');
-                    this.addFilter('owner');
-                }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.duration'),
-                disabled: this._criterias.indexOf('duration') > -1,
-                command: () => {
-                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_duration', null , 'Automation_manager');
-                    this.addFilter('duration');
-                }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.criteria.metadata'),
-                disabled: this._criterias.indexOf('metadata') > -1,
-                command: () => {
-                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_entry_custom_metadata', null , 'Automation_manager');
-                    this.addFilter('metadata');
-                }
-            }
-        ];
+            });
+        });
     }
 
     private clearFilterFields(field: string): void {
@@ -246,6 +159,11 @@ export class CriteriaComponent {
         })
     }
 
+    public onFilterUpdated(updateFilter: KalturaMediaEntryFilter): void {
+        this._filter = updateFilter;
+        this.onFilterChange.emit(this._filter);
+    }
+
     public onCriteriaChange(event: {field: string, value: any}): void {
         this.clearFilterFields(event.field);
         const advancedSearchFields = ['plays', 'tags', 'adminTags', 'metadata', 'captions', 'ead', 'sad'];
@@ -288,10 +206,10 @@ export class CriteriaComponent {
 
     public deleteCriteria(field: string): void {
         this._analytics.trackButtonClickEvent(ButtonType.Delete, 'AM_criteria', field , 'Automation_manager');
-        this.clearFilterFields(field);
+        // this.clearFilterFields(field);
         this._criterias = this._criterias.filter(criteria => criteria !== field);
-        this.removeEmptyFields();
-        this.onFilterChange.emit(this._filter);
+        // this.removeEmptyFields();
+        // this.onFilterChange.emit(this._filter);
     }
 
     private addFilter(field: string): void {

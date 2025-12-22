@@ -11,7 +11,7 @@ import {
     KalturaESearchUserItem,
     KalturaESearchUserOperator,
     KalturaESearchUserParams, KalturaESearchUserResponse, KalturaESearchUserResult,
-    KalturaFilterPager,
+    KalturaFilterPager, KalturaMediaEntryFilter,
     KalturaUser, KalturaUserFilter, UserListAction
 } from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
@@ -68,7 +68,9 @@ export class CriteriaOwnerComponent implements OnDestroy{
     ];
     public _owner = 'userIdIn';
 
-    @Input() set filter(value: any) {
+    private _filter: KalturaMediaEntryFilter;
+
+    @Input() set filter(value: KalturaMediaEntryFilter) {
         if (value && (value['userIdIn'] || value['userIdNotIn'])) {
             this._owner = value['userIdIn'] ? 'userIdIn' : 'userIdNotIn'; // set dropdown value
             // load users from their IDs
@@ -85,9 +87,10 @@ export class CriteriaOwnerComponent implements OnDestroy{
                     console.error("Error loading users ", error);
                 })
         }
+        this._filter = value;
     }
     @Output() onDelete = new EventEmitter<string>();
-    @Output() onFilterChange = new EventEmitter<{field: string, value: any}>();
+    @Output() onFilterChange = new EventEmitter<KalturaMediaEntryFilter>();
 
     private _searchUsersSubscription: ISubscription;
     public _usersProvider = new Subject<SuggestionsProviderData>();
@@ -99,15 +102,19 @@ export class CriteriaOwnerComponent implements OnDestroy{
 
 
     public onCriteriaChange(): void {
-        const value = {};
+        delete this._filter['userIdIn'];
+        delete this._filter['userIdNotIn'];
         const userIds = [];
         this.owners.forEach(user => userIds.push(user.id));
-        value[this._owner] = userIds.toString();
+        this._filter[this._owner] = userIds.toString();
         this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_owner_type', this._owner === 'userIdIn' ? 'is' : 'isn’t' , 'Automation_manager');
-        this.onFilterChange.emit({field: 'owner', value});
+        this.onFilterChange.emit(this._filter);
     }
 
     public delete(): void {
+        delete this._filter['userIdIn'];
+        delete this._filter['userIdNotIn'];
+        this.onFilterChange.emit(this._filter);
         this.onDelete.emit('owner');
     }
 

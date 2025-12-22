@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
+import {KalturaMediaEntryFilter} from 'kaltura-ngx-client';
 
 @Component({
     selector: 'kCriteriaCreated',
@@ -45,7 +46,9 @@ export class CriteriaCreatedComponent implements OnInit{
     public createdTime = 0;
     public createdTimeInterval = 'createdAtGreaterThanOrEqual';
 
-    @Input() set filter(value: any) {
+    private _filter: KalturaMediaEntryFilter;
+
+    @Input() set filter(value: KalturaMediaEntryFilter) {
         ['createdAtLessThanOrEqual', 'createdAtGreaterThanOrEqual'].forEach(key => {
             if (value && value[key]) {
                 this.createdTimeInterval = key;
@@ -53,9 +56,10 @@ export class CriteriaCreatedComponent implements OnInit{
                 this.createdTimeUnit = value[key].dateUnit || 'day';
             }
         });
+        this._filter = value;
     }
     @Output() onDelete = new EventEmitter<string>();
-    @Output() onFilterChange = new EventEmitter<{field: string, value: any}>();
+    @Output() onFilterChange = new EventEmitter<KalturaMediaEntryFilter>();
 
     constructor(private _analytics: AppAnalytics, private _appLocalization: AppLocalization) {
     }
@@ -64,16 +68,20 @@ export class CriteriaCreatedComponent implements OnInit{
     }
 
     public onCriteriaChange(): void {
-        const value = {};
-        value[this.createdTimeInterval] = {
+        delete this._filter['createdAtGreaterThanOrEqual'];
+        delete this._filter['createdAtLessThanOrEqual'];
+        this._filter[this.createdTimeInterval] = {
             numberOfUnits: this.createdTime * -1,
             dateUnit: this.createdTimeUnit
         };
         this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_creation_date_type', this.createdTimeInterval === 'createdAtGreaterThanOrEqual' ? 'less than' : 'more than' , 'Automation_manager');
-        this.onFilterChange.emit({field: 'created', value});
+        this.onFilterChange.emit(this._filter);
     }
 
     public delete(): void {
+        delete this._filter['createdAtGreaterThanOrEqual'];
+        delete this._filter['createdAtLessThanOrEqual'];
+        this.onFilterChange.emit(this._filter);
         this.onDelete.emit('created');
     }
 }
