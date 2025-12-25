@@ -167,10 +167,14 @@ export class CriteriaComponent {
                 delete this._filter[field];
             }
         })
+
     }
 
     public onFilterUpdated(updateFilter: KalturaMediaEntryFilter): void {
         this._filter = updateFilter;
+        if ((this._filter.advancedSearch as any)?.items?.length === 0) {
+            delete this._filter.advancedSearch;
+        }
         this.onFilterChange.emit(this._filter);
     }
 
