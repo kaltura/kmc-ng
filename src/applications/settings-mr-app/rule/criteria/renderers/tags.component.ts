@@ -3,9 +3,21 @@ import {Observable, Subject} from 'rxjs';
 import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
 import {ISubscription} from 'rxjs/Subscription';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
-import {KalturaClient, KalturaFilterPager,  KalturaMediaEntryMatchAttribute, KalturaTagFilter, KalturaTaggedObjectType, TagSearchAction} from 'kaltura-ngx-client';
+import {
+    KalturaClient,
+    KalturaFilterPager,
+    KalturaMediaEntryFilter,
+    KalturaMediaEntryMatchAttribute,
+    KalturaSearchOperator,
+    KalturaSearchOperatorType,
+    KalturaTagFilter,
+    KalturaTaggedObjectType,
+    TagSearchAction,
+    KalturaMediaEntryMatchAttributeCondition
+} from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
-import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
+import {AppAnalytics} from 'app-shared/kmc-shell';
+import {KalturaSearchItem} from 'kaltura-ngx-client/lib/api/types/KalturaSearchItem';
 
 @Component({
     selector: 'kCriteriaTags',
@@ -54,38 +66,53 @@ export class CriteriaTagsComponent implements OnDestroy{
     ];
     public _tags = 'tagsIn';
 
-    @Input() set filter(value: any) {
-        if (value['advancedSearch'] && value['advancedSearch']['items'] && value['advancedSearch']['items'].length) {
-            // Collect all tags from potentially multiple tag objects
-            const allTags = new Set<string>();
-            let notValue = null; // Track the 'not' value from the first tag object
+    private _filter: KalturaMediaEntryFilter;
 
-            value['advancedSearch']['items'].forEach((advancedSearch: any) => {
-                if (advancedSearch['attribute'] && advancedSearch['attribute'] === KalturaMediaEntryMatchAttribute.tags) {
-                    if (notValue === null) {
-                        notValue = advancedSearch['not'];
-                        this._tags = advancedSearch['not'] === true ? 'tagsNotIn' : 'tagsIn';
-                    }
+    @Input() set filter(value: KalturaMediaEntryFilter) {
+        // Collect all tags from potentially multiple tag objects
+        const allTags = new Set<string>();
+        let notValue = null; // Track the 'not' value from the first tag object
 
-                    // Handle both comma-separated values in a single object (backward compatibility)
-                    // and individual tag objects (new format)
-                    const tagValues = advancedSearch['value'].split(',');
-                    tagValues.forEach(tag => {
-                        if (tag.trim() !== '') {
-                            allTags.add(tag.trim());
-                        }
-                    });
+        const updateTagsFromObject = (tagObject: any) => {
+            if (notValue === null) {
+                notValue = tagObject['not'];
+                this._tags = tagObject['not'] === true ? 'tagsNotIn' : 'tagsIn';
+            }
+            // Handle both comma-separated values in a single object (backward compatibility)
+            // and individual tag objects (new format)
+            const tagValues = tagObject['value'].split(',');
+            tagValues.forEach(tag => {
+                if (tag.trim() !== '') {
+                    allTags.add(tag.trim());
                 }
             });
-
             // Convert Set to array for the tags property
             if (allTags.size > 0) {
                 this.tags = Array.from(allTags);
             }
         }
+
+        // backward compatible - collect tags from items array directly in advancedSearch top level
+        if (value['advancedSearch'] && value['advancedSearch']['items'] && value['advancedSearch']['items'].length) {
+            value['advancedSearch']['items'].forEach((advancedSearch: any) => {
+                if (advancedSearch['attribute'] && advancedSearch['attribute'] === KalturaMediaEntryMatchAttribute.tags) {
+                    updateTagsFromObject(advancedSearch);
+                } else {
+                    if (advancedSearch.items?.length) {
+                        advancedSearch.items.forEach((item: any) => {
+                            if (item['attribute'] && item['attribute'] === KalturaMediaEntryMatchAttribute.tags) {
+                                updateTagsFromObject(item);
+                            }
+                        });
+                    }
+                }
+            });
+
+        }
+        this._filter = value;
     }
     @Output() onDelete = new EventEmitter<string>();
-    @Output() onFilterChange = new EventEmitter<{field: string, value: any}>();
+    @Output() onFilterChange = new EventEmitter<KalturaMediaEntryFilter>();
 
     private _searchTagsSubscription: ISubscription;
     public _tagsProvider = new Subject<SuggestionsProviderData>();
@@ -97,17 +124,57 @@ export class CriteriaTagsComponent implements OnDestroy{
 
 
     public onCriteriaChange(): void {
-        const value = {
-            objectType: "KalturaMediaEntryMatchAttributeCondition",
-            not: this._tags === 'tagsIn' ? false : true,
-            attribute: KalturaMediaEntryMatchAttribute.tags,
-            value: this.tags.toString()
-        };
-        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_tags_type', this._tags === 'tagsIn' ? 'contains' : 'doesn’t_contain' , 'Automation_manager');
-        this.onFilterChange.emit({field: 'tags', value});
+        // check if filter already have advacedSearch and add it if not
+        if (!this._filter.advancedSearch) {
+            this._filter.advancedSearch = {
+                objectType: "KalturaSearchOperator",
+                type: KalturaSearchOperatorType.searchAnd,
+                items: []
+            } as any;
+        } else {
+            this.deleteTagsFromFilter();
+        }
+        const advancedSearch = (this._filter.advancedSearch as any).items;
+
+        const items: KalturaSearchItem[] = [];
+        this.tags.forEach(tag => {
+            items.push({
+                objectType: "KalturaMediaEntryMatchAttributeCondition",
+                not: this._tags === 'tagsIn' ? false : true,
+                attribute: KalturaMediaEntryMatchAttribute.tags,
+                value: tag
+            } as any);
+        })
+        advancedSearch.push({
+            objectType: "KalturaSearchOperator",
+            type: KalturaSearchOperatorType.searchOr,
+            items
+        });
+        this.onFilterChange.emit(this._filter);
+    }
+
+    private deleteTagsFromFilter(): void {
+        if ((this._filter.advancedSearch as any)?.items) {
+            (this._filter.advancedSearch as any).items = (this._filter.advancedSearch as any).items.filter((item: any) => {
+                // Keep only items that are not related to tags
+                if (item['attribute'] === KalturaMediaEntryMatchAttribute.tags) {
+                    return false; // Remove this item
+                }
+                // If the item has its own items array, filter it as well
+                if (item.items && item.items.length) {
+                    item.items = item.items.filter((subItem: any) => subItem['attribute'] !== KalturaMediaEntryMatchAttribute.tags);
+                }
+                if (item.items?.length === 0) {
+                    return false; // Remove the parent item if it has no sub-items left
+                }
+                return true; // Keep this item
+            });
+        }
     }
 
     public delete(): void {
+        this.deleteTagsFromFilter();
+        this.onFilterChange.emit(this._filter);
         this.onDelete.emit('tags');
     }
 

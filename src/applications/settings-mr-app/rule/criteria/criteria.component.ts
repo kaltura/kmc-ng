@@ -47,36 +47,44 @@ export class CriteriaComponent {
         if (this._filter.advancedSearch) {
             const items: any[] = this._filter.advancedSearch['items'];
             if (items && items.length) {
-                let hasTagsCriteria = false;
-
                 items.forEach(search => {
-                    if (search['attribute'] === KalturaMediaEntryCompareAttribute.plays) {
-                        this._criterias.push('plays');
-                    }
-                    if (search['attribute'] === KalturaMediaEntryMatchAttribute.tags && !hasTagsCriteria) {
+                    // backward compatibility for old tags structure directly in items array
+                    if (search['attribute'] === KalturaMediaEntryMatchAttribute.tags && this._criterias.indexOf('tags') === -1) {
                         delete this._filter['tagsMultiLikeOr']; // remove old filter from old rules to prevent tags filter duplication
                         this._criterias.push('tags');
-                        hasTagsCriteria = true;
                     }
-                    if (search['attribute'] === KalturaMediaEntryMatchAttribute.adminTags) {
-                        this._criterias.push('adminTags');
+                    if (search.items?.length) {
+                        const subItems: any[] = search.items;
+                        subItems.forEach(subItemsSearch => {
+                            if (subItemsSearch['attribute'] === KalturaMediaEntryCompareAttribute.plays && this._criterias.indexOf('plays') === -1) {
+                                this._criterias.push('plays');
+                            }
+                            if (subItemsSearch['attribute'] === KalturaMediaEntryMatchAttribute.tags && this._criterias.indexOf('tags') === -1) {
+                                delete this._filter['tagsMultiLikeOr']; // remove old filter from old rules to prevent tags filter duplication
+                                this._criterias.push('tags');
+                            }
+                            if (subItemsSearch['attribute'] === KalturaMediaEntryMatchAttribute.adminTags && this._criterias.indexOf('adminTags') === -1) {
+                                this._criterias.push('adminTags');
+                            }
+                            if (subItemsSearch['objectType'] === 'KalturaMetadataSearchItem' && this._criterias.indexOf('metadata') === -1) {
+                                this._criterias.push('metadata');
+                            }
+                            if (subItemsSearch['objectType'] === 'KalturaMediaEntryMatchAttributeCondition' && subItemsSearch['attribute'] === KalturaMediaEntryMatchAttribute.flavorParamsIds && this._criterias.indexOf('sad') === -1) {
+                                this._criterias.push('sad');
+                            }
+                            if (subItemsSearch['objectType'] === 'KalturaEntryCaptionAdvancedFilter' && subItemsSearch["usage"] === KalturaCaptionAssetUsage.caption && this._criterias.indexOf('captions') === -1) {
+                                this._criterias.push('captions');
+                            }
+                            if (subItemsSearch['objectType'] === 'KalturaEntryCaptionAdvancedFilter' && subItemsSearch["usage"] === KalturaCaptionAssetUsage.extendedAudioDescription && this._criterias.indexOf('ead') === -1) {
+                                this._criterias.push('ead');
+                            }
+                        })
                     }
-                    if (search['objectType'] === 'KalturaMetadataSearchItem') {
-                        this._criterias.push('metadata');
-                    }
-                    if (search['objectType'] === 'KalturaMediaEntryMatchAttributeCondition' && search['attribute'] === KalturaMediaEntryMatchAttribute.flavorParamsIds) {
-                        this._criterias.push('sad');
-                    }
-                    if (search['objectType'] === 'KalturaEntryCaptionAdvancedFilter' && search["usage"] === KalturaCaptionAssetUsage.caption) {
-                        this._criterias.push('captions');
-                    }
-                    if (search['objectType'] === 'KalturaEntryCaptionAdvancedFilter' && search["usage"] === KalturaCaptionAssetUsage.extendedAudioDescription) {
-                        this._criterias.push('ead');
-                    }
-                })
+                });
             }
         }
     };
+
     @Output() onFilterChange = new EventEmitter<any>();
 
     constructor(private _analytics: AppAnalytics,
@@ -91,7 +99,9 @@ export class CriteriaComponent {
                 disabled: this._criterias.indexOf(criteria) > -1,
                 command: () => {
                     this._analytics.trackButtonClickEvent(ButtonType.Choose, `AM_criteria_${criteria}`, null , 'Automation_manager');
-                    this.addFilter(criteria);
+                    if (this._criterias.indexOf(criteria) === -1) {
+                        this._criterias.push(criteria);
+                    }
                 }
             });
         });
@@ -212,7 +222,4 @@ export class CriteriaComponent {
         // this.onFilterChange.emit(this._filter);
     }
 
-    private addFilter(field: string): void {
-        this._criterias.push(field);
-    }
 }
