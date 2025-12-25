@@ -77,7 +77,6 @@ export class CriteriaCaptionsComponent implements OnInit{
     }
 
     ngOnInit(): void {
-        this.onCriteriaChange();
         const excludedLanguages = ['he', 'id', 'yi']; // duplicated languages TODO [KMCNG] - should be checked with backend
         for (const lang in KalturaLanguage) {
             if (lang !== 'en' && excludedLanguages.indexOf(lang) === -1) { // we push English to the top of the array after sorting

@@ -97,7 +97,6 @@ public updateDropdown = true;
                     this.updateDropdown = true;
                 }, 0);
 
-                this.onCriteriaChange();
                 this._isBusy = false;
             },
             error => {
