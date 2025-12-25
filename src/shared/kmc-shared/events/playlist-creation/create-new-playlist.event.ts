@@ -1,5 +1,5 @@
 import { AppEvent } from 'shared/kmc-shared/app-events/app-event';
-import { KalturaPlaylistType } from 'kaltura-ngx-client';
+import { KalturaEntryApplication, KalturaPlaylistType } from 'kaltura-ngx-client';
 import { ContentPlaylistViewSections } from 'app-shared/kmc-shared/kmc-views/details-views';
 
 export interface CreateNewPlaylistEventArgs {
@@ -7,6 +7,8 @@ export interface CreateNewPlaylistEventArgs {
   type: KalturaPlaylistType;
   description?: string;
   playlistContent?: string; // entry ids separated by comma
+  application: KalturaEntryApplication;
+  applicationVersion: string;
 }
 
 export class CreateNewPlaylistEvent extends AppEvent {

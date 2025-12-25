@@ -3,8 +3,9 @@ import { AppEventsService } from 'shared/kmc-shared/app-events';
 import { CreateNewPlaylistEvent, CreateNewPlaylistEventArgs } from './create-new-playlist.event';
 import { ISubscription } from 'rxjs/Subscription';
 import { ContentPlaylistViewSections, ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
-import { KalturaPlaylist } from 'kaltura-ngx-client';
+import { KalturaEntryApplication, KalturaPlaylist } from 'kaltura-ngx-client';
 import { KalturaPlaylistType } from 'kaltura-ngx-client';
+import {globalConfig} from 'config/global';
 
 @Injectable()
 export class PlaylistCreationService implements OnDestroy {
@@ -27,7 +28,11 @@ export class PlaylistCreationService implements OnDestroy {
       this._creationSubscription = this._appEvents.event(CreateNewPlaylistEvent)
         .subscribe(({ data, section }) => {
           this._newPlaylistData = data;
-            const playlist = new KalturaPlaylist({ playlistType: data.type });
+            const playlist = new KalturaPlaylist({ 
+              playlistType: data.type,
+              application: KalturaEntryApplication.kmc,
+              applicationVersion: globalConfig.client.appVersion
+            });
             (<any>playlist).id = 'new';
             if (!section) {
               section = playlist.playlistType === KalturaPlaylistType.staticList

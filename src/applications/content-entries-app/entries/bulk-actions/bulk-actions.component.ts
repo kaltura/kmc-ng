@@ -25,7 +25,8 @@ import {
     KalturaMediaEntry,
     KalturaMediaType,
     KalturaPlaylistType,
-    KalturaUser
+    KalturaUser,
+    KalturaEntryApplication
 } from 'kaltura-ngx-client';
 import {BulkActionBaseService} from './services/bulk-action-base.service';
 import {subApplicationsConfig} from 'config/sub-applications';
@@ -50,6 +51,7 @@ import {BulkAddViewersService} from './services/bulk-add-viewers.service';
 import {BulkRemoveViewersService} from './services/bulk-remove-viewers.service';
 import {TieredMenu} from "primeng/tieredmenu";
 import {AppAnalytics} from "app-shared/kmc-shell";
+import {globalConfig} from 'config/global';
 
 @Component({
   selector: 'kBulkActions',
@@ -141,6 +143,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     const creationEvent = new CreateNewPlaylistEvent({
       type: KalturaPlaylistType.staticList,
       name: this._appLocalization.get('applications.content.bulkActions.newPlaylist'),
+        application: KalturaEntryApplication.kmc,
+        applicationVersion: globalConfig.client.appVersion
     }, ContentPlaylistViewSections.Metadata);
     const invalidEntries = this.selectedEntries.filter(entry => {
         return this._allowedStatusesForPlaylist.indexOf(entry.status.toString()) === -1;
@@ -303,7 +307,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   // bulk delete
   public deleteEntries(): void {
     this._analytics.trackClickEvent('Bulk_delete');
-    
+
     if(this.selectedEntries.length <= 25) {
       const entriesToDelete = this.selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}` ),
       entries: string = this.selectedEntries.length <= 10 ? entriesToDelete.join(',').replace(/,/gi, '\n') : '',
