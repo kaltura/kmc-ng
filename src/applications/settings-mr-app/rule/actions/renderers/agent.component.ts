@@ -66,7 +66,7 @@ export class ActionAgentComponent implements OnInit, OnDestroy{
         this._mrStore.loadAgents().subscribe(
             (response) => {
                 if (response.objects) {
-                    this.agents = response.objects;
+                    this.agents = response.objects.filter(agent => (agent.systemName !== 'RUN_ON_DEMAND' && agent.status === 'Enabled') || agent.systemName === 'RUN_ON_DEMAND');
                     this.selectedAgent = this.action?.task?.taskParams?.agentTaskParams.agentId || this.agents[0]?.id;
                     if (!this.action?.task?.taskParams?.agentTaskParams.agentId) {
                         this.handleAgentChange();

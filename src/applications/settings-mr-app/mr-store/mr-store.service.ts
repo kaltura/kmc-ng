@@ -295,11 +295,10 @@ export class MrStoreService implements OnDestroy {
     public loadAgents(): Observable<any> {
         try {
             const pager = {pageIndex: 0, pageSize: 500};
-            const statusIn = ['Enabled'];
             const orderBy = '-createdAt';
             const partnerId = this._appAuthentication.appUser.partnerId;
             const body = {pager, orderBy};
-            return this._http.post(`${serverConfig.externalServices.agentsManagerEndpoint.uri}/agent/list`, {orderBy, pager, partnerId, statusIn}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
+            return this._http.post(`${serverConfig.externalServices.agentsManagerEndpoint.uri}/agent/list`, {orderBy, pager, partnerId}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<any>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to save actions'));
         }
