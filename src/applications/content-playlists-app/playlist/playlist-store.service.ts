@@ -3,7 +3,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {BehaviorSubject, EMPTY} from 'rxjs';
 import { Subject } from 'rxjs';
 import { ISubscription } from 'rxjs/Subscription';
-import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaEntryApplication, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
 import { PlaylistGetAction } from 'kaltura-ngx-client';
 import { KalturaPlaylist } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
@@ -25,6 +25,7 @@ import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { debounce } from 'rxjs/operators';
 import { timer } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
+import { globalConfig } from 'config/global';
 
 export enum ActionTypes {
   PlaylistLoading,
@@ -279,6 +280,11 @@ export class PlaylistStore implements OnDestroy {
       }
 
       const id = this._getPlaylistId();
+
+      if(id === 'new'){
+        newPlaylist.application = KalturaEntryApplication.kmc
+        newPlaylist.applicationVersion = globalConfig.client.appVersion;
+      }
       const action = id === 'new'
         ? new PlaylistAddAction({ playlist: newPlaylist })
         : new PlaylistUpdateAction({ id, playlist: newPlaylist });
