@@ -281,7 +281,7 @@ export class PlaylistStore implements OnDestroy {
 
       const id = this._getPlaylistId();
 
-      if(id == 'new'){
+      if(id === 'new'){
         newPlaylist.application = KalturaEntryApplication.kmc
         newPlaylist.applicationVersion = globalConfig.client.appVersion;
       }
