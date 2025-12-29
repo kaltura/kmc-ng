@@ -81,7 +81,7 @@ public updateDropdown = true;
         this._flavorsStore.get().subscribe(
             response => {
                 response.items.forEach(flavor => {
-                   if (flavor.audioLanguages?.length) {
+                   if (flavor.audioLanguages?.length && flavor.tags.indexOf('audio_description') !== -1) {
                        this._flavors.push({ value: flavor.id, label: flavor.audioLanguages[0].value });
                    }
                 });
@@ -97,7 +97,6 @@ public updateDropdown = true;
                     this.updateDropdown = true;
                 }, 0);
 
-                this.onCriteriaChange();
                 this._isBusy = false;
             },
             error => {

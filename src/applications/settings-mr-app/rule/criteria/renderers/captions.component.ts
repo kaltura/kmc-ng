@@ -77,16 +77,12 @@ export class CriteriaCaptionsComponent implements OnInit{
     }
 
     ngOnInit(): void {
-        this.onCriteriaChange();
         const excludedLanguages = ['he', 'id', 'yi']; // duplicated languages TODO [KMCNG] - should be checked with backend
         for (const lang in KalturaLanguage) {
             if (lang !== 'en' && excludedLanguages.indexOf(lang) === -1) { // we push English to the top of the array after sorting
-                const value = lang.toUpperCase();
-                const label = this._appLocalization.get(`languages.${value}`);
-                const hasTranslation = label.indexOf('languages.') === -1;
-                if (hasTranslation) {
-                    this._languages.push({ value, label});
-                }
+                const value = KalturaLanguage[lang];
+                const label = KalturaLanguage[lang];
+                this._languages.push({ value, label});
             }
         }
         // sort the language array by language alphabetically
@@ -96,7 +92,7 @@ export class CriteriaCaptionsComponent implements OnInit{
             return ((x < y) ? -1 : ((x > y) ? 1 : 0));
         });
         // put English on top
-        this._languages.unshift({ label: this._appLocalization.get('languages.EN'), value: 'EN' });
+        this._languages.unshift({ label: 'English', value: 'English' });
         // put any language on top
         this._languages.unshift({ value: null, label: this._appLocalization.get('applications.settings.mr.criteria.anyLanguage') });
     }
