@@ -8,15 +8,13 @@ import {
     KalturaFilterPager,
     KalturaMediaEntryFilter,
     KalturaMediaEntryMatchAttribute,
-    KalturaSearchOperator,
     KalturaSearchOperatorType,
     KalturaTagFilter,
     KalturaTaggedObjectType,
-    TagSearchAction,
-    KalturaMediaEntryMatchAttributeCondition
+    TagSearchAction
 } from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
-import {AppAnalytics} from 'app-shared/kmc-shell';
+import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
 import {KalturaSearchItem} from 'kaltura-ngx-client/lib/api/types/KalturaSearchItem';
 
 @Component({
@@ -150,6 +148,11 @@ export class CriteriaTagsComponent implements OnDestroy{
             type: KalturaSearchOperatorType.searchOr,
             items
         });
+
+        if (this.tags.length) {
+            this._analytics.trackButtonClickEvent(ButtonType.Choose, `AM_criteria_tags_type_${this.tags}`, this._tags === 'tagsIn' ? 'contains' : 'doesn’t_contain', 'Automation_manager');
+        }
+
         this.onFilterChange.emit(this._filter);
     }
 
