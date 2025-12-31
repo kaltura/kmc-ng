@@ -138,7 +138,7 @@ export class CriteriaAdminTagsComponent {
     private deleteTagsFromFilter(): void {
         if ((this._filter.advancedSearch as any)?.items) {
             (this._filter.advancedSearch as any).items = (this._filter.advancedSearch as any).items.filter((item: any) => {
-                // Keep only items that are not related to tags
+                // Keep only items that are not related to adminTags
                 if (item['attribute'] === KalturaMediaEntryMatchAttribute.adminTags) {
                     return false; // Remove this item
                 }

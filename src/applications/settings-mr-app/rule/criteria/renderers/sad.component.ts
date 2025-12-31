@@ -1,17 +1,15 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {
-    KalturaCaptionAssetUsage, KalturaConversionProfileType,
-    KalturaFlavorParams,
-    KalturaLanguage, KalturaLiveParams,
+    KalturaCaptionAssetUsage,
+    KalturaMediaEntryFilter,
     KalturaMediaEntryMatchAttribute,
-    KalturaNullableBoolean
+    KalturaNullableBoolean, KalturaSearchOperatorType
 } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppAnalytics, ButtonType } from 'app-shared/kmc-shell';
 import {FlavoursStore} from 'app-shared/kmc-shared';
-import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
-import {map} from 'rxjs/operators';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {KalturaSearchItem} from 'kaltura-ngx-client/lib/api/types/KalturaSearchItem';
 
 @Component({
     selector: 'kCriteriaSAD',
@@ -55,18 +53,30 @@ public updateDropdown = true;
     public _flavor: number = 0;
     public _flavors: { value: number, label: string }[] = [];
 
-    @Input() set filter(value: any) {
+    private _filter: KalturaMediaEntryFilter;
+
+    @Input() set filter(value: KalturaMediaEntryFilter) {
         if (value['advancedSearch'] && value['advancedSearch']['items'] && value['advancedSearch']['items'].length) {
             value['advancedSearch']['items'].forEach((advancedSearch: any) => {
                 if (advancedSearch['objectType'] && advancedSearch['objectType'] === 'KalturaMediaEntryMatchAttributeCondition' && advancedSearch["attribute"] === KalturaMediaEntryMatchAttribute.flavorParamsIds) {
                     this.hasFlavor = advancedSearch.not;
                     this._flavor = advancedSearch['value'];
+                } else {
+                    if (advancedSearch.items?.length) {
+                        advancedSearch.items.forEach((item: any) => {
+                            if (item['objectType'] && item['objectType'] === 'KalturaMediaEntryMatchAttributeCondition' && item["attribute"] === KalturaMediaEntryMatchAttribute.flavorParamsIds) {
+                                this.hasFlavor = item.not;
+                                this._flavor = item['value'];
+                            }
+                        });
+                    }
                 }
             });
         }
+        this._filter = value;
     }
     @Output() onDelete = new EventEmitter<string>();
-    @Output() onFilterChange = new EventEmitter<{field: string, value: any}>();
+    @Output() onFilterChange = new EventEmitter<KalturaMediaEntryFilter>();
 
     constructor(private _analytics: AppAnalytics,
                 private _flavorsStore: FlavoursStore,
@@ -116,18 +126,60 @@ public updateDropdown = true;
         );
     }
 
-
     public onCriteriaChange(): void {
+        // check if filter already have advacedSearch and add it if not
+        if (!this._filter.advancedSearch) {
+            this._filter.advancedSearch = {
+                objectType: "KalturaSearchOperator",
+                type: KalturaSearchOperatorType.searchAnd,
+                items: []
+            } as any;
+        } else {
+            this.deleteSADFromFilter();
+        }
+        const advancedSearch = (this._filter.advancedSearch as any).items;
+
+        const items: KalturaSearchItem[] = [];
+
         const value = {
             objectType: "KalturaMediaEntryMatchAttributeCondition",
             not: this.hasFlavor ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue,
             attribute: KalturaMediaEntryMatchAttribute.flavorParamsIds,
             value: this._flavor
         };
-        this.onFilterChange.emit({field: 'sad', value});
+
+        items.push(value as any);
+
+        advancedSearch.push({
+            objectType: "KalturaSearchOperator",
+            type: KalturaSearchOperatorType.searchOr,
+            items
+        });
+        this.onFilterChange.emit(this._filter);
+    }
+
+    private deleteSADFromFilter(): void {
+        if ((this._filter.advancedSearch as any)?.items) {
+            (this._filter.advancedSearch as any).items = (this._filter.advancedSearch as any).items.filter((item: any) => {
+                // Keep only items that are not related to sad
+                if (item['objectType'] === "KalturaMediaEntryMatchAttributeCondition" && item["attribute"] === KalturaMediaEntryMatchAttribute.flavorParamsIds) {
+                    return false; // Remove this item
+                }
+                // If the item has its own items array, filter it as well
+                if (item.items && item.items.length) {
+                    item.items = item.items.filter((subItem: any) => subItem['attribute'] !== KalturaMediaEntryMatchAttribute.flavorParamsIds);
+                }
+                if (item.items?.length === 0) {
+                    return false; // Remove the parent item if it has no sub-items left
+                }
+                return true; // Keep this item
+            });
+        }
     }
 
     public delete(): void {
+        this.deleteSADFromFilter();
+        this.onFilterChange.emit(this._filter);
         this.onDelete.emit('sad');
     }
 
