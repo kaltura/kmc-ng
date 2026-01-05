@@ -125,7 +125,7 @@
 
                     <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'criterrias'" *ngIf="rule">
                         <span class="kTitle">{{'applications.settings.mr.criterrias' | translate}}</span>
-                        <kRuleCriteria [filter]="rule.objectFilter || {}" (onFilterChange)="onCriteriaChange($event)"></kRuleCriteria>
+                        <kRuleCriteria [filter]="rule.objectFilter || {}" (onFilterChange)="onCriteriaChange($event)" [isLiveRule]="rule.type === 'liveEntryProfile'"></kRuleCriteria>
                     </div>
 
                     <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'action' && _selectedSection !== 'notifications'" *ngIf="rule">

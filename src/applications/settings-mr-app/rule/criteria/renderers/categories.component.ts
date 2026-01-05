@@ -42,6 +42,7 @@ import {KalturaMediaEntryFilter} from 'kaltura-ngx-client';
                         <a (click)="categoriesPopup.open()" class="kLink">
                             {{'applications.content.entryDetails.metadata.browse' | translate}}
                         </a>
+                        <p-checkbox *ngIf="_published === 'categoriesIdsMatchOr'" class="kCheckbox" label="{{'applications.settings.mr.criteria.subcategories' | translate}}" [(ngModel)]="_includeSubCategories" (onChange)="onCriteriaChange()" binary="true"></p-checkbox>
                     </div>
                 </div>
             </div>
@@ -65,14 +66,16 @@ export class CriteriaCategoriesComponent implements OnDestroy{
         {value: 'categoriesIdsNotContains', label: this._appLocalization.get('applications.settings.mr.criteria.notPublished')}
     ];
     public _published = 'categoriesIdsMatchOr';
+    public _includeSubCategories = false;
 
     private _filter: KalturaMediaEntryFilter;
 
     @Input() set filter(value: KalturaMediaEntryFilter) {
-        if (value && (value['categoriesIdsMatchOr'] || value['categoriesIdsNotContains'])) {
-            this._published = value['categoriesIdsMatchOr'] ? 'categoriesIdsMatchOr' : 'categoriesIdsNotContains'; // set dropdown value
+        if (value && (value['categoriesIdsMatchOr'] || value['categoriesIdsNotContains'] || value['categoryAncestorIdIn'])) {
+            this._published = value['categoriesIdsMatchOr'] || value['categoryAncestorIdIn'] ? 'categoriesIdsMatchOr' : 'categoriesIdsNotContains'; // set dropdown value
+            this._includeSubCategories = !!value.categoryAncestorIdIn;
             // load categories from their IDs
-            const categoriesFilter = value['categoriesIdsMatchOr'] ? value['categoriesIdsMatchOr'].split(',') : value['categoriesIdsNotContains'].split(',') ;
+            const categoriesFilter = value['categoriesIdsMatchOr'] ? value['categoriesIdsMatchOr'].split(',') : value['categoryAncestorIdIn'] ? value['categoryAncestorIdIn'].split(',') : value['categoriesIdsNotContains'].split(',') ;
             const categoryIDs: number[] = [];
             categoriesFilter.forEach(id => categoryIDs.push(parseInt(id)));
             this._categoriesSearchService.getCategories(categoryIDs).subscribe(response => {
@@ -112,8 +115,13 @@ export class CriteriaCategoriesComponent implements OnDestroy{
         const cats = [];
         delete this._filter['categoriesIdsMatchOr'];
         delete this._filter['categoriesIdsNotContains'];
+        delete this._filter['categoryAncestorIdIn'];
         this.categories.forEach(category => cats.push(category.id));
-        this._filter[this._published] = cats.toString();
+        if (this._includeSubCategories && this._published === 'categoriesIdsMatchOr') {
+            this._filter['categoryAncestorIdIn'] = cats.toString();
+        } else {
+            this._filter[this._published] = cats.toString();
+        }
         this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_categories_type', this._published === 'categoriesIdsMatchOr' ? 'Published_in' : 'not_published_in' , 'Automation_manager');
         this.onFilterChange.emit(this._filter);
     }
@@ -121,6 +129,7 @@ export class CriteriaCategoriesComponent implements OnDestroy{
     public delete(): void {
         delete this._filter['categoriesIdsMatchOr'];
         delete this._filter['categoriesIdsNotContains'];
+        delete this._filter['categoryAncestorIdIn'];
         this.onFilterChange.emit(this._filter);
         this.onDelete.emit('categories');
     }

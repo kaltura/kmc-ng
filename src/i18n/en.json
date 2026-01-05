@@ -3731,6 +3731,7 @@
                     "notPublished": "Not published in",
                     "published_tt": "Select categories the rule will apply to. The rule will be performed if the entry is found in at least one of the selected categories.",
                     "categories": "Categories",
+                    "subcategories": "Include sub-categories",
                     "captions": "Captions",
                     "captionsIn": "captions in",
                     "captions_tt": "Filter entries based on their caption files",

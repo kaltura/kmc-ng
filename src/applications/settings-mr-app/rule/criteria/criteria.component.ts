@@ -18,6 +18,7 @@ export class CriteriaComponent {
     public _criterias = [];
     public _filter: KalturaMediaEntryFilter;
 
+    @Input() isLiveRule: boolean;
     @Input() set filter(value: KalturaMediaEntryFilter) {
         // set existing criteria according the filter
 
@@ -31,7 +32,7 @@ export class CriteriaComponent {
         if (this._filter.lastPlayedAtLessThanOrEqualOrNull || this._filter.lastPlayedAtGreaterThanOrEqual) {
             this._criterias.push('played');
         }
-        if (this._filter.categoriesIdsMatchOr || this._filter.categoriesIdsNotContains) {
+        if (this._filter.categoriesIdsMatchOr || this._filter.categoriesIdsNotContains || this._filter.categoryAncestorIdIn) {
             this._criterias.push('categories');
         }
         if (this._filter.userIdIn || this._filter.userIdNotIn) {
@@ -93,7 +94,9 @@ export class CriteriaComponent {
 
     public buildMenu(): void {
         this.items = [];
-        ['created', 'played', 'plays', 'categories', 'tags', 'adminTags', 'captions', 'sad', 'ead', 'owner', 'duration', 'metadata'].forEach(criteria => {
+        const menuItems = this.isLiveRule ? ['created', 'played', 'plays', 'categories', 'tags', 'adminTags', 'owner', 'duration', 'metadata'] :
+            ['created', 'played', 'plays', 'categories', 'tags', 'adminTags', 'captions', 'sad', 'ead', 'owner', 'duration', 'metadata'];
+        menuItems.forEach(criteria => {
             this.items.push({
                 label: this._appLocalization.get(`applications.settings.mr.criteria.${criteria}`),
                 disabled: this._criterias.indexOf(criteria) > -1,
