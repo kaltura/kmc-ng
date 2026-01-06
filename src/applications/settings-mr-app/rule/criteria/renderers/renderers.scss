@@ -75,6 +75,13 @@
     }
     .kCheckbox {
         margin-top: 16px;
+        &.row {
+            margin-top: 0px;
+            margin-right: 8px;
+        }
+    }
+    .kDatePicker {
+        margin-left: 16px;
     }
     .kRadio {
         &:last-child {

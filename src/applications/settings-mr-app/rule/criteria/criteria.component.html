@@ -9,6 +9,7 @@
             <kCriteriaCreated *ngSwitchCase="field === 'created'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaCreated>
             <kCriteriaPlayed *ngSwitchCase="field === 'played'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaPlayed>
             <kCriteriaDuration *ngSwitchCase="field === 'duration'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaDuration>
+            <kCriteriaScheduling *ngSwitchCase="field === 'scheduling'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaScheduling>
             <kCriteriaCategories *ngSwitchCase="field === 'categories'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaCategories>
             <kCriteriaOwner *ngSwitchCase="field === 'owner'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaOwner>
 

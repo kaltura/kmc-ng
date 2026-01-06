@@ -41,6 +41,9 @@ export class CriteriaComponent {
         if (this._filter.durationLessThanOrEqual || this._filter.durationGreaterThan) {
             this._criterias.push('duration');
         }
+        if (this._filter.startDateGreaterThanOrEqual || this._filter.startDateLessThanOrEqualOrNull || this._filter.endDateGreaterThanOrEqual || this._filter.endDateLessThanOrEqual) {
+            this._criterias.push('scheduling');
+        }
 
         // advanced search filters
         if (this._filter.advancedSearch) {
@@ -94,18 +97,25 @@ export class CriteriaComponent {
 
     public buildMenu(): void {
         this.items = [];
-        const menuItems = this.isLiveRule ? ['created', 'played', 'plays', 'categories', 'tags', 'adminTags', 'owner', 'duration', 'metadata'] :
-            ['created', 'played', 'plays', 'categories', 'tags', 'adminTags', 'captions', 'sad', 'ead', 'owner', 'duration', 'metadata'];
-        menuItems.forEach(criteria => {
-            this.items.push({
-                label: this._appLocalization.get(`applications.settings.mr.criteria.${criteria}`),
-                disabled: this._criterias.indexOf(criteria) > -1,
-                command: () => {
-                    this._analytics.trackButtonClickEvent(ButtonType.Choose, `AM_criteria_${criteria}`, null , 'Automation_manager');
-                    if (this._criterias.indexOf(criteria) === -1) {
-                        this._criterias.push(criteria);
+        const menuItemGroups = this.isLiveRule ? [{label: 'ownership_group', items: ['owner']}, {label: 'activity_group', items: ['created', 'played', 'plays', 'scheduling']}, {label: 'classification_group', items: ['categories', 'tags']}, {label: 'metadata_group', items: ['metadata', 'duration', 'adminTags']}] :
+            [{label: 'ownership_group', items: ['owner']}, {label: 'activity_group', items: ['created', 'played', 'plays', 'scheduling']}, {label: 'classification_group', items: ['categories', 'tags']}, {label: 'accessibility_group', items: ['captions', 'sad', 'ead']}, {label: 'metadata', items: ['metadata_group', 'duration', 'adminTags']}];
+        menuItemGroups.forEach(menuItemGroup => {
+            const criteria: MenuItem[] = [];
+            menuItemGroup['items'].forEach(criteriaKey => {
+                criteria.push({
+                    label: this._appLocalization.get(`applications.settings.mr.criteria.${criteriaKey}`),
+                    disabled: this._criterias.indexOf(criteriaKey) > -1,
+                    command: () => {
+                        this._analytics.trackButtonClickEvent(ButtonType.Choose, `AM_criteria_${criteriaKey}`, null , 'Automation_manager');
+                        if (this._criterias.indexOf(criteriaKey) === -1) {
+                            this._criterias.push(criteriaKey);
+                        }
                     }
-                }
+                });
+            });
+            this.items.push({
+                label: this._appLocalization.get(`applications.settings.mr.criteria.${menuItemGroup.label}`),
+                items: criteria
             });
         });
     }
