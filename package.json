@@ -21,19 +21,8 @@
   "bugs": {
     "url": "https://github.com/kaltura/kmc-ng/issues"
   },
-  "contributors": [
-    {
-      "name": "Eran Sakal",
-      "email": "eran@sakalim.com"
-    },
-    {
-      "name": "Amir Chervinsky",
-      "email": "amir.chr@gmail.com"
-    }
-  ],
   "homepage": "https://github.com/kaltura/kmc-ng#readme",
   "scripts": {
-    "preinstall": "npx --yes --prefer-online --registry=https://npm.pkg.github.com --package @kaltura/kaltura-tools@latest kaltura-tools check --root=.",
     "setup": "node ./scripts/setup.js",
     "build": "ng build",
     "build:prod-old": "node --max_old_space_size=8092 ./node_modules/@angular/cli/bin/ng build --prod",
