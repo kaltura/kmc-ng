@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
+import {KalturaMediaEntryFilter} from 'kaltura-ngx-client';
 
 @Component({
     selector: 'kCriteriaDuration',
@@ -36,16 +37,19 @@ export class CriteriaDurationComponent implements OnInit{
     public durationTime = 0;
     public durationTimeInterval = 'durationLessThanOrEqual';
 
-    @Input() set filter(value: any) {
+    private _filter: KalturaMediaEntryFilter;
+
+    @Input() set filter(value: KalturaMediaEntryFilter) {
         ['durationLessThanOrEqual', 'durationGreaterThan'].forEach(key => {
             if (value && value[key]) {
                 this.durationTimeInterval = key;
                 this.durationTime = value[key];
             }
         });
+        this._filter = value;
     }
     @Output() onDelete = new EventEmitter<string>();
-    @Output() onFilterChange = new EventEmitter<{field: string, value: any}>();
+    @Output() onFilterChange = new EventEmitter<KalturaMediaEntryFilter>();
 
     constructor(private _analytics: AppAnalytics, private _appLocalization: AppLocalization) {
     }
@@ -54,13 +58,17 @@ export class CriteriaDurationComponent implements OnInit{
     }
 
     public onCriteriaChange(): void {
-        const value = {};
-        value[this.durationTimeInterval] = this.durationTime;
+        delete this._filter['durationLessThanOrEqual'];
+        delete this._filter['durationGreaterThan'];
+        this._filter[this.durationTimeInterval] = this.durationTime;
         this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_criteria_duration_type', this.durationTimeInterval === 'durationLessThanOrEqual' ? 'shorter than' : 'longer than' , 'Automation_manager');
-        this.onFilterChange.emit({field: 'duration', value});
+        this.onFilterChange.emit(this._filter);
     }
 
     public delete(): void {
+        delete this._filter['durationLessThanOrEqual'];
+        delete this._filter['durationGreaterThan'];
+        this.onFilterChange.emit(this._filter);
         this.onDelete.emit('duration');
     }
 }

@@ -1,7 +1,13 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {KalturaCaptionAssetUsage, KalturaLanguage, KalturaNullableBoolean} from 'kaltura-ngx-client';
+import {
+    KalturaCaptionAssetUsage,
+    KalturaLanguage,
+    KalturaMediaEntryFilter,
+    KalturaNullableBoolean, KalturaSearchOperatorType
+} from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { AppAnalytics, ButtonType } from 'app-shared/kmc-shell';
+import { AppAnalytics } from 'app-shared/kmc-shell';
+import {KalturaSearchItem} from 'kaltura-ngx-client/lib/api/types/KalturaSearchItem';
 
 @Component({
     selector: 'kCriteriaCaptions',
@@ -52,25 +58,40 @@ export class CriteriaCaptionsComponent implements OnInit{
     public _hasAccuracy: boolean = false;
     public _accuracyRange = [0, 100];
 
-    @Input() set filter(value: any) {
+    private _filter: KalturaMediaEntryFilter;
+
+    @Input() set filter(value: KalturaMediaEntryFilter) {
+        const updateDataFromObject = (obj: any) => {
+            this.hasCaptions = obj.hasCaption === KalturaNullableBoolean.trueValue ? true : false;
+            this._language = obj['language'] || null;
+            if (obj['accuracyGreaterThanOrEqual'] !== undefined && obj['accuracyLessThanOrEqual'] !== undefined) {
+                this._hasAccuracy = true;
+                this._accuracyRange = [
+                    obj['accuracyGreaterThanOrEqual'],
+                    obj['accuracyLessThanOrEqual']
+                ];
+            }
+        }
         if (value['advancedSearch'] && value['advancedSearch']['items'] && value['advancedSearch']['items'].length) {
             value['advancedSearch']['items'].forEach((advancedSearch: any) => {
                 if (advancedSearch['objectType'] && advancedSearch['objectType'] === 'KalturaEntryCaptionAdvancedFilter' && advancedSearch["usage"] === KalturaCaptionAssetUsage.caption) {
-                    this.hasCaptions = advancedSearch.hasCaption === KalturaNullableBoolean.trueValue ? true : false;
-                    this._language = advancedSearch['language'] || null;
-                    if (advancedSearch['accuracyGreaterThanOrEqual'] !== undefined && advancedSearch['accuracyLessThanOrEqual'] !== undefined) {
-                        this._hasAccuracy = true;
-                        this._accuracyRange = [
-                            advancedSearch['accuracyGreaterThanOrEqual'],
-                            advancedSearch['accuracyLessThanOrEqual']
-                        ];
+                    updateDataFromObject(advancedSearch);
+                } else {
+                    if (advancedSearch.items?.length) {
+                        advancedSearch.items.forEach((item: any) => {
+                            if (item['objectType'] && item['objectType'] === 'KalturaEntryCaptionAdvancedFilter' && item["usage"] === KalturaCaptionAssetUsage.caption) {
+                                updateDataFromObject(item);
+                            }
+                        });
                     }
                 }
             });
         }
+        this._filter = value;
     }
+
     @Output() onDelete = new EventEmitter<string>();
-    @Output() onFilterChange = new EventEmitter<{field: string, value: any}>();
+    @Output() onFilterChange = new EventEmitter<KalturaMediaEntryFilter>();
 
     constructor(private _analytics: AppAnalytics,
                 private _appLocalization: AppLocalization) {
@@ -97,8 +118,21 @@ export class CriteriaCaptionsComponent implements OnInit{
         this._languages.unshift({ value: null, label: this._appLocalization.get('applications.settings.mr.criteria.anyLanguage') });
     }
 
-
     public onCriteriaChange(): void {
+        // check if filter already have advacedSearch and add it if not
+        if (!this._filter.advancedSearch) {
+            this._filter.advancedSearch = {
+                objectType: "KalturaSearchOperator",
+                type: KalturaSearchOperatorType.searchAnd,
+                items: []
+            } as any;
+        } else {
+            this.deleteCaptionsFromFilter();
+        }
+        const advancedSearch = (this._filter.advancedSearch as any).items;
+
+        const items: KalturaSearchItem[] = [];
+
         const value = {
             objectType: "KalturaEntryCaptionAdvancedFilter",
             hasCaption: this.hasCaptions ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue,
@@ -109,10 +143,39 @@ export class CriteriaCaptionsComponent implements OnInit{
             value['accuracyGreaterThanOrEqual'] = this._accuracyRange[0];
             value['accuracyLessThanOrEqual'] = this._accuracyRange[1];
         }
-        this.onFilterChange.emit({field: 'captions', value});
+
+        items.push(value as any);
+
+        advancedSearch.push({
+            objectType: "KalturaSearchOperator",
+            type: KalturaSearchOperatorType.searchOr,
+            items
+        });
+        this.onFilterChange.emit(this._filter);
+    }
+
+    private deleteCaptionsFromFilter(): void {
+        if ((this._filter.advancedSearch as any)?.items) {
+            (this._filter.advancedSearch as any).items = (this._filter.advancedSearch as any).items.filter((item: any) => {
+                // Keep only items that are not related to captions
+                if (item['usage'] === KalturaCaptionAssetUsage.caption) {
+                    return false; // Remove this item
+                }
+                // If the item has its own items array, filter it as well
+                if (item.items && item.items.length) {
+                    item.items = item.items.filter((subItem: any) => subItem['usage'] !== KalturaCaptionAssetUsage.caption);
+                }
+                if (item.items?.length === 0) {
+                    return false; // Remove the parent item if it has no sub-items left
+                }
+                return true; // Keep this item
+            });
+        }
     }
 
     public delete(): void {
+        this.deleteCaptionsFromFilter();
+        this.onFilterChange.emit(this._filter);
         this.onDelete.emit('captions');
     }
 

@@ -6,9 +6,9 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {AppAnalytics, BrowserService, ButtonType} from 'app-shared/kmc-shell';
 
-import {KMCPermissions} from 'app-shared/kmc-shared/kmc-permissions';
 import {subApplicationsConfig} from 'config/sub-applications';
 import {Action, RuleActionsComponent} from './actions/actions.component';
+import {KalturaMediaEntryFilter} from 'kaltura-ngx-client';
 
 @Component({
     selector: 'kMrRule',
@@ -219,7 +219,7 @@ export class RuleComponent implements OnInit {
         return  this._isDirty && this.rule.name.length > 0;
     }
 
-    public onCriteriaChange(filter: any): void {
+    public onCriteriaChange(filter: KalturaMediaEntryFilter): void {
         this.rule.objectFilter = filter;
         this._isDirty = true;
     }

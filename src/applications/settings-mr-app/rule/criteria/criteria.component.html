@@ -6,18 +6,20 @@
 
     <div *ngFor="let field of _criterias">
         <ng-container [ngSwitch]="true">
-            <kCriteriaCreated *ngSwitchCase="field === 'created'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaCreated>
-            <kCriteriaPlayed *ngSwitchCase="field === 'played'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaPlayed>
-            <kCriteriaDuration *ngSwitchCase="field === 'duration'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaDuration>
-            <kCriteriaPlays *ngSwitchCase="field === 'plays'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaPlays>
-            <kCriteriaCategories *ngSwitchCase="field === 'categories'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaCategories>
-            <kCriteriaTags *ngSwitchCase="field === 'tags'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaTags>
-            <kCriteriaAdminTags *ngSwitchCase="field === 'adminTags'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaAdminTags>
-            <kCriteriaMetadata *ngSwitchCase="field === 'metadata'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaMetadata>
-            <kCriteriaCaptions *ngSwitchCase="field === 'captions'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaCaptions>
-            <kCriteriaSAD *ngSwitchCase="field === 'sad'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaSAD>
-            <kCriteriaEAD *ngSwitchCase="field === 'ead'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaEAD>
-            <kCriteriaOwner *ngSwitchCase="field === 'owner'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onCriteriaChange($event)"></kCriteriaOwner>
+            <kCriteriaCreated *ngSwitchCase="field === 'created'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaCreated>
+            <kCriteriaPlayed *ngSwitchCase="field === 'played'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaPlayed>
+            <kCriteriaDuration *ngSwitchCase="field === 'duration'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaDuration>
+            <kCriteriaScheduling *ngSwitchCase="field === 'scheduling'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaScheduling>
+            <kCriteriaCategories *ngSwitchCase="field === 'categories'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaCategories>
+            <kCriteriaOwner *ngSwitchCase="field === 'owner'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaOwner>
+
+            <kCriteriaTags *ngSwitchCase="field === 'tags'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaTags>
+            <kCriteriaAdminTags *ngSwitchCase="field === 'adminTags'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaAdminTags>
+            <kCriteriaPlays *ngSwitchCase="field === 'plays'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaPlays>
+            <kCriteriaMetadata *ngSwitchCase="field === 'metadata'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaMetadata>
+            <kCriteriaCaptions *ngSwitchCase="field === 'captions'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaCaptions>
+            <kCriteriaEAD *ngSwitchCase="field === 'ead'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaEAD>
+            <kCriteriaSAD *ngSwitchCase="field === 'sad'" [filter]="_filter" (onDelete)="deleteCriteria($event)" (onFilterChange)="onFilterUpdated($event)"></kCriteriaSAD>
         </ng-container>
     </div>
 </div>

@@ -1,16 +1,17 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {
     KalturaClient,
-    KalturaFilterPager,
+    KalturaFilterPager, KalturaMediaEntryCompareAttribute, KalturaMediaEntryFilter,
     KalturaMetadataObjectType,
     KalturaMetadataProfile,
     KalturaMetadataProfileCreateMode,
-    KalturaMetadataProfileFilter,
+    KalturaMetadataProfileFilter, KalturaSearchConditionComparison, KalturaSearchOperatorType,
     MetadataProfileListAction
 } from 'kaltura-ngx-client';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
 import {MetadataItem, MetadataItemTypes, MetadataProfileParser} from 'app-shared/kmc-shared';
+import {KalturaSearchItem} from 'kaltura-ngx-client/lib/api/types/KalturaSearchItem';
 
 @Component({
     selector: 'kCriteriaMetadata',
@@ -85,7 +86,9 @@ export class CriteriaMetadataComponent implements OnDestroy, OnInit {
     public _error = false;
     public _parsingError = false;
 
-    @Input() set filter(value: any) {
+    private _filter: KalturaMediaEntryFilter;
+
+    @Input() set filter(value: KalturaMediaEntryFilter) {
         if (value['advancedSearch'] && value['advancedSearch']['items'] && value['advancedSearch']['items'].length) {
             value['advancedSearch']['items'].forEach((advancedSearch: any) => {
                 if (advancedSearch['objectType'] && advancedSearch['objectType'] === 'KalturaMetadataSearchItem' && advancedSearch.items?.length) {
@@ -94,12 +97,26 @@ export class CriteriaMetadataComponent implements OnDestroy, OnInit {
                     this._matchCondition = item['not'] === true ? 'notEquals' : 'equals';
                     this.savedFieldName = item['field'].split("'")[3];
                     this._value = item['value'];
+                } else {
+                    if (advancedSearch.items?.length) {
+                        advancedSearch.items.forEach((searchItem: any) => {
+                            if (searchItem['objectType'] && searchItem['objectType'] === 'KalturaMetadataSearchItem' && searchItem.items?.length) {
+                                this.savedSchemaId = searchItem.metadataProfileId;
+                                const item = searchItem.items[0];
+                                this._matchCondition = item['not'] === true ? 'notEquals' : 'equals';
+                                this.savedFieldName = item['field'].split("'")[3];
+                                this._value = item['value'];
+                            }
+                        });
+                    }
                 }
             });
+            this._filter = value;
         }
     }
+
     @Output() onDelete = new EventEmitter<string>();
-    @Output() onFilterChange = new EventEmitter<{field: string, value: any}>();
+    @Output() onFilterChange = new EventEmitter<KalturaMediaEntryFilter>();
 
     constructor(private _kalturaServerClient: KalturaClient,
                 private _analytics: AppAnalytics,
@@ -191,10 +208,20 @@ export class CriteriaMetadataComponent implements OnDestroy, OnInit {
     }
 
     public onCriteriaChange(): void {
-        if (this._selectedField === null || this._selectedSchema === null || this._value === '') {
-            return;
+        // check if filter already have advacedSearch and add it if not
+        if (!this._filter.advancedSearch) {
+            this._filter.advancedSearch = {
+                objectType: "KalturaSearchOperator",
+                type: KalturaSearchOperatorType.searchAnd,
+                items: []
+            } as any;
+        } else {
+            this.deleteMetadataFromFilter();
         }
-        const value = {
+        const advancedSearch = (this._filter.advancedSearch as any).items;
+
+        const items: KalturaSearchItem[] = [];
+        items.push({
             objectType: "KalturaMetadataSearchItem",
             metadataProfileId: this._selectedSchema.id,
             items: [
@@ -206,11 +233,37 @@ export class CriteriaMetadataComponent implements OnDestroy, OnInit {
                 }
             ]
 
-        };
-        this.onFilterChange.emit({field: 'metadata', value});
+        } as any);
+        advancedSearch.push({
+            objectType: "KalturaSearchOperator",
+            type: KalturaSearchOperatorType.searchOr,
+            items
+        });
+        this.onFilterChange.emit(this._filter);
+    }
+
+    private deleteMetadataFromFilter(): void {
+        if ((this._filter.advancedSearch as any)?.items) {
+            (this._filter.advancedSearch as any).items = (this._filter.advancedSearch as any).items.filter((item: any) => {
+                // Keep only items that are not related to metadata
+                if (item['objectType'] === "KalturaMetadataSearchItem") {
+                    return false; // Remove this item
+                }
+                // If the item has its own items array, filter it as well
+                if (item.items && item.items.length) {
+                    item.items = item.items.filter((subItem: any) => subItem['objectType'] !== "KalturaMetadataSearchItem");
+                }
+                if (item.items?.length === 0) {
+                    return false; // Remove the parent item if it has no sub-items left
+                }
+                return true; // Keep this item
+            });
+        }
     }
 
     public delete(): void {
+        this.deleteMetadataFromFilter();
+        this.onFilterChange.emit(this._filter);
         this.onDelete.emit('metadata');
     }
 
