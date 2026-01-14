@@ -88,6 +88,9 @@
     }
     .kDatePicker {
         margin-left: 16px;
+        ::ng-deep input {
+            width: 150px !important;
+        }
     }
     .kRadio {
         &:last-child {

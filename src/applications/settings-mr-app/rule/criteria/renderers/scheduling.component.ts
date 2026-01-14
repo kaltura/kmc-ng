@@ -18,10 +18,15 @@ import {subApplicationsConfig} from 'config/sub-applications';
             </div>
 
             <div class="kRow kCenter">
+                <span class="kLabel"></span>
+                <span>{{'applications.content.entryDetails.scheduling.note' | translate:_timeZone}}</span>
+            </div>
+
+            <div class="kRow kCenter">
                 <span class="kLabel">{{'applications.settings.mr.criteria.schedulingStart' | translate}}</span>
                 <p-checkbox class="kCheckbox row" label="" [(ngModel)]="_enableStartTime" (onChange)="onCriteriaChange()" binary="true"></p-checkbox>
                 <p-dropdown [options]="_startDateOptions" [style]="{'width':'180px'}" [(ngModel)]="_startDateOptionSelected" (ngModelChange)="onCriteriaChange()" [disabled]="!_enableStartTime"></p-dropdown>
-                <p-calendar class="kDatePicker" [(ngModel)]="startTime" [readonlyInput]="true" [showIcon]="true"
+                <p-calendar class="kDatePicker" [(ngModel)]="startTime" [readonlyInput]="true" [showIcon]="true" showTime="true"
                             [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_dateRange" [disabled]="!_enableStartTime"
                             [dateFormat]="_calendarFormat" icon="kIconcalendar" (onSelect)="onCriteriaChange()"></p-calendar>
             </div>
@@ -30,7 +35,7 @@ import {subApplicationsConfig} from 'config/sub-applications';
                 <span class="kLabel">{{'applications.settings.mr.criteria.schedulingEnd' | translate}}</span>
                 <p-checkbox class="kCheckbox row" label="" [(ngModel)]="_enableEndTime" (onChange)="onCriteriaChange()" binary="true"></p-checkbox>
                 <p-dropdown [options]="_endDateOptions" [style]="{'width':'180px'}" [(ngModel)]="_endDateOptionSelected" (ngModelChange)="onCriteriaChange()" [disabled]="!_enableEndTime"></p-dropdown>
-                <p-calendar class="kDatePicker" [(ngModel)]="endTime" [readonlyInput]="true" [showIcon]="true"
+                <p-calendar class="kDatePicker" [(ngModel)]="endTime" [readonlyInput]="true" [showIcon]="true" showTime="true"
                             [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_dateRange" [disabled]="!_enableEndTime"
                             [dateFormat]="_calendarFormat" icon="kIconcalendar" (onSelect)="onCriteriaChange()"></p-calendar>
             </div>
@@ -58,6 +63,7 @@ export class CriteriaSchedulingComponent implements OnInit{
 
     public startTime = new Date();
     public endTime = new Date();
+    public _timeZone: any = {};
 
     public _dateRange: string = subApplicationsConfig.shared.datesRange;
     public _calendarFormat = this._browserService.getCurrentDateFormat(true);
@@ -90,6 +96,7 @@ export class CriteriaSchedulingComponent implements OnInit{
     }
 
     ngOnInit(): void {
+        this.getTimeZone();
     }
 
     public onCriteriaChange(): void {
@@ -124,5 +131,12 @@ export class CriteriaSchedulingComponent implements OnInit{
         delete this._filter['endDateLessThanOrEqual'];
         this.onFilterChange.emit(this._filter);
         this.onDelete.emit('scheduling');
+    }
+
+    private getTimeZone() {
+        const now: any = new Date();
+        const zoneTimeOffset: number = (now.getTimezoneOffset() / 60) * (-1);
+        const ztStr: string = (zoneTimeOffset === 0) ? '' : (zoneTimeOffset > 0) ? ('+' + zoneTimeOffset) : (zoneTimeOffset.toString());
+        this._timeZone = { 0: ztStr };
     }
 }
