@@ -98,7 +98,7 @@ export class CriteriaComponent {
     public buildMenu(): void {
         this.items = [];
         const menuItemGroups = this.isLiveRule ? [{label: 'ownership_group', items: ['owner']}, {label: 'activity_group', items: ['created', 'played', 'plays', 'scheduling']}, {label: 'classification_group', items: ['categories', 'tags']}, {label: 'metadata_group', items: ['metadata', 'duration', 'adminTags']}] :
-            [{label: 'ownership_group', items: ['owner']}, {label: 'activity_group', items: ['created', 'played', 'plays', 'scheduling']}, {label: 'classification_group', items: ['categories', 'tags']}, {label: 'accessibility_group', items: ['captions', 'sad', 'ead']}, {label: 'metadata', items: ['metadata_group', 'duration', 'adminTags']}];
+            [{label: 'ownership_group', items: ['owner']}, {label: 'activity_group', items: ['created', 'played', 'plays', 'scheduling']}, {label: 'classification_group', items: ['categories', 'tags']}, {label: 'accessibility_group', items: ['captions', 'sad', 'ead']}, {label: 'metadata_group', items: ['metadata', 'duration', 'adminTags']}];
         menuItemGroups.forEach(menuItemGroup => {
             const criteria: MenuItem[] = [];
             menuItemGroup['items'].forEach(criteriaKey => {
