@@ -41,7 +41,7 @@ export class CriteriaComponent {
         if (this._filter.durationLessThanOrEqual || this._filter.durationGreaterThan) {
             this._criterias.push('duration');
         }
-        if (this._filter.startDateGreaterThanOrEqual || this._filter.startDateLessThanOrEqualOrNull || this._filter.endDateGreaterThanOrEqual || this._filter.endDateLessThanOrEqual) {
+        if (this._filter.startDateGreaterThanOrEqual || this._filter.startDateLessThanOrEqualOrNull || this._filter.startDateLessThanOrEqual || this._filter.endDateGreaterThanOrEqual || this._filter.endDateLessThanOrEqual) {
             this._criterias.push('scheduling');
         }
 

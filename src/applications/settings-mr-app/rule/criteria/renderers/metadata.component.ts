@@ -111,8 +111,8 @@ export class CriteriaMetadataComponent implements OnDestroy, OnInit {
                     }
                 }
             });
-            this._filter = value;
         }
+        this._filter = value;
     }
 
     @Output() onDelete = new EventEmitter<string>();
