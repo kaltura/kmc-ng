@@ -177,6 +177,49 @@ export class AppBootstrap implements CanActivate {
                         }
                     }
                 ]
+            },
+            {
+                widgetName: 'unisphere.widget.in-app-messaging',
+                runtimeName: 'engine',
+                settings: {
+                    analytics: {
+                        analyticsServerUrl: serverConfig.analyticsServer.uri,
+                        hostApplicationNumber: ApplicationType.KMC,
+                        hostApplicationVersion: globalConfig.client.appVersion
+                    },
+                    hostUser: {
+                        ks: this.auth.appUser.ks,
+                        partnerId: this.auth.appUser.partnerId.toString(),
+                        roles: [this.auth.appUser.userRole]
+                    },
+                },
+                visuals: [
+                    {
+                        type: "feedButton",
+                        settings: {
+                            predefined: { type: 'kmc' }
+                        },
+                        target: {
+                            target: 'element',
+                            elementId: 'announcements'
+                        }
+                    }
+                ]
+            },
+            {
+                widgetName: 'unisphere.widget.in-app-messaging',
+                runtimeName: 'consent',
+                settings: {
+                    _schemaVersion: '1',
+                    hostApp: 'KMC',
+                    kaltura: {
+                        analyticsServerURI: serverConfig.analyticsServer.uri,
+                        hostAppName: ApplicationType.KMC,
+                        hostAppVersion: globalConfig.client.appVersion,
+                    },
+                    ks: this.auth.appUser.ks,
+                    partnerId: this.auth.appUser.partnerId.toString(),
+                }
             }
         ];
         // load content lab and ai-consent runtimes only if user has content lab permissions
@@ -269,9 +312,10 @@ export class AppBootstrap implements CanActivate {
         loadUnisphereWorkspace(
             `${serverConfig.externalServices.unisphereLoaderEndpoint.uri}/loader/index.esm.js`,
             {
-                serverUrl:
-                serverConfig.externalServices.unisphereLoaderEndpoint.uri,
+                serverUrl: serverConfig.externalServices.unisphereLoaderEndpoint.uri,
                 application: "kmc",
+                appId: "KMC",
+                appVersion: globalConfig.client.appVersion,
                 workspaceVersion: "1.0.0",
                 runtimes,
                 ui: {
@@ -280,7 +324,7 @@ export class AppBootstrap implements CanActivate {
                     },
                     theme: "light",
                     language: "en",
-                },
+                }
             }
         ).then(
             (workspace: any) => {

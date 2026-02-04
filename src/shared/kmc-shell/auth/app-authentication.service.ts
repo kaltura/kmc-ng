@@ -344,6 +344,7 @@ export class AppAuthentication {
             fullName: user.fullName,
             firstName: user.firstName,
             lastName: user.lastName,
+            userRole: userRole.name,
             isAccountOwner: user.isAccountOwner,
             createdAt: user.createdAt,
             isAdmin: userRole.systemName === "Publisher Administrator",
