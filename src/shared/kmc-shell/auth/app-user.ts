@@ -32,6 +32,7 @@ export interface AppUser {
     firstName: string;
     lastName: string;
     isAdmin: boolean;
+    userRole: string;
     partnerInfo: PartnerInfo;
     createdAt: Date;
     publishersQuota: number;
