@@ -46,6 +46,9 @@
         "unisphereLoaderEndpoint": {
             "uri": "https://unisphere.nvp1.ovp.kaltura.com/v1"
         },
+        "agentsManagerEndpoint": {
+            "uri": "https://agents-manager.nvp1.ovp.kaltura.com/api/v1"
+        },
         "checklistEndpoint": {
             "checklistItem": "kmc-ng-v1",
             "scriptUri": "https://checklist-ui.nvp1.ovp.kaltura.com",

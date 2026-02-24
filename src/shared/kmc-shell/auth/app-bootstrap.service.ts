@@ -318,6 +318,10 @@ export class AppBootstrap implements CanActivate {
                 appVersion: globalConfig.client.appVersion,
                 workspaceVersion: "1.0.0",
                 runtimes,
+                session: {
+                    ks: this.auth.appUser.ks,
+                    partnerId: this.auth.appUser.partnerId.toString()
+                },
                 ui: {
                     bodyContainer: {
                         zIndex: 1000,
