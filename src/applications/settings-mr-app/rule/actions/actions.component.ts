@@ -5,6 +5,7 @@ import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {Task} from '../../mr-store/mr-store.service';
 import {ActionNotificationComponent} from './renderers';
 import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 
 export type Action = {
     type: 'flavours' | 'addCategory' | 'removeCategory' | 'addTags' | 'removeTags' | 'owner' | 'delete' | 'notificationHeadsUp' | 'notificationProfileScan' | 'notificationExecutionSummary' | 'agent' | '';
@@ -49,7 +50,9 @@ export class RuleActionsComponent implements OnInit {
 
     public _notifications = {};
 
-    constructor(private _analytics: AppAnalytics, private _appLocalization: AppLocalization) {
+    constructor(private _analytics: AppAnalytics,
+                private _appLocalization: AppLocalization,
+                private permissionsService: KMCPermissionsService) {
     }
 
     ngOnInit() {
@@ -116,15 +119,21 @@ export class RuleActionsComponent implements OnInit {
                     this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_actions_change_owner', null , 'Automation_manager');
                     this.addAction('owner');
                 }
-            },
-            {
-                label: this._appLocalization.get('applications.settings.mr.actions.agent'),
-                disabled: this.actions.filter(action => action.type === 'agent' || action.type === 'delete').length > 0,
-                command: () => {
-                    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_actions_trigger_agent', null , 'Automation_manager');
-                    this.addAction('agent');
+            }
+        ];
+        if (this.permissionsService.hasPermission(KMCPermissions.FEATURE_AGENTS_FRAMEWORK_PERMISSION)) {
+            this.items.push(
+                {
+                    label: this._appLocalization.get('applications.settings.mr.actions.agent'),
+                    disabled: this.actions.filter(action => action.type === 'agent' || action.type === 'delete').length > 0,
+                    command: () => {
+                        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'AM_actions_trigger_agent', null, 'Automation_manager');
+                        this.addAction('agent');
+                    }
                 }
-            },
+            );
+        }
+        this.items.push(
             {
                 label: this._appLocalization.get('applications.settings.mr.actions.delete'),
                 disabled: this.actions.filter(action => action.type === 'delete' || action.type === 'owner' || action.type === 'removeTags'
@@ -134,7 +143,7 @@ export class RuleActionsComponent implements OnInit {
                     this.addAction('delete');
                 }
             }
-        ];
+        );
     }
 
     private getActionType(task: Task): Action['type'] {
