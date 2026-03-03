@@ -3291,6 +3291,7 @@
                 },
                 "service": {
                     "captions": "Captions Service",
+                    "supportMessage": "Not all service parameters are currently supported by Reach vendors. If needed, contact your Kaltura representative.",
                     "format": "Default Caption Format",
                     "max": "Max Characters Per Caption Line",
                     "machine": "Auto Display Machine Captions On Player",
