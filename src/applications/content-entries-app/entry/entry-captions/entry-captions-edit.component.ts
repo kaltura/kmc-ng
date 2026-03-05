@@ -14,6 +14,7 @@ import { NewEntryCaptionFile } from './new-entry-caption-file';
 import { globalConfig } from 'config/global';
 import { LanguageOptionsService } from 'app-shared/kmc-shared/language-options';
 import { KalturaValidators } from '@kaltura-ng/kaltura-ui';
+import { isWebVttFile, validateWebVttFileForUi } from './webvtt-validator';
 
 @Component({
     selector: 'kEntryCaptionsEdit',
@@ -165,14 +166,40 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
   public _onFileSelected(selectedFiles: FileList) {
     if (selectedFiles && selectedFiles.length) {
       const file = selectedFiles[0];
-      if (this._validateFileSize(file)) {
-        this.fileToUpload = file;
-        this._uploadFileName = this.fileToUpload.name;
-      } else {
+      
+      // First validate file size
+      if (!this._validateFileSize(file)) {
         this._browserService.alert({
           header: this._appLocalization.get('app.common.attention'),
           message: this._appLocalization.get('applications.upload.validation.fileSizeExceeded')
         });
+        return;
+      }
+      
+      // For VTT files, validate content
+			if (isWebVttFile(file)) {
+				validateWebVttFileForUi(file)
+					.then((validation) => {
+						if (validation.valid) {
+							this.fileToUpload = file;
+							this._uploadFileName = this.fileToUpload.name;
+						} else {
+							this._browserService.alert({
+								header: this._appLocalization.get('app.common.attention'),
+								message: `Invalid WebVTT file:\n\n${validation.errorMessage}`
+							});
+						}
+					})
+					.catch(() => {
+						this._browserService.alert({
+							header: this._appLocalization.get('app.common.attention'),
+							message: 'Error reading file content. Please try again.'
+						});
+					});
+      } else {
+        // For non-VTT files, just accept them
+        this.fileToUpload = file;
+        this._uploadFileName = this.fileToUpload.name;
       }
     }
   }
