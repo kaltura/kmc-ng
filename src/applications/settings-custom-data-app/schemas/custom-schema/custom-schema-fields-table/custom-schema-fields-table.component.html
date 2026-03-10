@@ -48,9 +48,9 @@
                 </td>
                 <td>
                     <div class="kTitle kTableColumn"
-                         [kTooltip]="field.key"
+                         [kTooltip]="field.label"
                          (click)="_editField(field)">
-                        {{field.key}}
+                        {{field.label}}
                     </div>
                 </td>
                 <td [ngStyle]="{'width':'115px'}">{{field.type | kCustomSchemaTypePipe:'label'}}</td>
