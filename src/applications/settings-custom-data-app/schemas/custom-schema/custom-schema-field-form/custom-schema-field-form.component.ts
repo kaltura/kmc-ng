@@ -118,7 +118,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
       this._fieldForm.setValue({
         type: this._field.type,
         allowMultiple: this._field.allowMultiple,
-        label: this._field.key,
+        label: this._field.label,
         shortDescription: this._field.description,
         description: this._field.documentations,
         searchable: !!this._field.isSearchable,
@@ -198,8 +198,8 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
     const formValue = this._fieldForm.getRawValue();
     const { label, shortDescription, description, searchable, includeTime, listValues, required, hidden } = formValue;
 
-    if (this._field.key !== label) {
-      this._field.key = label;
+    if (this._field.label !== label) {
+      this._field.label = label;
     }
 
     if (this._field.description !== shortDescription) {
