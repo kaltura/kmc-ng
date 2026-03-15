@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { EntriesListComponent } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
-import {AppAnalytics, AppAuthentication, AppBootstrap, BrowserService, NewEntryUploadFile} from 'app-shared/kmc-shell';
+import { AppAnalytics, AppAuthentication, AppBootstrap, BrowserService, NewEntryUploadFile } from 'app-shared/kmc-shell';
 import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { AreaBlockerMessage, PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
@@ -19,11 +19,11 @@ import { AnalyticsNewMainViewService, ContentEntriesMainViewService } from 'app-
 import { ClearEntriesSelectionEvent } from 'app-shared/kmc-shared/events/clear-entries-selection-event';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 import { filter } from 'rxjs/operators';
-import {KalturaClient, KalturaMediaEntry, KalturaPlaylist, KalturaQuizOutputType, QuizGetUrlAction} from 'kaltura-ngx-client';
-import {PubSubServiceType} from '@unisphere/runtime';
-import {Observable} from 'rxjs';
-import {throwError as ObservableThrowError} from 'rxjs/internal/observable/throwError';
-import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import { KalturaCaptionAsset, KalturaClient, KalturaMediaEntry, KalturaPlaylist, KalturaQuizOutputType, QuizGetUrlAction } from 'kaltura-ngx-client';
+import { PubSubServiceType } from '@unisphere/runtime';
+import { Observable } from 'rxjs';
+import { throwError as ObservableThrowError } from 'rxjs/internal/observable/throwError';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -38,11 +38,13 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent, { static: true }) public _entriesList: EntriesListComponent;
   @ViewChild('liveDashboard', { static: true }) _liveDashboard: PopupWidgetComponent;
   @ViewChild('clipAndTrim', { static: true }) _clipAndTrimPopup: PopupWidgetComponent;
+  @ViewChild('editCaptionPopup', { static: true }) _editCaptionPopup: PopupWidgetComponent;
 
   public _entryId: string = null;
   public _blockerMessage: AreaBlockerMessage = null;
   public _contentLabAvailable = false;
   public _contentLabEntry: KalturaMediaEntry | null = null;
+  public _contentLabCaption: KalturaCaptionAsset | null = null;
 
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
@@ -168,7 +170,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
                   this.unisphereRuntime = unisphereWorkspace.getRuntime('unisphere.widget.content-lab', 'application');
                   if (this.unisphereRuntime) {
                       this.unsubscribeToUnisphereEvents = unisphereWorkspace.getService<PubSubServiceType>('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-lab.message-host-app', (data) => {
-                          const {action, entry} = data.payload;
+                          const {action, entry, caption} = data.payload;
                           switch (action) {
                               case 'entry':
                                   // navigate to entry
@@ -205,6 +207,13 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
                                   this.unisphereRuntime?.closeWidget(); // close widget
                                   document.body.style.overflowY = "auto";
                                   this._router.navigateByUrl(`/content/entries/entry/${entry.id}/captions`);
+                                  break;
+                              case 'editCaptions':
+                                  // open captions editor
+                                  this.unisphereRuntime?.closeWidget(); // close widget
+                                  document.body.style.overflowY = "auto";
+                                  this._contentLabCaption = caption;
+                                  this._editCaptionPopup.open();
                                   break;
                               case 'sharePlaylist':
                                   // open share & embed for playlist

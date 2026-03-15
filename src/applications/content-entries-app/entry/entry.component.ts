@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { KalturaEntryStatus, KalturaExternalMediaEntry, KalturaMediaEntry, KalturaMediaType, KalturaPlaylist, KalturaSourceType } from 'kaltura-ngx-client';
+import { KalturaCaptionAsset, KalturaEntryStatus, KalturaExternalMediaEntry, KalturaMediaEntry, KalturaMediaType, KalturaPlaylist, KalturaSourceType } from 'kaltura-ngx-client';
 import { ActionTypes, EntryStore, NotificationTypes } from './entry-store.service';
 import { EntrySectionsListWidget } from './entry-sections-list/entry-sections-list-widget.service';
 import { EntryMetadataWidget } from './entry-metadata/entry-metadata-widget.service';
@@ -30,7 +30,7 @@ import { CustomMenuItem } from 'app-shared/content-shared/entries/entries-list/e
 import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ContentEntriesAppService } from '../content-entries-app.service';
-import { AppAnalytics, ApplicationType, BrowserService } from 'app-shared/kmc-shell/providers';
+import { AppAnalytics, BrowserService } from 'app-shared/kmc-shell/providers';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AnalyticsNewMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { EntryQuizzeWidget } from './entry-quizzes/entry-quizzes-widget.service';
@@ -69,6 +69,7 @@ export class EntryComponent implements OnInit, OnDestroy {
     @ViewChild('clipAndTrim', { static: true }) _clipAndTrim: PopupWidgetComponent;
     @ViewChild('bulkActionsPopup', { static: true }) _bulkActionsPopup: PopupWidgetComponent;
     @ViewChild('entryPreview', { static: true }) _entryPreview: EntryPreview;
+    @ViewChild('editCaptionPopup', { static: true }) _editCaptionPopup: PopupWidgetComponent;
 	public _entryName: string;
 	public _entryType: KalturaMediaType;
 	public _sourceType: KalturaSourceType;
@@ -134,6 +135,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 
     private unisphereRuntime: any = null;
     public _contentLabSelectedQuiz: KalturaMediaEntry;
+    public _contentLabCaption: KalturaCaptionAsset | null = null;
     private unisphereCallbackUnsubscribe:  () => void = null;
 
 	constructor(entryWidgetsManager: EntryWidgetsManager,
@@ -486,7 +488,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                     this.unisphereRuntime = unisphereWorkspace.getRuntime('unisphere.widget.content-lab', 'application');
                     if (this.unisphereRuntime) {
                         this.unisphereCallbackUnsubscribe = unisphereWorkspace.getService<PubSubServiceType>('unisphere.service.pub-sub')?.subscribe('unisphere.event.module.content-lab.message-host-app', (data) => {
-                            const {action, entry} = data.payload;
+                            const {action, entry, caption} = data.payload;
                             switch (action) {
                                 case 'entry':
                                     // navigate to entry
@@ -505,6 +507,13 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     this.unisphereRuntime?.closeWidget(); // close widget
                                     document.body.style.overflowY = "auto";
                                     this._router.navigateByUrl(`/content/playlists/playlist/${entry.id}/content`);
+                                    break;
+                                case 'editCaptions':
+                                    // open captions editor
+                                    this.unisphereRuntime?.closeWidget(); // close widget
+                                    document.body.style.overflowY = "auto";
+                                    this._contentLabCaption = caption;
+                                    this._editCaptionPopup.open();
                                     break;
                                 case 'download':
                                     // download entry
