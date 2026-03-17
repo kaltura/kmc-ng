@@ -69,10 +69,3 @@
         <kDownloadEntry [entry]="_entryStore.entry" [parentPopupWidget]="bulkActionsPopup"></kDownloadEntry>
     </ng-template>
 </kPopupWidget>
-
-<kPopupWidget #editCaptionPopup data-aid="editCaptionPopup" [popupWidth]="586" [modal]="true">
-    <ng-template>
-        <kEntryCaptionsEdit [currentCaption]="_contentLabCaption" [ead]="_contentLabCaption.usage === '1'"
-                            [parentPopupWidget]="editCaptionPopup"></kEntryCaptionsEdit>
-    </ng-template>
-</kPopupWidget>
