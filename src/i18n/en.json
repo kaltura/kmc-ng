@@ -1711,6 +1711,7 @@
                     "anytime": "Anytime",
                     "range": "Specific range",
                     "note": "Note: Time Zone used is (GMT{{0}})",
+                    "invalid": "Criteria format has changed. Please delete this criteria and add it again in order to use it.",
                     "start": "Start Date",
                     "end": "End Date",
                     "clear": "Clear Dates",

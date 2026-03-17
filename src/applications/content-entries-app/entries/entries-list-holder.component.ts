@@ -38,11 +38,13 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent, { static: true }) public _entriesList: EntriesListComponent;
   @ViewChild('liveDashboard', { static: true }) _liveDashboard: PopupWidgetComponent;
   @ViewChild('clipAndTrim', { static: true }) _clipAndTrimPopup: PopupWidgetComponent;
+  @ViewChild('editCaptionPopup', { static: true }) _editCaptionPopup: PopupWidgetComponent;
 
   public _entryId: string = null;
   public _blockerMessage: AreaBlockerMessage = null;
   public _contentLabAvailable = false;
   public _contentLabEntry: KalturaMediaEntry | null = null;
+  public _contentLabCaption: KalturaCaptionAsset | null = null;
 
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },

@@ -74,6 +74,7 @@ export class EntryComponent implements OnInit, OnDestroy {
     @ViewChild('clipAndTrim', { static: true }) _clipAndTrim: PopupWidgetComponent;
     @ViewChild('bulkActionsPopup', { static: true }) _bulkActionsPopup: PopupWidgetComponent;
     @ViewChild('entryPreview', { static: true }) _entryPreview: EntryPreview;
+    @ViewChild('editCaptionPopup', { static: true }) _editCaptionPopup: PopupWidgetComponent;
 	public _entryName: string;
 	public _entryType: KalturaMediaType;
 	public _sourceType: KalturaSourceType;
@@ -139,6 +140,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 
     private unisphereRuntime: any = null;
     public _contentLabSelectedQuiz: KalturaMediaEntry;
+    public _contentLabCaption: KalturaCaptionAsset | null = null;
     private unisphereCallbackUnsubscribe:  () => void = null;
 
 	constructor(entryWidgetsManager: EntryWidgetsManager,
