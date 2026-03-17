@@ -212,8 +212,8 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
                                   // open captions editor
                                   this.unisphereRuntime?.closeWidget(); // close widget
                                   document.body.style.overflowY = "auto";
-                                  this._contentLabCaption = caption;
-                                  this._editCaptionPopup.open();
+                                  const captionId = caption.id;
+                                  this._reachAppViewService.open({ entry, page: ReachPages.caption, captionId });
                                   break;
                               case 'sharePlaylist':
                                   // open share & embed for playlist
