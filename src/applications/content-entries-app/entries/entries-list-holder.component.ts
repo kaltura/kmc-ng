@@ -38,13 +38,11 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent, { static: true }) public _entriesList: EntriesListComponent;
   @ViewChild('liveDashboard', { static: true }) _liveDashboard: PopupWidgetComponent;
   @ViewChild('clipAndTrim', { static: true }) _clipAndTrimPopup: PopupWidgetComponent;
-  @ViewChild('editCaptionPopup', { static: true }) _editCaptionPopup: PopupWidgetComponent;
 
   public _entryId: string = null;
   public _blockerMessage: AreaBlockerMessage = null;
   public _contentLabAvailable = false;
   public _contentLabEntry: KalturaMediaEntry | null = null;
-  public _contentLabCaption: KalturaCaptionAsset | null = null;
 
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
@@ -212,8 +210,8 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
                                   // open captions editor
                                   this.unisphereRuntime?.closeWidget(); // close widget
                                   document.body.style.overflowY = "auto";
-                                  this._contentLabCaption = caption;
-                                  this._editCaptionPopup.open();
+                                  const captionId = caption.id;
+                                  this._reachAppViewService.open({ entry, page: ReachPages.caption, captionId });
                                   break;
                               case 'sharePlaylist':
                                   // open share & embed for playlist

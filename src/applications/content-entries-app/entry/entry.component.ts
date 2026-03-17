@@ -23,7 +23,12 @@ import { EntriesStore } from 'app-shared/content-shared/entries/entries-store/en
 import { EntryDistributionWidget } from './entry-distribution/entry-distribution-widget.service';
 import { EntryAdvertisementsWidget } from './entry-advertisements/entry-advertisements-widget.service';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import {
+    ContentEntryViewSections,
+    ContentEntryViewService,
+    ReachAppViewService,
+    ReachPages
+} from 'app-shared/kmc-shared/kmc-views/details-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { ClipAndTrimAppViewService } from 'app-shared/kmc-shared/kmc-views/component-views';
 import { CustomMenuItem } from 'app-shared/content-shared/entries/entries-list/entries-list.component';
@@ -69,7 +74,6 @@ export class EntryComponent implements OnInit, OnDestroy {
     @ViewChild('clipAndTrim', { static: true }) _clipAndTrim: PopupWidgetComponent;
     @ViewChild('bulkActionsPopup', { static: true }) _bulkActionsPopup: PopupWidgetComponent;
     @ViewChild('entryPreview', { static: true }) _entryPreview: EntryPreview;
-    @ViewChild('editCaptionPopup', { static: true }) _editCaptionPopup: PopupWidgetComponent;
 	public _entryName: string;
 	public _entryType: KalturaMediaType;
 	public _sourceType: KalturaSourceType;
@@ -135,7 +139,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 
     private unisphereRuntime: any = null;
     public _contentLabSelectedQuiz: KalturaMediaEntry;
-    public _contentLabCaption: KalturaCaptionAsset | null = null;
     private unisphereCallbackUnsubscribe:  () => void = null;
 
 	constructor(entryWidgetsManager: EntryWidgetsManager,
@@ -170,6 +173,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                 private _analyticsNewMainViewService: AnalyticsNewMainViewService,
                 private _bootstrapService: AppBootstrap,
                 private _appAuthentication: AppAuthentication,
+                private _reachAppViewService: ReachAppViewService,
                 private _router: Router) {
 		entryWidgetsManager.registerWidgets([
 			widget1, widget2, widget3, widget4, widget5, widget6, widget7,
@@ -512,8 +516,8 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     // open captions editor
                                     this.unisphereRuntime?.closeWidget(); // close widget
                                     document.body.style.overflowY = "auto";
-                                    this._contentLabCaption = caption;
-                                    this._editCaptionPopup.open();
+                                    const captionId = caption.id;
+                                    this._reachAppViewService.open({ entry, page: ReachPages.caption, captionId });
                                     break;
                                 case 'download':
                                     // download entry
