@@ -36,6 +36,8 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { SharedModule } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { PlaylistsUtilsService } from './playlists-utils.service';
+import {CategoriesSelector} from './playlist/playlist-metadata/category-selector/categories-selector.component';
+import {CategoriesModule} from 'app-shared/content-shared/categories/categories.module';
 
 @NgModule({
     imports: [
@@ -71,8 +73,10 @@ import { PlaylistsUtilsService } from './playlists-utils.service';
       KMCPermissionsModule,
         KPTableModule,
         DateFormatModule,
+        CategoriesModule
   ],declarations: [
       ContentPlaylistsComponent,
+        CategoriesSelector,
       PlaylistsComponentsList,
       PlaylistComponentsList
     ],
