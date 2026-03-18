@@ -18,6 +18,7 @@ import { ContentPlaylistViewSections, ContentPlaylistViewService } from 'app-sha
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { AnalyticsNewMainViewService } from "app-shared/kmc-shared/kmc-views";
 import {PlaylistsUtilsService} from "../playlists-utils.service";
+import {PlaylistUsersWidget} from './playlist-users/playlist-users-widget.service';
 
 @Component({
   selector: 'kPlaylist',
@@ -30,7 +31,8 @@ import {PlaylistsUtilsService} from "../playlists-utils.service";
     PlaylistDetailsWidget,
     ManualContentWidget,
     PlaylistMetadataWidget,
-    RuleBasedContentWidget
+    RuleBasedContentWidget,
+    PlaylistUsersWidget
   ]
 })
 export class PlaylistComponent implements OnInit, OnDestroy {
@@ -67,11 +69,12 @@ export class PlaylistComponent implements OnInit, OnDestroy {
               widget3: ManualContentWidget,
               widget4: PlaylistMetadataWidget,
               widget5: RuleBasedContentWidget,
+              widget6: PlaylistUsersWidget,
               private _contentPlaylistView: ContentPlaylistViewService,
               private _analyticsNewMainViewService: AnalyticsNewMainViewService,
               private _router: Router,
               private _playlistRoute: ActivatedRoute) {
-    _playlistWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5])
+    _playlistWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5, widget6])
   }
 
   ngOnInit() {

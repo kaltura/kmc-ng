@@ -1,4 +1,5 @@
 export const PlaylistSections = {
   Metadata: 'Metadata',
-  Content: 'Content'
+  Content: 'Content',
+  Users: 'Users'
 };

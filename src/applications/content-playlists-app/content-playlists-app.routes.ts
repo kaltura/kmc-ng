@@ -6,6 +6,7 @@ import { PlaylistComponent } from './playlist/playlist.component';
 import { PlaylistMetadataComponent } from './playlist/playlist-metadata/playlist-metadata.component';
 import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.service';
 import { PlaylistContentComponent } from './playlist/playlist-content/playlist-content.component';
+import { PlaylistUsers } from './playlist/playlist-users/playlist-users.component';
 
 export const routing: Route[] = [
   {
@@ -21,10 +22,8 @@ export const routing: Route[] = [
         children: [
           { path: '', redirectTo: 'content', pathMatch: 'full' },
           { path: 'metadata', component: PlaylistMetadataComponent },
-          {
-            path: 'content',
-            component: PlaylistContentComponent
-          },
+          { path: 'content', component: PlaylistContentComponent },
+          { path: 'users', component: PlaylistUsers }
         ]
       }
     ]

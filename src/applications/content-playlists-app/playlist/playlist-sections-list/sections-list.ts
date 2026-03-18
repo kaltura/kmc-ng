@@ -12,5 +12,9 @@ export const SectionsList = [
   {
     label: 'applications.content.playlistDetails.sections.content',
     key: ContentPlaylistViewSections.ContentRuleBased
-  }
+  },
+    {
+        label : 'applications.content.entryDetails.sections.users',
+        key : ContentPlaylistViewSections.Users
+    }
 ];

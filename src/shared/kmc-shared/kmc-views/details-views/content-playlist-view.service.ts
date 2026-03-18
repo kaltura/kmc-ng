@@ -15,6 +15,7 @@ export enum ContentPlaylistViewSections {
     Metadata = 'Metadata',
     Content = 'Content',
     ContentRuleBased = 'ContentRuleBased',
+    Users = 'Users',
     ResolveFromActivatedRoute = 'ResolveFromActivatedRoute'
 }
 
@@ -70,6 +71,9 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
                     case 'metadata':
                         result = ContentPlaylistViewSections.Metadata;
                         break;
+                    case 'users':
+                        result = ContentPlaylistViewSections.Users;
+                        break;
                     default:
                         break;
                 }
@@ -90,6 +94,9 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
             case ContentPlaylistViewSections.Content:
             case ContentPlaylistViewSections.ContentRuleBased:
                 result = 'content';
+                break;
+            case ContentPlaylistViewSections.Users:
+                result = 'users';
                 break;
             case ContentPlaylistViewSections.Metadata:
             default:
@@ -112,6 +119,7 @@ export class ContentPlaylistViewService extends KmcDetailsViewBaseService<Conten
                 result = playlist.playlistType === KalturaPlaylistType.dynamic;
                 break;
             case ContentPlaylistViewSections.Metadata:
+            case ContentPlaylistViewSections.Users:
                 // metadata section is always available to the user.
                 // if you need to change this you will need to resolve at runtime
                 // the default section to open
