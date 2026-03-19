@@ -69,7 +69,7 @@
                 <ui id="matchFromDropWin" allowSetRefid="false" />
             </permission>
 
-            <permission text="Modify Entry's Category" id="CONTENT_MANAGE_ASSIGN_CATEGORIES">
+            <permission text="Modify Entry or Playlist’s Category" id="CONTENT_MANAGE_ASSIGN_CATEGORIES">
                 <ui id="entryMetaData" categoriesEditable="false"/>
                 <ui id="entryDrilldown" saveEnabled="false"/>
             </permission>

@@ -68,7 +68,7 @@ export const PermissionTreeNodes: PermissionTreeNode[] = [
       },
       {
         value: KMCPermissions.CONTENT_MANAGE_ASSIGN_CATEGORIES,
-        label: 'Modify Entry\'s Category'
+        label: 'Modify Entry or Playlist\’s Category'
       },
       {
         value: KMCPermissions.CONTENT_MANAGE_THUMBNAIL,
