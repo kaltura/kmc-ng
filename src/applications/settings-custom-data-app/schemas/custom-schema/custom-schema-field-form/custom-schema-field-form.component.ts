@@ -200,6 +200,7 @@ export class CustomSchemaFieldFormComponent implements OnInit, OnDestroy, AfterV
 
     if (this._field.key !== label) {
       this._field.key = label;
+      this._field.label = label;
     }
 
     if (this._field.description !== shortDescription) {
