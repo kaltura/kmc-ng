@@ -2665,6 +2665,7 @@
                 "userAssociated": "User with Id {{0}} already exists on the account. Do you want to enable KMC access to this user?",
                 "refresh": "Refresh",
                 "commonError": "Error happened during server request.",
+                "duplicatedUser": "Multiple users share this email. Please contact support to resolve duplicates.",
                 "addUserError": "Missing one of the mandatory fields",
                 "invalidUserId": "Invalid User id",
                 "remove": "Remove",
