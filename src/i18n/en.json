@@ -297,20 +297,20 @@
         "error": "Error connecting to server"
     },
     "contentLab": {
-        "buttonLabel": "Enhance your video",
+        "buttonLabel": "Create with Content Lab",
         "loading": "Loading...",
         "initializing": "Initializing...",
         "errors": {
             "NO_REACH_PROFILE": "Reach profile ID is missing. Please contact your Kaltura representative to enable AI creation",
             "NO_CATALOG_ITEMS": "No catalog items found. Please contact your Kaltura representative to enable AI creation",
             "NO_REACH_PERMISSION": "Please contact your Kaltura representative to enable AI creation",
-            "NO_CAPTIONS": "To create with AI, this entry must have captions",
-            "ENTRY_NOT_READY": "To create with AI, this entry must be ready",
-            "ENTRY_DURATION_LESS_THAN_MIN": "To create with AI, video duration must be at least 60 seconds",
-            "ENTRY_TYPE_NOT_SUPPORTED": "To create with AI, this entry must be of type video or audio",
-            "NO_RECORDING": "To create with AI, live entries must have a recording",
+            "NO_CAPTIONS": "To create with Content Lab, this entry must have captions",
+            "ENTRY_NOT_READY": "To create with Content Lab, this entry must be ready",
+            "ENTRY_DURATION_LESS_THAN_MIN": "To create with Content Lab, video duration must be at least 60 seconds",
+            "ENTRY_TYPE_NOT_SUPPORTED": "To create with Content Lab, this entry must be of type video or audio",
+            "NO_RECORDING": "To create with Content Lab, live entries must have a recording",
             "GENERAL_ERROR": "Something happened on our end and we couldn't proceed with your request",
-            "AI_CONSENT": "To create with AI, you must accept the terms and conditions"
+            "AI_CONSENT": "To create with Content Lab, you must accept the terms and conditions"
         }
     },
     "applications": {
