@@ -179,7 +179,8 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
     this._usersStore.isExternalUser(email)
         .pipe(cancelOnDestroy(this))
-        .subscribe((isExternal) => {
+        .subscribe((user: KalturaUser | null) => {
+            const isExternal = user !== null;
             this._usersStore.isUserAlreadyExists(email)
                 .pipe(cancelOnDestroy(this))
                 .subscribe((status) => {
@@ -210,10 +211,12 @@ export class EditUserComponent implements OnInit, OnDestroy {
                                 break;
                             case IsUserExistsStatuses.unknownUser:
                                 if (isExternal) {
-                                    this._browserService.alert({
-                                        header: this._appLocalization.get('app.common.attention'),
-                                        message: this._appLocalization.get('applications.administration.users.duplicatedUser', {0: email})
-                                    });
+                                    this._browserService.confirm({
+                                            header: this._appLocalization.get('applications.administration.users.alreadyExist'),
+                                            message: this._appLocalization.get('applications.administration.users.userAlreadyExist', {0: email}),
+                                            accept: () => this._associateUserToAccount(email, user)
+                                        }
+                                    );
                                 } else {
                                     this._createOrAssociateUser();
                                 }

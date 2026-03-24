@@ -254,7 +254,7 @@ export class UsersStore implements OnDestroy {
       }));
   }
 
-    public isExternalUser(email: string): Observable<boolean> {
+    public isExternalUser(email: string): Observable<KalturaUser | null> {
         const user = new KalturaESearchUserItem({
             fieldName: KalturaESearchUserFieldName.externalId,
             itemType: KalturaESearchItemType.exactMatch,
@@ -272,8 +272,8 @@ export class UsersStore implements OnDestroy {
         return this._kalturaServerClient.request(new ESearchSearchUserAction({ searchParams, pager }))
             .pipe(
                 cancelOnDestroy(this),
-                map(response => !!(response.objects && response.objects.length > 0)),
-                catchError(() => of(false))
+                map(response => response.objects?.length > 0 ? response.objects[0].object as KalturaUser : null),
+                catchError(() => of(null))
             );
     }
 
