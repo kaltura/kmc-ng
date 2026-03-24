@@ -60,7 +60,11 @@ export class ClipAndTrimAppViewService extends KmcComponentViewBaseService<ClipA
         const entryReady = entry.status === KalturaEntryStatus.ready;
         const isEntryReplacing = entry.replacementStatus && entry.replacementStatus !== KalturaEntryReplacementStatus.none;
         const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
-        const isEntryRelevant = [KalturaMediaType.video, KalturaMediaType.audio].indexOf(entry.mediaType) !== -1;
+
+        // TODO: swap the 2 lines below once KEA with Youtube editing support is released
+        const isEntryRelevant = [KalturaMediaType.video, KalturaMediaType.audio].indexOf(entry.mediaType) !== -1 && !isExternalMedia;
+        // const isEntryRelevant = [KalturaMediaType.video, KalturaMediaType.audio].indexOf(entry.mediaType) !== -1;
+
         const isLiveEntry = [
             KalturaMediaType.liveStreamFlash,
             KalturaMediaType.liveStreamWindowsMedia,
@@ -68,8 +72,13 @@ export class ClipAndTrimAppViewService extends KmcComponentViewBaseService<ClipA
             KalturaMediaType.liveStreamQuicktime
         ].indexOf(entry.mediaType) !== -1;
         const isAvailableForLive = isLiveEntry && !!(<KalturaLiveEntry>entry).recordedEntryId;
-        let isAvailableForMedia = !isLiveEntry && isEntryRelevant && entryReady && !isEntryReplacing;
-        isAvailableForMedia = isExternalMedia ? isAvailableForMedia : isAvailableForMedia  && hasSource;
+
+        // TODO: swap the next lines with the 2 lines below it once KEA with Youtube editing support is released
+        const isAvailableForMedia = !isLiveEntry && isEntryRelevant && hasSource && entryReady && !isEntryReplacing;
+        // let isAvailableForMedia = !isLiveEntry && isEntryRelevant && entryReady && !isEntryReplacing;
+        // isAvailableForMedia = isExternalMedia ? isAvailableForMedia : isAvailableForMedia  && hasSource;
+
+
         const result = isAvailableForMedia || isAvailableForLive;
 
         this._logger.trace(`conditions used to check availability status by data`, () => (
