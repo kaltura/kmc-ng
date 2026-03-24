@@ -116,13 +116,28 @@ export class BulkAddEditorsComponent implements OnInit, OnDestroy, AfterViewInit
                         itemType: KalturaESearchItemType.startsWith,
                         fieldName: KalturaESearchUserFieldName.userId,
                         searchTerm: event.query
+                    }),
+                    new KalturaESearchUserItem({
+                        itemType: KalturaESearchItemType.exactMatch,
+                        fieldName: KalturaESearchUserFieldName.email,
+                        searchTerm: event.query
+                    }),
+                    new KalturaESearchUserItem({
+                        itemType: KalturaESearchItemType.startsWith,
+                        fieldName: KalturaESearchUserFieldName.fullName,
+                        searchTerm: event.query
+                    }),
+                    new KalturaESearchUserItem({
+                        itemType: KalturaESearchItemType.partial,
+                        fieldName: KalturaESearchUserFieldName.fullName,
+                        searchTerm: event.query
                     })
                 ]
             })
         }),
         pager: new KalturaFilterPager({
             pageIndex : 0,
-            pageSize : 30
+            pageSize : 50
         })
     }))
       .pipe(cancelOnDestroy(this))
