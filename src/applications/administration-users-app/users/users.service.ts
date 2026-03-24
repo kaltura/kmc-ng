@@ -6,7 +6,15 @@ import { of } from 'rxjs';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { IsUserExistsStatuses } from './user-exists-statuses';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { KalturaAPIException, KalturaKeyValueExtended, KalturaUser, UserDemoteAdminAction, UserExportToCsvAction } from 'kaltura-ngx-client';
+import {
+    ESearchSearchUserAction,
+    KalturaAPIException, KalturaESearchItemType, KalturaESearchOperatorType, KalturaESearchUserFieldName,
+    KalturaESearchUserItem, KalturaESearchUserOperator, KalturaESearchUserParams,
+    KalturaKeyValueExtended, KalturaPager,
+    KalturaUser,
+    UserDemoteAdminAction,
+    UserExportToCsvAction
+} from 'kaltura-ngx-client';
 import { KalturaUserRole } from 'kaltura-ngx-client';
 import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import { UserRoleListAction } from 'kaltura-ngx-client';
@@ -245,6 +253,29 @@ export class UsersStore implements OnDestroy {
         return;
       }));
   }
+
+    public isExternalUser(email: string): Observable<KalturaUser | null> {
+        const user = new KalturaESearchUserItem({
+            fieldName: KalturaESearchUserFieldName.externalId,
+            itemType: KalturaESearchItemType.exactMatch,
+            searchTerm: email,
+        });
+        const searchAnd = new KalturaESearchUserOperator({
+            operator: KalturaESearchOperatorType.andOp,
+            searchItems: [user],
+        });
+        const searchParams = new KalturaESearchUserParams({
+            objectStatuses: KalturaUserStatus.active.toString(),
+            searchOperator: searchAnd,
+        });
+        const pager = new KalturaPager();
+        return this._kalturaServerClient.request(new ESearchSearchUserAction({ searchParams, pager }))
+            .pipe(
+                cancelOnDestroy(this),
+                map(response => response.objects?.length > 0 ? response.objects[0].object as KalturaUser : null),
+                catchError(() => of(null))
+            );
+    }
 
   public isUserAlreadyExists(email: string): Observable<IsUserExistsStatuses | null> {
     return this._kalturaServerClient

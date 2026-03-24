@@ -176,41 +176,72 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
     const { email } = this._userForm.value;
     this._isBusy = true;
-    this._usersStore.isUserAlreadyExists(email)
-      .pipe(cancelOnDestroy(this))
-      .subscribe((status) => {
-        this._isBusy = false;
 
-        if (status !== null) {
-            switch (status) {
-                case IsUserExistsStatuses.kmcUser:
-                    this._browserService.alert({
-                        header: this._appLocalization.get('app.common.attention'),
-                        message: this._appLocalization.get('applications.administration.users.alreadyExistError', {0: email})
-                    });
-                    break;
-                case IsUserExistsStatuses.otherKMCUser:
-                    this._browserService.confirm({
-                            header: this._appLocalization.get('applications.administration.users.alreadyExist'),
-                            message: this._appLocalization.get('applications.administration.users.userAlreadyExist', {0: email}),
-                            accept: () => this._createOrAssociateUser()
+    this._usersStore.isExternalUser(email)
+        .pipe(cancelOnDestroy(this))
+        .subscribe((user: KalturaUser | null) => {
+            const isExternal = user !== null;
+            this._usersStore.isUserAlreadyExists(email)
+                .pipe(cancelOnDestroy(this))
+                .subscribe((status) => {
+                    this._isBusy = false;
+
+                    if (status !== null) {
+                        switch (status) {
+                            case IsUserExistsStatuses.kmcUser:
+                                this._browserService.alert({
+                                    header: this._appLocalization.get('app.common.attention'),
+                                    message: this._appLocalization.get('applications.administration.users.alreadyExistError', {0: email})
+                                });
+                                break;
+                            case IsUserExistsStatuses.otherKMCUser:
+                                if (isExternal) {
+                                    this._browserService.alert({
+                                        header: this._appLocalization.get('app.common.attention'),
+                                        message: this._appLocalization.get('applications.administration.users.duplicatedUser', {0: email})
+                                    });
+                                } else {
+                                    this._browserService.confirm({
+                                            header: this._appLocalization.get('applications.administration.users.alreadyExist'),
+                                            message: this._appLocalization.get('applications.administration.users.userAlreadyExist', {0: email}),
+                                            accept: () => this._createOrAssociateUser()
+                                        }
+                                    );
+                                }
+                                break;
+                            case IsUserExistsStatuses.unknownUser:
+                                if (isExternal) {
+                                    this._browserService.confirm({
+                                            header: this._appLocalization.get('applications.administration.users.alreadyExist'),
+                                            message: this._appLocalization.get('applications.administration.users.userAlreadyExist', {0: email}),
+                                            accept: () => this._associateUserToAccount(email, user)
+                                        }
+                                    );
+                                } else {
+                                    this._createOrAssociateUser();
+                                }
+                                break;
                         }
-                    );
-                    break;
-                case IsUserExistsStatuses.unknownUser:
-                    this._createOrAssociateUser();
-                    break;
-            }
-        }else {
-            this._blockerMessage = new AreaBlockerMessage({
-                message: this._appLocalization.get('applications.administration.users.commonError'),
-                buttons: [{
-                    label: this._appLocalization.get('app.common.ok'),
-                    action: () => this._blockerMessage = null
-                }]
-            });
-        }
-      });
+                    } else {
+                        if (isExternal) {
+                            this._browserService.confirm({
+                                    header: this._appLocalization.get('applications.administration.users.alreadyExist'),
+                                    message: this._appLocalization.get('applications.administration.users.userAlreadyExist', {0: email}),
+                                    accept: () => this._createOrAssociateUser()
+                                }
+                            );
+                        } else {
+                            this._blockerMessage = new AreaBlockerMessage({
+                                message: this._appLocalization.get('applications.administration.users.commonError'),
+                                buttons: [{
+                                    label: this._appLocalization.get('app.common.ok'),
+                                    action: () => this._blockerMessage = null
+                                }]
+                            });
+                        }
+                    }
+                });
+        });
   }
 
   private _updateUser(): void {
