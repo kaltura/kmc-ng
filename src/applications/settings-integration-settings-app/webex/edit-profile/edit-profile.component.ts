@@ -11,13 +11,6 @@ import {
     KalturaUserType,
     UserListAction,
     KalturaWebexAPIIntegrationSetting,
-    ESearchSearchUserAction,
-    KalturaESearchUserParams,
-    KalturaESearchUserOperator,
-    KalturaESearchOperatorType,
-    KalturaESearchUserItem,
-    KalturaESearchItemType,
-    KalturaESearchUserFieldName,
     KalturaESearchUserResult
 } from 'kaltura-ngx-client';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -29,6 +22,7 @@ import { Observable } from "rxjs";
 import { CategoriesSearchService } from "app-shared/content-shared/categories/categories-search.service";
 import { BrowserService } from "app-shared/kmc-shell";
 import {KalturaWebexAPIUsersMatching} from "kaltura-ngx-client/lib/api/types/KalturaWebexAPIUsersMatching";
+import {buildUserSearchQuery} from 'app-shared/kmc-shared';
 
 @Component({
     selector: 'kWebexEditProfile',
@@ -425,41 +419,7 @@ export class EditWebexProfileComponent implements OnInit, OnDestroy {
             this._searchUsersSubscription = null;
         }
 
-        this._searchUsersSubscription = this._kalturaServerClient.request(
-            new ESearchSearchUserAction({
-                searchParams: new KalturaESearchUserParams({
-                    searchOperator: new KalturaESearchUserOperator({
-                        operator: KalturaESearchOperatorType.orOp,
-                        searchItems: [
-                            new KalturaESearchUserItem({
-                                itemType: KalturaESearchItemType.startsWith,
-                                fieldName: KalturaESearchUserFieldName.screenName,
-                                searchTerm: event.query
-                            }),
-                            new KalturaESearchUserItem({
-                                itemType: KalturaESearchItemType.startsWith,
-                                fieldName: KalturaESearchUserFieldName.firstName,
-                                searchTerm: event.query.split(" ")[0]
-                            }),
-                            new KalturaESearchUserItem({
-                                itemType: KalturaESearchItemType.partial,
-                                fieldName: KalturaESearchUserFieldName.lastName,
-                                searchTerm: event.query
-                            }),
-                            new KalturaESearchUserItem({
-                                itemType: KalturaESearchItemType.startsWith,
-                                fieldName: KalturaESearchUserFieldName.userId,
-                                searchTerm: event.query
-                            })
-                        ]
-                    })
-                }),
-                pager: new KalturaFilterPager({
-                    pageIndex : 0,
-                    pageSize : 30
-                })
-            })
-        )
+        this._searchUsersSubscription = this._kalturaServerClient.request(buildUserSearchQuery(event.query))
             .pipe(cancelOnDestroy(this))
             .subscribe(
                 data => {

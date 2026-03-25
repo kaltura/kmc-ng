@@ -4,21 +4,13 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs';
 import {
-    ESearchSearchUserAction,
     KalturaClient,
-    KalturaESearchUserItem,
-    KalturaESearchUserOperator,
-    KalturaFilterPager,
     KalturaMediaEntry,
     KalturaMultiRequest,
     KalturaMultiResponse,
     KalturaResponse,
     KalturaUser,
-    KalturaESearchOperatorType,
     UserGetAction,
-    KalturaESearchUserFieldName,
-    KalturaESearchUserParams,
-    KalturaESearchItemType,
     KalturaESearchUserResponse,
     KalturaESearchUserResult
 } from 'kaltura-ngx-client';
@@ -32,6 +24,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { merge, forkJoin } from 'rxjs';
 import { observeOn, map, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { buildUserSearchQuery } from 'app-shared/kmc-shared';
 
 @Injectable()
 export class EntryUsersWidget extends EntryWidget implements OnDestroy
@@ -273,66 +266,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 	{
 		return Observable.create(
 			observer => {
-				const requestSubscription: ISubscription = this._kalturaServerClient.request(
-                    new ESearchSearchUserAction({
-                        searchParams: new KalturaESearchUserParams({
-                            searchOperator: new KalturaESearchUserOperator({
-                                operator: KalturaESearchOperatorType.orOp,
-                                searchItems: [
-                                    new KalturaESearchUserItem({
-                                        itemType: KalturaESearchItemType.startsWith,
-                                        fieldName: KalturaESearchUserFieldName.screenName,
-                                        searchTerm: text
-                                    }),
-                                    new KalturaESearchUserItem({
-                                        itemType: KalturaESearchItemType.startsWith,
-                                        fieldName: KalturaESearchUserFieldName.firstName,
-                                        searchTerm: text.split(" ")[0]
-                                    }),
-                                    new KalturaESearchUserItem({
-                                        itemType: KalturaESearchItemType.partial,
-                                        fieldName: KalturaESearchUserFieldName.lastName,
-                                        searchTerm: text
-                                    }),
-                                    new KalturaESearchUserItem({
-                                        itemType: KalturaESearchItemType.startsWith,
-                                        fieldName: KalturaESearchUserFieldName.userId,
-                                        searchTerm: text
-                                    }),
-                                    new KalturaESearchUserItem({
-                                        itemType: KalturaESearchItemType.partial,
-                                        fieldName: KalturaESearchUserFieldName.screenName,
-                                        searchTerm: text
-                                    }),
-                                    new KalturaESearchUserItem({
-                                        itemType: KalturaESearchItemType.partial,
-                                        fieldName: KalturaESearchUserFieldName.userId,
-                                        searchTerm: text
-                                    }),
-                                    new KalturaESearchUserItem({
-                                        itemType: KalturaESearchItemType.exactMatch,
-                                        fieldName: KalturaESearchUserFieldName.email,
-                                        searchTerm: text
-                                    }),
-                                    new KalturaESearchUserItem({
-                                        itemType: KalturaESearchItemType.startsWith,
-                                        fieldName: KalturaESearchUserFieldName.fullName,
-                                        searchTerm: text
-                                    }),
-                                    new KalturaESearchUserItem({
-                                        itemType: KalturaESearchItemType.partial,
-                                        fieldName: KalturaESearchUserFieldName.fullName,
-                                        searchTerm: text
-                                    })
-                                ]
-                            })
-                        }),
-                        pager: new KalturaFilterPager({
-                            pageIndex : 0,
-                            pageSize : 50
-                        })
-                    })
-				)
+				const requestSubscription: ISubscription = this._kalturaServerClient.request(buildUserSearchQuery(text))
 				.pipe(cancelOnDestroy(this, this.widgetReset$))
 				.subscribe(
                     (result: KalturaESearchUserResponse) =>
