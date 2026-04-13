@@ -199,6 +199,7 @@ export class ActionNotificationComponent implements OnDestroy{
         this.action = JSON.parse(JSON.stringify(this.originalAction));
         this.loadUsers();
         this.sendToCustomUsers = this.action?.task?.taskParams?.sendNotificationTaskParams?.recipients?.userIds?.length > 0;
+        this.onActionChange.emit(this.action);
     }
 
     public onNotificationsSaved(): void {
