@@ -76,7 +76,7 @@ import {buildUserSearchQuery} from 'app-shared/kmc-shared';
                         <button type="button" class="kButtonDefault" (click)="this.revert();editPopup.close()" pButton
                                 label="{{'app.common.cancel' | translate}}"></button>
                         <button pButton type="button" class="kButtonBranded" [label]="'app.common.apply' | translate"
-                                (click)="this.validate();editPopup.close()"></button>
+                                (click)="this.validate();this.updateOriginalAction();editPopup.close()"></button>
                     </div>
                 </div>
             </ng-template>
@@ -206,6 +206,12 @@ export class ActionNotificationComponent implements OnDestroy{
             this.originalAction = JSON.parse(JSON.stringify(this.action));
             this.loadUsers();
             this.sendToCustomUsers = this.action?.task?.taskParams?.sendNotificationTaskParams?.recipients?.userIds?.length > 0;
+        }
+    }
+
+    public updateOriginalAction(): void {
+        if (this.action) {
+            this.originalAction = JSON.parse(JSON.stringify(this.action));
         }
     }
 
