@@ -220,6 +220,11 @@ export class AppBootstrap implements CanActivate {
                     ks: this.auth.appUser.ks,
                     partnerId: this.auth.appUser.partnerId.toString(),
                 }
+            },
+            {
+                widgetName: 'unisphere.widget.analytics',
+                runtimeName: 'dashboard',
+                settings: {}
             }
         ];
         // load content lab and ai-consent runtimes only if user has content lab permissions
