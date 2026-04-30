@@ -96,7 +96,8 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                 settings: {
                     dashboards: {
                         ['genie']: {
-                            id: ''
+                            id: '',
+                            allowSourceDrillDown: true
                         },
                     }
                 },

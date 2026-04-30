@@ -96,6 +96,7 @@ export class AppMenuComponent implements OnInit, OnDestroy {
             .subscribe((event) => {
                 if (event instanceof NavigationEnd) {
                     this.setSelectedRoute(event.urlAfterRedirects);
+                    this._agentsEnabled = event.urlAfterRedirects.indexOf('/analytics') === -1 && this._appPermissions.hasPermission(KMCPermissions.FEATURE_AGENTS_FRAMEWORK_PERMISSION);
                 }
             });
         this.menuConfig = this._kmcMainViews.getMenu();
@@ -124,7 +125,6 @@ export class AppMenuComponent implements OnInit, OnDestroy {
         }
         this._showStartPlan = partnerInfo.isSelfServe && this._appUserStatus ===  AppUserStatus.FreeTrialActive && !partnerInfo.isChildAccount;
         this._showNotificationsBar = partnerInfo.isSelfServe && !partnerInfo.isChildAccount && (this._appUserStatus ===  AppUserStatus.FreeTrialBlocked || this._appUserStatus ===  AppUserStatus.PaidBlocked);
-        this._agentsEnabled = this._appPermissions.hasPermission(KMCPermissions.FEATURE_AGENTS_FRAMEWORK_PERMISSION);
     }
 
     ngOnInit() {
