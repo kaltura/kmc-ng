@@ -14,7 +14,7 @@ import {PubSubServiceType} from '@unisphere/runtime';
 @Component({
     selector: 'kAnalyticsFrame',
     template: `<span *ngIf="!_initialized && !_isUnisphereAnalytics" class="kLoading">Loading...</span>
-                <iframe *ngIf="!_isUnisphereAnalytics" #analyticsFrame allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0px" [src]="_url | safe"></iframe>
+                <iframe [class.kHidden]="_isUnisphereAnalytics" #analyticsFrame allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0px" [src]="_url | safe"></iframe>
                 <div id="unisphereAnalyticsContainer"></div>`,
     styles: [
         ':host { display: block; width: 100%; height: 100%; }',
