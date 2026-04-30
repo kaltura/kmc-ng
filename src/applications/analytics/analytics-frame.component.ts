@@ -19,6 +19,7 @@ import {PubSubServiceType} from '@unisphere/runtime';
     styles: [
         ':host { display: block; width: 100%; height: 100%; }',
         'iframe { width: 100%; height: 100%; border: 0px; transition: height 0.3s; }',
+        '.kHidden { position: absolute; }',
         '.kLoading { display: block; padding: 12px; font-size: 16px; }'
     ],
     providers: [KalturaLogger.createLogger('AnalyticsFrameComponent')]
