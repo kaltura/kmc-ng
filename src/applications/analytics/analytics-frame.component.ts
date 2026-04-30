@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, Renderer2, Input } from '@angular/core';
 import { Router, NavigationEnd, Params, ActivatedRoute } from '@angular/router';
-import { AppAuthentication, ApplicationType } from 'shared/kmc-shell/index';
+import {AppAuthentication, AppBootstrap, ApplicationType} from 'shared/kmc-shell/index';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
@@ -9,10 +9,13 @@ import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { globalConfig } from 'config/global';
+import {PubSubServiceType} from '@unisphere/runtime';
 
 @Component({
     selector: 'kAnalyticsFrame',
-    template: '<span *ngIf="!_initialized" class="kLoading">Loading...</span><iframe #analyticsFrame allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0px" [src]="_url | safe"></iframe>',
+    template: `<span *ngIf="!_initialized && !_isUnisphereAnalytics" class="kLoading">Loading...</span>
+                <iframe *ngIf="!_isUnisphereAnalytics" #analyticsFrame allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0px" [src]="_url | safe"></iframe>
+                <div id="unisphereAnalyticsContainer"></div>`,
     styles: [
         ':host { display: block; width: 100%; height: 100%; }',
         'iframe { width: 100%; height: 100%; border: 0px; transition: height 0.3s; }',
@@ -39,22 +42,35 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     private _lastParams: any;
     private _analyticsDefaultPage = '/analytics/engagement';
     private _multiAccount: string = null;
+    private analyticsRuntime: any = null;
+    private routerSubscription: any = null;
+    private _unisphereAnalyticsVisualId: string | null = null;
+
+    public _isUnisphereAnalytics = false;
+    private unisphereAnalyticsLoaded = false;
 
     constructor(private appAuthentication: AppAuthentication,
                 private logger: KalturaLogger,
                 private router: Router,
                 private _route: ActivatedRoute,
                 private _appLocalization: AppLocalization,
+                private _bootstrapService: AppBootstrap,
                 private _browserService: BrowserService,
                 private renderer: Renderer2,
                 private _permissions: KMCPermissionsService,
                 private _loggerConfigurator: KmcLoggerConfigurator,
     ) {
-        router.events
+        this.routerSubscription = router.events
             .pipe(cancelOnDestroy(this))
             .subscribe((event) => {
                 if (event instanceof NavigationEnd)  {
                     const { url, queryParams } = this._browserService.getUrlWithoutParams(event.urlAfterRedirects);
+                    this._isUnisphereAnalytics = url === '/analytics/genie';
+                    if (this._isUnisphereAnalytics) {
+                        this.loadUnisphereAnalytics();
+                    } else {
+                        this.unloadUnisphereAnalytics();
+                    }
                     if (this._currentAppUrl !== url || (this._currentAppUrl === url && this._lastParams && this._lastParams.id && this._lastParams.id !== this._route.snapshot.queryParams['id'])) {
                         this._lastParams = this._route.snapshot.queryParams;
                         this.updateLayout(window.innerHeight - 54);
@@ -70,6 +86,33 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
                     }
                 }
             });
+    }
+
+    private loadUnisphereAnalytics(): void {
+        if (!this.unisphereAnalyticsLoaded && this.analyticsRuntime) {
+            this._unisphereAnalyticsVisualId = this.analyticsRuntime.mountVisual({
+                type: 'main',
+                target: 'unisphereAnalyticsContainer',
+                settings: {
+                    dashboards: {
+                        ['genie']: {
+                            id: '',
+                            allowSourceDrillDown: true
+                        },
+                    }
+                },
+            })?.id;
+            this.unisphereAnalyticsLoaded = true;
+        }
+    }
+
+    private unloadUnisphereAnalytics(): void {
+        if (this.unisphereAnalyticsLoaded && this.analyticsRuntime) {
+            if (this._unisphereAnalyticsVisualId) {
+                this.analyticsRuntime.unmountVisual(this._unisphereAnalyticsVisualId);
+            }
+            this.unisphereAnalyticsLoaded = false;
+        }
     }
 
     private sendMessageToAnalyticsApp(message: any): void{
@@ -190,11 +233,32 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
             }
         };
         this._addPostMessagesListener();
+
+        this._bootstrapService.unisphereWorkspace$
+            .pipe(cancelOnDestroy(this))
+            .subscribe(unisphereWorkspace => {
+                    if (unisphereWorkspace) {
+                        this.analyticsRuntime = unisphereWorkspace.getRuntime('unisphere.widget.analytics', 'dashboard');
+                        if (this._isUnisphereAnalytics) {
+                            this.loadUnisphereAnalytics();
+                        }
+                    }
+                },
+                error => {
+                    console.error('Error initializing Unisphere analytics runtime', error);
+                })
     }
 
     ngOnDestroy() {
         this._url = null;
         this._removePostMessagesListener();
+        if (this.routerSubscription) {
+            this.routerSubscription.unsubscribe();
+            this.routerSubscription = null;
+        }
+        if (this._isUnisphereAnalytics) {
+            this.unloadUnisphereAnalytics();
+        }
     }
 
     private _modalToggle(opened: boolean): void {

@@ -90,7 +90,8 @@
             "contributors": "Contributors",
             "live": "Live",
             "realtime": "Real-Time",
-            "agents": "Agents"
+            "agents": "Agents",
+            "genie": "Genie"
         },
         "userSettings": {
             "changeAccount": "Change Account",

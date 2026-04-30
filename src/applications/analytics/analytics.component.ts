@@ -5,6 +5,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { ResetMenuEvent, UpdateMenuEvent } from 'app-shared/kmc-shared/events';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 
 @Component({
     selector: 'kAnalytics',
@@ -19,6 +20,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
     constructor(private _appLocalization: AppLocalization,
                 private _appEvents: AppEventsService,
                 private _router: Router,
+                private permissionsService: KMCPermissionsService,
                 private _browserService: BrowserService,
                 private _analyticsNewView: AnalyticsNewMainViewService,
                 private _liveAnalyticsView: LiveAnalyticsMainViewService) {
@@ -136,6 +138,17 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                     this._router.navigateByUrl('/analytics/live');
                 },
                 menuTitle: this._appLocalization.get('app.titles.realtime'),
+            });
+        }
+
+        if (this.permissionsService.hasPermission(KMCPermissions.FEATURE_GENIE_PERMISSION)) {
+            this.menuConfig.push({
+                isAvailable: true,
+                isActiveView: (activePath: string) => (activePath.indexOf(`/analytics/genie`) !== -1),
+                open: () => {
+                    this._router.navigateByUrl('/analytics/genie');
+                },
+                menuTitle: this._appLocalization.get('app.titles.genie'),
             });
         }
     }
