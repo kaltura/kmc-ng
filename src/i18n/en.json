@@ -91,7 +91,7 @@
             "live": "Live",
             "realtime": "Real-Time",
             "agents": "Agents",
-            "genie": "Genie"
+            "genie": "Agents"
         },
         "userSettings": {
             "changeAccount": "Change Account",
