@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BrowserService } from 'app-shared/kmc-shell/providers';
+import { AppAnalytics, BrowserService} from 'app-shared/kmc-shell/providers';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Observable } from 'rxjs';
@@ -12,13 +12,18 @@ import { ManualContentWidget } from './playlist-content/manual/manual-content-wi
 import { PlaylistMetadataWidget } from './playlist-metadata/playlist-metadata-widget.service';
 import { PlaylistDetailsWidget } from './playlist-details/playlist-details-widget.service';
 import { RuleBasedContentWidget } from './playlist-content/rule-based/rule-based-content-widget.service';
-import {KalturaPlaylistType, KalturaSourceType} from 'kaltura-ngx-client';
+import {KalturaEntryStatus, KalturaPlaylistType, KalturaSourceType} from 'kaltura-ngx-client';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { ContentPlaylistViewSections, ContentPlaylistViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import { AnalyticsNewMainViewService } from "app-shared/kmc-shared/kmc-views";
 import {PlaylistsUtilsService} from "../playlists-utils.service";
 import {PlaylistUsersWidget} from './playlist-users/playlist-users-widget.service';
+import {PreviewAndEmbedEvent} from 'app-shared/kmc-shared/events';
+import {ClipAndTrimAppViewService} from 'app-shared/kmc-shared/kmc-views/component-views';
+import {AppAuthentication} from 'app-shared/kmc-shell';
+import {PreviewEmbedService} from '../../preview-and-embed/preview-and-embed.service';
+import {AppEventsService} from 'app-shared/kmc-shared';
 
 @Component({
   selector: 'kPlaylist',
@@ -43,6 +48,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   public _areaBlockerMessage: AreaBlockerMessage;
   public isValid = true;
   public isDirty = true;
+    public _isReady = false;
   public _isRapt = false;
   public _isManual = false;
   public _isRuleBased = false;
@@ -50,6 +56,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   public _analyticsAllowed = false;
   public _enablePrevButton: boolean;
   public _enableNextButton: boolean;
+  public _embedLabel = '';
 
     public get _enableSaveBtn(): boolean {
         const hasUpdatePermission = this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_UPDATE);
@@ -73,12 +80,20 @@ export class PlaylistComponent implements OnInit, OnDestroy {
               private _contentPlaylistView: ContentPlaylistViewService,
               private _analyticsNewMainViewService: AnalyticsNewMainViewService,
               private _router: Router,
+              private _analytics: AppAnalytics,
+              private _appEvents: AppEventsService,
               private _playlistRoute: ActivatedRoute) {
     _playlistWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5, widget6])
   }
 
   ngOnInit() {
     let errorMessage;
+
+      this._embedLabel = this._appLocalization.get('applications.content.table.previewAndEmbed');
+      const hasEmbedPermission = this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_EMBED_CODE);
+      if (!hasEmbedPermission) {
+          this._embedLabel = this._appLocalization.get('applications.content.table.previewInPlayer');
+      }
 
       this._playlistStore.notifications$
           .pipe(cancelOnDestroy(this))
@@ -122,6 +137,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
               case ActionTypes.PlaylistLoaded:
                 this._playlistName = this._playlistStore.playlist.name;
+                this._isReady = this._playlistStore.playlist.status === KalturaEntryStatus.ready;
                 this._isRapt = this._playlistsUtilsService.isRapt(this._playlistStore.playlist);
                 this._isPath = this._playlistsUtilsService.isPath(this._playlistStore.playlist);
                 this._isManual = this._playlistsUtilsService.isManual(this._playlistStore.playlist);
@@ -264,6 +280,11 @@ export class PlaylistComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+    openPreviewAndEmbed() {
+        this._analytics.trackClickEvent('Share_Embed_playlist');
+        this._appEvents.publish(new PreviewAndEmbedEvent(this._playlistStore.playlist));
+    }
 
   public canLeave(): Observable<{ allowed: boolean }> {
     return this._playlistStore.canLeaveWithoutSaving();

@@ -1,3 +1,4 @@
+@import 'app-theme/_variables.scss';
 :host ::ng-deep span.p-button-icon-left.pi-kIconarrow_forward, :host ::ng-deep span.p-button-icon-left.pi-kIconarrow_backward {
 	margin-left: -.5em;
 }
@@ -11,6 +12,39 @@
 	box-sizing: border-box;
 	box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.2);
 	width: 100% !important;
+}
+.kShare{
+    display: flex;
+    align-items: center;
+    height: 60px;
+    flex-shrink: 0;
+    border-radius: 3px;
+    padding: 16px;
+    margin-bottom: 4px;
+    box-sizing: border-box;
+    background-color: white;
+    i {
+        cursor: pointer;
+        color: $kGrayscale3;
+        margin-right: 8px;
+        font-size: 24px;
+    }
+    a {
+        cursor: pointer;
+        color: $kGrayscale1;
+        white-space: nowrap;
+        text-decoration: none;
+        &:hover:not(.disabled){
+            color: #000000;
+        }
+        &:active:not(.disabled){
+            color: $kGrayscale2;
+        }
+    }
+    .kLink{
+        display: flex;
+        align-items: center;
+    }
 }
 .kSections{
 	height: 100%;

@@ -232,6 +232,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   public _onActionSelected(event: { action: string, playlist: KalturaPlaylist }): void {
       switch (event.action) {
           case 'preview':
+              this._analytics.trackClickEvent('Share_Embed_playlist');
               this._appEvents.publish(new PreviewAndEmbedEvent(event.playlist));
               break;
           case 'view':

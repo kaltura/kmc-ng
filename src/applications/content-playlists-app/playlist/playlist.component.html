@@ -26,6 +26,13 @@
 			</div>
 			<div class="kDetailsMain">
 				<div class="kSections">
+                    <div class="kShare" *ngIf="!_isPath && !_isRapt && _isReady">
+                        <div class="kLink" (click)="openPreviewAndEmbed()">
+                            <i class="kIconShare"></i>
+                            <a>{{_embedLabel}}</a>
+                        </div>
+                    </div>
+
 					<kPlaylistSectionsList></kPlaylistSectionsList>
 				</div>
 				<div class="kDetailsContent">
