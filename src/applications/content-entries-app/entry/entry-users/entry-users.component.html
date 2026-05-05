@@ -9,10 +9,7 @@
                 </div>
                 <div class="kRow">
                     <span class="kLabels">{{'applications.content.entryDetails.users.owner' | translate}}</span>
-                    <span
-                        [kTooltip]="_widgetService._owner?.screenName ? _widgetService._owner?.screenName : _widgetService._owner?.id">
-            {{_widgetService._owner?.screenName ? _widgetService._owner?.screenName : _widgetService._owner?.id}}
-          </span>
+                    <span [kTooltip]="_getFriendlyUserName(_widgetService._owner)">{{_getFriendlyUserName(_widgetService._owner)}}</span>
                     <a class="changeOwner"
                        *ngIf="_kmcPermissions.CONTENT_MANAGE_ENTRY_USERS | kNgIfPermitted"
                        (click)="_openChangeOwner()">{{'applications.content.entryDetails.users.changeOwner' | translate}}</a>
@@ -25,7 +22,7 @@
                                    suggestionLabelField="name"
                                    [tooltipResolver]="'__tooltip'"
                                    [classField]="'__class'"
-                                   field="id"
+                                   [field]="getField"
                                    [allowMultiple]="true"
                                    [onItemAdding]="_convertUserInputToValidValue"
                                    [limitToSuggestions]="true"
@@ -40,7 +37,7 @@
                     <kAutoComplete formControlName="publishers"
                                    suggestionItemField="item"
                                    suggestionLabelField="name"
-                                   field="id"
+                                   [field]="getField"
                                    [allowMultiple]="true"
                                    [tooltipResolver]="'__tooltip'"
                                    [classField]="'__class'"
@@ -57,7 +54,7 @@
                     <kAutoComplete formControlName="viewers"
                                    suggestionItemField="item"
                                    suggestionLabelField="name"
-                                   field="id"
+                                   [field]="getField"
                                    [allowMultiple]="true"
                                    [tooltipResolver]="'__tooltip'"
                                    [classField]="'__class'"
@@ -85,7 +82,7 @@
                         <kAutoComplete formControlName="owners"
                                        suggestionItemField="item"
                                        suggestionLabelField="name"
-                                       field="screenName"
+                                       [field]="getField"
                                        [onItemAdding]="_convertUserInputToValidValue"
                                        [allowMultiple]="false"
                                        [tooltipResolver]="'__tooltip'"

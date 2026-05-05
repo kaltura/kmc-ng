@@ -2,7 +2,7 @@ import {
     ESearchSearchUserAction, KalturaESearchItemType,
     KalturaESearchOperatorType, KalturaESearchUserFieldName, KalturaESearchUserItem,
     KalturaESearchUserOperator,
-    KalturaESearchUserParams, KalturaFilterPager
+    KalturaESearchUserParams, KalturaFilterPager, KalturaUser
 } from 'kaltura-ngx-client';
 
 export const buildUserSearchQuery = (text: string) => {
@@ -64,4 +64,25 @@ export const buildUserSearchQuery = (text: string) => {
             pageSize : 50
         })
     });
+}
+export const isHashed = (str: string): boolean => {
+    const regex = /^[a-z0-9]{64}$/;
+    return regex.test(str);
+}
+
+export const getFriendlyUserName = (user: KalturaUser | null): string => {
+    if (!user) {
+        return '';
+    }
+    let userName = '';
+    if (user.fullName && !isHashed(user.fullName)) {
+        return user.fullName;
+    } else if (user.screenName && !isHashed(user.screenName)) {
+        return user.screenName;
+    } else if (user.id && !isHashed(user.id)) {
+        return user.id;
+    } if (user.email && !isHashed(user.email)) {
+        return  user.email;
+    }
+    return userName;
 }
