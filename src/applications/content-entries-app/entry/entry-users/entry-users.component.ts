@@ -8,7 +8,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { EntryUsersWidget } from './entry-users-widget.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-import {getFriendlyUserName, isHashed} from 'app-shared/kmc-shared';
+import { isHashed } from 'app-shared/kmc-shared';
 
 @Component({
   selector: 'kEntryUsers',
@@ -23,7 +23,6 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 	public _usersProvider = new Subject<SuggestionsProviderData>();
 	public _kmcPermissions = KMCPermissions;
 	public _disableSaveButton = true;
-    public _getFriendlyUserName = getFriendlyUserName;
 
 	constructor(public _widgetService: EntryUsersWidget,
               private _appLocalization: AppLocalization,
@@ -63,8 +62,8 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
       }
     }
 
-    public getField(value: KalturaUser): string  {
-        return isHashed(value['id']) ? value['fullName'] || value['email'] || value['screenName'] : value['id'];
+    public getUnhashedField(value: KalturaUser): string  {
+        return isHashed(value['id']) ? value['email'] || value['fullName'] || value['screenName'] : value['id'];
     };
 
 	public _convertUserInputToValidValue(value : string) : any {
@@ -98,7 +97,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 		this._searchUsersSubscription = this._widgetService.searchUsers(event.query).subscribe(data => {
 				const suggestions = [];
 				(data || []).forEach((suggestedUser: KalturaUser) => {
-                    suggestedUser['__tooltip'] = getFriendlyUserName(suggestedUser);
+                    suggestedUser['__tooltip'] = this.getUnhashedField(suggestedUser);
 					let isSelectable = true;
 					if (formControl){
 						const owners = this._widgetService.usersForm.value[formControl] || [];
@@ -107,7 +106,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 						});
 					}
 					suggestions.push({
-                        name: `${getFriendlyUserName(suggestedUser)} (${suggestedUser.id})`,
+                        name: `${this.getUnhashedField(suggestedUser)} (${suggestedUser.id})`,
 						item: suggestedUser,
 						isSelectable: isSelectable
 					});

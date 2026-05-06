@@ -24,14 +24,13 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { merge, forkJoin } from 'rxjs';
 import { observeOn, map, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
-import {buildUserSearchQuery, getFriendlyUserName} from 'app-shared/kmc-shared';
+import { buildUserSearchQuery } from 'app-shared/kmc-shared';
 
 @Injectable()
 export class EntryUsersWidget extends EntryWidget implements OnDestroy
 {
 
-    public _creator: string = "";
-    public _ownerName: string = "";
+    public _creator: KalturaUser = null;
 	public _owner: KalturaUser = null;
 
 	public usersForm : FormGroup;
@@ -112,8 +111,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
      */
     protected onReset()
     {
-	    this._creator = "";
-        this._ownerName = "";
+	    this._creator = null;
 	    this._owner = null;
 	    this.usersForm.reset({
 		    owners: [],
@@ -133,8 +131,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
       }
 
         if (!this.data.creatorId && !this.data.userId) {
-            this._creator = '';
-            this._ownerName = '';
+            this._creator = new KalturaUser({ screenName: '' });
             this._owner = new KalturaUser({ screenName: '' });
         } else {
             const getUserActions = [];
@@ -155,15 +152,12 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
                 .pipe(cancelOnDestroy(this, this.widgetReset$))
                 .pipe(map((responses: KalturaMultiResponse) => {
                     if (responses.hasErrors()) {
-                        this._creator = this.data.creatorId;
-                        this._ownerName = this.data.userId;
                         this._owner = new KalturaUser({ screenName: this.data.userId });
                     } else {
                         const creatorResponse = responses.find((item: KalturaResponse<KalturaUser>) => item.result.id === this.data.creatorId);
                         const ownerResponse = responses.find((item: KalturaResponse<KalturaUser>) => item.result.id === this.data.userId);
 
-                        this._creator = getFriendlyUserName(creatorResponse.result);
-                        this._ownerName = getFriendlyUserName(ownerResponse.result);
+                        this._creator = creatorResponse ? creatorResponse.result : new KalturaUser({ screenName: this.data.userId });
                         this._owner = ownerResponse ? ownerResponse.result : new KalturaUser({ screenName: this.data.userId });
                     }
 
