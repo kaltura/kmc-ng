@@ -3,7 +3,7 @@
         <span class="kTitle">{{'applications.content.bulkActions.addViewers' | translate}}</span>
         <div class="kViewers">
             <span class="kLabel">{{'applications.content.bulkActions.addViewersLabel' | translate}}</span>
-            <kAutoComplete field="screenName"
+            <kAutoComplete [field]="getUnhashedField"
                            suggestionItemField="item"
                            suggestionLabelField="name"
                            suggestionSelectableField="isSelectable"

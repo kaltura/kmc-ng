@@ -7,7 +7,7 @@
                      suggestionItemField="item"
                      suggestionSelectableField="isSelectable"
                      suggestionLabelField="name"
-                     field="screenName"
+                     [field]="getUnhashedField"
                      [tooltipResolver]="'__tooltip'"
                      [classField]="'__class'"
                      [allowMultiple]="true"

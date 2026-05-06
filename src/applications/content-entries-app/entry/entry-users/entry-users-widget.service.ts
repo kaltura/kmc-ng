@@ -152,12 +152,13 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
                 .pipe(cancelOnDestroy(this, this.widgetReset$))
                 .pipe(map((responses: KalturaMultiResponse) => {
                     if (responses.hasErrors()) {
+                        this._creator = new KalturaUser({ screenName: this.data.creatorId });
                         this._owner = new KalturaUser({ screenName: this.data.userId });
                     } else {
                         const creatorResponse = responses.find((item: KalturaResponse<KalturaUser>) => item.result.id === this.data.creatorId);
                         const ownerResponse = responses.find((item: KalturaResponse<KalturaUser>) => item.result.id === this.data.userId);
 
-                        this._creator = creatorResponse ? creatorResponse.result : new KalturaUser({ screenName: this.data.userId });
+                        this._creator = creatorResponse ? creatorResponse.result : new KalturaUser({ screenName: this.data.creatorId });
                         this._owner = ownerResponse ? ownerResponse.result : new KalturaUser({ screenName: this.data.userId });
                     }
 

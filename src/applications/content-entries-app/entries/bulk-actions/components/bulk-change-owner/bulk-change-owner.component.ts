@@ -10,7 +10,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { KalturaUser } from 'kaltura-ngx-client';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
-import { buildUserSearchQuery } from 'app-shared/kmc-shared';
+import {buildUserSearchQuery, isHashed} from 'app-shared/kmc-shared';
 
 @Component({
 	selector: 'kBulkChangeOwner',
@@ -73,6 +73,10 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
 		this._parentPopupStateChangeSubscribe.unsubscribe();
 	}
 
+    public getUnhashedField(value: KalturaUser): string  {
+        return isHashed(value['id']) ? value['email'] || value['fullName'] || value['screenName'] : value['id'];
+    };
+
 	public _searchUsers(event): void {
 		this._usersProvider.next({suggestions: [], isLoading: true});
 
@@ -92,9 +96,9 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
                         data.objects.forEach((res: KalturaESearchUserResult) => users.push(res.object))
                     }
 					users.forEach((suggestedUser: KalturaUser) => {
-                        suggestedUser['__tooltip'] = suggestedUser.id;
+                        suggestedUser['__tooltip'] = this.getUnhashedField(suggestedUser);
 						suggestions.push({
-                            name: `${suggestedUser.screenName} (${suggestedUser.id})`,
+                            name: `${this.getUnhashedField(suggestedUser)} (${suggestedUser.id})`,
 							item: suggestedUser,
 							isSelectable: true
 						});

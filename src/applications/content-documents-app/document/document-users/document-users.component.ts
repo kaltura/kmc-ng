@@ -8,7 +8,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { DocumentUsersWidget } from './document-users-widget.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-
+import { isHashed } from 'app-shared/kmc-shared';
 
 @Component({
   selector: 'kDocumentUsers',
@@ -42,6 +42,10 @@ export class DocumentUsers implements AfterViewInit, OnInit, OnDestroy {
 
     ngAfterViewInit() {
     }
+
+    public getUnhashedField(value: KalturaUser): string  {
+        return isHashed(value['id']) ? value['email'] || value['fullName'] || value['screenName'] : value['id'];
+    };
 
     public _openChangeOwner(): void {
       this._disableSaveButton = true;
@@ -93,7 +97,7 @@ export class DocumentUsers implements AfterViewInit, OnInit, OnDestroy {
 		this._searchUsersSubscription = this._widgetService.searchUsers(event.query).subscribe(data => {
 				const suggestions = [];
 				(data || []).forEach((suggestedUser: KalturaUser) => {
-                    suggestedUser['__tooltip'] = suggestedUser.id;
+                    suggestedUser['__tooltip'] = this.getUnhashedField(suggestedUser);
 					let isSelectable = true;
 					if (formControl){
 						const owners = this._widgetService.usersForm.value[formControl] || [];
@@ -102,7 +106,7 @@ export class DocumentUsers implements AfterViewInit, OnInit, OnDestroy {
 						});
 					}
 					suggestions.push({
-                        name: `${suggestedUser.screenName} (${suggestedUser.id})`,
+                        name: `${this.getUnhashedField(suggestedUser)} (${suggestedUser.id})`,
 						item: suggestedUser,
 						isSelectable: isSelectable
 					});
