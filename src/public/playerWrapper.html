@@ -108,10 +108,17 @@
                                               kPlayer['loadMedia']({entryId: embedParams.embedParameters.entry_id});
                                           }
                                       } else {
-                                          window['__thumbnailEmbed']({
-                                              config: {...playerOptions},
-                                              mediaInfo: {entryId: embedParams.embedParameters.entry_id}
-                                          });
+                                          if (embedParams.isPlaylist === true) {
+                                              window['__thumbnailEmbed']({
+                                                  config: {...playerOptions},
+                                                  mediaInfo: {playlistId: embedParams.embedParameters.entry_id}
+                                              });
+                                          } else {
+                                                window['__thumbnailEmbed']({
+                                                    config: {...playerOptions},
+                                                    mediaInfo: {entryId: embedParams.embedParameters.entry_id}
+                                                });
+                                          }
                                       }
                                   } catch (e) {
                                       console.error(e.message)

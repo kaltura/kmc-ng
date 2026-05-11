@@ -24,19 +24,19 @@ import {KalturaMediaEntryFilter} from 'kaltura-ngx-client';
             <div class="kRow kCenter" *ngIf="isValid">
                 <span class="kLabel">{{'applications.settings.mr.criteria.schedulingStart' | translate}}</span>
                 <p-checkbox class="kCheckbox row" label="" [(ngModel)]="_enableStartTime" (onChange)="onCriteriaChange()" binary="true"></p-checkbox>
-                <p-dropdown [options]="_startDateOptions" [style]="{'width':'120px'}" [(ngModel)]="_startDateOptionSelected" (ngModelChange)="onCriteriaChange()" [disabled]="!_enableStartTime"></p-dropdown>
+                <p-dropdown [options]="_startDateOptions" [style]="{'width':'110px'}" [(ngModel)]="_startDateOptionSelected" (ngModelChange)="onCriteriaChange()" [disabled]="!_enableStartTime"></p-dropdown>
                 <p-inputNumber class="kInput" [(ngModel)]="schedulingStartTime" (ngModelChange)="onCriteriaChange()" [disabled]="!_enableStartTime"></p-inputNumber>
-                <p-dropdown [options]="_timeUnitOptions" [style]="{'width':'120px', 'margin-left': '8px'}" [(ngModel)]="schedulingStartTimeUnit" (ngModelChange)="onCriteriaChange()" [disabled]="!_enableStartTime"></p-dropdown>
-                <span class="kText kLeft">{{'applications.settings.mr.criteria.ago' | translate}}</span>
+                <p-dropdown [options]="_timeUnitOptions" [style]="{'width':'90px', 'margin-left': '8px'}" [(ngModel)]="schedulingStartTimeUnit" (ngModelChange)="onCriteriaChange()" [disabled]="!_enableStartTime"></p-dropdown>
+                <p-dropdown [options]="_periodOptions" [style]="{'width':'80px', 'margin-left': '8px'}" [(ngModel)]="periodStartTimeUnit" (ngModelChange)="onCriteriaChange()" [disabled]="!_enableStartTime"></p-dropdown>
             </div>
 
             <div class="kRow kCenter" *ngIf="isValid">
                 <span class="kLabel">{{'applications.settings.mr.criteria.schedulingEnd' | translate}}</span>
                 <p-checkbox class="kCheckbox row" label="" [(ngModel)]="_enableEndTime" (onChange)="onCriteriaChange()" binary="true"></p-checkbox>
-                <p-dropdown [options]="_endDateOptions" [style]="{'width':'120px'}" [(ngModel)]="_endDateOptionSelected" (ngModelChange)="onCriteriaChange()" [disabled]="!_enableEndTime"></p-dropdown>
+                <p-dropdown [options]="_endDateOptions" [style]="{'width':'110px'}" [(ngModel)]="_endDateOptionSelected" (ngModelChange)="onCriteriaChange()" [disabled]="!_enableEndTime"></p-dropdown>
                 <p-inputNumber class="kInput" [(ngModel)]="schedulingEndTime" (ngModelChange)="onCriteriaChange()" [disabled]="!_enableEndTime"></p-inputNumber>
-                <p-dropdown [options]="_timeUnitOptions" [style]="{'width':'120px', 'margin-left': '8px'}" [(ngModel)]="schedulingEndTimeUnit" (ngModelChange)="onCriteriaChange()" [disabled]="!_enableEndTime"></p-dropdown>
-                <span class="kText kLeft">{{'applications.settings.mr.criteria.ago' | translate}}</span>
+                <p-dropdown [options]="_timeUnitOptions" [style]="{'width':'90px', 'margin-left': '8px'}" [(ngModel)]="schedulingEndTimeUnit" (ngModelChange)="onCriteriaChange()" [disabled]="!_enableEndTime"></p-dropdown>
+                <p-dropdown [options]="_periodOptions" [style]="{'width':'80px', 'margin-left': '8px'}" [(ngModel)]="periodEndTimeUnit" (ngModelChange)="onCriteriaChange()" [disabled]="!_enableEndTime"></p-dropdown>
             </div>
 
             <span class="kDelete" (click)="delete()">{{'applications.content.table.delete'| translate}}</span>
@@ -63,12 +63,19 @@ export class CriteriaSchedulingComponent implements OnInit{
     public schedulingStartTimeUnit = 'day';
     public schedulingEndTime = 0;
     public schedulingEndTimeUnit = 'day';
+    public periodStartTimeUnit = -1;
+    public periodEndTimeUnit = -1;
 
     public _timeUnitOptions: { value: string, label: string }[] = [
         {value: 'day', label: this._appLocalization.get('applications.settings.mr.criteria.days')},
         {value: 'week', label: this._appLocalization.get('applications.settings.mr.criteria.weeks')},
         {value: 'month', label: this._appLocalization.get('applications.settings.mr.criteria.months')},
         {value: 'year', label: this._appLocalization.get('applications.settings.mr.criteria.years')}
+    ];
+
+    public _periodOptions: { value: number, label: string }[] = [
+        {value: -1, label: this._appLocalization.get('applications.settings.mr.criteria.ago')},
+        {value: 1, label: this._appLocalization.get('applications.settings.mr.criteria.ahead')}
     ];
 
     public _enableStartTime = false;
@@ -85,6 +92,7 @@ export class CriteriaSchedulingComponent implements OnInit{
                 } else {
                     this._startDateOptionSelected = key;
                     this.schedulingStartTime = Math.abs(value[key].numberOfUnits) || 0;
+                    this.periodStartTimeUnit = value[key].numberOfUnits < 0 ? -1 : 1;
                     this.schedulingStartTimeUnit = val.dateUnit  || 'day';
                     this._enableStartTime = true;
                 }
@@ -98,6 +106,7 @@ export class CriteriaSchedulingComponent implements OnInit{
                 } else {
                     this._endDateOptionSelected = key;
                     this.schedulingEndTime = Math.abs(value[key].numberOfUnits) || 0;
+                    this.periodEndTimeUnit = value[key].numberOfUnits < 0 ? -1 : 1;
                     this.schedulingEndTimeUnit = val.dateUnit  || 'day';
                     this._enableEndTime = true;
                 }
@@ -124,7 +133,7 @@ export class CriteriaSchedulingComponent implements OnInit{
         let analyticsLabel = "";
         if (this._enableStartTime) {
             this._filter[this._startDateOptionSelected] = {
-                numberOfUnits: this.schedulingStartTime * -1,
+                numberOfUnits: this.schedulingStartTime * this.periodStartTimeUnit,
                 dateUnit: this.schedulingStartTimeUnit
             };
             analyticsLabel += this._startDateOptionSelected === 'startDateLessThanOrEqual' ? 'start_date_less_' : 'start_date_more_';
@@ -132,7 +141,7 @@ export class CriteriaSchedulingComponent implements OnInit{
         }
         if (this._enableEndTime) {
             this._filter[this._endDateOptionSelected] = {
-                numberOfUnits: this.schedulingEndTime * -1,
+                numberOfUnits: this.schedulingEndTime * this.periodEndTimeUnit,
                 dateUnit: this.schedulingEndTimeUnit
             };
             if (this._enableStartTime) {

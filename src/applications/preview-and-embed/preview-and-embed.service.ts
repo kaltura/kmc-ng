@@ -243,7 +243,25 @@ kWidget.thumbEmbed({
                 case 'thumb':
                     const thumbWidgetCode = config.widgetId ? `,
                               widgetId: "${config.widgetId}"` : '';
-                    code = `<div id="kaltura_player_${rnd}" style="width: ${config.width};height: ${config.height}"></div>
+                    code = config.isPlaylist ? `<div id="kaltura_player_${rnd}" style="width: ${config.width};height: ${config.height}"></div>
+                    <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
+                    <script src="https://static.kaltura.com/content/static/player-scripts/thumbnail-embed.js"></script>
+                    <script type="text/javascript">
+                    try {
+                      __thumbnailEmbed({
+                        config:  {
+                            provider: {
+                              partnerId: ${config.pid},
+                              uiConfId: ${config.uiConfId}${thumbWidgetCode}
+                            },
+                            targetId: "kaltura_player_${rnd}"
+                        },
+                        mediaInfo: {playlistId: '${config.entryId}'}
+                      });
+                    } catch (e) {
+                      console.error(e.message)
+                    }
+                  </script>` : `<div id="kaltura_player_${rnd}" style="width: ${config.width};height: ${config.height}"></div>
                     <script type="text/javascript" src="${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}"></script>
                     <script src="https://static.kaltura.com/content/static/player-scripts/thumbnail-embed.js"></script>
                     <script type="text/javascript">
