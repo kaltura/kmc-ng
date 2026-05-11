@@ -135,6 +135,39 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
       this._relatedFiles.next({ items: [] });
     }
 
+    public reloadRelated(): Observable<{
+        failed: boolean;
+        error?: Error;
+    }> {
+        return this._kalturaServerClient.request(new AttachmentAssetListAction({
+            filter: new KalturaAssetFilter({ entryIdEqual: this._entryId })
+        }))
+            .pipe(cancelOnDestroy(this, this.widgetReset$))
+            .pipe(map(response => {
+                // Set file type and restore previous upload state
+                this._updateAssetsResponse(response);
+
+                this._relatedFiles.next({ items: response.objects });
+                this.relatedFilesListDiffer = this._listDiffers.find([]).create();
+                this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
+
+                this.relatedFileDiffer = {};
+                this._relatedFiles.getValue().items.forEach((asset: RelatedFile) => {
+                    this.relatedFileDiffer[asset.id] = this._objectDiffers.find([]).create();
+                    this.relatedFileDiffer[asset.id].diff(asset);
+                });
+                super._hideLoader();
+
+                return {failed: false};
+            }))
+            .pipe(catchError(error => {
+                    this._relatedFiles.next({ items: [] });
+                    super._hideLoader();
+                    super._showActivationError();
+                    return throwError(error);
+                }
+            ));
+    }
   protected onActivate(firstTimeActivating: boolean) {
     this._entryId = this.data.id;
     super._showLoader();
@@ -144,35 +177,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
     }
 
     this._relatedFiles.next({ items: [] });
-
-    return this._kalturaServerClient.request(new AttachmentAssetListAction({
-      filter: new KalturaAssetFilter({ entryIdEqual: this._entryId })
-    }))
-      .pipe(cancelOnDestroy(this, this.widgetReset$))
-      .pipe(map(response => {
-        // Set file type and restore previous upload state
-        this._updateAssetsResponse(response);
-
-        this._relatedFiles.next({ items: response.objects });
-        this.relatedFilesListDiffer = this._listDiffers.find([]).create();
-        this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
-
-        this.relatedFileDiffer = {};
-        this._relatedFiles.getValue().items.forEach((asset: RelatedFile) => {
-          this.relatedFileDiffer[asset.id] = this._objectDiffers.find([]).create();
-          this.relatedFileDiffer[asset.id].diff(asset);
-        });
-        super._hideLoader();
-
-        return {failed: false};
-      }))
-      .pipe(catchError(error => {
-          this._relatedFiles.next({ items: [] });
-          super._hideLoader();
-          super._showActivationError();
-          return throwError(error);
-        }
-      ));
+    return this.reloadRelated();
   }
 
   protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {

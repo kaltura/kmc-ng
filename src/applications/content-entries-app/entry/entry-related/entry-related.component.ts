@@ -9,6 +9,9 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
 import { Menu } from 'primeng/menu';
 import { MenuItem, SelectItem } from 'primeng/api';
+import { CaptionsUpdatedEvent } from 'app-shared/kmc-shared/events';
+import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
+import { AppEventsService } from 'app-shared/kmc-shared';
 
 
 @Component({
@@ -38,6 +41,7 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
 	private _editPopupStateChangeSubscribe : ISubscription;
 
 	constructor(public _widgetService: EntryRelatedWidget,
+                private _appEvents: AppEventsService,
 				private _appLocalization: AppLocalization) {
     }
 
@@ -60,6 +64,15 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
 			{label: this._appLocalization.get('applications.content.entryDetails.related.download'), command: (event) => {this.actionSelected("download");}},
 			{label: this._appLocalization.get('applications.content.entryDetails.related.delete'), styleClass: 'kDanger', command: (event) => {this.actionSelected("delete");}}
 		];
+
+        this._appEvents.event(CaptionsUpdatedEvent)
+            .pipe(cancelOnDestroy(this))
+            .subscribe(() => {
+                // update the captions table once the captions editor / captions & enrich window closes
+                this._widgetService.reloadRelated().subscribe(
+                    (status) => {}
+                );
+            });
 	}
 
 	ngAfterViewInit(){
