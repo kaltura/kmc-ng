@@ -8,32 +8,39 @@ import { IsUserExistsStatuses } from './user-exists-statuses';
 import { cancelOnDestroy, tag } from '@kaltura-ng/kaltura-common';
 import {
     ESearchSearchUserAction,
-    KalturaAPIException, KalturaESearchItemType, KalturaESearchOperatorType, KalturaESearchUserFieldName,
-    KalturaESearchUserItem, KalturaESearchUserOperator, KalturaESearchUserParams,
-    KalturaKeyValueExtended, KalturaPager,
+    KalturaAPIException,
+    KalturaClient,
+    KalturaESearchItemType,
+    KalturaESearchOperatorType,
+    KalturaESearchUserFieldName,
+    KalturaESearchUserItem,
+    KalturaESearchUserOperator,
+    KalturaESearchUserParams,
+    KalturaFilterPager,
+    KalturaKeyValueExtended,
+    KalturaMultiRequest,
+    KalturaNullableBoolean,
+    KalturaPager,
     KalturaUser,
+    KalturaUserFilter,
+    KalturaUserOrderBy,
+    KalturaUserRole,
+    KalturaUserRoleFilter,
+    KalturaUserRoleOrderBy,
+    KalturaUserRoleStatus,
+    KalturaUserStatus,
+    PartnerGetInfoAction,
+    UserAddAction,
+    UserDeleteAction,
     UserDemoteAdminAction,
-    UserExportToCsvAction
+    UserEnableLoginAction,
+    UserExportToCsvAction,
+    UserGetAction,
+    UserGetByLoginIdAction,
+    UserListAction,
+    UserRoleListAction,
+    UserUpdateAction,
 } from 'kaltura-ngx-client';
-import { KalturaUserRole } from 'kaltura-ngx-client';
-import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
-import { UserRoleListAction } from 'kaltura-ngx-client';
-import { KalturaUserRoleFilter } from 'kaltura-ngx-client';
-import { KalturaUserRoleStatus } from 'kaltura-ngx-client';
-import { KalturaUserRoleOrderBy } from 'kaltura-ngx-client';
-import { UserListAction } from 'kaltura-ngx-client';
-import { KalturaUserFilter } from 'kaltura-ngx-client';
-import { KalturaNullableBoolean } from 'kaltura-ngx-client';
-import { KalturaUserStatus } from 'kaltura-ngx-client';
-import { KalturaUserOrderBy } from 'kaltura-ngx-client';
-import { KalturaFilterPager } from 'kaltura-ngx-client';
-import { PartnerGetInfoAction } from 'kaltura-ngx-client';
-import { UserUpdateAction } from 'kaltura-ngx-client';
-import { UserDeleteAction } from 'kaltura-ngx-client';
-import { UserGetByLoginIdAction } from 'kaltura-ngx-client';
-import { UserGetAction } from 'kaltura-ngx-client';
-import { UserEnableLoginAction } from 'kaltura-ngx-client';
-import { UserAddAction } from 'kaltura-ngx-client';
 import { AdminUsersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -347,12 +354,14 @@ export class UsersStore implements OnDestroy {
       roleIds: roleIds,
       isAdmin: true
     });
-    const request = new KalturaMultiRequest(
-      new UserUpdateAction({ userId: user.id, user: updatedUser }),
-      new UserEnableLoginAction({ userId: user.id, loginId: userProvidedEmail })
-    );
+
+    const multiRequest = new KalturaMultiRequest();
+    multiRequest.requests.push(new UserUpdateAction({ userId: user.id, user: updatedUser }));
+    if (!user.loginEnabled) {
+        multiRequest.requests.push(new UserEnableLoginAction({userId: user.id, loginId: userProvidedEmail}));
+    }
     return this._kalturaServerClient
-      .multiRequest(request)
+      .multiRequest(multiRequest)
       .pipe(map((responses) => {
         if (responses.hasErrors()) {
           const errorMessage = responses.map(response => {
