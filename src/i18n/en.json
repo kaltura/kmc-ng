@@ -3134,6 +3134,7 @@
                     "categories": "Publish to categories",
                     "categories_tt": "Enter categories that the ingested media should be published to",
                     "transcripts": "Teams transcription",
+                    "adhoc": "Include ad-hoc sessions recordings",
                     "organizers": "Co-organizers",
                     "presenters": "Presenters",
                     "findUserBy": "Find user by",

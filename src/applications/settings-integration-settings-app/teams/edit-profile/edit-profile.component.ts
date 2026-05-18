@@ -139,6 +139,7 @@ export class EditTeamsProfileComponent implements OnDestroy {
             uploadIn: optInGroupNames,
             uploadOut: optOutGroupNames,
             transcripts: this._profile.settings?.uploadTranscripts ? true : false,
+            adhoc: this._profile.settings?.uploadAdHocRecordings ? true : false,
             coOrganizerRoles: this.getRole(this._profile.settings?.coOrganizerRoles || []),
             presentersRoles: this.getRole(this._profile.settings?.presentersRoles || []),
             attendeesRoles: this.getRole(this._profile.settings?.attendeesRoles || []),
@@ -168,6 +169,7 @@ export class EditTeamsProfileComponent implements OnDestroy {
             uploadIn: [[]],
             uploadOut: [[]],
             transcripts: true,
+            adhoc: false,
             coOrganizerRoles: null,
             presentersRoles: null,
             attendeesRoles: null,
@@ -223,6 +225,11 @@ export class EditTeamsProfileComponent implements OnDestroy {
         this._analytics.trackButtonClickEvent(ButtonType.Toggle, 'Teams_upload_transcripts', key);
     }
 
+    public sendDdhocAnalytics(): void {
+        const key = this._profileForm.controls['adhoc'].value ? 'enable' : 'disable';
+        this._analytics.trackButtonClickEvent(ButtonType.Toggle, 'Teams_upload_adhoc', key);
+    }
+
     public sendOrganizersAnalytics(): void {
         const selectedOption = this._hostsOptions.find(item => item.value === this._profileForm.controls['coOrganizerRoles'].value);
         if (selectedOption) {
@@ -251,11 +258,12 @@ export class EditTeamsProfileComponent implements OnDestroy {
     public _save(): void {
         this._logger.info(`handle 'save' action by the user`);
         const formValue = this._profileForm.getRawValue();
-
         this._profile.name = formValue.name;
         this._profile.settings = {
             uploadRecordings: true,
             uploadTranscripts: formValue.transcripts,
+            uploadAdHocRecordings: formValue.adhoc,
+            uploadAdHocTranscripts: formValue.transcripts && formValue.adhoc,
             categories: formValue.categories.map(category => category.fullName ? category.fullName : category.name)
         }
 
