@@ -29,7 +29,7 @@ import {buildUserSearchQuery, isHashed} from 'app-shared/kmc-shared';
                         suggestionLabelField="name"
                         [tooltipResolver]="'__tooltip'"
                         [classField]="'__class'"
-                        field="id"
+                        [field]="getUnhashedField"
                         [allowMultiple]="false"
                         [limitToSuggestions]="false"
                         [minLength]="3"
