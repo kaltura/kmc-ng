@@ -77,8 +77,8 @@ import {AppAnalytics, BrowserService, ButtonType, PageType} from 'app-shared/kmc
       const settings: TeamsIntegrationSettings = {
           uploadRecordings: true,
           uploadTranscripts: false,
-          uploadAdHocRecordings: false,
-          uploadAdHocTranscripts: false,
+          // uploadAdHocRecordings: false,
+          // uploadAdHocTranscripts: false,
           userIdSource: 'upn'
       }
     const newProfile = {

@@ -134,15 +134,15 @@
             </span>
         </div>
 
-        <div class="kRow" [class.marginTop]="_profileForm.get('upload').value === 0">
-            <div class="kLabel">
-                <span>{{'applications.settings.integrationSettings.teams.adhoc' | translate}}</span>
-            </div>
-            <p-inputSwitch class="kControl" formControlName="adhoc" (onChange)="sendDdhocAnalytics()"></p-inputSwitch>
-            <span class="kSwitchValue">
-              {{_profileForm.get('adhoc').value ? ('app.common.yes' | translate) : ('app.common.no' | translate)}}
-            </span>
-        </div>
+<!--        <div class="kRow" [class.marginTop]="_profileForm.get('upload').value === 0">-->
+<!--            <div class="kLabel">-->
+<!--                <span>{{'applications.settings.integrationSettings.teams.adhoc' | translate}}</span>-->
+<!--            </div>-->
+<!--            <p-inputSwitch class="kControl" formControlName="adhoc" (onChange)="sendDdhocAnalytics()"></p-inputSwitch>-->
+<!--            <span class="kSwitchValue">-->
+<!--              {{_profileForm.get('adhoc').value ? ('app.common.yes' | translate) : ('app.common.no' | translate)}}-->
+<!--            </span>-->
+<!--        </div>-->
 
         <span class="kSubTitle">{{'applications.settings.integrationSettings.zoom.permissions' | translate}}</span>
 
