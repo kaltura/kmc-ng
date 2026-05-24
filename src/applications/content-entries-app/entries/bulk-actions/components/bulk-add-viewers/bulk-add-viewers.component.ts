@@ -8,7 +8,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { AreaBlockerMessage, PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { buildUserSearchQuery } from 'app-shared/kmc-shared';
+import {buildUserSearchQuery, isHashed} from 'app-shared/kmc-shared';
 
 @Component({
     selector: 'kBulkAddViewers',
@@ -71,6 +71,10 @@ export class BulkAddViewersComponent implements OnInit, OnDestroy, AfterViewInit
         this._parentPopupStateChangeSubscribe.unsubscribe();
     }
 
+    public getUnhashedField(value: KalturaUser): string  {
+        return isHashed(value['id']) ? value['email'] || value['fullName'] || value['screenName'] : value['id'];
+    };
+
     public _searchUsers(event): void {
         this._usersProvider.next({ suggestions: [], isLoading: true });
 
@@ -90,10 +94,10 @@ export class BulkAddViewersComponent implements OnInit, OnDestroy, AfterViewInit
                         result.objects.forEach((res: KalturaESearchUserResult) => users.push(res.object))
                     }
                     (users).forEach(suggestedUser => {
-                        suggestedUser['__tooltip'] = suggestedUser.id;
+                        suggestedUser['__tooltip'] = this.getUnhashedField(suggestedUser);
                         const isSelectable = !(this.users || []).find(user => user.id === suggestedUser.id);
                         suggestions.push({
-                            name: `${suggestedUser.screenName} (${suggestedUser.id})`,
+                            name: `${this.getUnhashedField(suggestedUser)} (${suggestedUser.id})`,
                             item: suggestedUser,
                             isSelectable: isSelectable
                         });

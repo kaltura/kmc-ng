@@ -5,7 +5,7 @@ import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {ISubscription} from 'rxjs/Subscription';
 import {Observable, Subject} from 'rxjs';
 import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
-import {buildUserSearchQuery} from 'app-shared/kmc-shared';
+import {buildUserSearchQuery, isHashed} from 'app-shared/kmc-shared';
 
 @Component({
     selector: 'kActionOwner',
@@ -29,7 +29,7 @@ import {buildUserSearchQuery} from 'app-shared/kmc-shared';
                         suggestionLabelField="name"
                         [tooltipResolver]="'__tooltip'"
                         [classField]="'__class'"
-                        field="id"
+                        [field]="getUnhashedField"
                         [allowMultiple]="false"
                         [limitToSuggestions]="false"
                         [minLength]="3"
@@ -108,6 +108,10 @@ export class ActionOwnerComponent implements OnDestroy{
             });
     }
 
+    public getUnhashedField(value: KalturaUser): string  {
+        return isHashed(value['id']) ? value['email'] || value['fullName'] || value['screenName'] : value['id'];
+    };
+
     public _searchUsers(event, formControl?) : void {
         this._usersProvider.next({ suggestions : [], isLoading : true});
 
@@ -121,7 +125,7 @@ export class ActionOwnerComponent implements OnDestroy{
         this._searchUsersSubscription = this.searchUsers(event.query).subscribe(data => {
                 const suggestions = [];
                 (data || []).forEach((suggestedUser: KalturaUser) => {
-                    suggestedUser['__tooltip'] = suggestedUser.id;
+                    suggestedUser['__tooltip'] = this.getUnhashedField(suggestedUser);
                     let isSelectable = true;
                     if (formControl){
                         isSelectable = !this.owners.find(user => {
@@ -129,7 +133,7 @@ export class ActionOwnerComponent implements OnDestroy{
                         });
                     }
                     suggestions.push({
-                        name: `${suggestedUser.screenName} (${suggestedUser.id})`,
+                        name: `${this.getUnhashedField(suggestedUser)} (${suggestedUser.id})`,
                         item: suggestedUser,
                         isSelectable: isSelectable
                     });

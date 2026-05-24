@@ -7,7 +7,7 @@
       <kAutoComplete [(ngModel)]="_owner"
                      suggestionItemField="item"
                      suggestionLabelField="name"
-                     field="screenName"
+                     [field]="getUnhashedField"
                      [onItemAdding]="_convertUserInputToValidValue"
                      [tooltipResolver]="'__tooltip'"
                      [classField]="'__class'"

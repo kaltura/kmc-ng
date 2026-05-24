@@ -7,7 +7,7 @@ import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {notificationTemplates} from './notification.templates';
 import {AppAnalytics, ButtonType} from 'app-shared/kmc-shell';
-import {buildUserSearchQuery} from 'app-shared/kmc-shared';
+import {buildUserSearchQuery, isHashed} from 'app-shared/kmc-shared';
 
 @Component({
     selector: 'kActionNotification',
@@ -265,6 +265,10 @@ export class ActionNotificationComponent implements OnDestroy{
             });
     }
 
+    public getUnhashedField(value: KalturaUser): string  {
+        return isHashed(value['id']) ? value['email'] || value['fullName'] || value['screenName'] : value['id'];
+    };
+
     public _searchUsers(event, formControl?) : void {
         this._usersProvider.next({ suggestions : [], isLoading : true});
 
@@ -278,7 +282,7 @@ export class ActionNotificationComponent implements OnDestroy{
         this._searchUsersSubscription = this.searchUsers(event.query).subscribe(data => {
                 const suggestions = [];
                 (data || []).forEach((suggestedUser: KalturaUser) => {
-                    suggestedUser['__tooltip'] = suggestedUser.id;
+                    suggestedUser['__tooltip'] = this.getUnhashedField(suggestedUser);
                     let isSelectable = true;
                     if (formControl){
                         isSelectable = !this.owners.find(user => {
@@ -286,7 +290,7 @@ export class ActionNotificationComponent implements OnDestroy{
                         });
                     }
                     suggestions.push({
-                        name: `${suggestedUser.screenName} (${suggestedUser.id})`,
+                        name: `${this.getUnhashedField(suggestedUser)} (${suggestedUser.id})`,
                         item: suggestedUser,
                         isSelectable: isSelectable
                     });

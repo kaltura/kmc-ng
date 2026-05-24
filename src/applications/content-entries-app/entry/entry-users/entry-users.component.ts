@@ -8,7 +8,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { EntryUsersWidget } from './entry-users-widget.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
-
+import { isHashed } from 'app-shared/kmc-shared';
 
 @Component({
   selector: 'kEntryUsers',
@@ -62,6 +62,10 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
       }
     }
 
+    public getUnhashedField(value: KalturaUser): string  {
+        return isHashed(value['id']) ? value['email'] || value['fullName'] || value['screenName'] : value['id'];
+    };
+
 	public _convertUserInputToValidValue(value : string) : any {
 		let result = null;
 		const tooltip = this._appLocalization.get('applications.content.entryDetails.users.tooltip', {0: value});
@@ -93,7 +97,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 		this._searchUsersSubscription = this._widgetService.searchUsers(event.query).subscribe(data => {
 				const suggestions = [];
 				(data || []).forEach((suggestedUser: KalturaUser) => {
-                    suggestedUser['__tooltip'] = suggestedUser.id;
+                    suggestedUser['__tooltip'] = this.getUnhashedField(suggestedUser);
 					let isSelectable = true;
 					if (formControl){
 						const owners = this._widgetService.usersForm.value[formControl] || [];
@@ -102,7 +106,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 						});
 					}
 					suggestions.push({
-                        name: `${suggestedUser.screenName} (${suggestedUser.id})`,
+                        name: `${this.getUnhashedField(suggestedUser)} (${suggestedUser.id})`,
 						item: suggestedUser,
 						isSelectable: isSelectable
 					});

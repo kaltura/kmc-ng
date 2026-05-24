@@ -139,7 +139,7 @@ export class EditTeamsProfileComponent implements OnDestroy {
             uploadIn: optInGroupNames,
             uploadOut: optOutGroupNames,
             transcripts: this._profile.settings?.uploadTranscripts ? true : false,
-            adhoc: this._profile.settings?.uploadAdHocRecordings ? true : false,
+            // adhoc: this._profile.settings?.uploadAdHocRecordings ? true : false,
             coOrganizerRoles: this.getRole(this._profile.settings?.coOrganizerRoles || []),
             presentersRoles: this.getRole(this._profile.settings?.presentersRoles || []),
             attendeesRoles: this.getRole(this._profile.settings?.attendeesRoles || []),
@@ -169,7 +169,7 @@ export class EditTeamsProfileComponent implements OnDestroy {
             uploadIn: [[]],
             uploadOut: [[]],
             transcripts: true,
-            adhoc: false,
+            // adhoc: false,
             coOrganizerRoles: null,
             presentersRoles: null,
             attendeesRoles: null,
@@ -262,8 +262,8 @@ export class EditTeamsProfileComponent implements OnDestroy {
         this._profile.settings = {
             uploadRecordings: true,
             uploadTranscripts: formValue.transcripts,
-            uploadAdHocRecordings: formValue.adhoc,
-            uploadAdHocTranscripts: formValue.transcripts && formValue.adhoc,
+            // uploadAdHocRecordings: formValue.adhoc,
+            // uploadAdHocTranscripts: formValue.transcripts && formValue.adhoc,
             categories: formValue.categories.map(category => category.fullName ? category.fullName : category.name)
         }
 

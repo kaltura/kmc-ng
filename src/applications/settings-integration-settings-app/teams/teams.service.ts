@@ -24,8 +24,8 @@ export type KalturaPager = {
 export type TeamsIntegrationSettings = {
     uploadRecordings: boolean;
     uploadTranscripts: boolean;
-    uploadAdHocRecordings: boolean;
-    uploadAdHocTranscripts: boolean;
+    // uploadAdHocRecordings: boolean;
+    // uploadAdHocTranscripts: boolean;
     categories?: string[];
     userGroupsInclude?: any[];
     userGroupsExclude?: any[];

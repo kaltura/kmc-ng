@@ -2,7 +2,7 @@ import {
     ESearchSearchUserAction, KalturaESearchItemType,
     KalturaESearchOperatorType, KalturaESearchUserFieldName, KalturaESearchUserItem,
     KalturaESearchUserOperator,
-    KalturaESearchUserParams, KalturaFilterPager
+    KalturaESearchUserParams, KalturaFilterPager, KalturaUser
 } from 'kaltura-ngx-client';
 
 export const buildUserSearchQuery = (text: string) => {
@@ -64,4 +64,8 @@ export const buildUserSearchQuery = (text: string) => {
             pageSize : 50
         })
     });
+}
+export const isHashed = (str: string): boolean => {
+    const regex = /^[a-z0-9]{64}$/;
+    return regex.test(str);
 }
