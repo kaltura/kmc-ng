@@ -344,6 +344,9 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
           case 'reject':
               this._rejectEntry(event.document.id, event.document.name);
               break;
+          case 'analytics':
+              this._openDocumentAnalytics(event.document.id);
+              break;
           case 'delete':
               this._browserService.confirm(
                   {
@@ -359,6 +362,11 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
               break;
       }
   }
+
+    public _openDocumentAnalytics(id: string): void {
+        this._analytics.trackClickEvent('View_analytics');
+        this._router.navigate(['analytics/document'], { queryParams: { id } });
+    }
 
   public _onFreetextChanged(): void {
       // prevent searching for empty strings

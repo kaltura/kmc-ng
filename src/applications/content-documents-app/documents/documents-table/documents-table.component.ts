@@ -130,6 +130,13 @@ export class DocumentsTableComponent implements AfterViewInit, OnInit, OnDestroy
                 command: () => this.onActionSelected('reject', document)
             });
         }
+        if (this._analyticsNewMainViewService.isAvailable()) {
+            this._items.push({
+                id: 'analytics',
+                label: this._appLocalization.get('applications.content.entries.viewAnalytics'),
+                command: () => this.onActionSelected('analytics', document)
+            });
+        }
         if (this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE)) {
             this._items.push({
                 label: this._appLocalization.get('applications.content.table.delete'),
