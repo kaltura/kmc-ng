@@ -64,6 +64,9 @@ export class RulesComponent implements OnInit, OnDestroy {
         this._mrStore.loadProfiles(pageSize, pageIndex, sortField, sortOrder).subscribe(
             (response: LoadManagedTasksProfilesResponse) => {
                 this._isBusy = false;
+                this._profilesCount = 0;
+                this._profiles = [];
+                this._mrStore.rulesIds = [];
                 if (response.objects?.length) {
                     this._profiles = response.objects as ManagedTasksProfile[];
                     this._profiles.forEach(profile => { // mapping
