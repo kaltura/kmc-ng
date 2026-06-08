@@ -12,10 +12,10 @@
                 label="{{'applications.content.entryDetails.captions.addEad' | translate}}"
                 *ngIf="(_kmcPermissions.CAPTION_MODIFY | kNgIfPermitted) && !_isLive"
                 (click)="_addCaption(true)"></button>
-        <button type="button" class="kButtonDefault" pButton
-                label="{{'applications.content.entryDetails.captions.request' | translate}}"
-                *ngIf="_requestCaptionsAvailable && !_isLive"
-                (click)="_requestCaptions()"></button>
+        <button type="button" class="kButtonDefault" pButton icon="ccIcon"
+                label="{{'applications.content.entryDetails.captions.order' | translate}}"
+                *ngIf="!_isLive"
+                (click)="_orderCaptions()"></button>
         <kEntryLiveCaptions *ngIf="_isLive"></kEntryLiveCaptions>
         <div class="kTable" *ngIf="!_isLive">
             <p-table scrollHeight="100%"

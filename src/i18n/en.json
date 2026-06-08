@@ -1340,7 +1340,7 @@
                 "nameTooltip": "{{0}}\nTags:\n{{1}}",
                 "download": "Download",
                 "editor": "Launch Editor",
-                "captionRequest": "Captions & Enrich",
+                "captionRequest": "Captions & Enrich (Legacy)",
                 "analytics": "View Analytics"
             },
             "paginator": {
@@ -1898,6 +1898,7 @@
                     "addEad2": "Add File",
                     "eadHelp": "Extended Audio Description (EAD) is a text file that makes visual content in videos accessible for people with visual impairments. The Kaltura Player uses browser speech synthesis to convert the time-coded file into audio narration. File must be uploaded in VTT read-only format.",
                     "request": "Captions & Enrich",
+                    "order": "Order Captions",
                     "label": "Label",
                     "id": "ID",
                     "type": "File Type",

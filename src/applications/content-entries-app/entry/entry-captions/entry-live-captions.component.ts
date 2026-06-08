@@ -6,6 +6,7 @@ import {KalturaLiveStreamEntry, KalturaStreamContainer} from 'kaltura-ngx-client
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {SelectItem} from 'primeng/api';
 import {LanguageOptionsService} from 'app-shared/kmc-shared/language-options';
+import {AppBootstrap} from 'app-shared/kmc-shell';
 
 export enum LiveCaptionsType {
     Reach = 0,
@@ -37,8 +38,10 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
             'value': 'CEA-708'
         }
     ];
+    private unisphereRuntime: any = null;
 
     constructor(public _widgetService: EntryCaptionsWidget,
+                private _bootstrapService: AppBootstrap,
                 private _languageOptions: LanguageOptionsService,
                 private _reachAppViewService: ReachAppViewService) {
     }
@@ -77,6 +80,14 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
                     }
                 }
             });
+
+        this._bootstrapService.unisphereWorkspace$
+            .pipe(cancelOnDestroy(this))
+            .subscribe(unisphereWorkspace => {
+                if (unisphereWorkspace) {
+                    this.unisphereRuntime = unisphereWorkspace.getRuntime('unisphere.widget.content-lab', 'application');
+                }
+            });
     }
 
     ngOnDestroy() {
@@ -104,6 +115,13 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
     public _requestCaptions(): void {
         const entry = this._widgetService.data;
         this._reachAppViewService.open({ entry, page: ReachPages.entry });
+    }
+
+    public _orderCaptions(): void {
+        const entry = this._widgetService.data;
+        if (this._bootstrapService) {
+            this.unisphereRuntime.openApplication({entryId: '', eventSessionContextId: entry.id, type: 'entry', initialView: 'captions'});
+        }
     }
 
     public addStream() {

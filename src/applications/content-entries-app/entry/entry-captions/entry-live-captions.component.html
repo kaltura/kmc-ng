@@ -5,9 +5,9 @@
                        label="{{'applications.content.entryDetails.captions.reachCaptions' | translate}}"></p-radioButton>
     </div>
     <div class="kRow">
-        <button type="button" class="kButtonDefault kIndent" pButton [disabled]="!_requestCaptionsAvailable || _captionsType !== _liveCaptionsType.Reach"
-                label="{{'applications.content.entryDetails.captions.request' | translate}}"
-                (click)="_requestCaptions()"></button>
+        <button type="button" class="kButtonDefault kIndent" pButton [disabled]="_captionsType !== _liveCaptionsType.Reach"
+                label="{{'applications.content.entryDetails.captions.order' | translate}}" icon="ccIcon"
+                (click)="_orderCaptions()"></button>
     </div>
 
     <div class="kRow">

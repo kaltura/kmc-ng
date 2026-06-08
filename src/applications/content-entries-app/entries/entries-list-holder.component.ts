@@ -19,7 +19,15 @@ import { AnalyticsNewMainViewService, ContentEntriesMainViewService } from 'app-
 import { ClearEntriesSelectionEvent } from 'app-shared/kmc-shared/events/clear-entries-selection-event';
 import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shared/kmc-shared/columns-resize-manager';
 import { filter } from 'rxjs/operators';
-import { KalturaCaptionAsset, KalturaClient, KalturaMediaEntry, KalturaPlaylist, KalturaQuizOutputType, QuizGetUrlAction } from 'kaltura-ngx-client';
+import {
+    KalturaCaptionAsset,
+    KalturaClient,
+    KalturaMediaEntry,
+    KalturaMediaType,
+    KalturaPlaylist,
+    KalturaQuizOutputType,
+    QuizGetUrlAction
+} from 'kaltura-ngx-client';
 import { PubSubServiceType } from '@unisphere/runtime';
 import { Observable } from 'rxjs';
 import { throwError as ObservableThrowError } from 'rxjs/internal/observable/throwError';
@@ -80,6 +88,10 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
           styleClass: '',
           disabled: !this._analyticsNewMainViewService.isAvailable()
       },
+      {
+          label: this._appLocalization.get('applications.content.entryDetails.captions.order'),
+          commandName: 'captionOrder'
+      },,
       {
           label: this._appLocalization.get('applications.content.table.captionRequest'),
           commandName: 'captionRequest'
@@ -248,6 +260,13 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
           });
   }
 
+    private _isLiveMediaEntry(mediaType: KalturaMediaType): boolean {
+        return mediaType === KalturaMediaType.liveStreamFlash ||
+            mediaType === KalturaMediaType.liveStreamWindowsMedia ||
+            mediaType === KalturaMediaType.liveStreamRealMedia ||
+            mediaType === KalturaMediaType.liveStreamQuicktime;
+    }
+
   public _onActionSelected({ action, entry }) {
     switch (action) {
       case 'preview':
@@ -296,6 +315,28 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
             }
         }
         break;
+        case 'captionOrder':
+            this._analytics.trackClickEvent('Captions_order');
+            if (entry && entry.id) {
+                if (this.unisphereRuntime) {
+                    if (this._isLiveMediaEntry(entry.mediaType)) {
+                        this.unisphereRuntime.openApplication({
+                            entryId: '',
+                            eventSessionContextId: entry.id,
+                            type: 'entry',
+                            initialView: 'captions'
+                        });
+                    } else {
+                        this.unisphereRuntime.openApplication({
+                            entryId: entry.id,
+                            eventSessionContextId: '',
+                            type: 'entry',
+                            initialView: 'captions'
+                        });
+                    }
+                }
+            }
+            break;
         case 'captionRequest':
             this._analytics.trackClickEvent('Captions_enrich');
             this._reachAppViewService.open({ entry, page: ReachPages.entry });
