@@ -90,7 +90,8 @@ export class RuleComponent implements OnInit {
         this.rule = response;
         this.rule.createdAt = new Date(response.createdAt);
         this.rule.updatedAt = new Date(response.updatedAt);
-        this.rule.nextRunDate = new Date(response.nextRunDate);
+        const d = new Date(response.nextRunDate);
+        this.rule.nextRunDate = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
         this._ruleName = response.name;
         if (typeof response.objectFilter === "undefined") {
             this.rule.objectFilter = {};
@@ -295,6 +296,8 @@ export class RuleComponent implements OnInit {
 
     private doSave(): void {
         delete this.rule.partnerId; // remove partner as it is read only and cannot be saved
+        const d = this.rule.nextRunDate;
+        this.rule.nextRunDate = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
         // fix advancedCadence
         if (this.rule.runningCadence.advancedCadence.dateUnit === 'day') {
             delete this.rule.runningCadence.advancedCadence.day;
