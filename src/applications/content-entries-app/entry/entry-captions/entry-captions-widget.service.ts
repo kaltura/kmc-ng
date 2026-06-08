@@ -62,6 +62,7 @@ export interface CaptionRow {
 export interface LiveCaptions {
     adminTag: string;
     streams: KalturaStreamContainer[];
+    streamsModified: boolean;
 }
 
 export interface StreamContainer {
@@ -87,7 +88,8 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
 
     public liveCaptions: LiveCaptions = {
         adminTag: '',
-        streams: []
+        streams: [],
+        streamsModified: false
     };
     public _protocolError = '';
 
@@ -461,20 +463,13 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
               data.adminTags = adminTags.filter(tag => tag !== 'prioritize_ingested_captions' && tag !== 'extract_closed_caption_feature').join(',');
           }
       }
-    if (this.liveCaptions.streams.length) {
-        // replace all streams of type closedCaptions with this.liveCaptions.streams
-        if (!data.streams || data.streams.length === 0) {
-            // no streams yet, use the updated streams
-            data.streams = [...this.liveCaptions.streams];
-        } else {
-            // keep non closed captions streams and concat the updated streams
-            const nonClosedCaptionsStreams = data.streams.filter(stream => stream.type !== 'closedCaptions'); // remove any closedCaptions streams
-            data.streams = [...nonClosedCaptionsStreams, ...this.liveCaptions.streams];
-        }
+    const nonClosedCaptionsStreams = (data.streams || []).filter(stream => stream.type !== 'closedCaptions');
+    if (this.liveCaptions.streamsModified) {
+        data.streams = [...nonClosedCaptionsStreams, ...this.liveCaptions.streams];
     } else {
-        // keep non closed captions
-        const nonClosedCaptionsStreams = data.streams.filter(stream => stream.type !== 'closedCaptions'); // remove any closedCaptions streams
-        data.streams = nonClosedCaptionsStreams.length ? [...nonClosedCaptionsStreams] : [];
+        // User made no stream edits — preserve the server's closedCaptions streams as is.
+        const originalClosedCaptions = (this.data?.streams || []).filter(stream => stream.type === 'closedCaptions');
+        data.streams = [...nonClosedCaptionsStreams, ...originalClosedCaptions];
     }
   }
 
