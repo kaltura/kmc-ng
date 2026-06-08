@@ -64,18 +64,18 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
                     } else {
                         this._widgetService.liveCaptions.adminTag = '';
                     }
-                    let streams = (entry as KalturaLiveStreamEntry).streams.filter(stream => stream.type === 'closedCaptions');
-                    if (streams?.length) {
+                   this._widgetService.liveCaptions.streamsModified = false;
+                    const closedCaptionsStreams = ((entry as KalturaLiveStreamEntry).streams || []).filter(stream => stream.type === 'closedCaptions');
+                    if (closedCaptionsStreams.length) {
                         this._containers = [];
-                        streams = streams.sort((a, b) => a.id.localeCompare(b.id)); // sort by ID
-                        streams.forEach(stream => {
+                        closedCaptionsStreams.sort((a, b) => a.id.localeCompare(b.id)).forEach(stream => {
                             this._containers.push({
                                 id: stream.id,
                                 protocol: stream.id.startsWith('CC') ? 'CEA-608' : 'CEA-708',
                                 language: stream.language.toUpperCase(),
                                 label: stream.label
-                            })
-                        })
+                            });
+                        });
                         this.setAddStreamDisabled();
                     }
                 }
@@ -176,14 +176,14 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
     }
 
     private updateEntryStreams(): void {
-        // update widget with the correct streams
         this._widgetService.liveCaptions.streams = [];
         this._containers.forEach(container => this._widgetService.liveCaptions.streams.push(new KalturaStreamContainer({
             id: container.id,
             language: container.language.toLowerCase(),
             label: container.label,
             type: 'closedCaptions'
-        })))
+        })));
+        this._widgetService.liveCaptions.streamsModified = true;
     }
 
     private setAddStreamDisabled(): void {
