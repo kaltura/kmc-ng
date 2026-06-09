@@ -4,7 +4,7 @@ import { Menu } from 'primeng/menu';
 import { ISubscription } from 'rxjs/Subscription';
 
 import { AppLocalization } from '@kaltura-ng/mc-shared';
-import { AppAuthentication } from 'app-shared/kmc-shell';
+import {AppAuthentication, AppBootstrap} from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 import {KalturaCaptionAssetStatus, KalturaCaptionAssetUsage, KalturaCaptionType, KalturaMediaType} from 'kaltura-ngx-client';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
@@ -38,7 +38,10 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
     @ViewChild('editPopup', { static: true }) public editPopup: PopupWidgetComponent;
 
     private _popupStateChangeSubscribe: ISubscription;
+    private unisphereRuntime: any = null;
+
     constructor(public _widgetService: EntryCaptionsWidget,
+                private _bootstrapService: AppBootstrap,
                 private _appAuthentication: AppAuthentication,
                 private _appLocalization: AppLocalization,
                 private _browserService: BrowserService,
@@ -73,6 +76,15 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
                     (status) => {}
                 );
             });
+
+        this._bootstrapService.unisphereWorkspace$
+            .pipe(cancelOnDestroy(this))
+            .subscribe(unisphereWorkspace => {
+                if (unisphereWorkspace) {
+                    this.unisphereRuntime = unisphereWorkspace.getRuntime('unisphere.widget.content-lab', 'application');
+                }
+            });
+
     }
 
     openActionsMenu(event: any, caption: any): void{
@@ -209,6 +221,13 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
     public _requestCaptions(): void {
         const entry = this._widgetService.data;
         this._reachAppViewService.open({ entry, page: ReachPages.entry });
+    }
+
+    public _orderCaptions(): void {
+        const entry = this._widgetService.data;
+        if (this.unisphereRuntime) {
+            this.unisphereRuntime.openApplication({entryId: entry.id, eventSessionContextId: '', type: 'entry', initialView: 'captions'});
+        }
     }
 }
 

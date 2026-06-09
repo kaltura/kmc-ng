@@ -54,6 +54,15 @@
         cursor: pointer;
     }
 }
+button ::ng-deep .ccIcon {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 1rem;
+    height: 1rem;
+    display: inline-block;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAANtJREFUeAHtlI0NwiAQha/GAXAD3EA3qBt0A1dwA+wE7QaOoBvoCG7QbqAb4KschhBaSYqJafqSrxB+7o4XCtGsf5ICOhHKBs2cBJrS6h17QT/WtBO0YAdWYA1KZ+4CtmR87to7Rci/CTmQ4AwqXtP1G+7vwRUUQAT2DyZ48FjtjJ04eM1zjbO26kuwpLCe3ApnrPDmpLMmpwj5FQgOqrlaCY5kbCFudeBEURZZS2yFghPYIAfvFIp6LPr2J7dkbkjIhhsZuyTYBPZmn89AgjGa4FNRUjqljDVrpF79dFd0D7lIZAAAAABJRU5ErkJggg==);
+}
 :host ::ng-deep .p-datatable {
     .p-datatable-data tr.uoloading {
         background: repeating-linear-gradient(

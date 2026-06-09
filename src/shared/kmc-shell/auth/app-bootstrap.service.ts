@@ -227,37 +227,38 @@ export class AppBootstrap implements CanActivate {
                 settings: {}
             }
         ];
-        // load content lab and ai-consent runtimes only if user has content lab permissions
-        if (loadContentLab) {
-            runtimes.push(
-                {
-                    widgetName: "unisphere.widget.content-lab",
-                    runtimeName: "application",
-                    visuals: [
-                        {
-                            type: "drawer",
-                            settings: {},
-                            target: {
-                                target: "body"
-                            }
+        // load content lab for all users to allow reach captions ordering via content lab
+        runtimes.push(
+            {
+                widgetName: "unisphere.widget.content-lab",
+                runtimeName: "application",
+                visuals: [
+                    {
+                        type: "drawer",
+                        settings: {},
+                        target: {
+                            target: "body"
                         }
-                    ],
-                    settings: {
-                        _schemaVersion: '1',
-                        ks: this.auth.appUser.ks,
-                        pid: this.auth.appUser.partnerId.toString(),
-                        loadThumbnailWithKS: this.auth.appUser.partnerInfo.loadThumbnailWithKs,
-                        uiconfId: serverConfig.kalturaServer.previewUIConfV7.toString(),
-                        analyticsServerURI: serverConfig.analyticsServer.uri,
-                        hostAppName: ApplicationType.KMC,
-                        hostAppVersion: globalConfig.client.appVersion,
-                        kalturaServerURI: "https://" + serverConfig.kalturaServer.uri,
-                        postSaveActions: "share,editQuiz,download,entry,downloadQuiz,playlist,editPlaylist,sharePlaylist",
-                        hostedInKalturaProduct: true,
-                        widget: "",
-                    },
-                }
-            );
+                    }
+                ],
+                settings: {
+                    _schemaVersion: '1',
+                    ks: this.auth.appUser.ks,
+                    pid: this.auth.appUser.partnerId.toString(),
+                    loadThumbnailWithKS: this.auth.appUser.partnerInfo.loadThumbnailWithKs,
+                    uiconfId: serverConfig.kalturaServer.previewUIConfV7.toString(),
+                    analyticsServerURI: serverConfig.analyticsServer.uri,
+                    hostAppName: ApplicationType.KMC,
+                    hostAppVersion: globalConfig.client.appVersion,
+                    kalturaServerURI: "https://" + serverConfig.kalturaServer.uri,
+                    postSaveActions: "share,editQuiz,download,entry,downloadQuiz,playlist,editPlaylist,sharePlaylist",
+                    hostedInKalturaProduct: true,
+                    widget: "",
+                },
+            }
+        );
+        // load ai-consent runtime only if user has content lab permissions
+        if (loadContentLab) {
             runtimes.push(
                 {
                     widgetName: "unisphere.widget.content-lab",
