@@ -21,7 +21,7 @@ import { ColumnsResizeManagerService, ResizableColumnsTableName } from 'app-shar
 import { filter } from 'rxjs/operators';
 import {
     KalturaCaptionAsset,
-    KalturaClient,
+    KalturaClient, KalturaLiveStreamAdminEntry,
     KalturaMediaEntry,
     KalturaMediaType,
     KalturaPlaylist,
@@ -320,8 +320,9 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
             if (entry && entry.id) {
                 if (this.unisphereRuntime) {
                     if (this._isLiveMediaEntry(entry.mediaType)) {
+                        const recordingEntryId = (entry as KalturaLiveStreamAdminEntry).recordedEntryId || entry.redirectEntryId || '';
                         this.unisphereRuntime.openApplication({
-                            entryId: '',
+                            entryId: recordingEntryId,
                             eventSessionContextId: entry.id,
                             type: 'entry',
                             initialView: 'captions'

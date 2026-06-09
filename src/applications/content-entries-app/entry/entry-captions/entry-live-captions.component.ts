@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {EntryCaptionsWidget, StreamContainer} from './entry-captions-widget.service';
 import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 import {KMCPermissions} from 'app-shared/kmc-shared/kmc-permissions';
-import {KalturaLiveStreamEntry, KalturaStreamContainer} from 'kaltura-ngx-client';
+import {KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry, KalturaStreamContainer} from 'kaltura-ngx-client';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {SelectItem} from 'primeng/api';
 import {LanguageOptionsService} from 'app-shared/kmc-shared/language-options';
@@ -120,7 +120,8 @@ export class EntryLiveCaptions implements OnInit, OnDestroy {
     public _orderCaptions(): void {
         const entry = this._widgetService.data;
         if (this._bootstrapService) {
-            this.unisphereRuntime.openApplication({entryId: '', eventSessionContextId: entry.id, type: 'entry', initialView: 'captions'});
+            const recordingEntryId = (entry as KalturaLiveStreamAdminEntry).recordedEntryId || entry.redirectEntryId || '';
+            this.unisphereRuntime.openApplication({entryId: recordingEntryId, eventSessionContextId: entry.id, type: 'entry', initialView: 'captions'});
         }
     }
 
