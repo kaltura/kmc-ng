@@ -89,7 +89,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
           disabled: !this._analyticsNewMainViewService.isAvailable()
       },
       {
-          label: this._appLocalization.get('applications.reach.captionRequests'),
+          label: this._appLocalization.get('applications.content.entryDetails.captions.orderLive'),
           commandName: 'captionOrder'
       },
       {
@@ -324,13 +324,15 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
                         this.unisphereRuntime.openApplication({
                             entryId: recordingEntryId,
                             eventSessionContextId: entry.id,
-                            type: 'entry'
+                            type: 'entry',
+                            initialView: 'captions'
                         });
                     } else {
                         this.unisphereRuntime.openApplication({
                             entryId: entry.id,
                             eventSessionContextId: '',
-                            type: 'entry'
+                            type: 'entry',
+                            initialView: 'captions'
                         });
                     }
                 }
