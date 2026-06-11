@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
+import {AppAnalytics, AppAuthentication, BrowserService, ButtonType} from 'app-shared/kmc-shell';
 import { subApplicationsConfig } from 'config/sub-applications';
 import { PreviewEmbedService, EmbedConfig, EmbedParams } from './preview-and-embed.service';
 
@@ -74,6 +74,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   constructor(private _previewEmbedService: PreviewEmbedService,
               private _appAuthentication: AppAuthentication,
               private _appLocalization: AppLocalization,
+              private _analytics: AppAnalytics,
               private _browserService: BrowserService,
               private _permissionsService: KMCPermissionsService,
               private _fb: FormBuilder) {
@@ -501,6 +502,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   public copyEmbedCode(el):void{
+    this._analytics.trackButtonClickEvent(ButtonType.Share, 'Copy_Embed_Code', this._selectedPlayerVersion === 2 ? 'v2' : 'v7', this._previewForm.controls['selectedEmbedType'].value);
     this._browserService.copyElementToClipboard(el);
     this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('app.common.copySuccess')});
   }
