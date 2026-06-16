@@ -76,7 +76,7 @@ import {buildUserSearchQuery, isHashed} from 'app-shared/kmc-shared';
                         <button type="button" class="kButtonDefault" (click)="this.revert();editPopup.close()" pButton
                                 label="{{'app.common.cancel' | translate}}"></button>
                         <button pButton type="button" class="kButtonBranded" [label]="'app.common.apply' | translate"
-                                (click)="this.validate();this.updateOriginalAction();editPopup.close()"></button>
+                                (click)="this.applyChanges();editPopup.close()"></button>
                     </div>
                 </div>
             </ng-template>
@@ -101,7 +101,7 @@ export class ActionNotificationComponent implements OnDestroy{
 
     public action: Action;
     private originalAction: Action;
-    private hasEmittedChange = false;
+    private isEditing = false;
 
     public sendToCustomUsers = false;
     public owners: KalturaUser[] = [];
@@ -132,15 +132,9 @@ export class ActionNotificationComponent implements OnDestroy{
     }
 
     public onEditClick(): void {
-        this.hasEmittedChange = false;
+        this.isEditing = true;
     }
 
-    private hasActualChanges(): boolean {
-        // Compare current action with original to detect actual changes
-        const currentActionString = JSON.stringify(this.action);
-        const originalActionString = JSON.stringify(this.originalAction);
-        return currentActionString !== originalActionString;
-    }
 
     public onMessageBodyChange(event): void {
         this.action.task.taskParams.sendNotificationTaskParams.messageBody = event.target.innerHTML;
@@ -192,9 +186,7 @@ export class ActionNotificationComponent implements OnDestroy{
             this.action.requires = 'delete';
         }
 
-        // Only emit change if the action has actually changed from the original
-        if (this.hasActualChanges()) {
-            this.hasEmittedChange = true;
+        if (!this.isEditing) {
             this.onActionChange.emit(this.action);
         }
     }
@@ -211,20 +203,18 @@ export class ActionNotificationComponent implements OnDestroy{
         this._analytics.trackButtonClickEvent(ButtonType.Toggle, this.analyticsEvents[this.type] + postFix, enabled ? 'enable' : 'disable' , 'Automation_manager');
     }
 
+    public applyChanges(): void {
+        // Exit editing mode and emit changes to parent
+        this.isEditing = false;
+        this.validate(); // This will now emit since isEditing is false
+        this.updateOriginalAction();
+    }
+
     public revert(): void {
-        // Only revert and emit if we actually made changes during this editing session
-        if (this.hasEmittedChange) {
-            this.action = JSON.parse(JSON.stringify(this.originalAction));
-            this.loadUsers();
-            this.sendToCustomUsers = this.action?.task?.taskParams?.sendNotificationTaskParams?.recipients?.userIds?.length > 0;
-            this.onActionChange.emit(this.action);
-            this.hasEmittedChange = false;
-        } else {
-            // Just restore the UI state without emitting (no actual changes were made)
-            this.action = JSON.parse(JSON.stringify(this.originalAction));
-            this.loadUsers();
-            this.sendToCustomUsers = this.action?.task?.taskParams?.sendNotificationTaskParams?.recipients?.userIds?.length > 0;
-        }
+        this.action = JSON.parse(JSON.stringify(this.originalAction));
+        this.loadUsers();
+        this.sendToCustomUsers = this.action?.task?.taskParams?.sendNotificationTaskParams?.recipients?.userIds?.length > 0;
+        this.isEditing = false;
     }
 
     public onNotificationsSaved(): void {
@@ -238,7 +228,6 @@ export class ActionNotificationComponent implements OnDestroy{
     public updateOriginalAction(): void {
         if (this.action) {
             this.originalAction = JSON.parse(JSON.stringify(this.action));
-            this.hasEmittedChange = false;
         }
     }
 
