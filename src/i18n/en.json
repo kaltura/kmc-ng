@@ -1900,6 +1900,7 @@
                     "request": "Captions & Enrich",
                     "order": "Order captions & translations",
                     "orderLive": "Order Captions",
+                    "orderCaptionsTranslations": "Captions & Translations",
                     "label": "Label",
                     "id": "ID",
                     "type": "File Type",

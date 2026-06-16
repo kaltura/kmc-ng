@@ -89,7 +89,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
           disabled: !this._analyticsNewMainViewService.isAvailable()
       },
       {
-          label: this._appLocalization.get('applications.content.entryDetails.captions.orderLive'),
+          label: this._appLocalization.get('applications.content.entryDetails.captions.orderCaptionsTranslations'),
           commandName: 'captionOrder'
       },
       {
