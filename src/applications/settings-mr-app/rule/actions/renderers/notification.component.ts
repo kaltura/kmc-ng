@@ -76,7 +76,7 @@ import {buildUserSearchQuery, isHashed} from 'app-shared/kmc-shared';
                         <button type="button" class="kButtonDefault" (click)="this.revert();editPopup.close()" pButton
                                 label="{{'app.common.cancel' | translate}}"></button>
                         <button pButton type="button" class="kButtonBranded" [label]="'app.common.apply' | translate"
-                                (click)="this.validate();this.updateOriginalAction();editPopup.close()"></button>
+                                (click)="this.validate();this.updateActionChanges();editPopup.close()"></button>
                     </div>
                 </div>
             </ng-template>
@@ -161,6 +161,7 @@ export class ActionNotificationComponent implements OnDestroy{
                     this.action.task.taskParams.sendNotificationTaskParams.daysToWait = 3;
                 }
                 this.originalAction = JSON.parse(JSON.stringify((this.action))); // save for revert
+                this.onActionChange.emit(this.action);
             } else {
                 // update
                 if (this.action.task?.id) {
@@ -178,9 +179,8 @@ export class ActionNotificationComponent implements OnDestroy{
         } else {
             // remove notification
             this.action.requires = 'delete';
+            this.onActionChange.emit(this.action);
         }
-
-        this.onActionChange.emit(this.action);
     }
 
     public sendMainAnalytics(): void {
@@ -199,7 +199,6 @@ export class ActionNotificationComponent implements OnDestroy{
         this.action = JSON.parse(JSON.stringify(this.originalAction));
         this.loadUsers();
         this.sendToCustomUsers = this.action?.task?.taskParams?.sendNotificationTaskParams?.recipients?.userIds?.length > 0;
-        this.onActionChange.emit(this.action);
     }
 
     public onNotificationsSaved(): void {
@@ -210,10 +209,11 @@ export class ActionNotificationComponent implements OnDestroy{
         }
     }
 
-    public updateOriginalAction(): void {
+    public updateActionChanges(): void {
         if (this.action) {
             this.originalAction = JSON.parse(JSON.stringify(this.action));
         }
+        this.onActionChange.emit(this.action);
     }
 
     // --------------------------- users auto complete code --------------------------
