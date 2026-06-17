@@ -6,7 +6,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
-import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaBaseEntry } from 'kaltura-ngx-client';
 import { BulkRemoveCategoriesService } from '../../services/';
 import { KalturaCategory } from 'kaltura-ngx-client';
 
@@ -17,7 +17,7 @@ import { KalturaCategory } from 'kaltura-ngx-client';
 })
 export class BulkRemoveCategories implements OnInit, OnDestroy, AfterViewInit {
 
-  @Input() selectedEntries: KalturaMediaEntry[];
+  @Input() selectedEntries: KalturaBaseEntry[];
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Output() removeCategoriesChanged = new EventEmitter<string[]>();
 

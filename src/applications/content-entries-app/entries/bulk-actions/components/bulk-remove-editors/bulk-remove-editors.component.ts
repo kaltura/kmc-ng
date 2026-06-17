@@ -4,7 +4,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui';
-import {KalturaMediaEntry} from 'kaltura-ngx-client';
+import {KalturaBaseEntry} from 'kaltura-ngx-client';
 import {KalturaUser} from 'kaltura-ngx-client';
 
 @Component({
@@ -14,7 +14,7 @@ import {KalturaUser} from 'kaltura-ngx-client';
 })
 export class BulkRemoveEditorsComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  @Input() selectedEntries: KalturaMediaEntry[];
+  @Input() selectedEntries: KalturaBaseEntry[];
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Output() removeEditorsChanged = new EventEmitter<string[]>();
 

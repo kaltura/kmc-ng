@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {DocumentsFilters, DocumentsStore, SortDirection} from '../documents-store/documents-store.service';
-import {KalturaDocumentEntry} from 'kaltura-ngx-client';
+import {KalturaBaseEntry, KalturaDocumentEntry} from 'kaltura-ngx-client';
 import {AreaBlockerMessage, StickyComponent} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {AppAnalytics, BrowserService} from 'app-shared/kmc-shell/providers';
@@ -38,6 +38,7 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
     public _tableBlockerMessage: AreaBlockerMessage = null;
     public _categoriesUpdating = false;
     public _categoriesLocked = false;
+    public _selectedDocuments: KalturaBaseEntry[] = [];
 
   public _query = {
     freetext: '',
@@ -389,6 +390,13 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
 
   public _reload(): void {
     this._documentsStore.reload();
+  }
+
+  public onBulkChange(event: { reload: boolean }): void {
+    if (event.reload) {
+      this._selectedDocuments = [];
+      this._documentsStore.reload();
+    }
   }
 
 }

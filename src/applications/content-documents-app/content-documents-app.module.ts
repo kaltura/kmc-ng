@@ -44,7 +44,6 @@ import { DocumentCanDeactivate } from './document/document-can-deactivate.servic
 import { DocumentDetailsComponent } from './document/document-details/document-details.component';
 import { DocumentSectionsList } from './document/document-sections-list/document-sections-list.component';
 import { JumpToSection } from './document/document-metadata/jump-to-section.component';
-import { CategoriesSelector } from './document/document-metadata/category-selector/categories-selector.component';
 import { DocumentMetadataComponent } from './document/document-metadata/document-metadata.component';
 import { DynamicMetadataFormModule } from 'app-shared/kmc-shared';
 import { DocumentThumbnails } from './document/document-thumbnails/document-thumbnails.component';
@@ -53,6 +52,7 @@ import { DocumentScheduling } from './document/document-scheduling/document-sche
 import { DocumentRelatedEdit } from './document/document-related/document-related-edit.component';
 import { DocumentRelated } from './document/document-related/document-related.component';
 import { DocumentUsers } from './document/document-users/document-users.component';
+import { BulkActionsModule } from '../content-entries-app/entries/bulk-actions/bulk-actions.module';
 
 @NgModule({
     imports: [
@@ -91,7 +91,8 @@ import { DocumentUsers } from './document/document-users/document-users.componen
       KPTableModule,
       DateFormatModule,
       DynamicMetadataFormModule,
-      CategoriesModule
+      CategoriesModule,
+      BulkActionsModule,
     ],
     declarations: [
       ContentDocumentsComponent,
@@ -102,7 +103,6 @@ import { DocumentUsers } from './document/document-users/document-users.componen
       DocumentComponent,
       DocumentDetailsComponent,
       DocumentSectionsList,
-      CategoriesSelector,
       JumpToSection,
       DocumentMetadataComponent,
       DocumentThumbnails,

@@ -2,7 +2,7 @@ import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { subApplicationsConfig } from 'config/sub-applications';
 
-import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaBaseEntry } from 'kaltura-ngx-client';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaRequest, KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-ngx-client';
 
@@ -12,7 +12,7 @@ export abstract class BulkActionBaseService<T> {
   constructor(public _kalturaServerClient: KalturaClient) {
   }
 
-  public abstract execute(selectedEntries: KalturaMediaEntry[] , params : T) : Observable<any>;
+  public abstract execute(selectedEntries: KalturaBaseEntry[] , params : T) : Observable<any>;
 
   transmit(requests : KalturaRequest<any>[], chunk : boolean) : Observable<{}>
   {

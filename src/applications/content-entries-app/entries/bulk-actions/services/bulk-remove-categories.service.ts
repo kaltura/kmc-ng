@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 
-import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaBaseEntry } from 'kaltura-ngx-client';
 import { KalturaCategoryEntry } from 'kaltura-ngx-client';
 import { BulkActionBaseService } from './bulk-action-base.service';
 import { CategoryEntryListAction } from 'kaltura-ngx-client';
@@ -69,7 +69,7 @@ export class BulkRemoveCategoriesService extends BulkActionBaseService<number[]>
             }))
     }
 
-    public execute(entries: KalturaMediaEntry[], categoriesId: number[]): Observable<{}> {
+    public execute(entries: KalturaBaseEntry[], categoriesId: number[]): Observable<{}> {
         return Observable.create(observer => {
 
             const entriesId = entries ? entries.map(entry => entry.id) : [];

@@ -85,8 +85,25 @@
 		}
 	}
 	.kBulkOperations {
-    display: flex;
-    align-items: center;
+        display: flex;
+        align-items: center;
+        .kSelectedEntriesLabel {
+            font-weight: bold;
+            margin-right: 36px;
+            margin-left: 5px;
+            white-space: nowrap;
+        }
+        .kBulkCancel {
+            margin-left: 10px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+	}
+	.kHidden {
+		visibility: hidden;
+		width: 0;
+		height: 0;
+		overflow: hidden;
 	}
 	.kSearchInput {
 		background: $kMagnifyingGlassBkg;

@@ -10,7 +10,18 @@
               {{'applications.content.documents.documents' | translate : [(_documentsStore.documents.data$ | async)?.totalCount] }}
             </span>
 
-                        <div class="kFilters">
+                        <div [class.kHidden]="!_selectedDocuments?.length" class="kBulkOperations">
+                            <span *ngIf="_selectedDocuments?.length" class="kSelectedEntriesLabel">
+                                • {{_selectedDocuments.length}} {{'applications.content.entries.selected' | translate}}
+                            </span>
+                            <kBulkActions [selectedEntries]="_selectedDocuments"
+                                          (onBulkChange)="onBulkChange($event)"
+                                          [(blockerMessage)]="_blockerMessage"></kBulkActions>
+                            <a class="kBulkCancel"
+                               (click)="_selectedDocuments = []">{{'applications.content.entries.cancel' | translate}}</a>
+                        </div>
+
+                        <div class="kFilters" [class.kHidden]="_selectedDocuments?.length">
                             <input type="text" pInputText class="kSearchInput"
                                    [(ngModel)]="_query.freetext"
                                    (keyup.enter)="_onFreetextChanged()"
@@ -51,6 +62,7 @@
                             [bodyScroll]="true">
                 <kDocumentsTable
                     [documents]="(_documentsStore.documents.data$ | async)?.items"
+                    [(selectedDocuments)]="_selectedDocuments"
                     (sortChanged)="_onSortChanged($event)"
                     [sortField]="_query.sortBy"
                     [sortOrder]="_query.sortDirection"
