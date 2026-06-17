@@ -12,7 +12,7 @@ import { kmcAppConfig } from "../../../kmc-app/kmc-app-config";
 import { globalConfig } from "config/global";
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 import { serverConfig } from "config/server";
-import { ApplicationType } from "app-shared/kmc-shell";
+import { ApplicationType } from "app-shared/kmc-shell/providers/app-analytics.service";
 import { UnisphereWorkspaceType } from "@unisphere/runtime";
 import { registerElementInGlobalKalturaVersions } from '@unisphere/core';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
