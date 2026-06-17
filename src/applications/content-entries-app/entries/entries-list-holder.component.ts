@@ -169,9 +169,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
           this._rowActions[0].label = this._appLocalization.get('applications.content.table.previewInPlayer');
       }
 
-      if (this._contentLabAvailable) {
-          this.registerToContentLabAction();
-      }
+      this.registerToContentLabAction();
   }
 
   private registerToContentLabAction(): void {
