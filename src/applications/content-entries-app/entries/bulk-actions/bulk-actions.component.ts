@@ -91,6 +91,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   @Input() selectedEntries: KalturaBaseEntry[];
   @Input() blockerMessage: AreaBlockerMessage;
+  @Input() isDocuments: boolean;
 
   @Output() onBulkChange = new EventEmitter<{ reload: boolean }>();
   @Output() blockerMessageChange = new EventEmitter<AreaBlockerMessage>();
@@ -304,7 +305,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   // bulk delete
   public deleteEntries(): void {
     this._analytics.trackClickEvent('Bulk_delete');
-    
+
     if(this.selectedEntries.length <= 25) {
       const entriesToDelete = this.selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}` ),
       entries: string = this.selectedEntries.length <= 10 ? entriesToDelete.join(',').replace(/,/gi, '\n') : '',
@@ -463,24 +464,33 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
                   }
               ]
           },
-          {
-              label: this._appLocalization.get('applications.content.bulkActions.addToNewCategoryPlaylist'), items: [
-              {
-                  label: this._appLocalization.get('applications.content.bulkActions.addToNewCategory'),
-                  command: (event) => {
-                      this._addSelectedEntriesToNewCategory();
-                  },
-                  disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES)
+
+          ...(this.isDocuments ? [{
+              label: this._appLocalization.get('applications.content.bulkActions.addToNewCategory'),
+              command: (event) => {
+                  this._addSelectedEntriesToNewCategory();
               },
+              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES)
+          }] : [
               {
-                  label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'),
-                  command: (event) => {
-                      this.performBulkAction('addToNewPlaylist');
-                  },
-                  disabled: !this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_ADD)
-              }],
-              disabled: !this._permissionsService.hasAnyPermissions([KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES, KMCPermissions.PLAYLIST_ADD])
-          },
+                  label: this._appLocalization.get('applications.content.bulkActions.addToNewCategoryPlaylist'), items: [
+                      {
+                          label: this._appLocalization.get('applications.content.bulkActions.addToNewCategory'),
+                          command: (event) => {
+                              this._addSelectedEntriesToNewCategory();
+                          },
+                          disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES)
+                      },
+                      {
+                          label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'),
+                          command: (event) => {
+                              this.performBulkAction('addToNewPlaylist');
+                          },
+                          disabled: !this._permissionsService.hasPermission(KMCPermissions.PLAYLIST_ADD)
+                      }],
+                  disabled: !this._permissionsService.hasAnyPermissions([KMCPermissions.CONTENT_MANAGE_EDIT_CATEGORIES, KMCPermissions.PLAYLIST_ADD])
+              }
+          ]),
           {
               label: this._appLocalization.get('applications.content.bulkActions.addRemoveCategories'), items: [
               {

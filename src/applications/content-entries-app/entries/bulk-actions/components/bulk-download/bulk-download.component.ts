@@ -21,6 +21,7 @@ import {SelectItem} from 'primeng/api';
 export class BulkDownload implements OnInit, OnDestroy, AfterViewInit {
 
 	@Input() selectedEntries: KalturaBaseEntry[];
+    @Input() isDocument: boolean;
 	@Input() parentPopupWidget: PopupWidgetComponent;
 	@Output() downloadChanged = new EventEmitter<number>();
 

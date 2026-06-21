@@ -14,7 +14,7 @@
                             <span *ngIf="_selectedDocuments?.length" class="kSelectedEntriesLabel">
                                 • {{_selectedDocuments.length}} {{'applications.content.entries.selected' | translate}}
                             </span>
-                            <kBulkActions [selectedEntries]="_selectedDocuments"
+                            <kBulkActions [selectedEntries]="_selectedDocuments" [isDocuments]="true"
                                           (onBulkChange)="onBulkChange($event)"
                                           [(blockerMessage)]="_blockerMessage"></kBulkActions>
                             <a class="kBulkCancel"

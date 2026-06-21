@@ -4,11 +4,11 @@
     <div class="kDownload">
       <span class="kLabel" *ngIf="selectedEntries?.length === 1">{{'applications.content.bulkActions.download1Label' | translate}}</span>
       <span class="kLabel" *ngIf="selectedEntries?.length > 1">{{'applications.content.bulkActions.downloadManyLabel' | translate:_downloadLabel }}</span>
-      <span class="kLabel kSpacer">{{'applications.content.bulkActions.downloadFlavor' | translate }}</span>
-      <p-dropdown [options]="_flavors" [(ngModel)]="_selectedFlavor" (onChange)="_onSelectionChanged()"></p-dropdown>
-      <span class="kLabel">{{'applications.content.bulkActions.downloadAudio' | translate }}</span>
-      <span class="kLabel">{{'applications.content.bulkActions.downloadImage' | translate }}</span>
-      <div>
+      <span *ngIf="!isDocument" class="kLabel kSpacer">{{'applications.content.bulkActions.downloadFlavor' | translate }}</span>
+      <p-dropdown *ngIf="!isDocument" [options]="_flavors" [(ngModel)]="_selectedFlavor" (onChange)="_onSelectionChanged()"></p-dropdown>
+      <span *ngIf="!isDocument" class="kLabel">{{'applications.content.bulkActions.downloadAudio' | translate }}</span>
+      <span *ngIf="!isDocument" class="kLabel">{{'applications.content.bulkActions.downloadImage' | translate }}</span>
+      <div *ngIf="!isDocument">
         <span><b>{{'app.common.note' | translate }}</b></span>
         <span>{{'applications.content.bulkActions.downloadNote' | translate }}</span>
       </div>
