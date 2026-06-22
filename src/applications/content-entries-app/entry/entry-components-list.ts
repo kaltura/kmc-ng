@@ -19,7 +19,6 @@ import {EntryComponent} from './entry.component';
 import {EntryPreview} from './entry-preview/entry-preview.component';
 import {EntryDetails} from './entry-details/entry-details.component';
 import {JumpToSection} from './entry-metadata/jump-to-section.component';
-import {CategoriesSelector} from './entry-metadata/category-selector/categories-selector.component';
 import {TagsPipe} from './entry-flavours/pipes/tags.pipe';
 
 import {EntryDistributionComponent } from './entry-distribution/entry-distribution.component';
@@ -47,7 +46,6 @@ import {EntryLiveCaptions} from './entry-captions/entry-live-captions.component'
 import {EntryQuizzes} from './entry-quizzes/entry-quizzes.component';
 
 export const EntryComponentsList = [
-    CategoriesSelector,
     DRMDetails,
     EntryAccessControl,
     EntryCaptions,

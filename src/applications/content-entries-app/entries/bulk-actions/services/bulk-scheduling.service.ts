@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { KalturaClient } from 'kaltura-ngx-client';
 
-import { KalturaMediaEntry } from 'kaltura-ngx-client';
 import { KalturaBaseEntry } from 'kaltura-ngx-client';
 import { BaseEntryUpdateAction } from 'kaltura-ngx-client';
 import { BulkActionBaseService } from './bulk-action-base.service';
@@ -21,7 +20,7 @@ export class BulkSchedulingService extends BulkActionBaseService<SchedulingParam
     super(_kalturaServerClient);
   }
 
-  public execute(selectedEntries: KalturaMediaEntry[], schedulingParams : SchedulingParams) : Observable<{}>{
+  public execute(selectedEntries: KalturaBaseEntry[], schedulingParams : SchedulingParams) : Observable<{}>{
     return Observable.create(observer =>{
 
       let requests: BaseEntryUpdateAction[] = [];

@@ -42,9 +42,11 @@ export class DocumentsTableComponent implements AfterViewInit, OnInit, OnDestroy
 
     @Input() sortField: string = null;
     @Input() sortOrder: number = null;
+    @Input() selectedDocuments: KalturaDocumentEntry[] = [];
 
     @Output() sortChanged = new EventEmitter<{ field: string, order: number }>();
     @Output() actionSelected = new EventEmitter<any>();
+    @Output() selectedDocumentsChange = new EventEmitter<KalturaDocumentEntry[]>();
 
     @ViewChild('actionsmenu', {static: true}) private actionsMenu: Menu;
 
@@ -142,6 +144,10 @@ export class DocumentsTableComponent implements AfterViewInit, OnInit, OnDestroy
     onActionSelected(action: string, document: KalturaDocumentEntry) {
         if (action === 'view' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_METADATA)) return;
         this.actionSelected.emit({'action': action, 'document': document});
+    }
+
+    public _onSelectionChange(event: KalturaDocumentEntry[]): void {
+        this.selectedDocumentsChange.emit(event);
     }
 
     onSortChanged(event) {

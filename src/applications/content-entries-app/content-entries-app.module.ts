@@ -22,6 +22,7 @@ import {DynamicFormModule} from '@kaltura-ng/kaltura-ui';
 import {DynamicFormModule as PrimeDynamicFormModule} from '@kaltura-ng/kaltura-primeng-ui';
 import {EntryComponentsList} from './entry/entry-components-list';
 import {EntriesComponentsList} from './entries/entries-components-list';
+import {BulkActionsModule} from './entries/bulk-actions/bulk-actions.module';
 
 import {EntryCanDeactivate} from './entry/entry-can-deactivate.service';
 import {EntriesModule} from 'app-shared/content-shared/entries/entries.module';
@@ -115,7 +116,8 @@ import {ContentLabModule} from 'app-shared/content-shared/content-lab/content-la
         ClearableInputModule,
         DateFormatModule,
         TranslateModule,
-        ContentLabModule
+        ContentLabModule,
+        BulkActionsModule,
     ],
   declarations: [
     ContentEntriesComponent,

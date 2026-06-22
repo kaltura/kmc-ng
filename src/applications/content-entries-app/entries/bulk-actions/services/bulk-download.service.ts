@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { KalturaClient } from 'kaltura-ngx-client';
 
-import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaBaseEntry } from 'kaltura-ngx-client';
 import { BulkActionBaseService } from './bulk-action-base.service';
 import { XInternalXAddBulkDownloadAction } from './XInternalXAddBulkDownloadAction';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
@@ -22,7 +22,7 @@ export class BulkDownloadService extends BulkActionBaseService<number> {
     super(_kalturaServerClient);
   }
 
-  public execute(selectedEntries: KalturaMediaEntry[], flavorId: number) : Observable<{}>{
+  public execute(selectedEntries: KalturaBaseEntry[], flavorId: number) : Observable<{}>{
     return Observable.create(observer =>{
 
       let requests: XInternalXAddBulkDownloadAction[] = [];

@@ -3,7 +3,7 @@ import {ISubscription} from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui';
-import {KalturaMediaEntry} from 'kaltura-ngx-client';
+import {KalturaBaseEntry} from 'kaltura-ngx-client';
 
 @Component({
   selector: 'kBulkRemoveTags',
@@ -12,7 +12,7 @@ import {KalturaMediaEntry} from 'kaltura-ngx-client';
 })
 export class BulkRemoveTags implements OnInit, OnDestroy, AfterViewInit {
 
-  @Input() selectedEntries: KalturaMediaEntry[];
+  @Input() selectedEntries: KalturaBaseEntry[];
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Output() removeTagsChanged = new EventEmitter<string[]>();
 

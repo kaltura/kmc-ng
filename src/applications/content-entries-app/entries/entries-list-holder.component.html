@@ -5,7 +5,7 @@
               [rowActions]="_rowActions"
               (onActionsSelected)="_onActionSelected($event)">
   <div class="bulk-actions">
-    <kBulkActions [selectedEntries]="_entriesList.selectedEntries"
+    <kBulkActions [selectedEntries]="_entriesList.selectedEntries" [isDocuments]="false"
                   (onBulkChange)="_entriesList.onBulkChange($event)"
                   [(blockerMessage)]="_blockerMessage"></kBulkActions>
   </div>

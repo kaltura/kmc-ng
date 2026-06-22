@@ -12,9 +12,12 @@
             [defaultSortOrder]="_defaultSortOrder"
             (sortFunction)="onSortChanged($event)" [customSort]="true"
             (onColResize)="_columnsResizeManager.onColumnResize($event)"
+            [(selection)]="selectedDocuments"
+            (selectionChange)="_onSelectionChange($event)"
             kStickyHeader [sticksTo]="'roomsTags'" stickyClass="stickyHeader" [stickyId]="'roomsTable'">
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
+                <col style="width:44px; padding-left: 13px">
                 <col data-cid="thumbnail" [ngStyle]="{'width': '110px'}">
                 <col data-cid="name">
                 <col data-cid="documentId" [ngStyle]="{'width': '160px'}">
@@ -24,6 +27,9 @@
         </ng-template>
       <ng-template pTemplate="header">
         <tr>
+          <th [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
           <th data-cid="thumbnailUrl" [ngStyle]="{'width': '110px'}"></th>
           <th data-cid="name" pResizableColumn [pSortableColumn]="'name'">
             {{'applications.content.table.name' | translate}}
@@ -45,6 +51,10 @@
 
       <ng-template pTemplate="body" let-document>
         <tr [pSelectableRow]="document">
+
+            <td [ngStyle]="{'width': '44px', 'padding-left': '13px'}">
+                <p-tableCheckbox [value]="document"></p-tableCheckbox>
+            </td>
 
             <td [ngStyle]="{'width': '110px'}">
                 <div class="kThumbnailHolder" #holder [class.showIcon]="!document.thumbnailUrl">

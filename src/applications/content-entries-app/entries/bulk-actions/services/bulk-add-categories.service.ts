@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { KalturaClient } from 'kaltura-ngx-client';
 
-import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaBaseEntry } from 'kaltura-ngx-client';
 import { KalturaCategoryEntry } from 'kaltura-ngx-client';
 import { BulkActionBaseService } from './bulk-action-base.service';
 import { CategoryEntryAddAction } from 'kaltura-ngx-client';
@@ -21,7 +21,7 @@ export class BulkAddCategoriesService extends BulkActionBaseService<CategoryData
     super(_kalturaServerClient);
   }
 
-  public execute(entries: KalturaMediaEntry[], categories: CategoryData[]): Observable<void> {
+  public execute(entries: KalturaBaseEntry[], categories: CategoryData[]): Observable<void> {
     return Observable.create(observer => {
       if (!entries || !entries.length || !categories || !categories.length) {
         observer.error(new Error(this._appLocalization.get('applications.content.bulkActions.noCategoriesOrEntries')));
