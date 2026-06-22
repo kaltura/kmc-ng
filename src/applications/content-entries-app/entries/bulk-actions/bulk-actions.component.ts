@@ -397,13 +397,15 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   getBulkActionItems(): MenuItem[] {
       const result: MenuItem[] = [
-          {
-              label: this._appLocalization.get('applications.content.bulkActions.download'), command: (event) => {
-              this._bulkMenu.hide();
-              this.downloadEntries();
-          },
-              disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DOWNLOAD)
-          },
+          ...(this.isDocuments ? [] : [
+              {
+                  label: this._appLocalization.get('applications.content.bulkActions.download'), command: (event) => {
+                      this._bulkMenu.hide();
+                      this.downloadEntries();
+                  },
+                  disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DOWNLOAD)
+              }
+          ]),
           {
               disabled: !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_ENTRY_USERS),
               label: this._appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => {
