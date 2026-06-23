@@ -342,7 +342,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
     public _openDocumentAnalytics(): void {
         if (this._analyticsAllowed) {
             this._analytics.trackClickEvent('View_analytics');
-            this._router.navigate(['analytics/document'], { queryParams: { id: this._currentDocumentId } });
+            this._router.navigate(['analytics/entry'], { queryParams: { id: this._currentDocumentId } });
         }
     }
 

@@ -366,7 +366,7 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
 
     public _openDocumentAnalytics(id: string): void {
         this._analytics.trackClickEvent('View_analytics');
-        this._router.navigate(['analytics/document'], { queryParams: { id } });
+        this._router.navigate(['analytics/entry'], { queryParams: { id } });
     }
 
   public _onFreetextChanged(): void {
