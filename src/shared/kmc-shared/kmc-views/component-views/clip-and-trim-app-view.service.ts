@@ -60,10 +60,7 @@ export class ClipAndTrimAppViewService extends KmcComponentViewBaseService<ClipA
         const entryReady = entry.status === KalturaEntryStatus.ready;
         const isEntryReplacing = entry.replacementStatus && entry.replacementStatus !== KalturaEntryReplacementStatus.none;
         const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
-
-        // TODO: swap the 2 lines below once KEA with Youtube editing support is released
-        const isEntryRelevant = [KalturaMediaType.video, KalturaMediaType.audio].indexOf(entry.mediaType) !== -1 && !isExternalMedia;
-        // const isEntryRelevant = [KalturaMediaType.video, KalturaMediaType.audio].indexOf(entry.mediaType) !== -1;
+        const isEntryRelevant = [KalturaMediaType.video, KalturaMediaType.audio].indexOf(entry.mediaType) !== -1;
 
         const isLiveEntry = [
             KalturaMediaType.liveStreamFlash,
@@ -73,10 +70,8 @@ export class ClipAndTrimAppViewService extends KmcComponentViewBaseService<ClipA
         ].indexOf(entry.mediaType) !== -1;
         const isAvailableForLive = isLiveEntry && !!(<KalturaLiveEntry>entry).recordedEntryId;
 
-        // TODO: swap the next lines with the 2 lines below it once KEA with Youtube editing support is released
-        const isAvailableForMedia = !isLiveEntry && isEntryRelevant && hasSource && entryReady && !isEntryReplacing;
-        // let isAvailableForMedia = !isLiveEntry && isEntryRelevant && entryReady && !isEntryReplacing;
-        // isAvailableForMedia = isExternalMedia ? isAvailableForMedia : isAvailableForMedia  && hasSource;
+        let isAvailableForMedia = !isLiveEntry && isEntryRelevant && entryReady && !isEntryReplacing;
+        isAvailableForMedia = isExternalMedia ? isAvailableForMedia : isAvailableForMedia  && hasSource;
 
 
         const result = isAvailableForMedia || isAvailableForLive;
