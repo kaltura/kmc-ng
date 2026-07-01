@@ -59,8 +59,7 @@ export class QuizAppViewService extends KmcComponentViewBaseService<QuizAppViewA
             entry.mediaType === KalturaMediaType.liveStreamWindowsMedia ||
             entry.mediaType === KalturaMediaType.liveStreamRealMedia ||
             entry.mediaType === KalturaMediaType.liveStreamQuicktime;
-        const isExternalMedia = entry instanceof KalturaExternalMediaEntry;
-        const isEntryRelevant = [KalturaMediaType.video, KalturaMediaType.audio].indexOf(entry.mediaType) !== -1 && !isExternalMedia;
+        const isEntryRelevant = [KalturaMediaType.video, KalturaMediaType.audio].indexOf(entry.mediaType) !== -1;
 
         const result = hasSource && entryReady && !isEntryReplacing && isEntryRelevant && !isLiveEntry;
 
@@ -71,7 +70,6 @@ export class QuizAppViewService extends KmcComponentViewBaseService<QuizAppViewA
                 entryReady,
                 isLiveEntry,
                 isEntryReplacing,
-                isExternalMedia,
                 entryMediaType: entry.mediaType,
                 isEntryRelevant
             }
