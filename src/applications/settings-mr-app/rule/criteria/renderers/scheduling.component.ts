@@ -48,14 +48,14 @@ export class CriteriaSchedulingComponent implements OnInit{
     public isValid = true;
 
     public _startDateOptions: { value: string, label: string }[] = [
-        {value: 'startDateLessThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.less')},
-        {value: 'startDateGreaterThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
+        {value: 'startDateGreaterThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.less')},
+        {value: 'startDateLessThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
     ];
     public _startDateOptionSelected = 'startDateLessThanOrEqual';
 
     public _endDateOptions: { value: string, label: string }[] = [
-        {value: 'endDateLessThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.less')},
-        {value: 'endDateGreaterThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
+        {value: 'endDateGreaterThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.less')},
+        {value: 'endDateLessThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
     ];
     public _endDateOptionSelected = 'endDateLessThanOrEqual';
 
