@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientXsrfModule, HttpClient, HttpClientModule } from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {NgxWebstorageModule} from 'ngx-webstorage';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
@@ -137,6 +137,10 @@ export function kalturaClientDefaultOptionsFactory(): KalturaRequestOptionsArgs 
         ConfirmDialogModule,
         DropdownModule,
         HttpClientModule,
+        HttpClientXsrfModule.withOptions({
+            cookieName: 'XSRF-TOKEN',
+            headerName: 'X-XSRF-TOKEN',
+        }),
         InputTextModule,
         MetadataProfileModule.forRoot(),
         NgxPageScrollModule,
