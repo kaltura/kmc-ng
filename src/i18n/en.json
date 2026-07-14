@@ -2734,6 +2734,14 @@
                     "updateFailed": "An error occurred during Account Info update",
                     "loadFailed": "An error occurred during Account Info loading",
                     "invalidFields": "There are some invalid fields."
+                },
+                "security": {
+                    "title": "Security",
+                    "purifier": "HTML Purifier Behavior",
+                    "ignore": "Ignore",
+                    "sanitize": "Sanitize",
+                    "block": "Block",
+                    "fileTypeRestriction": "Enable file type restriction"
                 }
             },
             "accountInformation": {

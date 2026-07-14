@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {KalturaClient, KalturaFilterPager} from 'kaltura-ngx-client';
+import {KalturaClient, KalturaFilterPager, KalturaHTMLPurifierBehaviourType} from 'kaltura-ngx-client';
 import { KalturaMultiRequest, KalturaRequest, KalturaRequestBase } from 'kaltura-ngx-client';
 import {KalturaUserRoleFilter} from 'kaltura-ngx-client';
 import {KalturaUserRoleStatus} from 'kaltura-ngx-client';
@@ -44,11 +44,23 @@ export class SettingsAccountSettingsService {
       partner
     }));
   }
-  /** update the data for current partner */
+  /** update the sso data for current partner */
   public updatePartnerSSO(useSso: boolean, blockDirectLogin: boolean): Observable<KalturaPartner> {
     const partner = new KalturaPartner({
         useSso,
         blockDirectLogin
+    });
+    return this._kalturaServerClient.request(new PartnerUpdateAction({
+      partner
+    }));
+  }
+
+  /** update the security data for current partner */
+  public updatePartnerSecuritySettings(htmlPurifierBehaviour: KalturaHTMLPurifierBehaviourType, fileTypeRestrictionEnabled: boolean): Observable<KalturaPartner> {
+    const partner = new KalturaPartner({
+        htmlPurifierBehaviour,
+        fileTypeRestrictionEnabled,
+        htmlPurifierBaseListUsage: true
     });
     return this._kalturaServerClient.request(new PartnerUpdateAction({
       partner

@@ -1,5 +1,6 @@
 import { KalturaPartnerAuthenticationType } from "kaltura-ngx-client";
-import {KalturaPartnerStatus} from "kaltura-ngx-client/lib/api/types/KalturaPartnerStatus";
+import { KalturaPartnerStatus } from "kaltura-ngx-client/lib/api/types/KalturaPartnerStatus";
+import { KalturaHTMLPurifierBehaviourType } from 'kaltura-ngx-client/lib/api/types/KalturaHTMLPurifierBehaviourType';
 
 export interface PartnerInfo {
     partnerId: number;
@@ -14,6 +15,8 @@ export interface PartnerInfo {
     isSelfServe: boolean;
     loadThumbnailWithKs: boolean;
     isChildAccount: boolean;
+    fileTypeRestrictionEnabled: boolean;
+    htmlPurifierBehaviour: KalturaHTMLPurifierBehaviourType;
     authenticationType: KalturaPartnerAuthenticationType;
 }
 

@@ -142,24 +142,22 @@
       .error {
         padding-top: 8px;
       }
-
-      &.kSaveBtnContainer {
-        padding-top: 28px;
-        .kSaveBtn {
-          margin-left: auto;
-          width: 125px;
-          height: 34px;
-          font-weight: 400;
-        }
-      }
     }
   }
+}
+.kSaveBtnContainer {
+    padding-top: 28px;
+    .kSaveBtn {
+        margin-left: auto;
+        width: 125px;
+        height: 34px;
+        font-weight: 400;
+    }
 }
 .sso {
     background-color: white;
     width: 100%;
     margin-top: 24px;
-    margin-bottom: 24px;
     padding: 24px;
     display: flex;
     box-sizing: border-box;
@@ -226,7 +224,18 @@
     width: 100%;
     margin-bottom: 24px;
 }
-
+.security {
+    margin-bottom: 24px;
+    .kSecurity {
+        width: 710px;
+    }
+    .kDropDownWrapper {
+        width: 400px;
+        ::ng-deep p-dropdown {
+            width: 100%;
+        }
+    }
+}
 /*********************/
 /* PrimeNG overrides */
 /*********************/

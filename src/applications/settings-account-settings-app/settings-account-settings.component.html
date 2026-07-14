@@ -144,6 +144,38 @@
             </div>
         </div>
     </div>
+
+        <div class="sso security">
+            <span class="kTitle">{{'applications.settings.accountSettings.security.title' | translate}}</span>
+
+            <div class="kRow pushDown">
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.accountSettings.security.purifier' | translate}}</span>
+                </div>
+                <div class="kRow kDropDownWrapper">
+                    <p-dropdown [options]="htmlPurifierBehaviourOptions"
+                                (onChange)="_securitySettings.isDirty = true"
+                                [(ngModel)]="_securitySettings.htmlPurifierBehaviour">
+                    </p-dropdown>
+                </div>
+            </div>
+
+            <div class="kRow pushDown">
+                <div class="labelWithHelpTip">
+                    <span class="kLabel">{{'applications.settings.accountSettings.security.fileTypeRestriction' | translate}}</span>
+                </div>
+                <div class="kRow">
+                    <p-inputSwitch class="kInputSwitch" [(ngModel)]="_securitySettings.fileTypeRestrictionEnabled" (onChange)="_securitySettings.isDirty = true"></p-inputSwitch>
+                </div>
+            </div>
+
+            <div class="kSaveBtnContainer kRow kSecurity">
+                <button pButton class="kButtonBranded kSaveBtn"
+                        (click)="saveSecuritySettings()"
+                        label="{{'applications.settings.accountSettings.apply' | translate}}"
+                        [disabled]="!_securitySettings.isDirty"></button>
+            </div>
+        </div>
   </div>
 
     <kPopupWidget #ssoConfig data-aid="ssoConfigPopup" [popupWidth]="730" [popupHeight]="420" [modal]="true" [preventPageScroll]="true">

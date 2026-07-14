@@ -362,6 +362,8 @@ export class AppAuthentication {
                 publishersQuota: partner.publishersQuota,
                 authenticationType: partner.authenticationType,
                 isSelfServe: partner.isSelfServe,
+                fileTypeRestrictionEnabled: partner.fileTypeRestrictionEnabled,
+                htmlPurifierBehaviour: partner.htmlPurifierBehaviour,
                 loadThumbnailWithKs: this._permissionsService.hasPermission(KMCPermissions.FEATURE_LOAD_THUMBNAIL_WITH_KS),
                 isChildAccount: typeof partner.partnerParentId !== "undefined" && partner.partnerParentId > 0
             }
