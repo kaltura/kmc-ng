@@ -74,7 +74,7 @@ export class TeamsService implements OnDestroy {
 
     public loadTeamsIntegrationProfiles(filter: any = {}): Observable<LoadTeamsIntegrationResponse> {
         try {
-            return this._http.post(`${serverConfig.externalServices.vendorIntegrationsEndpoint.uri}/teams-integration/list`, filter, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadTeamsIntegrationResponse>;
+            return this._http.post(`${serverConfig.externalServices.vendorIntegrationsEndpoint.uri}/teams-integration/list`, {filter}, this.getHttpOptions()).pipe(cancelOnDestroy(this)) as Observable<LoadTeamsIntegrationResponse>;
         } catch (ex) {
             return throwError(new Error('An error occurred while trying to load teams integrations list'));
         }
