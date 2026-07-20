@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
-import {KalturaPartner} from 'kaltura-ngx-client';
+import {KalturaHTMLPurifierBehaviourType, KalturaPartner} from 'kaltura-ngx-client';
 import {SettingsAccountSettingsService} from './settings-account-settings.service';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
 import {SelectItem} from 'primeng/api';
@@ -24,6 +24,12 @@ function phoneValidator(): ValidatorFn {
     }
     return null;
   };
+}
+
+interface SecuritySettings {
+    isDirty: boolean;
+    htmlPurifierBehaviour: KalturaHTMLPurifierBehaviourType;
+    fileTypeRestrictionEnabled: boolean;
 }
 
 @Component({
@@ -55,9 +61,12 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   public _showEpSSO = false;
   public _authBrokerEnabled = false;
 
+  public _securitySettings: SecuritySettings;
+  public htmlPurifierBehaviourOptions: SelectItem[] = [];
+
   constructor(private _accountSettingsService: SettingsAccountSettingsService,
               private _appLocalization: AppLocalization,
-              _appAuthentication: AppAuthentication,
+              private _appAuthentication: AppAuthentication,
               private _permissionsService: KMCPermissionsService,
               private _settingsAuthenticationMain: SettingsAuthenticationMainViewService,
               private _pageExitVerificationService: PageExitVerificationService,
@@ -73,6 +82,20 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   ngOnInit() {
       this._logger.info(`initiate account settings view`);
       this._createForm();
+
+      this._securitySettings = {
+          isDirty: false,
+          htmlPurifierBehaviour: this._appAuthentication.appUser.partnerInfo.htmlPurifierBehaviour,
+          fileTypeRestrictionEnabled: this._appAuthentication.appUser.partnerInfo.fileTypeRestrictionEnabled
+      };
+      if (this._securitySettings.htmlPurifierBehaviour === KalturaHTMLPurifierBehaviourType.ignore) {
+            this._securitySettings.htmlPurifierBehaviour = KalturaHTMLPurifierBehaviourType.notify;
+      }
+      this.htmlPurifierBehaviourOptions = [
+            {label: this._appLocalization.get('applications.settings.accountSettings.security.ignore'), value: KalturaHTMLPurifierBehaviourType.notify},
+            {label: this._appLocalization.get('applications.settings.accountSettings.security.sanitize'), value: KalturaHTMLPurifierBehaviourType.sanitize},
+            {label: this._appLocalization.get('applications.settings.accountSettings.security.block'), value: KalturaHTMLPurifierBehaviourType.block}
+      ];
 
       if (this._settingsAccountSettingsMainView.viewEntered()) {
           this._prepare();
@@ -151,6 +174,36 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
                       }
                   );
               });
+  }
+
+  public saveSecuritySettings(): void {
+      this._updateAreaBlockerState(true, null);
+      this._accountSettingsService
+          .updatePartnerSecuritySettings(this._securitySettings.htmlPurifierBehaviour, this._securitySettings.fileTypeRestrictionEnabled)
+          .pipe(cancelOnDestroy(this))
+          .subscribe(updatedPartner => {
+                  this._securitySettings.isDirty = false;
+                  this._updateAreaBlockerState(false, null);
+                  this._browserService.showToastMessage({severity: 'success', detail: this._appLocalization.get('app.common.updateSuccess')});
+              },
+              error => {
+                  const blockerMessage = new AreaBlockerMessage(
+                      {
+                          message: this._appLocalization.get('applications.settings.accountSettings.errors.updateFailed'),
+                          buttons: [
+                              {
+                                  label: this._appLocalization.get('app.common.ok'),
+                                  action: () => {
+                                      this._loadPartnerAccountSettings();
+                                  }
+                              }
+                          ]
+                      })
+                  this._updateAreaBlockerState(false, blockerMessage);
+              }
+          );
+
+
   }
 
   private markFormFieldsAsTouched() {
@@ -233,6 +286,11 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
             partnerId: this.partnerId,
             partnerAdminEmail: this.partnerAdminEmail
           });
+          this._securitySettings = {
+              isDirty: false,
+              htmlPurifierBehaviour: response.partnerData.htmlPurifierBehaviour,
+              fileTypeRestrictionEnabled: response.partnerData.fileTypeRestrictionEnabled
+          };
         },
         error => {
           this._logger.warn(`handle failed load partner account settings request`, { errorMessage: error.message });
