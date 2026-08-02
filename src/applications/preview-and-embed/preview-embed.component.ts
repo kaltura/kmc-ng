@@ -264,7 +264,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   private createForm():void{
     const seo: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.seo');
-    const secured: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.secured');
+    const secured: boolean | null = true;
     const responsive: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.responsive');
     const dee: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.dee');
     this._previewForm = this._fb.group({
@@ -463,6 +463,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private createPreviewLink():void{
+      if (this._previewForm.controls['secured'].value === false) {
+          return;
+      }
       let url = '';
       try {
         url = this.getProtocol(false) + '://' + serverConfig.kalturaServer.uri + '/index.php/extwidget/preview';
