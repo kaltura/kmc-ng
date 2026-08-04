@@ -149,6 +149,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
         const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
         const isCaptionRequestCommand = commandName === 'captionRequest';
         const isCaptionOrderCommand = commandName === 'captionOrder';
+        const isAudioOrderCommand = commandName === 'audioOrder';
         return !(
             (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
             (!isReadyStatus && isLiveStreamFlash && isViewCommand) || // hide if trying to view live that isn't ready
@@ -157,7 +158,8 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
             (isWebcastAnalyticsCommand && !isKalturaLive) || // hide webcast analytics menu item for entry that isn't kaltura live
             cannotDeleteEntry ||
             (isCaptionRequestCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry })) ||
-            (isCaptionOrderCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry }))
+            (isCaptionOrderCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry })) ||
+            (isAudioOrderCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry }))
         );
     }
 

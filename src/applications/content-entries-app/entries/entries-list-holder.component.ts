@@ -93,6 +93,10 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
           commandName: 'captionOrder'
       },
       {
+          label: this._appLocalization.get('applications.content.entryDetails.captions.orderAudioDescriptions'),
+          commandName: 'audioOrder'
+      },
+      {
           label: this._appLocalization.get('applications.content.table.captionRequest'),
           commandName: 'captionRequest'
       },
@@ -213,6 +217,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
                                   this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaMediaEntry(entry)));
                                   break;
                               case 'addCaptions':
+                              case 'addAudioDescription':
                                   // open captions tab
                                   this.unisphereRuntime?.closeWidget(); // close widget
                                   document.body.style.overflowY = "auto";
@@ -331,6 +336,29 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
                             eventSessionContextId: '',
                             type: 'entry',
                             initialView: 'captions'
+                        });
+                    }
+                }
+            }
+            break;
+        case 'audioOrder':
+            this._analytics.trackClickEvent('Audio_order');
+            if (entry && entry.id) {
+                if (this.unisphereRuntime) {
+                    if (this._isLiveMediaEntry(entry.mediaType)) {
+                        const recordingEntryId = (entry as KalturaLiveStreamAdminEntry).recordedEntryId || entry.redirectEntryId || '';
+                        this.unisphereRuntime.openApplication({
+                            entryId: recordingEntryId,
+                            eventSessionContextId: entry.id,
+                            type: 'entry',
+                            initialView: 'audioDescription'
+                        });
+                    } else {
+                        this.unisphereRuntime.openApplication({
+                            entryId: entry.id,
+                            eventSessionContextId: '',
+                            type: 'entry',
+                            initialView: 'audioDescription'
                         });
                     }
                 }

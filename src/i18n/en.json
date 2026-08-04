@@ -1901,6 +1901,7 @@
                     "order": "Order captions & translations",
                     "orderLive": "Order Captions",
                     "orderCaptionsTranslations": "Captions & Translations",
+                    "orderAudioDescriptions": "Audio descriptions",
                     "label": "Label",
                     "id": "ID",
                     "type": "File Type",

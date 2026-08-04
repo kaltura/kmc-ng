@@ -531,6 +531,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaMediaEntry(entry)));
                                     break;
                                 case 'addCaptions':
+                                case 'addAudioDescription':
                                     // open captions tab
                                     this.unisphereRuntime?.closeWidget(); // close widget
                                     document.body.style.overflowY = "auto";
