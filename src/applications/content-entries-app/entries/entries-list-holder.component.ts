@@ -224,6 +224,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
                                   this._router.navigateByUrl(`/content/entries/entry/${entry.id}/captions`);
                                   break;
                               case 'editCaptions':
+                              case 'editAudioDescription':
                                   // open captions editor
                                   this.unisphereRuntime?.closeWidget(); // close widget
                                   document.body.style.overflowY = "auto";
