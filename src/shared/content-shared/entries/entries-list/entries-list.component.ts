@@ -147,6 +147,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
         const isRealTimeAnalyticsCommand = commandName === 'realTimeAnalytics';
         const isWebcastAnalyticsCommand = commandName === 'webcastAnalytics';
         const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
+        const loadContentLab = this._permissionsService.hasPermission(KMCPermissions.FEATURE_CONTENT_LAB);
         const isCaptionRequestCommand = commandName === 'captionRequest';
         const isCaptionOrderCommand = commandName === 'captionOrder';
         const isAudioOrderCommand = commandName === 'audioOrder';
@@ -158,8 +159,8 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
             (isWebcastAnalyticsCommand && !isKalturaLive) || // hide webcast analytics menu item for entry that isn't kaltura live
             cannotDeleteEntry ||
             (isCaptionRequestCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry })) ||
-            (isCaptionOrderCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry })) ||
-            (isAudioOrderCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry }))
+            (isCaptionOrderCommand && !(this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry }) && loadContentLab)) ||
+            (isAudioOrderCommand && !(this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry }) && loadContentLab))
         );
     }
 

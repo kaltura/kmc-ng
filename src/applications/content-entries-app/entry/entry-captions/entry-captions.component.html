@@ -14,7 +14,7 @@
                 (click)="_addCaption(true)"></button>
         <button type="button" class="kButtonDefault" pButton icon="ccIcon"
                 label="{{'applications.content.entryDetails.captions.order' | translate}}"
-                *ngIf="!_isLive"
+                *ngIf="!_isLive && _loadContentLab"
                 (click)="_orderCaptions()"></button>
         <kEntryLiveCaptions *ngIf="_isLive"></kEntryLiveCaptions>
         <div class="kTable" *ngIf="!_isLive">

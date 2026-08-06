@@ -10,7 +10,7 @@ import {KalturaCaptionAssetStatus, KalturaCaptionAssetUsage, KalturaCaptionType,
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui';
 import { EntryCaptionsWidget } from './entry-captions-widget.service';
 import { getKalturaServerUri, serverConfig } from 'config/server';
-import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { ReachAppViewService, ReachPages } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { MenuItem } from 'primeng/api';
@@ -31,6 +31,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
     public _captionStatusReady = KalturaCaptionAssetStatus.ready;
     public _captionStatusError = KalturaCaptionAssetStatus.error;
     public _requestCaptionsAvailable = false;
+    public _loadContentLab = this._permissionsService.hasPermission(KMCPermissions.FEATURE_CONTENT_LAB);
     public _isLive = false;
     public _ead = false;
 
@@ -42,6 +43,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 
     constructor(public _widgetService: EntryCaptionsWidget,
                 private _bootstrapService: AppBootstrap,
+                private _permissionsService: KMCPermissionsService,
                 private _appAuthentication: AppAuthentication,
                 private _appLocalization: AppLocalization,
                 private _browserService: BrowserService,
