@@ -213,6 +213,7 @@ kWidget.thumbEmbed({
                     try {
                       var kalturaPlayer = KalturaPlayer.setup({
                         targetId: "kaltura_player_${rnd}",
+                        entryTitle: "${config.entryTitle || ''}",
                         provider: {
                           partnerId: ${config.pid},
                           uiConfId: ${config.uiConfId}${widgetCode}
@@ -229,6 +230,7 @@ kWidget.thumbEmbed({
                     try {
                       var kalturaPlayer = KalturaPlayer.setup({
                         targetId: "kaltura_player_${rnd}",
+                        entryTitle: "${config.entryTitle || ''}",
                         provider: {
                           partnerId: ${config.pid},
                           uiConfId: ${config.uiConfId}${widgetCode}
@@ -254,7 +256,8 @@ kWidget.thumbEmbed({
                               partnerId: ${config.pid},
                               uiConfId: ${config.uiConfId}${thumbWidgetCode}
                             },
-                            targetId: "kaltura_player_${rnd}"
+                            targetId: "kaltura_player_${rnd}",
+                            entryTitle: "${config.entryTitle || ''}",
                         },
                         mediaInfo: {playlistId: '${config.entryId}'}
                       });
@@ -272,7 +275,8 @@ kWidget.thumbEmbed({
                               partnerId: ${config.pid},
                               uiConfId: ${config.uiConfId}${thumbWidgetCode}
                             },
-                            targetId: "kaltura_player_${rnd}"
+                            targetId: "kaltura_player_${rnd}",
+                            entryTitle: "${config.entryTitle || ''}",
                         },
                         mediaInfo: {entryId: '${config.entryId}'}
                       });
