@@ -222,6 +222,13 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
           // filter 'status'
           if (data.status && data.status.length > 0) {
               filter.statusIn = data.status.map(e => e).join(',');
+          } else {
+              // By default, exclude DELETED users (status 4) from the listing
+              filter.statusIn = [
+                  KalturaCategoryUserStatus.active,
+                  KalturaCategoryUserStatus.pending,
+                  KalturaCategoryUserStatus.notActive
+              ].join(',');
           }
 
           // filter 'updateMethod'
