@@ -220,6 +220,17 @@ export class AppBootstrap implements CanActivate {
                     ks: this.auth.appUser.ks,
                     partnerId: this.auth.appUser.partnerId.toString(),
                 }
+            },{
+                widgetName: 'unisphere.widget.recorder',
+                runtimeName: 'recorder',
+                settings: {
+                    _schemaVersion: '1',
+                    ks: this.auth.appUser.ks,
+                    partnerId: this.auth.appUser.partnerId.toString(),
+                    serviceUrl: serverConfig.kalturaServer.uri,
+                    playerUrl: serverConfig.kalturaServer.uri,
+                    uiConfId: serverConfig.kalturaServer.previewUIConfV7.toString(),
+                }
             },
             {
                 widgetName: 'unisphere.widget.analytics',

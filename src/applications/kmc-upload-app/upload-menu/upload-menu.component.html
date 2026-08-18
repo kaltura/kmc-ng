@@ -15,6 +15,14 @@
     </span>
   </div>
 
+    <div class="kUploadMenuListItem">
+        <i class="kIconvideo-small kUploadMenuRecordIcon" (click)="onItemSelected.emit('record')"></i>
+        <span class="kSingleItem">
+          <a (click)="onItemSelected.emit('record')">{{ 'applications.upload.uploadMenu.record' | translate }}</a><br>
+        </span>
+
+    </div>
+
   <div class="kUploadMenuListItem" *ngIf="_bulkUploadAvailable">
     <i class="kIconbulk kUploadMenuBulkUploadIcon" (click)="onItemSelected.emit('bulkUpload')"></i>
     <span>
