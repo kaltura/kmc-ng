@@ -222,6 +222,13 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
           // filter 'status'
           if (data.status && data.status.length > 0) {
               filter.statusIn = data.status.map(e => e).join(',');
+          } else {
+              // By default, exclude DELETED users (status 4) from the listing
+              filter.statusIn = [
+                  KalturaCategoryUserStatus.active,
+                  KalturaCategoryUserStatus.pending,
+                  KalturaCategoryUserStatus.notActive
+              ].join(',');
           }
 
           // filter 'updateMethod'
@@ -259,7 +266,7 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
                       if (result.hasErrors()) {
                           throw new Error(result.find(item => !!item.error).error.message);
                       } else {
-                          const users = result[0].result.objects;
+                          const users = result[0].result?.objects?.length ? result[0].result.objects.filter(user => user.status !== KalturaCategoryUserStatus.deleted) : [];
                           const totalCount = result[0].result.totalCount;
                           const actualUsersCount = result[1].result.membersCount;
                           return {users, totalCount, actualUsersCount};
@@ -267,7 +274,7 @@ export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilte
                   }),
                   switchMap(
                       categoryUserListResult =>
-                          this._getKalturaUsers(categoryUserListResult.users.map(item => item.userId))
+                          this._getKalturaUsers(categoryUserListResult.users.filter(user => user.status !== KalturaCategoryUserStatus.deleted).map(item => item.userId))
                           .pipe(
                               map((getKalturaUsersResult) => {
                                   const items = categoryUserListResult.users.map((categoryUser, index) => {
