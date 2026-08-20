@@ -10,7 +10,6 @@ import { serverConfig } from "config/server";
 })
 export class RecorderComponent implements OnInit, OnDestroy {
 
-  @ViewChild('recorder', { static: true }) recorder: HTMLDivElement;
   private unisphereRuntime: any = null;
   private visuals: any = null;
 
@@ -29,7 +28,7 @@ export class RecorderComponent implements OnInit, OnDestroy {
                             serviceUrl: "https://" + serverConfig.kalturaServer.uri,
                             playerUrl: "https://" + serverConfig.kalturaServer.uri,
                             uiConfId: serverConfig.kalturaServer.previewUIConfV7
-                        }).then(({runtime, runtimeInfo}) => {
+                        }).then(({runtime}) => {
                             this.unisphereRuntime = runtime;
                             this.visuals = this.unisphereRuntime.mountVisual({
                                 type: 'contained',
