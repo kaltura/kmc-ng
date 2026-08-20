@@ -32,6 +32,7 @@ import { MenuModule } from 'primeng/menu';
 import { SharedModule } from 'primeng/api';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CheckboxModule } from 'primeng/checkbox';
+import {RecorderComponent} from './recorder/recorder.component';
 
 @NgModule({
   imports: [
@@ -69,6 +70,7 @@ import { CheckboxModule } from 'primeng/checkbox';
     KalturaLiveStreamComponent,
     UniversalLiveComponent,
     ManualLiveComponent,
+      RecorderComponent,
       UploadFromYoutubeComponent
   ],
   exports: [
