@@ -24,6 +24,12 @@
   </ng-template>
 </kPopupWidget>
 
+<kPopupWidget #recordPopup data-aid="recordPopup" [popupWidth]="800" [popupHeight]="480" [closeBtn]="true" [modal]="true">
+  <ng-template>
+    <kRecorder></kRecorder>
+  </ng-template>
+</kPopupWidget>
+
 <kPrepareEntry #prepareEntry></kPrepareEntry>
 
 <kPopupWidget #createLive data-aid="createLive" [popupWidth]="791" [popupHeight]="675" [closeBtn]="true" [modal]="true">

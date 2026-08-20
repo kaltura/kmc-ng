@@ -44,6 +44,11 @@
         background-color: $kPrimary;
       }
 
+      &.kUploadMenuRecordIcon {
+        cursor: pointer;
+        background-color: $kAqua;
+      }
+
       &.kUploadMenuBulkUploadIcon {
         cursor: pointer;
         background-color: $kOrange;

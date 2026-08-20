@@ -17,6 +17,7 @@ export class UploadButtonComponent {
   @ViewChild('createLive', { static: true }) createLivePopup: PopupWidgetComponent;
   @ViewChild('prepareEntry', { static: true }) prepareEntryComponent: PrepareEntryComponent;
   @ViewChild('bulkuploadmenu', { static: true }) bulkUploadMenu: PopupWidgetComponent;
+  @ViewChild('recordPopup', { static: true }) recordPopup: PopupWidgetComponent;
   @ViewChild('createFromYoutube', { static: true }) createFromYoutube: PopupWidgetComponent;
 
     public _disabled = true;
@@ -49,6 +50,9 @@ export class UploadButtonComponent {
         break;
       case 'bulkUpload':
         this.bulkUploadMenu.open();
+        break;
+      case 'record':
+        this.recordPopup.open();
         break;
       case 'prepareVideoEntry':
         this.prepareEntryComponent.prepareEntry(KalturaMediaType.video);
