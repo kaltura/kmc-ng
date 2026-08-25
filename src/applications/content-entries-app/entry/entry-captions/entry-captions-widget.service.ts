@@ -466,7 +466,6 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     if (this.liveCaptions.streamsModified) {
         const nonClosedCaptionsStreams = (data.streams || []).filter(stream => stream.type !== 'closedCaptions');
         data.streams = [...nonClosedCaptionsStreams, ...this.liveCaptions.streams];
-        data.allowEmptyArray('streams');
     }
     // else: omit streams from payload — API partial-update semantics preserve existing stream containers (SUP-53217)
   }
