@@ -177,7 +177,7 @@ export class EntryStore implements OnDestroy {
 		const request = new KalturaMultiRequest(
 			new BaseEntryUpdateAction({
 				entryId: this.entryId,
-				baseEntry: newEntry.allowEmptyArray('streams')
+				baseEntry: newEntry
 			})
 		);
 
