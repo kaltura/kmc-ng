@@ -48,16 +48,16 @@ export class CriteriaSchedulingComponent implements OnInit{
     public isValid = true;
 
     public _startDateOptions: { value: string, label: string }[] = [
-        {value: 'startDateGreaterThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.less')},
-        {value: 'startDateLessThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
+        {value: 'less', label: this._appLocalization.get('applications.settings.mr.criteria.less')},
+        {value: 'more', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
     ];
-    public _startDateOptionSelected = 'startDateLessThanOrEqual';
+    public _startDateOptionSelected = 'less';
 
     public _endDateOptions: { value: string, label: string }[] = [
-        {value: 'endDateGreaterThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.less')},
-        {value: 'endDateLessThanOrEqual', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
+        {value: 'less', label: this._appLocalization.get('applications.settings.mr.criteria.less')},
+        {value: 'more', label: this._appLocalization.get('applications.settings.mr.criteria.more')}
     ];
-    public _endDateOptionSelected = 'endDateLessThanOrEqual';
+    public _endDateOptionSelected = 'less';
 
     public schedulingStartTime = 0;
     public schedulingStartTimeUnit = 'day';
@@ -90,7 +90,7 @@ export class CriteriaSchedulingComponent implements OnInit{
                 if (typeof val === "string") {
                     this.isValid = false;
                 } else {
-                    this._startDateOptionSelected = key;
+                    this._startDateOptionSelected = this._getComparison(key, val.numberOfUnits);
                     this.schedulingStartTime = Math.abs(value[key].numberOfUnits) || 0;
                     this.periodStartTimeUnit = value[key].numberOfUnits < 0 ? -1 : 1;
                     this.schedulingStartTimeUnit = val.dateUnit  || 'day';
@@ -104,7 +104,7 @@ export class CriteriaSchedulingComponent implements OnInit{
                 if (typeof val === "string") {
                     this.isValid = false;
                 } else {
-                    this._endDateOptionSelected = key;
+                    this._endDateOptionSelected = this._getComparison(key, val.numberOfUnits);
                     this.schedulingEndTime = Math.abs(value[key].numberOfUnits) || 0;
                     this.periodEndTimeUnit = value[key].numberOfUnits < 0 ? -1 : 1;
                     this.schedulingEndTimeUnit = val.dateUnit  || 'day';
@@ -125,6 +125,23 @@ export class CriteriaSchedulingComponent implements OnInit{
     ngOnInit(): void {
     }
 
+    /**
+     * The comparison the user picks ('less'/'more') maps to a different filter field depending on the
+     * selected direction: 'less than N days ago' is a lower bound (now - N), while 'less than N days
+     * ahead' is an upper bound (now + N).
+     */
+    private _getFilterField(prefix: 'startDate' | 'endDate', comparison: string, direction: number): string {
+        const ago = direction < 0;
+        const isUpperBound = ago ? comparison === 'more' : comparison === 'less';
+        return `${prefix}${isUpperBound ? 'LessThanOrEqual' : 'GreaterThanOrEqual'}`;
+    }
+
+    private _getComparison(field: string, numberOfUnits: number): string {
+        const ago = numberOfUnits < 0;
+        const isUpperBound = field.endsWith('LessThanOrEqual');
+        return ago === isUpperBound ? 'more' : 'less';
+    }
+
     public onCriteriaChange(): void {
         delete this._filter['startDateGreaterThanOrEqual'];
         delete this._filter['startDateLessThanOrEqual'];
@@ -132,22 +149,22 @@ export class CriteriaSchedulingComponent implements OnInit{
         delete this._filter['endDateLessThanOrEqual'];
         let analyticsLabel = "";
         if (this._enableStartTime) {
-            this._filter[this._startDateOptionSelected] = {
+            this._filter[this._getFilterField('startDate', this._startDateOptionSelected, this.periodStartTimeUnit)] = {
                 numberOfUnits: this.schedulingStartTime * this.periodStartTimeUnit,
                 dateUnit: this.schedulingStartTimeUnit
             };
-            analyticsLabel += this._startDateOptionSelected === 'startDateLessThanOrEqual' ? 'start_date_less_' : 'start_date_more_';
+            analyticsLabel += this._startDateOptionSelected === 'less' ? 'start_date_less_' : 'start_date_more_';
             analyticsLabel += `${this.schedulingStartTime}-${this.schedulingStartTimeUnit}`;
         }
         if (this._enableEndTime) {
-            this._filter[this._endDateOptionSelected] = {
+            this._filter[this._getFilterField('endDate', this._endDateOptionSelected, this.periodEndTimeUnit)] = {
                 numberOfUnits: this.schedulingEndTime * this.periodEndTimeUnit,
                 dateUnit: this.schedulingEndTimeUnit
             };
             if (this._enableStartTime) {
                 analyticsLabel += ';';
             }
-            analyticsLabel += this._startDateOptionSelected === '_endDateOptionSelected' ? 'end_date_less_' : 'end_date_more_';
+            analyticsLabel += this._endDateOptionSelected === 'less' ? 'end_date_less_' : 'end_date_more_';
             analyticsLabel += `${this.schedulingEndTime}-${this.schedulingEndTimeUnit}`;
         }
         if (analyticsLabel !== "") {
