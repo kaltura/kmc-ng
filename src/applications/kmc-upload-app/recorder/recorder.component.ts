@@ -28,7 +28,7 @@ export class RecorderComponent implements OnInit, OnDestroy {
                             serviceUrl: "https://" + serverConfig.kalturaServer.uri,
                             playerUrl: "https://" + serverConfig.kalturaServer.uri,
                             uiConfId: serverConfig.kalturaServer.previewUIConfV7,
-                            // mediapipeAssetBase: '/mediapipe',
+                            mediapipeAssetBase: '/mediapipe',
                         }).then(({runtime}) => {
                             this.unisphereRuntime = runtime;
                             this.visuals = this.unisphereRuntime.mountVisual({
