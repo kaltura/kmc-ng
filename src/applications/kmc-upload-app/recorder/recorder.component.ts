@@ -52,6 +52,7 @@ export class RecorderComponent implements OnInit, OnDestroy {
 
     async ngOnInit(): Promise<void> {
         const result = await this.ensureAvPermissions();
+        console.log('AV permissions result', result);
         if (result === 'granted') {
             this._bootstrapService.unisphereWorkspace$
                 .pipe(cancelOnDestroy(this))
