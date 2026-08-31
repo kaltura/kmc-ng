@@ -446,7 +446,9 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
           .subscribe(unisphereWorkspace => {
               if (unisphereWorkspace) {
                   unisphereWorkspace.getRuntimeAsync('unisphere.widget.content-lab', 'ai-consent').then(widget => {
-                      this.unMountBanner();
+                      if (this.unMountBanner) {
+                          this.unMountBanner();
+                      }
                   })
               }
           });
