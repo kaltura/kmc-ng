@@ -441,15 +441,9 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
   }
 
   ngOnDestroy() {
-      this._bootstrapService.unisphereWorkspace$
-          .pipe(cancelOnDestroy(this))
-          .subscribe(unisphereWorkspace => {
-              if (unisphereWorkspace) {
-                  unisphereWorkspace.getRuntimeAsync('unisphere.widget.content-lab', 'ai-consent').then(widget => {
-                      this.unMountBanner();
-                  })
-              }
-          });
+      if (this.unMountBanner) {
+          this.unMountBanner();
+      }
       this.actionsMenu.hide();
       this.destroyed = true;
   }
