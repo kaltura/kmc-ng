@@ -54,7 +54,7 @@ export class RecorderComponent implements OnInit, OnDestroy {
 
       const env = this.getUnisphereEnv(config.serviceUrl);
 
-      const recorderUrl = `http://localhost:4300/assets/loader/loader.html?parentOrigin=${encodeURIComponent(window.location.origin)}`;
+      const recorderUrl = `https://unisphere.${env}.ovp.kaltura.com/v1/static/applications/recorder/recorder-assets/1.0.3/assets/loader/loader.html?parentOrigin=${encodeURIComponent(window.location.origin)}`;
       this._recorderOrigin = new URL(recorderUrl).origin;
 
         this._windowEventListener = (e) => {
