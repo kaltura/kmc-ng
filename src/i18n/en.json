@@ -398,6 +398,7 @@
                     "title": "Bulk Upload",
                     "samplesLink": "Download CSV/XML Samples"
                 },
+                "record": "Record",
                 "liveStream": "Create Live Stream Entry",
                 "entryList": {
                     "title": "Prepare Entry",
