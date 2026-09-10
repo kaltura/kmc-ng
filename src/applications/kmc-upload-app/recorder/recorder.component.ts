@@ -14,6 +14,7 @@ export class RecorderComponent implements OnInit, OnDestroy {
 
     public appUrl: string;
     public _windowEventListener = null;
+    public _orientation = 'landscape';
     private _recorderOrigin: string = null;
 
     constructor(private auth: AppAuthentication,
@@ -75,6 +76,10 @@ export class RecorderComponent implements OnInit, OnDestroy {
 
             if (postMessageData.messageType === 'recorderInit') {
                 this.sendMessageToRecorderApp({'messageType': 'loadRecorder', payload: { config, env }});
+            }
+
+            if (postMessageData.messageType === 'orientationChanged') {
+                this._orientation = postMessageData.payload.orientation; // 'portrait' | 'landscape'
             }
         };
         this._addPostMessagesListener();
