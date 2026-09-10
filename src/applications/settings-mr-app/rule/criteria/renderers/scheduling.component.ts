@@ -84,34 +84,22 @@ export class CriteriaSchedulingComponent implements OnInit{
     private _filter: KalturaMediaEntryFilter;
 
     @Input() set filter(value: KalturaMediaEntryFilter) {
-        ['startDateLessThanOrEqual', 'startDateGreaterThanOrEqual'].forEach(key => {
-            if (value && value[key]) {
-                const val = value[key];
-                if (typeof val === "string") {
-                    this.isValid = false;
-                } else {
-                    this._startDateOptionSelected = this._getComparison(key, val.numberOfUnits);
-                    this.schedulingStartTime = Math.abs(value[key].numberOfUnits) || 0;
-                    this.periodStartTimeUnit = value[key].numberOfUnits < 0 ? -1 : 1;
-                    this.schedulingStartTimeUnit = val.dateUnit  || 'day';
-                    this._enableStartTime = true;
-                }
-            }
-        });
-        ['endDateLessThanOrEqual', 'endDateGreaterThanOrEqual'].forEach(key => {
-            if (value && value[key]) {
-                const val = value[key];
-                if (typeof val === "string") {
-                    this.isValid = false;
-                } else {
-                    this._endDateOptionSelected = this._getComparison(key, val.numberOfUnits);
-                    this.schedulingEndTime = Math.abs(value[key].numberOfUnits) || 0;
-                    this.periodEndTimeUnit = value[key].numberOfUnits < 0 ? -1 : 1;
-                    this.schedulingEndTimeUnit = val.dateUnit  || 'day';
-                    this._enableEndTime = true;
-                }
-            }
-        });
+        const start = this._parseDateCriteria(value, 'startDate');
+        if (start) {
+            this._startDateOptionSelected = start.comparison;
+            this.schedulingStartTime = start.amount;
+            this.periodStartTimeUnit = start.direction;
+            this.schedulingStartTimeUnit = start.dateUnit;
+            this._enableStartTime = true;
+        }
+        const end = this._parseDateCriteria(value, 'endDate');
+        if (end) {
+            this._endDateOptionSelected = end.comparison;
+            this.schedulingEndTime = end.amount;
+            this.periodEndTimeUnit = end.direction;
+            this.schedulingEndTimeUnit = end.dateUnit;
+            this._enableEndTime = true;
+        }
         this._filter = value;
     }
     @Output() onDelete = new EventEmitter<string>();
@@ -126,20 +114,55 @@ export class CriteriaSchedulingComponent implements OnInit{
     }
 
     /**
-     * The comparison the user picks ('less'/'more') maps to a different filter field depending on the
-     * selected direction: 'less than N days ago' is a lower bound (now - N), while 'less than N days
-     * ahead' is an upper bound (now + N).
+     * "less than N units ago/ahead" describes a window between now and the relative cutoff, so it needs
+     * both a lower and an upper bound. Which side the cutoff sits on depends on the direction:
+     *   less than N ago   -> now - N <= date <= now   (GreaterThanOrEqual: -N, LessThanOrEqual: 0)
+     *   less than N ahead -> now     <= date <= now + N (GreaterThanOrEqual: 0, LessThanOrEqual: +N)
+     * "more than N units ago/ahead" is open-ended on one side, so a single bound is correct:
+     *   more than N ago   -> date <= now - N          (LessThanOrEqual: -N)
+     *   more than N ahead -> date >= now + N          (GreaterThanOrEqual: +N)
      */
-    private _getFilterField(prefix: 'startDate' | 'endDate', comparison: string, direction: number): string {
+    private _buildDateCriteria(prefix: 'startDate' | 'endDate', comparison: string, amount: number, dateUnit: string, direction: number): { [field: string]: { numberOfUnits: number, dateUnit: string } } {
         const ago = direction < 0;
-        const isUpperBound = ago ? comparison === 'more' : comparison === 'less';
-        return `${prefix}${isUpperBound ? 'LessThanOrEqual' : 'GreaterThanOrEqual'}`;
+        const cutoff = { numberOfUnits: amount * direction, dateUnit };
+        const now = { numberOfUnits: 0, dateUnit };
+        if (comparison === 'less') {
+            return ago
+                ? { [`${prefix}GreaterThanOrEqual`]: cutoff, [`${prefix}LessThanOrEqual`]: now }
+                : { [`${prefix}GreaterThanOrEqual`]: now, [`${prefix}LessThanOrEqual`]: cutoff };
+        }
+        return ago
+            ? { [`${prefix}LessThanOrEqual`]: cutoff }
+            : { [`${prefix}GreaterThanOrEqual`]: cutoff };
     }
 
-    private _getComparison(field: string, numberOfUnits: number): string {
+    /**
+     * Reads a saved filter back into the UI state, reversing _buildDateCriteria. Also understands the
+     * single-bound "less than" shape written by earlier KMC versions, so existing rules keep rendering
+     * the same comparison they were saved with (re-saving them upgrades them to a bounded window).
+     */
+    private _parseDateCriteria(value: KalturaMediaEntryFilter, prefix: 'startDate' | 'endDate'): { comparison: string, amount: number, dateUnit: string, direction: number } | null {
+        const lower = value ? value[`${prefix}GreaterThanOrEqual`] : null;
+        const upper = value ? value[`${prefix}LessThanOrEqual`] : null;
+        if (!lower && !upper) {
+            return null;
+        }
+        if (typeof lower === 'string' || typeof upper === 'string') {
+            this.isValid = false;
+            return null;
+        }
+        // A bounded window pairs the relative cutoff with a zero-offset "now"; the non-zero side is the cutoff.
+        const bounded = lower && upper;
+        const cutoff = bounded ? (lower.numberOfUnits !== 0 ? lower : upper) : (lower || upper);
+        const numberOfUnits = cutoff.numberOfUnits || 0;
         const ago = numberOfUnits < 0;
-        const isUpperBound = field.endsWith('LessThanOrEqual');
-        return ago === isUpperBound ? 'more' : 'less';
+        const comparison = bounded ? 'less' : (ago === !!upper ? 'more' : 'less');
+        return {
+            comparison,
+            amount: Math.abs(numberOfUnits),
+            dateUnit: cutoff.dateUnit || 'day',
+            direction: numberOfUnits < 0 ? -1 : 1
+        };
     }
 
     public onCriteriaChange(): void {
@@ -149,18 +172,12 @@ export class CriteriaSchedulingComponent implements OnInit{
         delete this._filter['endDateLessThanOrEqual'];
         let analyticsLabel = "";
         if (this._enableStartTime) {
-            this._filter[this._getFilterField('startDate', this._startDateOptionSelected, this.periodStartTimeUnit)] = {
-                numberOfUnits: this.schedulingStartTime * this.periodStartTimeUnit,
-                dateUnit: this.schedulingStartTimeUnit
-            };
+            Object.assign(this._filter, this._buildDateCriteria('startDate', this._startDateOptionSelected, this.schedulingStartTime, this.schedulingStartTimeUnit, this.periodStartTimeUnit));
             analyticsLabel += this._startDateOptionSelected === 'less' ? 'start_date_less_' : 'start_date_more_';
             analyticsLabel += `${this.schedulingStartTime}-${this.schedulingStartTimeUnit}`;
         }
         if (this._enableEndTime) {
-            this._filter[this._getFilterField('endDate', this._endDateOptionSelected, this.periodEndTimeUnit)] = {
-                numberOfUnits: this.schedulingEndTime * this.periodEndTimeUnit,
-                dateUnit: this.schedulingEndTimeUnit
-            };
+            Object.assign(this._filter, this._buildDateCriteria('endDate', this._endDateOptionSelected, this.schedulingEndTime, this.schedulingEndTimeUnit, this.periodEndTimeUnit));
             if (this._enableStartTime) {
                 analyticsLabel += ';';
             }
