@@ -1,7 +1,8 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
-import {AppAuthentication, AppBootstrap} from 'app-shared/kmc-shell';
+import {AppAuthentication, AppBootstrap, ApplicationType} from 'app-shared/kmc-shell';
 import { serverConfig } from "config/server";
+import {globalConfig} from 'config/global';
 
 @Component({
   selector: 'kRecorder',
@@ -50,7 +51,12 @@ export class RecorderComponent implements OnInit, OnDestroy {
           partnerId: this.auth.appUser.partnerId,
           serviceUrl: "https://" + serverConfig.kalturaServer.uri,
           playerUrl: "https://" + serverConfig.kalturaServer.uri,
-          uiConfId: serverConfig.kalturaServer.previewUIConfV7
+          uiConfId: serverConfig.kalturaServer.previewUIConfV7,
+          analytics: {
+              analyticsServiceUrl: serverConfig.analyticsServer.uri,
+              hostAppName: ApplicationType.KMC,
+              hostAppVersion: globalConfig.client.appVersion,
+          }
       }
 
       const env = this.getUnisphereEnv(config.serviceUrl);
