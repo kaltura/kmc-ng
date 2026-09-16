@@ -1,10 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
+import { Component, ViewChild} from '@angular/core';
+import {PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
 import { KalturaMediaType } from 'kaltura-ngx-client';
 import { PrepareEntryComponent } from '../prepare-entry/prepare-entry.component';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 import { KMCFileCreationType } from '../upload-settings/upload-settings.component';
 import { AppAnalytics } from "app-shared/kmc-shell";
+import {ISubscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'kUploadButton',
@@ -23,6 +24,7 @@ export class UploadButtonComponent {
     public _disabled = true;
     public _creationTypes = KMCFileCreationType;
     public _creationType = this._creationTypes.upload;
+    public _orientation = 'landscape';
 
   constructor(private _appPermissions: KMCPermissionsService, private _analytics: AppAnalytics) {
       this._disabled = !this._appPermissions.hasAnyPermissions([
@@ -33,6 +35,19 @@ export class UploadButtonComponent {
           KMCPermissions.LIVE_STREAM_ADD,
           KMCPermissions.ADMIN_USER_BULK
       ]);
+  }
+
+
+  public onOrientationChange(orientation: string): void {
+      if (orientation === this._orientation) {
+            return;
+      }
+      this._orientation = orientation;
+      this.recordPopup.close();
+      setTimeout(() => {
+            this.recordPopup.open();
+      }, 100);
+
   }
 
   public _open(): void {

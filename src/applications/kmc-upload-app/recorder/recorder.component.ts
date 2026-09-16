@@ -1,5 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {AppAuthentication, AppBootstrap, ApplicationType} from 'app-shared/kmc-shell';
 import { serverConfig } from "config/server";
 import {globalConfig} from 'config/global';
@@ -12,10 +11,11 @@ import {globalConfig} from 'config/global';
 export class RecorderComponent implements OnInit, OnDestroy {
 
     @ViewChild('recorderFrame', { static: true}) recorderFrame: ElementRef;
+    @Output() onOrientationChange = new EventEmitter<string>();
+    @Input() orientation: string;
 
     public appUrl: string;
     public _windowEventListener = null;
-    public _orientation = 'landscape';
     private _recorderOrigin: string = null;
 
     constructor(private auth: AppAuthentication,
@@ -85,7 +85,7 @@ export class RecorderComponent implements OnInit, OnDestroy {
             }
 
             if (postMessageData.messageType === 'orientationChanged') {
-                this._orientation = postMessageData.payload.orientation; // 'portrait' | 'landscape'
+                this.onOrientationChange.emit(postMessageData.payload.orientation);
             }
         };
         this._addPostMessagesListener();

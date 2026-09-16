@@ -1,9 +1,8 @@
 <!--<div id="recorder" #recorder class="recorder"></div>-->
-<iframe class="recorder" #recorderFrame
+<iframe class="recorder" [class.portrait]="orientation === 'portrait'" #recorderFrame
     [src]="appUrl | safe"
     id="recorderFrame"
     title="Kaltura Recorder"
     allow="camera; microphone; display-capture; fullscreen"
     allowfullscreen
-    style="width: 800px; height: 450px; border: 0;"
 ></iframe>
