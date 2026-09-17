@@ -1,0 +1,12 @@
+@import 'app-theme/_variables.scss';
+
+.recorder {
+    width: 800px;
+    height: 450px;
+    background: #000000;
+    border: 0;
+    &.portrait {
+        width: 450px;
+        height: 800px;
+    }
+}
