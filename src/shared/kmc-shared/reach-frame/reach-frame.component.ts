@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { BrowserService } from 'shared/kmc-shell/providers';
-import { getKalturaServerUri, serverConfig, buildCDNUrl } from 'config/server';
+import { getKalturaServerUri, getUriOrigin, serverConfig, buildCDNUrl } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {
@@ -23,7 +23,7 @@ export interface ReachData {
 
 @Component({
     selector: 'kReachFrame',
-    template: '<iframe *ngIf="_url" frameborder="0" allow="autoplay" [src]="_url | safe"></iframe>',
+    template: '<iframe #reachFrame *ngIf="_url" frameborder="0" allow="autoplay" [src]="_url | safe"></iframe>',
     styles: [
         ':host { display: block; width: 100%; height: 100%; }',
         'iframe { width: 100%; height: 100% }'
@@ -36,9 +36,12 @@ export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
 
     @Output() closeApp = new EventEmitter<void>();
 
+    @ViewChild('reachFrame') _reachFrame: ElementRef;
+
     public _url = null;
     public _windowEventListener = null;
     public _reachConfig: any = null;
+    private _reachOrigin: string = null;
 
     constructor(private _appAuthentication: AppAuthentication,
                 private _appLocalization: AppLocalization,
@@ -50,7 +53,17 @@ export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnInit(){
+        this._reachOrigin = getUriOrigin(serverConfig.externalApps.reach && serverConfig.externalApps.reach.uri);
+
         this._windowEventListener = (e) => {
+            // only trust the reach frame we created, on the origin we loaded it from
+            if (!this._reachOrigin || e.origin !== this._reachOrigin) {
+                return;
+            }
+            if (!this._reachFrame || e.source !== this._reachFrame.nativeElement.contentWindow) {
+                return;
+            }
+
             let postMessageData;
             try {
                 postMessageData = e.data;
@@ -62,7 +75,7 @@ export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
                 e.source.postMessage({
                     'messageType': 'reach-config',
                     'data': this._reachConfig
-                }, e.origin);
+                }, this._reachOrigin);
             };
 
             if (postMessageData.messageType === 'reach-dashboard-entry') {

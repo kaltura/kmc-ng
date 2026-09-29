@@ -355,6 +355,15 @@ export function buildBaseUri(suffix: string): string {
     return result;
 }
 
+// returns the origin of the given uri, or null if it cannot be derived (callers should fail closed)
+export function getUriOrigin(uri: string): string {
+    try {
+        return uri ? new URL(uri, window.location.href).origin : null;
+    } catch (e) {
+        return null;
+    }
+}
+
 export function buildUrlWithClientProtocol(urlWithoutProtocol) {
     let protocol =  (location.protocol || '').toLowerCase();
     if (protocol[protocol.length - 1] === ':') {
