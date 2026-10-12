@@ -3841,7 +3841,9 @@
                     "period_tt": "Set a time period (in days) to review queued entries with one or more actions scheduled to be performed",
                     "startDate": "Start date",
                     "on": "On day",
-                    "of": "of the month"
+                    "of": "of the month",
+                    "repeated": "Allow repeated entry catch",
+                    "repeated_tt": "Catch entries again on every run while they still meet the rule criteria and are not pending review. Limited to 10,000 entries at a time."
                 },
                 "actions": {
                     "title": "Add actions to be taken on entries that meet the criteria set in the Criteria tab.",

@@ -98,6 +98,15 @@
                             <p-dropdown [options]="_everyDay" [style]="{'width':'60px', 'margin-right': '4px'}"  [(ngModel)]="rule.runningCadence.advancedCadence.dayNumber" (ngModelChange)="onOnChange('month')"></p-dropdown>
                             <span class="kLabel autoWidth">{{'applications.settings.mr.schedule.of' | translate}}</span>
                         </div>
+                        <div class="kRow kRowWithHelptip">
+                            <div class="labelWithHelpTip">
+                                <span class="kLabel">{{'applications.settings.mr.schedule.repeated' | translate}}</span>
+                                <kInputHelper>
+                                    <span>{{'applications.settings.mr.schedule.repeated_tt' | translate}}</span>
+                                </kInputHelper>
+                            </div>
+                            <p-inputSwitch (onChange)="onAdminRepeatedEntryChange()" [(ngModel)]="rule.allowReprocessing"></p-inputSwitch>
+                        </div>
 
                         <div class="kRow">
                             <span class="kSubtitle">{{'applications.settings.mr.review' | translate}}</span>

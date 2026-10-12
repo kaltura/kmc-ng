@@ -39,7 +39,7 @@ import {buildUserSearchQuery, isHashed} from 'app-shared/kmc-shared';
                                 <p-checkbox [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.recipients.managedTasksProfileOwner"
                                             (ngModelChange)="sendAnalytics('_send_to_rule_owner', action.task.taskParams.sendNotificationTaskParams.recipients.managedTasksProfileOwner); validate()"
                                             label="{{'applications.settings.mr.notification.rule' | translate}}" binary="true"></p-checkbox>
-                                <p-checkbox [class.kHidden]="type === 'executionSummary'" [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.recipients.objectOwner"
+                                <p-checkbox [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.recipients.objectOwner"
                                             (ngModelChange)="sendAnalytics('_send_to_entry_owner', action.task.taskParams.sendNotificationTaskParams.recipients.objectOwner); validate()"
                                             label="{{'applications.settings.mr.notification.entry' | translate}}" binary="true"></p-checkbox>
                                 <p-checkbox [(ngModel)]="sendToCustomUsers" (ngModelChange)="sendAnalytics('_send_to_custom', sendToCustomUsers); validate()"
