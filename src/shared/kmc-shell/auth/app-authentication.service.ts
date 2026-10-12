@@ -90,6 +90,7 @@ export class AppAuthentication {
     private _logger: KalturaLogger;
     private _appUser: Immutable.ImmutableObject<AppUser> = null;
     private _autoLoginAttempted = false;
+    private _sessionKs: string = null; // ks to hand over to the next page load (reload / partner switch), see _registerSessionKsHandoff
 
     public get defaultUrl(): string {
         return this._defaultUrl;
@@ -109,6 +110,23 @@ export class AppAuthentication {
                 private _restorePasswordView: RestorePasswordViewService,
                 private _authenticatorView: AuthenticatorViewService) {
         this._logger = logger.subLogger('AppAuthentication');
+        this._registerSessionKsHandoff();
+    }
+
+    // keep the ks out of session storage while the app is running: it is written only when the page is unloaded
+    // and removed as soon as the next page load reads it (see loginAutomatically)
+    private _registerSessionKsHandoff(): void {
+        window.addEventListener('pagehide', () => {
+            if (this._sessionKs) {
+                this._browserService.setInSessionStorage(ksSessionStorageKey, this._sessionKs);
+            }
+        });
+        window.addEventListener('pageshow', (event: PageTransitionEvent) => {
+            if (event.persisted) {
+                // page restored from the back/forward cache without reloading the app
+                this._browserService.removeFromSessionStorage(ksSessionStorageKey);
+            }
+        });
     }
 
     private _getLoginErrorMessage({error}): LoginError {
@@ -203,7 +221,7 @@ export class AppAuthentication {
         }
 
         this._automaticLoginErrorReason = null;
-        this._browserService.removeFromSessionStorage(ksSessionStorageKey);  // clear session storage
+        this._clearSessionCredentials();
 
         const requestedPartnerId = this._browserService.getFromLocalStorage('loginPartnerId');
 
@@ -317,7 +335,7 @@ export class AppAuthentication {
     private _afterLogin(ks: string, storeCredentialsInSessionStorage: boolean, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse): void {
 
         if (storeCredentialsInSessionStorage) {
-            this._browserService.setInSessionStorage(ksSessionStorageKey, ks);  // save ks in session storage
+            this._sessionKs = ks;  // will be saved in session storage on page unload
         }
 
         this._browserService.removeFromLocalStorage('loginPartnerId');
@@ -387,6 +405,7 @@ export class AppAuthentication {
 
     private _clearSessionCredentials(): void {
         this._logger.debug(`clear previous stored credentials in session storage if found`);
+        this._sessionKs = null;
         this._browserService.removeFromSessionStorage(ksSessionStorageKey);
     }
 
@@ -530,6 +549,8 @@ export class AppAuthentication {
 
         if (ksFromSession) {
             this._logger.info(`try to login automatically with KS stored in session storage`);
+            this._browserService.removeFromSessionStorage(ksSessionStorageKey);
+            this._sessionKs = ksFromSession; // keep it for the next reload even if this attempt fails (e.g. network error)
             return this._loginByKS(ksFromSession, true);
         }
 
@@ -543,7 +564,7 @@ export class AppAuthentication {
                 .subscribe(
                     result => {
                         this._logger.info(`switch partner account`, { partnerId });
-                        this._browserService.setInSessionStorage(ksSessionStorageKey, result.ks);
+                        this._sessionKs = result.ks; // saved in session storage by the page unload below
                         this.kalturaServerClient.request(new SessionEndAction()).subscribe(result => {
                             this._logger.info(`server session cleared`);
                             this._forceReload();
