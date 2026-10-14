@@ -26,7 +26,8 @@ import {
     UserLoginByKsAction,
     UserLoginByLoginIdAction,
     UserResetPasswordAction,
-    UserRoleGetAction
+    UserRoleGetAction,
+    VendorCatalogItemListAction
 } from 'kaltura-ngx-client';
 import * as Immutable from 'seamless-immutable';
 import {AppUser} from './app-user';
@@ -45,6 +46,7 @@ import {RestorePasswordViewService} from 'app-shared/kmc-shared/kmc-views/detail
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {AuthenticatorViewService} from "app-shared/kmc-shared/kmc-views/details-views";
 import {AppLocalization} from "@kaltura-ng/mc-shared";
+import {KalturaVendorCatalogItemListResponse} from 'kaltura-ngx-client/lib/api/types/KalturaVendorCatalogItemListResponse';
 
 const ksSessionStorageKey = 'auth.login.ks';
 
@@ -267,9 +269,23 @@ export class AppAuthentication {
                             fields: 'name'
                         })
                     })
-                        .setDependency(['ks', 0])
-                )
-        );
+                        .setDependency(['ks', 0]),
+
+        ),
+            new VendorCatalogItemListAction({
+                pager: new KalturaFilterPager({
+                    pageSize: 500
+                })
+            })
+                .setRequestOptions(
+                    new KalturaRequestOptions({
+                        responseProfile: new KalturaDetachedResponseProfile({
+                            type: KalturaResponseProfileType.includeFields,
+                            fields: 'id,serviceType,serviceFeature'
+                        })
+                    })
+                .setDependency(['ks', 0])
+                ));
 
         return <any>(this.kalturaServerClient.multiRequest(request)
                 .pipe(
@@ -286,7 +302,7 @@ export class AppAuthentication {
                         ({ response, isPartnerAllowed }) => {
                             if (!response.hasErrors()) {
                                 if (isPartnerAllowed) {
-                                    this._afterLogin(response[0].result, true, response[1].result, response[2].result, response[3].result, response[4].result);
+                                    this._afterLogin(response[0].result, true, response[1].result, response[2].result, response[3].result, response[4].result, response[5].result);
                                     return { success: true, error: null };
                                 } else {
                                     return {
@@ -332,7 +348,7 @@ export class AppAuthentication {
             }));
     }
 
-    private _afterLogin(ks: string, storeCredentialsInSessionStorage: boolean, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse): void {
+    private _afterLogin(ks: string, storeCredentialsInSessionStorage: boolean, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse, catalogItems: KalturaVendorCatalogItemListResponse): void {
 
         if (storeCredentialsInSessionStorage) {
             this._sessionKs = ks;  // will be saved in session storage on page unload
@@ -342,6 +358,7 @@ export class AppAuthentication {
 
         const partnerPermissionList = permissionList.objects.map(item => item.name);
         const userRolePermissionList = userRole.permissionNames.split(',');
+        const partnerReachCatalogItems =  catalogItems?.objects || [];
         this._permissionsService.load(userRolePermissionList, partnerPermissionList);
         // check if the user has KMC access permission and block KMC loading if not
         if (!this._permissionsService.hasPermission(KMCPermissions.KMC_ACCESS)) {
@@ -368,6 +385,7 @@ export class AppAuthentication {
             isAdmin: userRole.systemName === "Publisher Administrator",
             partnerInfo: {
                 partnerId: user.partnerId,
+                reachCatalogItems: partnerReachCatalogItems,
                 name: partner.name,
                 status: partner.status,
                 adminSecret: partner.adminSecret,
@@ -449,7 +467,20 @@ export class AppAuthentication {
                                     type: KalturaResponseProfileType.includeFields,
                                     fields: 'name'
                                 })
+                            }),
+                        new VendorCatalogItemListAction({
+                            pager: new KalturaFilterPager({
+                                pageSize: 500
                             })
+                        })
+                            .setRequestOptions(
+                                new KalturaRequestOptions({
+                                    ks: loginToken,
+                                    responseProfile: new KalturaDetachedResponseProfile({
+                                        type: KalturaResponseProfileType.includeFields,
+                                        fields: 'id,serviceType,serviceFeature'
+                                    })
+                                }))
                     ];
 
                     this.kalturaServerClient.multiRequest(requests)
@@ -466,7 +497,7 @@ export class AppAuthentication {
                         .subscribe(
                             ({ response, isPartnerAllowed }) => {
                                 if (!response.hasErrors() && isPartnerAllowed) {
-                                    this._afterLogin(loginToken, storeCredentialsInSessionStorage, response[0].result, response[1].result, response[2].result, response[3].result);
+                                    this._afterLogin(loginToken, storeCredentialsInSessionStorage, response[0].result, response[1].result, response[2].result, response[3].result, response[4].result);
                                     observer.next(true);
                                     observer.complete();
                                     return;

@@ -1,6 +1,7 @@
 import { KalturaPartnerAuthenticationType } from "kaltura-ngx-client";
 import { KalturaPartnerStatus } from "kaltura-ngx-client/lib/api/types/KalturaPartnerStatus";
 import { KalturaHTMLPurifierBehaviourType } from 'kaltura-ngx-client/lib/api/types/KalturaHTMLPurifierBehaviourType';
+import { KalturaVendorCatalogItem } from 'kaltura-ngx-client/lib/api/types/KalturaVendorCatalogItem';
 
 export interface PartnerInfo {
     partnerId: number;
@@ -8,6 +9,7 @@ export interface PartnerInfo {
     status: KalturaPartnerStatus,
     adminSecret: string;
     partnerPackage: PartnerPackageTypes;
+    reachCatalogItems: KalturaVendorCatalogItem[];
     landingPage: string;
     adultContent: boolean;
     blockDirectLogin: boolean;
