@@ -27,7 +27,10 @@ import {
     UserLoginByLoginIdAction,
     UserResetPasswordAction,
     UserRoleGetAction,
-    VendorCatalogItemListAction
+    VendorCatalogItemListAction,
+    KalturaVendorCatalogItemListResponse,
+    KalturaVendorCatalogItemStatus,
+    KalturaVendorCatalogItemFilter
 } from 'kaltura-ngx-client';
 import * as Immutable from 'seamless-immutable';
 import {AppUser} from './app-user';
@@ -46,7 +49,6 @@ import {RestorePasswordViewService} from 'app-shared/kmc-shared/kmc-views/detail
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {AuthenticatorViewService} from "app-shared/kmc-shared/kmc-views/details-views";
 import {AppLocalization} from "@kaltura-ng/mc-shared";
-import {KalturaVendorCatalogItemListResponse} from 'kaltura-ngx-client/lib/api/types/KalturaVendorCatalogItemListResponse';
 
 const ksSessionStorageKey = 'auth.login.ks';
 
@@ -273,6 +275,9 @@ export class AppAuthentication {
 
         ),
             new VendorCatalogItemListAction({
+                filter: new KalturaVendorCatalogItemFilter({
+                    statusEqual: KalturaVendorCatalogItemStatus.active
+                }),
                 pager: new KalturaFilterPager({
                     pageSize: 500
                 })
@@ -469,6 +474,9 @@ export class AppAuthentication {
                                 })
                             }),
                         new VendorCatalogItemListAction({
+                            filter: new KalturaVendorCatalogItemFilter({
+                                statusEqual: KalturaVendorCatalogItemStatus.active
+                            }),
                             pager: new KalturaFilterPager({
                                 pageSize: 500
                             })
