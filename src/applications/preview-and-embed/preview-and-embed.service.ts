@@ -25,6 +25,21 @@ export type EmbedConfig = {
     widgetId?: string;
 }
 
+// escape user controlled values (entry name, description etc.) before placing them in generated HTML
+export function escapeHtml(value: any): string {
+    return String(value === null || typeof value === 'undefined' ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+// serialize a user controlled value as a JS string literal that cannot break out of the surrounding <script> tag
+function toJsString(value: string): string {
+    return JSON.stringify(value || '').replace(/</g, '\\u003c');
+}
+
 export type EmbedParams = {
     playerVersion: number;
     embedType: string;
@@ -140,7 +155,7 @@ kWidget.embed({
                     break;
                 case 'iframe':
                     const iframeEntryId = config.entryId.length ? `&entry_id=${config.entryId}` : '';
-                    const titleAttr = config.entryTitle ? `title="${config.entryTitle}"` : '';
+                    const titleAttr = config.entryTitle ? `title="${escapeHtml(config.entryTitle)}"` : '';
                     code = `<iframe id="${config.playerId}" src="${config.serverUri}/p/${config.pid}/sp/${config.pid}00/embedIframeJs/uiconf_id/${config.uiConfId}/partner_id/${config.pid}?iframeembed=true&playerId=${config.playerId}${iframeEntryId}${config.flashVarsUrl}" width="${config.width}" height="${config.height}" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0"${config.videoMeta} ${titleAttr}>${config.entryMeta}</iframe>`
                     break;
                 case 'auto':
@@ -213,7 +228,7 @@ kWidget.thumbEmbed({
                     try {
                       var kalturaPlayer = KalturaPlayer.setup({
                         targetId: "kaltura_player_${rnd}",
-                        entryTitle: "${config.entryTitle || ''}",
+                        entryTitle: ${toJsString(config.entryTitle)},
                         provider: {
                           partnerId: ${config.pid},
                           uiConfId: ${config.uiConfId}${widgetCode}
@@ -230,7 +245,7 @@ kWidget.thumbEmbed({
                     try {
                       var kalturaPlayer = KalturaPlayer.setup({
                         targetId: "kaltura_player_${rnd}",
-                        entryTitle: "${config.entryTitle || ''}",
+                        entryTitle: ${toJsString(config.entryTitle)},
                         provider: {
                           partnerId: ${config.pid},
                           uiConfId: ${config.uiConfId}${widgetCode}
@@ -257,7 +272,7 @@ kWidget.thumbEmbed({
                               uiConfId: ${config.uiConfId}${thumbWidgetCode}
                             },
                             targetId: "kaltura_player_${rnd}",
-                            entryTitle: "${config.entryTitle || ''}",
+                            entryTitle: ${toJsString(config.entryTitle)},
                         },
                         mediaInfo: {playlistId: '${config.entryId}'}
                       });
@@ -276,7 +291,7 @@ kWidget.thumbEmbed({
                               uiConfId: ${config.uiConfId}${thumbWidgetCode}
                             },
                             targetId: "kaltura_player_${rnd}",
-                            entryTitle: "${config.entryTitle || ''}",
+                            entryTitle: ${toJsString(config.entryTitle)},
                         },
                         mediaInfo: {entryId: '${config.entryId}'}
                       });
@@ -286,7 +301,7 @@ kWidget.thumbEmbed({
                   </script>`;
                     break;
                 case 'iframe':
-                    const titleAttr = config.entryTitle ? `title="${config.entryTitle}"` : '';
+                    const titleAttr = config.entryTitle ? `title="${escapeHtml(config.entryTitle)}"` : '';
                     const iframeWidget = config.widgetId ? `&config[provider]={"widgetId":"${config.widgetId}"}` : '';
                     code = config.isPlaylist ? `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&playlist_id=${config.entryId}${iframeWidget}${config.playerConfig}' style="width: ${config.width}; height: ${config.height}" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0" ${titleAttr}></iframe>` :
                         `<iframe type="text/javascript" src='${config.serverUri}/p/${config.pid}/embedPlaykitJs/uiconf_id/${config.uiConfId}?iframeembed=true&entry_id=${config.entryId}${iframeWidget}${config.playerConfig}' style="width: ${config.width}; height: ${config.height}" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" frameborder="0" ${titleAttr}></iframe>`;
