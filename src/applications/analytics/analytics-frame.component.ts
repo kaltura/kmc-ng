@@ -2,7 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild, Renderer2, Input }
 import { Router, NavigationEnd, Params, ActivatedRoute } from '@angular/router';
 import {AppAuthentication, AppBootstrap, ApplicationType} from 'shared/kmc-shell/index';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { serverConfig } from 'config/server';
+import { getUriOrigin, serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { BrowserService } from 'app-shared/kmc-shell/providers';
 import { KmcLoggerConfigurator } from 'app-shared/kmc-shell/kmc-logs/kmc-logger-configurator';
@@ -39,6 +39,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     public _initialized = false;
     private _lastNav = '';
     private _currentAppUrl: string;
+    private _analyticsOrigin: string = null;
     private _lastQueryParams: { [key: string]: string }[] = null;
     private _lastParams: any;
     private _analyticsDefaultPage = '/analytics/engagement';
@@ -117,8 +118,8 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
     }
 
     private sendMessageToAnalyticsApp(message: any): void{
-        if (this.analyticsFrame && this.analyticsFrame.nativeElement.contentWindow && this.analyticsFrame.nativeElement.contentWindow.postMessage){
-            this.analyticsFrame.nativeElement.contentWindow.postMessage(message, window.location.origin);
+        if (this._analyticsOrigin && this.analyticsFrame && this.analyticsFrame.nativeElement.contentWindow && this.analyticsFrame.nativeElement.contentWindow.postMessage){
+            this.analyticsFrame.nativeElement.contentWindow.postMessage(message, this._analyticsOrigin);
         }
     }
 
@@ -132,6 +133,7 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
 
     private _updateUrl(): void {
         this._url = serverConfig.externalApps.kmcAnalytics.uri;
+        this._analyticsOrigin = getUriOrigin(this._url);
     }
 
     ngOnInit() {
@@ -186,6 +188,14 @@ export class AnalyticsFrameComponent implements OnInit, OnDestroy {
         }
 
         this._windowEventListener = (e) => {
+            // only trust the analytics frame we created, on the origin we loaded it from
+            if (!this._analyticsOrigin || e.origin !== this._analyticsOrigin) {
+                return;
+            }
+            if (!this.analyticsFrame || e.source !== this.analyticsFrame.nativeElement.contentWindow) {
+                return;
+            }
+
             let postMessageData;
             try {
                 postMessageData = e.data;
