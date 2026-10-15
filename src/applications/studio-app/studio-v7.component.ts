@@ -40,7 +40,6 @@ export class StudioV7Component implements OnInit, OnDestroy {
               },
               'useCanary': false, // this._browserService.getInitialQueryParam('useCanary') removed as per SECF-30927
               'dateFormat': this._browserService.getFromLocalStorage('kmc_date_format') || 'month-day-year',
-              'pid': this._appAuthentication.appUser.partnerId,
               'publisherEnvType': this._appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
               'updateView': (view: string) => {
                   this._ngZone.run(() => {
