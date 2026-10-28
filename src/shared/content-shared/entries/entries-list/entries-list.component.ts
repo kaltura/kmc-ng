@@ -4,7 +4,10 @@ import { CategoriesStatusMonitorService, CategoriesStatus } from '../../categori
 import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries/entries-table/entries-table.component';
 import { AppAnalytics, BrowserService } from 'app-shared/kmc-shell/providers';
-import { KalturaEntryStatus, KalturaMediaEntry, KalturaMediaType, KalturaSourceType } from 'kaltura-ngx-client';
+import {
+    KalturaEntryStatus,
+    KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry, KalturaMediaEntry, KalturaMediaType, KalturaRecordStatus, KalturaSourceType
+} from 'kaltura-ngx-client';
 import { CategoriesModes } from 'app-shared/content-shared/categories/categories-mode-type';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { Menu } from 'primeng/menu';
@@ -37,7 +40,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
     @Input() isAIButtonVisible = false;
     @Input() selectedEntries: any[] = [];
     @Input() columns: EntriesTableColumns | null;
-    @Input() rowActions: { label: string, commandName: string, styleClass: string }[];
+    @Input() rowActions: { label: string, commandName: string, styleClass: string, items?: CustomMenuItem[] }[];
     @Input() enforcedFilters: Partial<EntriesFilters>;
     @Input() defaultFilters: Partial<EntriesFilters>;
     @Input() showEnforcedFilters = false;
@@ -148,8 +151,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
         const isWebcastAnalyticsCommand = commandName === 'webcastAnalytics';
         const cannotDeleteEntry = commandName === 'delete' && !this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_DELETE);
         const isCaptionRequestCommand = commandName === 'captionRequest';
-        const isCaptionOrderCommand = commandName === 'captionOrder';
-        const isAudioOrderCommand = commandName === 'audioOrder';
+        const isReachOrderCommand = commandName === 'reach';
         return !(
             (!isReadyStatus && isPreviewCommand) || // hide if trying to share & embed entry that isn't ready
             (!isReadyStatus && isLiveStreamFlash && isViewCommand) || // hide if trying to view live that isn't ready
@@ -158,9 +160,26 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
             (isWebcastAnalyticsCommand && !isKalturaLive) || // hide webcast analytics menu item for entry that isn't kaltura live
             cannotDeleteEntry ||
             (isCaptionRequestCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry })) ||
-            (isCaptionOrderCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry })) ||
-            (isAudioOrderCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry }))
+            (isReachOrderCommand && !this._reachAppViewService.isAvailable({ entry, page: ReachPages.entry }))
         );
+    }
+
+    private _filterReachItems(entry: KalturaMediaEntry, items: CustomMenuItem[]): CustomMenuItem[] {
+        const { sourceType, status, mediaType } = entry;
+        const isReadyStatus = status === KalturaEntryStatus.ready;
+        const isLiveStream = mediaType === KalturaMediaType.liveStreamFlash ||
+            mediaType === KalturaMediaType.liveStreamWindowsMedia ||
+            mediaType === KalturaMediaType.liveStreamRealMedia ||
+            mediaType === KalturaMediaType.liveStreamQuicktime;
+        const isKalturaLive = (sourceType === KalturaSourceType.liveStream || sourceType === KalturaSourceType.manualLiveStream || sourceType === KalturaSourceType.akamaiLive || sourceType === KalturaSourceType.akamaiUniversalLive);
+
+        const isLive = isReadyStatus && (isKalturaLive || isLiveStream);
+        const isRecorded = (entry as KalturaLiveStreamAdminEntry).recordedEntryId || entry.redirectEntryId;
+
+        const vodCommands = ['captionOrder', 'translationOrder', 'audioOrder', 'extendedAudioOrder'];
+        const liveCommands = ['liveCaptionOrder', 'liveTranslationOrder'];
+        const allowedCommands = !isLive ? vodCommands : isRecorded ? [...vodCommands, ...liveCommands] : liveCommands;
+        return items.filter(item => allowedCommands.indexOf(item.commandName) !== -1);
     }
 
     private _buildMenu(entry: KalturaMediaEntry): void {
@@ -168,14 +187,17 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
             .filter(item => this._hideMenuItems(entry, item))
             .map(action =>
                 Object.assign({} as CustomMenuItem, action, {
-                    command: ({ item }) => {
-                        const actionAllowed = this._allowDrilldown(action.commandName, entry.mediaType, entry.status);
-                        if (actionAllowed) {
-                            this.onActionsSelected.emit({ action: action.commandName, entry });
-                        }
-                    }
+                    ...(action.commandName === 'reach' && action.items ? {
+                        items: this._filterReachItems(entry, action.items).map(subItem =>
+                            Object.assign({} as CustomMenuItem, subItem, {
+                                command: () => this.onActionsSelected.emit({ action: subItem.commandName, entry })
+                            })
+                        )
+                    } : {}),
+                    command: ({ item }) => this.onActionsSelected.emit({ action: action.commandName, entry })
                 })
-            );
+            )
+            .filter(action => !Array.isArray(action.items) || action.items.length > 0); // hide the reach menu if no sub items apply to this entry
     }
 
     public _openActionsMenu(evt: { event: any, entry: KalturaMediaEntry }): void {

@@ -26,7 +26,9 @@ import {
     KalturaMediaType,
     KalturaPlaylist,
     KalturaQuizOutputType,
-    QuizGetUrlAction
+    QuizGetUrlAction,
+    KalturaVendorCatalogItem,
+    KalturaVendorServiceFeature
 } from 'kaltura-ngx-client';
 import { PubSubServiceType } from '@unisphere/runtime';
 import { Observable } from 'rxjs';
@@ -89,12 +91,9 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
           disabled: !this._analyticsNewMainViewService.isAvailable()
       },
       {
-          label: this._appLocalization.get('applications.content.entryDetails.captions.orderCaptionsTranslations'),
-          commandName: 'captionOrder'
-      },
-      {
-          label: this._appLocalization.get('applications.content.entryDetails.captions.orderAudioDescriptions'),
-          commandName: 'audioOrder'
+          label: this._appLocalization.get('applications.content.entryDetails.captions.request'),
+          commandName: 'reach',
+          items: []
       },
       {
           label: this._appLocalization.get('applications.content.table.captionRequest'),
@@ -141,6 +140,41 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   ngOnInit() {
       if (this._contentEntriesMainViewService.viewEntered()) {
           this._prepare();
+      }
+      // add catalog items to reach menu
+      const catalogItems: KalturaVendorCatalogItem[] = this._appAuthentication.appUser.partnerInfo.reachCatalogItems;
+      const menuItems = [
+          ...(catalogItems.find(item => item.serviceFeature === KalturaVendorServiceFeature.captions) ? [{
+              label: this._appLocalization.get('applications.content.entryDetails.captions.reachOrderCaptions'),
+              commandName: 'captionOrder',
+          }] : []),
+          ...(catalogItems.find(item => item.serviceFeature === KalturaVendorServiceFeature.liveCaption) ? [{
+              label: this._appLocalization.get('applications.content.entryDetails.captions.reachOrderLiveCaptions'),
+              commandName: 'liveCaptionOrder',
+          }] : []),
+          ...(catalogItems.find(item => item.serviceFeature === KalturaVendorServiceFeature.translation) ? [{
+              label: this._appLocalization.get('applications.content.entryDetails.captions.reachOrderTranslations'),
+              commandName: 'translationOrder',
+          }] : []),
+          ...(catalogItems.find(item => item.serviceFeature === KalturaVendorServiceFeature.liveTranslation) ? [{
+              label: this._appLocalization.get('applications.content.entryDetails.captions.reachOrderLiveTranslations'),
+              commandName: 'liveTranslationOrder',
+          }] : []),
+          ...(catalogItems.find(item => item.serviceFeature === KalturaVendorServiceFeature.audioDescription) ? [{
+              label: this._appLocalization.get('applications.content.entryDetails.captions.reachOrderAudioDescriptions'),
+              commandName: 'audioOrder',
+          }] : []),
+          ...(catalogItems.find(item => item.serviceFeature === KalturaVendorServiceFeature.extendedAudioDescription) ? [{
+              label: this._appLocalization.get('applications.content.entryDetails.captions.reachOrderExtendedAudioDescriptions'),
+              commandName: 'extendedAudioOrder',
+          }] : []),
+
+      ];
+      // remove enrich menu item if the items array is empty
+      if (menuItems.length > 0) {
+          this._rowActions.find(action => action.commandName === 'reach').items = menuItems;
+      } else {
+            this._rowActions = this._rowActions.filter(action => action.commandName !== 'reach');
       }
   }
 
@@ -256,8 +290,6 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
                               default:
                                   break;
                           }
-
-
                       })
                   }
               }
@@ -270,6 +302,30 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
             mediaType === KalturaMediaType.liveStreamRealMedia ||
             mediaType === KalturaMediaType.liveStreamQuicktime;
     }
+
+  private openContentLabPage (entry: KalturaMediaEntry, page: string): void {
+      this._analytics.trackClickEvent(page);
+      if (entry && entry.id) {
+          if (this.unisphereRuntime) {
+              if (this._isLiveMediaEntry(entry.mediaType)) {
+                  const recordingEntryId = (entry as KalturaLiveStreamAdminEntry).recordedEntryId || entry.redirectEntryId || '';
+                  this.unisphereRuntime.openApplication({
+                      entryId: recordingEntryId,
+                      eventSessionContextId: entry.id,
+                      type: 'entry',
+                      initialView: page
+                  });
+              } else {
+                  this.unisphereRuntime.openApplication({
+                      entryId: entry.id,
+                      eventSessionContextId: '',
+                      type: 'entry',
+                      initialView: page
+                  });
+              }
+          }
+      }
+  }
 
   public _onActionSelected({ action, entry }) {
     switch (action) {
@@ -319,53 +375,15 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
             }
         }
         break;
-        case 'captionOrder':
-            this._analytics.trackClickEvent('Captions_order');
-            if (entry && entry.id) {
-                if (this.unisphereRuntime) {
-                    if (this._isLiveMediaEntry(entry.mediaType)) {
-                        const recordingEntryId = (entry as KalturaLiveStreamAdminEntry).recordedEntryId || entry.redirectEntryId || '';
-                        this.unisphereRuntime.openApplication({
-                            entryId: recordingEntryId,
-                            eventSessionContextId: entry.id,
-                            type: 'entry',
-                            initialView: 'captions'
-                        });
-                    } else {
-                        this.unisphereRuntime.openApplication({
-                            entryId: entry.id,
-                            eventSessionContextId: '',
-                            type: 'entry',
-                            initialView: 'captions'
-                        });
-                    }
-                }
-            }
+      case 'captionOrder':
+      case 'liveCaptionOrder':
+      case 'translationOrder':
+      case 'liveTranslationOrder':
+      case 'audioOrder':
+      case 'extendedAudioOrder':
+            this.openContentLabPage(entry, action);
             break;
-        case 'audioOrder':
-            this._analytics.trackClickEvent('Audio_order');
-            if (entry && entry.id) {
-                if (this.unisphereRuntime) {
-                    if (this._isLiveMediaEntry(entry.mediaType)) {
-                        const recordingEntryId = (entry as KalturaLiveStreamAdminEntry).recordedEntryId || entry.redirectEntryId || '';
-                        this.unisphereRuntime.openApplication({
-                            entryId: recordingEntryId,
-                            eventSessionContextId: entry.id,
-                            type: 'entry',
-                            initialView: 'audioDescription'
-                        });
-                    } else {
-                        this.unisphereRuntime.openApplication({
-                            entryId: entry.id,
-                            eventSessionContextId: '',
-                            type: 'entry',
-                            initialView: 'audioDescription'
-                        });
-                    }
-                }
-            }
-            break;
-        case 'captionRequest':
+      case 'captionRequest':
             this._analytics.trackClickEvent('Captions_enrich');
             this._reachAppViewService.open({ entry, page: ReachPages.entry });
             break;
