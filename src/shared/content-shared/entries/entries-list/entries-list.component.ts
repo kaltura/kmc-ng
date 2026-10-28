@@ -167,10 +167,13 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
     private _filterReachItems(entry: KalturaMediaEntry, items: CustomMenuItem[]): CustomMenuItem[] {
         const { sourceType, status, mediaType } = entry;
         const isReadyStatus = status === KalturaEntryStatus.ready;
-        const isLiveStreamFlash = mediaType && mediaType === KalturaMediaType.liveStreamFlash;
+        const isLiveStream = mediaType === KalturaMediaType.liveStreamFlash ||
+            mediaType === KalturaMediaType.liveStreamWindowsMedia ||
+            mediaType === KalturaMediaType.liveStreamRealMedia ||
+            mediaType === KalturaMediaType.liveStreamQuicktime;
         const isKalturaLive = (sourceType === KalturaSourceType.liveStream || sourceType === KalturaSourceType.manualLiveStream || sourceType === KalturaSourceType.akamaiLive || sourceType === KalturaSourceType.akamaiUniversalLive);
 
-        const isLive = isReadyStatus && (isKalturaLive || isLiveStreamFlash);
+        const isLive = isReadyStatus && (isKalturaLive || isLiveStream);
         const isRecorded = (entry as KalturaLiveStreamAdminEntry).recordedEntryId || entry.redirectEntryId;
 
         const vodCommands = ['captionOrder', 'translationOrder', 'audioOrder', 'extendedAudioOrder'];
