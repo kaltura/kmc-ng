@@ -47,10 +47,12 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   public manualLiveData: ManualLive = {
     name: '',
     description: '',
-    flashHDSURL: '',
     hlsStreamUrl: '',
+    backupHlsStreamUrl: '',
     dashStreamUrl: '',
-    useAkamaiHdProtocol: false
+    backupDashStreamUrl: '',
+    useAkamaiHdProtocol: false,
+    previewMode: false,
   };
   public universalLiveData: UniversalLive = {
     name: '',

@@ -535,6 +535,7 @@
                     "lowLatencyHelp1": "Follow instructions on this",
                     "lowLatencyHelp2": "Knowledge Center article",
                     "lowLatencyHelp3": "to make sure Low Latency works correctly",
+                    "previewModeHelp": "Allow controlling stream visibility using the preview / go-live toggle",
                     "errors": {
                         "required": "This field is required."
                     }
@@ -544,12 +545,15 @@
                     "description": "Description",
                     "flashHDSURL": "Live Flash HDS stream URL",
                     "hlsStreamUrl": "Live Mobile HLS stream URL",
+                    "backupHlsStreamUrl": "Live Mobile HLS stream backup URL",
                     "dashStreamUrl": "DASH stream URL",
+                    "backupDashStreamUrl": "DASH stream backup URL",
                     "useAkamaiHdProtocol": "Akamai HD protocol is used on this HDS URL.",
                     "errors": {
                         "required": "This field is required",
                         "enterUrl": "You must enter at least one of HDS/HLS/DASH stream URLs",
-                        "invalidUrl": "You must enter a valid URL"
+                        "invalidUrl": "You must enter a valid URL",
+                        "backupUrlRequiresPrimary": "A backup URL requires a primary URL for the same protocol"
                     }
                 },
                 "universalStreamType": {
