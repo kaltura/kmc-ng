@@ -151,24 +151,32 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		}
 		if (this._liveType === "manual") {
             const entry = data as KalturaLiveStreamEntry;
+            const existingConfigurations = (this.data as KalturaLiveStreamEntry).liveStreamConfigurations || [];
             entry.liveStreamConfigurations = [];
             // save hls stream to main entry and stream configuration
             const hlsStreamUrl = this._form.controls['hlsStreamUrl'].value;
             entry.hlsStreamUrl = hlsStreamUrl;
             if (hlsStreamUrl && hlsStreamUrl.length) {
+                const hlsStreamConfig = existingConfigurations.find(cfg => cfg.protocol === KalturaPlaybackProtocol.appleHttp);
                 const cfg = new KalturaLiveStreamConfiguration();
                 cfg.protocol = KalturaPlaybackProtocol.appleHttp;
                 cfg.url = hlsStreamUrl;
+                if (hlsStreamConfig) {
+                    cfg.backupUrl = hlsStreamConfig.backupUrl;
+                }
                 entry.liveStreamConfigurations.push(cfg);
             }
 
             // save dash stream to stream configuration
             const dashStreamUrl = this._form.controls['dashStreamUrl'].value;
             if (dashStreamUrl && dashStreamUrl.length) {
-                const dashStreamConfig = (this.data as KalturaLiveStreamEntry).liveStreamConfigurations.find(cfg => cfg.protocol === KalturaPlaybackProtocol.mpegDash);
+                const dashStreamConfig = existingConfigurations.find(cfg => cfg.protocol === KalturaPlaybackProtocol.mpegDash);
                 const cfg = new KalturaLiveStreamConfiguration();
                 cfg.protocol = KalturaPlaybackProtocol.mpegDash;
                 cfg.url = dashStreamUrl;
+                if (dashStreamConfig) {
+                    cfg.backupUrl = dashStreamConfig.backupUrl;
+                }
                 entry.liveStreamConfigurations.push(cfg);
             }
 		}
