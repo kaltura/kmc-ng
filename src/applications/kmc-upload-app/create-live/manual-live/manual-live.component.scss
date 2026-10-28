@@ -1,1 +1,48 @@
 @import "../live-form";
+
+.kContent {
+    .kRow {
+        position: relative;
+        &.gap {
+            padding-top: 30px;
+        }
+        &.kGroup {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        &.kError {
+            padding-top: 8px;
+            padding-bottom: 0px;
+        }
+
+        .kLabel .kMultiline {
+            margin-top: -10px;
+        }
+
+        .kHelpTip {
+            position: absolute;
+            padding-top: 4px;
+            font-size: 15px;
+            margin-left: 8px;
+            cursor: pointer;
+
+            &:hover {
+                color: $kSecondary;
+            }
+        }
+    }
+}
+.kTooltip {
+    padding: 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    .content1 {
+        display: flex;
+        margin-bottom: 4px;
+        a {
+            margin-left: 4px;
+        }
+    }
+}
+

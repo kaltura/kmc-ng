@@ -1,7 +1,7 @@
 import { Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { serverConfig } from 'config/server';
+import { getUriOrigin, serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { HideMenuEvent, PlayersUpdatedEvent, ShowMenuEvent } from 'app-shared/kmc-shared/events';
 import { StudioV3MainViewService } from 'app-shared/kmc-shared/kmc-views';
@@ -17,6 +17,7 @@ export class StudioV7Component implements OnInit, OnDestroy {
   public iframeHeight = '932px';
   public currentView = 'list';
   public _windowEventListener = null;
+  private _studioOrigin: string = null;
   @ViewChild('studioFrame', { static: true}) studioFrame: ElementRef;
 
   constructor(
@@ -39,7 +40,6 @@ export class StudioV7Component implements OnInit, OnDestroy {
               },
               'useCanary': false, // this._browserService.getInitialQueryParam('useCanary') removed as per SECF-30927
               'dateFormat': this._browserService.getFromLocalStorage('kmc_date_format') || 'month-day-year',
-              'pid': this._appAuthentication.appUser.partnerId,
               'publisherEnvType': this._appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
               'updateView': (view: string) => {
                   this._ngZone.run(() => {
@@ -55,60 +55,40 @@ export class StudioV7Component implements OnInit, OnDestroy {
               }
           };
           this.studioUrl = `${serverConfig.externalApps.studioV7.uri}?rnd=${Math.random()}`;
+          this._studioOrigin = getUriOrigin(serverConfig.externalApps.studioV7.uri);
+
+          // the studio requests its session over postMessage - send it only to the studio frame we created, on its origin
+          this._windowEventListener = (e: MessageEvent) => {
+              if (!this._studioOrigin || e.origin !== this._studioOrigin) {
+                  return;
+              }
+              if (!this.studioFrame || e.source !== this.studioFrame.nativeElement.contentWindow) {
+                  return;
+              }
+              if (e.data && e.data.messageType === 'studioInit') {
+                  this._sendMessageToStudio({
+                      'messageType': 'init',
+                      'payload': {
+                          'ks': this._appAuthentication.appUser.ks,
+                          'pid': this._appAuthentication.appUser.partnerId
+                      }
+                  });
+              }
+          };
+          window.addEventListener('message', this._windowEventListener);
       }
-
-      // all commented out code is a placeholder to use postmessage communication instead of window vars to support unfriendly iframe (KMS, EP)
-      /*
-      const config = {
-          'pid': this._appAuthentication.appUser.partnerId,
-          'ks': this._appAuthentication.appUser.ks,
-          'publisherEnvType': this._appAuthentication.appUser.partnerInfo.publisherEnvironmentType,
-      };
-      this.studioUrl = "http://localhost:3000/index.html";  // TODO - update to serverConfig.externalApps.studioV7.uri
-
-      this._windowEventListener = (e) => {
-          let postMessageData;
-          try {
-              postMessageData = e.data;
-          } catch (ex) {
-              return;
-          }
-
-          if (postMessageData.messageType === 'studioInit') {
-              this.sendMessageToStudio({'messageType': 'init', 'payload': config });
-          }
-          if (postMessageData.messageType === 'listView') {
-              this._appEvents.publish(new HideMenuEvent(true));
-              this.iframeHeight = '932px';
-          }
-          if (postMessageData.messageType === 'editView') {
-              this._appEvents.publish(new HideMenuEvent(false));
-              this.iframeHeight = '100vh';
-          }
-      };
-      this._addPostMessagesListener();*/
   }
 
-  /*
-    private sendMessageToStudio(message: any): void{
-        if (this.studioFrame && this.studioFrame.nativeElement.contentWindow && this.studioFrame.nativeElement.contentWindow.postMessage){
-            this.studioFrame.nativeElement.contentWindow.postMessage(message, '*');
-        }
-    }
-
-    private _addPostMessagesListener() {
-        this._removePostMessagesListener();
-        window.addEventListener('message', this._windowEventListener);
-    }
-
-
-    private _removePostMessagesListener(): void {
-        window.removeEventListener('message', this._windowEventListener);
-    }*/
+  private _sendMessageToStudio(message: any): void {
+      const studioWindow = this.studioFrame && this.studioFrame.nativeElement.contentWindow;
+      if (this._studioOrigin && studioWindow) {
+          studioWindow.postMessage(message, this._studioOrigin);
+      }
+  }
 
   ngOnDestroy() {
     window['kmc'] = null;
     this.studioUrl = '';
-    // this._removePostMessagesListener();
+    window.removeEventListener('message', this._windowEventListener);
   }
 }

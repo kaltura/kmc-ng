@@ -317,20 +317,6 @@
 
                   <div class="kFormSection">
                       <div class="kRow">
-                          <span class="kWideLabels">{{'applications.upload.prepareLive.manualStreamType.flashHDSURL' | translate}}</span>
-                          <div class="inputWrapper">
-                              <input class="kControl" formControlName="flashHDSURL" pInputText [ngClass]="{'kHasError':!_widgetService._form.controls['flashHDSURL'].valid && _widgetService._form.controls['flashHDSURL'].touched}">
-                              <div *ngIf="_widgetService._form.controls['flashHDSURL'].touched">
-                                  <div *ngIf="_widgetService._form.controls['flashHDSURL'].hasError('url')" class="error">
-                                      {{'applications.upload.prepareLive.manualStreamType.errors.invalidUrl' | translate}}
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-
-                  <div class="kFormSection">
-                      <div class="kRow">
                           <span class="kWideLabels">{{'applications.upload.prepareLive.manualStreamType.dashStreamUrl' | translate}}</span>
                           <div class="inputWrapper">
                               <input class="kControl" formControlName="dashStreamUrl" pInputText [ngClass]="{'kHasError':!_widgetService._form.controls['dashStreamUrl'].valid && _widgetService._form.controls['dashStreamUrl'].touched}">
