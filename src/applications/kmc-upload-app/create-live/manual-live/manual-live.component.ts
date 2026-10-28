@@ -41,7 +41,7 @@ export class ManualLiveComponent implements OnInit, OnDestroy {
         dashStreamUrl: this.data.dashStreamUrl,
         backupDashStreamUrl: this.data.backupDashStreamUrl
       },
-      previewMode: false
+      previewMode: this.data.previewMode
     });
   }
 
