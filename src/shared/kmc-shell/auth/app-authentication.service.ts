@@ -277,7 +277,7 @@ export class AppAuthentication {
             new VendorCatalogItemListAction({
                 filter: new KalturaVendorCatalogItemFilter({
                     statusEqual: KalturaVendorCatalogItemStatus.active
-                }),
+                }).setDependency(['partnerIdEqual', 1, 'partnerId']),
                 pager: new KalturaFilterPager({
                     pageSize: 500
                 })
@@ -476,7 +476,7 @@ export class AppAuthentication {
                         new VendorCatalogItemListAction({
                             filter: new KalturaVendorCatalogItemFilter({
                                 statusEqual: KalturaVendorCatalogItemStatus.active
-                            }),
+                            }).setDependency(['partnerIdEqual', 0, 'partnerId']),
                             pager: new KalturaFilterPager({
                                 pageSize: 500
                             })
