@@ -295,7 +295,7 @@ export class AppAuthentication {
         return <any>(this.kalturaServerClient.multiRequest(request)
                 .pipe(
                     switchMap(response => {
-                        if (!response.hasErrors()) {
+                        if (!response.slice(0, -1).some(({error}) => !!error)) {
                             return this._checkIfPartnerCanAccess(response[2].result)
                                 .pipe(map(isPartnerAllowed => ({ response, isPartnerAllowed })));
                         } else {
@@ -305,7 +305,7 @@ export class AppAuthentication {
                     }),
                     map(
                         ({ response, isPartnerAllowed }) => {
-                            if (!response.hasErrors()) {
+                            if (!response.slice(0, -1).some(({error}) => !!error)) {
                                 if (isPartnerAllowed) {
                                     this._afterLogin(response[0].result, true, response[1].result, response[2].result, response[3].result, response[4].result, response[5].result);
                                     return { success: true, error: null };
@@ -495,7 +495,7 @@ export class AppAuthentication {
                         .pipe(
                             switchMap(
                                 response => {
-                                    const result = !response.hasErrors()
+                                    const result = !response.slice(0, -1).some(({error}) => !!error)
                                         ? this._checkIfPartnerCanAccess(response[1].result)
                                         : ObservableOf(true);
 
@@ -504,7 +504,7 @@ export class AppAuthentication {
                         )
                         .subscribe(
                             ({ response, isPartnerAllowed }) => {
-                                if (!response.hasErrors() && isPartnerAllowed) {
+                                if (!response.slice(0, -1).some(({error}) => !!error) && isPartnerAllowed) {
                                     this._afterLogin(loginToken, storeCredentialsInSessionStorage, response[0].result, response[1].result, response[2].result, response[3].result, response[4].result);
                                     observer.next(true);
                                     observer.complete();
