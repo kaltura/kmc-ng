@@ -152,7 +152,10 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		if (this._liveType === "manual") {
             const entry = data as KalturaLiveStreamEntry;
             const existingConfigurations = (this.data as KalturaLiveStreamEntry).liveStreamConfigurations || [];
-            entry.liveStreamConfigurations = [];
+            entry.liveStreamConfigurations = existingConfigurations.filter(cfg =>
+                cfg.protocol !== KalturaPlaybackProtocol.appleHttp &&
+                cfg.protocol !== KalturaPlaybackProtocol.mpegDash
+            );
             // save hls stream to main entry and stream configuration
             const hlsStreamUrl = this._form.controls['hlsStreamUrl'].value;
             entry.hlsStreamUrl = hlsStreamUrl;
@@ -230,8 +233,16 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	}
 
     private _atLeastOneUrlValidator(formgroup: FormGroup) {
+        const hasExistingOtherConfiguration = (
+            (this.data as KalturaLiveStreamEntry).liveStreamConfigurations || []
+        ).some(cfg =>
+            cfg.protocol !== KalturaPlaybackProtocol.appleHttp &&
+            cfg.protocol !== KalturaPlaybackProtocol.mpegDash
+        );
+
         if (!formgroup.controls['hlsStreamUrl'].value &&
-            !formgroup.controls['dashStreamUrl'].value) {
+            !formgroup.controls['dashStreamUrl'].value &&
+            !hasExistingOtherConfiguration) {
             return {atLeastOneUrl: true};
         } else {
             return null;
