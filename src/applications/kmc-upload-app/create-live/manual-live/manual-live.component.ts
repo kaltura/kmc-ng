@@ -36,10 +36,12 @@ export class ManualLiveComponent implements OnInit, OnDestroy {
       description: this.data.description,
       useAkamaiHdProtocol: this.data.useAkamaiHdProtocol,
       streamUrl: {
-        flashHDSURL: this.data.flashHDSURL,
         hlsStreamUrl: this.data.hlsStreamUrl,
-        dashStreamUrl: this.data.dashStreamUrl
-      }
+        backupHlsStreamUrl: this.data.backupHlsStreamUrl,
+        dashStreamUrl: this.data.dashStreamUrl,
+        backupDashStreamUrl: this.data.backupDashStreamUrl
+      },
+      previewMode: false
     });
   }
 
@@ -62,9 +64,10 @@ export class ManualLiveComponent implements OnInit, OnDestroy {
   // Create empty structured form on loading
   private _createForm(): void {
     this._streamUrlForm = this._fb.group({
-        flashHDSURL: ['', KalturaValidators.url],
         hlsStreamUrl: ['', KalturaValidators.url],
-        dashStreamUrl: ['', KalturaValidators.url]
+        backupHlsStreamUrl: ['', KalturaValidators.url],
+        dashStreamUrl: ['', KalturaValidators.url],
+        backupDashStreamUrl: ['', KalturaValidators.url]
       },
       {
         validator: (formGroup: FormGroup) => {
@@ -76,7 +79,8 @@ export class ManualLiveComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       description: [''],
       streamUrl: this._streamUrlForm,
-      useAkamaiHdProtocol: [true]
+      useAkamaiHdProtocol: [true],
+      previewMode: false
     });
 
     this._form
@@ -87,16 +91,17 @@ export class ManualLiveComponent implements OnInit, OnDestroy {
             name: data.name,
             description: data.description,
             useAkamaiHdProtocol: data.useAkamaiHdProtocol,
-            flashHDSURL: data.streamUrl.flashHDSURL,
             hlsStreamUrl: data.streamUrl.hlsStreamUrl,
-            dashStreamUrl: data.streamUrl.dashStreamUrl
+            backupHlsStreamUrl: data.streamUrl.backupHlsStreamUrl,
+            dashStreamUrl: data.streamUrl.dashStreamUrl,
+            backupDashStreamUrl: data.streamUrl.backupDashStreamUrl,
+            previewMode: data.previewMode
           });
       });
   }
 
   private _atLeastOneUrlValidator(formgroup: FormGroup) {
-    if (!formgroup.controls['flashHDSURL'].value &&
-        !formgroup.controls['hlsStreamUrl'].value &&
+    if (!formgroup.controls['hlsStreamUrl'].value &&
         !formgroup.controls['dashStreamUrl'].value) {
       return {atLeastOneUrl: true};
     } else {

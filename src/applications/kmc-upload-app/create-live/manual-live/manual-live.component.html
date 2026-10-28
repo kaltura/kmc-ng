@@ -1,4 +1,4 @@
-<form [formGroup]="_form" novalidate class="kContent">
+<form [formGroup]="_form" novalidate class="kContent" #popup>
   <section class="kFormContainer">
     <div class="kFormSection">
 
@@ -31,22 +31,8 @@
       </div>
     </div>
     <form [formGroup]="_streamUrlForm" novalidate>
-        <div class="kRow">
-            <span class="kLabel">{{'applications.upload.prepareLive.manualStreamType.flashHDSURL' | translate}}</span>
-            <div class="kRequired"></div>
-            <div>
-                <input class="kControl" formControlName="flashHDSURL" pInputText
-                       [ngClass]="{'kHasError':!_streamUrlForm.controls['flashHDSURL'].valid &&
-                   _streamUrlForm.controls['flashHDSURL'].touched}">
-                <div *ngIf="_streamUrlForm.controls['flashHDSURL'].touched">
-                    <div *ngIf="_streamUrlForm.controls['flashHDSURL'].hasError('url')"
-                         class="error">
-                        {{'applications.upload.prepareLive.manualStreamType.errors.invalidUrl' | translate}}
-                    </div>
-                </div>
-            </div>
-        </div>
-      <div class="kRow">
+
+      <div class="kRow gap">
         <span class="kLabel">{{'applications.upload.prepareLive.manualStreamType.hlsStreamUrl' | translate}}</span>
         <div class="kRequired"></div>
         <div>
@@ -61,6 +47,23 @@
           </div>
         </div>
       </div>
+
+        <div class="kRow kGroup">
+            <span class="kLabel kMultiline">{{'applications.upload.prepareLive.manualStreamType.backupHlsStreamUrl' | translate}}</span>
+            <div class="kRequired"></div>
+            <div>
+                <input class="kControl" formControlName="backupHlsStreamUrl" pInputText
+                       [ngClass]="{'kHasError':!_streamUrlForm.controls['backupHlsStreamUrl'].valid &&
+                   _streamUrlForm.controls['backupHlsStreamUrl'].touched}">
+                <div *ngIf="_streamUrlForm.controls['backupHlsStreamUrl'].touched">
+                    <div *ngIf="_streamUrlForm.controls['backupHlsStreamUrl'].hasError('url')"
+                         class="error">
+                        {{'applications.upload.prepareLive.manualStreamType.errors.invalidUrl' | translate}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
       <div class="kRow">
         <span class="kLabel">{{'applications.upload.prepareLive.manualStreamType.dashStreamUrl' | translate}}</span>
         <div class="kRequired"></div>
@@ -76,14 +79,41 @@
           </div>
         </div>
       </div>
+
+      <div class="kRow kGroup">
+        <span class="kLabel">{{'applications.upload.prepareLive.manualStreamType.backupDashStreamUrl' | translate}}</span>
+        <div class="kRequired"></div>
+        <div>
+          <input class="kControl" formControlName="backupDashStreamUrl" pInputText
+                 [ngClass]="{'kHasError':!_streamUrlForm.controls['backupDashStreamUrl'].valid &&
+                   _streamUrlForm.controls['backupDashStreamUrl'].touched}">
+          <div *ngIf="_streamUrlForm.controls['backupDashStreamUrl'].touched">
+            <div *ngIf="_streamUrlForm.controls['backupDashStreamUrl'].hasError('url')"
+                 class="error">
+              {{'applications.upload.prepareLive.manualStreamType.errors.invalidUrl' | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+
     </form>
-    <div class="kRow">
+
+    <div class="kRow kError" *ngIf="_streamUrlForm.touched && _streamUrlForm.hasError('atLeastOneUrl')">
       <div
-        *ngIf="_streamUrlForm.touched && _streamUrlForm.hasError('atLeastOneUrl')"
         class="error">
         {{'applications.upload.prepareLive.manualStreamType.errors.enterUrl' | translate}}
       </div>
     </div>
+
+      <div class="kRow">
+          <span class="kLabel kInputSwitchLabel">{{'applications.upload.prepareLive.kalturaStreamType.previewMode' | translate}}</span>
+          <div class="kRequired"></div>
+          <div>
+              <p-inputSwitch class="kControl kInputSwitch" formControlName="previewMode"></p-inputSwitch>
+              <span>{{_form.controls['previewMode'].value ? ( 'app.common.on' | translate) : ( 'app.common.off' | translate)}}</span>
+              <i #helpTip class="kIconhelp_full kHelpTip"></i>
+          </div>
+      </div>
 
     <div class="kRow">
         <span class="kPreviewMode">
@@ -93,3 +123,11 @@
     </div>
   </section>
 </form>
+
+<kPopupWidget data-aid="helpTip" [popupWidth]="360" [targetRef]="helpTip" [appendTo]="popup" [targetOffset]="{'x':0, 'y': 24}" [closeBtn]="false">
+    <div class="kTooltip">
+        <div class="content1">
+            <span>{{'applications.upload.prepareLive.kalturaStreamType.previewModeHelp' | translate}}</span>
+        </div>
+    </div>
+</kPopupWidget>
