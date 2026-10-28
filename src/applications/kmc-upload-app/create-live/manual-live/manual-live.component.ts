@@ -101,12 +101,24 @@ export class ManualLiveComponent implements OnInit, OnDestroy {
   }
 
   private _atLeastOneUrlValidator(formgroup: FormGroup) {
+    const errors: { [key: string]: boolean } = {};
+
     if (!formgroup.controls['hlsStreamUrl'].value &&
         !formgroup.controls['dashStreamUrl'].value) {
-      return {atLeastOneUrl: true};
-    } else {
-      return null;
+      errors.atLeastOneUrl = true;
     }
+
+    if (formgroup.controls['backupHlsStreamUrl'].value &&
+        !formgroup.controls['hlsStreamUrl'].value) {
+      errors.backupHlsRequiresPrimary = true;
+    }
+
+    if (formgroup.controls['backupDashStreamUrl'].value &&
+        !formgroup.controls['dashStreamUrl'].value) {
+      errors.backupDashRequiresPrimary = true;
+    }
+
+    return Object.keys(errors).length ? errors : null;
   }
 
 

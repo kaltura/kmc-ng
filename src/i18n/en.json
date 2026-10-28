@@ -552,7 +552,8 @@
                     "errors": {
                         "required": "This field is required",
                         "enterUrl": "You must enter at least one of HDS/HLS/DASH stream URLs",
-                        "invalidUrl": "You must enter a valid URL"
+                        "invalidUrl": "You must enter a valid URL",
+                        "backupUrlRequiresPrimary": "A backup URL requires a primary URL for the same protocol"
                     }
                 },
                 "universalStreamType": {

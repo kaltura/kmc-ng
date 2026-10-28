@@ -517,7 +517,8 @@
                     "errors": {
                         "required": "Ce champ est requis",
                         "enterUrl": "Vous devez saisir au moins l'une des URL de flux HDS/HLS/DASH",
-                        "invalidUrl": "Vous devez saisir une URL valide"
+                        "invalidUrl": "Vous devez saisir une URL valide",
+                        "backupUrlRequiresPrimary": "Une URL de secours nécessite une URL principale pour le même protocole."
                     }
                 },
                 "universalStreamType": {

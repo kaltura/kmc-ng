@@ -61,6 +61,10 @@
                         {{'applications.upload.prepareLive.manualStreamType.errors.invalidUrl' | translate}}
                     </div>
                 </div>
+                <div *ngIf="_streamUrlForm.touched && _streamUrlForm.hasError('backupHlsRequiresPrimary')"
+                     class="error">
+                    {{'applications.upload.prepareLive.manualStreamType.errors.backupUrlRequiresPrimary' | translate}}
+                </div>
             </div>
         </div>
 
@@ -92,6 +96,10 @@
                  class="error">
               {{'applications.upload.prepareLive.manualStreamType.errors.invalidUrl' | translate}}
             </div>
+          </div>
+          <div *ngIf="_streamUrlForm.touched && _streamUrlForm.hasError('backupDashRequiresPrimary')"
+               class="error">
+            {{'applications.upload.prepareLive.manualStreamType.errors.backupUrlRequiresPrimary' | translate}}
           </div>
         </div>
       </div>
