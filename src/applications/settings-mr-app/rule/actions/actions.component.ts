@@ -23,6 +23,7 @@ export type Action = {
 export class RuleActionsComponent implements OnInit {
     @ViewChild('notifications', { static: false }) notificationsComponent: ActionNotificationComponent;
     @Input() profileId: string;
+    @Input() reviewPeriod: number;
     @Input() set ruleActions(value: Task[]) {
         this.actions = [];
         value.forEach(task => {
