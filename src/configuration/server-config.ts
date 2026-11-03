@@ -19,15 +19,6 @@ export interface ExternalApplications {
         html5_version: string,
         html5lib: string,
     };
-    studioV3?: {
-        uri: string,
-        html5_version: string,
-        html5lib: string,
-        playerVersionsMap?: string,
-        playerConfVars?: string,
-        playerBetaVersionsMap?: string,
-        playerBetaConfVars?: string
-    };
     studioV7?: {
         uri: string,
         html5_version: string,
@@ -199,22 +190,6 @@ export const externalAppsConfigurationAdapter: ExternalAppsAdapter<ExternalAppli
         let result = false;
         if (configuration) {
             result =  !!configuration.uri &&
-                !configuration.uri.match(/\s/g) && // not contains white spaces
-                !!configuration.html5_version &&
-                !!configuration.html5lib;
-
-            if (result) {
-                configuration.uri = buildBaseUri(configuration.uri);
-            }
-        }
-
-        return result;
-    },
-    studioV3: (configuration) => {
-        let result = false;
-
-        if (configuration) {
-            result = !!configuration.uri &&
                 !configuration.uri.match(/\s/g) && // not contains white spaces
                 !!configuration.html5_version &&
                 !!configuration.html5lib;

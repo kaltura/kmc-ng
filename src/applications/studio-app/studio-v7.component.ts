@@ -4,7 +4,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { getUriOrigin, serverConfig } from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { HideMenuEvent, PlayersUpdatedEvent, ShowMenuEvent } from 'app-shared/kmc-shared/events';
-import { StudioV3MainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { StudioV7MainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kStudioV7',
@@ -25,11 +25,11 @@ export class StudioV7Component implements OnInit, OnDestroy {
         private _appAuthentication: AppAuthentication,
         private _browserService: BrowserService,
         private _ngZone: NgZone,
-        private _studioV3MainView: StudioV3MainViewService) {
+        private _studioV7MainView: StudioV7MainViewService) {
   }
 
   ngOnInit() {
-      if (this._studioV3MainView.viewEntered()) {
+      if (this._studioV7MainView.viewEntered()) {
           window['kmc'] = {
               'preview_embed': {
                   'updateList': (isPlaylist: boolean) => {

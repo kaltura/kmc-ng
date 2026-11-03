@@ -32,11 +32,10 @@ export class StudioV7MainViewService extends KmcMainViewBaseService {
             KMCPermissions.STUDIO_DELETE_UICONF,
         ]);
         const studioHtmlIsAvailable = !!serverConfig.externalApps.studioV7;
-        const studioHtmlIsPermitted = this._appPermissions.hasPermission(KMCPermissions.FEATURE_V7_STUDIO_PERMISSION);
+        const studioHtmlIsPermitted = this._appPermissions.hasPermission(KMCPermissions.FEATURE_V3_STUDIO_PERMISSION);
 
         this._logger.info(`handle isAvailable action by user`,
             { isViewPermitted, studioHtmlIsAvailable, studioHtmlIsPermitted });
-
         return isViewPermitted && studioHtmlIsAvailable && studioHtmlIsPermitted;
     }
 

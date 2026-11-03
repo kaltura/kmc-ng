@@ -4,8 +4,7 @@ import {AppEventsService} from 'app-shared/kmc-shared';
 import { buildCDNUrl, getKalturaServerUri, getUriOrigin, serverConfig } from 'config/server';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import { PlayersUpdatedEvent } from 'app-shared/kmc-shared/events';
-import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { StudioV3MainViewService, StudioV2MainViewService } from 'app-shared/kmc-shared/kmc-views';
+import { StudioV2MainViewService } from 'app-shared/kmc-shared/kmc-views';
 
 @Component({
   selector: 'kStudioV2',

@@ -398,7 +398,7 @@
                     "title": "Bulk Upload",
                     "samplesLink": "Download CSV/XML Samples"
                 },
-                "record": "Record (Beta)",
+                "record": "Record",
                 "liveStream": "Create Live Stream Entry",
                 "entryList": {
                     "title": "Prepare Entry",
@@ -3908,6 +3908,7 @@
                     "editTitle": "Edit Email notifications",
                     "scheduling": "Email scheduling",
                     "daysBefore": "days before run",
+                    "invalid": "Must be {{0}} days or less, based on the Review period set in the General tab",
                     "sendTo": "Send to",
                     "rule": "Rule owner",
                     "entry": "Entry owner",

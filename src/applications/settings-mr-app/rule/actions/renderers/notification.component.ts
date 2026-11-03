@@ -28,11 +28,13 @@ import {buildUserSearchQuery, isHashed} from 'app-shared/kmc-shared';
                         <span>{{'applications.settings.mr.notification.editTitle' | translate}}</span>
                     </div>
                     <div class="kForm" *ngIf="action">
-                        <div [class.kHidden]="type !== 'headsUp'" class="kRow kCenter">
+                        <div [class.kHidden]="type !== 'headsUp'" class="kRow kCenter" [class.kInvalidRow]="type === 'headsUp' && invalid">
                             <span class="kLabel">{{'applications.settings.mr.notification.scheduling' | translate}}</span>
                             <p-inputNumber class="kInput" [(ngModel)]="action.task.taskParams.sendNotificationTaskParams.daysToWait" (ngModelChange)="this.sendBeforeAnalytics(); validate()"></p-inputNumber>
                             <span class="kText kLeft">{{'applications.settings.mr.notification.daysBefore' | translate}}</span>
                         </div>
+                        <span *ngIf="type === 'headsUp' && invalid" class="kInvalid">{{'applications.settings.mr.notification.invalid' | translate: [reviewPeriod] }}</span>
+
                         <div class="kRow">
                             <span class="kLabel">{{'applications.settings.mr.notification.sendTo' | translate}}</span>
                             <div class="kCol">
@@ -75,7 +77,7 @@ import {buildUserSearchQuery, isHashed} from 'app-shared/kmc-shared';
                     <div class="footer">
                         <button type="button" class="kButtonDefault" (click)="this.revert();editPopup.close()" pButton
                                 label="{{'app.common.cancel' | translate}}"></button>
-                        <button pButton type="button" class="kButtonBranded" [label]="'app.common.apply' | translate"
+                        <button pButton type="button" class="kButtonBranded" [label]="'app.common.apply' | translate" [disabled]="invalid"
                                 (click)="this.validate();this.updateActionChanges();editPopup.close()"></button>
                     </div>
                 </div>
@@ -83,7 +85,14 @@ import {buildUserSearchQuery, isHashed} from 'app-shared/kmc-shared';
         </kPopupWidget>
     `
 })
-export class ActionNotificationComponent implements OnDestroy{
+export class ActionNotificationComponent implements OnDestroy {
+    @Input() set reviewPeriod(value: number) {
+        this._reviewPeriod = value;
+        this.checkReviewPeriod();
+    }
+    get reviewPeriod(): number {
+        return this._reviewPeriod;
+    }
     @Input() set ruleAction(value: Action | undefined){
         if (value) {
             this.action = value;
@@ -91,6 +100,7 @@ export class ActionNotificationComponent implements OnDestroy{
             this.sendToCustomUsers = this.action?.task?.taskParams?.sendNotificationTaskParams?.recipients?.userIds?.length > 0;
             this.loadUsers();
             this.selected = true;
+            this.checkReviewPeriod();
         }
     };
     @Input() type: 'profileScan' | 'headsUp' | 'executionSummary';
@@ -98,6 +108,8 @@ export class ActionNotificationComponent implements OnDestroy{
     @Output() onActionChange = new EventEmitter<Action>();
 
     public selected = false;
+    public invalid = false;
+    private _reviewPeriod: number;
 
     public action: Action;
     private originalAction: Action;
@@ -135,7 +147,17 @@ export class ActionNotificationComponent implements OnDestroy{
         this.validate();
     }
 
+    // heads up notification cannot be sent more days before the run than the rule review period
+    private checkReviewPeriod(): void {
+        const daysToWait = this.action?.task?.taskParams?.sendNotificationTaskParams?.daysToWait;
+        this.invalid = this.type === 'headsUp' && this.selected && daysToWait > this._reviewPeriod;
+    }
+
     public validate(): void {
+        this.checkReviewPeriod();
+        if (this.invalid) {
+            return;
+        }
         if (this.selected) {
             if (!this.action || this.action.requires === 'delete') {
                 this.action = {
@@ -199,6 +221,7 @@ export class ActionNotificationComponent implements OnDestroy{
         this.action = JSON.parse(JSON.stringify(this.originalAction));
         this.loadUsers();
         this.sendToCustomUsers = this.action?.task?.taskParams?.sendNotificationTaskParams?.recipients?.userIds?.length > 0;
+        this.checkReviewPeriod();
     }
 
     public onNotificationsSaved(): void {
