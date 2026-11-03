@@ -21,6 +21,10 @@ export class LoginByKSComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this._logger.info(`handle 'login-by-ks' action`);
         const ks = serverConfig.ks ? serverConfig.ks : (this._route.snapshot.params['ks'] || '').trim();
+        // remove ks from config object
+        if (window['kmcConfig']) {
+            delete window['kmcConfig'].ks;
+        }
         if (!ks) {
             this._logger.info(`missing 'ks' value, navigating to default page`);
             this._browserService.navigateToDefault();

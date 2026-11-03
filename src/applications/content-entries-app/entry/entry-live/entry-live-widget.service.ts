@@ -86,7 +86,6 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 
     public initManualForm() {
         this._form = this._fb.group({
-                flashHDSURL: ['', KalturaValidators.url],
                 hlsStreamUrl: ['', KalturaValidators.url],
                 dashStreamUrl: ['', KalturaValidators.url]
             },
@@ -96,13 +95,9 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
                 }
             });
 
-        let flashHDSURL = this._manualStreamsConfiguration.find(stream => stream.label.split(" ")[0] === KalturaPlaybackProtocol.akamaiHds)?.url || '';
-        if (flashHDSURL === '') {
-            flashHDSURL = this._manualStreamsConfiguration.find(stream => stream.label.split(" ")[0] === KalturaPlaybackProtocol.hds)?.url || '';
-        }
         const hlsStreamUrl = this._manualStreamsConfiguration.find(stream => stream.label.split(" ")[0] === KalturaPlaybackProtocol.appleHttp)?.url || '';
         const dashStreamUrl = this._manualStreamsConfiguration.find(stream => stream.label.split(" ")[0] === KalturaPlaybackProtocol.mpegDash)?.url || '';
-        this._form.reset({ flashHDSURL, hlsStreamUrl, dashStreamUrl });
+        this._form.reset({ hlsStreamUrl, dashStreamUrl });
 
         merge(this._form.valueChanges,
             this._form.statusChanges)
@@ -156,38 +151,35 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		}
 		if (this._liveType === "manual") {
             const entry = data as KalturaLiveStreamEntry;
-            entry.liveStreamConfigurations = [];
+            const existingConfigurations = (this.data as KalturaLiveStreamEntry).liveStreamConfigurations || [];
+            entry.liveStreamConfigurations = existingConfigurations.filter(cfg =>
+                cfg.protocol !== KalturaPlaybackProtocol.appleHttp &&
+                cfg.protocol !== KalturaPlaybackProtocol.mpegDash
+            );
             // save hls stream to main entry and stream configuration
             const hlsStreamUrl = this._form.controls['hlsStreamUrl'].value;
             entry.hlsStreamUrl = hlsStreamUrl;
             if (hlsStreamUrl && hlsStreamUrl.length) {
+                const hlsStreamConfig = existingConfigurations.find(cfg => cfg.protocol === KalturaPlaybackProtocol.appleHttp);
                 const cfg = new KalturaLiveStreamConfiguration();
                 cfg.protocol = KalturaPlaybackProtocol.appleHttp;
                 cfg.url = hlsStreamUrl;
-                entry.liveStreamConfigurations.push(cfg);
-            }
-
-            // save flash stream to stream configuration
-            const flashStreamUrl = this._form.controls['flashHDSURL'].value;
-            if (flashStreamUrl && flashStreamUrl.length) {
-                let protocol = KalturaPlaybackProtocol.akamaiHds;
-                let flashStreamConfig = (this.data as KalturaLiveStreamEntry).liveStreamConfigurations.find(cfg => cfg.protocol === KalturaPlaybackProtocol.akamaiHds);
-                if (!flashStreamConfig) {
-                    protocol = KalturaPlaybackProtocol.hds;
+                if (hlsStreamConfig) {
+                    cfg.backupUrl = hlsStreamConfig.backupUrl;
                 }
-                const cfg = new KalturaLiveStreamConfiguration();
-                cfg.protocol = protocol;
-                cfg.url = flashStreamUrl;
                 entry.liveStreamConfigurations.push(cfg);
             }
 
             // save dash stream to stream configuration
             const dashStreamUrl = this._form.controls['dashStreamUrl'].value;
             if (dashStreamUrl && dashStreamUrl.length) {
-                const dashStreamConfig = (this.data as KalturaLiveStreamEntry).liveStreamConfigurations.find(cfg => cfg.protocol === KalturaPlaybackProtocol.mpegDash);
+                const dashStreamConfig = existingConfigurations.find(cfg => cfg.protocol === KalturaPlaybackProtocol.mpegDash);
                 const cfg = new KalturaLiveStreamConfiguration();
                 cfg.protocol = KalturaPlaybackProtocol.mpegDash;
                 cfg.url = dashStreamUrl;
+                if (dashStreamConfig) {
+                    cfg.backupUrl = dashStreamConfig.backupUrl;
+                }
                 entry.liveStreamConfigurations.push(cfg);
             }
 		}
@@ -241,9 +233,16 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	}
 
     private _atLeastOneUrlValidator(formgroup: FormGroup) {
-        if (!formgroup.controls['flashHDSURL'].value &&
-            !formgroup.controls['hlsStreamUrl'].value &&
-            !formgroup.controls['dashStreamUrl'].value) {
+        const hasExistingOtherConfiguration = (
+            (this.data as KalturaLiveStreamEntry).liveStreamConfigurations || []
+        ).some(cfg =>
+            cfg.protocol !== KalturaPlaybackProtocol.appleHttp &&
+            cfg.protocol !== KalturaPlaybackProtocol.mpegDash
+        );
+
+        if (!formgroup.controls['hlsStreamUrl'].value &&
+            !formgroup.controls['dashStreamUrl'].value &&
+            !hasExistingOtherConfiguration) {
             return {atLeastOneUrl: true};
         } else {
             return null;

@@ -398,7 +398,7 @@
                     "title": "Bulk Upload",
                     "samplesLink": "Download CSV/XML Samples"
                 },
-                "record": "Record (Beta)",
+                "record": "Record",
                 "liveStream": "Create Live Stream Entry",
                 "entryList": {
                     "title": "Prepare Entry",
@@ -535,6 +535,7 @@
                     "lowLatencyHelp1": "Follow instructions on this",
                     "lowLatencyHelp2": "Knowledge Center article",
                     "lowLatencyHelp3": "to make sure Low Latency works correctly",
+                    "previewModeHelp": "Allow controlling stream visibility using the preview / go-live toggle",
                     "errors": {
                         "required": "This field is required."
                     }
@@ -544,12 +545,15 @@
                     "description": "Description",
                     "flashHDSURL": "Live Flash HDS stream URL",
                     "hlsStreamUrl": "Live Mobile HLS stream URL",
+                    "backupHlsStreamUrl": "Live Mobile HLS stream backup URL",
                     "dashStreamUrl": "DASH stream URL",
+                    "backupDashStreamUrl": "DASH stream backup URL",
                     "useAkamaiHdProtocol": "Akamai HD protocol is used on this HDS URL.",
                     "errors": {
                         "required": "This field is required",
                         "enterUrl": "You must enter at least one of HDS/HLS/DASH stream URLs",
-                        "invalidUrl": "You must enter a valid URL"
+                        "invalidUrl": "You must enter a valid URL",
+                        "backupUrlRequiresPrimary": "A backup URL requires a primary URL for the same protocol"
                     }
                 },
                 "universalStreamType": {
@@ -1903,6 +1907,12 @@
                     "orderLive": "Order Captions",
                     "orderCaptionsTranslations": "Captions & Translations",
                     "orderAudioDescriptions": "Audio descriptions",
+                    "reachOrderCaptions": "Closed captions (CC)",
+                    "reachOrderLiveCaptions": "Live closed captions (CC)",
+                    "reachOrderTranslations": "Translations",
+                    "reachOrderLiveTranslations": "Live translations",
+                    "reachOrderAudioDescriptions": "Audio descriptions",
+                    "reachOrderExtendedAudioDescriptions": "Extended audio descriptions",
                     "label": "Label",
                     "id": "ID",
                     "type": "File Type",
@@ -3841,7 +3851,9 @@
                     "period_tt": "Set a time period (in days) to review queued entries with one or more actions scheduled to be performed",
                     "startDate": "Start date",
                     "on": "On day",
-                    "of": "of the month"
+                    "of": "of the month",
+                    "repeated": "Allow repeated entry catch",
+                    "repeated_tt": "Catch entries again on every run while they still meet the rule criteria and are not pending review. Limited to 10,000 entries at a time."
                 },
                 "actions": {
                     "title": "Add actions to be taken on entries that meet the criteria set in the Criteria tab.",
@@ -3896,6 +3908,7 @@
                     "editTitle": "Edit Email notifications",
                     "scheduling": "Email scheduling",
                     "daysBefore": "days before run",
+                    "invalid": "Must be {{0}} days or less, based on the Review period set in the General tab",
                     "sendTo": "Send to",
                     "rule": "Rule owner",
                     "entry": "Entry owner",

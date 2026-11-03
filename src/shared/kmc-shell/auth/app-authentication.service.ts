@@ -26,7 +26,11 @@ import {
     UserLoginByKsAction,
     UserLoginByLoginIdAction,
     UserResetPasswordAction,
-    UserRoleGetAction
+    UserRoleGetAction,
+    VendorCatalogItemListAction,
+    KalturaVendorCatalogItemListResponse,
+    KalturaVendorCatalogItemStatus,
+    KalturaVendorCatalogItemFilter
 } from 'kaltura-ngx-client';
 import * as Immutable from 'seamless-immutable';
 import {AppUser} from './app-user';
@@ -90,6 +94,7 @@ export class AppAuthentication {
     private _logger: KalturaLogger;
     private _appUser: Immutable.ImmutableObject<AppUser> = null;
     private _autoLoginAttempted = false;
+    private _sessionKs: string = null; // ks to hand over to the next page load (reload / partner switch), see _registerSessionKsHandoff
 
     public get defaultUrl(): string {
         return this._defaultUrl;
@@ -109,6 +114,23 @@ export class AppAuthentication {
                 private _restorePasswordView: RestorePasswordViewService,
                 private _authenticatorView: AuthenticatorViewService) {
         this._logger = logger.subLogger('AppAuthentication');
+        this._registerSessionKsHandoff();
+    }
+
+    // keep the ks out of session storage while the app is running: it is written only when the page is unloaded
+    // and removed as soon as the next page load reads it (see loginAutomatically)
+    private _registerSessionKsHandoff(): void {
+        window.addEventListener('pagehide', () => {
+            if (this._sessionKs) {
+                this._browserService.setInSessionStorage(ksSessionStorageKey, this._sessionKs);
+            }
+        });
+        window.addEventListener('pageshow', (event: PageTransitionEvent) => {
+            if (event.persisted) {
+                // page restored from the back/forward cache without reloading the app
+                this._browserService.removeFromSessionStorage(ksSessionStorageKey);
+            }
+        });
     }
 
     private _getLoginErrorMessage({error}): LoginError {
@@ -203,7 +225,7 @@ export class AppAuthentication {
         }
 
         this._automaticLoginErrorReason = null;
-        this._browserService.removeFromSessionStorage(ksSessionStorageKey);  // clear session storage
+        this._clearSessionCredentials();
 
         const requestedPartnerId = this._browserService.getFromLocalStorage('loginPartnerId');
 
@@ -249,14 +271,31 @@ export class AppAuthentication {
                             fields: 'name'
                         })
                     })
-                        .setDependency(['ks', 0])
-                )
-        );
+                        .setDependency(['ks', 0]),
+
+        ),
+            new VendorCatalogItemListAction({
+                filter: new KalturaVendorCatalogItemFilter({
+                    statusEqual: KalturaVendorCatalogItemStatus.active
+                }).setDependency(['partnerIdEqual', 1, 'partnerId']),
+                pager: new KalturaFilterPager({
+                    pageSize: 500
+                })
+            })
+                .setRequestOptions(
+                    new KalturaRequestOptions({
+                        responseProfile: new KalturaDetachedResponseProfile({
+                            type: KalturaResponseProfileType.includeFields,
+                            fields: 'id,serviceType,serviceFeature'
+                        })
+                    })
+                .setDependency(['ks', 0])
+                ));
 
         return <any>(this.kalturaServerClient.multiRequest(request)
                 .pipe(
                     switchMap(response => {
-                        if (!response.hasErrors()) {
+                        if (!response.slice(0, -1).some(({error}) => !!error)) {
                             return this._checkIfPartnerCanAccess(response[2].result)
                                 .pipe(map(isPartnerAllowed => ({ response, isPartnerAllowed })));
                         } else {
@@ -266,9 +305,9 @@ export class AppAuthentication {
                     }),
                     map(
                         ({ response, isPartnerAllowed }) => {
-                            if (!response.hasErrors()) {
+                            if (!response.slice(0, -1).some(({error}) => !!error)) {
                                 if (isPartnerAllowed) {
-                                    this._afterLogin(response[0].result, true, response[1].result, response[2].result, response[3].result, response[4].result);
+                                    this._afterLogin(response[0].result, true, response[1].result, response[2].result, response[3].result, response[4].result, response[5].result);
                                     return { success: true, error: null };
                                 } else {
                                     return {
@@ -314,16 +353,17 @@ export class AppAuthentication {
             }));
     }
 
-    private _afterLogin(ks: string, storeCredentialsInSessionStorage: boolean, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse): void {
+    private _afterLogin(ks: string, storeCredentialsInSessionStorage: boolean, user: KalturaUser, partner: KalturaPartner, userRole: KalturaUserRole, permissionList: KalturaPermissionListResponse, catalogItems: KalturaVendorCatalogItemListResponse): void {
 
         if (storeCredentialsInSessionStorage) {
-            this._browserService.setInSessionStorage(ksSessionStorageKey, ks);  // save ks in session storage
+            this._sessionKs = ks;  // will be saved in session storage on page unload
         }
 
         this._browserService.removeFromLocalStorage('loginPartnerId');
 
         const partnerPermissionList = permissionList.objects.map(item => item.name);
         const userRolePermissionList = userRole.permissionNames.split(',');
+        const partnerReachCatalogItems =  catalogItems?.objects || [];
         this._permissionsService.load(userRolePermissionList, partnerPermissionList);
         // check if the user has KMC access permission and block KMC loading if not
         if (!this._permissionsService.hasPermission(KMCPermissions.KMC_ACCESS)) {
@@ -350,6 +390,7 @@ export class AppAuthentication {
             isAdmin: userRole.systemName === "Publisher Administrator",
             partnerInfo: {
                 partnerId: user.partnerId,
+                reachCatalogItems: partnerReachCatalogItems,
                 name: partner.name,
                 status: partner.status,
                 adminSecret: partner.adminSecret,
@@ -373,7 +414,6 @@ export class AppAuthentication {
         this.kalturaServerClient.setDefaultRequestOptions({
             ks: appUser.ks
         });
-        window['kmcng'] = {ks};
 
         this._appUser = appUser;
         this._appEvents.publish(new UserLoginStatusEvent(true));
@@ -388,6 +428,7 @@ export class AppAuthentication {
 
     private _clearSessionCredentials(): void {
         this._logger.debug(`clear previous stored credentials in session storage if found`);
+        this._sessionKs = null;
         this._browserService.removeFromSessionStorage(ksSessionStorageKey);
     }
 
@@ -431,14 +472,30 @@ export class AppAuthentication {
                                     type: KalturaResponseProfileType.includeFields,
                                     fields: 'name'
                                 })
+                            }),
+                        new VendorCatalogItemListAction({
+                            filter: new KalturaVendorCatalogItemFilter({
+                                statusEqual: KalturaVendorCatalogItemStatus.active
+                            }).setDependency(['partnerIdEqual', 0, 'partnerId']),
+                            pager: new KalturaFilterPager({
+                                pageSize: 500
                             })
+                        })
+                            .setRequestOptions(
+                                new KalturaRequestOptions({
+                                    ks: loginToken,
+                                    responseProfile: new KalturaDetachedResponseProfile({
+                                        type: KalturaResponseProfileType.includeFields,
+                                        fields: 'id,serviceType,serviceFeature'
+                                    })
+                                }))
                     ];
 
                     this.kalturaServerClient.multiRequest(requests)
                         .pipe(
                             switchMap(
                                 response => {
-                                    const result = !response.hasErrors()
+                                    const result = !response.slice(0, -1).some(({error}) => !!error)
                                         ? this._checkIfPartnerCanAccess(response[1].result)
                                         : ObservableOf(true);
 
@@ -447,8 +504,8 @@ export class AppAuthentication {
                         )
                         .subscribe(
                             ({ response, isPartnerAllowed }) => {
-                                if (!response.hasErrors() && isPartnerAllowed) {
-                                    this._afterLogin(loginToken, storeCredentialsInSessionStorage, response[0].result, response[1].result, response[2].result, response[3].result);
+                                if (!response.slice(0, -1).some(({error}) => !!error) && isPartnerAllowed) {
+                                    this._afterLogin(loginToken, storeCredentialsInSessionStorage, response[0].result, response[1].result, response[2].result, response[3].result, response[4].result);
                                     observer.next(true);
                                     observer.complete();
                                     return;
@@ -531,6 +588,8 @@ export class AppAuthentication {
 
         if (ksFromSession) {
             this._logger.info(`try to login automatically with KS stored in session storage`);
+            this._browserService.removeFromSessionStorage(ksSessionStorageKey);
+            this._sessionKs = ksFromSession; // keep it for the next reload even if this attempt fails (e.g. network error)
             return this._loginByKS(ksFromSession, true);
         }
 
@@ -544,7 +603,7 @@ export class AppAuthentication {
                 .subscribe(
                     result => {
                         this._logger.info(`switch partner account`, { partnerId });
-                        this._browserService.setInSessionStorage(ksSessionStorageKey, result.ks);
+                        this._sessionKs = result.ks; // saved in session storage by the page unload below
                         this.kalturaServerClient.request(new SessionEndAction()).subscribe(result => {
                             this._logger.info(`server session cleared`);
                             this._forceReload();
@@ -584,7 +643,6 @@ export class AppAuthentication {
     private _logout(reloadPage = true) {
         this._logger.info(`log out user from the application`, { forceReload: reloadPage });
         this._permissionsService.flushPermissions();
-        delete window['kmcng'];
         this._appEvents.publish(new UserLoginStatusEvent(false));
         this._pageExitVerificationService.removeAll();
         const reload = (logoutUrl: string) => {

@@ -517,7 +517,8 @@
                     "errors": {
                         "required": "Este campo es obligatorio.",
                         "enterUrl": "Debe ingresar al menos una de las URL de retransmisión HDS/HLS/DASH.",
-                        "invalidUrl": "Debe ingresar una URL válida."
+                        "invalidUrl": "Debe ingresar una URL válida.",
+                        "backupUrlRequiresPrimary": "Una URL de respaldo requiere una URL principal del mismo protocolo."
                     }
                 },
                 "universalStreamType": {

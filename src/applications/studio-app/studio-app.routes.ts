@@ -7,6 +7,6 @@ import { UpgradePlayerComponent } from './upgrade-player.component';
 
 export const routing: Route[] = [
   { path: 'v2', component: StudioV2Component },
-  { path: 'v3', component: StudioV7Component },
+  { path: 'v7', component: StudioV7Component },
   { path: 'upgrade', component: UpgradePlayerComponent }
 ];

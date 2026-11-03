@@ -265,6 +265,11 @@ export class RuleComponent implements OnInit {
         this._isDirty = true;
     }
 
+    public onAdminRepeatedEntryChange(): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Toggle, 'AM_general_repeated_entry', this.rule.allowReprocessing ? 'on' : 'off' , 'Automation_manager');
+        this._isDirty = true;
+    }
+
     public onAdminApprovalChange(): void {
         this._analytics.trackButtonClickEvent(ButtonType.Toggle, 'AM_general_requires_admin', this.rule.audit.auditApproval ? 'on' : 'off' , 'Automation_manager');
         this._isDirty = true;

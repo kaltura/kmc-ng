@@ -367,7 +367,7 @@ export class EntriesStoreDataProvider implements EntriesDataProvider, OnDestroy 
   public executeQuery(data: EntriesFilters): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }> {
     const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
       type: KalturaResponseProfileType.includeFields,
-      fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,moderationCount,tags,adminTags,categoriesIds,downloadUrl,sourceType,entitledUsersPublish,entitledUsersView,entitledUsersEdit,externalSourceType,capabilities,redirectEntryId,recordedEntryId'
+      fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,moderationCount,tags,adminTags,categoriesIds,downloadUrl,sourceType,entitledUsersPublish,entitledUsersView,entitledUsersEdit,externalSourceType,capabilities,redirectEntryId,recordedEntryId,recordStatus'
     });
     let pagination: KalturaFilterPager = null;
 
