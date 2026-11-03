@@ -17,6 +17,8 @@
   .kContainer {
     height: 530px;
     width: 760px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   .kFooter {
     height: 66px;

@@ -39,7 +39,7 @@ export class CreateLiveService {
       conversionProfileId: data.transcodingProfile,
       dvrStatus: data.liveDVR ? KalturaDVRStatus.enabled : KalturaDVRStatus.disabled,
       dvrWindow: data.liveDVR ? 120 : null,
-        explicitLive: data.previewMode ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue
+      explicitLive: data.previewMode ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue
     });
 
     return this._kalturaServerClient
@@ -58,20 +58,17 @@ export class CreateLiveService {
       sourceVersion: 'create_live',
       description: data.description,
       liveStreamConfigurations: new Array(),
-      hlsStreamUrl: data.hlsStreamUrl || ''
+      hlsStreamUrl: data.hlsStreamUrl || '',
+      explicitLive: data.previewMode ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue
     });
 
     if (data.hlsStreamUrl) {
       const cfg = new KalturaLiveStreamConfiguration();
       cfg.protocol = KalturaPlaybackProtocol.appleHttp;
       cfg.url = stream.hlsStreamUrl;
-      stream.liveStreamConfigurations.push(cfg);
-    }
-
-    if (data.flashHDSURL) {
-      const cfg = new KalturaLiveStreamConfiguration();
-      cfg.protocol = data.useAkamaiHdProtocol ? KalturaPlaybackProtocol.akamaiHds : KalturaPlaybackProtocol.hds;
-      cfg.url = data.flashHDSURL;
+      if (data.backupHlsStreamUrl) {
+        cfg.backupUrl = data.backupHlsStreamUrl;
+      }
       stream.liveStreamConfigurations.push(cfg);
     }
 
@@ -79,6 +76,9 @@ export class CreateLiveService {
       const cfg = new KalturaLiveStreamConfiguration();
       cfg.protocol = KalturaPlaybackProtocol.mpegDash;
       cfg.url = data.dashStreamUrl;
+      if (data.backupDashStreamUrl) {
+        cfg.backupUrl = data.backupDashStreamUrl;
+      }
       stream.liveStreamConfigurations.push(cfg);
     }
 

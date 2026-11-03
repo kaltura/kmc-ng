@@ -49,6 +49,7 @@ export type ManagedTasksProfile = {
         auditApproval: boolean;
         reviewPeriod: number;
     }
+    allowReprocessing: boolean;
 }
 
 export type ObjectState = {

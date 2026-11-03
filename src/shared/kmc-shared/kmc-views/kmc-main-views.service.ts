@@ -13,7 +13,6 @@ import {
     ContentBulkUploadsMainViewService,
     ContentDropFoldersMainViewService,
     StudioV7MainViewService,
-    StudioV3MainViewService,
     StudioV2MainViewService,
     UpgradePlayerMainViewService,
     UsageDashboardMainViewService,
@@ -71,7 +70,6 @@ export class KmcMainViewsService {
         private _contentBulkUploadsMain: ContentBulkUploadsMainViewService,
         private _contentDropFoldersMain: ContentDropFoldersMainViewService,
         private _studioV2Main: StudioV2MainViewService,
-        private _studioV3Main: StudioV3MainViewService,
         private _studioV7Main: StudioV7MainViewService,
         private _upgradePlayerMain: UpgradePlayerMainViewService,
         private _servicesDashboardMain: ServicesDashboardMainViewService,
@@ -203,12 +201,12 @@ export class KmcMainViewsService {
                 position: 'left',
                 children: [
                     {
-                        isAvailable: this._studioV3Main.isAvailable(),
-                        isActiveView:  (path) => this._studioV3Main.isActiveView(path),
+                        isAvailable: this._studioV7Main.isAvailable(),
+                        isActiveView:  (path) => this._studioV7Main.isActiveView(path),
                         open: () => {
-                            this._studioV3Main.open();
+                            this._studioV7Main.open();
                         },
-                        menuTitle: this._studioV3Main.getViewMetadata().menu
+                        menuTitle: this._studioV7Main.getViewMetadata().menu
                     },
                     {
                         isAvailable: this._studioV2Main.isAvailable(),

@@ -21,14 +21,15 @@ export class AnalyticsKavaComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    try {
-      if (this._kavaAppViewService.viewEntered()) { // Deep link when disabled handling
-          this.appUrl = `${serverConfig.externalApps.kava.uri}?ks=${this.appAuthentication.appUser.ks}`;
-      }
-    } catch (ex) {
-      this.logger.warn(`Could not load kava, please check that kava configurations are loaded correctly\n error: ${ex}`);
-      this.appUrl = null;
-    }
+    // this component is no longer in use. If need to use it again, prevent passing ks on the URL as per SECF-30927.
+    // try {
+    //   if (this._kavaAppViewService.viewEntered()) { // Deep link when disabled handling
+    //       this.appUrl = `${serverConfig.externalApps.kava.uri}?ks=${this.appAuthentication.appUser.ks}`;
+    //   }
+    // } catch (ex) {
+    //   this.logger.warn(`Could not load kava, please check that kava configurations are loaded correctly\n error: ${ex}`);
+    //   this.appUrl = null;
+    // }
   }
 
 
