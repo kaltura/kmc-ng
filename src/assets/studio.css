@@ -1,6 +1,9 @@
 .kccs-editor {
-    width: 100vw;
+    width: calc(100vw - 12px);
     height: calc(100vh - 60px);
+    position: absolute;
+    top: 0px;
+    left: 12px;
 }
 
 .kccs-editor iframe {
