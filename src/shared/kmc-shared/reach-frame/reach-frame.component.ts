@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { BrowserService } from 'shared/kmc-shell/providers';
-import { getKalturaServerUri, getUriOrigin, serverConfig, buildCDNUrl } from 'config/server';
+import {getKalturaServerUri, getUriOrigin, serverConfig, buildCDNUrl, buildDeployUrl} from 'config/server';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import {
@@ -130,7 +130,8 @@ export class ReachFrameComponent implements OnInit, OnDestroy, OnChanges {
                 'service_url': getKalturaServerUri(),
                 'partner_id': this._appAuthentication.appUser.partnerId,
                 'cdn_host': buildCDNUrl(""),
-                'language': this._appLocalization.selectedLanguage
+                'language': this._appLocalization.selectedLanguage,
+                'additionalCss': buildDeployUrl('./assets/studio.css')
             };
 
             if (this.page === ReachPages.entry) {
