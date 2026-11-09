@@ -149,8 +149,12 @@ export class ActionNotificationComponent implements OnDestroy {
 
     // heads up notification cannot be sent more days before the run than the rule review period
     private checkReviewPeriod(): void {
+        this.invalid = this.exceedsReviewPeriod();
+    }
+
+    public exceedsReviewPeriod(): boolean {
         const daysToWait = this.action?.task?.taskParams?.sendNotificationTaskParams?.daysToWait;
-        this.invalid = this.type === 'headsUp' && this.selected && daysToWait > this._reviewPeriod;
+        return this.type === 'headsUp' && this.selected && daysToWait > this._reviewPeriod;
     }
 
     public validate(): void {
@@ -180,7 +184,7 @@ export class ActionNotificationComponent implements OnDestroy {
                     }
                 }
                 if (this.type === 'headsUp') {
-                    this.action.task.taskParams.sendNotificationTaskParams.daysToWait = 3;
+                    this.action.task.taskParams.sendNotificationTaskParams.daysToWait = this.reviewPeriod > 3 ? 3 : this.reviewPeriod;
                 }
                 this.originalAction = JSON.parse(JSON.stringify((this.action))); // save for revert
                 this.onActionChange.emit(this.action);

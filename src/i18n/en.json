@@ -3909,6 +3909,8 @@
                     "scheduling": "Email scheduling",
                     "daysBefore": "days before run",
                     "invalid": "Must be {{0}} days or less, based on the Review period set in the General tab",
+                    "reviewPeriodHeader": "Invalid notification scheduling",
+                    "reviewPeriodMsg": "The pre-action notification is scheduled to be sent more days before the run than the review period ({{0}} days). Please update the notification scheduling in the Notifications tab or increase the review period before saving.",
                     "sendTo": "Send to",
                     "rule": "Rule owner",
                     "entry": "Entry owner",

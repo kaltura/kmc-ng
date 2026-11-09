@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren} from '@angular/core';
 import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {MenuItem} from 'primeng/api';
 import {AppLocalization} from '@kaltura-ng/mc-shared';
@@ -21,7 +21,7 @@ export type Action = {
     ]
 })
 export class RuleActionsComponent implements OnInit {
-    @ViewChild('notifications', { static: false }) notificationsComponent: ActionNotificationComponent;
+    @ViewChildren('notifications') notificationComponents: QueryList<ActionNotificationComponent>;
     @Input() profileId: string;
     @Input() reviewPeriod: number;
     @Input() set ruleActions(value: Task[]) {
@@ -228,9 +228,14 @@ export class RuleActionsComponent implements OnInit {
         this.onActionsChange.emit(this.actionsOnSave);
     }
 
+    // heads up notification days before run must not exceed the rule review period
+    public headsUpExceedsReviewPeriod(): boolean {
+        return this.notificationComponents?.some(notification => notification.exceedsReviewPeriod()) ?? false;
+    }
+
     public resetActionsOnSave(): void {
         this.actionsOnSave = [];
-        this.notificationsComponent.onNotificationsSaved();
+        this.notificationComponents?.forEach(notification => notification.onNotificationsSaved());
     }
 
 }
