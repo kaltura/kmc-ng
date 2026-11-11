@@ -61,7 +61,7 @@
     "@kaltura-ng/mc-theme": "~5.0.3",
     "@ngx-translate/core": "~13.0.0",
     "@ngx-translate/http-loader": "~6.0.0",
-    "@unisphere/cli": "~1.51.3",
+    "@unisphere/cli": "~6.2.2",
     "@unisphere/core": "~1.75.8",
     "@unisphere/runtime": "~1.75.8",
     "@unisphere/runtime-js": "~1.74.0",
