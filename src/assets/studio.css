@@ -1,6 +1,6 @@
 .kccs-editor {
     width: calc(100vw - 12px);
-    height: calc(100vh - 60px);
+    height: calc(100vh - 12px);
     position: absolute;
     top: 0px;
     left: 12px;
