@@ -501,7 +501,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           window.addEventListener('message', this.renderPlayer);
           const uri = serverConfig.externalApps.playerWrapper ? serverConfig.externalApps.playerWrapper.uri : '/public/playerWrapper.html';
           this.previewIframe.nativeElement.src = uri;
-      }, 0);
+      }, 100);
   }
 
   public copyEmbedCode(el):void{
