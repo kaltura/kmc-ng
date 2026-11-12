@@ -9,6 +9,7 @@ import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client';
 import { ShortLinkAddAction } from 'kaltura-ngx-client';
 import { KalturaShortLink } from 'kaltura-ngx-client';
+import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
 
 export type EmbedConfig = {
     embedType: string;
@@ -52,12 +53,17 @@ export type EmbedParams = {
 @Injectable()
 export class PreviewEmbedService {
 
-	constructor(private _kalturaClient: KalturaClient) {
+	constructor(private _kalturaClient: KalturaClient,
+                private _permissionsService: KMCPermissionsService) {
 	}
 
 	listPlayers(isPlaylist: boolean = false): Observable<KalturaUiConfListResponse>{
 
-		const tags = isPlaylist ? 'playlist,kalturaPlayerJs' : 'player';
+        // allow both v2 and v7 players
+		let tags = isPlaylist ? 'playlist,kalturaPlayerJs' : 'player';
+        if (!this._permissionsService.hasPermission(KMCPermissions.FEATURE_ENABLE_V2_PLAYER)) {
+            tags = 'kalturaPlayerJs'; // v7 only
+        }
 
 		const filter = new KalturaUiConfFilter({
 			'tagsMultiLikeOr': tags,
