@@ -43,7 +43,7 @@ import {
 } from 'kaltura-ngx-client';
 import { AdminUsersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, switchMap } from 'rxjs/operators';
 
 export interface QueryData {
   pageIndex: number;
@@ -350,6 +350,7 @@ export class UsersStore implements OnDestroy {
       if (!user || !roleIds) {
           return throwError(new Error('cannot associate user to account'));
       }
+    const wasAdmin = !!user.isAdmin;
     const updatedUser = new KalturaUser({
       roleIds: roleIds,
       isAdmin: true
@@ -362,15 +363,27 @@ export class UsersStore implements OnDestroy {
     }
     return this._kalturaServerClient
       .multiRequest(multiRequest)
-      .pipe(map((responses) => {
-        if (responses.hasErrors()) {
-          const errorMessage = responses.map(response => {
-            if (response.error) {
-              return response.error.message + '\n';
-            }
-          }).join('');
-          throw Error(errorMessage);
+      .pipe(switchMap((responses) => {
+        if (!responses.hasErrors()) {
+          return of(undefined);
         }
+
+        const updateError = responses[0].error;
+        const enableLoginError = responses.length > 1 ? responses[1].error : null;
+
+        // multirequest is not transactional - the update was committed but enableLogin failed
+        // (e.g. ADMIN_LOGIN_USERS_QUOTA_EXCEEDED). Revert isAdmin so the user is not left as an admin without login.
+        if (!updateError && enableLoginError && !wasAdmin) {
+          return this._kalturaServerClient
+            .request(new UserUpdateAction({ userId: user.id, user: new KalturaUser({ isAdmin: false }) }))
+            .pipe(
+              catchError(() => of(null)),
+              switchMap(() => throwError(enableLoginError))
+            );
+        }
+
+        // rethrow the API error itself so callers keep error.code
+        return throwError(updateError || enableLoginError);
       }));
   }
 

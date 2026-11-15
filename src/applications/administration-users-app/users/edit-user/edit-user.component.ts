@@ -196,10 +196,18 @@ export class EditUserComponent implements OnInit, OnDestroy {
                                 break;
                             case IsUserExistsStatuses.otherKMCUser:
                                 if (isExternal) {
-                                    this._browserService.alert({
-                                        header: this._appLocalization.get('app.common.attention'),
-                                        message: this._appLocalization.get('applications.administration.users.duplicatedUser', {0: email})
-                                    });
+                                    // the SSO user exists on this partner and the email already has login data
+                                    // on another partner - associate the existing user (update + enableLogin,
+                                    // which reuses the login data) instead of creating a duplicate user
+                                    this._browserService.confirm({
+                                            header: this._appLocalization.get('applications.administration.users.alreadyExist'),
+                                            message: this._appLocalization.get(
+                                                'applications.administration.users.userAlreadyExist',
+                                                {0: email}
+                                            ),
+                                            accept: () => this._associateUserToAccount(email, user)
+                                        }
+                                    );
                                 } else {
                                     this._browserService.confirm({
                                             header: this._appLocalization.get('applications.administration.users.alreadyExist'),
@@ -388,8 +396,11 @@ export class EditUserComponent implements OnInit, OnDestroy {
           this.parentPopupWidget.close();
         },
         error => {
+          const message = error && error.code === 'ADMIN_LOGIN_USERS_QUOTA_EXCEEDED'
+              ? this._appLocalization.get('applications.administration.users.quotaError')
+              : error.message;
           this._blockerMessage = new AreaBlockerMessage({
-            message: error.message,
+            message,
             buttons: [{
               label: this._appLocalization.get('app.common.ok'),
               action: () => {
