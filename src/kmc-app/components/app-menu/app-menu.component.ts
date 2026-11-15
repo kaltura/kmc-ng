@@ -111,7 +111,7 @@ export class AppMenuComponent implements OnInit, OnDestroy {
             this.setSelectedRoute(router.routerState.snapshot.url);
         }
 
-        this._powerUser = this._browserService.getInitialQueryParam('mode') === 'poweruser';
+        this._powerUser = false; // this._browserService.getInitialQueryParam('mode') === 'poweruser' removed as per SECF-30927
         if (this._userAuthentication.appUser?.fullName) {
             this.userInitials = this._userAuthentication.appUser.fullName.toUpperCase().split(' ').slice(0, 2).map(s => s[0]).join('');
         }

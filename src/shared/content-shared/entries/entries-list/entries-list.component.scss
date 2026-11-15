@@ -251,7 +251,10 @@
 
 
 }
-
+::ng-deep .p-tieredmenu .p-submenu-list {
+    left: -100% !important;
+    right: 100% !important;
+}
 :host{
   width: 100%;
 }

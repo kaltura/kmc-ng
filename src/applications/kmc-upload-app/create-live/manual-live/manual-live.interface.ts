@@ -1,8 +1,10 @@
 export interface ManualLive {
   name: string
   description: string,
-  flashHDSURL: string,
   hlsStreamUrl: string,
+  backupHlsStreamUrl: string,
   dashStreamUrl: string,
-  useAkamaiHdProtocol: boolean
+  backupDashStreamUrl: string,
+  useAkamaiHdProtocol: boolean,
+  previewMode: boolean
 }

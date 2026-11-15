@@ -1,0 +1,19 @@
+.kccs-editor {
+    width: calc(100vw - 12px);
+    height: calc(100vh - 12px);
+    position: absolute;
+    top: 0px;
+    left: 12px;
+}
+
+.kccs-editor iframe {
+    border: none;
+    width: 100%;
+    height: 100%;
+    margin-top: 0px;
+}
+
+
+.reach__header {
+    padding-top: 32px;
+}

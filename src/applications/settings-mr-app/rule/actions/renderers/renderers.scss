@@ -7,6 +7,13 @@
         margin-left: 8px;
     }
 }
+.kInvalid {
+    font-size: 13px;
+    position: absolute;
+    top: 140px;
+    left: 232px;
+    color: $kDandger;
+}
 .emailSettings {
     position: relative;
     height: 582px;
@@ -45,6 +52,9 @@
 .kRow {
     display: flex;
     margin-top: 24px;
+    &.kInvalidRow {
+        margin-bottom: 8px;
+    }
     &.kHidden {
         margin-top: 0px;
     }

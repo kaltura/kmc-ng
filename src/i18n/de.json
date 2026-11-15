@@ -517,7 +517,8 @@
                     "errors": {
                         "required": "Dieses Feld ist ein Pflichtfeld",
                         "enterUrl": "Sie müssen mindestens eine aus den HDS/HLS/DASH-Stream-URLs eingeben",
-                        "invalidUrl": "Sie müssen eine gültige URL eingeben"
+                        "invalidUrl": "Sie müssen eine gültige URL eingeben",
+                        "backupUrlRequiresPrimary": "Eine Backup-URL erfordert eine primäre URL für dasselbe Protokoll."
                     }
                 },
                 "universalStreamType": {

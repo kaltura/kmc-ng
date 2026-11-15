@@ -517,7 +517,8 @@
                     "errors": {
                         "required": "このフィールドは必須です",
                         "enterUrl": "少なくとも1つのHDS/HLS/DASHストリームURLを入力する必要があります",
-                        "invalidUrl": "有効なURLを入力する必要があります"
+                        "invalidUrl": "有効なURLを入力する必要があります",
+                        "backupUrlRequiresPrimary": "バックアップURLには、同じプロトコルのプライマリURLが必要です。"
                     }
                 },
                 "universalStreamType": {
