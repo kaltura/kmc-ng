@@ -265,6 +265,11 @@ export class RuleComponent implements OnInit {
         this._isDirty = true;
     }
 
+    public onAdminRepeatedEntryChange(): void {
+        this._analytics.trackButtonClickEvent(ButtonType.Toggle, 'AM_general_repeated_entry', this.rule.allowReprocessing ? 'on' : 'off' , 'Automation_manager');
+        this._isDirty = true;
+    }
+
     public onAdminApprovalChange(): void {
         this._analytics.trackButtonClickEvent(ButtonType.Toggle, 'AM_general_requires_admin', this.rule.audit.auditApproval ? 'on' : 'off' , 'Automation_manager');
         this._isDirty = true;
@@ -276,6 +281,14 @@ export class RuleComponent implements OnInit {
     }
 
     public save(): void {
+        // heads up notification cannot be sent more days before the run than the rule review period
+        if (this.actionsComponent?.headsUpExceedsReviewPeriod()) {
+            this._browserService.alert({
+                header: this._appLocalization.get('applications.settings.mr.notification.reviewPeriodHeader'),
+                message: this._appLocalization.get('applications.settings.mr.notification.reviewPeriodMsg', [this.rule.audit.reviewPeriod])
+            });
+            return;
+        }
         // check for missing criteria in enabled rule
         if (this.rule.status === 'enabled' && Object.keys(this.rule.objectFilter).length === 0) {
             this._browserService.confirm(

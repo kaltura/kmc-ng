@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, OnChanges} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, OnChanges, ViewChild} from '@angular/core';
 import {AppAuthentication} from 'app-shared/kmc-shell/auth';
-import {getKalturaServerUri, serverConfig} from 'config/server';
+import {getKalturaServerUri, getUriOrigin, serverConfig} from 'config/server';
 import {KMCPermissions, KMCPermissionsService} from 'app-shared/kmc-shared/kmc-permissions';
 import {UpdateClipsEvent} from 'app-shared/kmc-shared/events/update-clips-event';
 import {AppEventsService} from 'app-shared/kmc-shared/app-events';
@@ -39,10 +39,12 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
   @Output() exitDraftMode = new EventEmitter<void>();
   @Output() closeEditor = new EventEmitter<void>();
 
+  @ViewChild('keditFrame') _keditFrame: ElementRef;
 
   public keditUrl: string;
   public _windowEventListener = null;
   public _keditConfig: any = null;
+  private _keditOrigin: string = null;
 
   constructor(private _appAuthentication: AppAuthentication,
               private _contentEntryViewService: ContentEntryViewService,
@@ -63,7 +65,17 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit() {
+      this._keditOrigin = getUriOrigin(serverConfig.externalApps.editor && serverConfig.externalApps.editor.uri);
+
       this._windowEventListener = (e) => {
+          // only trust the kedit frame we created, on the origin we loaded it from
+          if (!this._keditOrigin || e.origin !== this._keditOrigin) {
+              return;
+          }
+          if (!this._keditFrame || e.source !== this._keditFrame.nativeElement.contentWindow) {
+              return;
+          }
+
           let postMessageData;
           try {
               postMessageData = e.data;
@@ -74,7 +86,7 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
           /* request for init params,
 		  * should return a message where messageType = kea-config */
           if (postMessageData.messageType === 'kea-bootstrap') {
-              e.source.postMessage(this._keditConfig, e.origin);
+              e.source.postMessage(this._keditConfig, this._keditOrigin);
           }
 
 
@@ -88,7 +100,7 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
               e.source.postMessage({
                   'messageType': 'kea-display-name',
                   'data': displayName
-              }, e.origin);
+              }, this._keditOrigin);
           }
 
           /* received when a clip was created.
@@ -108,7 +120,7 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
               e.source.postMessage({
                   'messageType': 'kea-clip-message',
                   'data': message
-              }, e.origin);
+              }, this._keditOrigin);
           }
 
 
@@ -141,12 +153,12 @@ export class KeditHosterComponent implements OnInit, OnDestroy, OnChanges {
 		  * should return a message {messageType:kea-ks, data: ks}
 		  */
           if (postMessageData.messageType === 'kea-get-ks') {
-              // send the user's display name based on the user ID
-              const ks = this._appAuthentication.appUser.ks;
+              // send the user's ks to the kedit frame
+              const ks =this._appAuthentication.appUser.ks;
               e.source.postMessage({
                   'messageType': 'kea-ks',
                   'data': ks
-              }, e.origin);
+              }, this._keditOrigin);
           }
       };
   }

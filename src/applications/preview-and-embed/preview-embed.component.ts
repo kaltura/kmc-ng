@@ -5,7 +5,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import {AppAnalytics, AppAuthentication, BrowserService, ButtonType} from 'app-shared/kmc-shell';
 import { subApplicationsConfig } from 'config/sub-applications';
-import { PreviewEmbedService, EmbedConfig, EmbedParams } from './preview-and-embed.service';
+import { PreviewEmbedService, EmbedConfig, EmbedParams, escapeHtml } from './preview-and-embed.service';
 
 import {KalturaPlaylist, KalturaUiConfObjType, KalturaWidget} from 'kaltura-ngx-client';
 import { KalturaMediaEntry } from 'kaltura-ngx-client';
@@ -264,7 +264,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   private createForm():void{
     const seo: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.seo');
-    const secured: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.secured');
+    const secured: boolean | null = true;
     const responsive: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.responsive');
     const dee: boolean | null = this._browserService.getFromLocalStorage('previewEmbed.dee');
     this._previewForm = this._fb.group({
@@ -391,13 +391,13 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private getMediaMetadata(): string {
-      const name = this.media.name ? this.media.name : '';
-      const description = this.media.description ? this.media.description : '';
+      const name = escapeHtml(this.media.name);
+      const description = escapeHtml(this.media.description);
       return `
                               <span itemprop="name" content="${name}"></span>
                           <span itemprop="description" content="${description}"></span>
-                          <span itemprop="duration" content="${this.media.duration}"></span>
-                          <span itemprop="thumbnailUrl" content="${this.media.thumbnailUrl}"></span>
+                          <span itemprop="duration" content="${escapeHtml(this.media.duration)}"></span>
+                          <span itemprop="thumbnailUrl" content="${escapeHtml(this.media.thumbnailUrl)}"></span>
                           <span itemprop="uploadDate" content="${this.media.createdAt.toISOString()}"></span>
                           <span itemprop="width" content="${this._previewForm.controls['selectedPlayer'].value.uiConf.width}"></span>
                           <span itemprop="height" content="${this._previewForm.controls['selectedPlayer'].value.uiConf.height}"></span>
@@ -463,6 +463,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private createPreviewLink():void{
+      if (this._previewForm.controls['secured'].value === false) {
+          return;
+      }
       let url = '';
       try {
         url = this.getProtocol(false) + '://' + serverConfig.kalturaServer.uri + '/index.php/extwidget/preview';
@@ -498,7 +501,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
           window.addEventListener('message', this.renderPlayer);
           const uri = serverConfig.externalApps.playerWrapper ? serverConfig.externalApps.playerWrapper.uri : '/public/playerWrapper.html';
           this.previewIframe.nativeElement.src = uri;
-      }, 0);
+      }, 100);
   }
 
   public copyEmbedCode(el):void{

@@ -68,7 +68,7 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
 			// load player lib if doesn't exist
 			if (document.getElementById("kalturaPlayerV7Lib") === null) {
 				let s = document.createElement('script');
-				s.src = `${this.cdnUrl}/p/${this.pid}/embedPlaykitJs/uiconf_id/${this.uiconfid}/ks/${this.ks}`;
+				s.src = `${this.cdnUrl}/p/${this.pid}/embedPlaykitJs/uiconf_id/${this.uiconfid}`;
 				s.id = "kalturaPlayerV7Lib";
 				s.async = false;
 				document.head.appendChild(s);

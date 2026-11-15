@@ -98,6 +98,15 @@
                             <p-dropdown [options]="_everyDay" [style]="{'width':'60px', 'margin-right': '4px'}"  [(ngModel)]="rule.runningCadence.advancedCadence.dayNumber" (ngModelChange)="onOnChange('month')"></p-dropdown>
                             <span class="kLabel autoWidth">{{'applications.settings.mr.schedule.of' | translate}}</span>
                         </div>
+                        <div class="kRow kRowWithHelptip">
+                            <div class="labelWithHelpTip">
+                                <span class="kLabel">{{'applications.settings.mr.schedule.repeated' | translate}}</span>
+                                <kInputHelper>
+                                    <span>{{'applications.settings.mr.schedule.repeated_tt' | translate}}</span>
+                                </kInputHelper>
+                            </div>
+                            <p-inputSwitch (onChange)="onAdminRepeatedEntryChange()" [(ngModel)]="rule.allowReprocessing"></p-inputSwitch>
+                        </div>
 
                         <div class="kRow">
                             <span class="kSubtitle">{{'applications.settings.mr.review' | translate}}</span>
@@ -130,7 +139,7 @@
 
                     <div class="ruleDetails" [class.kHidden]="_selectedSection !== 'action' && _selectedSection !== 'notifications'" *ngIf="rule">
                         <span class="kTitle">{{_selectedSection === 'action' ? ('applications.settings.mr.action' | translate) : ('applications.settings.mr.notifications' | translate)}}</span>
-                        <kRuleActions #actionsComponent [ruleActions]="ruleActions" [isLiveRule]="rule.type === 'liveEntryProfile'" [profileId]="rule.id" [selectedTab]="_selectedSection" (onActionsChange)="onActionChange($event)"></kRuleActions>
+                        <kRuleActions #actionsComponent [ruleActions]="ruleActions" [isLiveRule]="rule.type === 'liveEntryProfile'" [profileId]="rule.id" [selectedTab]="_selectedSection" [reviewPeriod]="rule.audit.reviewPeriod" (onActionsChange)="onActionChange($event)"></kRuleActions>
                     </div>
 
                 </div>

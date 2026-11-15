@@ -463,14 +463,11 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
               data.adminTags = adminTags.filter(tag => tag !== 'prioritize_ingested_captions' && tag !== 'extract_closed_caption_feature').join(',');
           }
       }
-    const nonClosedCaptionsStreams = (data.streams || []).filter(stream => stream.type !== 'closedCaptions');
     if (this.liveCaptions.streamsModified) {
+        const nonClosedCaptionsStreams = (data.streams || []).filter(stream => stream.type !== 'closedCaptions');
         data.streams = [...nonClosedCaptionsStreams, ...this.liveCaptions.streams];
-    } else {
-        // User made no stream edits — preserve the server's closedCaptions streams as is.
-        const originalClosedCaptions = (this.data?.streams || []).filter(stream => stream.type === 'closedCaptions');
-        data.streams = [...nonClosedCaptionsStreams, ...originalClosedCaptions];
     }
+    // else: omit streams from payload — API partial-update semantics preserve existing stream containers (SUP-53217)
   }
 
     getCaptionPreviewUrl(): Observable<{ url: string }> {

@@ -514,6 +514,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     this._router.navigateByUrl(`/content/playlists/playlist/${entry.id}/content`);
                                     break;
                                 case 'editCaptions':
+                                case 'editAudioDescription':
                                     // open captions editor
                                     this.unisphereRuntime?.closeWidget(); // close widget
                                     document.body.style.overflowY = "auto";
@@ -531,6 +532,7 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     this._appEvents.publish(new PreviewAndEmbedEvent(new KalturaMediaEntry(entry)));
                                     break;
                                 case 'addCaptions':
+                                case 'addAudioDescription':
                                     // open captions tab
                                     this.unisphereRuntime?.closeWidget(); // close widget
                                     document.body.style.overflowY = "auto";
