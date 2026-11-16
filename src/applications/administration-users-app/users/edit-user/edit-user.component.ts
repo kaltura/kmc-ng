@@ -179,7 +179,16 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
     this._usersStore.isExternalUser(email)
         .pipe(cancelOnDestroy(this))
-        .subscribe((user: KalturaUser | null) => {
+        .subscribe(({ user, multipleMatches }) => {
+            if (multipleMatches) {
+                // several users share this external id - don't create or promote any of them
+                this._isBusy = false;
+                this._browserService.alert({
+                    header: this._appLocalization.get('app.common.attention'),
+                    message: this._appLocalization.get('applications.administration.users.duplicatedUser', {0: email})
+                });
+                return;
+            }
             const isExternal = user !== null;
             this._usersStore.isUserAlreadyExists(email)
                 .pipe(cancelOnDestroy(this))
