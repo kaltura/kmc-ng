@@ -1,4 +1,5 @@
 @import 'app-theme/_variables.scss';
+@import 'src/shared/content-shared/document-thumbnail/document-thumbnail';
 
 .kPlaylistEntriesTable {
   background-color: white;
@@ -35,6 +36,7 @@
       height: auto;
       border-radius: 3px;
     }
+    @include kDocumentThumbnailIcons;
       .kIcons {
           display: flex;
           align-items: center;

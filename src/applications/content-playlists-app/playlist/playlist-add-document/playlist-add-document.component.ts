@@ -16,6 +16,7 @@ import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { KMCPermissions } from 'app-shared/kmc-shared/kmc-permissions';
+import { getDocumentThumbnailClass } from 'app-shared/content-shared/document-thumbnail/document-thumbnail';
 
 // a document picker used to add document entries to a manual playlist
 @Component({
@@ -39,6 +40,7 @@ export class PlaylistAddDocumentComponent implements OnInit, OnDestroy {
   public _addButtonLabel = '';
   public _ks: string;
   public _loadThumbnailWithKs: boolean;
+  public _getDocumentThumbnailClass = getDocumentThumbnailClass;
 
   private _addButtonLabelTranslation = '';
   private _querySubscription: ISubscription;
@@ -141,8 +143,9 @@ export class PlaylistAddDocumentComponent implements OnInit, OnDestroy {
       : this._addButtonLabelTranslation;
   }
 
-  public _onThumbLoadError(event): void {
+  public _onThumbLoadError(event, holder: HTMLDivElement): void {
     event.target.style.display = 'none';
+    holder.classList.add('showIcon');
   }
 
   public _addDocuments(): void {

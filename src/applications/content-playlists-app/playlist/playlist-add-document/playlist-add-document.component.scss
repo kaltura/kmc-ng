@@ -1,4 +1,5 @@
 @import 'app-theme/_variables.scss';
+@import 'src/shared/content-shared/document-thumbnail/document-thumbnail';
 
 .kAddDocumentWrap {
   display: flex;
@@ -132,17 +133,14 @@
     align-items: center;
     justify-content: center;
 
-    .kDocumentIcon {
-      color: $kGrayscale3;
-      font-size: 20px;
-    }
-
     img {
       position: absolute;
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
+
+    @include kDocumentThumbnailIcons(64px, 36px);
   }
 
   .kThumbnailColumn {

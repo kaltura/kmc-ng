@@ -13,6 +13,7 @@ import {
 } from 'app-shared/kmc-shared/kmc-views/details-views';
 import { MenuItem } from 'primeng/api';
 import { AppAuthentication } from 'app-shared/kmc-shell';
+import { getDocumentThumbnailClass } from 'app-shared/content-shared/document-thumbnail/document-thumbnail';
 
 @Component({
   selector: 'kPlaylistEntriesTable',
@@ -52,6 +53,8 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   public _items: MenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
     public _youtubeExternalSourceType = KalturaExternalMediaSourceType.youtube;
+    public _documentEntryType = KalturaEntryType.document;
+    public _getDocumentThumbnailClass = getDocumentThumbnailClass;
     public _sortBy: string;
     public _sortDirection: number;
     public _loadThumbnailWithKs = false;
@@ -153,8 +156,9 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
     this._emptyMessage = this._appLocalization.get('applications.content.playlistDetails.errors.addAtLeastOneMedia');
   }
 
-  public _onThumbLoadError(event): void {
+  public _onThumbLoadError(event, holder: HTMLDivElement): void {
     event.target.style.display = 'none';
+    holder.classList.add('showIcon'); // only documents render an icon element, so media entries are unaffected
   }
 
     public isRoom(entry: KalturaMediaEntry): boolean {

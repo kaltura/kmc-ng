@@ -38,9 +38,9 @@
           <ng-template pTemplate="body" let-document>
             <tr>
               <td class="kThumbnailColumn" *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
-                <div class="kThumbnailHolder">
-                  <i class="kIconfile-small kDocumentIcon"></i>
-                  <img *ngIf="document.thumbnailUrl" [src]="_loadThumbnailWithKs ? document.thumbnailUrl + '/ks/' + _ks : document.thumbnailUrl" (error)="_onThumbLoadError($event)">
+                <div class="kThumbnailHolder" #holder [class.showIcon]="!document.thumbnailUrl">
+                  <img *ngIf="document.thumbnailUrl" [src]="_loadThumbnailWithKs ? document.thumbnailUrl + '/ks/' + _ks : document.thumbnailUrl" (error)="_onThumbLoadError($event, holder)">
+                  <div class="thumbnail" [ngClass]="_getDocumentThumbnailClass(document.name)"></div>
                 </div>
               </td>
               <td><span class="kTitle kTableColumn" [kTooltip]="document.name" [showOnEllipsis]="true">{{document.name}}</span></td>
@@ -69,11 +69,12 @@
 
     <div class="kDocumentSelectorBucket" *ngIf="_selectedDocuments.length">
       <div class="kSelectedItem" *ngFor="let document of _selectedDocuments">
-        <div class="kThumbnailHolder">
-          <i class="kIconfile-small kDocumentIcon"></i>
+        <div class="kThumbnailHolder" #holder
+             [class.showIcon]="!document.thumbnailUrl || (_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
           <img *ngIf="document.thumbnailUrl && !(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)"
                [src]="_loadThumbnailWithKs ? document.thumbnailUrl + '/ks/' + _ks : document.thumbnailUrl"
-               (error)="_onThumbLoadError($event)">
+               (error)="_onThumbLoadError($event, holder)">
+          <div class="thumbnail" [ngClass]="_getDocumentThumbnailClass(document.name)"></div>
         </div>
         <span [kTooltip]="document.name">{{document.name}}</span>
         <i class="kIcontrash" (click)="_removeFromBucket(document)"></i>

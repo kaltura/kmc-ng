@@ -47,12 +47,14 @@
                         <p-tableCheckbox [value]="entry"></p-tableCheckbox>
                     </td>
                     <td class="thumbnailColumn" [class.rapt]="isRapt" *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
-                        <div class="kThumbnailHolder"
+                        <div class="kThumbnailHolder" #holder
                              [class.kShowAsDisabled]="_kmcPermissions.CONTENT_MANAGE_BASE | kDisabledIfNotPermitted"
                              [class.disablePointer]="isRapt"
+                             [class.showIcon]="!entry.thumbnailUrl"
                              (click)="_goToEntry(entry)">
-                            <img *ngIf="entry.thumbnailUrl && _loadThumbnailWithKs" [src]="entry.thumbnailUrl+'/ks/'+_ks">
-                            <img *ngIf="entry.thumbnailUrl && !_loadThumbnailWithKs" [src]="entry.thumbnailUrl" (error)="_onThumbLoadError($event)">
+                            <img *ngIf="entry.thumbnailUrl && _loadThumbnailWithKs" [src]="entry.thumbnailUrl+'/ks/'+_ks" (error)="_onThumbLoadError($event, holder)">
+                            <img *ngIf="entry.thumbnailUrl && !_loadThumbnailWithKs" [src]="entry.thumbnailUrl" (error)="_onThumbLoadError($event, holder)">
+                            <div *ngIf="entry.type === _documentEntryType" class="thumbnail" [ngClass]="_getDocumentThumbnailClass(entry.name)"></div>
                             <div class="kIcons">
                                 <i class="kIconyoutube kThumbnailTypeIcon" *ngIf="entry.externalSourceType === _youtubeExternalSourceType"></i>
                                 <i class="kIconquiz kThumbnailTypeIcon" *ngIf="entry.isQuizEntry"></i>
