@@ -222,7 +222,15 @@ export class ActionNotificationComponent implements OnDestroy {
     }
 
     public revert(): void {
-        this.action = JSON.parse(JSON.stringify(this.originalAction));
+        const reverted: Action = JSON.parse(JSON.stringify(this.originalAction));
+        if (this.action?.task && reverted.task) {
+            // restore in place: the popup edits this task object directly and the rule editor holds the same
+            // object, so replacing this.action with a copy would leave the cancelled values in what Save sends
+            Object.assign(this.action.task, reverted.task);
+            this.action.requires = reverted.requires;
+        } else {
+            this.action = reverted;
+        }
         this.loadUsers();
         this.sendToCustomUsers = this.action?.task?.taskParams?.sendNotificationTaskParams?.recipients?.userIds?.length > 0;
         this.checkReviewPeriod();
