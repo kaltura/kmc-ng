@@ -9,3 +9,4 @@ export { BulkDeleteService } from './bulk-delete.service';
 export { BulkDownloadService } from './bulk-download.service';
 export { BulkAddViewersService } from './bulk-add-viewers.service';
 export { BulkRemoveViewersService } from './bulk-remove-viewers.service';
+export { BulkAddToPlaylistService } from './bulk-add-to-playlist.service';

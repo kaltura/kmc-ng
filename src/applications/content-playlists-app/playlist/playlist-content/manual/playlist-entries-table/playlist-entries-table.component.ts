@@ -1,11 +1,16 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Menu } from 'primeng/menu';
-import { KalturaExternalMediaSourceType, KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaDocumentEntry, KalturaEntryType, KalturaExternalMediaSourceType, KalturaMediaEntry } from 'kaltura-ngx-client';
 import { ManualContentWidget } from '../manual-content-widget.service';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import {
+    ContentDocumentViewSections,
+    ContentDocumentViewService,
+    ContentEntryViewSections,
+    ContentEntryViewService
+} from 'app-shared/kmc-shared/kmc-views/details-views';
 import { MenuItem } from 'primeng/api';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 
@@ -57,7 +62,8 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
               private _widgetService: ManualContentWidget,
               private _appAuthentication: AppAuthentication,
               private _permissionsService: KMCPermissionsService,
-              private _contentEntryViewService: ContentEntryViewService) {
+              private _contentEntryViewService: ContentEntryViewService,
+              private _contentDocumentViewService: ContentDocumentViewService) {
   }
 
   ngOnInit() {
@@ -124,7 +130,11 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 
   public _goToEntry(entry: KalturaMediaEntry): void {
     if (!this.isRapt && this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_BASE)) {
-        this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
+        if (entry.type === KalturaEntryType.document) {
+            this._contentDocumentViewService.open({ document: <KalturaDocumentEntry><unknown>entry, section: ContentDocumentViewSections.Metadata });
+        } else {
+            this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
+        }
     }
   }
 

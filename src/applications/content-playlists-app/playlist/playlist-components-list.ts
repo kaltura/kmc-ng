@@ -5,6 +5,7 @@ import { PlaylistComponent } from './playlist.component';
 import { PlaylistDetailsComponent } from './playlist-details/playlist-details.component';
 import { PlaylistEntriesTableComponent } from './playlist-content/manual/playlist-entries-table/playlist-entries-table.component';
 import { PlaylistAddEntryComponent } from './playlist-add-entry/playlist-add-entry.component';
+import { PlaylistAddDocumentComponent } from './playlist-add-document/playlist-add-document.component';
 import { EntryTypePipe } from './pipes/entry-type.pipe';
 import { EntryDurationPipe } from './pipes/entry-duration.pipe';
 import { BulkOperationsComponent } from './playlist-content/manual/bulk-operations/bulk-operations.component';
@@ -27,6 +28,7 @@ export const PlaylistComponentsList = [
   PlaylistEntriesTableComponent,
   PlaylistRulesTableComponent,
   PlaylistAddEntryComponent,
+  PlaylistAddDocumentComponent,
   RuleBasedBulkOperationsComponent,
   EntryTypePipe,
   EntryDurationPipe,

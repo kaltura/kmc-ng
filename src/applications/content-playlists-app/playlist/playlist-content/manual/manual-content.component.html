@@ -7,6 +7,7 @@
         [entriesTotalCount]="_widgetService.entriesTotalCount"
         [isRapt]="_widgetService._isRapt"
         (addEntry)="addEntry.open()"
+        (addDocument)="addDocument.open()"
         (deleteEntries)="_deleteSelected($event)"
         (clearSelection)="_clearSelection()"
         (moveEntries)="_widgetService.moveEntries($event)">
@@ -26,6 +27,12 @@
   <kPopupWidget #addEntry data-aid="addEntry" [popupWidth]="995" [slider]="true">
     <ng-template>
       <kAddEntry (onClosePopupWidget)="addEntry.close()" (onAddEntries)="_widgetService.addEntries($event)"></kAddEntry>
+    </ng-template>
+  </kPopupWidget>
+
+  <kPopupWidget #addDocument data-aid="addDocument" [popupWidth]="995" [slider]="true">
+    <ng-template>
+      <kAddDocument (onClosePopupWidget)="addDocument.close()" (onAddDocuments)="_widgetService.addEntries($event)"></kAddDocument>
     </ng-template>
   </kPopupWidget>
 </k-area-blocker>

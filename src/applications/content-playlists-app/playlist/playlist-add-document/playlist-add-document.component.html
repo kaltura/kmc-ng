@@ -1,0 +1,83 @@
+<div class="kAddDocumentWrap">
+  <div class="kHeader">
+    <span class="kTitle">{{'applications.content.playlists.addDocument' | translate}}</span>
+    <div class="kButtons">
+      <a class="kCancel" (click)="onClosePopupWidget.emit()">{{'app.common.cancel' | translate}}</a>
+      <button type="button"
+              class="kButtonBranded"
+              [disabled]="_selectedDocuments.length === 0"
+              pButton
+              [label]="_addButtonLabel"
+              (click)="_addDocuments()"></button>
+    </div>
+  </div>
+
+  <div class="kDocumentSelector">
+    <div class="kDocumentSelectorTable">
+      <div class="kFilters">
+        <input type="text"
+               pInputText
+               class="kSearchInput"
+               [(ngModel)]="_freeText"
+               (keyup.enter)="_search()"
+               [placeholder]="'applications.content.playlists.searchDocuments' | translate">
+        <span class="kTotal" *ngIf="!_isBusy">{{'applications.content.playlists.documentsCount' | translate:[_totalCount]}}</span>
+      </div>
+
+      <k-area-blocker class="kTableArea" [showLoader]="_isBusy" [message]="_errorMessage">
+        <p-table [value]="_documents" dataKey="id">
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="kThumbnailColumn" *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)"></th>
+              <th>{{'applications.content.table.name' | translate}}</th>
+              <th class="kIdColumn">{{'applications.content.table.id' | translate}}</th>
+              <th class="kCreatedAtColumn">{{'applications.content.table.createdOn' | translate}}</th>
+              <th class="kAddColumn"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-document>
+            <tr>
+              <td class="kThumbnailColumn" *ngIf="!(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)">
+                <div class="kThumbnailHolder">
+                  <i class="kIconfile-small kDocumentIcon"></i>
+                  <img *ngIf="document.thumbnailUrl" [src]="_loadThumbnailWithKs ? document.thumbnailUrl + '/ks/' + _ks : document.thumbnailUrl" (error)="_onThumbLoadError($event)">
+                </div>
+              </td>
+              <td><span class="kTitle kTableColumn" [kTooltip]="document.name" [showOnEllipsis]="true">{{document.name}}</span></td>
+              <td class="kIdColumn"><span class="kTableColumn" [kTooltip]="document.id" [showOnEllipsis]="true">{{document.id}}</span></td>
+              <td class="kCreatedAtColumn">{{document.createdAt | kmcDate}}</td>
+              <td class="kAddColumn">
+                <button type="button" pButton class="kButtonDefault kButtonAddToBucket" label="+" (click)="_addToBucket(document)"></button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <div class="kEmptyMessage" *ngIf="!_isBusy">{{'applications.content.table.noResults' | translate}}</div>
+          </ng-template>
+        </p-table>
+      </k-area-blocker>
+
+      <div class="kFooter" *ngIf="_totalCount">
+        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+        <p-paginator [rows]="_pageSize"
+                     [totalRecords]="_totalCount"
+                     [first]="_pageIndex * _pageSize"
+                     [rowsPerPageOptions]="[25, 50, 75, 100]"
+                     (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+      </div>
+    </div>
+
+    <div class="kDocumentSelectorBucket" *ngIf="_selectedDocuments.length">
+      <div class="kSelectedItem" *ngFor="let document of _selectedDocuments">
+        <div class="kThumbnailHolder">
+          <i class="kIconfile-small kDocumentIcon"></i>
+          <img *ngIf="document.thumbnailUrl && !(_kmcPermissions.FEATURE_DISABLE_KMC_LIST_THUMBNAILS | kNgIfPermitted)"
+               [src]="_loadThumbnailWithKs ? document.thumbnailUrl + '/ks/' + _ks : document.thumbnailUrl"
+               (error)="_onThumbLoadError($event)">
+        </div>
+        <span [kTooltip]="document.name">{{document.name}}</span>
+        <i class="kIcontrash" (click)="_removeFromBucket(document)"></i>
+      </div>
+    </div>
+  </div>
+</div>
