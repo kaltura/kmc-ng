@@ -11,3 +11,4 @@ export { BulkRemoveCategories } from './bulk-remove-categories/bulk-remove-categ
 export { BulkDownload } from './bulk-download/bulk-download.component';
 export { BulkAddViewersComponent } from './bulk-add-viewers/bulk-add-viewers.component';
 export { BulkRemoveViewersComponent } from './bulk-remove-viewers/bulk-remove-viewers.component';
+export { BulkAddToPlaylistComponent } from './bulk-add-to-playlist/bulk-add-to-playlist.component';

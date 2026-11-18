@@ -33,6 +33,7 @@ import {
     BulkDownload,
     BulkAddViewersComponent,
     BulkRemoveViewersComponent,
+    BulkAddToPlaylistComponent,
 } from './components';
 
 const BULK_ACTIONS_COMPONENTS = [
@@ -51,6 +52,7 @@ const BULK_ACTIONS_COMPONENTS = [
     BulkDownload,
     BulkAddViewersComponent,
     BulkRemoveViewersComponent,
+    BulkAddToPlaylistComponent,
 ];
 
 @NgModule({
