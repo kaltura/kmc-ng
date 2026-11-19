@@ -2682,6 +2682,8 @@
                 "refresh": "Refresh",
                 "commonError": "Error happened during server request.",
                 "duplicatedUser": "Multiple users share this email. Please contact support to resolve duplicates.",
+                "associateRollbackFailed": "Could not enable login for this user ({{0}}), and the user's admin role could not be reverted. Please check the user's role and status.",
+                "associateRolesRestoreFailed": "Could not enable login for this user ({{0}}). The admin permission was removed, but the user's previous roles could not be restored. Please check the user's roles.",
                 "addUserError": "Missing one of the mandatory fields",
                 "invalidUserId": "Invalid User id",
                 "remove": "Remove",

@@ -43,7 +43,12 @@ import {
 } from 'kaltura-ngx-client';
 import { AdminUsersMainViewService } from 'app-shared/kmc-shared/kmc-views';
 import { throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, switchMap } from 'rxjs/operators';
+
+export interface ExternalUserSearchResult {
+  user: KalturaUser | null;
+  multipleMatches: boolean;
+}
 
 export interface QueryData {
   pageIndex: number;
@@ -261,7 +266,7 @@ export class UsersStore implements OnDestroy {
       }));
   }
 
-    public isExternalUser(email: string): Observable<KalturaUser | null> {
+    public isExternalUser(email: string): Observable<ExternalUserSearchResult> {
         const user = new KalturaESearchUserItem({
             fieldName: KalturaESearchUserFieldName.externalId,
             itemType: KalturaESearchItemType.exactMatch,
@@ -279,8 +284,15 @@ export class UsersStore implements OnDestroy {
         return this._kalturaServerClient.request(new ESearchSearchUserAction({ searchParams, pager }))
             .pipe(
                 cancelOnDestroy(this),
-                map(response => response.objects?.length > 0 ? response.objects[0].object as KalturaUser : null),
-                catchError(() => of(null))
+                map(response => {
+                    const objects = response.objects || [];
+                    return {
+                        user: objects.length > 0 ? objects[0].object as KalturaUser : null,
+                        // more than one active user with this external id - none of them may be promoted
+                        multipleMatches: Math.max(response.totalCount || 0, objects.length) > 1
+                    };
+                }),
+                catchError(() => of({ user: null, multipleMatches: false }))
             );
     }
 
@@ -350,6 +362,8 @@ export class UsersStore implements OnDestroy {
       if (!user || !roleIds) {
           return throwError(new Error('cannot associate user to account'));
       }
+    const wasAdmin = !!user.isAdmin;
+    const originalRoleIds = user.roleIds || '';
     const updatedUser = new KalturaUser({
       roleIds: roleIds,
       isAdmin: true
@@ -362,15 +376,52 @@ export class UsersStore implements OnDestroy {
     }
     return this._kalturaServerClient
       .multiRequest(multiRequest)
-      .pipe(map((responses) => {
-        if (responses.hasErrors()) {
-          const errorMessage = responses.map(response => {
-            if (response.error) {
-              return response.error.message + '\n';
-            }
-          }).join('');
-          throw Error(errorMessage);
+      .pipe(switchMap((responses) => {
+        if (!responses.hasErrors()) {
+          return of(undefined);
         }
+
+        const updateError = responses[0].error;
+        const enableLoginError = responses.length > 1 ? responses[1].error : null;
+
+        // loginEnabled comes from the search index and can be stale - if login is already enabled
+        // in the DB, the promotion (update) succeeded and the user can log in, so treat it as success
+        if (!updateError && enableLoginError && enableLoginError.code === 'USER_LOGIN_ALREADY_ENABLED') {
+          return of(undefined);
+        }
+
+        // multirequest is not transactional - the update was committed but enableLogin failed
+        // (e.g. ADMIN_LOGIN_USERS_QUOTA_EXCEEDED). Revert so the user is not left as an admin without login.
+        // user.update cannot set isAdmin back to false (CANNOT_SET_ROOT_ADMIN_AS_NO_ADMIN), so use
+        // user.demoteAdmin (isAdmin=false, roleIds cleared) and then restore any roles the user had before.
+        if (!updateError && enableLoginError && !wasAdmin) {
+          return this._kalturaServerClient
+            .request(new UserDemoteAdminAction({ userId: user.id }))
+            .pipe(
+              // demote failed - the user is still an admin without login; report it instead of hiding it
+              catchError(() => throwError(new Error(this._appLocalization.get(
+                'applications.administration.users.associateRollbackFailed',
+                {0: enableLoginError.message}
+              )))),
+              switchMap(() => originalRoleIds
+                ? this._kalturaServerClient.request(new UserUpdateAction({
+                    userId: user.id,
+                    user: new KalturaUser({ roleIds: originalRoleIds })
+                  })).pipe(
+                    // admin was removed, only the previous roles could not be restored
+                    catchError(() => throwError(new Error(this._appLocalization.get(
+                      'applications.administration.users.associateRolesRestoreFailed',
+                      {0: enableLoginError.message}
+                    ))))
+                  )
+                : of(null)
+              ),
+              switchMap(() => throwError(enableLoginError))
+            );
+        }
+
+        // rethrow the API error itself so callers keep error.code
+        return throwError(updateError || enableLoginError);
       }));
   }
 
