@@ -384,6 +384,12 @@ export class UsersStore implements OnDestroy {
         const updateError = responses[0].error;
         const enableLoginError = responses.length > 1 ? responses[1].error : null;
 
+        // loginEnabled comes from the search index and can be stale - if login is already enabled
+        // in the DB, the promotion (update) succeeded and the user can log in, so treat it as success
+        if (!updateError && enableLoginError && enableLoginError.code === 'USER_LOGIN_ALREADY_ENABLED') {
+          return of(undefined);
+        }
+
         // multirequest is not transactional - the update was committed but enableLogin failed
         // (e.g. ADMIN_LOGIN_USERS_QUOTA_EXCEEDED). Revert so the user is not left as an admin without login.
         // user.update cannot set isAdmin back to false (CANNOT_SET_ROOT_ADMIN_AS_NO_ADMIN), so use
@@ -392,18 +398,24 @@ export class UsersStore implements OnDestroy {
           return this._kalturaServerClient
             .request(new UserDemoteAdminAction({ userId: user.id }))
             .pipe(
-              switchMap(() => originalRoleIds
-                ? this._kalturaServerClient.request(new UserUpdateAction({
-                    userId: user.id,
-                    user: new KalturaUser({ roleIds: originalRoleIds })
-                  }))
-                : of(null)
-              ),
-              // the revert failed - report it instead of hiding it behind the original error
+              // demote failed - the user is still an admin without login; report it instead of hiding it
               catchError(() => throwError(new Error(this._appLocalization.get(
                 'applications.administration.users.associateRollbackFailed',
                 {0: enableLoginError.message}
               )))),
+              switchMap(() => originalRoleIds
+                ? this._kalturaServerClient.request(new UserUpdateAction({
+                    userId: user.id,
+                    user: new KalturaUser({ roleIds: originalRoleIds })
+                  })).pipe(
+                    // admin was removed, only the previous roles could not be restored
+                    catchError(() => throwError(new Error(this._appLocalization.get(
+                      'applications.administration.users.associateRolesRestoreFailed',
+                      {0: enableLoginError.message}
+                    ))))
+                  )
+                : of(null)
+              ),
               switchMap(() => throwError(enableLoginError))
             );
         }
