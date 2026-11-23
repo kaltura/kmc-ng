@@ -31,6 +31,14 @@
             class="kButtonBranded kAddEntryBtn"
             (click)="addEntry.emit()">
           </button>
+          <button *ngIf="!isRapt"
+            pButton
+            [disabled]="!isNewPlaylist && (_kmcPermissions.PLAYLIST_UPDATE | kDisabledIfNotPermitted)"
+            type="button"
+            label="{{'applications.content.playlists.addDocument' | translate}}"
+            class="kButtonDefault kAddDocumentBtn"
+            (click)="addDocument.emit()">
+          </button>
         </ng-template>
         <span class="kSelectedEntriesNum" *ngIf="entriesTotalCount">
           {{ 'applications.content.playlists.entries' | translate : [entriesTotalCount] }}

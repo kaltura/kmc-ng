@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient, KalturaMultiRequest, KalturaObjectBaseFactory } from 'kaltura-ngx-client';
 import { KalturaPlaylist } from 'kaltura-ngx-client';
-import { KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaDocumentEntry, KalturaMediaEntry } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client';
@@ -113,7 +113,7 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
               filter: new KalturaBaseEntryFilter({idIn: this.data.playlistContent, statusIn: '1,2,7,5,6'}),
               pager: new KalturaFilterPager({pageSize: 500})
           }).setRequestOptions({
-              acceptedTypes: [KalturaMediaEntry],
+              acceptedTypes: [KalturaMediaEntry, KalturaDocumentEntry],
               responseProfile
           }))
               .pipe(map(response => {
@@ -158,7 +158,7 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
 
   private _recalculateCountAndDuration(): void {
     this.entriesTotalCount = this.entries.length;
-    this.entriesDuration = this.entries.reduce((acc, val) => acc + val.duration, 0);
+    this.entriesDuration = this.entries.reduce((acc, val) => acc + (val.duration || 0), 0); // documents have no duration
   }
 
   private _deleteEntryFromPlaylist(entry: PlaylistContentMediaEntry): void {
@@ -176,7 +176,8 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
     const entryIndex = this.entries.indexOf(entry);
 
     if (entryIndex !== -1) {
-      const clonedEntry = new KalturaMediaEntry(entry);
+      // clone using the entry's own type so document entries remain documents
+      const clonedEntry = <PlaylistContentMediaEntry>Object.assign(KalturaObjectBaseFactory.createObject(entry), entry);
       this._extendWithSelectionId([clonedEntry]);
       this.entries.splice(entryIndex, 0, clonedEntry);
       this._recalculateCountAndDuration();
@@ -251,8 +252,9 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
     }
   }
 
-  public addEntries(entries: KalturaMediaEntry[]): void {
-    this.entries.push(...this._extendWithSelectionId(entries));
+  // accepts media entries and document entries
+  public addEntries(entries: KalturaBaseEntry[]): void {
+    this.entries.push(...this._extendWithSelectionId(<KalturaMediaEntry[]>entries));
     this._recalculateCountAndDuration();
     this._setDirty();
   }

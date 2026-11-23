@@ -1,13 +1,19 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/mc-shared';
 import { Menu } from 'primeng/menu';
-import { KalturaExternalMediaSourceType, KalturaMediaEntry } from 'kaltura-ngx-client';
+import { KalturaDocumentEntry, KalturaEntryType, KalturaExternalMediaSourceType, KalturaMediaEntry } from 'kaltura-ngx-client';
 import { ManualContentWidget } from '../manual-content-widget.service';
 import { globalConfig } from 'config/global';
 import { KMCPermissions, KMCPermissionsService } from 'app-shared/kmc-shared/kmc-permissions';
-import { ContentEntryViewSections, ContentEntryViewService } from 'app-shared/kmc-shared/kmc-views/details-views';
+import {
+    ContentDocumentViewSections,
+    ContentDocumentViewService,
+    ContentEntryViewSections,
+    ContentEntryViewService
+} from 'app-shared/kmc-shared/kmc-views/details-views';
 import { MenuItem } from 'primeng/api';
 import { AppAuthentication } from 'app-shared/kmc-shell';
+import { getDocumentThumbnailClass } from 'app-shared/content-shared/document-thumbnail/document-thumbnail';
 
 @Component({
   selector: 'kPlaylistEntriesTable',
@@ -47,6 +53,8 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   public _items: MenuItem[];
   public _defaultSortOrder = globalConfig.client.views.tables.defaultSortOrder;
     public _youtubeExternalSourceType = KalturaExternalMediaSourceType.youtube;
+    public _documentEntryType = KalturaEntryType.document;
+    public _getDocumentThumbnailClass = getDocumentThumbnailClass;
     public _sortBy: string;
     public _sortDirection: number;
     public _loadThumbnailWithKs = false;
@@ -57,7 +65,8 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
               private _widgetService: ManualContentWidget,
               private _appAuthentication: AppAuthentication,
               private _permissionsService: KMCPermissionsService,
-              private _contentEntryViewService: ContentEntryViewService) {
+              private _contentEntryViewService: ContentEntryViewService,
+              private _contentDocumentViewService: ContentDocumentViewService) {
   }
 
   ngOnInit() {
@@ -124,7 +133,11 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 
   public _goToEntry(entry: KalturaMediaEntry): void {
     if (!this.isRapt && this._permissionsService.hasPermission(KMCPermissions.CONTENT_MANAGE_BASE)) {
-        this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
+        if (entry.type === KalturaEntryType.document) {
+            this._contentDocumentViewService.open({ document: <KalturaDocumentEntry><unknown>entry, section: ContentDocumentViewSections.Metadata });
+        } else {
+            this._contentEntryViewService.open({ entry, section: ContentEntryViewSections.Metadata });
+        }
     }
   }
 
@@ -143,8 +156,9 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
     this._emptyMessage = this._appLocalization.get('applications.content.playlistDetails.errors.addAtLeastOneMedia');
   }
 
-  public _onThumbLoadError(event): void {
+  public _onThumbLoadError(event, holder: HTMLDivElement): void {
     event.target.style.display = 'none';
+    holder.classList.add('showIcon'); // only documents render an icon element, so media entries are unaffected
   }
 
     public isRoom(entry: KalturaMediaEntry): boolean {

@@ -1,0 +1,26 @@
+<div class="kContent kOverrideFAIcons">
+  <span class="kTitle">{{'applications.content.bulkActions.addToExistingPlaylist' | translate}}</span>
+  <div class="kContainer">
+    <span class="kLabel">{{'applications.content.bulkActions.addToExistingPlaylistLabel' | translate}}</span>
+
+    <kAutoComplete [(ngModel)]="_playlists"
+                   suggestionItemField="item"
+                   suggestionLabelField="name"
+                   field="name"
+                   [allowMultiple]="false"
+                   [limitToSuggestions]="true"
+                   placeholder="{{'applications.content.bulkActions.addToExistingPlaylistPH' | translate}}"
+                   [minLength]="3"
+                   [suggestionsProvider]="_playlistsProvider"
+                   (completeMethod)="_searchPlaylists($event)">
+    </kAutoComplete>
+  </div>
+  <div class="kFooter">
+    <button type="button"
+            class="kButtonBranded"
+            pButton
+            [label]="'applications.content.bulkActions.apply' | translate"
+            [disabled]="!_playlists?.length"
+            (click)="_apply()"></button>
+  </div>
+</div>

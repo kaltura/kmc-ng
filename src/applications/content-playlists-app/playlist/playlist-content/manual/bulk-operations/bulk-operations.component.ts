@@ -15,6 +15,7 @@ export class BulkOperationsComponent {
   @Input() isRapt: boolean;
 
   @Output() addEntry = new EventEmitter<void>();
+  @Output() addDocument = new EventEmitter<void>();
   @Output() clearSelection = new EventEmitter<void>();
   @Output() deleteEntries = new EventEmitter<KalturaMediaEntry[]>();
   @Output() moveEntries = new EventEmitter<{ entries: KalturaMediaEntry[], direction: 'up' | 'down' }>();
