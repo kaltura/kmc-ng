@@ -501,6 +501,12 @@ export class EntryComponent implements OnInit, OnDestroy {
                                     document.body.style.overflowY = "auto";
                                     this._entryStore.openEntry(new KalturaMediaEntry(entry));
                                     break;
+                                case 'manageFlavors':
+                                    // navigate to entry falvors tab
+                                    this.unisphereRuntime?.closeWidget(); // close widget
+                                    document.body.style.overflowY = "auto";
+                                    this._router.navigateByUrl(`/content/entries/entry/${entry.id}/flavours`);
+                                    break;
                                 case 'playlist':
                                     // navigate to playlist metadata tab
                                     this.unisphereRuntime?.closeWidget(); // close widget

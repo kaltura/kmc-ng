@@ -1913,6 +1913,8 @@
                     "reachOrderLiveTranslations": "Live translations",
                     "reachOrderAudioDescriptions": "Audio descriptions",
                     "reachOrderExtendedAudioDescriptions": "Extended audio descriptions",
+                    "reachOrderAlignment": "Transcript alignment",
+                    "reachOrderDubbing": "Dubbing",
                     "label": "Label",
                     "id": "ID",
                     "type": "File Type",

@@ -176,7 +176,7 @@ export class EntriesListComponent implements OnInit, OnDestroy, OnChanges, After
         const isLive = isReadyStatus && (isKalturaLive || isLiveStream);
         const isRecorded = (entry as KalturaLiveStreamAdminEntry).recordedEntryId || entry.redirectEntryId;
 
-        const vodCommands = ['captionOrder', 'translationOrder', 'audioOrder', 'extendedAudioOrder'];
+        const vodCommands = ['captionOrder', 'translationOrder', 'audioOrder', 'extendedAudioOrder', 'dubbing', 'alignmentOrder'];
         const liveCommands = ['liveCaptionOrder', 'liveTranslationOrder'];
         const allowedCommands = !isLive ? vodCommands : isRecorded ? [...vodCommands, ...liveCommands] : liveCommands;
         return items.filter(item => allowedCommands.indexOf(item.commandName) !== -1);

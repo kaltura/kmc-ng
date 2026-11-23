@@ -160,6 +160,10 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
               label: this._appLocalization.get('applications.content.entryDetails.captions.reachOrderLiveTranslations'),
               commandName: 'liveTranslationOrder',
           }] : []),
+          ...(catalogItems.find(item => item.serviceFeature === KalturaVendorServiceFeature.alignment) ? [{
+              label: this._appLocalization.get('applications.content.entryDetails.captions.reachOrderAlignment'),
+              commandName: 'alignmentOrder',
+          }] : []),
           ...(catalogItems.find(item => item.serviceFeature === KalturaVendorServiceFeature.audioDescription) ? [{
               label: this._appLocalization.get('applications.content.entryDetails.captions.reachOrderAudioDescriptions'),
               commandName: 'audioOrder',
@@ -167,6 +171,10 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
           ...(catalogItems.find(item => item.serviceFeature === KalturaVendorServiceFeature.extendedAudioDescription) ? [{
               label: this._appLocalization.get('applications.content.entryDetails.captions.reachOrderExtendedAudioDescriptions'),
               commandName: 'extendedAudioOrder',
+          }] : []),
+          ...(catalogItems.find(item => item.serviceFeature === KalturaVendorServiceFeature.dubbing) ? [{
+              label: this._appLocalization.get('applications.content.entryDetails.captions.reachOrderDubbing'),
+              commandName: 'dubbing',
           }] : []),
 
       ];
@@ -226,6 +234,12 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
                                   document.body.style.overflowY = "auto";
                                   this._router.navigateByUrl(`/content/entries/entry/${entry.id}/metadata`);
                                   // this._entryStore.openEntry(new KalturaMediaEntry(entry)); // TODO - handle in entry page
+                                  break;
+                              case 'manageFlavors':
+                                  // navigate to entry falvors tab
+                                  this.unisphereRuntime?.closeWidget(); // close widget
+                                  document.body.style.overflowY = "auto";
+                                  this._router.navigateByUrl(`/content/entries/entry/${entry.id}/flavours`);
                                   break;
                               case 'playlist':
                                   // navigate to playlist metadata tab
@@ -380,6 +394,8 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       case 'translationOrder':
       case 'liveTranslationOrder':
       case 'audioOrder':
+      case 'alignmentOrder':
+      case 'dubbing':
       case 'extendedAudioOrder':
             this.openContentLabPage(entry, action);
             break;
